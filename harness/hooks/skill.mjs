@@ -10,15 +10,21 @@
 //   node .claude/hooks/skill.mjs correct <task-id> trede|rung <1-5> "reason"   (more help than logged; only upwards)
 //   node .claude/hooks/skill.mjs correct <task-id> schrap|void "reason"        (void one specific task)
 //   node .claude/hooks/skill.mjs override <id|*> <minutes> "<reason>"
-//   node .claude/hooks/skill.mjs setting <key> <value>     (examDate, stuckTimerMinutes, defaultLevel, course, language)
+//   node .claude/hooks/skill.mjs setting <key> <value>     (examDate, stuckTimerMinutes, idleMinutes, defaultLevel, course, language)
+//   node .claude/hooks/skill.mjs replay <transcript.jsonl> [--dry-run]   (recover explanations a hook missed)
 // The guard blocks Claude from running any command except list and status.
 // There is deliberately NO command to mark a task as explained: that only happens via
-// an explanation in your own words in the chat (checked by reflect-gate.mjs).
+// an explanation in your own words in the chat (checked by reflect-gate.mjs). `replay` does not
+// change that: it runs the same two keys again on a saved transcript.
+import fs from "node:fs";
+import path from "node:path";
 import {
   loadSkills, saveSkills, findSkill, addOverride, loadOverrides, logEvent, today, taskStats,
-  LEVELS, levelName, isMicro, microsOf, familyIds, scheduleOnLevel, scheduleOnReview, dueReviews,
-  pendingTasks, allTasks, logTask, levelAdvice, recentWins, latestSessionId, loadSession, saveSession, t, language,
+  LEVELS, levelName, isMicro, microsOf, familyIds, familyOf, scheduleOnLevel, scheduleOnReview, dueReviews,
+  pendingTasks, allTasks, logTask, levelAdvice, recentWins, pickSession, loadSession, saveSession, touch, startTask,
+  activeMinutesSince, readTranscript, isLearnerEntry, learnerEntryText, entryText, checkExplanation, t, language,
 } from "./lib.mjs";
+import { EXPLAIN_MARK } from "./patterns.mjs";
 
 const [cmd, ...args] = process.argv.slice(2);
 const data = loadSkills();
@@ -124,13 +130,56 @@ switch (cmd) {
   case "done": {
     const [id, ...what] = args;
     const s = need(id);
-    const sid = latestSessionId();
-    const st = sid ? loadSession(sid) : null;
+    const sid = pickSession(familyIds(data, familyOf(s)), data);
+    const st = sid ? touch(loadSession(sid), Date.now(), data) : null;
     // All help since the last logged task counts, whatever skill the session detected (see check.mjs).
     const maxRung = st?.maxRung ?? 0;
-    const task = logTask({ skill: s.id, success: maxRung < 5, maxRung, source: "done", what: what.join(" ") || undefined, session: sid });
-    if (st) { st.rung = 0; st.maxRung = 0; st.lastRungAt = null; st.taskStartedAt = Date.now(); st.lastTaskAt = Date.now(); saveSession(sid, st); }
+    const minutes = st ? activeMinutesSince(st, st.taskStartedActive) : null;
+    const task = logTask({ skill: s.id, success: maxRung < 5, maxRung, minutes, source: "done", what: what.join(" ") || undefined, session: sid });
+    if (st) {
+      // The family of this task is what the learner works on now (setup review 3.3).
+      st.folderSkill = familyOf(s); st.folderSkillAt = Date.now();
+      startTask(st);
+      saveSession(sid, st);
+    }
     console.log(t("cli.done", { id: s.id, tid: task.tid, rung: maxRung }));
+    break;
+  }
+  case "replay": {
+    // Recover explanations that were approved in the chat but never logged (setup review §5): read a
+    // saved transcript, find Claude's [uitleg-ok <tid>] markers and check the learner's message they
+    // answer with the same checkExplanation(). Only what passes both keys is logged, with source "replay".
+    const [file, ...flags] = args;
+    if (!file) exit("cli.replay.usage");
+    const dry = flags.includes("--dry-run");
+    if (!fs.existsSync(path.resolve(file))) exit("cli.replay.noFile", { file });
+    const entries = readTranscript(path.resolve(file));
+    const session = path.basename(file).replace(/\.jsonl$/i, "");
+    const open = new Map(pendingTasks().map((x) => [x.tid, x]));
+    const results = new Map(); // tid -> { ok, reasons, text }
+    let lastLearner = -1;
+    entries.forEach((e, i) => {
+      if (isLearnerEntry(e)) { lastLearner = i; return; }
+      if (e.type !== "assistant" || lastLearner < 0) return;
+      for (const m of entryText(e).matchAll(EXPLAIN_MARK)) {
+        const tid = m[2];
+        if (m[1].toLowerCase() !== "ok" || results.get(tid)?.ok) continue;
+        const text = learnerEntryText(entries[lastLearner]) ?? "";
+        const earlier = entries.slice(0, lastLearner).filter((x) => x.type === "assistant").map(entryText);
+        results.set(tid, { ...checkExplanation(text, earlier), text });
+      }
+    });
+    if (!results.size) { console.log(t("cli.replay.none", { file })); break; }
+    let logged = 0;
+    for (const [tid, r] of results) {
+      const task = open.get(tid);
+      if (!task) { console.log("  " + t("cli.replay.notOpen", { tid })); continue; }
+      if (!r.ok) { console.log("  " + t("cli.replay.failed", { tid, id: task.skill, reasons: r.reasons.join("; ") })); continue; }
+      if (!dry) logEvent({ type: "task-explained", tid, skill: task.skill, text: r.text.slice(0, 600), session, source: "replay" });
+      logged++;
+      console.log("  " + t(dry ? "cli.replay.wouldLog" : "cli.replay.logged", { tid, id: task.skill }));
+    }
+    console.log(t(dry ? "cli.replay.dryRun" : "cli.replay.done", { n: logged }));
     break;
   }
   case "untask": {
@@ -182,12 +231,12 @@ switch (cmd) {
     const [key, ...rest] = args;
     const value = rest.join(" ");
     const allowed = {
-      examDate: /^\d{4}-\d{2}-\d{2}$/, stuckTimerMinutes: /^\d+$/, defaultLevel: /^L[0-4]$/,
+      examDate: /^\d{4}-\d{2}-\d{2}$/, stuckTimerMinutes: /^\d+$/, idleMinutes: /^[1-9]\d*$/, defaultLevel: /^L[0-4]$/,
       course: /^[^\r\n<>]{1,80}$/, language: /^(nl|en)$/,
     };
     if (!allowed[key] || !allowed[key].test(value)) exit("cli.setting.usage");
     data.settings = data.settings ?? {};
-    data.settings[key] = key === "stuckTimerMinutes" ? Number(value) : value;
+    data.settings[key] = ["stuckTimerMinutes", "idleMinutes"].includes(key) ? Number(value) : value;
     saveSkills(data);
     logEvent({ type: "setting", key, value });
     console.log(`${key} = ${value}`);

@@ -42,6 +42,15 @@ node harness/install.mjs ../mijn-oefenmap --update --yes
 
 Een oudere installatie zonder manifest (met absolute paden in `settings.json`) wordt ook herkend en omgezet.
 
+## Voordat je gaat oefenen
+
+Zet de AI-hulp buiten Claude Code uit. Anders vult je IDE de code aan die je zelf hoort te schrijven, en daar ziet de harnas niets van.
+
+- **Rider:** zet *Full Line Code Completion* uit (Settings → Plugins), en ook *JetBrains AI Assistant* als je die hebt.
+- **Visual Studio:** zet *IntelliCode* (hele regels aanvullen) en *GitHub Copilot* uit.
+- **VS Code:** zet *GitHub Copilot* en andere extensies voor inline-suggesties uit voor deze map.
+- **Claude Code:** de installer zet de prompt-suggesties uit (`promptSuggestionEnabled: false`), omdat een voorgestelde prompt een hint kan verklappen.
+
 ## Na de installatie
 
 1. Start Claude Code in je projectmap. De hook bij de sessiestart laat je vaardigheden en herhalingen zien.

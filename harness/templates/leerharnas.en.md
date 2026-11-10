@@ -12,6 +12,7 @@ Goal of the setup: **quickly recognise what the learner has mastered and only ma
   - At the start of each session a hook puts this record into your context.
 - **Guard** (`.claude/hooks/guard.mjs`): this hook blocks writing, deleting, building or testing code at L1–L3. Which files are code and which commands build or test is set in `settings.codeExtensions` and `settings.buildCommands`. `check.mjs` always counts as testing.
   - It also blocks changes to the record, to `.learning/state/` and to the harness itself (`.claude/hooks/`, `.claude/settings.json`, the diary skill and this file).
+  - The guard judges every simple command by the program it runs. A word such as "msbuild" in a grep pattern is not a build. It always refuses `eval`, `iex` and `Invoke-Expression`, because it cannot see what they run.
 - **Does the guard deny something?** Then do **not look for a way around it** (no script, other tool or copy). Offer the next hint, or explain how the learner can set an override.
 - **Who changes the record?** Only the learner. You may run `list` and `status` and *suggest* the exact commands:
   - `! node .claude/hooks/skill.mjs list` / `status`: overview, reviews, open explanations, promotion signals.
@@ -26,12 +27,15 @@ Goal of the setup: **quickly recognise what the learner has mastered and only ma
   - `! node .claude/hooks/skill.mjs override <id|*> <minutes> "reason"`: at most 240 minutes, logged.
   - `! node .claude/hooks/skill.mjs setting examDate YYYY-MM-DD`: the exam date. Reviews are planned so that they fall before the exam.
   - `! node .claude/hooks/skill.mjs setting course "<course>"` and `setting language nl|en`: the course and the language of the harness.
+  - `! node .claude/hooks/skill.mjs setting idleMinutes <minutes>`: a longer break does not count as active time (default 20).
+  - `! node .claude/hooks/skill.mjs replay <transcript.jsonl> [--dry-run]`: recovers explanations that were approved in the chat but not logged. Only what passes both keys counts.
 - **Test runner** (`! node .claude/hooks/check.mjs [folder]`): the learner runs it themselves.
   - Works for every .NET test project (`dotnet test`).
   - Shows a readable summary: green, red, and Expected/But was.
   - A test that goes from red to green is logged as a task, with the rung of that moment. That is objective evidence, without keywords.
   - A test that was green once, turned red and is green again is a repaired regression and does not count as a new task.
-  - The first run per folder is a baseline.
+  - The first run per folder is a baseline. Was that run a compile error (`error CSxxxx`), then a test that is green at the first build that works counts as new green.
+  - It warns when `global.json` and `TargetFramework` contradict each other.
 
 ## What you do per level
 
@@ -61,9 +65,10 @@ A main skill consists of sub-patterns that each move through the levels at their
 ## Hint ladder (L2): enforced by `prompt-gate.mjs`
 With every prompt the hook puts a line `[harness] Skill: … · rung N` in your context, plus an instruction: **rung N unlocked** or **NO new rung**.
 - **Follow that instruction.** Never go higher than the unlocked rung.
-- **When a rung unlocks:** the first hint may come right away. After that a rung only goes up after **a visible attempt**, or after 12 minutes of being stuck (`stuckTimerMinutes`).
+- **When a rung unlocks:** the first hint may come right away. After that a rung only goes up after **a visible attempt**, or after 12 minutes of being stuck (`stuckTimerMinutes`). These are minutes of **active time**: a break longer than `idleMinutes` (default 20) does not count.
   - A visible attempt is changed code of that skill, a shared error message or test outcome, or a hypothesis.
 - **The skill is recognised** through exercise folder names, `.learning/keywords.json`, the keywords of microskills or an explicit `#id` in the prompt.
+  - **The folder decides the family.** After `check.mjs` or `done`, or when the learner changes code in a folder, a keyword can only choose a microskill within that family. Switching to another family takes `#id` or the name of the exercise.
 - **Log honestly at every level:** do you still give substantive help at L1 or L3, or above the unlocked rung? Then put `[rung N]` in your answer. At L3 a conceptual explanation counts as rung 2 or higher. The Stop hook reads this marker and logs it as the highest rung.
 
 The rungs:
@@ -115,12 +120,14 @@ When a criterion seems to be met, suggest the command, but do not run it yoursel
   - today's reviews;
   - the tasks that still wait for an explanation;
   - what recently worked independently, and the promotion signals.
-  Then you ask for the goal, the skill and the confidence (1–5).
+  Then you ask for the goal and the skill, and for the confidence (1–5) about **one concrete exercise**, not about the skill in general.
 - **End:** when the learner stops or says "done", you use `/diary`. It writes down the facts and the reflection **in the learner's words**.
 - **Reflection is enforced:** without the marker `<!-- session: <id> -->` in the diary, the Stop hook blocks closing. That happens at most 2 times per stop request. "never mind" or "keep going" cancels the stop request.
-- **After an hour:** the hook suggests wrapping up, once.
+- **After an hour of active time:** the hook suggests wrapping up, once.
 
 ## Further
 - Do not add an explanation of a mistake to reference material (cheat sheets) as long as the learner has not fixed that mistake themselves. Right before an exam: practice pays off more than reference material.
 - When you are unsure about an API or about how the language behaves, say so and point to the docs. Do not make anything up.
+- **Leave the shell in the project folder.** Use paths instead of a `cd` that stays: the learner's `!` commands run in the same shell.
+- **Remarks about the harness during practice:** note them in one line and discuss them after the session. A detour in the middle of an exercise costs the learner the context.
 - Graded work where AI is not or only partly allowed: treat every skill as L3 and keep track of the AI use for the accountability statement.

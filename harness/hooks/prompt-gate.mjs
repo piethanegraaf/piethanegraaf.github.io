@@ -5,9 +5,9 @@
 import fs from "node:fs";
 import path from "node:path";
 import {
-  readStdin, loadSkills, findSkill, globToRegex, logEvent, loadSession, saveSession,
+  readStdin, loadSkills, findSkill, globToRegex, logEvent, loadSession, saveSession, skillForPath, familyOf,
   taskStats, ROOT, levelName, isMicro, microsOf, keywordMap, logTask, pendingTasks, levelAdvice, learnerText,
-  settingsOf, codeExtRe, toolingRe, t,
+  settingsOf, codeExtRe, toolingRe, touch, activeMinutesSince, startTask, t,
 } from "./lib.mjs";
 import {
   HINT, SOLUTION, SOLVED_STRONG, SOLVED_WEAK, CODE_CONTEXT, NOT_SOLVED, END, RESUME, ATTEMPT, CHECKING,
@@ -36,7 +36,7 @@ const T = settings.stuckTimerMinutes;
 const TOOLING_RE = toolingRe(data);
 const CODE_FILE = codeExtRe(data);
 const now = Date.now();
-const st = loadSession(sid);
+const st = touch(loadSession(sid), now, data);
 const ctx = [];
 
 // The learner's last message, so reflect-gate can check an explanation against it.
@@ -44,6 +44,39 @@ st.lastPrompt = prompt.slice(0, 4000);
 st.lastPromptAt = now;
 
 // ---------- 1. Skill detection ----------
+const SKIP_DIR = /^(bin|obj|\.vs|\.idea|\.git|\.claude|\.learning|node_modules)$/i;
+
+// The code file the learner changed most recently since `since` (anywhere in the project).
+function latestChangedCode(since) {
+  let best = null, budget = 4000;
+  const walk = (dir) => {
+    let entries = [];
+    try { entries = fs.readdirSync(path.join(ROOT, dir), { withFileTypes: true }); } catch { return; }
+    for (const e of entries) {
+      if (budget-- <= 0) return;
+      const f = (dir ? dir + "/" : "") + e.name;
+      if (e.isDirectory()) { if (!SKIP_DIR.test(e.name)) walk(f); continue; }
+      if (!CODE_FILE.test(e.name)) continue;
+      try { const m = fs.statSync(path.join(ROOT, f)).mtimeMs; if (m > since && (!best || m > best.mtime)) best = { file: f, mtime: m }; } catch { /* skip */ }
+    }
+  };
+  walk("");
+  return best;
+}
+
+// The folder decides the family (setup review 3.3): check.mjs and `done` set st.folderSkill, and a
+// code file changed more recently than that is the second signal. A keyword may then only choose a
+// microskill within that family; another family needs #id or the name of an exercise.
+function folderFamily() {
+  const latest = latestChangedCode(Math.max(st.folderSkillAt ?? 0, st.startedAt ?? 0));
+  if (latest) {
+    const s = skillForPath(data, latest.file);
+    if (s && s.kind !== "zone") { st.folderSkill = familyOf(s); st.folderSkillAt = latest.mtime; }
+  }
+  const f = st.folderSkill ? findSkill(data, st.folderSkill) : null;
+  return f ? familyOf(f) : null;
+}
+const folderFam = folderFamily();
 function exerciseDirs(skill) {
   const dirs = [];
   for (const pat of skill.paths ?? []) {
@@ -62,43 +95,55 @@ function exerciseDirs(skill) {
   return dirs;
 }
 
+// A deliberate switch (#id or the name of an exercise) also moves the folder lock.
+let explicit = false;
 function detectSkill() {
   const p = prompt.toLowerCase();
   const tag = p.match(/#([a-z]+(?:\.[a-z0-9-]+)+)/);
-  if (tag && findSkill(data, tag[1])) return findSkill(data, tag[1]);
+  if (tag && findSkill(data, tag[1])) { explicit = true; return findSkill(data, tag[1]); }
   const kw = keywordMap(data);
   const scores = new Map();
   let best = null;
   let activeScore = 0;
+  // Exercise names first: they may switch to another family, also when the folder is known.
+  const byExercise = new Set();
   for (const s of data.skills) {
     if (s.kind === "zone") continue;
-    let score = 0, byExercise = false;
     for (const d of exerciseDirs(s)) {
       const name = d.split("/").pop().toLowerCase();          // "21-bankrekening"
       const bare = name.replace(/^\d+-/, "");                  // "bankrekening"
-      if (p.includes(name) || (bare.length > 4 && (p.includes(bare) || p.includes(bare.replace(/-/g, " "))))) { score += 5; byExercise = true; }
+      if (p.includes(name) || (bare.length > 4 && (p.includes(bare) || p.includes(bare.replace(/-/g, " "))))) byExercise.add(s.id);
     }
+  }
+  const lockedTo = byExercise.size ? null : folderFam;
+  for (const s of data.skills) {
+    if (s.kind === "zone") continue;
+    if (lockedTo && familyOf(s) !== lockedTo) continue;
+    let score = byExercise.has(s.id) ? 5 : 0;
     // Microskill keywords are more specific: they weigh double.
     for (const k of kw[s.id] ?? []) if (k && p.includes(k)) score += isMicro(s) ? 2 : 1;
     scores.set(s.id, score);
     if (s.id === st.activeSkill) activeScore = score;
-    if (score > 0 && (!best || score > best.score || (score === best.score && s.id === st.activeSkill))) best = { s, score, byExercise };
+    if (score > 0 && (!best || score > best.score || (score === best.score && s.id === st.activeSkill))) best = { s, score, byExercise: byExercise.has(s.id) };
   }
   // A parent wins (e.g. by exercise name)? Then prefer its best-matching microskill.
   if (best && !isMicro(best.s)) {
     const m = microsOf(data, best.s.id).map((x) => ({ s: x, score: scores.get(x.id) ?? 0 })).sort((a, b) => b.score - a.score)[0];
     if (m && m.score > 0) best = { ...best, s: m.s };
   }
-  // Sticky: a few loose keywords do not switch skills. Staying within the same family is always allowed.
   const active = st.activeSkill ? findSkill(data, st.activeSkill) : null;
-  const family = (s) => (isMicro(s) ? s.parent : s.id);
-  if (best && active && best.s.id !== active.id && family(best.s) !== family(active) && !best.byExercise && best.score < activeScore + 2) {
+  // The folder is known but the session skill is from another family: the folder wins.
+  if (!best && lockedTo && familyOf(active) !== lockedTo) return findSkill(data, lockedTo);
+  // Sticky: a few loose keywords do not switch skills (a tie stays too). Staying within the same family is always allowed.
+  if (best && active && best.s.id !== active.id && familyOf(best.s) !== familyOf(active) && !best.byExercise && best.score <= activeScore + 2) {
     return active;
   }
+  if (best?.byExercise) explicit = true;
   return best?.s ?? null;
 }
 
 const detected = detectSkill();
+if (detected && explicit && familyOf(detected) !== folderFam) { st.folderSkill = familyOf(detected); st.folderSkillAt = now; }
 if (detected && detected.id !== st.activeSkill) {
   const prev = st.activeSkill ? findSkill(data, st.activeSkill) : null;
   const sameFamily = prev && (prev.id === detected.parent || prev.parent === detected.id || (prev.parent && prev.parent === detected.parent));
@@ -106,7 +151,7 @@ if (detected && detected.id !== st.activeSkill) {
   // Another family gets its own ladder (rung back to 0), but maxRung is kept until a task is logged:
   // the help was really given, and a misdetected skill must not erase it (10 Nov 2026: hints for
   // one skill's code were logged under another skill and the tasks showed rung 0).
-  if (!sameFamily) { st.rung = 0; st.lastRungAt = null; st.taskStartedAt = now; }
+  if (!sameFamily) { st.rung = 0; st.lastRungAt = null; st.lastRungActive = null; st.taskStartedAt = now; st.taskStartedActive = st.activeMs; }
 }
 const skill = st.activeSkill ? findSkill(data, st.activeSkill) : null;
 const level = skill ? skill.level : settings.defaultLevel;
@@ -147,7 +192,8 @@ const solved = (SOLVED_STRONG.test(prompt) || weak) && !NOT_SOLVED.test(prompt) 
 const ending = END.test(prompt);
 const changed = wantsHint ? changedSince(since) : [];
 const attempt = textAttempt || changed.length > 0;
-const minutes = st.lastRungAt ? Math.round((now - st.lastRungAt) / 60000) : null;
+// The stuck timer counts ACTIVE minutes since the last hint: a break does not unlock a rung (setup review 3.5).
+const minutes = st.lastRungAt ? activeMinutesSince(st, st.lastRungActive) : null;
 const timerUp = minutes !== null && minutes >= T;
 const attemptWhy = changed.length ? t("pg.attemptWhy.changed", { files: changed.slice(0, 2).join(", ") })
   : textAttempt ? t("pg.attemptWhy.text") : "";
@@ -155,7 +201,7 @@ const attemptWhy = changed.length ? t("pg.attemptWhy.changed", { files: changed.
 // ---------- 3. Outcomes ----------
 if (solved && skill) {
   const success = (st.maxRung ?? 0) < 5;
-  const mins = Math.round((now - (st.taskStartedAt ?? now)) / 60000);
+  const mins = activeMinutesSince(st, st.taskStartedActive);
   const m = st.maxRung ?? 0;
   const tk = logTask({ skill: skill.id, success, maxRung: m, minutes: mins, source: "chat", session: sid });
   const verdict = t(!success ? "pg.verdict.fail" : m <= 2 ? "pg.verdict.ok" : "pg.verdict.help");
@@ -168,7 +214,7 @@ if (solved && skill) {
     }));
   }
   if (!isMicro(skill) && microsOf(data, skill.id).length === 0) ctx.push(t("pg.noMicros", { id: skill.id }));
-  st.rung = 0; st.maxRung = 0; st.lastRungAt = null; st.taskStartedAt = now; st.lastTaskAt = now;
+  startTask(st, now);
 }
 
 // ---------- 3b. Explanation check (consolidation) ----------
@@ -189,6 +235,7 @@ if (wantsHint && !solved) {
     if (why) {
       st.maxRung = Math.max(st.maxRung ?? 0, st.rung);
       st.lastRungAt = now;
+      st.lastRungActive = st.activeMs;
       logEvent({ type: "hint-unlock", skill: skill?.id ?? null, rung: st.rung, reason: why, session: sid });
       ctx.push(st.rung === 5 ? t("pg.rung5") : t("pg.unlocked", { rung: st.rung, name: rungName(st.rung), why }));
     } else if (st.rung === 5) {
@@ -216,7 +263,7 @@ if (ending) {
   st.endRequested = true; st.reflectBlocks = 0;
   logEvent({ type: "end-request", session: sid });
   ctx.push(t("pg.end", { sid, pending: pending.length ? t("pg.end.pending", { n: pending.length }) : "" }));
-} else if (!st.nudged && now - st.startedAt > 60 * 60000) {
+} else if (!st.nudged && (st.activeMs ?? 0) > 60 * 60000) {
   st.nudged = true;
   ctx.push(t("pg.hour"));
 }

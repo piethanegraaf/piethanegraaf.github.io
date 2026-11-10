@@ -10,43 +10,88 @@
 //    new task: it is logged as "regression-fixed" and does not count towards promotion.
 //  - the folder tells the session which skill is practised ("!" commands bypass prompt-gate),
 //    so the next prompt gets the right level and hint ladder.
+//  - a compile error is remembered as the starting point of that folder: a test that is green at the
+//    first build that works counts as new green, also when it never ran before (setup review 3.2).
 // Claude may not run this script for L1-L3 code (guard.mjs); it is your test run.
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { spawnSync } from "node:child_process";
 import {
-  ROOT, TESTS_FILE, STATE_DIR, loadSkills, skillForPath, rel, keywordMap, findSkill, isMicro, familyIds,
-  latestSessionId, loadSession, saveSession, logTask, logEvent, levelAdvice, taskStats, t,
+  ROOT, TESTS_FILE, STATE_DIR, loadSkills, skillForPath, rel, keywordMap, findSkill, isMicro, familyIds, familyOf,
+  pickSession, loadSession, saveSession, touch, startTask, activeMinutesSince, logTask, logEvent, levelAdvice, taskStats, t,
 } from "./lib.mjs";
 
-try { loadSkills(); } catch { /* messages stay in the default language */ }
+let data0 = null;
+try { data0 = loadSkills(); } catch { /* messages stay in the default language */ }
 const dirArg = process.argv[2] ?? ".";
-const dir = path.resolve(process.cwd(), dirArg);
+// Relative to where you are; if that folder does not exist, relative to the project (the shell may
+// have been left in an exercise folder, setup review §4).
+let dir = path.resolve(process.cwd(), dirArg);
+if (!fs.existsSync(dir) && !path.isAbsolute(dirArg) && fs.existsSync(path.resolve(ROOT, dirArg))) dir = path.resolve(ROOT, dirArg);
 if (!fs.existsSync(dir)) { console.error(t("check.noDir", { dir })); process.exit(1); }
 const relDir = rel(dir) ?? dir;
+const BUILD_KEY = `${relDir}::#build`;
 
 // ---------- 0. The folder decides the session skill ----------
 // "!" commands never reach prompt-gate, so without this the session could stay on a skill that was
 // guessed from a keyword (e.g. "unit test" in a question about cs.basis code), with the wrong level.
-// maxRung is kept: help already given for this task still counts.
+// maxRung is kept: help already given for this task still counts. st.folderSkill also locks the
+// skill detection of prompt-gate to this family (setup review 3.3).
+const folderSkill = data0 ? skillForPath(data0, path.join(dir, "__probe__", "x.cs")) : null;
+const mapped = folderSkill && folderSkill.kind !== "zone" ? folderSkill : null;
+const sid = pickSession(mapped ? familyIds(data0, mapped.id) : null, data0);
 {
-  const data = loadSkills();
-  const s = skillForPath(data, path.join(dir, "__probe__", "x.cs"));
-  const sid0 = latestSessionId();
-  const st0 = sid0 ? loadSession(sid0) : null;
-  if (s && s.kind !== "zone" && st0) {
-    const active = st0.activeSkill ? findSkill(data, st0.activeSkill) : null;
-    if (!active || !familyIds(data, s.id).includes(active.id)) {
-      st0.activeSkill = s.id;
-      saveSession(sid0, st0);
+  const st0 = sid ? loadSession(sid) : null;
+  if (st0) {
+    touch(st0, Date.now(), data0);
+    if (mapped) {
+      st0.folderSkill = familyOf(mapped);
+      st0.folderSkillAt = Date.now();
+      const active = st0.activeSkill ? findSkill(data0, st0.activeSkill) : null;
+      if (!active || !familyIds(data0, mapped.id).includes(active.id)) st0.activeSkill = mapped.id;
     }
+    saveSession(sid, st0);
   }
+}
+
+// global.json asks for an older SDK than the project targets, without rolling forward to a newer
+// major version (setup review §4: the IDE then installs that SDK and shows no errors).
+function sdkWarning() {
+  let gj = null;
+  for (let d = dir; ; d = path.dirname(d)) {
+    if (fs.existsSync(path.join(d, "global.json"))) { gj = path.join(d, "global.json"); break; }
+    const r = path.relative(ROOT, d);
+    if (!r || r.startsWith("..") || path.isAbsolute(r) || path.dirname(d) === d) break;
+  }
+  if (!gj) return null;
+  let sdk = null;
+  try { sdk = JSON.parse(fs.readFileSync(gj, "utf8")).sdk ?? null; } catch { return null; }
+  const sdkMajor = Number(String(sdk?.version ?? "").split(".")[0]);
+  if (!sdkMajor || ["major", "latestmajor"].includes(String(sdk?.rollForward ?? "").toLowerCase())) return null;
+  let tf = 0, budget = 500;
+  const scan = (d, depth) => {
+    let entries = [];
+    try { entries = fs.readdirSync(d, { withFileTypes: true }); } catch { return; }
+    for (const e of entries) {
+      if (budget-- <= 0) return;
+      if (e.isDirectory()) { if (depth < 3 && !/^(bin|obj|\.vs|\.idea|\.git)$/i.test(e.name)) scan(path.join(d, e.name), depth + 1); continue; }
+      if (!/\.csproj$/i.test(e.name)) continue;
+      const xml = fs.readFileSync(path.join(d, e.name), "utf8");
+      for (const m of xml.matchAll(/<TargetFrameworks?>([^<]+)<\/TargetFrameworks?>/gi)) {
+        for (const f of m[1].split(";")) { const v = Number((f.trim().match(/^net(\d+)\./i) ?? [])[1]); if (v > tf) tf = v; }
+      }
+    }
+  };
+  scan(dir, 0);
+  return tf > sdkMajor ? t("check.sdkMismatch", { file: rel(gj) ?? gj, sdk: sdk.version, tf: `net${tf}.0`, rollForward: sdk.rollForward ?? "-" }) : null;
 }
 
 // ---------- 1. Run the tests ----------
 let resDir = process.env.LEERHARNAS_TRX_DIR; // testing only: parse existing trx files
-let out = "";
+let out = process.env.LEERHARNAS_DOTNET_OUT ?? ""; // testing only: the output of dotnet
+const warn = sdkWarning();
+if (warn) console.log(warn + "\n");
 if (!resDir) {
   resDir = fs.mkdtempSync(path.join(os.tmpdir(), "leerharnas-trx-"));
   console.log(t("check.running", { dir: relDir }));
@@ -58,11 +103,22 @@ const trxFiles = [];
 const walk = (d) => { for (const e of fs.readdirSync(d, { withFileTypes: true })) { const p = path.join(d, e.name); if (e.isDirectory()) walk(p); else if (/\.trx$/i.test(e.name)) trxFiles.push(p); } };
 try { walk(resDir); } catch { /* none */ }
 
+let store = {};
+try { store = JSON.parse(fs.readFileSync(TESTS_FILE, "utf8")); } catch { /* first run */ }
+
 if (!trxFiles.length) {
   const errs = [...new Set(out.split(/\r?\n/).filter((l) => /\berror\b/i.test(l)).map((l) => l.trim().replace(/\s*\[[^\]]*\.csproj[^\]]*\]$/, "")))];
   console.log("\n" + t("check.noTests"));
   if (errs.length) { console.log(t("check.errors")); errs.slice(0, 10).forEach((e) => console.log("  " + e)); }
   else console.log(out.split(/\r?\n/).slice(-15).join("\n"));
+  // Only a compile error of your code (CSxxxx) is a starting point; a tooling error (NETSDK, MSB) is not.
+  if (/\berror CS\d{4}\b/.test(out) && !store[BUILD_KEY]) {
+    store[BUILD_KEY] = { outcome: "BuildFailed", at: new Date().toISOString() };
+    fs.mkdirSync(STATE_DIR, { recursive: true });
+    fs.writeFileSync(TESTS_FILE, JSON.stringify(store, null, 2) + "\n");
+    logEvent({ type: "build-failed", dir: relDir, session: sid });
+    console.log("\n" + t("check.buildNoted"));
+  }
   console.log("\n" + t("check.tipBuild"));
   process.exit(1);
 }
@@ -85,15 +141,17 @@ for (const f of trxFiles) {
 }
 
 // ---------- 3. Compare with the previous run ----------
-let store = {};
-try { store = JSON.parse(fs.readFileSync(TESTS_FILE, "utf8")); } catch { /* first run */ }
 const nowIso = new Date().toISOString();
 const newlyGreen = [], restored = [], newlyRed = [], baseline = [];
+// After a compile error, a test without an earlier outcome counts as red: green now is new green.
+const afterBuildError = Boolean(store[BUILD_KEY]);
+delete store[BUILD_KEY];
 for (const r of results) {
   const key = `${relDir}::${r.className}.${r.name}`;
   const prev = store[key];
   const passed = r.outcome === "Passed";
-  if (!prev) baseline.push(r);
+  if (!prev && afterBuildError) { if (passed) newlyGreen.push(r); }
+  else if (!prev) baseline.push(r);
   // Green before (firstPassAt), then red, now green again: a repaired regression, not a new task.
   else if (passed && prev.outcome !== "Passed") (prev.firstPassAt ? restored : newlyGreen).push(r);
   else if (!passed && prev.outcome === "Passed") newlyRed.push(r);
@@ -116,18 +174,17 @@ for (const r of pass) console.log(`  ✓ ${r.name}`);
 const fullNames = (list) => list.map((r) => `${r.className}.${r.name}`);
 if (newlyRed.length) {
   console.log("\n" + t("check.regression", { tests: newlyRed.map((r) => r.name).join(", ") }));
-  logEvent({ type: "regression", tests: fullNames(newlyRed), dir: relDir, session: latestSessionId() });
+  logEvent({ type: "regression", tests: fullNames(newlyRed), dir: relDir, session: sid });
 }
 if (restored.length) {
   console.log("\n" + t("check.restored", { tests: restored.map((r) => r.name).join(", ") }));
-  logEvent({ type: "regression-fixed", tests: fullNames(restored), dir: relDir, session: latestSessionId() });
+  logEvent({ type: "regression-fixed", tests: fullNames(restored), dir: relDir, session: sid });
 }
 if (baseline.length && baseline.length === results.length) console.log("\n" + t("check.baseline"));
 
 // ---------- 5. Log tasks for tests that turned green ----------
 if (newlyGreen.length) {
   const data = loadSkills();
-  const sid = latestSessionId();
   const st = sid ? loadSession(sid) : null;
   // Skill: (1) path of the solution/project folder, (2) keywords in test/class names, (3) active session skill.
   let skill = skillForPath(data, path.join(dir, "__probe__", "x.cs"));
@@ -156,9 +213,10 @@ if (newlyGreen.length) {
   // belonged to another family. Erring towards "more help" keeps "independent" honest (R2).
   const maxRung = st?.maxRung ?? 0;
   const what = newlyGreen.map((r) => r.name).join(", ");
-  const task = logTask({ skill: skill.id, success: maxRung < 5, maxRung, source: "check", what, session: sid });
+  const minutes = st ? activeMinutesSince(st, st.taskStartedActive) : null;
+  const task = logTask({ skill: skill.id, success: maxRung < 5, maxRung, minutes, source: "check", what, session: sid });
   logEvent({ type: "test-green", skill: skill.id, tid: task.tid, tests: newlyGreen.map((r) => `${r.className}.${r.name}`), dir: relDir });
-  if (st) { st.rung = 0; st.maxRung = 0; st.lastRungAt = null; st.taskStartedAt = Date.now(); st.lastTaskAt = Date.now(); saveSession(sid, st); }
+  if (st) { startTask(st); saveSession(sid, st); }
 
   console.log("\n" + t("check.newGreen", { tests: what }));
   console.log("  " + t("check.logged", { id: skill.id, tid: task.tid, rung: maxRung }) +

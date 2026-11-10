@@ -34,7 +34,7 @@ Een vaardigheid kan **microvaardigheden** hebben: deelpatronen met een eigen niv
 4. Een klein voorbeeld van hooguit 5 regels, met een ander onderwerp.
 5. Een uitwerking, alleen na bevestiging. De taak telt dan als **niet gelukt**.
 
-De eerste hint mag meteen. Een volgende trede komt pas na een **zichtbare poging**: gewijzigde code, een foutmelding of testuitkomst, of een hypothese. Of na 12 minuten vastzitten.
+De eerste hint mag meteen. Een volgende trede komt pas na een **zichtbare poging**: gewijzigde code, een foutmelding of testuitkomst, of een hypothese. Of na 12 minuten vastzitten. Dat zijn minuten **actieve tijd**: een pauze van meer dan 20 minuten (`idleMinutes`) telt niet mee. Na het eten krijg je dus niet vanzelf een hogere trede.
 
 ## De guard
 
@@ -42,6 +42,8 @@ Bij L1–L3 blokkeert `guard.mjs` dat Claude code schrijft, verwijdert, bouwt of
 
 - het register en de state in `.learning/`;
 - de harnas zelf: de hooks, `.claude/settings.json`, de diary-skill en de regels.
+
+Een shell-commando splitst de guard eerst in losse commando's. Hij kijkt naar het programma dat draait, niet naar woorden in de argumenten: `grep "msbuild"` is geen build, maar `bash -c "dotnet test"` wel.
 
 Wil je toch dat Claude iets doet, dan zet je zelf een override: `! node .claude/hooks/skill.mjs override ood.overerving 30 "reden"`. Die wordt gelogd en staat in het dagboek.
 

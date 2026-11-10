@@ -34,7 +34,7 @@ A skill can have **microskills**: sub-patterns with their own level. Filtering l
 4. A small example of at most 5 lines, on a different topic.
 5. A worked solution, only after confirmation. The task then counts as **not solved**.
 
-The first hint may come right away. The next rung only comes after a **visible attempt**: changed code, an error or test outcome, or a hypothesis. Or after 12 minutes of being stuck.
+The first hint may come right away. The next rung only comes after a **visible attempt**: changed code, an error or test outcome, or a hypothesis. Or after 12 minutes of being stuck. These are minutes of **active time**: a break of more than 20 minutes (`idleMinutes`) does not count. So after dinner you do not get a higher rung by itself.
 
 ## The guard
 
@@ -42,6 +42,8 @@ At L1–L3, `guard.mjs` blocks Claude from writing, deleting, building or testin
 
 - the record and the state in `.learning/`;
 - the harness itself: the hooks, `.claude/settings.json`, the diary skill and the rules.
+
+The guard first splits a shell command into simple commands. It looks at the program that runs, not at words in the arguments: `grep "msbuild"` is not a build, but `bash -c "dotnet test"` is.
 
 If you still want Claude to do something, you set an override yourself: `! node .claude/hooks/skill.mjs override ood.overerving 30 "reason"`. It is logged and shows up in the diary.
 

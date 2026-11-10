@@ -10,13 +10,18 @@ De instellingen staan in `.learning/skills.json`, onder `settings`. Je wijzigt z
 | `language` | `nl` | `nl` of `en`: de taal van de meldingen. De herkenning werkt altijd in beide talen. |
 | `examDate` | geen | De toetsdatum. Herhalingen vallen uiterlijk 3 dagen ervoor. |
 | `defaultLevel` | `L2` | Het niveau van code die bij geen vaardigheid hoort. |
-| `stuckTimerMinutes` | `12` | Na zoveel minuten vastzitten mag een nieuwe trede, ook zonder poging. |
+| `stuckTimerMinutes` | `12` | Na zoveel minuten **actieve tijd** vastzitten mag een nieuwe trede, ook zonder poging. |
+| `idleMinutes` | `20` | Een pauze die langer duurt, telt niet als actieve tijd: niet voor de vasttimer, niet voor de minuten per taak en niet voor de melding na een uur. |
 | `targetSuccess` | `0.85` | Het doel voor doorstromen van L2 naar L3. |
 | `codeExtensions` | `cs, csproj, sln, slnx` | Welke bestanden code van de student zijn. |
 | `buildCommands` | `dotnet build/test/run …`, `msbuild` | Reguliere expressies voor commando's die bouwen of testen. `check.mjs` telt altijd mee. |
 | `toolingTerms` | `rider, sdk, nuget …` | Woorden over tooling: "het werkt" daarover is geen opgeloste taak. |
 
 Een ongeldige waarde valt terug op de standaard. De guard laat dan dus nooit alles door.
+
+## Instellingen van Claude Code
+
+De installer zet in `.claude/settings.json` ook `"promptSuggestionEnabled": false`. Claude Code stelt anders zelf een volgende prompt voor, en zo'n voorstel kan een hint verklappen. Zet je de waarde zelf op `true`, dan laat de installer je keuze staan.
 
 ## Een eigen vak
 
