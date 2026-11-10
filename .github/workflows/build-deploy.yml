@@ -62,15 +62,17 @@ jobs:
 
       - name: Add static pages from site-src/
         run: |
-          for src in site-src/*/; do
-            name="$(basename "$src")"
-            if [ -e "site/$name" ]; then
-              echo "::error::site/$name already exists (a docs page uses the same path)"
+          # Every file lands at the same path under site/, so site-src/en/cheatsheet/ becomes /en/cheatsheet/.
+          # A file may never replace a page that MkDocs built.
+          while IFS= read -r -d '' f; do
+            rel="${f#site-src/}"
+            if [ -e "site/$rel" ]; then
+              echo "::error::site/$rel already exists (a docs page uses the same path)"
               exit 1
             fi
-            cp -R "$src" "site/$name"
-          done
-          find site -name .gitkeep -delete
+            mkdir -p "site/$(dirname "$rel")"
+            cp "$f" "site/$rel"
+          done < <(find site-src -type f ! -name .gitkeep -print0)
 
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:

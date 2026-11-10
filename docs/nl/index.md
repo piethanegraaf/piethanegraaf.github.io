@@ -21,7 +21,7 @@ De harnas weet per vaardigheid hoe ver je bent, en past daar de hulp van de AI o
 
     Voortgang per (micro)vaardigheid, met echte data en een demo.
 
-    [Naar het dashboard](progress-dashboard.md)
+    [Naar het dashboard](/dashboard/)
 
 - **C# OOP-cheat sheet**
 

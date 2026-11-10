@@ -1,4 +1,4 @@
-<!doctype html><html lang="nl"><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style><link rel="icon" href="../assets/images/favicon.png"></head><body>
+<!doctype html><html lang="nl"><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style><link rel="icon" href="../assets/images/favicon.png"><link rel="alternate" hreflang="nl" href="/cheatsheet/"><link rel="alternate" hreflang="en" href="/en/cheatsheet/"></head><body>
 <title>C# OOP Cheat Sheet</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -303,6 +303,15 @@ html{ scroll-padding-top:calc(var(--header-h) + 20px); }
 .site-header nav{ margin-left:auto; display:flex; gap:18px; font-size:.9rem; }
 .site-header nav a:hover{ text-decoration:underline; }
 .site-header a:focus-visible{ outline:2px solid #ffffff; outline-offset:2px; }
+.lang-select{ position:relative; }
+.lang-button{ display:flex; align-items:center; justify-content:center; width:40px; height:40px; padding:8px; border:0; border-radius:4px; background:transparent; color:#ffffff; cursor:pointer; }
+.lang-button svg{ width:24px; height:24px; fill:currentColor; }
+.lang-button:hover{ background:rgba(255,255,255,.12); }
+.lang-button:focus-visible{ outline:2px solid #ffffff; outline-offset:2px; }
+.lang-list{ position:absolute; right:0; top:calc(100% + 4px); min-width:150px; margin:0; padding:6px 0; list-style:none; background:var(--surface); border:1px solid var(--border); border-radius:4px; box-shadow:0 .2rem .5rem rgba(0,0,0,.2); }
+.site-header .lang-list a{ display:block; padding:8px 16px; color:var(--text); text-decoration:none; white-space:nowrap; font-size:.9rem; }
+.site-header .lang-list a:hover, .site-header .lang-list a:focus-visible{ background:var(--code-bg); outline:2px solid var(--accent); outline-offset:-2px; }
+.site-header .lang-list a[aria-current]{ font-weight:700; }
 .sidebar{ top:var(--header-h); height:calc(100vh - var(--header-h)); }
 .concept{ scroll-margin-top:calc(var(--header-h) + 20px); }
 .hero h1{ font-family:'IBM Plex Sans',sans-serif; font-weight:300; color:var(--text-dim); letter-spacing:0; }
@@ -353,6 +362,13 @@ td.no{ color:var(--no); }
   <a class="site-name" href="/">Leerharnas</a>
   <span class="page-name">C# OOP-cheat sheet</span>
   <nav aria-label="Site"><a href="/">Docs</a><a href="/dashboard/">Dashboard</a><a href="/ai-statement/">AI-verklaring</a></nav>
+  <div class="lang-select">
+    <button type="button" class="lang-button" id="langButton" aria-label="Selecteer taal" aria-expanded="false" aria-controls="langList"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg></button>
+    <ul class="lang-list" id="langList" hidden>
+      <li><a href="/cheatsheet/" hreflang="nl" lang="nl" aria-current="true">Nederlands</a></li>
+      <li><a href="/en/cheatsheet/" hreflang="en" lang="en">English</a></li>
+    </ul>
+  </div>
 </header>
 <button class="menu-toggle" id="menuToggle" aria-label="Menu">☰</button>
 <div class="overlay" id="overlay"></div>
@@ -3366,6 +3382,28 @@ el.classList.add('hljs');
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", mark); else mark();
   window.addEventListener("resize", mark);
+})();
+// Language button: a list with the two languages. Switching keeps the section you are reading
+// (both languages use the same section ids).
+(function(){
+  var btn = document.getElementById("langButton"), list = document.getElementById("langList");
+  if (!btn || !list) return;
+  function setOpen(open){ list.hidden = !open; btn.setAttribute("aria-expanded", open ? "true" : "false"); }
+  btn.addEventListener("click", function(){
+    setOpen(list.hidden);
+    if (!list.hidden) { var cur = list.querySelector("a[aria-current]") || list.querySelector("a"); if (cur) cur.focus(); }
+  });
+  document.addEventListener("keydown", function(e){ if (e.key === "Escape" && !list.hidden) { setOpen(false); btn.focus(); } });
+  document.addEventListener("click", function(e){ if (!list.hidden && !e.target.closest(".lang-select")) setOpen(false); });
+  list.addEventListener("focusout", function(e){ if (!e.relatedTarget || !e.relatedTarget.closest(".lang-select")) setOpen(false); });
+  var links = list.querySelectorAll("a");
+  for (var i = 0; i < links.length; i++) {
+    links[i].addEventListener("click", function(){
+      var active = document.querySelector(".nav-link.active");
+      var hash = location.hash || (active ? active.getAttribute("href") : "");
+      if (hash) this.href = this.getAttribute("href").split("#")[0] + hash;
+    });
+  }
 })();
 </script>
 </body></html>

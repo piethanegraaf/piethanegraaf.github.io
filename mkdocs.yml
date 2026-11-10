@@ -58,38 +58,40 @@ plugins:
           copyright: >-
             Code: MIT · Texts, docs and data: CC BY-NC 4.0 ·
             Made with help from Claude (Anthropic), see the AI statement
-          nav_translations:
-            Start: Home
-            Installeren: Install
-            Hoe het werkt: How it works
-            Naslag: Reference
-            Configuratie en privacy: Configuration and privacy
-            Onderzoek: Research
-            Literatuuronderzoek: Literature review
-            Onderzoeksnotities: Research notes
-            C# OOP-cheat sheet: C# OOP cheat sheet
-            "Nieuw bewijs: AI en leren": "New evidence: AI and learning"
-            Economie van AI-code: Economics of AI-written code
-            Arbeidsmarkt: Labour market
-            Vaardigheden en toetsing: Skills and assessment
-            AI-verklaring: AI statement
+          # Own nav: the dashboard and the cheat sheet have an English URL of their own.
+          nav:
+            - Home: index.md
+            - Get started:
+                - How it works: how-it-works.md
+                - Install: install.md
+                - Configuration and privacy: configuration.md
+                - Updating the dashboard: progress-dashboard.md
+                - Reference: reference.md
+            - Tools:
+                - Dashboard: /dashboard/?lang=en
+                - C# OOP cheat sheet: /en/cheatsheet/
+            - Research:
+                - Literature review: research.md
+            - About this project:
+                - AI statement: ai-statement.md
 
+# Every item sits under a heading. The research notes are not in the menu:
+# they are linked from the literature review (and the notes overview).
 nav:
   - Start: index.md
-  - Installeren: install.md
-  - Hoe het werkt: how-it-works.md
-  - Naslag: reference.md
-  - Configuratie en privacy: configuration.md
-  - Dashboard: progress-dashboard.md
+  - Aan de slag:
+      - Hoe het werkt: how-it-works.md
+      - Installeren: install.md
+      - Configuratie en privacy: configuration.md
+      - Dashboard bijwerken: progress-dashboard.md
+      - Naslag: reference.md
+  - Gebruiken:
+      - Dashboard: /dashboard/
+      - C# OOP-cheat sheet: /cheatsheet/
   - Onderzoek:
       - Literatuuronderzoek: research.md
-      - Onderzoeksnotities: notes/index.md
-      - "Nieuw bewijs: AI en leren": notes/genai_learning_evidence.md
-      - Economie van AI-code: notes/ai_coding_economics.md
-      - Arbeidsmarkt: notes/labour_market.md
-      - Vaardigheden en toetsing: notes/skills_curriculum_policy.md
-  - C# OOP-cheat sheet: /cheatsheet/
-  - AI-verklaring: ai-statement.md
+  - Over dit project:
+      - AI-verklaring: ai-statement.md
 
 markdown_extensions:
   - admonition

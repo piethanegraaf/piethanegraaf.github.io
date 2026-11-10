@@ -87,7 +87,7 @@ De hooks zijn een **zelfbindingsmechanisme** (commitment device) dat je zelf kie
 
 Dit is een **narratief literatuuroverzicht**, geen systematisch overzicht. De eerste versie (7 november 2026) had geen zoekprotocol, geen inclusiecriteria en geen kwaliteitsbeoordeling. Ook stonden gerandomiseerde experimenten, kleine interviewstudies en preprints door elkaar in dezelfde tabellen. De herziening van 8 november 2026 voegde toe:
 
-- **Gerichte zoekopdrachten.** Vier zoekopdrachten besloegen mei–november 2026: leeronderzoek, de arbeidsmarkt, de economie van coderen met AI, en beleid over vaardigheden en toetsing. Twee citatiecontroles vergeleken de oorspronkelijke beweringen met hun primaire bronnen. De aantekeningen, met een link bij elk getal, staan in `research_notes/AI learning and skill shift 2026/`. De synthese staat in `reports/`. Geen van beide is gepubliceerd.
+- **Gerichte zoekopdrachten.** Vier zoekopdrachten besloegen mei–november 2026: leeronderzoek, de arbeidsmarkt, de economie van coderen met AI, en beleid over vaardigheden en toetsing. Twee citatiecontroles vergeleken de oorspronkelijke beweringen met hun primaire bronnen. De aantekeningen, met een link bij elk getal, staan in de [onderzoeksnotities](notes/index.md) (Engels). De synthese staat in `reports/` en is niet gepubliceerd.
 - **Correcties** overal waar een bewering verder ging dan de bron (opgesomd in het wijzigingslogboek, §11).
 - **Een bewijsgraad** voor elke studie:
 
@@ -1775,5 +1775,5 @@ Een kritische lezing en twee citatiecontroles tegen de primaire bronnen brachten
 **Hoe deze herziening tot stand kwam:**
 
 - **Onderzoek:** zes onderzoeksagents van Claude zochten op 7–8 november 2026 op het web. Vier zochten nieuw bewijs en twee controleerden de oorspronkelijke citaties.
-- **Notities:** hun notities, met een link bij elk cijfer, staan in `research_notes/AI learning and skill shift 2026/`. Cijfers die de agents alleen in zoekfragmenten of in secundaire berichtgeving zagen, zijn daar als zodanig gemarkeerd.
+- **Notities:** hun notities, met een link bij elk cijfer, staan in de [onderzoeksnotities](notes/index.md). Cijfers die de agents alleen in zoekfragmenten of in secundaire berichtgeving zagen, zijn daar als zodanig gemarkeerd.
 - **Synthese:** er is een apart syntheserapport geprobeerd, maar de schrijvende agent liep twee keer vast. Daarom is de synthese vanuit de notities direct in dit document geschreven.

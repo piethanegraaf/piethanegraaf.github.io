@@ -84,7 +84,7 @@ The hooks are a **commitment device** you choose for yourself (Ariely & Wertenbr
 
 This is a **narrative review**, not a systematic one. The first version (7 November 2026) had no search protocol, no inclusion criteria and no quality appraisal, and it mixed randomized trials, small interview studies and preprints in single tables. The revision of 8 November 2026 added:
 
-- **Targeted searches.** Four searches covered May–November 2026: learning research, the labour market, the economics of AI coding, and skills and assessment policy. Two citation checks compared the original claims with their primary sources. The notes, with a link for every figure, are in `research_notes/AI learning and skill shift 2026/`; the synthesis is in `reports/`. Neither is published.
+- **Targeted searches.** Four searches covered May–November 2026: learning research, the labour market, the economics of AI coding, and skills and assessment policy. Two citation checks compared the original claims with their primary sources. The notes, with a link for every figure, are in the [research notes](notes/index.md); the synthesis is in `reports/` and is not published.
 - **Corrections** wherever a claim went further than its source (listed in the change log, §11).
 - **An evidence grade** for each study:
 
@@ -1773,5 +1773,5 @@ A critical read and two citation checks against primary sources found the proble
 **How this revision was made:**
 
 - **Research:** six Claude research agents searched the web on 7–8 November 2026. Four covered new evidence and two checked the original citations.
-- **Notes:** their notes, with a link for every figure, are in `research_notes/AI learning and skill shift 2026/`. Figures the agents saw only in search snippets or secondary coverage are marked as such there.
+- **Notes:** their notes, with a link for every figure, are in the [research notes](notes/index.md). Figures the agents saw only in search snippets or secondary coverage are marked as such there.
 - **Synthesis:** a separate synthesis report was attempted, but the writing agent stalled twice, so the synthesis was written directly into this document from the notes.
