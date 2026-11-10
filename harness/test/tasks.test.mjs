@@ -1,7 +1,7 @@
 // Task corrections (skill.mjs correct / untask) and how allTasks applies them.
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { makeProject } from "./helpers.mjs";
+import { makeProject, fakeSkills } from "./helpers.mjs";
 
 const at = "2026-11-10T12:00:00.000Z";
 const task = (tid, maxRung, extra = {}) => ({ at, type: "task", tid, skill: "demo.l2", success: maxRung < 5, maxRung, source: "check", ...extra });
@@ -70,6 +70,26 @@ test("a promotion is refused while a task still waits for an explanation", () =>
     assert.equal(p.skills().skills.find((s) => s.id === "demo.l2").level, "L2");
     assert.equal(p.cli("skill.mjs", ["set", "demo.l2", "L1", "terug"]).code, 0); // lowering is always allowed
   } finally { p.cleanup(); }
+});
+
+test("promotion and relapse signals in status (both languages)", () => {
+  const ev = [];
+  for (let i = 1; i <= 5; i++) ev.push(task(`u${i}`, i % 2), explained(`u${i}`));
+  const up = makeProject({ events: ev });
+  try {
+    const r = up.cli("skill.mjs", ["status"]);
+    assert.equal(r.code, 0, r.stderr);
+    assert.match(r.stdout, /↑ demo\.l2: 5\/5 gelukt \(≥ 85%\)/);
+    assert.match(r.stdout, /skill\.mjs set demo\.l2 L3 "5\/5 gelukt"/);
+  } finally { up.cleanup(); }
+  const down = makeProject({ events: [task("d1", 5), explained("d1"), task("d2", 5), explained("d2")],
+    skills: { ...fakeSkills({ language: "en" }) } });
+  try {
+    const r = down.cli("skill.mjs", ["status"]);
+    assert.equal(r.code, 0, r.stderr);
+    assert.match(r.stdout, /↓ demo\.l2: two tasks in a row failed/);
+    assert.match(r.stdout, /set demo\.l2 L1 "2 failed in a row"/);
+  } finally { down.cleanup(); }
 });
 
 test("setting: course and language are validated and stored", () => {

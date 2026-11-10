@@ -344,11 +344,11 @@ export function allTasks() {
     } else if (e.type === "task-explained") explained.set(e.tid, e.text ?? "");
     else if (e.type === "task-correct") {
       // Correction by the learner (skill.mjs correct): only ever more help than logged, never less.
-      const t = tasks.find((x) => x.tid === e.tid);
-      if (t && Number(e.maxRung) > (t.maxRung ?? 0)) {
-        t.maxRung = Number(e.maxRung);
-        if (t.maxRung >= 5) t.success = false;
-        t.corrected = true;
+      const task = tasks.find((x) => x.tid === e.tid);
+      if (task && Number(e.maxRung) > (task.maxRung ?? 0)) {
+        task.maxRung = Number(e.maxRung);
+        if (task.maxRung >= 5) task.success = false;
+        task.corrected = true;
       }
     }
   }
@@ -382,8 +382,8 @@ export function taskStats(skillId, n = 10, data = null) {
 // Advisory check of the promotion/demotion criteria from CLAUDE.md. Returns { dir, text, cmd } or null.
 export function levelAdvice(data, s) {
   const st = taskStats(s.id, 10, data);
-  const t = st.tasks;
-  const lastTwo = t.slice(-2);
+  const recent = st.tasks;
+  const lastTwo = recent.slice(-2);
   if (lastTwo.length === 2 && lastTwo.every((x) => !x.success)) {
     const lower = LEVELS[Math.max(0, LEVELS.indexOf(s.level) - 1)];
     return { dir: "down", text: t("advice.twoFailed", { id: s.id }), cmd: `set ${s.id} ${lower} "${t("note.twoFailed")}"` };
@@ -392,9 +392,9 @@ export function levelAdvice(data, s) {
     const lower = LEVELS[Math.max(0, LEVELS.indexOf(s.level) - 1)];
     return { dir: "down", text: t("advice.below70", { id: s.id, ok: st.ok, n: st.n }), cmd: `set ${s.id} ${lower} "${t("note.below70")}"` };
   }
-  const clean = t.filter((x) => x.success && (x.maxRung ?? 0) <= 2);
+  const clean = recent.filter((x) => x.success && (x.maxRung ?? 0) <= 2);
   if (s.level === "L1") {
-    const gaps = t.filter((x) => x.success && (x.maxRung ?? 0) <= 1).length;
+    const gaps = recent.filter((x) => x.success && (x.maxRung ?? 0) <= 1).length;
     if (gaps >= 3) return { dir: "up", text: t("advice.gapsFilled", { id: s.id, n: gaps }), cmd: `set ${s.id} L2 "${t("note.gapsFilled")}"` };
   }
   const target = settingsOf(data).targetSuccess;
