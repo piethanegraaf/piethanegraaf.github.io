@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "generatedAt": "2026-11-10",
+  "generatedAt": "2026-11-10T23:41:04.492Z",
   "course": null,
   "language": "nl",
   "examDate": "2027-01-20",
@@ -19,6 +19,8 @@
       "nextReview": null,
       "intervalIndex": 0,
       "lastReview": null,
+      "lastSeen": null,
+      "placement": null,
       "history": []
     },
     {
@@ -30,12 +32,16 @@
       "nextReview": null,
       "intervalIndex": 0,
       "lastReview": null,
+      "lastSeen": "2026-11-10",
+      "placement": "done",
       "history": [
         {
           "at": "2026-11-07",
           "from": "L3",
           "to": "L2",
-          "note": "vast op Reverse (void) en chainen"
+          "note": "vast op Reverse (void) en chainen",
+          "auto": false,
+          "placement": false
         }
       ]
     },
@@ -45,15 +51,19 @@
       "kind": null,
       "title": "lijst filteren met foreach",
       "level": "L3",
-      "nextReview": "2026-11-08",
+      "nextReview": null,
       "intervalIndex": 0,
       "lastReview": null,
+      "lastSeen": null,
+      "placement": "done",
       "history": [
         {
           "at": "2026-11-07",
           "from": null,
           "to": "L3",
-          "note": "aangemaakt"
+          "note": "aangemaakt",
+          "auto": false,
+          "placement": false
         }
       ]
     },
@@ -63,15 +73,19 @@
       "kind": null,
       "title": "strings en StringBuilder",
       "level": "L3",
-      "nextReview": "2026-11-08",
+      "nextReview": null,
       "intervalIndex": 0,
       "lastReview": null,
+      "lastSeen": null,
+      "placement": "done",
       "history": [
         {
           "at": "2026-11-07",
           "from": null,
           "to": "L3",
-          "note": "aangemaakt"
+          "note": "aangemaakt",
+          "auto": false,
+          "placement": false
         }
       ]
     },
@@ -84,12 +98,16 @@
       "nextReview": null,
       "intervalIndex": 0,
       "lastReview": null,
+      "lastSeen": null,
+      "placement": "done",
       "history": [
         {
           "at": "2026-11-07",
           "from": null,
           "to": "L2",
-          "note": "aangemaakt"
+          "note": "aangemaakt",
+          "auto": false,
+          "placement": false
         }
       ]
     },
@@ -102,12 +120,16 @@
       "nextReview": null,
       "intervalIndex": 0,
       "lastReview": null,
+      "lastSeen": null,
+      "placement": "done",
       "history": [
         {
           "at": "2026-11-07",
           "from": null,
           "to": "L2",
-          "note": "aangemaakt"
+          "note": "aangemaakt",
+          "auto": false,
+          "placement": false
         }
       ]
     },
@@ -120,12 +142,16 @@
       "nextReview": null,
       "intervalIndex": 0,
       "lastReview": null,
+      "lastSeen": null,
+      "placement": "done",
       "history": [
         {
           "at": "2026-11-10",
           "from": null,
           "to": "L2",
-          "note": "aangemaakt"
+          "note": "aangemaakt",
+          "auto": false,
+          "placement": false
         }
       ]
     },
@@ -138,6 +164,8 @@
       "nextReview": null,
       "intervalIndex": 0,
       "lastReview": null,
+      "lastSeen": "2026-11-10",
+      "placement": "done",
       "history": []
     },
     {
@@ -149,12 +177,16 @@
       "nextReview": null,
       "intervalIndex": 0,
       "lastReview": null,
+      "lastSeen": "2026-11-10",
+      "placement": "done",
       "history": [
         {
           "at": "2026-11-07",
           "from": null,
           "to": "L2",
-          "note": "aangemaakt"
+          "note": "aangemaakt",
+          "auto": false,
+          "placement": false
         }
       ]
     },
@@ -164,15 +196,19 @@
       "kind": null,
       "title": "Overerving, : base(...), abstract, override",
       "level": "L3",
-      "nextReview": "2026-11-08",
+      "nextReview": null,
       "intervalIndex": 0,
       "lastReview": null,
+      "lastSeen": null,
+      "placement": "done",
       "history": [
         {
           "at": "2026-11-07",
           "from": "L3",
           "to": "L3",
-          "note": "herhalingen starten"
+          "note": "herhalingen starten",
+          "auto": false,
+          "placement": false
         }
       ]
     },
@@ -185,6 +221,8 @@
       "nextReview": null,
       "intervalIndex": 0,
       "lastReview": null,
+      "lastSeen": null,
+      "placement": "pending",
       "history": []
     },
     {
@@ -196,6 +234,8 @@
       "nextReview": null,
       "intervalIndex": 0,
       "lastReview": null,
+      "lastSeen": null,
+      "placement": "pending",
       "history": []
     },
     {
@@ -207,6 +247,8 @@
       "nextReview": null,
       "intervalIndex": 0,
       "lastReview": null,
+      "lastSeen": null,
+      "placement": "pending",
       "history": []
     },
     {
@@ -218,6 +260,8 @@
       "nextReview": null,
       "intervalIndex": 0,
       "lastReview": null,
+      "lastSeen": null,
+      "placement": "pending",
       "history": []
     },
     {
@@ -229,12 +273,16 @@
       "nextReview": null,
       "intervalIndex": 0,
       "lastReview": null,
+      "lastSeen": null,
+      "placement": "done",
       "history": [
         {
           "at": "2026-11-07",
           "from": null,
           "to": "L2",
-          "note": "aangemaakt"
+          "note": "aangemaakt",
+          "auto": false,
+          "placement": false
         }
       ]
     },
@@ -247,12 +295,16 @@
       "nextReview": null,
       "intervalIndex": 0,
       "lastReview": null,
+      "lastSeen": null,
+      "placement": "done",
       "history": [
         {
           "at": "2026-11-07",
           "from": null,
           "to": "L2",
-          "note": "aangemaakt"
+          "note": "aangemaakt",
+          "auto": false,
+          "placement": false
         }
       ]
     },
@@ -265,6 +317,8 @@
       "nextReview": null,
       "intervalIndex": 0,
       "lastReview": null,
+      "lastSeen": null,
+      "placement": "pending",
       "history": []
     },
     {
@@ -276,6 +330,8 @@
       "nextReview": null,
       "intervalIndex": 0,
       "lastReview": null,
+      "lastSeen": null,
+      "placement": "pending",
       "history": []
     },
     {
@@ -287,6 +343,8 @@
       "nextReview": null,
       "intervalIndex": 0,
       "lastReview": null,
+      "lastSeen": null,
+      "placement": "pending",
       "history": []
     },
     {
@@ -298,6 +356,8 @@
       "nextReview": null,
       "intervalIndex": 0,
       "lastReview": null,
+      "lastSeen": null,
+      "placement": "pending",
       "history": []
     },
     {
@@ -309,6 +369,8 @@
       "nextReview": null,
       "intervalIndex": 0,
       "lastReview": null,
+      "lastSeen": null,
+      "placement": "pending",
       "history": []
     },
     {
@@ -320,6 +382,8 @@
       "nextReview": null,
       "intervalIndex": 0,
       "lastReview": null,
+      "lastSeen": null,
+      "placement": "pending",
       "history": []
     },
     {
@@ -331,6 +395,8 @@
       "nextReview": null,
       "intervalIndex": 0,
       "lastReview": null,
+      "lastSeen": null,
+      "placement": "pending",
       "history": []
     },
     {
@@ -342,6 +408,8 @@
       "nextReview": null,
       "intervalIndex": 0,
       "lastReview": null,
+      "lastSeen": null,
+      "placement": "pending",
       "history": []
     }
   ],
@@ -358,6 +426,10 @@
       "explained": true,
       "explanation": null,
       "explainedAt": null,
+      "explainedBy": null,
+      "lapsed": false,
+      "lapseReason": null,
+      "retaggedFrom": null,
       "rejections": [],
       "corrections": [],
       "void": false,
@@ -375,6 +447,10 @@
       "explained": true,
       "explanation": null,
       "explainedAt": null,
+      "explainedBy": null,
+      "lapsed": false,
+      "lapseReason": null,
+      "retaggedFrom": null,
       "rejections": [],
       "corrections": [],
       "void": true,
@@ -392,6 +468,10 @@
       "explained": true,
       "explanation": "als je in de eerste regel voor de functienaam belooft wat terug te geven moet je dat ook datwerkelijk doen dus daarom ging het fout",
       "explainedAt": "2026-11-10T11:47:48.536Z",
+      "explainedBy": null,
+      "lapsed": false,
+      "lapseReason": null,
+      "retaggedFrom": null,
       "rejections": [],
       "corrections": [
         {
@@ -416,6 +496,10 @@
       "explained": true,
       "explanation": "< nu omdat het niet logisch is om als het getal al gelijk is aan het maximum er dan nog een aan toe te voegen en die vervolgens ook aan de lijst toe te voegen, dan krijg je te hoge getallen, aan het begin van de while loop moet soms het startgetal ook aan de lijst toegevoegd worden maar dat gebeurd nu nog niet, daar ga ik nu naar kijken",
       "explainedAt": "2026-11-10T12:58:16.973Z",
+      "explainedBy": null,
+      "lapsed": false,
+      "lapseReason": null,
+      "retaggedFrom": null,
       "rejections": [
         {
           "at": "2026-11-10T12:52:51.543Z",
@@ -446,6 +530,10 @@
       "explained": true,
       "explanation": "< nu omdat het niet logisch is om als het getal al gelijk is aan het maximum er dan nog een aan toe te voegen en die vervolgens ook aan de lijst toe te voegen, dan krijg je te hoge getallen, aan het begin van de while loop moet soms het startgetal ook aan de lijst toegevoegd worden maar dat gebeurd nu nog niet, daar ga ik nu naar kijken",
       "explainedAt": "2026-11-10T12:58:16.977Z",
+      "explainedBy": null,
+      "lapsed": false,
+      "lapseReason": null,
+      "retaggedFrom": null,
       "rejections": [
         {
           "at": "2026-11-10T12:52:51.544Z",
@@ -466,9 +554,13 @@
       "maxRung": 2,
       "minutes": null,
       "what": "TestEvenGetallenReeks, TestEvenGetallenReeksNegatief",
-      "explained": false,
-      "explanation": null,
-      "explainedAt": null,
+      "explained": true,
+      "explanation": "omdat eerst altijd het min getal eerst ofwel number opgeplust werd voordat het weggegeschreven werd naaar de lijst",
+      "explainedAt": "2026-11-10T23:36:52.104Z",
+      "explainedBy": "replay",
+      "lapsed": false,
+      "lapseReason": null,
+      "retaggedFrom": null,
       "rejections": [
         {
           "at": "2026-11-10T13:03:38.392Z",
@@ -504,6 +596,10 @@
       "explained": true,
       "explanation": "omdat Getallenterug.Count() exact terug geeft wat we willen weten, mamelijk of we al genoeg getallen hebben verzameld volgens de gebruikers input",
       "explainedAt": "2026-11-10T13:16:29.354Z",
+      "explainedBy": null,
+      "lapsed": false,
+      "lapseReason": null,
+      "retaggedFrom": null,
       "rejections": [
         {
           "at": "2026-11-10T13:14:23.970Z",
@@ -534,6 +630,10 @@
       "explained": true,
       "explanation": "omdat er nog geen fields waren voor merk bouwjaar en model, dit verwachte de test wel en daarom ging het compilen fout",
       "explainedAt": "2026-11-10T15:44:54.014Z",
+      "explainedBy": null,
+      "lapsed": false,
+      "lapseReason": null,
+      "retaggedFrom": null,
       "rejections": [],
       "corrections": [
         {
@@ -555,9 +655,13 @@
       "maxRung": 1,
       "minutes": null,
       "what": "AutoInfoTest, AutoConstructorTest",
-      "explained": false,
-      "explanation": null,
-      "explainedAt": null,
+      "explained": true,
+      "explanation": "omdat de properties overschreven worden door de test (regels 29 tot 31) en dat in autoinfor de retrun de waarden van de properties als string terug geeft",
+      "explainedAt": "2026-11-10T23:36:52.248Z",
+      "explainedBy": "replay",
+      "lapsed": false,
+      "lapseReason": null,
+      "retaggedFrom": null,
       "rejections": [
         {
           "at": "2026-11-10T16:03:02.898Z",
@@ -568,12 +672,119 @@
       "corrections": [],
       "void": false,
       "voidReason": null
+    },
+    {
+      "id": "mwb0nd6d5pny",
+      "at": "2026-11-10T18:21:02.965Z",
+      "skill": "ood.klassen-properties",
+      "source": "check",
+      "success": true,
+      "maxRung": 2,
+      "minutes": null,
+      "what": "TestHeeftBSA50, TestHeeftProp75, TestHeeftProp60, TestHeeftBSA40",
+      "explained": true,
+      "explanation": "omdat als je hogere studiepunten hebt je natuurlijk nog steeds gewoon je bsa hebt gehaald dus == was fout en de grens bleek 40 en niet 20, had ik verkeerd gekeken. vond het al vreemd dat het afweek van hoe het op school werkt",
+      "explainedAt": "2026-11-10T23:36:52.250Z",
+      "explainedBy": "replay",
+      "lapsed": false,
+      "lapseReason": null,
+      "retaggedFrom": null,
+      "rejections": [],
+      "corrections": [],
+      "void": false,
+      "voidReason": null
+    },
+    {
+      "id": "mwb0q5ms7k4p",
+      "at": "2026-11-10T18:23:13.156Z",
+      "skill": "ood.klassen-properties",
+      "source": "check",
+      "success": true,
+      "maxRung": 1,
+      "minutes": null,
+      "what": "TestHeeftBSA20",
+      "explained": true,
+      "explanation": "omdat als je hogere studiepunten hebt je natuurlijk nog steeds gewoon je bsa hebt gehaald dus == was fout en de grens bleek 40 en niet 20, had ik verkeerd gekeken. vond het al vreemd dat het afweek van hoe het op school werkt",
+      "explainedAt": "2026-11-10T23:36:52.251Z",
+      "explainedBy": "replay",
+      "lapsed": false,
+      "lapseReason": null,
+      "retaggedFrom": null,
+      "rejections": [],
+      "corrections": [
+        {
+          "at": "2026-11-10T18:23:57.201Z",
+          "from": 0,
+          "to": 1,
+          "reason": "vraag over kleinste waarde die true geeft"
+        }
+      ],
+      "void": false,
+      "voidReason": null
+    },
+    {
+      "id": "mwb154du7lez",
+      "at": "2026-11-10T18:34:51.379Z",
+      "skill": "ood.klassen.veld-vs-lokaal",
+      "source": "done",
+      "success": true,
+      "maxRung": 1,
+      "minutes": null,
+      "what": "afgeleide toestand: property vervangen door lokale variabele",
+      "explained": true,
+      "explanation": "de oude propertie bestond zolang het object geinstanseerd was opdat deze wert aangemaakt bij instacieren en de lokale varaible bestaat sins dat de functie word aageroepen omdat deze in de functie geinstanseerd wordt",
+      "explainedAt": "2026-11-10T18:38:51.228Z",
+      "explainedBy": null,
+      "lapsed": false,
+      "lapseReason": null,
+      "retaggedFrom": null,
+      "rejections": [
+        {
+          "at": "2026-11-10T18:35:57.313Z",
+          "by": "claude",
+          "reasons": []
+        },
+        {
+          "at": "2026-11-10T18:36:58.777Z",
+          "by": "claude",
+          "reasons": []
+        }
+      ],
+      "corrections": [],
+      "void": false,
+      "voidReason": null
     }
   ],
   "reviews": [],
-  "regressions": [],
-  "overrides": [],
-  "signals": [],
+  "regressions": [
+    {
+      "at": "2026-11-10T18:21:02.963Z",
+      "skill": "ood.klassen-properties",
+      "tests": 1,
+      "fixed": false
+    },
+    {
+      "at": "2026-11-10T18:22:32.732Z",
+      "skill": "ood.klassen-properties",
+      "tests": 1,
+      "fixed": true
+    }
+  ],
+  "overrides": [
+    {
+      "at": "2026-11-10T23:10:31.329Z",
+      "skill": "*",
+      "minutes": 15,
+      "reason": "securitycheck site (tooling)"
+    }
+  ],
+  "signals": [
+    {
+      "skill": "ood.klassen-properties",
+      "dir": "up",
+      "text": "ood.klassen-properties: 5/5 gelukt (≥ 85%)"
+    }
+  ],
   "activity": [
     {
       "date": "2026-11-07",
@@ -601,10 +812,10 @@
     },
     {
       "date": "2026-11-10",
-      "sessions": 3,
-      "hints": 1,
-      "holds": 0,
-      "denials": 2,
+      "sessions": 4,
+      "hints": 4,
+      "holds": 1,
+      "denials": 7,
       "overridesUsed": 0
     }
   ],
@@ -625,6 +836,23 @@
         "nextStep": "ik wil in de volgende sessie door naar het volgende onderwerp"
       },
       "calibration": "vooraf onbekend → alles groen, met trede ≤2 en zonder uitwerking → gevoel \"niet heel zeker\" is mogelijk een onderschatting."
+    },
+    {
+      "date": "2026-11-10",
+      "n": 2,
+      "time": "±15:08–19:40 (kloktijd, zie harnas-observaties)",
+      "skills": "ood.klassen-properties (L2), ood.klassen.veld-vs-lokaal (L2), cs.basis.strings (L3)",
+      "plan": "zoveel mogelijk snek-opdrachten afmaken (05–24), OOD-vaardigheden",
+      "confidenceBefore": "niet gegeven. De vraag was te open; de student wil hem voortaan gekoppeld aan één concrete opdracht.",
+      "wentWell": "`cs.basis.strings`: de string-interpolatie in `AutoInfo` zonder hint. · `ood.klassen-properties`: constructors en properties met passende types (05 en 06). Ook zelf een parameterloze constructor toegevoegd voor de test, zelf `>=` gekozen en CS0161 zelf opgelost. · `ood.klassen.veld-vs-lokaal` (prioriteit 1 uit de D-toets): de bug met opgeslagen toestand zelf voorspeld (\"het wordt nu nog niet op false gezet\") en zelf omgebouwd. De levensduur van een property tegenover een lokale variabele correct uitgelegd. · Een realiteitscheck: hij zag zelf dat een BSA-grens van 20 niet klopte met hoe het op school werkt.",
+      "signals": "geen. `ood.klassen-properties` staat op 2/2 geregistreerde taken. Voor het advies L2 → L3 zijn er minstens 5 nodig; met de 3 verloren uitleggen zouden het er 5 zijn.",
+      "reflection": {
+        "learned": "wat het verschil is tussen een fuctie variabele en een propertie in een klas en waneer deze geinstaseerd worden.",
+        "confusing": "ik had even pauze toen ik ging eten en toen was ik de context van een vraag kwijt.",
+        "confidenceAfter": "4",
+        "nextStep": "straks door naar de volgende snack chalge"
+      },
+      "calibration": "vooraf niet gegeven → 05 en 06 af met trede ≤2, zonder uitwerking, en het D-toets-zwaktepunt zelf opgelost → een 4 nu lijkt te kloppen."
     }
   ]
 }
