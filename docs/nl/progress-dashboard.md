@@ -18,8 +18,9 @@ Elke grafiek heeft een tabelweergave. Je kunt wisselen tussen Nederlands en Enge
 ## Je eigen data publiceren
 
 1. Maak `.learning/private.json` aan met de namen en termen die niet online mogen (zie [Configuratie en privacy](configuration.md#privacy)).
-2. Bekijk eerst wat er gefilterd wordt: `node harness/export.mjs ../mijn-oefenmap --dry-run`
-3. Exporteer: `node harness/export.mjs ../mijn-oefenmap`
-4. Controleer de diff van `site-src/dashboard/data/progress.json`, en commit en push hem zelf.
+2. Ging een goedgekeurde uitleg verloren, bijvoorbeeld door een fout van de harnas? Herstel die dan eerst met `replay` (zie de [naslag](reference.md)). Anders staat de taak online als open of overgeslagen.
+3. Bekijk wat er gefilterd wordt: `node harness/export.mjs ../mijn-oefenmap --dry-run`
+4. Exporteer: `node harness/export.mjs ../mijn-oefenmap`
+5. Controleer de diff van `site-src/dashboard/data/progress.json`, en commit en push hem zelf. Het dashboard toont de datum en de tijd van de export, zodat je ziet hoe actueel het is.
 
 Het dashboard is statisch: HTML, CSS en JavaScript zonder afhankelijkheden, met een strikte Content Security Policy. Alle tekst uit de data komt via `textContent` in de pagina.
