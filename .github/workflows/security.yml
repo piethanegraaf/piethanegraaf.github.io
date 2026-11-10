@@ -32,9 +32,11 @@ jobs:
       - name: Security check
         env:
           BASE: ${{ github.event.pull_request.base.sha || github.event.before }}
+          # For a pull request: the PR's own commits, not the temporary merge commit GitHub makes for the test.
+          HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
         run: |
           if [ -n "$BASE" ] && ! echo "$BASE" | grep -qE '^0+$' && git cat-file -e "$BASE^{commit}" 2>/dev/null; then
-            node harness/security-check.mjs --ci --range "$BASE..HEAD"
+            node harness/security-check.mjs --ci --range "$BASE..$HEAD_SHA"
           else
             node harness/security-check.mjs --ci
           fi

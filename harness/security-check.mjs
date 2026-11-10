@@ -34,6 +34,10 @@ const privateTerms = [...(Array.isArray(priv.terms) ? priv.terms : []), ...Objec
 let userEmail = "";
 try { userEmail = git(["config", "user.email"]).trim(); } catch { /* none */ }
 const userName = os.userInfo().username;
+// In CI the logs are public: never print a found value there, and skip the checks on the
+// local user name (on a runner that is an account such as "runner", not a person).
+const CI_MODE = Boolean(process.env.CI) || process.argv.includes("--ci");
+const shown = (value) => (CI_MODE ? "[verborgen in CI]" : value);
 
 const escapeRe = (s) => String(s).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 const ALLOWED_EMAIL = /@(example\.(com|org|net)|users\.noreply\.github\.com)$|^(noreply@anthropic\.com|noreply@github\.com)$/i;
@@ -75,11 +79,12 @@ const PASSWORD = /\b(password|passwd|wachtwoord|api[_-]?key|client[_-]?secret)\b
 function contentRules(file, text) {
   const out = [];
   const lines = text.split(/\r?\n/);
-  const add = (level, rule, i, detail) => out.push({ level, rule, file, line: i + 1, detail });
+  // raw: the found value, only for matching the allowlist. It is never printed.
+  const add = (level, rule, i, detail, raw) => out.push({ level, rule, file, line: i + 1, detail, raw });
   const isTest = /^harness\/test\//.test(file);
-  const userPath = new RegExp(`([A-Z]:[\\\\/]+Users[\\\\/]+|/[a-z]/Users/|/home/|/Users/)${escapeRe(userName)}\\b`, "i");
+  const userPath = CI_MODE ? /(?!)/ : new RegExp(`([A-Z]:[\\\\/]+Users[\\\\/]+|/[a-z]/Users/|/home/|/Users/)${escapeRe(userName)}\\b`, "i");
   const anyUserPath = /([A-Z]:[\\/]+Users[\\/]+|\/[a-z]\/Users\/|\/home\/)[A-Za-z][\w.-]*/;
-  const userWord = userName.length >= 4 ? new RegExp(`(?<![\\w.-])${escapeRe(userName)}(?![\\w-])`, "i") : null;
+  const userWord = !CI_MODE && userName.length >= 4 ? new RegExp(`(?<![\\w.-])${escapeRe(userName)}(?![\\w-])`, "i") : null;
   const privRe = privateTerms.length ? new RegExp(`(?<![\\p{L}\\p{N}])(${privateTerms.map(escapeRe).join("|")})(?![\\p{L}\\p{N}])`, "iu") : null;
   lines.forEach((line, i) => {
     if (line.length > 20000) return; // minified vendor code: names and secrets are still checked below per chunk
@@ -88,16 +93,16 @@ function contentRules(file, text) {
     for (const m of line.matchAll(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/gi)) {
       const e = m[0];
       if (userEmail && e.toLowerCase() === userEmail.toLowerCase()) add(B, "privacy.email", i, "jouw eigen e-mailadres");
-      else if (!ALLOWED_EMAIL.test(e) && !/@[\w-]+\.(png|jpg|svg|webp|gif|mjs|js|json|css|md|html)$/i.test(e)) add(T, "privacy.email", i, `e-mailadres ${e}`);
+      else if (!ALLOWED_EMAIL.test(e) && !/@[\w-]+\.(png|jpg|svg|webp|gif|mjs|js|json|css|md|html)$/i.test(e)) add(T, "privacy.email", i, `e-mailadres ${shown(e)}`, e);
     }
     // Web addresses are not file paths, and an id in a public URL is not a session id.
     const noUrl = line.replace(/\bhttps?:\/\/[^\s)>\]"'`]+/gi, " ");
     if (userPath.test(line)) add(B, "privacy.user-path", i, "pad met jouw gebruikersnaam");
-    else if (anyUserPath.test(noUrl)) add(T, "privacy.path", i, `absoluut gebruikerspad (${noUrl.match(anyUserPath)[0]})`);
+    else if (anyUserPath.test(noUrl)) add(T, "privacy.path", i, `absoluut gebruikerspad (${shown(noUrl.match(anyUserPath)[0])})`);
     else if (userWord && userWord.test(line)) add(T, "privacy.user-name", i, `jouw gebruikersnaam '${userName}'`);
     if (/\.claude[\\/]+projects[\\/]/i.test(line)) add(B, "privacy.transcript", i, "pad naar een Claude-transcript");
     if (/\b[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\b/i.test(noUrl)) add(T, "privacy.uuid", i, "lijkt een sessie-id");
-    if (privRe && privRe.test(line)) add(B, "privacy.private-term", i, `term uit private.json: '${line.match(privRe)[1]}'`);
+    if (privRe && privRe.test(line)) add(B, "privacy.private-term", i, `term uit private.json: '${shown(line.match(privRe)[1])}'`);
   });
   // Very long lines (minified code): only secrets and private terms, in chunks.
   lines.forEach((line, i) => {
@@ -248,7 +253,7 @@ function scanRange(range) {
     const [ae, ce] = git(["show", "-s", "--format=%ae%x00%ce", c]).trim().split("\0");
     for (const e of new Set([ae, ce])) {
       if (!allowedEmails.has(e.toLowerCase()) && !/@users\.noreply\.github\.com$|^noreply@github\.com$/i.test(e)) {
-        out.push({ level: B, rule: "privacy.commit-email", file: `commit ${c.slice(0, 7)}`, line: null, detail: `commit-e-mail ${e} wordt zichtbaar op GitHub (gebruik je noreply-adres)` });
+        out.push({ level: B, rule: "privacy.commit-email", file: `commit ${c.slice(0, 7)}`, line: null, detail: `commit-e-mail ${shown(e)} wordt zichtbaar op GitHub (gebruik je noreply-adres)` });
       }
     }
     const msg = git(["show", "-s", "--format=%B", c]);
@@ -282,7 +287,7 @@ function applyAllowlist(findings) {
     if (f.level !== T) return f;
     const plain = f.file.replace(/ @[0-9a-f]{7}$/, "");
     const e = (allow.entries ?? []).find((x) => x.rule && x.reason && (x.rule === f.rule || globRe(x.rule).test(f.rule)) &&
-      (!x.path || globRe(x.path).test(plain)) && (!x.match || String(f.detail).includes(x.match)));
+      (!x.path || globRe(x.path).test(plain)) && (!x.match || String(f.raw ?? f.detail).includes(x.match) || String(f.detail).includes(x.match)));
     return e ? { ...f, level: OK, detail: `${f.detail} — toegestaan: ${e.reason}` } : f;
   });
 }
