@@ -12,5 +12,6 @@
     { "rule": "copyright.quote", "path": "docs/nl/notes/citation_check_learning_science.md", "reason": "Besluit 10-11-2026: korte letterlijke abstracts met bronvermelding, nodig om de citatiecheck na te kunnen gaan (citaatrecht)." },
     { "rule": "copyright.quote", "path": "docs/nl/notes/labour_market.md", "reason": "Besluit 10-11-2026: regel 3 is de eigen labellegenda van de notitie; de andere zijn korte citaten met bronvermelding (citaatrecht)." }
   ],
-  "commitEmails": []
+  "commitEmails": [],
+  "githubMerges": { "allow": true, "reason": "Besluit 10-11-2026: een merge op github.com mag het e-mailadres van het GitHub-account dragen." }
 }

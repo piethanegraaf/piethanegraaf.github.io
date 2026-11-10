@@ -2,7 +2,7 @@
 // so this file itself contains none.
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { nameRules, contentRules, webRules, ciRules, requirementsRules, harnessRules, copyrightRules } from "../security-check.mjs";
+import { nameRules, contentRules, webRules, ciRules, requirementsRules, harnessRules, copyrightRules, commitEmailFindings } from "../security-check.mjs";
 
 const levels = (findings) => findings.map((f) => `${f.level} ${f.rule}`);
 const has = (findings, level, rule) => findings.some((f) => f.level === level && f.rule === rule);
@@ -78,6 +78,20 @@ test("harness code: no network, eval or shell", () => {
   assert.ok(has(harnessRules("harness/hooks/x.mjs", "spawn(cmd, { she" + "ll: true })"), "BLOKKEER", "harness.shell"));
   assert.deepEqual(harnessRules("harness/hooks/x.mjs", `spawnSync("dotnet", ["test", dir]); const m = re.exec(s);`), []);
   assert.deepEqual(harnessRules("harness/test/x.test.mjs", "ev" + "al(x)"), [], "tests are not installed");
+});
+
+test("commit e-mails: noreply is fine, other addresses block; a github.com merge only with a decision", () => {
+  const own = { sha: "a".repeat(40), author: "1+jdoe@users.noreply.github.com", committer: "1+jdoe@users.noreply.github.com", parents: 1 };
+  assert.deepEqual(commitEmailFindings(own), []);
+  const work = { ...own, author: "jdoe@bedrijf.example", committer: "jdoe@bedrijf.example" };
+  assert.ok(has(commitEmailFindings(work), "BLOKKEER", "privacy.commit-email"));
+  const merge = { sha: "b".repeat(40), author: "jdoe@mail.example", committer: "noreply@github.com", parents: 2 };
+  assert.ok(has(commitEmailFindings(merge), "BLOKKEER", "privacy.commit-email"), "no decision: blocked");
+  const decided = { githubMerges: { allow: true, reason: "besluit" } };
+  assert.ok(has(commitEmailFindings(merge, decided), "OK", "privacy.commit-email"));
+  assert.ok(has(commitEmailFindings({ ...merge, parents: 1 }, decided), "BLOKKEER", "privacy.commit-email"), "only real merges");
+  assert.ok(has(commitEmailFindings({ ...merge, committer: "jdoe@mail.example" }, decided), "BLOKKEER", "privacy.commit-email"), "only merges by GitHub");
+  assert.ok(has(commitEmailFindings(merge, { githubMerges: { allow: true } }), "BLOKKEER", "privacy.commit-email"), "a decision needs a reason");
 });
 
 test("copyright: long quotes in research notes are TWIJFEL", () => {

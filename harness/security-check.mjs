@@ -245,17 +245,30 @@ function scanWorkingTree() {
   return { out, files: files.length };
 }
 
+// The e-mail addresses of one commit. A merge made on github.com (more than one parent, committed by
+// GitHub itself with its own noreply address) carries the address of the GitHub account; that is only allowed by a
+// reasoned decision in the allowlist (githubMerges). Its message and files are checked as usual.
+export function commitEmailFindings({ sha, author, committer, parents }, allowlist = {}) {
+  const file = `commit ${String(sha).slice(0, 7)}`;
+  const allowed = new Set((allowlist.commitEmails ?? []).map((e) => String(e).toLowerCase()));
+  const webMerge = /^noreply@github\.com$/i.test(committer) && parents > 1;
+  const reason = allowlist.githubMerges?.allow === true && allowlist.githubMerges?.reason ? allowlist.githubMerges.reason : null;
+  if (webMerge && reason) return [{ level: OK, rule: "privacy.commit-email", file, line: null, detail: `merge op github.com — toegestaan: ${reason}` }];
+  const out = [];
+  for (const e of new Set([author, committer])) {
+    if (!allowed.has(String(e).toLowerCase()) && !/@users\.noreply\.github\.com$|^noreply@github\.com$/i.test(e)) {
+      out.push({ level: B, rule: "privacy.commit-email", file, line: null, detail: `commit-e-mail ${shown(e)} wordt zichtbaar op GitHub (gebruik je noreply-adres)` });
+    }
+  }
+  return out;
+}
+
 function scanRange(range) {
   const out = [];
   const commits = git(["rev-list", ...range.split(" ")]).split("\n").filter(Boolean);
-  const allowedEmails = new Set((allow.commitEmails ?? []).map((e) => e.toLowerCase()));
   for (const c of commits) {
-    const [ae, ce] = git(["show", "-s", "--format=%ae%x00%ce", c]).trim().split("\0");
-    for (const e of new Set([ae, ce])) {
-      if (!allowedEmails.has(e.toLowerCase()) && !/@users\.noreply\.github\.com$|^noreply@github\.com$/i.test(e)) {
-        out.push({ level: B, rule: "privacy.commit-email", file: `commit ${c.slice(0, 7)}`, line: null, detail: `commit-e-mail ${shown(e)} wordt zichtbaar op GitHub (gebruik je noreply-adres)` });
-      }
-    }
+    const [ae, ce, parents = ""] = git(["show", "-s", "--format=%ae%x00%ce%x00%p", c]).trim().split("\0");
+    out.push(...commitEmailFindings({ sha: c, author: ae, committer: ce, parents: parents.trim().split(/\s+/).filter(Boolean).length }, allow));
     const msg = git(["show", "-s", "--format=%B", c]);
     out.push(...contentRules(`commit ${c.slice(0, 7)} (bericht)`, msg).filter((f) => f.rule !== "privacy.uuid"));
     const changed = git(["diff-tree", "--root", "--no-commit-id", "-r", "-z", "--name-status", c]).split("\0").filter(Boolean);
