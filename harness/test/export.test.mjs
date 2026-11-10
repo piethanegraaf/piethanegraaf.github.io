@@ -169,3 +169,34 @@ test("export refuses a folder without data and an invalid private.json", () => {
     assert.match(run(EXPORT, [p.root, "--dry-run"]).stderr, /private\.json is geen geldige JSON/);
   } finally { p.cleanup(); }
 });
+
+// ---------- Setup review S1-S4 in the export ----------
+test("export: skipped and replayed tasks, retags, placement, last seen, no review below L4", () => {
+  const at = "2026-11-10T12:00:00.000Z";
+  const s = fakeSkills();
+  Object.assign(s.skills.find((x) => x.id === "demo.l3"), { nextReview: "2026-01-01" });
+  Object.assign(s.skills.find((x) => x.id === "demo.l4"), { nextReview: "2026-11-20" });
+  s.skills.push({ id: "demo.nieuw", title: "Nieuw", level: "L2", paths: ["opdrachten/05-*/**"] });
+  const p = makeProject({ skills: s, events: [
+    { at, type: "task", tid: "a", skill: "demo.l2", success: true, maxRung: 1, source: "check" },
+    { at, type: "task-lapsed", tid: "a", skill: "demo.l2", reason: "other-exercise" },
+    { at, type: "task", tid: "b", skill: "demo.l2", success: true, maxRung: 0, source: "check" },
+    { at, type: "task-explained", tid: "b", skill: "demo.l2", text: "uitleg", source: "replay" },
+    { at, type: "task-retag", tid: "b", from: "demo.l2", to: "demo.l2.micro", by: "demotie-analist" },
+  ] });
+  try {
+    const out = path.join(p.root, "out.json");
+    const r = run(EXPORT, [p.root, "--out", out]);
+    assert.equal(r.code, 0, r.stderr);
+    const j = JSON.parse(fs.readFileSync(out, "utf8"));
+    const task = (id) => j.tasks.find((x) => x.id === id);
+    assert.deepEqual([task("a").lapsed, task("a").lapseReason, task("a").explained], [true, "other-exercise", false]);
+    assert.deepEqual([task("b").explainedBy, task("b").skill, task("b").retaggedFrom], ["replay", "demo.l2.micro", "demo.l2"]);
+    const skill = (id) => j.skills.find((x) => x.id === id);
+    assert.equal(skill("demo.l3").nextReview, null, "no review below L4");
+    assert.equal(skill("demo.l4").nextReview, "2026-11-20");
+    assert.equal(skill("demo.nieuw").placement, "pending");
+    assert.equal(skill("demo.l2").placement, "done");
+    assert.equal(skill("demo.l2").lastSeen, "2026-11-10");
+  } finally { p.cleanup(); }
+});

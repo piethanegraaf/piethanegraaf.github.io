@@ -8,11 +8,12 @@ The settings live in `.learning/skills.json`, under `settings`. Change them with
 |---|---|---|
 | `course` | `""` | The name of the course, for the session start and the dashboard. |
 | `language` | `nl` | `nl` or `en`: the language of the messages. Recognition always works in both languages. |
-| `examDate` | none | The exam date. Reviews fall at least 3 days before it. |
+| `examDate` | none | The exam date. Reviews (L4) fall at least 3 days before it. |
 | `defaultLevel` | `L2` | The level of code that belongs to no skill. |
 | `stuckTimerMinutes` | `12` | After this many minutes of **active time** being stuck, a new rung may unlock without an attempt. |
 | `idleMinutes` | `20` | A longer break does not count as active time: not for the stuck timer, not for the minutes per task and not for the message after an hour. |
 | `targetSuccess` | `0.85` | The target for moving from L2 to L3. |
+| `autoDemote` | `false` | Automatic demotion on evidence, with the demotion analyst for a main skill. Only turn it on once the logging has been reliable for a few sessions: `setting autoDemote true`. |
 | `codeExtensions` | `cs, csproj, sln, slnx` | Which files are the learner's code. |
 | `buildCommands` | `dotnet build/test/run …`, `msbuild` | Regular expressions for commands that build or test. `check.mjs` always counts. |
 | `toolingTerms` | `rider, sdk, nuget …` | Tooling words: "it works" about these is not a solved task. |
@@ -44,7 +45,7 @@ node harness/export.mjs ../my-practice-folder --dry-run   # report, writes nothi
 node harness/export.mjs ../my-practice-folder             # writes site-src/dashboard/data/progress.json
 ```
 
-- **A whitelist only.** Levels, tasks (rung, source, explanation, rejections, corrections), reviews, signals, and from the diary only the plan, what went well, the reflection and the calibration. Never raw events, session ids, test names or paths.
+- **A whitelist only.** Levels, tasks (rung, source, explanation, rejections, corrections, skipped), reviews, signals, and from the diary only the plan, what went well, the reflection and the calibration. Never raw events, session ids, test names or paths.
 - **Fixed filters** on all free text: e-mail addresses, absolute paths, your user name, session and transcript ids, and HTML comments. The name in `skills.json` (`learner`) is filtered too.
 - **Your own filter** in `.learning/private.json`:
 

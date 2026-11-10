@@ -10,22 +10,23 @@
       demoNote: "Demo: alle data is verzonnen. Zo ziet het dashboard eruit na een paar weken oefenen.",
       subtitle: "{course} · stand van {date}", subtitleNoCourse: "Stand van {date}",
       filter: "Vaardigheid", all: "Alle vaardigheden", asof: "Alle cijfers gelden op {date}, de dag van de export.",
-      kSolo: "Zelfstandig gelukt", kSoloSub: "{ok} van {n} uitgelegde taken, trede ≤ 2", kPending: "Wacht op uitleg", kPendingSub: "taken tellen pas na uitleg in eigen woorden",
-      kReviews: "Herhalingen", kReviewsSub: "{overdue} te laat · {due} vandaag", kExam: "Tot de toets", kExamSub: "{date}", kNoExam: "geen datum",
+      kSolo: "Zelfstandig gelukt", kSoloSub: "{ok} van {n} uitgelegde taken, trede ≤ 2", kPending: "Wacht op uitleg", kPendingSub: "{skipped} overgeslagen · uitleg hoort direct na het groen worden",
+      kReviews: "Herhalingen (L4)", kReviewsSub: "klaar; je doet ze zelf als ze in je werk langskomen", kExam: "Tot de toets", kExamSub: "{date}", kNoExam: "geen datum",
       days: "{n} dagen", day: "1 dag", none: "–",
       levels: "Niveaus", levelsHint: "Hoeveel vaardigheden (en microvaardigheden) op elk niveau staan.", skillsN: "{n} vaardigheden",
       showTable: "Tabel", showChart: "Grafiek", level: "Niveau", name: "Naam", count: "Aantal", skillsCol: "Vaardigheden",
       skills: "Per vaardigheid", skillsHint: "Gelukt = opgelost met hooguit trede 2, over de laatste 10 uitgelegde taken. Het streepje is het doel ({pct}%).",
       solved: "{ok}/{n} gelukt", noTasks: "nog geen uitgelegde taken", open: "{n} uitleg open", next: "herhaling {date}",
-      overdue: "te laat", dueToday: "vandaag", upcoming: "gepland", noReview: "geen herhaling",
+      reviewReady: "herhaling klaar", lastSeen: "laatst gezien {date}", notSeen: "nog niet gezien", placementOpen: "plaatsing open", skippedN: "{n} overgeslagen",
       more: "Details", less: "Sluiten", history: "Niveaugeschiedenis", tasks: "Taken", reviews: "Herhalingen", noHistory: "Nog geen niveauwijzigingen.",
       noTaskRows: "Nog geen taken.", noReviewRows: "Nog geen herhalingen.",
       date: "Datum", task: "Taak", rung: "Trede", source: "Bron", explanation: "Uitleg", rejections: "Afgewezen", corrections: "Correcties", result: "Uitkomst", nextReview: "Volgende",
-      explained: "goedgekeurd", pendingExpl: "wacht op uitleg", voided: "geschrapt", from: "van", to: "naar", note: "Notitie",
+      explained: "goedgekeurd", pendingExpl: "wacht op uitleg", voided: "geschrapt", skipped: "overgeslagen", replayed: "goedgekeurd (hersteld met replay)",
+      lapse: { "other-exercise": "andere opdracht begonnen", "session-end": "sessie beëindigd" }, auto: "automatisch", placementNote: "plaatsing", from: "van", to: "naar", note: "Notitie",
       by: { claude: "door Claude", hook: "door de check" }, src: { check: "test (check.mjs)", done: "zelf afgemeld", chat: "chat" },
       res: { pass: "geslaagd", shaky: "wankel", fail: "mislukt" },
       tasksChart: "Taken per dag", tasksHint: "Elke taak met de hoogste trede aan hulp. Donkerder = zelfstandiger.",
-      bSolo: "zelfstandig (trede 0)", bHint: "met een hint (trede 1–2)", bHelp: "veel hulp (trede 3–5)", bPending: "wacht op uitleg", total: "totaal",
+      bSolo: "zelfstandig (trede 0)", bHint: "met een hint (trede 1–2)", bHelp: "veel hulp (trede 3–5)", bPending: "wacht op uitleg", bSkipped: "overgeslagen (uitleg niet direct)", total: "totaal",
       noTaskChart: "Nog geen taken in deze selectie.",
       attention: "Signalen", signalsUp: "Doorstroom-signaal", signalsDown: "Terugval-signaal", regression: "{n} test(s) van groen naar rood", regressionFixed: "{n} test(s) weer groen (herstel, geen nieuwe taak)",
       override: "Override van {min} min", noSignals: "Geen signalen in deze selectie.",
@@ -44,22 +45,23 @@
       demoNote: "Demo: all data is made up. This is what the dashboard looks like after a few weeks of practice.",
       subtitle: "{course} · as of {date}", subtitleNoCourse: "As of {date}",
       filter: "Skill", all: "All skills", asof: "All figures are as of {date}, the day of the export.",
-      kSolo: "Solved independently", kSoloSub: "{ok} of {n} explained tasks, rung ≤ 2", kPending: "Waiting for an explanation", kPendingSub: "tasks only count after an explanation in own words",
-      kReviews: "Reviews", kReviewsSub: "{overdue} overdue · {due} today", kExam: "Until the exam", kExamSub: "{date}", kNoExam: "no date",
+      kSolo: "Solved independently", kSoloSub: "{ok} of {n} explained tasks, rung ≤ 2", kPending: "Waiting for an explanation", kPendingSub: "{skipped} skipped · the explanation belongs right after the green",
+      kReviews: "Reviews (L4)", kReviewsSub: "ready; you do them yourself when they come by in your work", kExam: "Until the exam", kExamSub: "{date}", kNoExam: "no date",
       days: "{n} days", day: "1 day", none: "–",
       levels: "Levels", levelsHint: "How many skills (and microskills) are at each level.", skillsN: "{n} skills",
       showTable: "Table", showChart: "Chart", level: "Level", name: "Name", count: "Count", skillsCol: "Skills",
       skills: "Per skill", skillsHint: "Solved = with at most rung 2, over the last 10 explained tasks. The tick is the target ({pct}%).",
       solved: "{ok}/{n} solved", noTasks: "no explained tasks yet", open: "{n} explanation(s) open", next: "review {date}",
-      overdue: "overdue", dueToday: "today", upcoming: "planned", noReview: "no review",
+      reviewReady: "review ready", lastSeen: "last seen {date}", notSeen: "not seen yet", placementOpen: "placement open", skippedN: "{n} skipped",
       more: "Details", less: "Close", history: "Level history", tasks: "Tasks", reviews: "Reviews", noHistory: "No level changes yet.",
       noTaskRows: "No tasks yet.", noReviewRows: "No reviews yet.",
       date: "Date", task: "Task", rung: "Rung", source: "Source", explanation: "Explanation", rejections: "Rejected", corrections: "Corrections", result: "Outcome", nextReview: "Next",
-      explained: "approved", pendingExpl: "waiting for an explanation", voided: "voided", from: "from", to: "to", note: "Note",
+      explained: "approved", pendingExpl: "waiting for an explanation", voided: "voided", skipped: "skipped", replayed: "approved (recovered with replay)",
+      lapse: { "other-exercise": "started another exercise", "session-end": "session ended" }, auto: "automatic", placementNote: "placement", from: "from", to: "to", note: "Note",
       by: { claude: "by Claude", hook: "by the check" }, src: { check: "test (check.mjs)", done: "logged by the learner", chat: "chat" },
       res: { pass: "passed", shaky: "shaky", fail: "failed" },
       tasksChart: "Tasks per day", tasksHint: "Every task with its highest rung of help. Darker = more independent.",
-      bSolo: "independent (rung 0)", bHint: "with a hint (rung 1–2)", bHelp: "a lot of help (rung 3–5)", bPending: "waiting for an explanation", total: "total",
+      bSolo: "independent (rung 0)", bHint: "with a hint (rung 1–2)", bHelp: "a lot of help (rung 3–5)", bPending: "waiting for an explanation", bSkipped: "skipped (no explanation right away)", total: "total",
       noTaskChart: "No tasks in this selection yet.",
       attention: "Signals", signalsUp: "Promotion signal", signalsDown: "Relapse signal", regression: "{n} test(s) went from green to red", regressionFixed: "{n} test(s) green again (repair, not a new task)",
       override: "Override of {min} min", noSignals: "No signals in this selection.",
@@ -77,7 +79,7 @@
     nl: { L0: "Voordoen", L1: "Aanvullen", L2: "Begeleid", L3: "Zelfstandig", L4: "Geautomatiseerd" },
     en: { L0: "Demonstrate", L1: "Complete", L2: "Guided", L3: "Independent", L4: "Automated" },
   };
-  const BUCKETS = [["solo", "r-solo", "bSolo"], ["hint", "r-hint", "bHint"], ["help", "r-help", "bHelp"], ["pending", "pending", "bPending"]];
+  const BUCKETS = [["solo", "r-solo", "bSolo"], ["hint", "r-hint", "bHint"], ["help", "r-help", "bHelp"], ["pending", "pending", "bPending"], ["skipped", "skipped", "bSkipped"]];
 
   const params = new URLSearchParams(location.search);
   let lang = ["nl", "en"].includes(params.get("lang")) ? params.get("lang") : (navigator.language || "nl").toLowerCase().startsWith("nl") ? "nl" : "en";
@@ -169,16 +171,11 @@
     const fam = liveTasks().filter((x) => ids.has(x.skill));
     const done = fam.filter((x) => x.explained).slice(-10);
     const ok = done.filter((x) => x.success && x.maxRung <= 2).length;
-    return { n: done.length, ok, pending: fam.filter((x) => !x.explained).length };
+    return { n: done.length, ok, pending: fam.filter((x) => !x.explained && !x.lapsed).length, skipped: fam.filter((x) => x.lapsed).length };
   }
-  function reviewState(s) {
-    if (!s.nextReview) return { cls: "none", key: "noReview" };
-    const d = dayDiff(asOf(), s.nextReview);
-    if (d < 0) return { cls: "critical", key: "overdue" };
-    if (d === 0) return { cls: "warning", key: "dueToday" };
-    return { cls: "good", key: "upcoming" };
-  }
-  const bucketOf = (x) => (!x.explained ? "pending" : x.maxRung === 0 ? "solo" : x.maxRung <= 2 ? "hint" : "help");
+  // Reviews only at L4 and never "overdue": a ready review waits until the skill comes by (setup review S2).
+  const reviewReady = (s) => s.level === "L4" && s.nextReview && dayDiff(asOf(), s.nextReview) <= 0;
+  const bucketOf = (x) => (x.lapsed ? "skipped" : !x.explained ? "pending" : x.maxRung === 0 ? "solo" : x.maxRung <= 2 ? "hint" : "help");
   const conf = (v) => { const m = String(v ?? "").match(/(?:^|\D)([1-5])(?:\s*\/\s*5)?(?!\d)/); return m ? Number(m[1]) : null; };
 
   // ---------- Building blocks ----------
@@ -211,17 +208,16 @@
     const tasks = liveTasks().filter((x) => inScope(x.skill));
     const done = tasks.filter((x) => x.explained);
     const ok = done.filter((x) => x.success && x.maxRung <= 2).length;
-    const pend = tasks.filter((x) => !x.explained).length;
+    const pend = tasks.filter((x) => !x.explained && !x.lapsed).length;
+    const skipped = tasks.filter((x) => x.lapsed).length;
     const skills = data.skills.filter((s) => s.kind !== "zone" && inScope(s.id));
-    const states = skills.map(reviewState);
-    const overdue = states.filter((s) => s.key === "overdue").length;
-    const due = states.filter((s) => s.key === "dueToday").length;
+    const ready = skills.filter(reviewReady).length;
     const tile = (label, value, sub) => el("div", { class: "tile" }, el("div", { class: "label", text: label }), el("div", { class: "value", text: value }), sub ? el("div", { class: "sub" }, sub) : null);
     const examDays = data.examDate ? dayDiff(asOf(), data.examDate) : null;
     return el("section", { class: "kpis", "aria-label": t("title") },
       tile(t("kSolo"), done.length ? pct(ok / done.length) : t("none"), t("kSoloSub", { ok, n: done.length })),
-      tile(t("kPending"), String(pend), t("kPendingSub")),
-      tile(t("kReviews"), String(overdue + due), overdue ? statusBadge("critical", t("kReviewsSub", { overdue, due })) : t("kReviewsSub", { overdue, due })),
+      tile(t("kPending"), String(pend), t("kPendingSub", { skipped })),
+      tile(t("kReviews"), String(ready), t("kReviewsSub")),
       tile(t("kExam"), examDays === null ? t("kNoExam") : examDays === 1 ? t("day") : t("days", { n: examDays }), data.examDate ? fmtLong(data.examDate) : null));
   }
 
@@ -253,12 +249,14 @@
     const rungLabel = (x) => String(x.maxRung) + (x.corrections.length ? " *" : "");
     const explainCell = (x) => {
       if (x.void) return el("span", { class: "muted", text: `${t("voided")}${x.voidReason ? `: ${x.voidReason}` : ""}` });
+      if (x.lapsed) return el("span", { class: "muted", text: `${t("skipped")}${x.lapseReason && t("lapse")?.[x.lapseReason] ? `: ${t("lapse")[x.lapseReason]}` : ""}` });
       if (!x.explained) return statusBadge("warning", t("pendingExpl"));
-      return el("span", {}, statusBadge("good", t("explained")), x.explanation ? el("div", { text: `“${x.explanation}”` }) : null);
+      return el("span", {}, statusBadge("good", t(x.explainedBy === "replay" ? "replayed" : "explained")), x.explanation ? el("div", { text: `“${x.explanation}”` }) : null);
     };
     return el("div", { class: "detail" },
       el("div", {}, el("h3", { text: t("history") }), hist.length ? table([t("date"), t("from"), t("to"), t("note")],
-        hist.map((h) => [fmtDate(h.at), h.from ?? t("none"), `${h.to} ${levelName(h.to)}`, h.note ?? ""])) : el("p", { class: "muted", text: t("noHistory") })),
+        hist.map((h) => [fmtDate(h.at), h.from ?? t("none"), `${h.to} ${levelName(h.to)}`,
+          `${h.auto ? `[${t("auto")}] ` : h.placement ? `[${t("placementNote")}] ` : ""}${h.note ?? ""}`])) : el("p", { class: "muted", text: t("noHistory") })),
       el("div", {}, el("h3", { text: t("tasks") }), tasks.length ? table([t("date"), t("task"), t("rung"), t("source"), t("explanation"), t("rejections"), t("corrections")],
         tasks.map((x) => [fmtDate(x.at), `${x.skill !== s.id ? `${x.skill}: ` : ""}${x.what ?? x.id}`, rungLabel(x), t(`src.${x.source}`) === `src.${x.source}` ? (x.source ?? t("none")) : t(`src.${x.source}`),
           explainCell(x), x.rejections.map((r) => `${t(`by.${r.by}`)}${r.reasons.length ? `: ${r.reasons.join("; ")}` : ""}`).join(" · ") || t("none"),
@@ -273,7 +271,6 @@
     for (const main of mains().filter((s) => filter === "all" || s.id === filter)) {
       for (const s of [main, ...microsOf(main.id)]) {
         const st = stats(s);
-        const rs = reviewState(s);
         const open = detailOpen.has(s.id);
         const meter = el("div", { class: "meter" });
         const track = el("div", { class: "track", role: "img", "aria-label": st.n ? t("solved", { ok: st.ok, n: st.n }) : t("noTasks") });
@@ -285,7 +282,10 @@
           el("span", { class: `chip lv${LEVELS.indexOf(s.level)}`, text: `${s.level} ${levelName(s.level)}` }),
           meter,
           el("div", { class: "skill-meta" }, st.pending ? statusBadge("warning", t("open", { n: st.pending })) : null,
-            s.nextReview ? statusBadge(rs.cls, `${t(rs.key)} · ${t("next", { date: fmtDate(s.nextReview) })}`) : el("span", { class: "muted", text: t("noReview") })),
+            st.skipped ? el("span", { class: "muted", text: t("skippedN", { n: st.skipped }) }) : null,
+            s.placement === "pending" ? el("span", { class: "muted", text: t("placementOpen") }) : null,
+            reviewReady(s) ? el("span", { class: "muted", text: t("reviewReady") }) : s.level === "L4" && s.nextReview ? el("span", { class: "muted", text: t("next", { date: fmtDate(s.nextReview) }) }) : null,
+            el("span", { class: "muted", text: s.lastSeen ? t("lastSeen", { date: fmtDate(s.lastSeen) }) : t("notSeen") })),
           el("button", { type: "button", class: "expand", "aria-expanded": open ? "true" : "false", "aria-controls": `d-${s.id}`, text: open ? t("less") : t("more"),
             onclick: () => { if (detailOpen.has(s.id)) detailOpen.delete(s.id); else detailOpen.add(s.id); render(); } }));
         list.append(el("li", { class: `skill${s.parent ? " micro" : ""}`, id: `s-${s.id}` }, row, open ? el("div", { id: `d-${s.id}` }, skillDetail(s)) : null));
@@ -298,9 +298,9 @@
     const tasks = liveTasks().filter((x) => inScope(x.skill));
     const days = [...new Set(tasks.map((x) => String(x.at).slice(0, 10)))].sort();
     const per = days.map((d) => {
-      const c = { solo: 0, hint: 0, help: 0, pending: 0 };
+      const c = { solo: 0, hint: 0, help: 0, pending: 0, skipped: 0 };
       for (const x of tasks) if (String(x.at).slice(0, 10) === d) c[bucketOf(x)]++;
-      return { d, c, total: c.solo + c.hint + c.help + c.pending };
+      return { d, c, total: c.solo + c.hint + c.help + c.pending + c.skipped };
     });
     const legend = el("ul", { class: "legend" }, BUCKETS.map(([, cls, key]) => el("li", {}, el("span", { class: `sw ${cls}`, "aria-hidden": "true" }), t(key))));
     let body;
@@ -313,6 +313,8 @@
       const ph = H - B - PT, slot = (W - L) / per.length, bw = Math.min(24, slot * 0.6);
       const y = (v) => PT + ph - (v / top) * ph;
       const chart = svg("svg", { class: "chart", viewBox: `0 0 ${W} ${H}`, role: "group", "aria-label": t("tasksChart") });
+      chart.append(svg("defs", {}, svg("pattern", { id: "hatch-skipped", width: 5, height: 5, patternUnits: "userSpaceOnUse", patternTransform: "rotate(45)" },
+        svg("rect", { class: "hatch-bg", width: 5, height: 5 }), svg("line", { class: "hatch-line", x1: 0, y1: 0, x2: 0, y2: 5 }))));
       for (let v = 0; v <= top; v += step) {
         chart.append(svg("line", { class: v === 0 ? "baseline" : "gridline", x1: L, x2: W, y1: y(v), y2: y(v) }));
         chart.append(svg("text", { x: L - 6, y: y(v) + 4, "text-anchor": "end", text: v }));
@@ -337,7 +339,7 @@
       body = el("div", {}, chart, legend);
     }
     return card(t("tasksChart"), t("tasksHint"), body, () => table([t("date"), ...BUCKETS.map(([, , key]) => t(key)), t("total")],
-      per.map((p) => [fmtLong(p.d), ...BUCKETS.map(([k]) => String(p.c[k])), String(p.total)]), [1, 2, 3, 4, 5]), "tasks");
+      per.map((p) => [fmtLong(p.d), ...BUCKETS.map(([k]) => String(p.c[k])), String(p.total)]), [1, 2, 3, 4, 5, 6]), "tasks");
   }
   function barPath(x, y, w, h, r) {
     r = Math.min(r, w / 2, h);

@@ -71,6 +71,8 @@ test("the harness itself (hooks, settings.json, diary skill, rules) can never be
   assert.equal(decision(bash("sed -i 's/deny/allow/' .claude/hooks/guard.mjs")), "deny");
   assert.equal(decision(bash("node .claude/hooks/skill.mjs list")), "allow");
   assert.equal(decision(write(".claude/agents/helper.md", "x")), "allow");
+  // The demotion analyst decides about levels: Claude may not rewrite it (setup review S3a).
+  assert.equal(decision(write(".claude/agents/demotie-analist.md", "x")), "deny");
 });
 
 test("record commands are denied, list and status are allowed", () => {

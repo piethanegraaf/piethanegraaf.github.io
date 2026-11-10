@@ -127,6 +127,11 @@ for (const f of fs.readdirSync(path.join(HARNESS, "i18n")).filter((f) => /^[a-z]
 const skill = localized(path.join(HARNESS, "skills", "diary"), "SKILL");
 if (skill === null) fail("install.noSkill");
 code.set(".claude/skills/diary/SKILL.md", skill);
+// The read-only agent that decides which level goes down (automatic demotion, setup review S3a).
+for (const f of fs.readdirSync(path.join(HARNESS, "agents")).filter((f) => /^[a-z-]+\.nl\.md$/.test(f)).sort()) {
+  const name = f.replace(/\.nl\.md$/, "");
+  code.set(`.claude/agents/${name}.md`, localized(path.join(HARNESS, "agents"), name));
+}
 const rules = localized(path.join(HARNESS, "templates"), "leerharnas");
 if (rules === null) fail("install.noRules");
 const mapNotes = localized(path.join(HARNESS, "maps", mapId), "notes");

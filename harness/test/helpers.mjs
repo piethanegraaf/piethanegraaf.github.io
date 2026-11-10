@@ -9,17 +9,18 @@ import { fileURLToPath } from "node:url";
 export const HARNESS = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 export const HOOKS = path.join(HARNESS, "hooks");
 
-// A small fake map: one skill per level, with exercise folders.
+// A small fake map: one skill per level, with exercise folders. The skills are already placed
+// (placement "done"); a test of the placement (S4) uses a skill without it.
 export function fakeSkills(overrides = {}) {
   return {
     settings: { defaultLevel: "L2", stuckTimerMinutes: 12, targetSuccess: 0.85, ...overrides },
     skills: [
       { id: "zone.voorbeelden", kind: "zone", title: "Voorbeelden", level: "L0", paths: ["voorbeelden/**"], priority: 20 },
-      { id: "demo.l1", title: "Aanvullen", level: "L1", paths: ["opdrachten/01-*/**"] },
-      { id: "demo.l2", title: "Begeleid", level: "L2", paths: ["opdrachten/02-*/**"] },
-      { id: "demo.l2.micro", parent: "demo.l2", title: "Deelpatroon", level: "L2", keywords: ["deelpatroon"] },
-      { id: "demo.l3", title: "Zelfstandig", level: "L3", paths: ["opdrachten/03-*/**"] },
-      { id: "demo.l4", title: "Geautomatiseerd", level: "L4", paths: ["opdrachten/04-*/**"] },
+      { id: "demo.l1", title: "Aanvullen", level: "L1", paths: ["opdrachten/01-*/**"], placement: "done" },
+      { id: "demo.l2", title: "Begeleid", level: "L2", paths: ["opdrachten/02-*/**"], placement: "done" },
+      { id: "demo.l2.micro", parent: "demo.l2", title: "Deelpatroon", level: "L2", keywords: ["deelpatroon"], placement: "done" },
+      { id: "demo.l3", title: "Zelfstandig", level: "L3", paths: ["opdrachten/03-*/**"], placement: "done" },
+      { id: "demo.l4", title: "Geautomatiseerd", level: "L4", paths: ["opdrachten/04-*/**"], placement: "done" },
     ],
   };
 }

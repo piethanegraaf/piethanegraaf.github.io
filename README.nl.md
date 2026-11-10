@@ -11,7 +11,9 @@ Een leerharnas voor [Claude Code](https://docs.claude.com/en/docs/claude-code/ov
 - **Niveaus per vaardigheid** (L0 voordoen → L4 geautomatiseerd). Op L1–L3 blokkeert een hook dat de AI jouw code schrijft, bouwt of test.
 - **Een hintladder**: een vraag, dan een vindplaats, dan een schets. Een volgende trede pas na een zichtbare poging.
 - **Een taak telt pas na jouw eigen uitleg**, gecontroleerd door Claude en door een vaste check.
-- **Fibonacci-herhalingen** vanaf L3, gepland vóór je toetsdatum.
+- **Uitleg direct**: een taak die je niet uitlegt voor de volgende opdracht, vervalt (overgeslagen).
+- **Herhalingen alleen op L4**, met Fibonacci-intervallen: de eerstvolgende keer dat zo'n vaardigheid in je werk langskomt, doe je het zelf.
+- **Omhoog kies jij, omlaag volgt het bewijs** (optioneel): een agent die alleen leest, beslist of één deelpatroon of de hele vaardigheid zakt.
 - **Een dagboek** aan het eind van elke sessie, met de reflectie in je eigen woorden.
 - **Nederlands en Engels**: meldingen, regels en de diary-skill.
 

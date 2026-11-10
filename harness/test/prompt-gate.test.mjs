@@ -10,7 +10,7 @@ const MIN = 60000;
 // fakeSkills plus a microskill from ANOTHER family whose keyword ("string") is in an everyday question.
 function skills() {
   const s = fakeSkills();
-  s.skills.push({ id: "demo.l3.strings", parent: "demo.l3", title: "Strings", level: "L3", keywords: ["string"] });
+  s.skills.push({ id: "demo.l3.strings", parent: "demo.l3", title: "Strings", level: "L3", keywords: ["string"], placement: "done" });
   return s;
 }
 function project(session, files = {}) {

@@ -7,10 +7,12 @@ import path from "node:path";
 import {
   readStdin, loadSkills, findSkill, globToRegex, logEvent, loadSession, saveSession, skillForPath, familyOf,
   taskStats, ROOT, levelName, isMicro, microsOf, keywordMap, logTask, pendingTasks, levelAdvice, learnerText,
-  settingsOf, codeExtRe, toolingRe, touch, activeMinutesSince, startTask, t,
+  settingsOf, codeExtRe, toolingRe, touch, activeMinutesSince, startTask, effectiveLevel, isPlacementPending, isReviewDue,
+  afterTask, allTasks, readEvents, t,
 } from "./lib.mjs";
 import {
   HINT, SOLUTION, SOLVED_STRONG, SOLVED_WEAK, CODE_CONTEXT, NOT_SOLVED, END, RESUME, ATTEMPT, CHECKING,
+  STUCK, DONT_KNOW, MORE_EXPLANATION, errorSignature,
 } from "./patterns.mjs";
 
 const rungName = (n) => t(`rung.${n}`);
@@ -154,7 +156,27 @@ if (detected && detected.id !== st.activeSkill) {
   if (!sameFamily) { st.rung = 0; st.lastRungAt = null; st.lastRungActive = null; st.taskStartedAt = now; st.taskStartedActive = st.activeMs; }
 }
 const skill = st.activeSkill ? findSkill(data, st.activeSkill) : null;
-const level = skill ? skill.level : settings.defaultLevel;
+// The effective level: an open placement counts as L2, a due L4 review as L3 (S4, S2).
+const level = skill ? effectiveLevel(data, skill) : settings.defaultLevel;
+const placementOpen = skill ? isPlacementPending(data, skill) : false;
+
+// Notices from the Stop hook or a "!" run (automatic demotion, placement): tell the learner.
+if (Array.isArray(st.notices) && st.notices.length) {
+  ctx.push(t("pg.notices", { list: st.notices.join("\n") }));
+  st.notices = [];
+}
+
+// A due L4 review comes by in real work (S2): this time the learner does it, once per session.
+{
+  const parent = skill && isMicro(skill) ? findSkill(data, skill.parent) : null;
+  const due = [skill, parent].find((s) => isReviewDue(s));
+  st.reviewNoticed = st.reviewNoticed ?? [];
+  if (due && !st.reviewNoticed.includes(due.id)) {
+    st.reviewNoticed.push(due.id);
+    logEvent({ type: "review-due", skill: due.id, session: sid });
+    ctx.push(t("pg.review", { id: due.id }));
+  }
+}
 
 // ---------- 2. Signals ----------
 function changedSince(since) {
@@ -197,6 +219,11 @@ const minutes = st.lastRungAt ? activeMinutesSince(st, st.lastRungActive) : null
 const timerUp = minutes !== null && minutes >= T;
 const attemptWhy = changed.length ? t("pg.attemptWhy.changed", { files: changed.slice(0, 2).join(", ") })
   : textAttempt ? t("pg.attemptWhy.text") : "";
+// Placement signals (S4): the same error or test outcome twice, and whether there was an own attempt.
+const errSig = errorSignature(prompt);
+const sameError = Boolean(errSig) && errSig === st.lastErrorSig;
+if (errSig) st.lastErrorSig = errSig;
+if (attempt) st.attempted = true;
 
 // ---------- 3. Outcomes ----------
 if (solved && skill) {
@@ -214,6 +241,9 @@ if (solved && skill) {
     }));
   }
   if (!isMicro(skill) && microsOf(data, skill.id).length === 0) ctx.push(t("pg.noMicros", { id: skill.id }));
+  const after = afterTask(data, skill.id, tk);
+  if (after.messages.length) ctx.push(t("pg.notices", { list: after.messages.join("\n") }));
+  if (after.pending) st.demotionPending = after.pending;
   startTask(st, now);
 }
 
@@ -224,22 +254,63 @@ if (pending.length) {
   ctx.push(t("pg.pending", { list }));
 }
 
+// ---------- 3c. Demotion analyst (S3a) ----------
+// The criterion was met for a parent skill: Claude calls the read-only agent demotie-analist after
+// the learner's current point, and puts its JSON in the marker [demotie {...}]. The Stop hook checks
+// the JSON and that the agent really ran in that turn. Without that, nothing changes automatically.
+if (st.demotionPending && settings.autoDemote) {
+  const dp = st.demotionPending;
+  const byTid = new Map(allTasks().map((x) => [x.tid, x]));
+  const tests = new Map(readEvents().filter((e) => e.type === "test-green").map((e) => [e.tid, e.tests]));
+  const tdir = input.transcript_path ? path.dirname(String(input.transcript_path)) : null;
+  const taken = (dp.tids ?? []).map((tid) => byTid.get(tid)).filter(Boolean).map((x) => ({
+    tid: x.tid, wat: x.what ?? null, tests: tests.get(x.tid) ?? [], map: x.dir ?? null, hoogsteTrede: x.maxRung ?? 0,
+    gelukt: Boolean(x.success && (x.maxRung ?? 0) <= 2), sessie: x.session ?? null, tijd: x.at,
+    transcript: tdir && x.session ? path.join(tdir, `${x.session}.jsonl`) : null,
+  }));
+  const micros = microsOf(data, dp.skill).map((m) => ({ id: m.id, titel: m.title, trefwoorden: m.keywords ?? [], niveau: m.level }));
+  const analystInput = { ouder: dp.skill, niveau: findSkill(data, dp.skill)?.level ?? null, reden: dp.reason, taken, microvaardigheden: micros };
+  ctx.push(t("pg.analyst", { id: dp.skill, input: JSON.stringify(analystInput) }));
+}
+
 // ---------- 4. Hint ladder per level ----------
-if (wantsHint && !solved) {
+// A new skill (placement open, S4): try first. A rung only goes up when the learner says they are
+// stuck, shares the same error or test outcome twice, or admits not knowing the concept; never on
+// time. An explicit request for more explanation, after an own attempt, may go straight higher.
+const placementWhy = () => {
+  if (STUCK.test(prompt)) return t("pg.why.saysStuck");
+  if (sameError) return t("pg.why.sameError");
+  if (DONT_KNOW.test(prompt)) return t("pg.why.dontKnow");
+  return null;
+};
+const asksMore = placementOpen && st.attempted && MORE_EXPLANATION.test(prompt);
+st.placementNoticed = st.placementNoticed ?? [];
+if (placementOpen && (wantsHint || asksMore) && !solved && level === "L2" && !st.placementNoticed.includes(skill.id)) {
+  st.placementNoticed.push(skill.id);
+  ctx.push(t("pg.placement", { id: skill.id }));
+}
+if ((wantsHint || asksMore) && !solved) {
   if (level === "L2") {
-    let why = null;
+    let why = null, ceilingOnly = false;
     if (wantsSolution && st.rung >= 4) { st.rung = 5; why = t("pg.why.solutionAfter4"); }
+    else if (asksMore && st.rung < 4) { st.rung = 4; why = t("pg.why.asksMore"); ceilingOnly = true; }
+    else if (placementOpen) { const w = placementWhy(); if (w) { st.rung = Math.min(st.rung + 1, 4); why = w; } }
     else if (st.rung === 0) { st.rung = 1; why = t("pg.why.first"); }
     else if (attempt || timerUp) { st.rung = Math.min(st.rung + 1, 4); why = attempt ? attemptWhy : t("pg.why.stuck", { min: minutes, timer: T }); }
 
     if (why) {
-      st.maxRung = Math.max(st.maxRung ?? 0, st.rung);
+      // A ceiling (asked for more explanation) is logged by the [trede N] Claude really gives, not by the ceiling.
+      if (!ceilingOnly) st.maxRung = Math.max(st.maxRung ?? 0, st.rung);
       st.lastRungAt = now;
       st.lastRungActive = st.activeMs;
       logEvent({ type: "hint-unlock", skill: skill?.id ?? null, rung: st.rung, reason: why, session: sid });
-      ctx.push(st.rung === 5 ? t("pg.rung5") : t("pg.unlocked", { rung: st.rung, name: rungName(st.rung), why }));
+      ctx.push(st.rung === 5 ? t("pg.rung5") : ceilingOnly ? t("pg.unlockedUpTo", { rung: st.rung, mark: t("pg.rungMark") })
+        : t("pg.unlocked", { rung: st.rung, name: rungName(st.rung), why }));
     } else if (st.rung === 5) {
       ctx.push(t("pg.rung5reached"));
+    } else if (placementOpen) {
+      logEvent({ type: "hint-hold", skill: skill?.id ?? null, rung: st.rung, session: sid, placement: true });
+      ctx.push(t("pg.holdPlacement", { rung: st.rung, name: rungName(st.rung) }));
     } else {
       const left = Math.max(0, T - (minutes ?? 0));
       logEvent({ type: "hint-hold", skill: skill?.id ?? null, rung: st.rung, session: sid });

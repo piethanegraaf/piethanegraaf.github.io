@@ -53,7 +53,7 @@ Turn off AI help outside Claude Code. Otherwise your IDE completes the code you 
 
 ## After installing
 
-1. Start Claude Code in your project folder. The session-start hook shows your skills and reviews.
+1. Start Claude Code in your project folder. The session-start hook shows your skills.
 2. Set your exam date: `! node .claude/hooks/skill.mjs setting examDate 2027-01-20`
 3. Calibrate your levels with a short baseline test without AI, and set them yourself: `! node .claude/hooks/skill.mjs set ood.overerving L3 "baseline: solved myself"`
 

@@ -7,7 +7,9 @@ Het [dashboard](/dashboard/) laat de voortgang per vaardigheid en microvaardighe
 - je **niveau** en de geschiedenis daarvan;
 - hoeveel taken **gelukt** zijn met hooguit trede 2, over de laatste 10 uitgelegde taken, met het doel van 85%;
 - per taak: de trede, de bron (test, zelf afgemeld, chat), je **uitleg**, en wanneer die werd **afgewezen** of **gecorrigeerd**;
-- de **herhalingen** (Fibonacci) en welke te laat zijn;
+- de **herhalingen** (alleen L4, Fibonacci), neutraal: wanneer de volgende klaarstaat, en wanneer je de vaardigheid **laatst** in je werk zag. Niets is "te laat": een herhaling wacht tot de vaardigheid langskomt;
+- **overgeslagen** taken: de uitleg kwam niet direct, dus ze tellen niet. Ze staan apart van mislukt en van wacht op uitleg, en in de grafiek gearceerd;
+- wat de harnas **automatisch** deed: de plaatsing van een nieuwe vaardigheid en automatisch omlaag, gemarkeerd in de niveaugeschiedenis;
 - **doorstroom- en terugvalsignalen**, **regressies** en **overrides**;
 - een **dagboektijdlijn** met je reflecties en de **kalibratie**: je zelfvertrouwen vooraf en achteraf.
 

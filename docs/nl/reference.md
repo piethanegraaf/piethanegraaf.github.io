@@ -4,19 +4,19 @@
 
 | Event | Script | Wat het doet |
 |---|---|---|
-| `SessionStart` | `session-start.mjs` | Zet het register, de herhalingen van vandaag, open uitleg en doorstroom-signalen in de context, en vraagt naar je doel. |
+| `SessionStart` | `session-start.mjs` | Zet het register, open uitleg en doorstroom-signalen in de context, en vraagt naar je doel. Open uitleg van eerdere sessies vervalt hier. Herhalingen noemt hij niet. |
 | `UserPromptSubmit` | `prompt-gate.mjs` | Herkent de vaardigheid, bepaalt of er een nieuwe trede bij mag, logt opgeloste taken en vraagt om uitleg. Berichten van agents, notificaties en systeemherinneringen tellen niet als jouw woorden. |
 | `PreToolUse` | `guard.mjs` | Blokkeert schrijven, bouwen en testen van code op L1–L3, en elke wijziging aan het register, de state en de harnas zelf. Een shell-commando beoordeelt hij per los commando, op het programma dat draait. `eval`, `iex` en `Invoke-Expression` weigert hij altijd. |
-| `Stop` | `reflect-gate.mjs` | Verwerkt de markers in Claude's antwoord, controleert je uitleg, en vraagt om het dagboek als je wilt stoppen. |
+| `Stop` | `reflect-gate.mjs` | Verwerkt de markers in Claude's antwoord, controleert je uitleg en het oordeel van de demotie-analist, en vraagt om het dagboek als je wilt stoppen. Na het dagboek vervalt wat nog open staat. |
 
 ## `skill.mjs` (je draait het zelf, met `!`)
 
 | Commando | Wat |
 |---|---|
-| `list` / `status` | Overzicht; herhalingen, open uitleg en signalen. Deze twee mag Claude ook draaien. |
+| `list` / `status` | Overzicht; herhalingen (L4) die klaarstaan, open en overgeslagen uitleg, en signalen. Deze twee mag Claude ook draaien. |
 | `set <id> <L0..L4> "notitie"` | Niveau zetten. Omhoog kan pas als er geen taken meer op uitleg wachten. |
-| `review <id> pass\|shaky\|fail` | Uitkomst van een herhaling. |
-| `add-micro <parent> <id> <niveau> "titel" "trefwoorden"` | Een microvaardigheid toevoegen. |
+| `review <id> pass\|shaky\|fail` | De uitkomst van een herhaling zelf opgeven. Meestal niet nodig: de eerstvolgende taak van een L4-vaardigheid bepaalt hem. |
+| `add-micro <parent> <id> <niveau> "titel" "trefwoorden"` | Een microvaardigheid toevoegen. Met `autoDemote` maakt de demotie-analist er ook zelf een aan, op het niveau van de ouder min 1. |
 | `done <id> "wat"` | Een taak zonder test afmelden (ontwerp, UML). |
 | `untask <id>` | De laatst gelogde taak van een vaardigheid schrappen. |
 | `correct <taak-id> trede <1-5> "reden"` | Meer hulp dan gelogd: de trede alleen **omhoog** zetten. |
@@ -47,7 +47,23 @@ Draait `dotnet test` met een trx-logger en toont een korte samenvatting. Een tes
 | `[trede N]` / `[rung N]` | Er is inhoudelijke hulp gegeven op trede N. |
 | `[uitleg-ok <tid>]` / `[explain-ok <tid>]` | De uitleg klopt; de Stop-hook controleert hem nog. |
 | `[uitleg-nee <tid>]` / `[explain-no <tid>]` | De uitleg is onvolledig; de taak blijft open. |
+| `[demotie {...}]` / `[demotion {...}]` | Het oordeel van de demotie-analist (JSON). De Stop-hook voert het alleen uit als de agent in die beurt echt gedraaid heeft. |
 | `<!-- sessie: <id> -->` / `<!-- session: <id> -->` | In het dagboek: de entry van deze sessie. |
+
+## Events
+
+Alles wat de harnas doet, staat in `.learning/state/events.jsonl`. De events van de review van 10 november 2026:
+
+| Event | Betekenis |
+|---|---|
+| `task-lapsed` | De uitleg kwam niet direct: de taak vervalt (`other-exercise` of `session-end`). Telt niet; op het dashboard *overgeslagen*. |
+| `task-explained` met `source: replay` | Een uitleg die achteraf met `replay` is hersteld. |
+| `placement` | Het niveau van een nieuwe vaardigheid, gezet na de eerste taak. |
+| `review` met `auto: true` | De uitkomst van een L4-herhaling, uit de eerstvolgende taak. `review-due`: de herhaling kwam langs. |
+| `level` met `auto: true` | Automatisch omlaag; `by` zegt door wie: `harnas`, `demotie-analist` of `achtervang`. |
+| `demotion-pending`, `demotion-verdict`, `demotion-rejected` | De analist is nodig, zijn oordeel, of een oordeel dat de Stop-hook weigerde. |
+| `micro-add` met `auto: true`, `task-retag` | De analist maakte een microvaardigheid en koppelde taken eraan. |
+| `build-failed` | Een compileerfout, onthouden als startpunt van de map. |
 
 ## Bestanden
 

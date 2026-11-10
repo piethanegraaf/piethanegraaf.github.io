@@ -36,6 +36,7 @@ test("a fresh install: code, data from the map, settings with $CLAUDE_PROJECT_DI
       assert.ok(exists(d, `.claude/hooks/${f}`), f);
     }
     assert.ok(exists(d, ".claude/skills/diary/SKILL.md"));
+    assert.match(read(d, ".claude/agents/demotie-analist.md"), /^---\r?\nname: demotie-analist\r?\n/);
     assert.match(read(d, ".claude/leerharnas.md"), /Over dit vak/);
     assert.ok(exists(d, ".learning/diary"));
 

@@ -108,6 +108,8 @@ main:focus { outline: none; }
 .lv0 { background: var(--lv0); color: var(--on-lv0); } .lv1 { background: var(--lv1); color: var(--on-lv1); } .lv2 { background: var(--lv2); color: var(--on-lv2); }
 .lv3 { background: var(--lv3); color: var(--on-lv3); } .lv4 { background: var(--lv4); color: var(--on-lv4); }
 .sw.r-solo { background: var(--r-solo); } .sw.r-hint { background: var(--r-hint); } .sw.r-help { background: var(--r-help); } .sw.pending { background: var(--pending); }
+/* Skipped: the neutral of "pending" with a 45° texture, so it differs without color (also for CVD and print). */
+.sw.skipped { background: repeating-linear-gradient(45deg, var(--pending) 0 2px, var(--surface) 2px 4px); box-shadow: inset 0 0 0 1px var(--pending); }
 
 /* Skills: meter list */
 .skills { list-style: none; margin: 0; padding: 0; }
@@ -153,6 +155,8 @@ td.text { min-width: 220px; }
 .chart .gridline { stroke: var(--grid); stroke-width: 1; }
 .chart .baseline { stroke: var(--axis); stroke-width: 1; }
 .chart .r-solo { fill: var(--r-solo); } .chart .r-hint { fill: var(--r-hint); } .chart .r-help { fill: var(--r-help); } .chart .pending { fill: var(--pending); }
+.chart .skipped { fill: url(#hatch-skipped); stroke: var(--pending); stroke-width: 1; }
+.chart .hatch-bg { fill: var(--surface); } .chart .hatch-line { stroke: var(--pending); stroke-width: 2.5; }
 .chart .hit { fill: transparent; cursor: default; }
 .chart .hit:hover + g rect, .chart g.col:hover rect { opacity: 0.85; }
 .chart .link { stroke: var(--axis); stroke-width: 2; stroke-linecap: round; }
@@ -166,6 +170,7 @@ td.text { min-width: 220px; }
 .tooltip .tt-row strong { font-variant-numeric: tabular-nums; min-width: 1.5em; }
 .tooltip .ln { width: 12px; height: 2px; border-radius: 1px; }
 .ln.r-solo { background: var(--r-solo); } .ln.r-hint { background: var(--r-hint); } .ln.r-help { background: var(--r-help); } .ln.pending { background: var(--pending); }
+.ln.skipped { background: repeating-linear-gradient(90deg, var(--pending) 0 3px, transparent 3px 5px); }
 
 /* Lists */
 .signals { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
