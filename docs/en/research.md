@@ -1,46 +1,16 @@
 # Learning to Code (and OOD) with AI: Literature Review, Risk Assessment & a Learning-Preserving Claude Code Setup
 
-*Prepared 7 November 2026 · revised 8 November 2026 (see §11) · Context: HBO-ICT year 2, Object-Oriented Design (OOD)*
+*Prepared 7 November 2026 · revised 8 November 2026 and rewritten for students and teachers on 10 November 2026 (see §11) · For students who learn programming and Object-Oriented Design (OOD) with AI, and for their teachers*
 
-> **Published version.** This is the public version of a document written for one learner. Personal passages (career plans and work) were removed, and the learner is not named. The D-test and the course at CHE remain as an anonymised case. Files it refers to, such as the D-test analysis and the session logs, are not published.
+> **Published version.** This review was first written for one student. This version is written for students and teachers in general; that student's situation remains as examples in boxes. Files it refers to, such as the session logs, are not published.
 
 ---
 
 ## Contents
 
-1. [Executive summary](#1-executive-summary)
-2. [Literature review](#2-literature-review)
-   - 2.0 Scope, method and evidence grades
-   - 2.1 How programming and OOD skills are learned
-   - 2.2 Friction: desirable difficulties vs. getting stuck
-   - 2.3 Scaffolding, fading and the expertise-reversal effect
-   - 2.4 Mastery, skill acquisition stages and when to automate
-   - 2.5 Retention after mastery: spacing, retrieval and skill decay
-   - 2.6 Practice conditions and transfer to the test
-   - 2.7 Reflection, learning journals and self-regulation
-   - 2.8 Generative AI and learning to program: the evidence so far
-   - 2.9 The shift in skill needs: jobs, the economics of hand-written code, and what to practise
-   - 2.10 Automation, offloading, over-reliance and deskilling
-   - 2.11 Synthesis: design principles
-3. [Risk assessment](#3-risk-assessment)
-4. [Mitigation plan](#4-mitigation-plan)
-5. [Proposed Claude Code setup](#5-proposed-claude-code-setup)
-   - 5.1 Architecture
-   - 5.2 The Autonomy Ladder (per skill)
-   - 5.3 Friction calibration & the hint ladder
-   - 5.4 Hook pipeline
-   - 5.5 Skill record (data model)
-   - 5.6 AI diary & reflection loop
-   - 5.7 Spaced reinforcement after mastery
-   - 5.8 OOD skill map
-6. [Evaluation: how you'll know it works](#6-evaluation)
-7. [Limitations](#7-limitations)
-8. [References](#8-references)
-9. [Appendix: implementation sketches](#appendix-implementation-sketches)
-10. [Revision 7 Nov 2026: lessons from the first sessions](#10-revision-7-nov-2026-lessons-from-the-first-sessions)
-11. [Change log](#11-change-log)
+The table of contents is in the sidebar.
 
-> **Status note.** Sections 1–9 are the original design. §1–4, §6–8 and §5.3/§5.7 were revised on 8 November 2026 with research from May–November 2026, the shift in skill needs, and a critical review of the original literature review; what changed and why is in the change log (§11). The harness as actually built differs in places: there are microskills, a test runner (`check.mjs`) instead of a PostToolUse evidence hook, a hard own-words explanation check, Fibonacci reviews from L3 and a tooling zone. Those differences are summarized in §10. For day-to-day rules, `CLAUDE.md` is authoritative.
+> **Status note.** Sections 1–9 are the original design. §1–4, §6–8 and §5.3/§5.7 were revised on 8 November 2026 with research from May–November 2026, the shift in skill needs, and a critical review of the original literature review; what changed and why is in the change log (§11). The harness as actually built differs in places: there are microskills, a test runner (`check.mjs`) instead of a PostToolUse evidence hook, a hard own-words explanation check, Fibonacci reviews from L3 and a tooling zone. Those differences are summarized in §10, which reports what the first sessions showed. If you use the harness, its `CLAUDE.md` is authoritative for day-to-day rules.
 
 ---
 
@@ -49,42 +19,48 @@
 **The literature does not show that AI harms learning by itself. Letting AI do the thinking during practice lowers what you can do without it afterwards. AI that explains or tutors does no harm or helps a little.** The strongest evidence:
 
 - **Performance with AI is not learning.**
-  - **High-school maths:** unrestricted GPT-4 raised practice scores by 48% but lowered exam scores by **17%** once access was removed. A tutor that gave hints and no answers avoided the harm (Bastani et al., 2025).
-  - **University course:** in a 2026 trial with 2,379 students, an AI tutor used mostly for direct answers lowered final grades by 0.37 SD within the same course (Liu et al., 2026, working paper).
-  - **Programming:** in a small study, Copilot raised scores during the session, but students retained less a week later (Gardella et al., 2026).
-- **AI can also help.** In a proctored trial, ChatGPT access raised test scores without AI by 0.28 SD, mainly for students who used it like a tutor (Contractor & Reyes, 2026, working paper). What decides it is whether the AI replaces the learner's thinking or supports it (Boolzen et al., 2026).
+    - **High-school maths:** unrestricted GPT-4 raised practice scores by 48% but lowered exam scores by **17%** once access was removed. A tutor that gave hints and no answers avoided the harm (Bastani et al., 2025).
+    - **University course:** in a 2026 trial with 2,379 students, an AI tutor used mostly for direct answers lowered final grades by 0.37 SD within the same course (Liu et al., 2026, working paper).
+    - **Programming:** in a small study, Copilot raised scores during the session, but students retained less a week later (Gardella et al., 2026).
+- **AI can also help.** In a proctored trial, ChatGPT access raised test scores without AI by 0.28 SD, mainly for students who used it like a tutor (Contractor & Reyes, 2026, working paper). What decides it is whether the AI replaces your thinking or supports it (Boolzen et al., 2026).
 - **Developers learning a new library** with an AI assistant scored 50% vs. 67% on a follow-up quiz, with the largest gap on debugging, and were not significantly faster (Shen & Tamkin, 2026, preprint).
 - **Enforced guardrails work better than requested ones.** Telling a tutor in its system prompt to scaffold changed nothing in a trial with 1,059 students (Barth et al., 2026). Gates built into the workflow did better: mastery rules, explanation gates, blocks outside the model. That is the case for hooks over a "learning mode" prompt.
 - **Pooled positive effects are mostly publication bias.** The most rigorous 2026 meta-analysis shrinks g = 0.84 to 0.08 after correction, and the most-cited 2025 meta-analysis was retracted.
 - **Weaker than the first version claimed** (see the change log, §11):
-  - that specific interaction patterns *cause* better learning: every study so far let learners choose their own pattern;
-  - that LLMs widen the gap between strong and weak students: this rests on an exploratory analysis;
-  - that the "85% rule" applies to people: it was shown only in simulations;
-  - that expanding review intervals beat equal ones: they do not, reliably;
-  - the "Google effect": its first experiment failed to replicate, twice.
+    - that specific interaction patterns *cause* better learning: every study so far let students choose their own pattern;
+    - that LLMs widen the gap between strong and weak students: this rests on an exploratory analysis;
+    - that the "85% rule" applies to people: it was shown only in simulations;
+    - that expanding review intervals beat equal ones: they do not, reliably;
+    - the "Google effect": its first experiment failed to replicate, twice.
 
 **The skill shift is real, but it is not a reason to stop writing code by hand while you are learning it (§2.9).**
+
 - **For the shift:**
-  - most new code at AI-forward companies is now drafted by AI;
-  - the tool costs about 1–2% of a developer's labour cost;
-  - US projections expect "programmer" jobs to shrink, and "developer" jobs to grow more slowly than forecast before.
+    - most new code at AI-forward companies is now drafted by AI;
+    - the tool costs about 1–2% of a developer's labour cost;
+    - US projections expect "programmer" jobs to shrink, and "developer" jobs to grow more slowly than forecast before.
 
-  For routine, well-specified code at work, writing it by hand is no longer the cheapest way.
+    For routine, well-specified code at work, writing it by hand is no longer the cheapest way.
+
 - **Against dropping hand practice:**
-  - the bottleneck has moved to reviewing and testing;
-  - AI code still fails more than a third of security checks;
-  - entry-level hiring has weakened in the US, but how much of that is due to AI is contested;
-  - new interview formats test reading, debugging and checking AI output.
+    - the bottleneck has moved to reviewing and testing;
+    - AI code still fails more than a third of security checks;
+    - entry-level hiring has weakened in the US, but how much of that is due to AI is contested;
+    - new interview formats test reading, debugging and checking AI output.
 
-  Hand practice builds those supervision skills, and delegation erodes them most (§2.10).
+    Hand practice builds those supervision skills, and delegation erodes them most (§2.10).
 
-So the evidence argues for **adding** deliberate practice of AI-era skills (review, testing, specification, verification) on top of hand-written fundamentals, not for replacing them. It also fits the course's assessment design: CHE's level 0/1 for the final assessment matches the Dutch two-lane consensus (Npuls). It is not an outlier.
+So the evidence argues for **adding** deliberate practice of AI-era skills (review, testing, specification, verification) on top of hand-written fundamentals, not for replacing them. It also fits programmes that hold the final assessment at AI level 0/1. That matches the Dutch two-lane consensus (Npuls); it is not an outlier.
 
-**Two horizons.** Until 20 January 2027, the target is competence without AI under exam conditions, which means practising timed, without AI, in the exam IDE (§2.6). After that, the target follows the shift in skill needs: the supervision side of working with AI, such as specifying, testing and reviewing AI output (§2.9). The risk register (§3) covers both horizons, including the risks of investing too much and too little in writing code by hand.
+**Two horizons.** Until your exam, the target is competence without AI under the conditions of your exam. That means practising timed, without AI, in the environment of your exam (§2.6). After the exam, and for your work after your studies, the target follows the shift in skill needs: the supervision side of working with AI, such as specifying, testing and reviewing AI output (§2.9). The risk register (§3) covers both horizons, including the risks of investing too much and too little in writing code by hand.
+
+!!! example "Example: one student's situation"
+    This review was first written for a second-year HBO-ICT student. The student's OOD exam at CHE was timed, at AI level 0/1, and about ten weeks after the review was written. For that student, the first horizon ran until that exam date. After it, the focus could widen to the supervision skills of §2.9.
 
 The learning-science foundations line up with this:
+
 - **Effort:** learning depends on effortful generation and retrieval (Bjork, 1994; Roediger & Karpicke, 2006).
-- **Expertise:** the right amount of help changes with expertise (Kalyuga et al., 2003).
+- **Expertise:** the right amount of help changes with your expertise (Kalyuga et al., 2003).
 - **Fading:** scaffolds should be **faded** (Renkl & Atkinson, 2003; Wood, Bruner & Ross, 1976).
 - **Difficulty:** practice should be hard enough that you sometimes fail.
 - **Decay:** mastered skills **decay** unless they are reinforced at spaced intervals (Arthur et al., 1998; Cepeda et al., 2006).
@@ -98,6 +74,8 @@ The learning-science foundations line up with this:
 
 The hooks are a **commitment device** you choose for yourself (Ariely & Wertenbroch, 2002), not a prison. You can step out deliberately, and stepping out gets logged.
 
+**For teachers and programmes.** This review is written mainly for students. §4.2 is a separate part for teachers and programmes: it turns this evidence into points for the AI policy of a course or programme.
+
 ---
 
 ## 2. Literature review
@@ -106,7 +84,7 @@ The hooks are a **commitment device** you choose for yourself (Ariely & Wertenbr
 
 This is a **narrative review**, not a systematic one. The first version (7 November 2026) had no search protocol, no inclusion criteria and no quality appraisal, and it mixed randomized trials, small interview studies and preprints in single tables. The revision of 8 November 2026 added:
 
-- **Targeted searches.** Four searches covered May–November 2026: learning research, the labour market, the economics of AI coding, and skills and assessment policy. Two citation checks compared the original claims with their primary sources. The notes, with a link for every figure, are in `research_notes/AI learning and skill shift 2026/`; the synthesis is in `reports/`.
+- **Targeted searches.** Four searches covered May–November 2026: learning research, the labour market, the economics of AI coding, and skills and assessment policy. Two citation checks compared the original claims with their primary sources. The notes, with a link for every figure, are in `research_notes/AI learning and skill shift 2026/`; the synthesis is in `reports/`. Neither is published.
 - **Corrections** wherever a claim went further than its source (listed in the change log, §11).
 - **An evidence grade** for each study:
 
@@ -118,6 +96,7 @@ This is a **narrative review**, not a systematic one. The first version (7 Novem
 | **D** | Claims by companies or executives, press reports, opinion |
 
 **Conflicts of interest.** Several key sources come from AI vendors:
+
 - **Anthropic:** Shen & Tamkin, the Education Report, and the study of its own engineers.
 - **Microsoft and GitHub:** Peng et al., Cui et al., Lee et al.
 - **Google:** DORA.
@@ -125,16 +104,17 @@ This is a **narrative review**, not a systematic one. The first version (7 Novem
 This document was written with Claude, Anthropic's model, and Claude agents did the research for the revision. A vendor study that reports *harm* from the vendor's own product, such as Shen & Tamkin, is more credible than a vendor claim about how much code AI already writes; such claims are graded D. Check important claims through the linked primary source.
 
 **Two time horizons.** The review answers two different questions, and the evidence answers them differently:
-- **Short term (§2.1–2.8):** what helps the learner pass an assessment at AI level 0/1 on 20 January 2027.
-- **Long term (§2.9):** which skills will matter in the labour market after graduating.
+
+- **Short term (§2.1–2.8):** what helps you pass an exam at AI level 0/1 on your exam date.
+- **Long term (§2.9):** which skills will matter in the labour market after your studies.
 
 ### 2.1 How programming and OOD skills are learned
 
 **Programming is hard to learn, and the difficulty lies in problem decomposition and mental models more than in syntax.** The multinational McCracken et al. (2001) study found that most first-year students could not solve a moderate programming problem. Robins, Rountree & Rountree (2003) reviewed the field and concluded that novices lack *schemas* (plans) and *mental models* of program execution. Novices have trouble combining known constructs into solutions. Knowing the constructs is not the bottleneck.
 
-**Reading and tracing come before writing.** Lister et al. (2004) showed that many students cannot reliably *trace* code. Lopez et al. (2008) found a hierarchy in which tracing and explaining code predict writing ability. **This matters for AI use:** if AI writes the code, the learner gets *reading* practice at best. Reading practice only pays off when the learner actually traces and explains the code. Passively accepting it does not count.
+**Reading and tracing come before writing.** Lister et al. (2004) showed that many students cannot reliably *trace* code. Lopez et al. (2008) found a hierarchy in which tracing and explaining code predict writing ability. **This matters for AI use:** if AI writes the code, you get *reading* practice at best. Reading practice only pays off when you actually trace and explain the code. Passively accepting it does not count.
 
-**OOD has its own misconceptions.** Holland, Griffiths & Woodman (1997) described common object misconceptions, for example confusing a class with an instance, or seeing objects as mere data records. Ragonis & Ben-Ari (2005) followed novices over a long period and found persistent difficulties with object state, constructors and the static/dynamic distinction. Eckerdal & Thuné (2005) showed that students' *conceptions* of object and class range from "a piece of code" to "a model of something in the problem domain". The last of these is the conception OOD needs. Sanders & Thomas (2007) built a checklist of OO concepts and misconceptions for assessment. Kölling (1999) argued that OOP needs an "objects first" approach with suitable tools. **What this means for us:** OOD skill is largely *design judgment*, which shows up as choosing responsibilities, abstractions and relationships. An AI that hands over finished, pattern-heavy designs lets the learner skip exactly that judgment.
+**OOD has its own misconceptions.** Holland, Griffiths & Woodman (1997) described common object misconceptions, for example confusing a class with an instance, or seeing objects as mere data records. Ragonis & Ben-Ari (2005) followed novices over a long period and found persistent difficulties with object state, constructors and the static/dynamic distinction. Eckerdal & Thuné (2005) showed that students' *conceptions* of object and class range from "a piece of code" to "a model of something in the problem domain". The last of these is the conception OOD needs. Sanders & Thomas (2007) built a checklist of OO concepts and misconceptions for assessment. Kölling (1999) argued that OOP needs an "objects first" approach with suitable tools. **What this means for you:** OOD skill is largely *design judgment*, which shows up as choosing responsibilities, abstractions and relationships. An AI that hands over finished, pattern-heavy designs lets you skip exactly that judgment.
 
 **Instructional techniques with good evidence in computing education:**
 
@@ -146,100 +126,109 @@ This document was written with Claude, Anthropic's model, and Claude agents did 
 
 ### 2.2 Friction: desirable difficulties vs. getting stuck
 
-**Desirable difficulties.** Bjork (1994) and Bjork & Bjork (2011) showed that conditions which slow down *apparent* progress during practice often *improve* long-term retention and transfer. Examples are spacing, interleaving, retrieval and generation. Fluent, easy practice gives an *illusion of competence*: learners judge their learning by how easy practice felt, and that judgment is systematically wrong (Koriat & Bjork, 2005; Kornell & Bjork, 2008). AI assistance is close to the ultimate fluency machine.
+**Desirable difficulties.** Bjork (1994) and Bjork & Bjork (2011) showed that conditions which slow down *apparent* progress during practice often *improve* long-term retention and transfer. Examples are spacing, interleaving, retrieval and generation. Fluent, easy practice gives an *illusion of competence*: students judge their learning by how easy practice felt, and that judgment is systematically wrong (Koriat & Bjork, 2005; Kornell & Bjork, 2008). AI assistance is close to the ultimate fluency machine.
 
-**But difficulty has to be *desirable*, meaning the learner can overcome it:**
+**But difficulty has to be *desirable*, meaning you can overcome it:**
 
 - **Minimal guidance fails novices.** Kirschner, Sweller & Clark (2006) reviewed the evidence that unguided discovery overloads working memory.
-- **Productive failure.** Kapur (2008, 2016) showed that struggling with a problem *before* instruction can improve conceptual understanding and transfer, but only if the struggle is followed by consolidation. Kapur (2016) separates *productive failure* from *unproductive failure*, where the learner flounders without support. A meta-analysis of 53 studies found a moderate advantage for problem solving before instruction (g = 0.36, 95% CI 0.20–0.51), and a larger one (0.37–0.58) when the design followed productive-failure principles. Instruction first was better for young learners and for domain-general skills (Sinha & Kapur, 2021). So the debate with Kirschner et al. is moderated, not settled. An attempt only counts as productive failure if an explanation follows that builds on it and compares it with a canonical solution. Without that, "attempt first" is the minimally guided case Kirschner et al. criticise.
+- **Productive failure.** Kapur (2008, 2016) showed that struggling with a problem *before* instruction can improve conceptual understanding and transfer, but only if the struggle is followed by consolidation. Kapur (2016) separates *productive failure* from *unproductive failure*, where a student flounders without support. A meta-analysis of 53 studies found a moderate advantage for problem solving before instruction (g = 0.36, 95% CI 0.20–0.51), and a larger one (0.37–0.58) when the design followed productive-failure principles. Instruction first was better for young learners and for domain-general skills (Sinha & Kapur, 2021). So the debate with Kirschner et al. is moderated, not settled. An attempt only counts as productive failure if an explanation follows that builds on it and compares it with a canonical solution. Without that, "attempt first" is the minimally guided case Kirschner et al. criticise.
 - **Confusion can help.** D'Mello et al. (2014) found that confusion improves learning *when it is resolved*. Unresolved confusion turns into frustration and disengagement.
 - **The 85% rule is a heuristic, not evidence.** Wilson et al. (2019) derived that learners trained by stochastic gradient descent on *binary classification* tasks learn fastest at a training error rate of about 15.87% (accuracy ≈ 85%).
-  - **Simulations only:** they showed it in a perceptron, a two-layer network on MNIST digits and a model of monkey perceptual learning. They collected no human data and call a human test future work.
-  - **Depends on noise:** with non-Gaussian noise the optimum moves to 82% or 75%.
-  - **Difficulty, not mastery:** the number is a difficulty target *during* practice, not a mastery threshold.
-  - **Not measurable here:** over 5 tasks a success rate can only be 80% or 100%.
+    - **Simulations only:** they showed it in a perceptron, a two-layer network on MNIST digits and a model of monkey perceptual learning. They collected no human data and call a human test future work.
+    - **Depends on noise:** with non-Gaussian noise the optimum moves to 82% or 75%.
+    - **Difficulty, not mastery:** the number is a difficulty target *during* practice, not a mastery threshold.
+    - **Not measurable here:** over 5 tasks a success rate can only be 80% or 100%.
 
-  The harness therefore uses "about 85%" only as a rule of thumb: practice should be hard enough that you sometimes fail.
-- **Zone of proximal development / region of proximal learning.** Vygotsky (1978) described the zone where a learner succeeds *with* help but not yet alone. Metcalfe & Kornell (2005) showed that learners gain most from studying items just beyond their current mastery.
+    The harness therefore uses "about 85%" only as a rule of thumb: practice should be hard enough that you sometimes fail.
+
+- **Zone of proximal development / region of proximal learning.** Vygotsky (1978) described the zone where you succeed *with* help but not yet alone. Metcalfe & Kornell (2005) showed that students gain most from studying items just beyond their current mastery.
 - **Flow.** Csikszentmihalyi (1990) found that engagement peaks when challenge matches skill. Too easy leads to boredom and too hard to anxiety.
 
-**Help-seeking itself can go wrong.** Aleven & Koedinger (2000) and Aleven et al. (2003) showed that learners in tutoring systems often *misuse* help: they click through hints to reach the answer ("help abuse") or avoid help when they need it. Baker et al. (2004) documented "gaming the system" and its negative link with learning. **An AI coding assistant is a hint button with no limit.** Help-seeking behaviour therefore needs structure, such as hint ladders, time limits and attempt requirements.
+**Help-seeking itself can go wrong.** Aleven & Koedinger (2000) and Aleven et al. (2003) showed that students in tutoring systems often *misuse* help: they click through hints to reach the answer ("help abuse") or avoid help when they need it. Baker et al. (2004) documented "gaming the system" and its negative link with learning. **An AI coding assistant is a hint button with no limit.** Help-seeking behaviour therefore needs structure, such as hint ladders, time limits and attempt requirements.
 
-**Bottom line for friction:** aim for *struggle with a safety net*. The learner tries first, help escalates gradually and only after a real attempt, a stuck learner is never left alone too long, and every struggle ends with consolidation (an explanation, a reflection, or a worked solution *after* the attempt).
+**Bottom line for friction:** aim for *struggle with a safety net*. You try first, help escalates gradually and only after a real attempt, you are never left stuck and alone for too long, and every struggle ends with consolidation (an explanation, a reflection, or a worked solution *after* the attempt).
 
 ### 2.3 Scaffolding, fading and the expertise-reversal effect
 
-- **Scaffolding** was defined by Wood, Bruner & Ross (1976) as tutor support that controls the parts of a task beyond the learner's capacity. Pea (2004) and Puntambekar & Hübscher (2005) stressed that a scaffold only counts as one if it is **faded**. Permanent support is just a crutch.
+- **Scaffolding** was defined by Wood, Bruner & Ross (1976) as tutor support that controls the parts of a task beyond the student's capacity. Pea (2004) and Puntambekar & Hübscher (2005) stressed that a scaffold only counts as one if it is **faded**. Permanent support is just a crutch.
 - **Cognitive apprenticeship** (Collins, Brown & Newman, 1989) runs through *modelling → coaching → scaffolding → fading → articulation → reflection → exploration*. This sequence is practically the blueprint for the Autonomy Ladder in §5.
 - **Faded worked examples.** Renkl & Atkinson (2003) and Atkinson, Renkl & Merrill (2003) showed that gradually removing solution steps from worked examples (*backward fading*) works better than jumping from examples to problems all at once.
-- **Expertise-reversal effect.** Kalyuga et al. (2003) showed that guidance which helps novices becomes *redundant and harmful* for more advanced learners. **Help level must therefore follow the learner's expertise in each skill.** A fixed "tutor mode" is too much for some skills and too little for others.
+- **Expertise-reversal effect.** Kalyuga et al. (2003) showed that guidance which helps novices becomes *redundant and harmful* for more advanced students. **Help level must therefore follow your expertise in each skill.** A fixed "tutor mode" is too much for some skills and too little for others.
 - **Contingent tutoring.** Wood & Wood (1999) found the most effective tutors follow a rule: *give more help after failure, less after success*. That rule can be implemented directly (§5.3).
 
 ### 2.4 Mastery, skill acquisition stages and when to automate
 
-- **Stages of skill acquisition.** Fitts & Posner (1967) proposed cognitive → associative → autonomous stages. Anderson (1982) formalized this as declarative knowledge compiled into procedures. Dreyfus & Dreyfus (1980) described novice → advanced beginner → competent → proficient → expert. Once a skill is *autonomous*, it no longer needs conscious attention. **That is the right moment to hand it to automation:** cognitive resources are then free for the next skill, and the learner still has the competence to *supervise* the automation.
-- **Mastery learning.** Bloom (1968, 1984) proposed that learners move on only after showing mastery (≈ 80–90% on a criterion test).
-  - **Course exams:** a meta-analysis of 108 evaluations found positive effects, strongest for weaker students (Kulik, Kulik & Bangert-Drowns, 1990).
-  - **Standardized tests:** effects are essentially zero, a point Kulik et al. accepted (Slavin, 1987, 1990).
-  - **Cost:** mastery gates take time and reduce coverage.
+- **Stages of skill acquisition.** Fitts & Posner (1967) proposed cognitive → associative → autonomous stages. Anderson (1982) formalized this as declarative knowledge compiled into procedures. Dreyfus & Dreyfus (1980) described novice → advanced beginner → competent → proficient → expert. Once a skill is *autonomous*, it no longer needs conscious attention. **That is the right moment to hand it to automation:** cognitive resources are then free for the next skill, and you still have the competence to *supervise* the automation.
+- **Mastery learning.** Bloom (1968, 1984) proposed that students move on only after showing mastery (≈ 80–90% on a criterion test).
+    - **Course exams:** a meta-analysis of 108 evaluations found positive effects, strongest for weaker students (Kulik, Kulik & Bangert-Drowns, 1990).
+    - **Standardized tests:** effects are essentially zero, a point Kulik et al. accepted (Slavin, 1987, 1990).
+    - **Cost:** mastery gates take time and reduce coverage.
 
-  Both points matter here. The gains show up on narrow tests aligned with the course, which an exam is. A strict gate, such as "no promotion while explanations are open", trades coverage for depth.
+    Both points matter here. The gains show up on narrow tests aligned with the course, which a course exam is. A strict gate, such as "no promotion while explanations are open", trades coverage for depth.
+
 - **The "2 sigma" claim does not hold.** Bloom's (1984) two-standard-deviation effect of one-to-one tutoring rested on two three-week dissertation studies with narrow tests. About half of it came from the mastery tests and corrective feedback, not from tutoring itself (von Hippel, 2024). Better estimates:
-  - human tutoring d ≈ 0.79 and intelligent tutoring systems d ≈ 0.76 (VanLehn, 2011);
-  - tutoring programmes about 0.29 SD (Nickow, Oreopoulos & Quan, 2024);
-  - tutoring systems a median 0.66 SD, much larger on locally made tests than on standardized ones (Kulik & Fletcher, 2016).
+    - human tutoring d ≈ 0.79 and intelligent tutoring systems d ≈ 0.76 (VanLehn, 2011);
+    - tutoring programmes about 0.29 SD (Nickow, Oreopoulos & Quan, 2024);
+    - tutoring systems a median 0.66 SD, much larger on locally made tests than on standardized ones (Kulik & Fletcher, 2016).
 
-  A realistic expectation for an AI tutor is a fraction of a standard deviation, not two.
+    A realistic expectation for an AI tutor is a fraction of a standard deviation, not two.
+
 - **Knowledge tracing.** Corbett & Anderson (1994) modelled the probability that a skill is known, updating it after each attempt, and declared mastery at P(known) ≥ 0.95. This idea is behind the skill record in §5.5. Anderson et al. (1995) and VanLehn (2011) showed that step-based intelligent tutoring comes close to the effectiveness of human tutoring.
 - **Deliberate practice.** Ericsson, Krampe & Tesch-Römer (1993) identified effortful practice on specific weaknesses, with immediate feedback, as the engine of expertise. Practice in easy "autopilot" mode does not have the same effect. Treat this as a principle of practice *quality*. It does not show that the amount of practice explains most differences between people:
-  - **Variance explained:** deliberate practice explained 26% in games, 21% in music, 18% in sports, 4% in education and under 1% in professions (Macnamara, Hambrick & Oswald, 2014).
-  - **Replication:** a direct replication of the original study failed (Macnamara & Maitra, 2019).
-  - **Counter-claim:** Ericsson & Harwell (2019) report higher shares when they keep only studies that match the original definition.
+    - **Variance explained:** deliberate practice explained 26% in games, 21% in music, 18% in sports, 4% in education and under 1% in professions (Macnamara, Hambrick & Oswald, 2014).
+    - **Replication:** a direct replication of the original study failed (Macnamara & Maitra, 2019).
+    - **Counter-claim:** Ericsson & Harwell (2019) report higher shares when they keep only studies that match the original definition.
 - **Overlearning** (practice beyond first mastery) improves retention, but the benefit fades over time (Driskell, Willis & Copper, 1992). *Spacing* is a more efficient use of extra practice (Rohrer et al., 2005).
 
 ### 2.5 Retention after mastery: spacing, retrieval and skill decay
 
 - **Forgetting** follows a steep curve that slows over time (Ebbinghaus, 1885).
-- **Spacing effect.** Cepeda et al. (2006) reviewed 317 experiments: practice spread out over time beats massed practice. Cepeda et al. (2008) found that the optimal gap grows with the retention interval but shrinks as a share of it, from about **20–40% of a one-week** test delay to about **5–10% of a one-year** delay. The assessment on 20 January is about ten weeks away, which points to gaps of one to two weeks between reviews of a learned skill. The study used trivia facts with a single review, so applying it to programming skill is an extrapolation. Kang (2016) reviewed spacing as a practical, efficient strategy.
+- **Spacing effect.** Cepeda et al. (2006) reviewed 317 experiments: practice spread out over time beats massed practice. Cepeda et al. (2008) found that the optimal gap grows with the retention interval but shrinks as a share of it, from about **20–40% of a one-week** test delay to about **5–10% of a one-year** delay. If your exam is about ten weeks away, this points to gaps of one to two weeks between reviews of a learned skill. The study used trivia facts with a single review, so applying it to programming skill is an extrapolation. Kang (2016) reviewed spacing as a practical, efficient strategy.
 - **Expanding intervals are not proven better.**
-  - **Spaced vs. massed:** spaced retrieval beats massed retrieval (g = 0.74).
-  - **Expanding vs. equal:** expanding schedules, like the harness's Fibonacci intervals, did not beat equal spacing (g = 0.034, not significant). They gain only when items are retrieved many times (Latimier, Peyre & Ramus, 2021).
-  - **First retrieval:** what matters most is delaying the first retrieval (Karpicke & Roediger, 2007).
-  - **During training:** expanding and equal spacing tie on a test eight weeks later, but expanding keeps recall much higher during the training period (Kang et al., 2014).
+    - **Spaced vs. massed:** spaced retrieval beats massed retrieval (g = 0.74).
+    - **Expanding vs. equal:** expanding schedules, like the harness's Fibonacci intervals, did not beat equal spacing (g = 0.034, not significant). They gain only when items are retrieved many times (Latimier, Peyre & Ramus, 2021).
+    - **First retrieval:** what matters most is delaying the first retrieval (Karpicke & Roediger, 2007).
+    - **During training:** expanding and equal spacing tie on a test eight weeks later, but expanding keeps recall much higher during the training period (Kang et al., 2014).
 
-  So the Fibonacci schedule is defensible because it keeps early reviews successful and puts them before the exam. Growing intervals are not proven superior.
+    So the Fibonacci schedule is defensible because it keeps early reviews successful and puts them before your exam. Growing intervals are not proven superior.
+
 - **Retrieval practice (the testing effect).** Retrieving from memory beats re-studying (Roediger & Karpicke, 2006; Karpicke & Roediger, 2008). Meta-analyses: Adesope, Trevisan & Sundararajan (2017); for spaced retrieval specifically, Latimier, Peyre & Ramus (2021). Dunlosky et al. (2013) rated practice testing and distributed practice the two *highest-utility* learning techniques.
-- **Interleaving** (mixing problem types) improves the ability to *choose* the right strategy (Rohrer & Taylor, 2007). A meta-analysis found g = 0.42, largest when the categories are similar (Brunmair & Richter, 2019). There is no randomized trial in programming yet. Choosing is crucial in OOD, where the hard part is knowing *which* pattern or principle applies. Learners judge interleaving as harder and wrongly believe they learn less from it (Samani & Pan, 2021), so a review session that feels worse is not evidence that it works worse.
+- **Interleaving** (mixing problem types) improves the ability to *choose* the right strategy (Rohrer & Taylor, 2007). A meta-analysis found g = 0.42, largest when the categories are similar (Brunmair & Richter, 2019). There is no randomized trial in programming yet. Choosing is crucial in OOD, where the hard part is knowing *which* pattern or principle applies. Students judge interleaving as harder and wrongly believe they learn less from it (Samani & Pan, 2021), so a review session that feels worse is not evidence that it works worse.
 - **Skill decay.** Arthur et al. (1998) meta-analysed 53 articles.
-  - **Over time:** skill loss grew from d ≈ −0.01 right after training to d ≈ −1.4 after more than a year of non-use.
-  - **By task type:** **cognitive, artificial and accuracy-based tasks decay faster** than physical, natural and speed-based ones.
-  - **Retrieval conditions:** retention tests under conditions similar to training showed less loss.
-  - **Newer estimate:** a 2025 meta-analysis of procedural skills found half of the initial accuracy gains lost after about 6.5 months (Tatel & Ackerman, 2025).
+    - **Over time:** skill loss grew from d ≈ −0.01 right after training to d ≈ −1.4 after more than a year of non-use.
+    - **By task type:** **cognitive, artificial and accuracy-based tasks decay faster** than physical, natural and speed-based ones.
+    - **Retrieval conditions:** retention tests under conditions similar to training showed less loss.
+    - **Newer estimate:** a 2025 meta-analysis of procedural skills found half of the initial accuracy gains lost after about 6.5 months (Tatel & Ackerman, 2025).
 
-  Writing correct C# from memory falls in the fast-decaying class.
+    Writing correct code from memory, for example C#, falls in the fast-decaying class.
+
 - **Adaptive scheduling.** The Leitner system (Leitner, 1972) and half-life regression (Settles & Meeder, 2016, from Duolingo) set review intervals adaptively from success history. This is the model behind §5.7.
 
 ### 2.6 Practice conditions and transfer to the test
 
-The D-toets analysis named practice conditions as a main cause of the result. There was no timed practice without help, and the test was in a different IDE. The literature supports that diagnosis, with one correction about what matters most.
+How and where you practise affects how well your skill carries over to the exam. Two conditions matter here: whether you have practised timed and without help, and whether you have practised in the IDE that your exam uses. The literature supports paying attention to both, with one correction about what matters most.
+
+!!! example "Example: one student's situation"
+    A second-year HBO-ICT student practised OOD in Visual Studio, with AI available. A diagnostic test at CHE was in Rider, timed and without AI. The student's own analysis named the practice conditions as a main cause of the result: there had been no timed practice without help, and the test was in a different IDE.
 
 - **Transfer-appropriate processing.** Performance depends on how well the processing during practice matches the processing at the test (Morris, Bransford & Franks, 1977; see also encoding specificity, Tulving & Thomson, 1973). Practice in the test's format transfers better:
-  - **Classroom quizzing:** g ≈ 0.50, moderated by how consistent the practice format is with the test format (Yang et al., 2021).
-  - **Test-enhanced learning:** it transfers with d ≈ 0.40, mostly across formats and to application questions. Once publication bias is corrected, there is hardly any transfer without those supporting conditions (Pan & Rickard, 2018).
-- **The room matters less than the task.** Effects of the physical environment are reliable but modest (d ≈ 0.28; Smith & Vela, 2001, as summarised by Smith et al., 2014), and the classic underwater study failed to replicate (Murre, 2021). An IDE is not background context, though. Creating classes, running tests and reading compiler output in Rider are part of the procedure being tested.
+    - **Classroom quizzing:** g ≈ 0.50, moderated by how consistent the practice format is with the test format (Yang et al., 2021).
+    - **Test-enhanced learning:** it transfers with d ≈ 0.40, mostly across formats and to application questions. Once publication bias is corrected, there is hardly any transfer without those supporting conditions (Pan & Rickard, 2018).
+- **The room matters less than the task.** Effects of the physical environment are reliable but modest (d ≈ 0.28; Smith & Vela, 2001, as summarised by Smith et al., 2014), and the classic underwater study failed to replicate (Murre, 2021). An IDE is not background context, though. Creating classes, running tests and reading compiler output in the IDE of your exam are part of the procedure being tested.
 - **Stress and stakes.** Retrieval practice protected recall against acute stress in one study (Smith, Floerke & Thomas, 2016), with mixed follow-ups. High-stakes quizzes *during learning* removed the benefit of retrieval practice (Hinze & Rapp, 2014). Training under stress improves performance under stress and carries over to new stressors and tasks (Saunders et al., 1996; Driskell, Johnston & Salas, 2001).
-- **What this means.** Learn at low stakes, with hints, first. In the last weeks before a test, rehearse timed sessions without AI in the exam IDE, starting short and working up to full mock exams. No study has measured the cost of an unfamiliar IDE specifically, so this is an inference from the principles above.
+- **What this means.** Learn at low stakes, with hints, first. In the last weeks before your exam, rehearse timed sessions without AI in the IDE of your exam, starting short and working up to full mock exams. No study has measured the cost of an unfamiliar IDE specifically, so this is an inference from the principles above.
 
 ### 2.7 Reflection, learning journals and self-regulation
 
-- **Self-regulated learning (SRL).** Zimmerman (2002) described a cycle of *forethought → performance → self-reflection*. Learners who plan, monitor and reflect learn more.
+- **Self-regulated learning (SRL).** Zimmerman (2002) described a cycle of *forethought → performance → self-reflection*. Students who plan, monitor and reflect learn more.
 - **Writing learning protocols.** Nückles, Hübner & Renkl (2009) showed that journal writing with **cognitive and metacognitive prompts** improves learning outcomes. Nückles et al. (2020) refined this into a self-regulation account of writing-to-learn. Moon (2006) gives practical guidance on learning journals. Schön (1983) and Boud, Keogh & Walker (1985) laid the foundations of reflective practice.
 - **Feedback** is among the stronger influences on learning, especially when it is rich in information and addresses the task, the process and self-regulation rather than the person (Hattie & Timperley, 2007; Shute, 2008).
-  - **Average effect:** the newer meta-analytic estimate is d = 0.48 (95% CI 0.44–0.51) (Wisniewski, Zierer & Hattie, 2020).
-  - **By feedback type:** high-information feedback reaches d ≈ 0.99, praise or rewards d ≈ 0.24 (same source).
-  - **Harm:** over a third of feedback interventions made performance *worse* (Kluger & DeNisi, 1996).
+    - **Average effect:** the newer meta-analytic estimate is d = 0.48 (95% CI 0.44–0.51) (Wisniewski, Zierer & Hattie, 2020).
+    - **By feedback type:** high-information feedback reaches d ≈ 0.99, praise or rewards d ≈ 0.24 (same source).
+    - **Harm:** over a third of feedback interventions made performance *worse* (Kluger & DeNisi, 1996).
 
-  For the harness, positive signals should name the specific (micro)skill and strategy that worked, not praise the person. **Learning from errors** works best when the errors are corrected and reflected on (Metcalfe, 2017).
+    For the harness, positive signals should name the specific (micro)skill and strategy that worked, not praise the person. **Learning from errors** works best when the errors are corrected and reflected on (Metcalfe, 2017).
+
 - **Self-determination theory.** Ryan & Deci (2000) showed that autonomy, competence and relatedness sustain motivation. A setup that *you* configure and that makes your progress visible supports autonomy and competence. One that nags and blocks you arbitrarily undermines them.
 
 **Implication for an AI diary:** the *facts* can be logged automatically (skills touched, hints used, levels, test results). The *reflection* has to be **written by you**, prompted with specific questions. If the AI writes your reflection, you lose the generation effect (Slamecka & Graf, 1978; Bertsch et al., 2007) and the benefit of writing to learn (Nückles et al., 2009). Fan et al. (2025) are often cited here, but they did not study AI-written reflections. They found that ChatGPT support improved an essay without improving knowledge gain or transfer, and *interpreted* that as metacognitive laziness.
@@ -254,8 +243,8 @@ By 2026, five current models scored above the average student on the tests and e
 
 | Study | Design | Key finding | Grade |
 |---|---|---|---|
-| Kazemitabaar et al. (2023), CHI | Randomized; 69 novices aged 10–17; Codex vs. none; retention test after a week | Better code authoring with Codex, less frustration. **No significant difference in one-week retention**; the Codex group did slightly better. Learners with more prior experience benefited more. | A (small) |
-| Kazemitabaar et al. (2023b), Koli Calling | Observational; only the 33 learners who had Codex | Copy-pasting whole tasks went with worse retention, and writing code first and then asking AI went with better retention. **These were trends, not significant.** | C |
+| Kazemitabaar et al. (2023), CHI | Randomized; 69 novices aged 10–17; Codex vs. none; retention test after a week | Better code authoring with Codex, less frustration. **No significant difference in one-week retention**; the Codex group did slightly better. Students with more prior experience benefited more. | A (small) |
+| Kazemitabaar et al. (2023b), Koli Calling | Observational; only the 33 students who had Codex | Copy-pasting whole tasks went with worse retention, and writing code first and then asking AI went with better retention. **These were trends, not significant.** | C |
 | Prather et al. (2024b), TOCHI | Qualitative; novices using Copilot | New metacognitive difficulties: being "drawn in" by suggestions, losing your own plan. | C |
 | Prather et al. (2024), ICER "Widening Gap" | Qualitative lab study; 21 novices; observation, eye tracking, interviews | Strong students accelerated, weak students were derailed. **Illusion of competence.** | C |
 | Margulieux et al. (2024), ITiCSE | Observational; novices with LLMs | Self-regulation, self-efficacy and fear of failure shaped *how* students used LLMs. | C |
@@ -267,7 +256,7 @@ By 2026, five current models scored above the average student on the tests and e
 | Hellas et al. (2023), ICER | Analysis of LLM answers to novice help requests | Often helpful, but **frequently included incorrect** content or full solutions. | C |
 | Leinonen et al. (2023); Sarsa et al. (2022) | LLM error explanations and exercise generation | Useful as *generators* of explanations and exercises, a good role for AI. | C |
 | Denny et al. (2024b): Prompt Problems | New exercise type | Students learn to specify problems precisely for AI, a new skill worth practising. | C |
-| Kazemitabaar et al. (2025), IUI | Randomized; 82 between-subjects, then 42 within-subjects; seven ways to engage with AI-generated code | The best technique walks learners through the problem step by step and asks what each stage needs *before* revealing the code. Engaging techniques beat passive viewing. | B |
+| Kazemitabaar et al. (2025), IUI | Randomized; 82 between-subjects, then 42 within-subjects; seven ways to engage with AI-generated code | The best technique walks students through the problem step by step and asks what each stage needs *before* revealing the code. Engaging techniques beat passive viewing. | B |
 | **New:** Gardella et al. (2026), ICER | Within-subjects; 22 CS2/CS3 students; Copilot vs. a human pair, 20 min each; solo retest without AI a week later | With Copilot, performance rose 14 points (g = 0.99) and workload fell. From the session to the retest, scores dropped 18.9 points more after the Copilot trial (g = −1.13, p_adj = .054). The absolute retest difference was not significant. | A (small) |
 | **New:** Barth et al. (2026), ICER | Preregistered crossover; 1,059 CS1 students over six weeks | Steering the tutor's pedagogy through system prompts (self-regulation or ICAP scaffolds) made **no difference** on any preregistered outcome. The authors conclude that tutor pedagogy "may not be easily steered by system prompts alone". | A |
 | **New:** Pădurean et al. (2026), ICER | Log study; 917 CS1 students, 2,636 sessions; realistic bugs injected into AI-generated solutions | Injected bugs made students edit and repair the code itself, with more success on the next attempt. Natural prompt failures made them reword the prompt instead. | C |
@@ -278,87 +267,91 @@ By 2026, five current models scored above the average student on the tests and e
 **Studies of AI and learning in general:**
 
 - **Bastani et al. (2025), PNAS.** *Grade A.* Randomized by classroom; about 1,000 students in grades 9–11 at one Turkish high school.
-  - **GPT Base** (unrestricted): +48% in practice, but **−17% on the exam** after access was removed.
-  - **GPT Tutor** (hints, guardrails): +127% in practice and no exam harm (−0.004, not significant).
+    - **GPT Base** (unrestricted): +48% in practice, but **−17% on the exam** after access was removed.
+    - **GPT Tutor** (hints, guardrails): +127% in practice and no exam harm (−0.004, not significant).
 
-  Students used the unrestricted tool "as a crutch".
+    Students used the unrestricted tool "as a crutch".
+
 - **Shen & Tamkin (2026), arXiv preprint (Anthropic Fellows).** *Grade A for the main effect, C for the patterns.*
-  - **Design:** randomized; 52 mostly professional or freelance developers (aged about 25–35, recruited through a crowdworker platform) learned the asynchronous Python library Trio, with or without a GPT-4o-based assistant.
-  - **Result:** the AI group scored **50% vs. 67%** on the follow-up quiz (d = 0.74, p = 0.01), with the largest gap on debugging. It was only about two minutes faster, which was not significant. The paper calls the gap "17%"; its own numbers give 15.4 points.
-  - **Patterns:** the six interaction patterns with cognitive engagement (asking conceptual questions; generating code, then checking understanding) scored 65–86%, against 24–39% for delegation. **The patterns were identified afterwards from screen recordings, with 2–7 people each, so they are correlational.** Stronger or more motivated participants may simply choose them.
-  - **Vendor:** a vendor study, but its result runs against the vendor's commercial interest.
+    - **Design:** randomized; 52 mostly professional or freelance developers (aged about 25–35, recruited through a crowdworker platform) learned the asynchronous Python library Trio, with or without a GPT-4o-based assistant.
+    - **Result:** the AI group scored **50% vs. 67%** on the follow-up quiz (d = 0.74, p = 0.01), with the largest gap on debugging. It was only about two minutes faster, which was not significant. The paper calls the gap "17%"; its own numbers give 15.4 points.
+    - **Patterns:** the six interaction patterns with cognitive engagement (asking conceptual questions; generating code, then checking understanding) scored 65–86%, against 24–39% for delegation. **The patterns were identified afterwards from screen recordings, with 2–7 people each, so they are correlational.** Stronger or more motivated participants may simply choose them.
+    - **Vendor:** a vendor study, but its result runs against the vendor's commercial interest.
 - **Lehmann, Cornelius & Sting (2025), arXiv preprint, still unpublished.** *Grade A for the null effect, C for the rest.*
-  - **Design:** a field study (observational) plus two preregistered lab experiments in which only LLM access was randomized.
-  - **Average effect:** **neither lab experiment found an average effect on learning** (n = 107 and n = 69).
-  - **Solutions vs. explanations:** the contrast between asking for solutions (breadth without depth) and asking for explanations (depth) comes from the observational data.
-  - **"Widening gap":** the gap between students with low and high prior knowledge is an **exploratory** median split (pooled n = 176, interaction p = 0.028).
+    - **Design:** a field study (observational) plus two preregistered lab experiments in which only LLM access was randomized.
+    - **Average effect:** **neither lab experiment found an average effect on learning** (n = 107 and n = 69).
+    - **Solutions vs. explanations:** the contrast between asking for solutions (breadth without depth) and asking for explanations (depth) comes from the observational data.
+    - **"Widening gap":** the gap between students with low and high prior knowledge is an **exploratory** median split (pooled n = 176, interaction p = 0.028).
 - **Fan et al. (2025), BJET, "metacognitive laziness".** *Grade B.* Lab experiment, 117 students in four conditions: ChatGPT, a human expert, writing analytics, nothing. ChatGPT improved the essay *product* most, but knowledge gain and transfer did not differ. "Metacognitive laziness" is the authors' interpretation, not a measured outcome.
 - **Stadler, Bannert & Sailer (2024), Computers in Human Behavior.** *Grade B.* Randomized; 91 students; ChatGPT-3.5 vs. Google search. LLMs reduced mental effort during scientific inquiry, but the reasoning was less deep.
 - **Darvishi et al. (2024), Computers & Education.** *Grade A.* Randomized; 1,625 students in 10 courses. Students leaned on AI assistance in peer feedback, and their own performance dropped when it was removed. Self-regulation strategies helped them keep agency.
 - **Kestin et al. (2025), Scientific Reports.** *Grade B, short-term only.* Two-week crossover in a Harvard physics course; 194 of 233 students analysed. An AI tutor built on pedagogical best practice beat in-class active learning (0.73–1.3 SD) in less time (median 49 vs. about 60 minutes). Limits:
-  - the post-test came **right after each lesson, with no retention test**;
-  - the tutor was used at home;
-  - it relied on pre-written answers.
+    - the post-test came **right after each lesson, with no retention test**;
+    - the tutor was used at home;
+    - it relied on pre-written answers.
 - **Kosmyna et al. (2025), arXiv preprint, not peer reviewed.** *Grade C.* 54 participants, only 18 in the fourth session. In an essay task, the LLM group showed the lowest EEG connectivity, the lowest sense of ownership and poor recall of their own essays ("cognitive debt"). A formal methodological critique exists (Stanković et al., 2026).
 - **Gerlich (2025), Societies; Lee et al. (2025), CHI.** *Grade C.* Both correlational:
-  - Gerlich: a survey of 666 people, with a published correction to a table.
-  - Lee et al.: a self-report survey of 319 knowledge workers (936 examples), by Microsoft authors.
+    - Gerlich: a survey of 666 people, with a published correction to a table.
+    - Lee et al.: a self-report survey of 319 knowledge workers (936 examples), by Microsoft authors.
 
-  Heavier AI use and more trust in AI go with less critical-thinking effort. For knowledge workers, critical thinking shifts towards checking output.
+    Heavier AI use and more trust in AI go with less critical-thinking effort. For knowledge workers, critical thinking shifts towards checking output.
+
 - **Anthropic (2025a), Education Report.** *Grade C, vendor data.* 574,740 student conversations; **≈ 47% were "direct"**, meaning the student wanted the answer with minimal engagement. Students also delegated higher-order tasks such as creating and analysing. Computer science made up 36.8% of conversations (38.6% in the body of the report), against 5.4% of US degrees.
 - **Productivity is not learning.**
-  - **Peng et al. (2023):** developers were 55.8% faster with Copilot (95% CI 21–89%) on one well-specified greenfield task. 95 were recruited and 35 per group completed. Preprint, by GitHub and Microsoft authors.
-  - **METR (Becker et al., 2025):** 16 experienced open-source developers, working on 246 of their own tasks, were **19% slower** with early-2025 tools (CI +2% to +39%). They had forecast a 24% speed-up and afterwards believed it had been 20%.
-  - **METR follow-up (February 2026):** 57 developers and over 800 tasks gave estimated speed-ups of 18% and 4%, both with intervals that include zero. METR calls the data unreliable, because 30–50% of the developers held back tasks they did not want to do without AI, and is redesigning the study.
+    - **Peng et al. (2023):** developers were 55.8% faster with Copilot (95% CI 21–89%) on one well-specified greenfield task. 95 were recruited and 35 per group completed. Preprint, by GitHub and Microsoft authors.
+    - **METR (Becker et al., 2025):** 16 experienced open-source developers, working on 246 of their own tasks, were **19% slower** with early-2025 tools (CI +2% to +39%). They had forecast a 24% speed-up and afterwards believed it had been 20%.
+    - **METR follow-up (February 2026):** 57 developers and over 800 tasks gave estimated speed-ups of 18% and 4%, both with intervals that include zero. METR calls the data unreliable, because 30–50% of the developers held back tasks they did not want to do without AI, and is redesigning the study.
 
-  Perceived and actual gains can diverge, even for experts.
+    Perceived and actual gains can diverge, even for experts.
+
 - **Vendor "learning modes".** Several products build pedagogy into the model's behaviour:
-  - Claude Code's *Learning* output style, with `TODO(human)` markers;
-  - OpenAI's ChatGPT study mode (July 2025);
-  - Google's Guided Learning in Gemini (August 2025); LearnLM is no longer a separate model.
+    - Claude Code's *Learning* output style, with `TODO(human)` markers;
+    - OpenAI's ChatGPT study mode (July 2025);
+    - Google's Guided Learning in Gemini (August 2025); LearnLM is no longer a separate model.
 
-  All are **opt-in and easy to switch off**, none tracks mastery per skill, and **no evaluation of their learning outcomes** was found.
+    All are **opt-in and easy to switch off**, none tracks mastery per skill, and **no evaluation of their learning outcomes** was found.
 
 **New evidence, May–November 2026:**
 
 - **Maryland trial (Liu et al., 2026; working paper).** *Grade A, not peer reviewed.*
-  - **Design:** randomized by instructor; 2,379 undergraduates and 30 instructors. A GPT-4o tutor was built into the course, mostly in direct-answer mode, and both arms also had ChatGPT and Gemini. Only about 15% of students used the tutor.
-  - **Grades:** final grades fell by **0.37 SD** in comparisons within the same course. Across the full sample the drop was not significant.
-  - **Engagement:** recorded participation fell by 0.90 SD.
-  - **Equity:** first-generation students lost more (−0.50 vs. −0.22 SD).
-  - **Use:** 73.8% of requests sought information, explanations or solutions; 0.7% asked for feedback on the student's own work.
+    - **Design:** randomized by instructor; 2,379 undergraduates and 30 instructors. A GPT-4o tutor was built into the course, mostly in direct-answer mode, and both arms also had ChatGPT and Gemini. Only about 15% of students used the tutor.
+    - **Grades:** final grades fell by **0.37 SD** in comparisons within the same course. Across the full sample the drop was not significant.
+    - **Engagement:** recorded participation fell by 0.90 SD.
+    - **Equity:** first-generation students lost more (−0.50 vs. −0.22 SD).
+    - **Use:** 73.8% of requests sought information, explanations or solutions; 0.7% asked for feedback on the student's own work.
 - **Middlebury trial (Contractor & Reyes, 2026; working paper).** *Grade A, not peer reviewed; one short task.*
-  - **Design:** randomized and proctored; 211 undergraduates had a 35-minute learning phase on an unfamiliar topic, and then took all tests without AI.
-  - **Result:** ChatGPT access **raised** AI-free test scores by 0.28 SD, and by about 0.21 SD a week later (p = 0.068).
-  - **Use type:** students who used it like a tutor gained, while students who let it write for them lost their essay advantage once AI was removed. That split is self-selected.
-  - **Caveats:** not programming; figures from the arXiv HTML version.
+    - **Design:** randomized and proctored; 211 undergraduates had a 35-minute learning phase on an unfamiliar topic, and then took all tests without AI.
+    - **Result:** ChatGPT access **raised** AI-free test scores by 0.28 SD, and by about 0.21 SD a week later (p = 0.068).
+    - **Use type:** students who used it like a tutor gained, while students who let it write for them lost their essay advantage once AI was removed. That split is self-selected.
+    - **Caveats:** not programming; figures from the arXiv HTML version.
 - **Mastery-practice trial (Oreopoulos, Liut, Sungu & Low, 2026; working paper; middle school).** *Grade A, K-12.* Individually randomized; over 6,000 students. A guard-railed tutor improved a one-week test by only **3.1 percentage points (p = 0.065)**, and only inside a mastery workflow. Mastery alone did not improve delayed learning. One author is a co-author of Bastani et al.
 - **MBA field experiment (Yang, Van Alstyne & Dellarocas, 2026; preprint).** *Grade B.* Preregistered; 86 students. A structured tutor grounded in the course beat freely available consumer AI by 6.63 points (p = .007).
 - **"Generative AI learning penalty" (Strömberg, Lei & Wu, 2026; CEPR working paper).** *Grade B, quasi-experimental, not higher education.* Difference-in-differences on 26,811 secondary-school students in China. After AI adoption, homework scores rose 18% while closed-book exam scores fell about 20% within six months. About 80% of users showed signs of outsourcing their homework.
 - **AI tutors over-help (Teo et al., 2026; preprint).** *Grade C.* In simulations, LLM "teachers" step in earlier and more often than human teachers, and hand out complete solutions instead of targeted hints.
 - **Meta-analyses.** The most rigorous one (Boolzen et al., 2026, *Artificial Intelligence Review*, preregistered) pooled 49 studies of AI in STEM education:
-  - the uncorrected g = 0.84 falls to **0.08 after correcting for publication bias**;
-  - none of the 34 randomized trials had low risk of bias;
-  - 33 studies showed large effects only because the two groups did different cognitive work;
-  - AI helped when it augmented the learner's activity and could harm when it replaced it.
+    - the uncorrected g = 0.84 falls to **0.08 after correcting for publication bias**;
+    - none of the 34 randomized trials had low risk of bias;
+    - 33 studies showed large effects only because the two groups did different cognitive work;
+    - AI helped when it augmented the student's activity and could harm when it replaced it.
 
-  Two other 2026 meta-analyses report g = 0.50 and g = 1.10 without bias correction (Fan, Ke, Chen & Lv, 2026; Liu, Xie & Xu, 2026). The most-cited 2025 meta-analysis (Wang & Fan, g = 0.87) **was retracted in 2026** after a critique of its methods; it had been cited more than 500 times. *Uncorrected pooled effects should not be cited as evidence that AI improves learning.*
+    Two other 2026 meta-analyses report g = 0.50 and g = 1.10 without bias correction (Fan, Ke, Chen & Lv, 2026; Liu, Xie & Xu, 2026). The most-cited 2025 meta-analysis (Wang & Fan, g = 0.87) **was retracted in 2026** after a critique of its methods; it had been cited more than 500 times. *Uncorrected pooled effects should not be cited as evidence that AI improves learning.*
+
 - **Assignments overstate mastery.**
-  - **Đức Minh (2026):** *grade C, observational.* In 1,498 Vietnamese undergraduates, AI-assisted assignments averaged 7.62, while mastery checked at random without devices averaged 5.55.
-  - **Eleftheriou, Pallis & Constantinides (2026):** *grade B; April, just before the window; n = 85.* A standard LLM gave the highest *perceived* understanding and the lowest *measured* learning, and guided hints gave the largest gains.
+    - **Đức Minh (2026):** *grade C, observational.* In 1,498 Vietnamese undergraduates, AI-assisted assignments averaged 7.62, while mastery checked at random without devices averaged 5.55.
+    - **Eleftheriou, Pallis & Constantinides (2026):** *grade B; April, just before the window; n = 85.* A standard LLM gave the highest *perceived* understanding and the lowest *measured* learning, and guided hints gave the largest gains.
 - **Agentic tools and OOD: an evidence vacuum.** No controlled study yet measures student learning with Claude Code, Cursor, Copilot agent mode or Codex. No study measures design skill without AI after AI-assisted practice; the one UML experiment (EDULEARN26) measured performance and perceptions only *with* ChatGPT. Everything this document says about agentic tools is extrapolated from chat and autocomplete studies.
 
 **What the evidence supports, and how strongly:**
 
 - **Strong (several grade-A studies agree): performance with AI is not learning.** When AI does the cognitive work during practice, performance without AI later is the same or lower (Bastani; Liu; Gardella; Strömberg). When AI explains or tutors, results range from no harm to modest gains (Bastani's tutor; Contractor & Reyes; Kazemitabaar 2023). Boolzen's moderator, augment vs. substitute, says the same.
 - **Moderate: guardrails work when they are enforced in the workflow** (mastery gates, explanation gates, structured tutors, blocks outside the model), and much less when they are only asked for in a system prompt (Barth's null result; Teo's over-helping tutors). That supports the harness's hooks over relying on a "learning mode" prompt.
-- **Weak, correlational only: that specific interaction patterns cause better learning.** This covers asking for explanations and attempting first. In every study so far the learner chose the pattern (Shen & Tamkin; Contractor & Reyes; Kazemitabaar 2023b). No randomized trial has compared attempt-first with AI-first. The pattern idea is the best working hypothesis, not a finding. It fits the experimental result that only explanation *without* the answer produced learning (Gajos & Mamykina, 2022; §2.10).
-- **Equity: weaker and first-generation students are hurt more and use escape hatches more** (Liu; Kapoor et al., 2025; Lehmann, exploratory; Prather, qualitative). **Guardrails matter most for the learners least likely to choose them.**
+- **Weak, correlational only: that specific interaction patterns cause better learning.** This covers asking for explanations and attempting first. In every study so far the student chose the pattern (Shen & Tamkin; Contractor & Reyes; Kazemitabaar 2023b). No randomized trial has compared attempt-first with AI-first. The pattern idea is the best working hypothesis, not a finding. It fits the experimental result that only explanation *without* the answer produced learning (Gajos & Mamykina, 2022; §2.10).
+- **Equity: weaker and first-generation students are hurt more and use escape hatches more** (Liu; Kapoor et al., 2025; Lehmann, exploratory; Prather, qualitative). **Guardrails matter most for the students least likely to choose them.**
 - **Unknown:** retention beyond about a week in higher education, agentic tools, and design-level OOD skill.
 
 ### 2.9 The shift in skill needs: jobs, the economics of hand-written code, and what to practise
 
-The first version of this review assumed that the goal is to write code without AI. That holds for the assessment on 20 January, which allows AI only at level 0/1 and includes an oral defence. It was never argued for the career that follows. This section tests the claim that **writing code by hand is no longer economical**, and asks which skills employers now pay for.
+The first version of this review assumed that the goal is to write code without AI. That holds for an exam without AI, for example an assessment that allows AI only at level 0/1 and includes an oral defence. It was never argued for the career that follows. This section tests the claim that **writing code by hand is no longer economical**, and asks which skills employers now pay for.
 
 Most of the evidence is from the US, and Dutch data are added where they exist. Most sources here are working papers, government statistics or industry reports rather than peer-reviewed studies. Grades follow §2.0.
 
@@ -376,29 +369,33 @@ Most of the evidence is from the US, and Dutch data are added where they exist. 
 The direction is clear on every measure: steep growth from 2024 to 2026, with a step from autocomplete to agent-drafted pull requests in 2026. "Most new code at AI-forward companies is drafted by AI" is plausible. "Most code everywhere is written by AI" is not established. Every company claim adds that engineers approve the code, so a human is still accountable for every merged line.
 
 **Productivity: who gains, and where the bottleneck went.**
+
 - **Field experiments with 2022–23 code completion** (Cui et al., 2025): 4,867 developers at Microsoft, Accenture and a Fortune-100 firm completed about 26% more tasks (SE 10.3%). Less experienced developers adopted more and gained more. Two co-authors work at Microsoft. *Grade A, working paper.*
 - **Google's internal trial** (Paradis et al., 2024): about 21% less time on one enterprise task, with 96 Google engineers. *Grade B, vendor.*
 - **METR:** experienced developers were 19% *slower* on their own mature repositories, and the 2026 follow-up was unreliable (§2.8). *Grade A/B.*
 - **Cursor adoption** (He et al., 2026; difference-in-differences on GitHub projects): a large but **transient** speed-up, significant only in the first two months. It came with a **persistent** rise in static-analysis warnings (about +30%) and code complexity (about +41%), which later slowed the projects down. *Grade B.*
 - **Task type:** gains of about 35–40% on simple greenfield tasks and 10% or less on complex legacy code (Stanford research cited in DORA's ROI report). *Grade C.*
 - **The bottleneck has moved to review, testing and change approval.** The sources below have different commercial interests and still agree:
-  - Anthropic: "human code review has become a new bottleneck".
-  - DORA: models a "verification tax".
-  - Sonar: 96% of developers do not fully trust AI-generated code, yet only 48% always check it before committing.
+    - Anthropic: "human code review has become a new bottleneck".
+    - DORA: models a "verification tax".
+    - Sonar: 96% of developers do not fully trust AI-generated code, yet only 48% always check it before committing.
 
 **Quality and security.**
+
 - **Veracode's benchmark** (Veracode sells security testing): the average security pass rate for AI-generated code was 55–56% until July 2026 and 62% in October 2026. C# passed 59.6%; cross-site scripting (18%) and log injection (12.6%) still mostly fail. The syntax is almost always correct. *Grade C, vendor benchmark.*
 - **GitClear** (sells developer analytics; correlational): duplicated code blocks rose 81% compared with 2023. Moved, meaning refactored, code fell from 21% of changes (2022) to 3.8% (2026). *Grade C.*
 - **CodeRabbit** (sells AI code review): about 1.7 times as many issues in AI-co-authored pull requests (470 pull requests). *Grade C.*
 - **Incidents in 2025–26:** these were mostly agents with too many permissions taking destructive actions, such as deleting a production database and its backups, rather than subtle bugs. *Grade D, secondary reports.*
 
 **Cost.** The tool is cheap compared with labour.
+
 - **Tool:** Anthropic reports about $13 per developer per active day ($150–250 a month) for Claude Code (vendor).
 - **Labour:** DORA's ROI model assumes $176,000 fully loaded per engineer, roughly $800 per working day.
 
 So the tool costs about 1–2% of labour (own arithmetic). The economics turn on the human minutes spent specifying, reviewing and fixing. **No study compares the total cost per delivered feature of generated vs. hand-written code**, counting generation, review, rework and incidents.
 
 **Capability.**
+
 - **METR (May 2026):** the public frontier completes tasks of about 12 hours half the time, but only about 1.5 hours reliably (80% of the time). METR warns that a 50% horizon of X hours "does not mean we can delegate tasks under X hours".
 - **SWE-bench Verified:** saturated and contaminated.
 - **SWE-bench Pro:** independently standardized top scores are around 60%; vendor-reported scores go up to 89.9%.
@@ -406,66 +403,71 @@ So the tool costs about 1–2% of labour (own arithmetic). The economics turn on
 *Grade B/C.*
 
 **Adoption and trust.**
+
 - **Stack Overflow 2026** (over 30,000 respondents):
-  - 66% use coding assistants or agents; the top use is generating code in familiar areas (69.3%).
-  - 48% trust AI only when they can easily check its answers, and only 6.6% trust it with important decisions.
-  - Design (49%) and communication (35%) are rated least useful for AI.
-  - 17.1% avoid AI because they worry about losing job skills.
+    - 66% use coding assistants or agents; the top use is generating code in familiar areas (69.3%).
+    - 48% trust AI only when they can easily check its answers, and only 6.6% trust it with important decisions.
+    - Design (49%) and communication (35%) are rated least useful for AI.
+    - 17.1% avoid AI because they worry about losing job skills.
 - **JetBrains 2026:** 90% use agents at least weekly (vendor).
 
 *Grade C.*
 
 **Jobs.**
-- **Young workers in the US: evidence for an AI effect.** *Grade B, quasi-experimental working papers.*
-  - **Stanford "Canaries"** (revised August 2026; ADP payroll data to June 2026): employment of 22–25-year-olds in the most AI-exposed occupations is 19% below where it would be had it kept pace with less-exposed peers, up from 15% a year earlier. The gap comes through less hiring, not layoffs, and older workers show none. The authors call the result descriptive.
-  - **Fed Board** (Crane & Soto, March 2026): coder employment growth is about 3 percentage points a year lower since ChatGPT, after controlling for industry shocks.
-  - **Census** (Tucker, April 2026): early-career employment in the most exposed industries fell 12% over 10 quarters, and monetary policy explains at most a quarter of that.
-- **Evidence against an AI cause.** *Grade B/C.*
-  - In the national ACS survey the Stanford gap shrinks to about −2%, with a confidence interval that includes zero, and controlling for education halves it.
-  - The NY Fed attributes 64% of the rise in young-graduate unemployment to remote work (June 2026).
-  - Fairlie & Wu (NBER, September 2026) find no spike in recent-graduate unemployment in summer 2026.
-  - The Yale Budget Lab tracker finds no clear AI footprint (September 2026).
-  - The Danish study rules out effects on earnings and hours larger than 2% (Humlum & Vestergaard, revised March 2026).
-  - LinkedIn (owned by Microsoft) finds that real interest rates explain most of the variation in software-engineer hiring.
-- **Job postings.** *Grade C.*
-  - **US recovery:** US software-development postings recovered, up 23.8% on a year earlier by 30 October 2026, though still 18% below February 2020.
-  - **Senior-heavy:** only 4.5% were entry-level in Q1 2026, 71% of the recent increase was senior, and 37% of the increase had "AI" in the job title (Indeed, a job platform).
-  - **Europe weaker:** Germany (−14.6% on a year earlier, a new low in October 2026) and France (−7.3%).
-  - **Netherlands:** no Dutch series exists.
-- **Programmers vs. developers (US BLS, August 2026).** *Grade C, forecast.*
-  - **"Computer programmers"** (110,800 jobs): projected −7% over 2025–35, with AI automating "repetitive programming tasks" named as a reason.
-  - **"Software developers"** (1,717,800 jobs): +10%, down from +15.8% and +17% in the two previous projections.
 
-  So writing code to a specification is the part expected to be automated. The surrounding work (requirements, design, integration, testing) is expected to grow, but less than forecast a year earlier.
+- **Young workers in the US: evidence for an AI effect.** *Grade B, quasi-experimental working papers.*
+    - **Stanford "Canaries"** (revised August 2026; ADP payroll data to June 2026): employment of 22–25-year-olds in the most AI-exposed occupations is 19% below where it would be had it kept pace with less-exposed peers, up from 15% a year earlier. The gap comes through less hiring, not layoffs, and older workers show none. The authors call the result descriptive.
+    - **Fed Board** (Crane & Soto, March 2026): coder employment growth is about 3 percentage points a year lower since ChatGPT, after controlling for industry shocks.
+    - **Census** (Tucker, April 2026): early-career employment in the most exposed industries fell 12% over 10 quarters, and monetary policy explains at most a quarter of that.
+- **Evidence against an AI cause.** *Grade B/C.*
+    - In the national ACS survey the Stanford gap shrinks to about −2%, with a confidence interval that includes zero, and controlling for education halves it.
+    - The NY Fed attributes 64% of the rise in young-graduate unemployment to remote work (June 2026).
+    - Fairlie & Wu (NBER, September 2026) find no spike in recent-graduate unemployment in summer 2026.
+    - The Yale Budget Lab tracker finds no clear AI footprint (September 2026).
+    - The Danish study rules out effects on earnings and hours larger than 2% (Humlum & Vestergaard, revised March 2026).
+    - LinkedIn (owned by Microsoft) finds that real interest rates explain most of the variation in software-engineer hiring.
+- **Job postings.** *Grade C.*
+    - **US recovery:** US software-development postings recovered, up 23.8% on a year earlier by 30 October 2026, though still 18% below February 2020.
+    - **Senior-heavy:** only 4.5% were entry-level in Q1 2026, 71% of the recent increase was senior, and 37% of the increase had "AI" in the job title (Indeed, a job platform).
+    - **Europe weaker:** Germany (−14.6% on a year earlier, a new low in October 2026) and France (−7.3%).
+    - **Netherlands:** no Dutch series exists.
+- **Programmers vs. developers (US BLS, August 2026).** *Grade C, forecast.*
+    - **"Computer programmers"** (110,800 jobs): projected −7% over 2025–35, with AI automating "repetitive programming tasks" named as a reason.
+    - **"Software developers"** (1,717,800 jobs): +10%, down from +15.8% and +17% in the two previous projections.
+
+    So writing code to a specification is the part expected to be automated. The surrounding work (requirements, design, integration, testing) is expected to grow, but less than forecast a year earlier.
+
 - **Netherlands.** *Grade C.*
-  - **UWV:** ICT employment is still rising (589,000 people). But ICT vacancies have been falling since 2023 (about 18,900 in Q2 2026), and ICT unemployment-benefit claims rose to nearly 6,400 in July 2026, partly from bank reorganisations.
-  - **ROA** (November 2025): ICT job growth slows from 2.5% a year (2019–2024) to 0.3% (2025–2030), with "virtually no bottlenecks" for software developers by 2030 but "good" prospects for bachelor ICT graduates. ROA says its forecasts do not capture the effect of AI.
-  - **Most direct evidence for HBO-ICT:** employment of hbo and wo ICT graduates was "barely" negative through the 2024 cohort (Cnossen, July 2026; CBS microdata; correlational).
-  - **Disputed:** RaboResearch's −13% for young workers in AI-exposed jobs is contested by economists who point to monetary tightening (Salomons & van den Berge, 2026).
+    - **UWV:** ICT employment is still rising (589,000 people). But ICT vacancies have been falling since 2023 (about 18,900 in Q2 2026), and ICT unemployment-benefit claims rose to nearly 6,400 in July 2026, partly from bank reorganisations.
+    - **ROA** (November 2025): ICT job growth slows from 2.5% a year (2019–2024) to 0.3% (2025–2030), with "virtually no bottlenecks" for software developers by 2030 but "good" prospects for bachelor ICT graduates. ROA says its forecasts do not capture the effect of AI.
+    - **Most direct evidence for HBO-ICT:** employment of hbo and wo ICT graduates was "barely" negative through the 2024 cohort (Cnossen, July 2026; CBS microdata; correlational).
+    - **Disputed:** RaboResearch's −13% for young workers in AI-exposed jobs is contested by economists who point to monetary tightening (Salomons & van den Berge, 2026).
 - **Wage premia.** *Grade C.*
-  - **Sellers' figures:** PwC (2026) reports a 62% premium for AI skills and Lightcast 28%. Both sell AI or labour-market services, and both figures are correlational.
-  - **Independent wage data:** they point to experience and judgement as what protects pay. AI exposure hurts wage growth only where the experience premium is low (Dallas Fed, 2026).
-  - **PwC's own finding:** AI-exposed entry-level roles are seven times more likely to require senior "human-intensive" skills.
+    - **Sellers' figures:** PwC (2026) reports a 62% premium for AI skills and Lightcast 28%. Both sell AI or labour-market services, and both figures are correlational.
+    - **Independent wage data:** they point to experience and judgement as what protects pay. AI exposure hurts wage growth only where the experience premium is low (Dallas Fed, 2026).
+    - **PwC's own finding:** AI-exposed entry-level roles are seven times more likely to require senior "human-intensive" skills.
 
 **What employers ask of juniors now.** *Grade D, press accounts of memos.*
+
 - **Expectation:** employers moved from allowing AI to expecting it. Shopify, Microsoft and Coinbase did so in 2025, and Meta and JPMorgan tied it to performance reviews.
 - **Usage counts mislead:** in September 2026 Meta dropped token counts from reviews after employees inflated their usage.
 - **AI in interviews:** Google is piloting an interview round for junior and mid-level roles, from the second half of 2026. Candidates use Gemini to **read, debug and improve an existing codebase**, and are graded on validating output and debugging.
 - **AI bans:** other firms still ban AI in some rounds; Anysphere, the maker of Cursor, does so in its first coding round.
 
 **How curricula respond.**
+
 - **UC San Diego's CS1-LLM** (556 students): it replaced writing code from scratch with prompting, tracing, explaining, testing and debugging, but kept most exams free of AI. Exam scores were comparable to an international benchmark and 11% higher on explaining code in plain English. There was no randomized control.
 - **Npuls** (May 2025), the Dutch national guidance, adopts the **two-lane approach**:
-  - "Lane 1" assures crucial learning outcomes in supervised moments without AI.
-  - "Lane 2" allows or even requires AI, and asks students to show how they used it.
-  - "Students must ultimately be able to practise their profession without AI where needed."
+    - "Lane 1" assures crucial learning outcomes in supervised moments without AI.
+    - "Lane 2" allows or even requires AI, and asks students to show how they used it.
+    - "Students must ultimately be able to practise their profession without AI where needed."
 - **The University of Sydney's Green Paper** (August 2026) requires foundational skills before AI-supported tasks and "opportunities for performance independent of AI".
-- **CHE's own rules** (OER 2026–27, ICT, art. 7.11) define three levels:
-  - **Level 0:** no AI, in a controlled setting.
-  - **Level 1:** AI as an aid for ideas or structure.
-  - **Level 2:** AI built into the task.
+- **Institutional rules** turn this into AI levels. CHE's rules (OER 2026–27, ICT, art. 7.11) are an example, and this review uses their three levels:
+    - **Level 0:** no AI, in a controlled setting.
+    - **Level 1:** AI as an aid for ideas or structure.
+    - **Level 2:** AI built into the task.
 
-  At levels 1 and 2 students must account for their use, link their prompts, cite in APA and check the output for correctness and relevance.
+    At levels 1 and 2 students must account for their use, link their prompts, cite in APA and check the output for correctness and relevance.
 
 **Verdict on "writing code by hand is no longer economical":**
 
@@ -478,50 +480,56 @@ So the tool costs about 1–2% of labour (own arithmetic). The economics turn on
 | Practising by hand is still how you build the skills to check AI | Shen & Tamkin (debugging gap); Gardella (retention); Yu & Moon (productive struggle); CS1-LLM keeps AI-free exams | **Supported for learning** (grades A–C). No study gives the best mix |
 
 **What this means for what to practise.** The economic claim and the learning claim are about different things:
+
 - **As a way to produce code**, writing by hand is becoming less economical.
 - **As a way to build skill**, it is still the main route to the reading, debugging and design judgement that make AI output safe to accept. The 2026 interview formats test exactly those skills, and delegation erodes them most (§2.8, §2.10).
 
 So the shift argues for **adding** deliberate practice of AI-era skills, not for dropping hand practice before a skill is learned:
-1. **Keep, by hand, until L3:** core OOD and C# (classes and state, encapsulation, inheritance and interfaces, the patterns). They are what the assessment tests, and the base for judging AI code. AI is also weakest on interfaces, abstract classes and inheritance (Lepp & Kaimre, 2026).
+
+1. **Keep, by hand, until L3:** core OOD and C# (classes and state, encapsulation, inheritance and interfaces, the patterns). They are what an exam without AI tests, and the base for judging AI code. AI is also weakest on interfaces, abstract classes and inheritance (Lepp & Kaimre, 2026).
 2. **Add, as a new skill track:**
-   - reading and reviewing AI-generated code;
-   - finding a planted bug;
-   - writing tests that would catch AI mistakes;
-   - specifying a task precisely enough for an agent;
-   - predicting what the AI will produce and comparing;
-   - checking AI code for common security flaws such as missing input validation and injection.
+            - reading and reviewing AI-generated code;
+            - finding a planted bug;
+            - writing tests that would catch AI mistakes;
+            - specifying a task precisely enough for an agent;
+            - predicting what the AI will produce and comparing;
+            - checking AI code for common security flaws such as missing input validation and injection.
 
    Do this on topics you can already write yourself, so you can judge the output.
+
 3. **Delegate (already L4):** tooling, project setup, and boilerplate you have mastered.
 
 ### 2.10 Automation, offloading, over-reliance and deskilling
 
 - **Cognitive offloading.** People offload cognition to external tools when that is cheaper (Risko & Gilbert, 2016). Offloading does not only cost memory:
-  - **Freed capacity:** saving information can free capacity for new material ("saving-enhanced memory"; Storm & Stone, 2015, with later replications).
-  - **Parallel tasks:** it improves performance on a concurrent task (Grinschgl et al., 2023).
-  - **The cost:** it lowers memory for the offloaded content mainly when there is no explicit goal to learn it. An explicit goal almost cancels the cost (Grinschgl, Papenmeier & Meyerhoff, 2021).
+    - **Freed capacity:** saving information can free capacity for new material ("saving-enhanced memory"; Storm & Stone, 2015, with later replications).
+    - **Parallel tasks:** it improves performance on a concurrent task (Grinschgl et al., 2023).
+    - **The cost:** it lowers memory for the offloaded content mainly when there is no explicit goal to learn it. An explicit goal almost cancels the cost (Grinschgl, Papenmeier & Meyerhoff, 2021).
 
-  That is the line the harness draws. Offload tooling and boilerplate freely (L4), but not the skill you are learning, and make the learning goal explicit (attempt first, explain in your own words).
+    That is the line the harness draws. Offload tooling and boilerplate freely (L4), but not the skill you are learning, and make the learning goal explicit (attempt first, explain in your own words).
+
 - **The "Google effect" is contested.** Sparrow, Liu & Wegner (2011) reported that people remember *where* information is rather than the information itself.
-  - **Failed replications:** their first experiment failed to replicate (Camerer et al., 2018; Hesselmann, 2020).
-  - **Never replicated:** the "where, not what" experiment has never been directly replicated.
-  - **What did replicate:** saved information is remembered less, but only when the saving is experienced as reliable (Schooler & Storm, 2021).
+    - **Failed replications:** their first experiment failed to replicate (Camerer et al., 2018; Hesselmann, 2020).
+    - **Never replicated:** the "where, not what" experiment has never been directly replicated.
+    - **What did replicate:** saved information is remembered less, but only when the saving is experienced as reliable (Schooler & Storm, 2021).
 
-  An always-available AI tutor is exactly that reliable condition, which argues for deliberate practice without AI.
+    An always-available AI tutor is exactly that reliable condition, which argues for deliberate practice without AI.
+
 - **Ironies of automation.** Bainbridge (1983) pointed out that automating the routine work removes the practice operators need to handle the rare hard cases. The more reliable the automation, the less able the human is to take over.
 - **Complacency and automation bias.** Parasuraman & Manzey (2010) showed that humans over-trust and under-monitor reliable automation. Endsley & Kiris (1995) showed that *out-of-the-loop* operators lose situation awareness. Parasuraman, Sheridan & Wickens (2000) proposed choosing *levels of automation* for each function. This is precisely the idea of per-skill levels.
 - **Forcing people to think first works, at a cost.**
-  - **Deciding first:** designs that make people decide before they see the AI's answer, or that delay or hide the answer, reduce over-reliance compared with simply showing an explanation. Users rate them least favourably, and people high in need for cognition benefit most (Buçinca, Malaya & Gajos, 2021; n = 199).
-  - **Explanations alone:** they *increase* acceptance of AI advice whether it is right or wrong (Bansal et al., 2021), unless they make checking cheaper than doing the task (Vasconcelos et al., 2023).
-  - **Learning:** this is the most important result for a tutor. In Gajos & Mamykina (2022), deciding first and then seeing the AI's recommendation improved decisions but produced **no learning**. Only an explanation *without* the answer, so that people had to reach the answer themselves, produced learning gains.
-  - **Escape hatches get used:** in one course, 50% of 885 students used an optional "See Solution" button at least once. Low performers used it more, and more often close to deadlines (Kapoor et al., 2025, preprint).
+    - **Deciding first:** designs that make people decide before they see the AI's answer, or that delay or hide the answer, reduce over-reliance compared with simply showing an explanation. Users rate them least favourably, and people high in need for cognition benefit most (Buçinca, Malaya & Gajos, 2021; n = 199).
+    - **Explanations alone:** they *increase* acceptance of AI advice whether it is right or wrong (Bansal et al., 2021), unless they make checking cheaper than doing the task (Vasconcelos et al., 2023).
+    - **Learning:** this is the most important result for a tutor. In Gajos & Mamykina (2022), deciding first and then seeing the AI's recommendation improved decisions but produced **no learning**. Only an explanation *without* the answer, so that people had to reach the answer themselves, produced learning gains.
+    - **Escape hatches get used:** in one course, 50% of 885 students used an optional "See Solution" button at least once. Low performers used it more, and more often close to deadlines (Kapoor et al., 2025, preprint).
 - **Deskilling in professional practice.** The first strong real-world signal comes from medicine. After routine use of AI-assisted colonoscopy, experienced endoscopists' adenoma detection rate *without* AI fell from 28.4% to 22.4% (Budzyń et al., 2025; observational, 19 endoscopists in four Polish centres).
-  - **No longitudinal software study:** for software developers there is no longitudinal study of skill decay yet.
-  - **Anthropic's study of its own engineers:** 132 surveyed and 53 interviewed; a vendor source, and not anonymous. It reports self-reported Claude use rising from 28% to 59% of their work, and worries about skill atrophy. It names the **"paradox of supervision"**: checking AI output needs the very skills that delegating to it erodes (Anthropic, 2025b).
-  - **Juniors:** interviewees describe entry-level work being absorbed into seniors' AI workflows, so juniors lose the "productive struggle" through which expertise develops (Yu & Moon, 2026; 14 interviews).
-  - **For a student it is sharper:** an engineer has to *keep* supervision skills, a student has to *acquire* them. Medical educators call this "never-skilling" (Abdulnour, Gin & Boscardin, 2025).
+    - **No longitudinal software study:** for software developers there is no longitudinal study of skill decay yet.
+    - **Anthropic's study of its own engineers:** 132 surveyed and 53 interviewed; a vendor source, and not anonymous. It reports self-reported Claude use rising from 28% to 59% of their work, and worries about skill atrophy. It names the **"paradox of supervision"**: checking AI output needs the very skills that delegating to it erodes (Anthropic, 2025b).
+    - **Juniors:** interviewees describe entry-level work being absorbed into seniors' AI workflows, so juniors lose the "productive struggle" through which expertise develops (Yu & Moon, 2026; 14 interviews).
+    - **For a student it is sharper:** an engineer has to *keep* supervision skills, a student has to *acquire* them. Medical educators call this "never-skilling" (Abdulnour, Gin & Boscardin, 2025).
 
 **Implication:** automating a mastered skill is fine, and it is the goal of the system. Three conditions apply:
+
 - **(a) Supervise:** the human keeps a *supervisory* role, reviewing, predicting and spot-checking AI output.
 - **(b) Maintain:** the skill gets *periodic maintenance practice*, so the ability to supervise and take over does not decay.
 - **(c) Train supervision itself:** supervision is a skill that has to be practised deliberately (§2.9). It comes neither from writing code by hand nor from delegating.
@@ -530,7 +538,7 @@ So the shift argues for **adding** deliberate practice of AI-era skills, not for
 
 | # | Principle | Evidence base | Strength |
 |---|---|---|---|
-| P1 | **Attempt first, then help.** The learner generates before the AI reveals. Attempting first is not enough on its own: the learning comes from what follows. | Generation effect; productive failure (Sinha & Kapur 2021); Bastani 2025; Gajos & Mamykina 2022 (attempting first, then seeing the answer, gave no learning) | Moderate |
+| P1 | **Attempt first, then help.** You generate before the AI reveals. Attempting first is not enough on its own: the learning comes from what follows. | Generation effect; productive failure (Sinha & Kapur 2021); Bastani 2025; Gajos & Mamykina 2022 (attempting first, then seeing the answer, gave no learning) | Moderate |
 | P2 | **Help follows expertise in each skill and fades.** | Expertise reversal; faded worked examples; cognitive apprenticeship | Strong |
 | P3 | **Graduated, contingent hints** (more after failure, less after success). | Wood & Wood 1999; Aleven et al. 2003; Kestin 2025 (short-term) | Moderate |
 | P4 | **Keep practice hard enough that you sometimes fail** (about 70–90% success as a rule of thumb), and time-box stuckness. | Desirable difficulties; Kapur 2016; D'Mello 2014. Wilson et al. 2019 only as computational inspiration | Heuristic |
@@ -538,20 +546,20 @@ So the shift argues for **adding** deliberate practice of AI-era skills, not for
 | P6 | **Mastery gate with transfer and explanation**, not just "it works". | Mastery learning (gains on aligned tests; Kulik 1990, Slavin 1990); Corbett & Anderson; illusion of competence (Đức Minh 2026; Eleftheriou 2026) | Moderate |
 | P7 | **Automate only after mastery; keep supervising.** | Fitts & Posner; Bainbridge; Parasuraman & Manzey; deskilling (Budzyń 2025) | Moderate |
 | P8 | **Spaced, interleaved retrieval after mastery; demote on failure.** Spacing matters more than expanding intervals. | Cepeda 2008; Latimier 2021; Roediger & Karpicke; Arthur 1998; Tatel & Ackerman 2025 | Strong (spacing), weak (expanding) |
-| P9 | **Learner-written reflection in a structured diary.** | Nückles 2009; Zimmerman 2002; generation effect | Moderate |
-| P10 | **Autonomy-supportive, transparent enforcement** that the learner chose. | Ryan & Deci 2000; Ariely & Wertenbroch 2002; acceptance cost of forcing functions (Buçinca 2021) | Moderate |
+| P9 | **Reflection you write yourself, in a structured diary.** | Nückles 2009; Zimmerman 2002; generation effect | Moderate |
+| P10 | **Autonomy-supportive, transparent enforcement** that you chose. | Ryan & Deci 2000; Ariely & Wertenbroch 2002; acceptance cost of forcing functions (Buçinca 2021) | Moderate |
 | P11 | **Enforce guardrails in the workflow, not only in prompts.** | Barth 2026 (prompts alone: no effect); Oreopoulos 2026; Sankaranarayanan 2026; Teo 2026 (tutors over-help) | Moderate |
-| P12 | **Practise under test conditions before the test**: timed, without AI, in the exam IDE, after low-stakes learning. | Transfer-appropriate processing (Morris 1977); Pan & Rickard 2018; Hinze & Rapp 2014; Driskell 2001 | Moderate (no IDE-specific study) |
+| P12 | **Practise under test conditions before the test**: timed, without AI, in the IDE of your exam, after low-stakes learning. | Transfer-appropriate processing (Morris 1977); Pan & Rickard 2018; Hinze & Rapp 2014; Driskell 2001 | Moderate (no IDE-specific study) |
 | P13 | **Train supervision as its own skill**: read, test, debug and specify AI output, on topics you can already write yourself. | Paradox of supervision (Anthropic 2025b); employer interview formats; CS1-LLM; Pădurean 2026; §2.9 | Inference, consistent across sources |
 
 ---
 
 ## 3. Risk assessment
 
-Likelihood (L) and Impact (I) are scored 1–5. Risk = L × I. Scores assume **no mitigation** for a year-2 student using an agentic coding assistant such as Claude Code.
+Likelihood (L) and Impact (I) are scored 1–5. Risk = L × I. Scores assume **no mitigation** for a student who practises with an agentic coding assistant such as Claude Code before an exam without AI.
 
 - **Judgements, not measurements:** the scores are judgements. The evidence grade in brackets (A–D, §2.0) shows how well each mechanism is supported. A high score with weak evidence is a reason to watch closely, not a fact.
-- **Horizon:** *Exam* means the assessment on 20 January 2027; *Career* means the labour market from about 2028.
+- **Horizon:** *Exam* means your exam without AI; *Career* means the labour market after you graduate.
 - **New and changed:** R14–R18 are new in the revision of 8 November 2026, and R9 and R12 were re-scored.
 
 | ID | Risk | Mechanism | Evidence [grade] | L | I | Score | Horizon |
@@ -566,13 +574,13 @@ Likelihood (L) and Impact (I) are scored 1–5. Risk = L × I. Scores assume **n
 | R8 | **Mastered skills decay after automation** | No practice after hand-off, so you can no longer review or take over. | Arthur 1998; Tatel & Ackerman 2025 [A, meta-analyses]; Budzyń 2025 [C]; Bainbridge 1983; Parasuraman & Manzey 2010 | 4 | 4 | **16** | Career |
 | R9 | **Learning wrong things from wrong AI output** *(L raised 3 → 4)* | Hallucinated APIs, bad OO practice, insecure code or subtly wrong explanations get absorbed. | Hellas 2023 [C]; CodeAid 2024 [C]; Veracode 2026: 38% of tasks introduce a vulnerability [C]; Lepp & Kaimre 2026 [C] | 4 | 4 | **16** | Both |
 | R10 | **Weaker ownership and memory of your own work** | You cannot explain or defend your project in an assessment. Offloaded content is remembered less when the store is reliable. | Schooler & Storm 2021; Grinschgl 2021 [A, lab]; Kosmyna 2025 [C, preprint, critiqued] | 4 | 4 | **16** | Exam |
-| R11 | **Assessment and integrity problems** | Graded work isn't your own, or AI use isn't declared. At CHE, unauthorized AI use counts as fraud (OER art. 1.41), and level-1 work needs prompt links, APA citation and a check of the output (art. 7.11). Detection is unreliable, so your own records are your protection. | CHE OER 2026–27 [policy]; Npuls 2025 [policy]; Scarfe 2024 (94% of AI answers undetected) [B]; Lau & Guo 2023 | 3 | 5 | **15** | Exam |
-| R12 | **The harness becomes the goal** *(re-scored from 3 × 2)* | Time goes into tuning the setup, or into research about it (such as this revision), instead of practice. Or the system gets abandoned. | Own data: the D-toets analysis (time went to the cheat sheet instead of practice); this revision and the hook fix of 7–8 Nov; SDT | 4 | 3 | **12** | Exam |
-| R13 | **Privacy of the diary and skill data** | Reflections, research notes and transcripts are synced to cloud storage (OneDrive) or shared. | — | 2 | 2 | **4** | Both |
-| R14 | **Practice does not match the test** *(new)* | You practise with AI, untimed, in Visual Studio. The test is without AI, timed, in Rider. Skill practised in one mode transfers poorly to another. | Own data: D-toets of 5 Nov 2026; transfer-appropriate processing (Morris 1977); Pan & Rickard 2018 [A, meta]; Hinze & Rapp 2014 [A]; no IDE-specific study | 5 | 5 | **25** | Exam |
-| R15 | **Investing too much in hand-writing production code** *(new)* | Practice time goes to writing routine code by hand beyond what learning requires (boilerplate, syntax drills, re-writing mastered code), while the market pays for specifying, reviewing and verifying. | Routine code is cheap to generate: tool about 1–2% of labour cost [C]; Google, Anthropic code-share claims [D]; Octoverse 2026 [C]; BLS: programmers −7% [C]. Low likelihood here, because the harness already automates mastered skills (L4) and the exam requires hand-writing | 2 | 3 | **6** | Career |
-| R16 | **Supervision skills stay untrained** *(new)* | The harness blocks AI code at L1–L3 and automates at L4, but nothing trains specifying, testing, reviewing and debugging AI output. Employers now test these skills, and delegation erodes them ("paradox of supervision"). | Anthropic 2025b [C, vendor]; Google interview pilot 2026 [D]; Stack Overflow 2026 [C]; Veracode 2026 [C]; CS1-LLM [C]; Pădurean 2026 [C] | 4 | 4 | **16** | Career (testing also in the final assessment) |
-| R17 | **Career-path uncertainty** *(new)* | The junior-developer squeeze: fewer entry-level openings and choosier employers. The evidence is descriptive and contested, so its effect on one learner is uncertain. | Junior squeeze: Canaries 2026 [B, descriptive, contested]; Crane & Soto 2026; Tucker 2026 [B]; Indeed (4.5% entry-level) [C]; UWV, ROA, Cnossen 2026 [C]; null results: Humlum & Vestergaard, Fairlie & Wu, NY Fed [B] | 3 | 4 | **12** | Career |
+| R11 | **Assessment and integrity problems** | Graded work isn't your own, or AI use isn't declared. Unauthorized AI use can count as fraud, and level-1 work can require prompt links, APA citation and a check of the output. CHE's rules are an example (OER art. 1.41 and art. 7.11). Detection is unreliable, so your own records are your protection. | CHE OER 2026–27 [policy]; Npuls 2025 [policy]; Scarfe 2024 (94% of AI answers undetected) [B]; Lau & Guo 2023 | 3 | 5 | **15** | Exam |
+| R12 | **The harness becomes the goal** *(re-scored from 3 × 2)* | Time goes into tuning the setup, or into research about it (such as revising this review), instead of practice. Or the system gets abandoned. | A diagnostic test in the pilot (time went to a cheat sheet instead of practice); in the pilot, time also went to revising this review and fixing a hook; SDT | 4 | 3 | **12** | Exam |
+| R13 | **Privacy of the diary and skill data** | Reflections, research notes and transcripts are synced to cloud storage (such as OneDrive) or shared. | — | 2 | 2 | **4** | Both |
+| R14 | **Practice does not match the test** *(new)* | You practise with AI, untimed, in the IDE you are used to. The test is without AI, timed, and perhaps in another IDE. Skill practised in one mode transfers poorly to another. | A diagnostic test in the pilot; transfer-appropriate processing (Morris 1977); Pan & Rickard 2018 [A, meta]; Hinze & Rapp 2014 [A]; no IDE-specific study | 5 | 5 | **25** | Exam |
+| R15 | **Investing too much in hand-writing production code** *(new)* | Practice time goes to writing routine code by hand beyond what learning requires (boilerplate, syntax drills, re-writing mastered code), while the market pays for specifying, reviewing and verifying. | Routine code is cheap to generate: tool about 1–2% of labour cost [C]; Google, Anthropic code-share claims [D]; Octoverse 2026 [C]; BLS: programmers −7% [C]. Low likelihood with the harness, because it already automates mastered skills (L4), and an exam without AI requires hand-writing | 2 | 3 | **6** | Career |
+| R16 | **Supervision skills stay untrained** *(new)* | The harness blocks AI code at L1–L3 and automates at L4, but nothing trains specifying, testing, reviewing and debugging AI output. Employers now test these skills, and delegation erodes them ("paradox of supervision"). | Anthropic 2025b [C, vendor]; Google interview pilot 2026 [D]; Stack Overflow 2026 [C]; Veracode 2026 [C]; CS1-LLM [C]; Pădurean 2026 [C] | 4 | 4 | **16** | Career (testing may also count in your final assessment) |
+| R17 | **Career-path uncertainty** *(new)* | The junior-developer squeeze: fewer entry-level openings and choosier employers. The evidence is descriptive and contested, so its effect on any one student is uncertain. | Junior squeeze: Canaries 2026 [B, descriptive, contested]; Crane & Soto 2026; Tucker 2026 [B]; Indeed (4.5% entry-level) [C]; UWV, ROA, Cnossen 2026 [C]; null results: Humlum & Vestergaard, Fairlie & Wu, NY Fed [B] | 3 | 4 | **12** | Career |
 | R18 | **Decisions driven by vendor claims or hype** *(new)* | You change what you practise because of vendor numbers ("80–90% of code is AI-written"), inflated benchmarks or uncorrected meta-analyses. Or you trust this document too much: it was written by an Anthropic model and leans on Anthropic sources. | Vendor-reported vs. independent benchmark scores (89.9% vs. about 60%) [C]; retracted Wang & Fan 2025 meta-analysis; Boolzen 2026 (g 0.84 → 0.08) [A]; METR on self-reports [A] | 3 | 3 | **9** | Both |
 
 ```mermaid
@@ -605,11 +613,18 @@ quadrantChart
 ```
 
 **What changed in the picture.**
-- **Top risks:** R1 (skills never form) and R14 (practice–test mismatch) are joint highest. R14 is not an AI risk as such, but the D-toets showed it is the one that actually happened.
-- **Asymmetric skill-shift risks:** too much hand-writing (R15) is a small risk for this learner, because the harness already hands mastered skills to the AI and the exam requires hand-writing. Too little supervision practice (R16) is a real one. Nothing in the harness trains it yet.
+
+- **Top risks:** R1 (skills never form) and R14 (practice–test mismatch) are joint highest. R14 is not an AI risk as such, but in the pilot it is the one that actually happened (see the example below).
+- **Asymmetric skill-shift risks:** too much hand-writing (R15) is a small risk if you use the harness, because the harness already hands mastered skills to the AI, and an exam without AI requires hand-writing. Too little supervision practice (R16) is a real one. Nothing in the harness trains it yet; §4.1 proposes how to add it.
+
+!!! example "Example: one student's situation"
+    A second-year HBO-ICT student at CHE practised for an OOD exam with AI at hand, untimed, in Visual Studio. A diagnostic test before the exam was timed, without AI and in Rider. Its analysis named the practice conditions as a main cause of the result, and debugging was where it went wrong. Time had also gone to a cheat sheet instead of practice (R12).
+
 ---
 
-## 4. Mitigation plan
+## 4. How to apply it: mitigation plan
+
+This section turns the risks into a plan you can lay on your own exam date. The table gives one mitigation for each risk. The step plan after it says when to do what, counted from your exam.
 
 | Risk | Mitigation | Implemented by | Residual risk |
 |---|---|---|---|
@@ -623,81 +638,88 @@ quadrantChart
 | R8 | Spaced maintenance checks on expanding intervals (e.g. 3 → 7 → 21 → 60 → 120 days). A failed check demotes the skill to L3. At L4 you must predict or review the AI's approach on samples. | `SessionStart` hook + `/review-due` skill | Low |
 | R9 | The AI must cite docs, and you run the tests yourself (`check.mjs`). Treat AI code and explanations as untrusted. Be especially careful with interfaces, abstract classes and inheritance, where AI is weakest, and with anything security-related: cross-check those with the course material or the C# docs. Explanation errors you find get logged as "AI errors". | CLAUDE.md, `check.mjs` | Medium |
 | R10 | Diary records what *you* wrote. Before handing in, a "defend your design" rehearsal with `/mastery-check --defend`. | Diary + skill | Low |
-| R11 | Graded work: treat every skill as L3 (CLAUDE.md), and keep an AI-use log for the AI-use statement: prompt links, what the AI did, and how you checked it (CHE OER art. 7.11). Ask the teacher which parts of the final assessment are level 0 and which are level 1 (§4.2). Always follow course and institution rules. | CLAUDE.md + diary | Low |
-| R12 | Keep the harness small (~5 hooks, 1 skill) and review it monthly. Time-box harness work: at most one fix per session, and research only when it would change what you practise. This revision counts: no more harness research before the assessment, unless a hook misfires. | Diary (note minutes spent on the harness vs. practice) | Medium |
+| R11 | Graded work: treat every skill as L3 (CLAUDE.md), and keep an AI-use log for the AI-use statement: prompt links, what the AI did, and how you checked it (as CHE's OER art. 7.11 asks, for example). Ask your teacher which parts of your final assessment are level 0 and which are level 1 (§4.2). Always follow course and institution rules. | CLAUDE.md + diary | Low |
+| R12 | Keep the harness small (~5 hooks, 1 skill) and review it monthly. Time-box harness work: at most one fix per session, and research only when it would change what you practise. Research about the harness counts as harness work too: stop it until after your exam, unless a hook misfires. | Diary (note minutes spent on the harness vs. practice) | Medium |
 | R13 | Keep `.learning/`, `research_notes/` and transcripts out of shared repos and public pages (`.gitignore`). Store only what is needed. | `.gitignore` | Low |
-| R14 | **Practise under test conditions.** From about two weeks before each test, do timed sessions without AI in Rider. Start short, then do full mock exams (the course's practice tests). Learn at low stakes first. Review afterwards, and use `claude-study` only for what you found yourself. | Plan in the D-toets analysis; diary | Medium |
+| R14 | **Practise under test conditions.** From about two weeks before each test, do timed sessions without AI in the IDE of your exam. Start short, then do full mock exams (your course's practice tests). Learn at low stakes first. Review afterwards, and use `claude-study` only for what you found yourself. | Step plan below; diary | Medium |
 | R15 | Don't drill what is already at L3/L4. The Fibonacci reviews keep it fresh, and boilerplate goes to the AI (L4). Hand practice goes to skills below L3. | Skill register; L4 policy | Low |
-| R16 | **Add a supervision track (§4.1):** find planted bugs in code you did not write, write tests that catch mistakes, review AI code against OOD principles, predict and then compare. Only do this on topics at L3 or higher, so you can judge the output. Before 20 January, limit it to the part that overlaps with the exam (debugging, testing). After the assessment, extend it: acceptance criteria that become tests, domain models in UML, and judging AI-built work against them. | New microskills (you add them); exercise code from Claude in `voorbeelden/` or the chat | Medium |
+| R16 | **Add a supervision track (§4.1):** find planted bugs in code you did not write, write tests that catch mistakes, review AI code against OOD principles, predict and then compare. Only do this on topics at L3 or higher, so you can judge the output. Before your exam, limit it to the part that overlaps with the exam (debugging, testing). After your exam, extend it: acceptance criteria that become tests, domain models in UML, and judging AI-built work against them. | New microskills (you add them); exercise code from Claude in `voorbeelden/` or the chat | Medium |
 | R17 | Build visible judgement that employers can see: tests and a test plan, design rationale in the report, explaining your code aloud (oral defence). | Final project; diary | Medium (outside your control) |
 | R18 | Use the evidence grades (§2.0). Act on A/B evidence, treat C as a signal and D as a claim. Check important figures in the primary source, and keep in mind who wrote this document. Re-run this review only when it could change what you practise. | This document | Low–medium |
 
-**Mitigation timeline**
+**Step plan, relative to your exam**
 
-```mermaid
-gantt
-    title Rollout of the learning harness (example semester)
-    dateFormat  YYYY-MM-DD
-    axisFormat  %d %b
-    section Setup
-    CLAUDE.md pedagogy policy + skill map          :a1, 2026-11-09, 2d
-    Skill record + diary templates                 :a2, after a1, 2d
-    Hooks (SessionStart, UserPromptSubmit, Stop)   :a3, after a2, 3d
-    PreToolUse ownership guard + PostToolUse tests :a4, after a3, 2d
-    section Use
-    Learning OOD skills on the ladder              :b1, after a4, 60d
-    Weekly diary review (15 min)                   :b2, after a4, 60d
-    Timed mocks without AI, in Rider (R14)         :b3, 2027-01-04, 14d
-    Supervision track, full version (R16)          :b4, 2027-01-21, 30d
-    section Evaluate
-    Month-1 check (success rate, overrides)        :milestone, c1, 2026-12-15, 0d
-    Unassisted mini-exam / transfer test           :milestone, c2, 2027-01-20, 0d
-```
+| Phase | When (relative to your exam) | What |
+|---|---|---|
+| Setup | At the start, ideally about ten weeks before your exam. Plan about nine days. | CLAUDE.md pedagogy policy and skill map; skill record and diary templates; hooks (`SessionStart`, `UserPromptSubmit`, `Stop`); `PreToolUse` ownership guard and `PostToolUse` tests |
+| Learning | From the end of setup until your exam | Learn the OOD skills on the ladder. Review your diary once a week (15 minutes). |
+| Month-1 check | About a month after you start, roughly five weeks before your exam | Check your success rate and your overrides (§6). |
+| Exam conditions (R14) | The last two weeks before your exam | Timed mock exams without AI, in the IDE of your exam. Start short, then do full mock exams. |
+| Transfer test | Just before your exam | An unassisted mini-exam or transfer test (§6). |
+| Supervision track (R16) | From the day after your exam, for about a month | The full supervision track (§4.1). |
 
-### 4.1 Rebalancing practice: proposed register changes (the learner decides)
+The timings come from one example semester of about ten weeks. If you start later, shorten setup and learning, not the two weeks under exam conditions.
 
-The harness already does two of the three things §2.9 recommends: it keeps hand practice for skills below mastery, and it hands mastered skills to the AI (L4). What's missing is supervision (R16).
+### 4.1 Rebalancing practice: proposed register changes (you decide)
+
+The harness already does two of the three things §2.9 recommends: it keeps hand practice for skills below mastery, and it hands mastered skills to the AI (L4). What's missing is supervision (R16). The changes below are proposals. You decide whether to make them.
 
 | When | What | Why |
 |---|---|---|
-| Now until 20 January | Keep the plan from the D-toets analysis. Close the OOD gaps by hand, and from early January do timed mocks without AI in Rider (R14). Add only the overlap between supervision and the exam: **debugging code you did not write**, and **writing tests that catch mistakes**. | Both are graded: the test plan, and debugging, which is where the D-toets went wrong. AI-era interviews test both too. |
-| After 20 January | Add a top-level skill for supervising AI output. It covers:<br>• specifying a task or user story precisely enough for an agent or a team;<br>• writing acceptance criteria that become tests;<br>• reviewing AI-built work against them and against OOD principles;<br>• predicting what the AI will produce, then comparing. | The career horizon (§2.9). This is not exam material, so it doesn't belong before the assessment. |
+| Until your exam | Keep your exam plan. Close the gaps in your core OOD skills by hand, and from about two weeks before your exam do timed mocks without AI in the IDE of your exam (R14). Add only the overlap between supervision and the exam: **debugging code you did not write**, and **writing tests that catch mistakes**. | Check whether your exam grades them. In the example (§3), the assessment graded a test plan, and debugging was where the diagnostic test went wrong. AI-era interviews test both too. |
+| After your exam | Add a top-level skill for supervising AI output. It covers:<br>• specifying a task or user story precisely enough for an agent or a team;<br>• writing acceptance criteria that become tests;<br>• reviewing AI-built work against them and against OOD principles;<br>• predicting what the AI will produce, then comparing. | The career horizon (§2.9). This is not material for an exam without AI, so it doesn't belong before your exam. |
 
-**Commands to consider.** You run them yourself, because the guard does not let Claude change the register:
+**Example commands.** You run them yourself, because the guard does not let Claude change the register:
 
 ```
 ! node .claude/hooks/skill.mjs add-micro debug.zonder-foutmelding debug.code-van-ander L1 "bug vinden in code die je niet zelf schreef" "geplante bug, code van een ander, ai-code debuggen"
 ! node .claude/hooks/skill.mjs add-micro test.unit-tests test.fouten-vangen L1 "tests schrijven die fouten in andermans code vangen" "test die fout vangt, ai-code testen, grenswaarde vergeten"
 ```
 
-Claude writes the exercise code, with a planted bug, in `voorbeelden/` or in the chat. You debug it in your own exercise folder, so `check.mjs` can log the result. Use only topics you already have at L3 or higher, so you can judge the code. A top-level skill such as `ai.supervisie` cannot be added with `add-micro`. You would add it to `skills.json` yourself after the assessment.
+Claude writes the exercise code, with a planted bug, in `voorbeelden/` or in the chat. You debug it in your own exercise folder, so `check.mjs` can log the result. Use only topics you already have at L3 or higher, so you can judge the code. A top-level skill such as `ai.supervisie` cannot be added with `add-micro`. You would add it to `skills.json` yourself after your exam.
 
-### 4.2 Talking points for the AI-policy conversation
+### 4.2 For teachers and programmes
 
-These points are evidence-based, and each one ends with a question to ask. The research found that supporting CHE's policy and asking about its gaps is a stronger position than arguing against it.
+This part is for teachers, curriculum designers and exam committees. Each point gives the evidence and ends with what you can do. The research found that supporting AI-free assessment of core skills, and closing the gaps around it, is a stronger position than arguing against it.
 
-1. **Level 0 for the final assessment is the consensus, not an outlier.**
-   - **Matches the two-lane model:** it is "lane 1" in the Dutch national vision (Npuls, 2025) and in the University of Sydney's two-lane model.
-   - **Why supervision is needed:** a ban on AI in unsupervised work cannot be verified. In one blind test, 94% of AI-written exam answers went undetected (Scarfe et al., 2024).
-   - *Ask:* which parts of the final assessment are level 0 and which are level 1?
-2. **A level-1 rule is only as strong as how it is checked.** Rules about permitted use are "discursive" changes that students can ignore (Corbin, Dawson & Liu, 2025). What makes them work is structure: the prompt links and records required by OER art. 7.11, and an oral check.
-   - *Ask:* how is level-1 work verified, and is there an oral defence?
-3. **Where is lane 2 in the programme?** Npuls says the two lanes "complement each other", and employers now test reading, debugging and validating AI output (Google's 2026 interview pilot). Art. 7.11 already makes students responsible for checking AI output "op juistheid en relevantie" (for correctness and relevance). That could be assessed as a skill, not only as compliance. CS1-LLM shows that AI-integrated practice can coexist with AI-free exams without worse exam results.
-   - *Ask:* is there a course or assignment at level 2 where checking AI output is graded?
-4. **Practising under exam conditions.** The D-toets was in Rider, timed and without AI, while practice happened in Visual Studio with AI available. Practice transfers best when it matches the test (§2.6).
-   - *Ask:* can practice tests be taken in the exam environment beforehand?
+1. **Assess core skills at AI level 0, under supervision.** This is the consensus, not an outlier.
+            - **Matches the two-lane model:** it is "lane 1" in the Dutch national vision (Npuls, 2025) and in the University of Sydney's two-lane model. Sydney's Green Paper also requires foundational skills before AI-supported tasks and "opportunities for performance independent of AI" (University of Sydney, 2026).
+            - **Why supervision is needed:** a ban on AI in unsupervised work cannot be verified. In one blind test, 94% of AI-written exam answers went undetected (Scarfe et al., 2024).
+            - **Why AI-assisted work overstates mastery:** AI-assisted assignments averaged 7.62, while mastery checked at random without devices averaged 5.55 (Đức Minh, 2026; grade C).
+            - *What you can do:* state for each part of the final assessment whether it is level 0 or level 1, and tell students before they start practising.
+2. **AI-allowed work is only as strong as how it is checked.** Rules about permitted use are "discursive" changes that students can ignore (Corbin, Dawson & Liu, 2025). What makes them work is structure: prompt links and records of AI use (CHE's OER art. 7.11 requires them, for example), and an oral check.
+            - **The oral defence:** it targets a risk from §3: students who cannot explain or defend their own work (R10). Tracing and explaining code predict writing ability (Lopez et al., 2008), so explaining is a fair test of skill. Requiring an explanation also helps during practice: on a later task with AI blacked out, 77% failed after unrestricted AI, against 39% after an "explanation gate" (Sankaranarayanan, 2026; grade C).
+            - **A gap in the evidence:** none of the studies in this review tests the oral defence itself as an assessment format.
+            - *What you can do:* say in every level-1 assignment how it is verified, for example prompt links, an AI-use log and a short oral defence.
+3. **Give lane 2 a place in the programme, and grade supervision of AI output.** Npuls says the two lanes "complement each other", and employers now test reading, debugging and validating AI output (Google's 2026 interview pilot). Students have to *acquire* supervision skills, not just keep them ("never-skilling"; Abdulnour, Gin & Boscardin, 2025). A rule such as CHE's art. 7.11 already makes students responsible for checking AI output "op juistheid en relevantie" (for correctness and relevance). That could be assessed as a skill, not only as compliance.
+            - **No cost to exam results:** CS1-LLM shows that AI-integrated practice can coexist with AI-free exams without worse exam results.
+            - **Exercise formats with early evidence (grade C):** realistic bugs injected into AI-generated solutions made students repair the code itself, while natural prompt failures made them reword the prompt (Pădurean et al., 2026). "Prompt Problems" train precise specification (Denny et al., 2024b).
+            - **Order matters:** foundations first, then supervision practice on topics students can already write themselves, so they can judge the output (P13).
+            - *What you can do:* name at least one course or assignment at level 2 where checking AI output is graded, and place it after the core skills are in place.
+4. **Let students practise under exam conditions.** Practice transfers best when it matches the test (§2.6). Keep it low-stakes, though: high-stakes quizzes during learning removed the benefit of retrieval practice (Hinze & Rapp, 2014). No study has measured the cost of an unfamiliar IDE, but creating classes, running tests and reading compiler output are part of the procedure being tested. The example in §3 shows the gap: practice with AI in one IDE, then a diagnostic test without AI, timed, in another.
+            - *What you can do:* make practice tests available in the exam environment beforehand (same IDE, same time limit, no AI), and keep them low-stakes.
 5. **Don't overclaim.**
-   - **AI Act:** EU AI Act Article 4 (AI literacy) is about the staff of providers and deployers. Since 27 July 2026 it only requires that organisations *support* AI literacy. It does not require AI in student assessment.
-   - **Labour market:** the evidence on junior jobs is contested.
-   - **Code-share figures:** vendor figures about how much code AI writes are claims, not evidence.
-6. **Detection is not proof.** Npuls states that AI-detection scores are not watertight proof and that suspicions need human investigation, for example oral questioning. CHE allows Turnitin in fraud investigations. Keeping your own prompt links and records protects you.
-7. **Offer the harness as an example** of transparent, self-limited AI use. It logs hints, overrides and explanations, which is the kind of AI-use statement level-1 work asks for.
+            - **AI Act:** EU AI Act Article 4 (AI literacy) is about the staff of providers and deployers. Since 27 July 2026 it only requires that organisations *support* AI literacy. It does not require AI in student assessment.
+            - **Labour market:** the evidence on junior jobs is contested.
+            - **Code-share figures:** vendor figures about how much code AI writes are claims, not evidence.
+            - **Learning gains:** after correcting for publication bias, the most rigorous 2026 meta-analysis shrinks g = 0.84 to 0.08 (Boolzen et al., 2026).
+            - *What you can do:* base programme changes on grade A/B evidence (§2.0), and treat vendor figures as claims.
+6. **Detection is not proof.** Npuls states that AI-detection scores are not watertight proof and that suspicions need human investigation, for example oral questioning. CHE is one institution that allows Turnitin in fraud investigations. Students' own prompt links and records protect them.
+            - *What you can do:* treat a detection score as a reason for a conversation, not as evidence, and ask students to keep their prompt links and records.
+7. **See a tool like this harness as an example** of transparent, self-limited AI use. It logs hints, overrides and explanations, which is the kind of AI-use statement level-1 work asks for. If your course offers its own AI tutor, the evidence favours guardrails built into the workflow over instructions in a prompt.
+            - **Prompts alone:** steering a tutor through its system prompt made no difference for 1,059 CS1 students (Barth et al., 2026). A guard-railed tutor helped only inside a mastery workflow (Oreopoulos et al., 2026).
+            - **Equity:** weaker and first-generation students are hurt more and use escape hatches more (Liu et al., 2026; Kapoor et al., 2025). Guardrails matter most for the students least likely to choose them.
+            - *What you can do:* consider accepting logs like these as part of an AI-use statement. When you choose an AI tutor, ask where its guardrails are enforced.
 
 ---
 
 ## 5. Proposed Claude Code setup
 
+This section describes what the harness does during a session, and why. If you install it, this is what you will work with. If you teach, it shows which rules the harness enforces and which are only advice to the AI.
+
 ### 5.1 Architecture
+
+The harness is a small set of parts in your project: a `CLAUDE.md` with the teaching policy, an output style, a few skills, five hooks, and a local `.learning/` folder that holds your data.
 
 ```mermaid
 flowchart LR
@@ -746,13 +768,13 @@ flowchart LR
 
 **Design choices:**
 
-- **Rules that must hold go in hooks.** Hooks are deterministic, while CLAUDE.md instructions are *advisory*: the model usually follows them, but they can drift in long sessions. The rule "do not write code the learner owns" must be a hook.
-- **Pedagogical behaviour goes in skills, CLAUDE.md and the output style.** This covers Socratic questioning, explanations and the tone of feedback.
-- **State lives in plain files** you can read and edit (JSON/Markdown). That keeps the system transparent, and transparency supports autonomy (P10).
+- **Rules that must hold go in hooks.** Hooks are deterministic. Instructions in CLAUDE.md are *advisory*: the model usually follows them, but it can drift from them in long sessions. So the rule "do not write code that you own" has to be a hook.
+- **Teaching behaviour goes in skills, CLAUDE.md and the output style.** This covers Socratic questions, explanations and the tone of feedback.
+- **The harness keeps its state in plain files** that you can read and edit (JSON/Markdown). That keeps the system transparent, and transparency supports your autonomy (P10).
 
 ### 5.2 The Autonomy Ladder (per skill)
 
-The five levels follow cognitive apprenticeship and faded worked examples, with automation at the top.
+The harness gives each skill its own level. The five levels follow cognitive apprenticeship and worked examples that are faded step by step, with automation at the top.
 
 | Level | Name | Who writes the code? | AI role | You must… | Grounding |
 |---|---|---|---|---|---|
@@ -786,11 +808,11 @@ stateDiagram-v2
     L4_Automated --> [*] : skill retired - no longer relevant
 ```
 
-> **"Just giving text input" at the start** is L0. You describe intent and requirements in prose and the AI writes a fully annotated example. Even here you are never fully passive: L0 needs a short self-explanation or prediction before the session counts as progress (Chi et al., 1989; Kazemitabaar et al., 2025).
+> **"Just giving text input" at the start** is L0. You describe your intent and requirements in prose, and the AI writes a fully annotated example. Even here you are never fully passive: at L0 you give a short self-explanation or prediction before the session counts as progress (Chi et al., 1989; Kazemitabaar et al., 2025).
 
 ### 5.3 Friction calibration & the hint ladder
 
-The hint ladder puts contingent tutoring and productive struggle into practice. Each rung unlocks only after **(a)** a visible attempt, such as code you changed or a hypothesis you stated, **or (b)** a stuck timer running out. That rule keeps the struggle productive and stops it turning into floundering.
+The hint ladder puts two ideas into practice: contingent tutoring (more help after failure, less after success; §2.3) and productive struggle (§2.2). You get the next rung only after **(a)** a visible attempt, such as code you changed or a hypothesis you stated, **or (b)** when the stuck timer runs out. This rule keeps the struggle productive, so that it does not turn into floundering.
 
 ```mermaid
 flowchart TD
@@ -813,15 +835,17 @@ flowchart TD
     M --> O
 ```
 
-**Calibration rules** (contingent tutoring, with about 85% as a rule of thumb; §2.2 explains why it is a heuristic and not evidence):
+**Calibration rules** (contingent tutoring, with about 85% success as a rule of thumb; §2.2 explains why this is a heuristic and not evidence):
 
-- Track a **rolling success rate** per skill, counting successes with rung ≤ 2.
-- **> 95%** → the task is too easy. Increase difficulty, or add interleaving with other skills. Check whether promotion criteria are met.
+- The harness keeps a **rolling success rate** for each skill. It counts only successes at rung ≤ 2.
+- **> 95%** → too easy. Make the tasks harder, or mix in other skills (interleaving). Check whether you meet the criteria for the next level.
 - **70–95%** → in the zone. Keep going.
-- **< 70%** → too hard. Shorten the stuck timer `T` (e.g. 15 → 8 min), give easier tasks, or demote one level.
-- `T` starts at **10–15 minutes** for L2, inside the range where confusion can still be productive (D'Mello et al., 2014). It is configurable.
+- **< 70%** → too hard. Shorten the stuck timer `T` (e.g. 15 → 8 min), choose easier tasks, or go down one level.
+- For L2, `T` starts at **10–15 minutes**. That is within the time in which confusion can still be productive (D'Mello et al., 2014). You can change `T`.
 
 ### 5.4 Hook pipeline
+
+The diagram follows one session and shows when each hook steps in.
 
 ```mermaid
 sequenceDiagram
@@ -860,15 +884,18 @@ sequenceDiagram
 
 | Hook | Event | Job | Can it block? |
 |---|---|---|---|
-| `session-start.mjs` | `SessionStart` | Injects a summary of the skill record, reviews due today, and the instruction to ask for a plan (*forethought*) | No (context only) |
-| `prompt-gate.mjs` | `UserPromptSubmit` | Maps the prompt to a skill using keywords from `skill-map.yaml`, injects the level policy and current hint rung, starts or updates the stuck timer, handles `/override`. *Revised (§10.2, item 10):* ignores agent reports, task notifications and system reminders, and logs `prompt-ignored` | Can add context. Can block only on abuse patterns (optional) |
-| `ownership-guard.mjs` | `PreToolUse` (matcher `Edit\|Write\|MultiEdit\|NotebookEdit`) | Denies AI edits to files or regions owned by a skill at L1–L3. At L1 it allows writes only if they contain `TODO(human)` gaps | **Yes** (`permissionDecision: deny`) |
-| ~~`evidence-log.mjs`~~ → `check.mjs` (built) | CLI, run by the learner with `!` | *Revised (§10):* because the learner runs the tests, a PostToolUse hook never sees them. `check.mjs` runs `dotnet test` with a trx logger, prints a readable summary, remembers per test method whether it was green, and logs a red→green transition as a task with the current hint rung. It works for any .NET test project (snek exercises and project work) | No |
-| `reflect-gate.mjs` | `Stop` | If skill work happened and there is no diary entry yet, blocks **once** and tells Claude to run the reflection. Uses `stop_hook_active` to avoid loops. *Revised (§10):* it also reads Claude's last answer from the transcript and processes the `[trede N]` and `[uitleg-ok <tid>]` markers. That second marker is accepted only if the learner's own message passes the deterministic explanation check | Yes, once |
+| `session-start.mjs` | `SessionStart` | Gives Claude a summary of your skill record, the reviews due today, and the instruction to ask you for a plan (*forethought*) | No (context only) |
+| `prompt-gate.mjs` | `UserPromptSubmit` | Matches your prompt to a skill using keywords from `skill-map.yaml`, adds the policy for that level and the current hint rung, starts or updates the stuck timer, and handles `/override`. *Revised (§10.2, item 10):* ignores agent reports, task notifications and system reminders, and logs `prompt-ignored` | Can add context. Can block only on abuse patterns (optional) |
+| `ownership-guard.mjs` | `PreToolUse` (matcher `Edit\|Write\|MultiEdit\|NotebookEdit`) | Blocks AI edits to files, or parts of files, that belong to a skill at L1–L3. At L1 it allows a write only if it contains `TODO(human)` gaps | **Yes** (`permissionDecision: deny`) |
+| ~~`evidence-log.mjs`~~ → `check.mjs` (built) | CLI, which you run yourself with `!` | *Revised (§10):* because you run the tests yourself, a PostToolUse hook never sees them. `check.mjs` runs `dotnet test` with a trx logger, prints a readable summary, remembers per test method whether it was green, and logs a red→green transition as a task with the current hint rung. It works for any .NET test project (practice exercises and project work) | No |
+| `reflect-gate.mjs` | `Stop` | If you worked on a skill and there is no diary entry yet, it blocks **once** and tells Claude to run the reflection. It uses `stop_hook_active` to avoid loops. *Revised (§10):* it also reads Claude's last answer from the transcript and processes the `[trede N]` and `[uitleg-ok <tid>]` markers. That second marker is accepted only if your own message passes the deterministic explanation check | Yes, once |
+
+!!! example "Example: one student's situation"
+    The harness was first tried by a second-year HBO-ICT student who practised OOD in C#. The course exercises came with .NET unit tests, and the student ran them, not Claude. That is why `check.mjs` runs `dotnet test`. The diagrams and examples in this section still use Java from the original design (`mvn test`, `src/Payment.java`).
 
 ### 5.5 Skill record (data model)
 
-The skill record follows the knowledge-tracing idea (a probability of mastery for each skill, updated from evidence) and spaced-repetition scheduling. Since this is an OOD course, here it is as a class diagram:
+The skill record is where the harness keeps track of your progress. It follows the idea of knowledge tracing (a probability of mastery for each skill, updated from evidence) and the scheduling of spaced repetition. The subject is OOD, so here it is as a class diagram:
 
 ```mermaid
 classDiagram
@@ -961,7 +988,7 @@ classDiagram
 }
 ```
 
-**As built (revision §10):** the record is flatter than the class diagram above. Each entry has `id`, `title`, `level`, `paths`, `nextReview`, `intervalIndex`, `failStreak` and `history`. Evidence is not stored inside the skill. It lives in an append-only log, `.learning/state/events.jsonl`, with events such as `task`, `task-explained`, `test-green`, `hint-unlock` and `review`. **Microskills** are entries with a `parent` and their own `keywords`:
+**As built (after the first sessions, §10):** the record is flatter than the class diagram above. Each entry has `id`, `title`, `level`, `paths`, `nextReview`, `intervalIndex`, `failStreak` and `history`. The harness does not store evidence inside the skill. It writes it to a log that only grows (append-only), `.learning/state/events.jsonl`, with events such as `task`, `task-explained`, `test-green`, `hint-unlock` and `review`. **Microskills** are parts of a skill: entries with a `parent` and their own `keywords`:
 
 ```json
 { "id": "cs.basis.void-chaining", "parent": "cs.basis", "title": "void-methoden en chainen",
@@ -970,7 +997,7 @@ classDiagram
 
 ### 5.6 AI diary & reflection loop
 
-The diary follows the self-regulated learning cycle (Zimmerman, 2002) and uses **prompted learning protocols** (Nückles et al., 2009). The AI logs facts. You write the reflection.
+The diary follows the cycle of self-regulated learning (Zimmerman, 2002) and uses **prompted learning protocols** (Nückles et al., 2009): you write in answer to a few set questions. The AI logs the facts. You write the reflection.
 
 ```mermaid
 flowchart LR
@@ -991,7 +1018,7 @@ flowchart LR
     P2 --> S[(skills.json)]
 ```
 
-**Diary entry template** (`.learning/diary/2026-11-07.md`):
+**Diary entry template** (for example `.learning/diary/2026-11-07.md`):
 
 ```markdown
 ## Session 2 · 14:05–15:10 · skills: ood.polymorphism (L2), ood.srp (review)
@@ -1012,11 +1039,11 @@ flowchart LR
 **Calibration:** predicted 2 → performed at rung ≤2 → under-confident ✅ (good sign)
 ```
 
-**Weekly diary review** (15 minutes, `/diary --week`): Claude summarizes the week's trends: success rate per skill, number of overrides, calibration gaps, and the skills nearest promotion. *You* decide next week's focus. The weekly review supports metacognitive monitoring without doing it for you.
+**Weekly diary review** (15 minutes, `/diary --week`): Claude summarizes the trends of the week: the success rate per skill, the number of overrides, gaps in calibration, and the skills closest to the next level. *You* decide what to focus on next week. In this way the review helps you monitor your own learning, without doing the monitoring for you.
 
 ### 5.7 Spaced reinforcement after mastery
 
-Reviews use **expanding intervals**, adjusted by results in the style of Leitner and half-life regression, and they **interleave** skills, which trains choosing the right principle. Expanding intervals are not proven better than equal ones (§2.5). Spacing and retrieval do the work, and the schedule mainly keeps early reviews successful and puts them before the exam. Review tasks are *retrieval* tasks, not re-reading:
+Once you have mastered a skill, the harness keeps checking it now and then. Reviews use **expanding intervals**, adjusted to your results in the style of Leitner and half-life regression. They also **interleave** skills, which trains you to choose the right principle. Expanding intervals are not proven better than equal ones (§2.5). Spacing and retrieval do the work. The schedule mainly makes sure that early reviews succeed and that reviews fall before your exam. Review tasks are *retrieval* tasks, not re-reading:
 
 - *"Without looking: sketch the class diagram for a Strategy-based shipping cost calculator."*
 - *"Here are 3 code snippets. Which violates LSP, and why?"* (interleaved discrimination)
@@ -1052,14 +1079,15 @@ timeline
     Month 5 : Review at +60 days passed - long-term maintenance
 ```
 
-The **`SessionStart` hook** surfaces due reviews at the start of each session, so reinforcement happens automatically without you having to remember it. This is the "enforce learning as long as needed" part: a skill is *never permanently out of the loop*. It just gets checked less and less often.
+At the start of each session, the **`SessionStart` hook** shows the reviews that are due. So reinforcement happens automatically, and you do not have to remember it. This is the "enforce learning as long as needed" part: a skill is *never permanently out of the loop*. It just gets checked less and less often.
 
-**As built (revision §10):** the 3 → 7 → 21 → 60 → 120 schedule above was replaced.
+**As built (after the first sessions, §10):** the harness replaced the 3 → 7 → 21 → 60 → 120 schedule above.
+
 - **Fibonacci intervals:** 1, 2, 3, 5, 8, 13, 21, 34 … days.
-- **Starting point:** reviews start as soon as a skill or microskill reaches **L3**, not L4. That is the "mastered → only occasional reinforcement" goal.
+- **Starting point:** reviews start as soon as a skill or microskill reaches **L3**, not L4. That fits the goal "mastered → only occasional reinforcement".
 - **After a review:** `pass` moves one step up the sequence, `shaky` repeats the interval, and `fail` moves **two steps back**.
-- **After two fails in a row:** the harness *advises* demoting one level. It never demotes automatically.
-- **Before the exam:** with `settings.examDate` set, every interval is shortened so that the review falls no later than 3 days before the exam.
+- **After two fails in a row:** the harness *advises* you to go down one level. It never demotes a skill automatically.
+- **Before your exam:** if you set your exam date in `settings.examDate`, the harness shortens every interval so that the review falls no later than 3 days before the exam.
 
 ```mermaid
 flowchart LR
@@ -1075,7 +1103,7 @@ flowchart LR
 
 ### 5.8 OOD skill map
 
-`skill-map.yaml` defines the curriculum graph, which skills unlock which, and keywords used to detect skills in prompts. A skill becomes available at L0 once its prerequisites reach ≥ L2. Automating a skill (L4) requires its prerequisites to be at L4 as well, so the AI never automates something whose foundations you can't supervise.
+`skill-map.yaml` defines the curriculum as a graph: which skills unlock which, and which keywords the harness uses to detect skills in your prompts. A skill becomes available at L0 once its prerequisites are at L2 or higher. A skill can only be automated (L4) when its prerequisites are at L4 as well. That way the AI never automates something whose foundations you cannot supervise.
 
 ```mermaid
 flowchart TD
@@ -1140,29 +1168,30 @@ flowchart TD
 
 ## 6. Evaluation
 
-To check that the setup protects learning and isn't just adding friction:
+How do you know whether the harness protects your learning and does not just add friction? Check these points:
 
-1. **Unassisted transfer tests** at baseline, after month 1 and before the exam. Use small OOD tasks *without AI*: design a class diagram, refactor a smelly class, apply a pattern to a new domain. This is the measure that matters, because Bastani et al. (2025) showed practice performance with AI tells you little about performance without it.
-2. **Success rate per skill** should hover around 70–95%. Persistent > 95% means the friction is too low. Persistent < 70% means it is too high.
-3. **Override rate.** If it rises, that's a sign of frustration (R6) or bypassing (R5). Read the reasons in the diary.
-4. **Calibration.** The gap between predicted confidence and actual independence should shrink over time (R2).
-5. **Review pass rate** for L4 skills should be ≥ 80%. If not, shorten the intervals.
-6. **Time to mastery per skill.** It should *decrease* for later skills that build on mastered prerequisites. This is a transfer effect.
-7. **Mock exam vs. practice (R14).** Compare your score on a timed mock without AI in Rider with your success rate in practice. A big gap means practice conditions are too easy or too different from the test.
-8. **Supervision check (R16, after 20 January).** Give yourself a short AI-written class with planted OOD and test flaws, and count how many you find without help. Repeat it monthly.
+1. **Unassisted transfer tests** at the start (baseline), after about a month, and shortly before your exam. Use small OOD tasks *without AI*: design a class diagram, refactor a smelly class, apply a pattern to a new domain. This is the measure that matters most. Bastani et al. (2025) showed that how well you do in practice with AI tells you little about how well you do without it.
+2. **Success rate per skill** should stay around 70–95%. If it stays above 95%, the friction is too low. If it stays below 70%, the friction is too high.
+3. **Override rate.** If it rises, that is a sign of frustration (R6) or of bypassing the rules (R5). Read the reasons in the diary.
+4. **Calibration.** The gap between your predicted confidence and how independently you actually work should shrink over time (R2).
+5. **Review pass rate** for L4 skills should be 80% or higher. If it is lower, shorten the intervals.
+6. **Time to mastery per skill.** It should *decrease* for later skills that build on prerequisites you have already mastered. This is a transfer effect.
+7. **Mock exam vs. practice (R14).** Do a timed mock exam without AI, in the same environment (IDE) as your exam. Compare your score with your success rate in practice. A big gap means that your practice conditions are too easy, or too different from the test.
+8. **Supervision check (R16, after your exam).** Take a short class written by AI, with planted OOD and test flaws, and count how many flaws you find without help. Repeat this every month.
 
 ---
 
 ## 7. Limitations
 
-- **Evidence base is young.** Most generative AI studies date from 2023–2026, often with small samples, short durations, or as preprints and working papers (e.g. Kosmyna et al., 2025; Shen & Tamkin, 2026; Lehmann et al., 2025; most of the 2026 trials in §2.8). No trial in higher education has measured retention beyond about a week. Effects may change as tools change.
-- **A narrative review, corrected once.** There was no search protocol, and the first version overstated several findings (§11). The revision added evidence grades and targeted searches, but it is still not systematic, so selection bias is possible.
-- **Little OOD-specific AI research, and none on agentic tools.** Most AI-in-CS-education studies focus on CS1 programming tasks. Applying them to design skills is an inference from the OOD misconception literature plus general learning science. No controlled study of student learning with agentic tools like Claude Code exists yet.
-- **The skill-shift evidence is mostly American, descriptive and commercial.** Causal labour-market studies disagree, Dutch data are thin and correlational, and the figures on how much code AI writes come mainly from companies that sell AI. No study measures the best mix of hand practice and supervision practice, so §2.9 and §4.1 are inferences.
+- **The evidence base is young.** Most studies on generative AI date from 2023–2026. They often have small samples or short durations, or they are preprints and working papers (e.g. Kosmyna et al., 2025; Shen & Tamkin, 2026; Lehmann et al., 2025; most of the 2026 trials in §2.8). No trial in higher education has measured retention beyond about a week. Effects may change as the tools change.
+- **A narrative review, corrected once.** There was no search protocol, and the first version overstated several findings (§11). The revision added evidence grades and targeted searches. It is still not systematic, so selection bias is possible.
+- **Little OOD-specific AI research, and none on agentic tools.** Most studies of AI in computing education focus on programming tasks from CS1 (the first programming course). Applying them to design skills is an inference from research on OOD misconceptions plus general learning science. No controlled study yet exists of how students learn with agentic tools like Claude Code.
+- **The evidence on the skill shift is mostly American, descriptive and commercial.** Causal labour-market studies disagree. Dutch data are thin and correlational. The figures on how much code AI writes come mainly from companies that sell AI. No study measures the best mix of practice by hand and practice in supervision, so §2.9 and §4.1 are inferences.
 - **Conflict of interest.** This document was written by Claude, an Anthropic model, and it relies in places on Anthropic research. Check the important claims through the linked sources.
-- **Hooks are a commitment device, not security.** You can always switch them off, and the AI can sometimes find routes around the rules (e.g. shell commands that write files). The setup works because *you* chose it. The `PreToolUse` matcher can be extended to `Bash` for common file-writing commands, but this will never be airtight. Hooks can also misfire in the other direction. Until 8 November 2026, agent reports were treated as the learner's prompts and unlocked hint rungs (§10.2, item 10).
-- **Mastery thresholds are heuristics.** The numbers (85%, 3 successes over 2 days, intervals) come from the literature but haven't been validated for this specific setup. Adjust them using your own evaluation data (§6).
-- **Skill detection from prompts is approximate.** Keyword mapping will misclassify sometimes. Let the AI propose a mapping and confirm it, or tag the skill explicitly (`/learn ood.strategy`).
+- **Hooks are a commitment device, not security.** You can always switch them off, and the AI can sometimes find routes around the rules (e.g. shell commands that write files). So the harness cannot prove to a teacher that a student worked without AI. It works because *you* chose it. The `PreToolUse` matcher can be extended to `Bash` for common file-writing commands, but this will never be airtight. Hooks can also misfire the other way. In the first sessions of the pilot, reports from background agents were treated as the student's own prompts and unlocked hint rungs, until this was fixed (§10.2, item 10).
+- **Tried by one student so far.** The design was first tried in a pilot with one student. What §10 reports comes from those first sessions. It shows what went wrong and what was changed, not how well the harness works for students in general.
+- **Mastery thresholds are heuristics.** The numbers (85%, 3 successes over 2 days, the intervals) come from the literature, but they have not been validated for this setup. Adjust them using your own evaluation data (§6).
+- **Detecting skills from prompts is approximate.** Matching on keywords will sometimes pick the wrong skill. Let the AI propose a skill and confirm it, or name the skill yourself (`/learn ood.strategy`).
 
 ---
 
@@ -1427,11 +1456,11 @@ To check that the setup protects learning and isn't just adding friction:
 
 ## Appendix: implementation sketches
 
-> These are **sketches** to show that the design can be built. They are not yet installed in your Claude Code configuration. Paths assume a project-level `.claude/` folder and `.learning/` data folder. Node.js is used because Claude Code already requires it, so it works the same on Windows, macOS and Linux.
+> These are **sketches** that show the design can be built. They are not part of your Claude Code configuration unless you add them yourself. Paths assume a project-level `.claude/` folder and a `.learning/` data folder. Node.js is used because Claude Code already requires it, so it works the same on Windows, macOS and Linux.
 
 ### A. Folder layout
 
-**As built (7 Nov 2026):**
+**As built for the pilot:**
 
 ```text
 ood/
@@ -1620,16 +1649,19 @@ if (state.activeSkill && !diaryHasEntry(input.session_id)) {
 ### G. `/mastery-check` skill protocol (summary)
 
 1. Generate a **novel transfer task** for the skill in an unfamiliar domain (e.g. Strategy for tax rules instead of shipping).
-2. The learner solves it **with no hints**. The `prompt-gate` treats rung = 0 as locked.
+2. The student solves it **with no hints**. The `prompt-gate` treats rung = 0 as locked.
 3. Ask 3 explanation questions: *why this design?*, *what would break with alternative X?*, *when would you NOT use it?*
 4. Score it against a rubric. Pass means a working solution, ≥ 2/3 explanation answers correct, and ≥ 2 independent successes in the skill record on different days.
 5. On pass: `level = L4`, `nextReview = today + 3d`. On fail: stay at L3 and log the specific gaps as next-session focus.
 
 ---
 
-## 10. Revision 7 Nov 2026: lessons from the first sessions
+## 10. What we learned from the first sessions
 
-The harness first ran on 7 November 2026 for three learning sessions: snek setup, `02-namen` and `03-lijsten`. The transcripts and `events.jsonl` were analysed afterwards. This section records what went wrong and what was changed. The learner's guiding requirement: **recognize what is mastered as quickly as possible, then only reinforce it occasionally, so that most time goes to new material before the assessment** (working date `examDate` 2027-01-20; the assessment assignment is published in week 10).
+In the first sessions of the pilot, one student used the harness for three learning sessions: setting up the snek exercises, `02-namen` and `03-lijsten`. Afterwards, the transcripts and `events.jsonl` were analysed. This section reports what went wrong and what was changed as a result. The student's guiding requirement was: **recognize what is mastered as quickly as possible, then only reinforce it occasionally, so that most time goes to new material before the assessment.**
+
+!!! example "Example: one student's situation"
+    The pilot student was a second-year HBO-ICT student preparing for an OOD exam without AI (AI level 0/1). In the harness, `examDate` was set to the working date 2027-01-20, and the assessment assignment would be published in week 10. The three sessions took place on 7 November 2026. A check after the first month was planned for 15 December 2026.
 
 ### 10.1 What the data showed
 
@@ -1644,58 +1676,66 @@ The harness first ran on 7 November 2026 for three learning sessions: snek setup
 | The consolidation explanation never came | It was asked for twice and not answered, yet the task still counted | No consolidation |
 | Reading test output was only half mastered | Expected/But was was reasoned through correctly, but the summary was not readable. "Is it the test's fault?" showed a misconception about observable behaviour | This is real learning content for `test.*` microskills |
 
-### 10.2 Changes
+### 10.2 What was changed
 
-1. **Objective evidence: `check.mjs`.** The learner runs it. It works for any .NET test project, snek or project work. A red→green transition is logged as a task with the rung that applied at that moment. The first run per folder is a baseline. Skill mapping, in order: the path of the solution folder, then keywords in test and class names, then the active session skill. Claude may not run it at L1–L3 (guard).
+1. **Objective evidence: `check.mjs`.** The student runs it. It works for any .NET test project, snek exercises or project work. A red→green transition is logged as a task with the rung that applied at that moment. The first run per folder is a baseline. Skill mapping, in order: the path of the solution folder, then keywords in test and class names, then the active session skill. Claude may not run it at L1–L3 (guard).
 2. **Stricter keyword logging, plus the `done` command.** "het werkt" counts only with code or test context and never with tooling words. Claude proposes the `done` command for successes without tests, such as design or UML.
-3. **Microskills.** Entries with a `parent`, their own level, keywords and reviews. They drive the hint ladder. The guard stays path-based on the parent's level. Claude proposes new ones (`add-micro`) and the learner creates them. Parent statistics include microskill tasks.
+3. **Microskills.** Entries with a `parent`, their own level, keywords and reviews. They drive the hint ladder. The guard stays path-based on the parent's level. Claude proposes new ones (`add-micro`) and the student creates them. Parent statistics include microskill tasks.
 4. **Hard own-words explanation check (two keys).** A task stays open, also across sessions, until it is explained.
-   - Key 1: Claude judges the content and writes `[uitleg-ok <tid>]`.
-   - Key 2: `reflect-gate.mjs` checks the learner's own message deterministically: at least 12 words outside code, a causal connective, and at most 40% of its 5-word sequences copied from Claude's earlier text.
-   - There is no CLI command to mark a task explained. Promotion via `set` is refused while tasks of that skill are open. Claude cannot write `.learning/state/`.
-   - *Rationale:* self-explanation and retrieval (Chi et al., 1989; Roediger & Karpicke, 2006), and avoiding the illusion of competence (Prather et al., 2024).
+            - Key 1: Claude judges the content and writes `[uitleg-ok <tid>]`.
+            - Key 2: `reflect-gate.mjs` checks the student's own message deterministically: at least 12 words outside code, a causal connective, and at most 40% of its 5-word sequences copied from Claude's earlier text.
+            - There is no CLI command to mark a task explained. Promotion via `set` is refused while tasks of that skill are open. Claude cannot write `.learning/state/`.
+            - *Rationale:* self-explanation and retrieval (Chi et al., 1989; Roediger & Karpicke, 2006), and avoiding the illusion of competence (Prather et al., 2024).
 5. **Honest rung logging at every level.** Claude marks substantive help with `[trede N]`, and the Stop hook raises the task's maximum rung from it.
-6. **Active positive signalling.** This happens right after a task at rung 0–2, at session start (recent rung-0 wins and promotion candidates with the exact command) and in the diary. Promotion criteria were *not* loosened. The learner explicitly chose against a fast-track challenge route.
+6. **Active positive signalling.** This happens right after a task at rung 0–2, at session start (recent rung-0 wins and promotion candidates with the exact command) and in the diary. Promotion criteria were *not* loosened. The student explicitly chose against a fast-track challenge route.
 7. **Fibonacci reviews from L3,** clamped to the exam date (§5.7).
 8. **Tooling as an L4 zone, plus guard fixes.**
-   - Only `dotnet build|test|run|new|add|…` and `check.mjs` count as building or testing.
-   - Redirects to `/dev/null` or `$null`, and `=>` / `->`, no longer count as writes.
-   - A leading `cd <dir> &&` sets the effective working directory.
-   - Paths inside `.claude/` and `.learning/` are not learner code.
+            - Only `dotnet build|test|run|new|add|…` and `check.mjs` count as building or testing.
+            - Redirects to `/dev/null` or `$null`, and `=>` / `->`, no longer count as writes.
+            - A leading `cd <dir> &&` sets the effective working directory.
+            - Paths inside `.claude/` and `.learning/` are not the student's code.
 9. **Demotion discipline.** A single struggle leads to a microskill at a lower level or a short override, not a demotion of the parent skill.
-10. **Agent messages are not the learner's words (8 Nov 2026).**
-    - **The problem:** in a session that used background research agents, every agent report and task notification reached `UserPromptSubmit` as if the learner had typed it.
-      - `prompt-gate.mjs` detected skills in the report text and unlocked hint rungs as "attempt detected", because reports contain words like *error* and *I think*.
-      - A report saying "all tests passed" could have logged a fake task.
-      - The report also became `lastPrompt`, the text the explanation check reads.
-      - Five spurious `hint-unlock` events were logged (session `afe9df34…`, 7 Nov, 22:06–22:16 UTC).
-    - **The fix:** `learnerText()` and `isLearnerEntry()` in `lib.mjs`.
-      - A prompt that starts like an agent report or task notification is ignored as a whole.
-      - System-reminder blocks inside a real message are stripped.
-      - `prompt-gate` then logs one `prompt-ignored` event and stops.
-      - `reflect-gate` treats only the learner's own messages as the start of "the last answer".
-    - **Why text-based:** the real hook input has no origin field (`cwd, hook_event_name, permission_mode, prompt, prompt_id, scratchpad_dir, session_id, transcript_path`), so detection has to rely on the text.
+10. **Agent messages are not the student's words (a later fix).**
+                - **The problem:** in a session that used background research agents, every agent report and task notification reached `UserPromptSubmit` as if the student had typed it.
+                        - `prompt-gate.mjs` detected skills in the report text and unlocked hint rungs as "attempt detected", because reports contain words like *error* and *I think*.
+                        - A report saying "all tests passed" could have logged a fake task.
+                        - The report also became `lastPrompt`, the text the explanation check reads.
+                        - Five spurious `hint-unlock` events were logged within ten minutes in one session.
+                - **The fix:** `learnerText()` and `isLearnerEntry()` in `lib.mjs`.
+                        - A prompt that starts like an agent report or task notification is ignored as a whole.
+                        - System-reminder blocks inside a real message are stripped.
+                        - `prompt-gate` then logs one `prompt-ignored` event and stops.
+                        - `reflect-gate` treats only the student's own messages as the start of "the last answer".
+                - **Why text-based:** the real hook input has no origin field (`cwd, hook_event_name, permission_mode, prompt, prompt_id, scratchpad_dir, session_id, transcript_path`), so detection has to rely on the text.
 
-### 10.3 Open points to evaluate (month-1 check, 15 Dec 2026)
+### 10.3 Open points to evaluate after the first month
 
 - **Threshold checks:**
-  - Is 12 words / 40% overlap a good threshold, or does it reject honest short explanations? Check the `explain-rejected` events.
-  - Does skill mapping by path or keyword in `check.mjs` work for the project structure of the assessment?
+    - Is 12 words / 40% overlap a good threshold, or does it reject honest short explanations? Check the `explain-rejected` events.
+    - Does skill mapping by path or keyword in `check.mjs` work for the project structure of the assessment?
 - **Behaviour checks:**
-  - Does Claude really mark help at L3 with `[trede N]`? Compare `rung-mark` events with the transcripts.
-  - Does the number of `untask` events stay low? A high number would mean the logging is still noisy.
+    - Does Claude really mark help at L3 with `[trede N]`? Compare `rung-mark` events with the transcripts.
+    - Does the number of `untask` events stay low? A high number would mean the logging is still noisy.
 - **Guard:** shell text that merely *mentions* a record command (e.g. in a heredoc) is blocked. This is a deliberate trade-off: the guard is a commitment device, so it errs on the strict side.
 - **Agent traffic:**
-  - Check that every agent report produces a `prompt-ignored` event and that no real message does.
-  - Filter the five spurious `hint-unlock` events of 7 Nov (session `afe9df34…`) out of any evaluation.
+    - Check that every agent report produces a `prompt-ignored` event and that no real message does.
+    - Filter the five spurious `hint-unlock` events of that session out of any evaluation.
 
 ---
 
 ## 11. Change log
 
+### 10 November 2026: rewritten for students and teachers
+
+- **General main text.** The main text now addresses students who learn programming with AI. The situation of the student it was first written for remains as short, anonymised example boxes. Evidence, grades, citations and references are unchanged.
+- **§4 as a step plan.** §4 is now a general step plan, timed relative to the reader's own exam date. The chart with fixed dates became a table.
+- **§4.2 for teachers and programmes.** §4.2 is now a separate part for teachers and programmes.
+- **§10 as an experience report.** §10 now reports, in the third person, what the first sessions of the pilot showed and what was changed as a result.
+
 ### 8 November 2026: research update and critical review of the literature review
 
 **Why.** The first version (7 November) had three weaknesses:
+
 - **No method:** it had no search method.
 - **Mixed evidence:** it put evidence of very different strength side by side.
 - **One-sided risks:** it looked only at the risks of *using* AI.
@@ -1706,7 +1746,7 @@ A critical read and two citation checks against primary sources found the proble
 
 | Where | Was | Now | Source of the correction |
 |---|---|---|---|
-| §1, §2.8 | "The interaction pattern decides the learning outcome" ("what the field agrees on") | The pattern effects are correlational; the best working hypothesis, not a finding | In every study learners chose their own pattern. Shen & Tamkin's patterns were identified afterwards, with 2–7 people each |
+| §1, §2.8 | "The interaction pattern decides the learning outcome" ("what the field agrees on") | The pattern effects are correlational; the best working hypothesis, not a finding | In every study students chose their own pattern. Shen & Tamkin's patterns were identified afterwards, with 2–7 people each |
 | §1, §2.8 | Lehmann et al.: solutions vs. explanations; LLMs widen gaps | Neither lab experiment found an average effect; the contrast is observational; the "widening gap" is an exploratory median split | Citation check |
 | §2.8 | Kazemitabaar 2023b: copy-paste "linked to worse retention" | Observational; trends, not significant | Citation check |
 | §2.8 | Lyu 2024: "gains for AI users" | Not randomized; no direct test between groups | Citation check |
@@ -1727,22 +1767,24 @@ A critical read and two citation checks against primary sources found the proble
 | §2.8 | Anthropic Education Report: CS "heavily over-represented" | 36.8% (key findings) or 38.6% (body) of conversations vs. 5.4% of US degrees | Citation check |
 
 **Added:**
+
 - **§2.0:** method, evidence grades A–D, conflicts of interest (including this document's own), and the two time horizons.
 - **§2.6:** practice conditions and transfer to the test.
 - **§2.8:** evidence grades in the tables, the May–November 2026 studies, the retraction of Wang & Fan (2025), and graded conclusions.
-- **§2.9:** the shift in skill needs: how much code AI writes, productivity, quality, cost, jobs (US, EU, Netherlands), employer expectations, curricula and CHE's own AI levels, and a graded verdict on "hand-written code is no longer economical".
+- **§2.9:** the shift in skill needs: how much code AI writes, productivity, quality, cost, jobs (US, EU, Netherlands), employer expectations, curricula and an institution's own AI levels, and a graded verdict on "hand-written code is no longer economical".
 - **§2.10:** cognitive forcing and over-reliance, plus deskilling and the "paradox of supervision".
 - **§2.11:** principles P11–P13 and a strength column.
 - **§3:** evidence grades and a horizon for every risk; R9 and R12 re-scored; new risks R14–R18.
 - **§4:** mitigations for R14–R18, plus §4.1 (rebalancing practice) and §4.2 (talking points for the AI-policy conversation).
 - **Elsewhere:**
-  - §6 items 7–8 and the §7 limitations;
-  - in §8, corrections to existing references and over 100 new ones;
-  - §10.2 item 10 (the hook fix).
+    - §6 items 7–8 and the §7 limitations;
+    - in §8, corrections to existing references and over 100 new ones;
+    - §10.2 item 10 (the hook fix).
 
-**Not changed:** the harness design (§5) and its rules (`CLAUDE.md`). The register changes in §4.1 are proposals, for the learner to make.
+**Not changed:** the harness design (§5) and its rules (`CLAUDE.md`). The register changes in §4.1 are proposals; the student who uses the harness decides whether to make them.
 
 **How this revision was made:**
+
 - **Research:** six Claude research agents searched the web on 7–8 November 2026. Four covered new evidence and two checked the original citations.
 - **Notes:** their notes, with a link for every figure, are in `research_notes/AI learning and skill shift 2026/`. Figures the agents saw only in search snippets or secondary coverage are marked as such there.
 - **Synthesis:** a separate synthesis report was attempted, but the writing agent stalled twice, so the synthesis was written directly into this document from the notes.

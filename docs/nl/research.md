@@ -3,9 +3,9 @@
 !!! warning "Machinevertaling"
     Dit is een machinevertaling door Claude (Anthropic) van het [Engelse origineel](../en/research/). Een mens heeft de vertaling niet nagekeken. Bij twijfel geldt de Engelse tekst.
 
-*Opgesteld 7 november 2026 · herzien 8 november 2026 (zie §11) · Context: HBO-ICT jaar 2, Object-Oriented Design (OOD)*
+*Opgesteld 7 november 2026 · herzien 8 november 2026 en herschreven voor studenten en docenten op 10 november 2026 (zie §11) · Voor studenten die programmeren en Object-Oriented Design (OOD) leren met AI, en voor hun docenten*
 
-> **Gepubliceerde versie.** Dit is de openbare versie van een document dat voor één lerende is geschreven. Persoonlijke passages (loopbaanplannen en werk) zijn verwijderd, en de lerende wordt niet bij naam genoemd. De D-toets en de cursus bij CHE blijven staan als geanonimiseerde casus. Bestanden waarnaar het document verwijst, zoals de analyse van de D-toets en de sessielogs, zijn niet gepubliceerd.
+> **Gepubliceerde versie.** Dit literatuuronderzoek is eerst geschreven voor één student. Deze versie is geschreven voor studenten en docenten in het algemeen; de situatie van die student staat er nog in als voorbeelden in kaders. Bestanden waarnaar het document verwijst, zoals de sessielogs, zijn niet gepubliceerd.
 
 ---
 
@@ -13,7 +13,7 @@
 
 De inhoudsopgave staat in de zijbalk.
 
-> **Statusnotitie.** Secties 1–9 zijn het oorspronkelijke ontwerp. §1–4, §6–8 en §5.3/§5.7 zijn op 8 november 2026 herzien met onderzoek uit mei–november 2026, de verschuiving in benodigde vaardigheden en een kritische beoordeling van het oorspronkelijke literatuuronderzoek. Wat er veranderd is en waarom, staat in het wijzigingslogboek (§11). De harnas zoals het echt is gebouwd, wijkt op punten af: er zijn microvaardigheden, een testrunner (`check.mjs`) in plaats van een PostToolUse-hook voor bewijs, een harde controle op uitleg in eigen woorden, Fibonacci-herhalingen vanaf L3 en een toolingzone. Die verschillen staan samengevat in §10. Voor de dagelijkse regels is `CLAUDE.md` leidend.
+> **Statusnotitie.** Secties 1–9 zijn het oorspronkelijke ontwerp. §1–4, §6–8 en §5.3/§5.7 zijn op 8 november 2026 herzien met onderzoek uit mei–november 2026, de verschuiving in benodigde vaardigheden en een kritische beoordeling van het oorspronkelijke literatuuronderzoek. Wat er veranderd is en waarom, staat in het wijzigingslogboek (§11). De harnas zoals die echt is gebouwd, wijkt op punten af: er zijn microvaardigheden, een testrunner (`check.mjs`) in plaats van een PostToolUse-hook voor bewijs, een harde controle op uitleg in eigen woorden, Fibonacci-herhalingen vanaf L3 en een toolingzone. Die verschillen staan samengevat in §10, waarin staat wat de eerste sessies lieten zien. Als je de harnas gebruikt, is de `CLAUDE.md` daarvan leidend voor de dagelijkse regels.
 
 ---
 
@@ -22,42 +22,48 @@ De inhoudsopgave staat in de zijbalk.
 **De literatuur laat niet zien dat AI op zichzelf het leren schaadt. Als je AI het denkwerk laat doen tijdens het oefenen, kun je daarna minder zonder AI. AI die uitlegt of als tutor begeleidt, schaadt niet of helpt een beetje.** Het sterkste bewijs:
 
 - **Presteren met AI is geen leren.**
-  - **Wiskunde op de middelbare school:** onbeperkte GPT-4 verhoogde de oefenscores met 48%, maar verlaagde de examenscores met **17%** zodra de toegang was weggehaald. Een tutor die hints gaf en geen antwoorden, voorkwam die schade (Bastani et al., 2025).
-  - **Universitaire cursus:** in een experiment uit 2026 met 2,379 studenten verlaagde een AI-tutor die vooral voor directe antwoorden werd gebruikt, de eindcijfers met 0.37 SD binnen dezelfde cursus (Liu et al., 2026, working paper).
-  - **Programmeren:** in een kleine studie verhoogde Copilot de scores tijdens de sessie, maar een week later hadden studenten minder onthouden (Gardella et al., 2026).
-- **AI kan ook helpen.** In een experiment onder toezicht verhoogde toegang tot ChatGPT de toetsscores zonder AI met 0.28 SD, vooral bij studenten die het als tutor gebruikten (Contractor & Reyes, 2026, working paper). Doorslaggevend is of de AI het denken van de lerende vervangt of ondersteunt (Boolzen et al., 2026).
+    - **Wiskunde op de middelbare school:** onbeperkte GPT-4 verhoogde de oefenscores met 48%, maar verlaagde de toetsscores met **17%** zodra de toegang was weggehaald. Een tutor die hints gaf en geen antwoorden, voorkwam die schade (Bastani et al., 2025).
+    - **Universitaire cursus:** in een experiment uit 2026 met 2,379 studenten verlaagde een AI-tutor die vooral voor directe antwoorden werd gebruikt, de eindcijfers met 0.37 SD binnen dezelfde cursus (Liu et al., 2026, working paper).
+    - **Programmeren:** in een kleine studie verhoogde Copilot de scores tijdens de sessie, maar een week later hadden studenten minder onthouden (Gardella et al., 2026).
+- **AI kan ook helpen.** In een experiment onder toezicht verhoogde toegang tot ChatGPT de toetsscores zonder AI met 0.28 SD, vooral bij studenten die het als tutor gebruikten (Contractor & Reyes, 2026, working paper). Doorslaggevend is of de AI jouw denken vervangt of ondersteunt (Boolzen et al., 2026).
 - **Ontwikkelaars die een nieuwe library leerden** met een AI-assistent, scoorden 50% tegenover 67% op een quiz achteraf, met het grootste verschil bij debuggen. Ze waren niet significant sneller (Shen & Tamkin, 2026, preprint).
 - **Afgedwongen vangrails werken beter dan gevraagde.** Een tutor in zijn systeemprompt opdragen om scaffolding (ondersteuning) te bieden, veranderde niets in een experiment met 1,059 studenten (Barth et al., 2026). Poorten die in de werkwijze zijn ingebouwd, deden het beter: beheersingsregels, uitlegpoorten, blokkades buiten het model. Dat is het argument voor hooks in plaats van een prompt voor een "leermodus".
 - **Gepoolde positieve effecten zijn vooral publicatiebias.** De strengste meta-analyse uit 2026 laat g = 0.84 na correctie krimpen tot 0.08, en de meest geciteerde meta-analyse uit 2025 is ingetrokken.
 - **Zwakker dan de eerste versie beweerde** (zie het wijzigingslogboek, §11):
-  - dat bepaalde interactiepatronen beter leren *veroorzaken*: in elke studie tot nu toe kozen lerenden hun eigen patroon;
-  - dat LLM's de kloof tussen sterke en zwakke studenten groter maken: dit berust op een verkennende analyse;
-  - dat de "85%-regel" voor mensen geldt: die is alleen in simulaties aangetoond;
-  - dat groeiende intervallen tussen herhalingen beter werken dan gelijke: dat doen ze niet betrouwbaar;
-  - het "Google-effect": het eerste experiment ervan is twee keer niet gerepliceerd.
+    - dat bepaalde interactiepatronen beter leren *veroorzaken*: in elke studie tot nu toe kozen studenten hun eigen patroon;
+    - dat LLM's de kloof tussen sterke en zwakke studenten groter maken: dit berust op een verkennende analyse;
+    - dat de "85%-regel" voor mensen geldt: die is alleen in simulaties aangetoond;
+    - dat groeiende intervallen tussen herhalingen beter werken dan gelijke: dat doen ze niet betrouwbaar;
+    - het "Google-effect": het eerste experiment ervan is twee keer niet gerepliceerd.
 
 **De verschuiving in vaardigheden is echt, maar het is geen reden om te stoppen met code met de hand schrijven terwijl je het nog leert (§2.9).**
+
 - **Voor de verschuiving:**
-  - bij bedrijven die voorop lopen met AI, stelt AI nu de meeste nieuwe code op;
-  - de tool kost ongeveer 1–2% van de loonkosten van een ontwikkelaar;
-  - Amerikaanse prognoses verwachten dat banen als "programmeur" krimpen, en dat banen als "ontwikkelaar" langzamer groeien dan eerder voorspeld.
+    - bij bedrijven die voorop lopen met AI, stelt AI nu de meeste nieuwe code op;
+    - de tool kost ongeveer 1–2% van de loonkosten van een ontwikkelaar;
+    - Amerikaanse prognoses verwachten dat banen als "programmeur" krimpen, en dat banen als "ontwikkelaar" langzamer groeien dan eerder voorspeld.
 
-  Voor routinematige, goed gespecificeerde code op het werk is met de hand schrijven niet meer de goedkoopste manier.
+    Voor routinematige, goed gespecificeerde code op het werk is met de hand schrijven niet meer de goedkoopste manier.
+
 - **Tegen het schrappen van oefenen met de hand:**
-  - het knelpunt is verschoven naar reviewen en testen;
-  - AI-code zakt nog steeds voor meer dan een derde van de beveiligingscontroles;
-  - in de VS wordt minder aangenomen op instapniveau, maar hoeveel daarvan door AI komt, staat ter discussie;
-  - nieuwe vormen van sollicitatiegesprekken toetsen lezen, debuggen en het controleren van AI-output.
+    - het knelpunt is verschoven naar reviewen en testen;
+    - AI-code zakt nog steeds voor meer dan een derde van de beveiligingscontroles;
+    - in de VS wordt minder aangenomen op instapniveau, maar hoeveel daarvan door AI komt, staat ter discussie;
+    - nieuwe vormen van sollicitatiegesprekken toetsen lezen, debuggen en het controleren van AI-uitvoer.
 
-  Oefenen met de hand bouwt juist die toezichtsvaardigheden op, en delegeren tast ze het meest aan (§2.10).
+    Oefenen met de hand bouwt juist die toezichtsvaardigheden op, en delegeren tast ze het meest aan (§2.10).
 
-Het bewijs pleit dus voor het **toevoegen** van doelbewust oefenen met vaardigheden uit het AI-tijdperk (reviewen, testen, specificeren, verifiëren) bovenop fundamenten die je met de hand schrijft, niet voor het vervangen daarvan. Het past ook bij de toetsopzet van de cursus: het AI-niveau 0/1 van CHE voor het eindassessment sluit aan bij de Nederlandse consensus over twee sporen (Npuls). Het is geen uitzondering.
+Het bewijs pleit dus voor het **toevoegen** van doelbewust oefenen met vaardigheden uit het AI-tijdperk (reviewen, testen, specificeren, verifiëren) bovenop fundamenten die je met de hand schrijft, niet voor het vervangen daarvan. Het past ook bij opleidingen die het eindassessment op AI-niveau 0/1 houden. Dat sluit aan bij de Nederlandse consensus over twee sporen (Npuls); het is geen uitzondering.
 
-**Twee horizonnen.** Tot 20 januari 2027 is het doel bekwaamheid zonder AI onder examenomstandigheden. Dat betekent: getimed oefenen, zonder AI, in de IDE van het examen (§2.6). Daarna volgt het doel de verschuiving in benodigde vaardigheden: de toezichtskant van werken met AI, zoals specificeren, testen en reviewen van AI-output (§2.9). Het risicoregister (§3) dekt beide horizonnen, ook de risico's van te veel en te weinig investeren in code met de hand schrijven.
+**Twee horizonnen.** Tot je toets is het doel bekwaamheid zonder AI onder de omstandigheden van je toets. Dat betekent: getimed oefenen, zonder AI, in de omgeving van je toets (§2.6). Na de toets, en voor je werk na je studie, volgt het doel de verschuiving in benodigde vaardigheden: de toezichtskant van werken met AI, zoals specificeren, testen en reviewen van AI-uitvoer (§2.9). Het risicoregister (§3) dekt beide horizonnen, ook de risico's van te veel en te weinig investeren in code met de hand schrijven.
+
+!!! example "Voorbeeld: de situatie van één student"
+    Dit literatuuronderzoek is eerst geschreven voor een tweedejaars student HBO-ICT. De OOD-toets van die student bij CHE was getimed, op AI-niveau 0/1, en viel ongeveer tien weken na het schrijven van het onderzoek. Voor die student liep de eerste horizon tot die toetsdatum. Daarna kon de aandacht breder worden, naar de toezichtsvaardigheden uit §2.9.
 
 De fundamenten uit de leerwetenschap sluiten hierop aan:
+
 - **Inspanning:** leren hangt af van inspannend zelf genereren en ophalen (Bjork, 1994; Roediger & Karpicke, 2006).
-- **Expertise:** de juiste hoeveelheid hulp verandert met de expertise (Kalyuga et al., 2003).
+- **Expertise:** de juiste hoeveelheid hulp verandert met je expertise (Kalyuga et al., 2003).
 - **Afbouwen:** scaffolding moet worden **afgebouwd** (Renkl & Atkinson, 2003; Wood, Bruner & Ross, 1976).
 - **Moeilijkheid:** oefenen moet zo moeilijk zijn dat je soms faalt.
 - **Verval:** vaardigheden die je beheerst, **zakken weg**, tenzij ze met gespreide tussenpozen worden versterkt (Arthur et al., 1998; Cepeda et al., 2006).
@@ -71,6 +77,8 @@ De fundamenten uit de leerwetenschap sluiten hierop aan:
 
 De hooks zijn een **zelfbindingsmechanisme** (commitment device) dat je zelf kiest (Ariely & Wertenbroch, 2002), geen gevangenis. Je kunt er bewust uitstappen, en dat uitstappen wordt gelogd.
 
+**Voor docenten en opleidingen.** Dit literatuuronderzoek is vooral voor studenten geschreven. §4.2 is een apart deel voor docenten en opleidingen: het vertaalt dit bewijs naar punten voor het AI-beleid van een cursus of opleiding.
+
 ---
 
 ## 2. Literatuuronderzoek
@@ -79,7 +87,7 @@ De hooks zijn een **zelfbindingsmechanisme** (commitment device) dat je zelf kie
 
 Dit is een **narratief literatuuroverzicht**, geen systematisch overzicht. De eerste versie (7 november 2026) had geen zoekprotocol, geen inclusiecriteria en geen kwaliteitsbeoordeling. Ook stonden gerandomiseerde experimenten, kleine interviewstudies en preprints door elkaar in dezelfde tabellen. De herziening van 8 november 2026 voegde toe:
 
-- **Gerichte zoekopdrachten.** Vier zoekopdrachten besloegen mei–november 2026: leeronderzoek, de arbeidsmarkt, de economie van coderen met AI, en beleid over vaardigheden en toetsing. Twee citatiecontroles vergeleken de oorspronkelijke beweringen met hun primaire bronnen. De aantekeningen, met een link bij elk getal, staan in `research_notes/AI learning and skill shift 2026/`. De synthese staat in `reports/`.
+- **Gerichte zoekopdrachten.** Vier zoekopdrachten besloegen mei–november 2026: leeronderzoek, de arbeidsmarkt, de economie van coderen met AI, en beleid over vaardigheden en toetsing. Twee citatiecontroles vergeleken de oorspronkelijke beweringen met hun primaire bronnen. De aantekeningen, met een link bij elk getal, staan in `research_notes/AI learning and skill shift 2026/`. De synthese staat in `reports/`. Geen van beide is gepubliceerd.
 - **Correcties** overal waar een bewering verder ging dan de bron (opgesomd in het wijzigingslogboek, §11).
 - **Een bewijsgraad** voor elke studie:
 
@@ -91,6 +99,7 @@ Dit is een **narratief literatuuroverzicht**, geen systematisch overzicht. De ee
 | **D** | Beweringen van bedrijven of bestuurders, berichten in de pers, meningen |
 
 **Belangenconflicten.** Een aantal belangrijke bronnen komt van AI-leveranciers:
+
 - **Anthropic:** Shen & Tamkin, het Education Report en de studie naar de eigen engineers.
 - **Microsoft en GitHub:** Peng et al., Cui et al., Lee et al.
 - **Google:** DORA.
@@ -98,16 +107,17 @@ Dit is een **narratief literatuuroverzicht**, geen systematisch overzicht. De ee
 Dit document is geschreven met Claude, het model van Anthropic, en Claude-agents deden het onderzoek voor de herziening. Een leveranciersstudie die *schade* door het eigen product meldt, zoals Shen & Tamkin, is geloofwaardiger dan een bewering van een leverancier over hoeveel code AI al schrijft. Zulke beweringen krijgen graad D. Controleer belangrijke beweringen via de gelinkte primaire bron.
 
 **Twee tijdshorizonnen.** Het overzicht beantwoordt twee verschillende vragen, en het bewijs beantwoordt ze verschillend:
-- **Korte termijn (§2.1–2.8):** wat helpt de lerende om op 20 januari 2027 te slagen voor een toets op AI-niveau 0/1.
-- **Lange termijn (§2.9):** welke vaardigheden na het afstuderen tellen op de arbeidsmarkt.
+
+- **Korte termijn (§2.1–2.8):** wat je helpt om op je toetsdatum te slagen voor een toets op AI-niveau 0/1.
+- **Lange termijn (§2.9):** welke vaardigheden na je studie tellen op de arbeidsmarkt.
 
 ### 2.1 Hoe je programmeer- en OOD-vaardigheden leert
 
 **Programmeren is moeilijk te leren, en de moeilijkheid zit meer in het opdelen van problemen en in mentale modellen dan in syntaxis.** De multinationale studie van McCracken et al. (2001) vond dat de meeste eerstejaars een middelzwaar programmeerprobleem niet konden oplossen. Robins, Rountree & Rountree (2003) brachten het vakgebied in kaart en concludeerden dat beginners *schema's* (plannen) en *mentale modellen* van programma-uitvoering missen. Beginners hebben moeite om bekende constructies te combineren tot oplossingen. De constructies kennen is niet het knelpunt.
 
-**Lezen en traceren gaan voor schrijven.** Lister et al. (2004) lieten zien dat veel studenten code niet betrouwbaar kunnen *traceren*. Lopez et al. (2008) vonden een hiërarchie waarin het traceren en uitleggen van code het schrijfvermogen voorspellen. **Dit is belangrijk voor AI-gebruik:** als AI de code schrijft, krijgt de lerende hooguit *lees*oefening. Leesoefening levert alleen iets op als de lerende de code echt traceert en uitlegt. Passief accepteren telt niet.
+**Lezen en traceren gaan voor schrijven.** Lister et al. (2004) lieten zien dat veel studenten code niet betrouwbaar kunnen *traceren*. Lopez et al. (2008) vonden een hiërarchie waarin het traceren en uitleggen van code het schrijfvermogen voorspellen. **Dit is belangrijk voor AI-gebruik:** als AI de code schrijft, krijg je hooguit *lees*oefening. Leesoefening levert alleen iets op als je de code echt traceert en uitlegt. Passief accepteren telt niet.
 
-**OOD heeft eigen misvattingen.** Holland, Griffiths & Woodman (1997) beschreven veelvoorkomende misvattingen over objecten, bijvoorbeeld een klasse verwarren met een instantie, of objecten zien als alleen maar datarecords. Ragonis & Ben-Ari (2005) volgden beginners lange tijd en vonden hardnekkige problemen met de toestand van objecten, constructors en het onderscheid tussen statisch en dynamisch. Eckerdal & Thuné (2005) lieten zien dat de *opvattingen* van studenten over object en klasse lopen van "een stuk code" tot "een model van iets in het probleemdomein". Die laatste opvatting is wat OOD nodig heeft. Sanders & Thomas (2007) maakten een checklist van OO-concepten en misvattingen voor toetsing. Kölling (1999) betoogde dat OOP een "objects first"-aanpak nodig heeft, met geschikte tools. **Wat dit voor ons betekent:** OOD-vaardigheid is grotendeels *ontwerpoordeel*. Dat zie je aan het kiezen van verantwoordelijkheden, abstracties en relaties. Een AI die kant-en-klare ontwerpen vol patronen aanlevert, laat de lerende precies dat oordeel overslaan.
+**OOD heeft eigen misvattingen.** Holland, Griffiths & Woodman (1997) beschreven veelvoorkomende misvattingen over objecten, bijvoorbeeld een klasse verwarren met een instantie, of objecten zien als alleen maar datarecords. Ragonis & Ben-Ari (2005) volgden beginners lange tijd en vonden hardnekkige problemen met de toestand van objecten, constructors en het onderscheid tussen statisch en dynamisch. Eckerdal & Thuné (2005) lieten zien dat de *opvattingen* van studenten over object en klasse lopen van "een stuk code" tot "een model van iets in het probleemdomein". Die laatste opvatting is wat OOD nodig heeft. Sanders & Thomas (2007) maakten een checklist van OO-concepten en misvattingen voor toetsing. Kölling (1999) betoogde dat OOP een "objects first"-aanpak nodig heeft, met geschikte tools. **Wat dit voor jou betekent:** OOD-vaardigheid is grotendeels *ontwerpoordeel*. Dat zie je aan het kiezen van verantwoordelijkheden, abstracties en relaties. Een AI die kant-en-klare ontwerpen vol patronen aanlevert, laat jou precies dat oordeel overslaan.
 
 **Instructietechnieken met goed bewijs in het informatica-onderwijs:**
 
@@ -119,100 +129,109 @@ Dit document is geschreven met Claude, het model van Anthropic, en Claude-agents
 
 ### 2.2 Frictie: wenselijke moeilijkheden (desirable difficulties) tegenover vastlopen
 
-**Wenselijke moeilijkheden.** Bjork (1994) en Bjork & Bjork (2011) lieten zien dat omstandigheden die de *zichtbare* vooruitgang tijdens het oefenen vertragen, het onthouden en de transfer op lange termijn vaak *verbeteren*. Voorbeelden zijn gespreid oefenen, interleaving, ophalen en genereren. Vlot, makkelijk oefenen geeft een *illusie van bekwaamheid*: lerenden beoordelen hun leren naar hoe makkelijk het oefenen voelde, en dat oordeel zit er systematisch naast (Koriat & Bjork, 2005; Kornell & Bjork, 2008). AI-hulp komt dicht bij de ultieme vlotheidsmachine.
+**Wenselijke moeilijkheden.** Bjork (1994) en Bjork & Bjork (2011) lieten zien dat omstandigheden die de *zichtbare* vooruitgang tijdens het oefenen vertragen, het onthouden en de transfer op lange termijn vaak *verbeteren*. Voorbeelden zijn gespreid oefenen, interleaving, ophalen en genereren. Vlot, makkelijk oefenen geeft een *illusie van bekwaamheid*: studenten beoordelen hun leren naar hoe makkelijk het oefenen voelde, en dat oordeel zit er systematisch naast (Koriat & Bjork, 2005; Kornell & Bjork, 2008). AI-hulp komt dicht bij de ultieme vlotheidsmachine.
 
-**Maar de moeilijkheid moet *wenselijk* zijn. Dat betekent dat de lerende die kan overwinnen:**
+**Maar de moeilijkheid moet *wenselijk* zijn. Dat betekent dat je die kunt overwinnen:**
 
 - **Minimale begeleiding laat beginners in de steek.** Kirschner, Sweller & Clark (2006) zetten het bewijs op een rij dat ontdekken zonder begeleiding het werkgeheugen overbelast.
-- **Productief falen.** Kapur (2008, 2016) liet zien dat worstelen met een probleem *vóór* de instructie het conceptuele begrip en de transfer kan verbeteren, maar alleen als er na het worstelen consolidatie volgt. Kapur (2016) onderscheidt *productief falen* van *onproductief falen*, waarbij de lerende zonder steun blijft ploeteren. Een meta-analyse van 53 studies vond een matig voordeel voor problemen oplossen vóór de instructie (g = 0.36, 95% CI 0.20–0.51), en een groter voordeel (0.37–0.58) als het ontwerp de principes van productief falen volgde. Eerst instructie werkte beter voor jonge lerenden en voor domeinoverstijgende vaardigheden (Sinha & Kapur, 2021). Het debat met Kirschner et al. is dus genuanceerd, niet beslecht. Een poging telt alleen als productief falen als er een uitleg op volgt die erop voortbouwt en de poging vergelijkt met een standaardoplossing. Zonder dat is "eerst proberen" het geval met minimale begeleiding dat Kirschner et al. bekritiseren.
+- **Productief falen.** Kapur (2008, 2016) liet zien dat worstelen met een probleem *vóór* de instructie het conceptuele begrip en de transfer kan verbeteren, maar alleen als er na het worstelen consolidatie volgt. Kapur (2016) onderscheidt *productief falen* van *onproductief falen*, waarbij een student zonder steun blijft ploeteren. Een meta-analyse van 53 studies vond een matig voordeel voor problemen oplossen vóór de instructie (g = 0.36, 95% CI 0.20–0.51), en een groter voordeel (0.37–0.58) als het ontwerp de principes van productief falen volgde. Eerst instructie werkte beter voor jonge lerenden en voor domeinoverstijgende vaardigheden (Sinha & Kapur, 2021). Het debat met Kirschner et al. is dus genuanceerd, niet beslecht. Een poging telt alleen als productief falen als er een uitleg op volgt die erop voortbouwt en de poging vergelijkt met een standaardoplossing. Zonder dat is "eerst proberen" het geval met minimale begeleiding dat Kirschner et al. bekritiseren.
 - **Verwarring kan helpen.** D'Mello et al. (2014) vonden dat verwarring het leren verbetert *als ze wordt opgelost*. Onopgeloste verwarring slaat om in frustratie en afhaken.
 - **De 85%-regel is een heuristiek, geen bewijs.** Wilson et al. (2019) leidden af dat lerende systemen die met stochastic gradient descent worden getraind op taken met *binaire classificatie*, het snelst leren bij een foutpercentage van ongeveer 15.87% tijdens de training (nauwkeurigheid ≈ 85%).
-  - **Alleen simulaties:** ze lieten het zien in een perceptron, een netwerk met twee lagen op MNIST-cijfers en een model van perceptueel leren bij apen. Ze verzamelden geen gegevens van mensen en noemen een test bij mensen toekomstig werk.
-  - **Hangt af van ruis:** bij niet-Gaussische ruis verschuift het optimum naar 82% of 75%.
-  - **Moeilijkheid, geen beheersing:** het getal is een doel voor de moeilijkheid *tijdens* het oefenen, geen drempel voor beheersing.
-  - **Hier niet meetbaar:** over 5 taken kan een succespercentage alleen 80% of 100% zijn.
+    - **Alleen simulaties:** ze lieten het zien in een perceptron, een netwerk met twee lagen op MNIST-cijfers en een model van perceptueel leren bij apen. Ze verzamelden geen gegevens van mensen en noemen een test bij mensen toekomstig werk.
+    - **Hangt af van ruis:** bij niet-Gaussische ruis verschuift het optimum naar 82% of 75%.
+    - **Moeilijkheid, geen beheersing:** het getal is een doel voor de moeilijkheid *tijdens* het oefenen, geen drempel voor beheersing.
+    - **Hier niet meetbaar:** over 5 taken kan een succespercentage alleen 80% of 100% zijn.
 
-  De harnas gebruikt "ongeveer 85%" daarom alleen als vuistregel: oefenen moet zo moeilijk zijn dat je soms faalt.
-- **Zone van naaste ontwikkeling / region of proximal learning.** Vygotsky (1978) beschreef de zone waarin een lerende slaagt *met* hulp, maar nog niet alleen. Metcalfe & Kornell (2005) lieten zien dat lerenden het meest winnen bij het bestuderen van stof die net boven hun huidige beheersing ligt.
+    De harnas gebruikt "ongeveer 85%" daarom alleen als vuistregel: oefenen moet zo moeilijk zijn dat je soms faalt.
+
+- **Zone van naaste ontwikkeling / region of proximal learning.** Vygotsky (1978) beschreef de zone waarin je slaagt *met* hulp, maar nog niet alleen. Metcalfe & Kornell (2005) lieten zien dat studenten het meest winnen bij het bestuderen van stof die net boven hun huidige beheersing ligt.
 - **Flow.** Csikszentmihalyi (1990) vond dat betrokkenheid het hoogst is als de uitdaging past bij de vaardigheid. Te makkelijk leidt tot verveling, te moeilijk tot angst.
 
-**Ook hulp zoeken kan misgaan.** Aleven & Koedinger (2000) en Aleven et al. (2003) lieten zien dat lerenden in tutorsystemen hulp vaak *verkeerd gebruiken*: ze klikken door de hints heen om bij het antwoord te komen ("help abuse"), of ze vermijden hulp als ze die nodig hebben. Baker et al. (2004) beschreven "gaming the system" en het negatieve verband daarvan met leren. **Een AI-codeerassistent is een hintknop zonder limiet.** Hulpzoekgedrag heeft daarom structuur nodig, zoals hintladders, tijdslimieten en de eis dat je eerst een poging doet.
+**Ook hulp zoeken kan misgaan.** Aleven & Koedinger (2000) en Aleven et al. (2003) lieten zien dat studenten in tutorsystemen hulp vaak *verkeerd gebruiken*: ze klikken door de hints heen om bij het antwoord te komen ("help abuse"), of ze vermijden hulp als ze die nodig hebben. Baker et al. (2004) beschreven "gaming the system" en het negatieve verband daarvan met leren. **Een AI-codeerassistent is een hintknop zonder limiet.** Hulpzoekgedrag heeft daarom structuur nodig, zoals hintladders, tijdslimieten en de eis dat je eerst een poging doet.
 
-**Conclusie over frictie:** mik op *worstelen met een vangnet*. De lerende probeert eerst. Hulp neemt stap voor stap toe, en alleen na een echte poging. Een lerende die vastzit, blijft nooit te lang alleen. En elke worsteling eindigt met consolidatie (een uitleg, een reflectie of een uitgewerkte oplossing *na* de poging).
+**Conclusie over frictie:** mik op *worstelen met een vangnet*. Je probeert eerst. Hulp neemt stap voor stap toe, en alleen na een echte poging. Als je vastzit, blijf je nooit te lang alleen. En elke worsteling eindigt met consolidatie (een uitleg, een reflectie of een uitgewerkte oplossing *na* de poging).
 
 ### 2.3 Scaffolding, afbouwen en het expertise-omkeereffect
 
-- **Scaffolding** (ondersteuning) werd door Wood, Bruner & Ross (1976) gedefinieerd als steun van een tutor die de delen van een taak overneemt die de lerende nog niet aankan. Pea (2004) en Puntambekar & Hübscher (2005) benadrukten dat scaffolding alleen als scaffolding telt als die wordt **afgebouwd**. Blijvende steun is gewoon een kruk.
+- **Scaffolding** (ondersteuning) werd door Wood, Bruner & Ross (1976) gedefinieerd als steun van een tutor die de delen van een taak overneemt die de student nog niet aankan. Pea (2004) en Puntambekar & Hübscher (2005) benadrukten dat scaffolding alleen als scaffolding telt als die wordt **afgebouwd**. Blijvende steun is gewoon een kruk.
 - **Cognitief leerlingschap** (cognitive apprenticeship; Collins, Brown & Newman, 1989) doorloopt *voordoen → coachen → scaffolding → afbouwen → verwoorden → reflecteren → verkennen*. Deze volgorde is vrijwel de blauwdruk voor de Autonomieladder in §5.
 - **Afgebouwde uitgewerkte voorbeelden.** Renkl & Atkinson (2003) en Atkinson, Renkl & Merrill (2003) lieten zien dat het geleidelijk weghalen van oplossingsstappen uit uitgewerkte voorbeelden (*backward fading*) beter werkt dan in één keer overstappen van voorbeelden naar opgaven.
-- **Expertise-omkeereffect.** Kalyuga et al. (2003) lieten zien dat begeleiding die beginners helpt, *overbodig en schadelijk* wordt voor gevorderde lerenden. **Het hulpniveau moet daarom per vaardigheid de expertise van de lerende volgen.** Een vaste "tutormodus" is te veel voor sommige vaardigheden en te weinig voor andere.
+- **Expertise-omkeereffect.** Kalyuga et al. (2003) lieten zien dat begeleiding die beginners helpt, *overbodig en schadelijk* wordt voor gevorderde studenten. **Het hulpniveau moet daarom per vaardigheid jouw expertise volgen.** Een vaste "tutormodus" is te veel voor sommige vaardigheden en te weinig voor andere.
 - **Contingente begeleiding.** Wood & Wood (1999) vonden dat de meest effectieve tutors één regel volgen: *geef meer hulp na falen, minder na succes*. Die regel kun je direct implementeren (§5.3).
 
 ### 2.4 Beheersing, fasen van vaardigheidsverwerving en wanneer je automatiseert
 
-- **Fasen van vaardigheidsverwerving.** Fitts & Posner (1967) stelden de fasen cognitief → associatief → autonoom voor. Anderson (1982) formaliseerde dit als declaratieve kennis die wordt gecompileerd tot procedures. Dreyfus & Dreyfus (1980) beschreven beginner → gevorderde beginner → competent → bekwaam → expert. Zodra een vaardigheid *autonoom* is, heeft die geen bewuste aandacht meer nodig. **Dat is het juiste moment om de vaardigheid aan automatisering over te dragen:** de cognitieve capaciteit komt dan vrij voor de volgende vaardigheid, en de lerende heeft nog de bekwaamheid om op de automatisering *toe te zien*.
-- **Beheersingsleren (mastery learning).** Bloom (1968, 1984) stelde voor dat lerenden pas verdergaan als ze beheersing hebben laten zien (≈ 80–90% op een criteriumtoets).
-  - **Toetsen van de cursus:** een meta-analyse van 108 evaluaties vond positieve effecten, het sterkst bij zwakkere studenten (Kulik, Kulik & Bangert-Drowns, 1990).
-  - **Gestandaardiseerde toetsen:** de effecten zijn in wezen nul, een punt dat Kulik et al. erkenden (Slavin, 1987, 1990).
-  - **Kosten:** beheersingspoorten kosten tijd en verkleinen hoeveel stof je behandelt.
+- **Fasen van vaardigheidsverwerving.** Fitts & Posner (1967) stelden de fasen cognitief → associatief → autonoom voor. Anderson (1982) formaliseerde dit als declaratieve kennis die wordt gecompileerd tot procedures. Dreyfus & Dreyfus (1980) beschreven beginner → gevorderde beginner → competent → bekwaam → expert. Zodra een vaardigheid *autonoom* is, heeft die geen bewuste aandacht meer nodig. **Dat is het juiste moment om de vaardigheid aan automatisering over te dragen:** de cognitieve capaciteit komt dan vrij voor de volgende vaardigheid, en je hebt nog de bekwaamheid om op de automatisering *toe te zien*.
+- **Beheersingsleren (mastery learning).** Bloom (1968, 1984) stelde voor dat studenten pas verdergaan als ze beheersing hebben laten zien (≈ 80–90% op een criteriumtoets).
+    - **Toetsen van de cursus:** een meta-analyse van 108 evaluaties vond positieve effecten, het sterkst bij zwakkere studenten (Kulik, Kulik & Bangert-Drowns, 1990).
+    - **Gestandaardiseerde toetsen:** de effecten zijn in wezen nul, een punt dat Kulik et al. erkenden (Slavin, 1987, 1990).
+    - **Kosten:** beheersingspoorten kosten tijd en verkleinen hoeveel stof je behandelt.
 
-  Beide punten zijn hier van belang. De winst zie je op smalle toetsen die op de cursus aansluiten, en een toets is zo'n toets. Een strenge poort, zoals "geen promotie zolang er uitleg openstaat", ruilt breedte in voor diepte.
+    Beide punten zijn hier van belang. De winst zie je op smalle toetsen die op de cursus aansluiten, en een cursustoets is zo'n toets. Een strenge poort, zoals "geen promotie zolang er uitleg openstaat", ruilt breedte in voor diepte.
+
 - **De "2 sigma"-claim houdt geen stand.** Het effect van twee standaarddeviaties van één-op-één-begeleiding door een tutor bij Bloom (1984) berustte op twee dissertatiestudies van drie weken met smalle toetsen. Ongeveer de helft ervan kwam van de beheersingstoetsen en de corrigerende feedback, niet van de begeleiding zelf (von Hippel, 2024). Betere schattingen:
-  - begeleiding door een menselijke tutor d ≈ 0.79 en intelligente tutorsystemen d ≈ 0.76 (VanLehn, 2011);
-  - tutorprogramma's ongeveer 0.29 SD (Nickow, Oreopoulos & Quan, 2024);
-  - tutorsystemen een mediaan van 0.66 SD, veel groter op lokaal gemaakte toetsen dan op gestandaardiseerde (Kulik & Fletcher, 2016).
+    - begeleiding door een menselijke tutor d ≈ 0.79 en intelligente tutorsystemen d ≈ 0.76 (VanLehn, 2011);
+    - tutorprogramma's ongeveer 0.29 SD (Nickow, Oreopoulos & Quan, 2024);
+    - tutorsystemen een mediaan van 0.66 SD, veel groter op lokaal gemaakte toetsen dan op gestandaardiseerde (Kulik & Fletcher, 2016).
 
-  Een realistische verwachting voor een AI-tutor is een fractie van een standaarddeviatie, niet twee.
+    Een realistische verwachting voor een AI-tutor is een fractie van een standaarddeviatie, niet twee.
+
 - **Knowledge tracing.** Corbett & Anderson (1994) modelleerden de kans dat een vaardigheid wordt beheerst, werkten die kans na elke poging bij, en verklaarden beheersing bij P(known) ≥ 0.95. Dit idee zit achter het vaardighedenregister in §5.5. Anderson et al. (1995) en VanLehn (2011) lieten zien dat intelligente tutorsystemen die per stap werken, bijna zo effectief zijn als begeleiding door een menselijke tutor.
 - **Doelbewust oefenen (deliberate practice).** Ericsson, Krampe & Tesch-Römer (1993) wezen inspannend oefenen op specifieke zwakke punten, met directe feedback, aan als de motor van expertise. Oefenen op een makkelijke "automatische piloot" heeft niet hetzelfde effect. Zie dit als een principe over de *kwaliteit* van oefenen. Het laat niet zien dat de hoeveelheid oefening de meeste verschillen tussen mensen verklaart:
-  - **Verklaarde variantie:** doelbewust oefenen verklaarde 26% bij spellen, 21% bij muziek, 18% bij sport, 4% in het onderwijs en minder dan 1% in beroepen (Macnamara, Hambrick & Oswald, 2014).
-  - **Replicatie:** een directe replicatie van de oorspronkelijke studie mislukte (Macnamara & Maitra, 2019).
-  - **Tegenclaim:** Ericsson & Harwell (2019) melden hogere aandelen als ze alleen studies meenemen die passen bij de oorspronkelijke definitie.
+    - **Verklaarde variantie:** doelbewust oefenen verklaarde 26% bij spellen, 21% bij muziek, 18% bij sport, 4% in het onderwijs en minder dan 1% in beroepen (Macnamara, Hambrick & Oswald, 2014).
+    - **Replicatie:** een directe replicatie van de oorspronkelijke studie mislukte (Macnamara & Maitra, 2019).
+    - **Tegenclaim:** Ericsson & Harwell (2019) melden hogere aandelen als ze alleen studies meenemen die passen bij de oorspronkelijke definitie.
 - **Overleren** (doorgaan met oefenen na de eerste beheersing) verbetert het onthouden, maar het voordeel neemt in de loop van de tijd af (Driskell, Willis & Copper, 1992). *Gespreid oefenen* is een efficiëntere besteding van extra oefening (Rohrer et al., 2005).
 
 ### 2.5 Onthouden na beheersing: gespreid oefenen, ophalen en verval van vaardigheden
 
 - **Vergeten** volgt een steile curve die in de loop van de tijd afvlakt (Ebbinghaus, 1885).
-- **Spreidingseffect (spacing effect).** Cepeda et al. (2006) bekeken 317 experimenten: oefening die over de tijd is gespreid, wint van geconcentreerd oefenen. Cepeda et al. (2008) vonden dat de beste tussenpoos groeit met de tijd tot de toets, maar als aandeel daarvan kleiner wordt: van ongeveer **20–40% bij een toets na één week** tot ongeveer **5–10% bij een toets na één jaar**. De toets op 20 januari is ongeveer tien weken weg. Dat wijst op tussenpozen van één tot twee weken tussen herhalingen van een geleerde vaardigheid. De studie gebruikte weetjes met één herhaling, dus toepassen op programmeervaardigheid is een extrapolatie. Kang (2016) besprak gespreid oefenen als een praktische, efficiënte strategie.
+- **Spreidingseffect (spacing effect).** Cepeda et al. (2006) bekeken 317 experimenten: oefening die over de tijd is gespreid, wint van geconcentreerd oefenen. Cepeda et al. (2008) vonden dat de beste tussenpoos groeit met de tijd tot de toets, maar als aandeel daarvan kleiner wordt: van ongeveer **20–40% bij een toets na één week** tot ongeveer **5–10% bij een toets na één jaar**. Als je toets ongeveer tien weken weg is, wijst dat op tussenpozen van één tot twee weken tussen herhalingen van een geleerde vaardigheid. De studie gebruikte weetjes met één herhaling, dus toepassen op programmeervaardigheid is een extrapolatie. Kang (2016) besprak gespreid oefenen als een praktische, efficiënte strategie.
 - **Groeiende intervallen zijn niet aantoonbaar beter.**
-  - **Gespreid tegenover geconcentreerd:** gespreid ophalen wint van geconcentreerd ophalen (g = 0.74).
-  - **Groeiend tegenover gelijk:** groeiende schema's, zoals de Fibonacci-intervallen van de harnas, wonnen niet van gelijke tussenpozen (g = 0.034, niet significant). Ze leveren alleen winst op als items vaak worden opgehaald (Latimier, Peyre & Ramus, 2021).
-  - **Eerste keer ophalen:** het belangrijkst is dat je de eerste keer ophalen uitstelt (Karpicke & Roediger, 2007).
-  - **Tijdens de training:** groeiende en gelijke tussenpozen scoren gelijk op een toets acht weken later, maar met groeiende tussenpozen blijft het herinneren tijdens de trainingsperiode veel hoger (Kang et al., 2014).
+    - **Gespreid tegenover geconcentreerd:** gespreid ophalen wint van geconcentreerd ophalen (g = 0.74).
+    - **Groeiend tegenover gelijk:** groeiende schema's, zoals de Fibonacci-intervallen van de harnas, wonnen niet van gelijke tussenpozen (g = 0.034, niet significant). Ze leveren alleen winst op als items vaak worden opgehaald (Latimier, Peyre & Ramus, 2021).
+    - **Eerste keer ophalen:** het belangrijkst is dat je de eerste keer ophalen uitstelt (Karpicke & Roediger, 2007).
+    - **Tijdens de training:** groeiende en gelijke tussenpozen scoren gelijk op een toets acht weken later, maar met groeiende tussenpozen blijft het herinneren tijdens de trainingsperiode veel hoger (Kang et al., 2014).
 
-  Het Fibonacci-schema is dus te verdedigen omdat het de vroege herhalingen succesvol houdt en ze vóór het examen plaatst. Dat groeiende intervallen beter zijn, is niet bewezen.
+    Het Fibonacci-schema is dus te verdedigen omdat het de vroege herhalingen succesvol houdt en ze vóór je toets plaatst. Dat groeiende intervallen beter zijn, is niet bewezen.
+
 - **Ophaaloefening (het testeffect).** Ophalen uit het geheugen wint van opnieuw bestuderen (Roediger & Karpicke, 2006; Karpicke & Roediger, 2008). Meta-analyses: Adesope, Trevisan & Sundararajan (2017); specifiek voor gespreid ophalen: Latimier, Peyre & Ramus (2021). Dunlosky et al. (2013) beoordeelden oefentoetsen en gespreid oefenen als de twee leertechnieken met het *hoogste nut*.
-- **Interleaving** (soorten opgaven door elkaar oefenen) verbetert het vermogen om de juiste strategie te *kiezen* (Rohrer & Taylor, 2007). Een meta-analyse vond g = 0.42, het grootst als de categorieën op elkaar lijken (Brunmair & Richter, 2019). Er is nog geen gerandomiseerd experiment bij programmeren. Kiezen is cruciaal bij OOD, waar het lastige deel is weten *welk* patroon of principe van toepassing is. Lerenden vinden interleaving moeilijker en denken ten onrechte dat ze er minder van leren (Samani & Pan, 2021). Een herhalingssessie die slechter voelt, is dus geen bewijs dat die slechter werkt.
+- **Interleaving** (soorten opgaven door elkaar oefenen) verbetert het vermogen om de juiste strategie te *kiezen* (Rohrer & Taylor, 2007). Een meta-analyse vond g = 0.42, het grootst als de categorieën op elkaar lijken (Brunmair & Richter, 2019). Er is nog geen gerandomiseerd experiment bij programmeren. Kiezen is cruciaal bij OOD, waar het lastige deel is weten *welk* patroon of principe van toepassing is. Studenten vinden interleaving moeilijker en denken ten onrechte dat ze er minder van leren (Samani & Pan, 2021). Een herhalingssessie die slechter voelt, is dus geen bewijs dat die slechter werkt.
 - **Verval van vaardigheden.** Arthur et al. (1998) deden een meta-analyse van 53 artikelen.
-  - **Over de tijd:** het verval groeide van d ≈ −0.01 direct na de training tot d ≈ −1.4 na meer dan een jaar niet gebruiken.
-  - **Per soort taak:** **cognitieve, kunstmatige en op nauwkeurigheid gerichte taken vervallen sneller** dan fysieke, natuurlijke en op snelheid gerichte taken.
-  - **Omstandigheden bij het ophalen:** retentietoetsen onder omstandigheden die op de training leken, lieten minder verlies zien.
-  - **Nieuwere schatting:** een meta-analyse uit 2025 van procedurele vaardigheden vond dat de helft van de aanvankelijke winst in nauwkeurigheid na ongeveer 6.5 maanden verloren was (Tatel & Ackerman, 2025).
+    - **Over de tijd:** het verval groeide van d ≈ −0.01 direct na de training tot d ≈ −1.4 na meer dan een jaar niet gebruiken.
+    - **Per soort taak:** **cognitieve, kunstmatige en op nauwkeurigheid gerichte taken vervallen sneller** dan fysieke, natuurlijke en op snelheid gerichte taken.
+    - **Omstandigheden bij het ophalen:** retentietoetsen onder omstandigheden die op de training leken, lieten minder verlies zien.
+    - **Nieuwere schatting:** een meta-analyse uit 2025 van procedurele vaardigheden vond dat de helft van de aanvankelijke winst in nauwkeurigheid na ongeveer 6.5 maanden verloren was (Tatel & Ackerman, 2025).
 
-  Correcte C# uit je hoofd schrijven valt in de categorie die snel vervalt.
+    Correcte code uit je hoofd schrijven, bijvoorbeeld C#, valt in de categorie die snel vervalt.
+
 - **Adaptief plannen.** Het Leitner-systeem (Leitner, 1972) en half-life regression (Settles & Meeder, 2016, van Duolingo) stellen de intervallen tussen herhalingen adaptief in op basis van eerdere successen. Dit is het model achter §5.7.
 
 ### 2.6 Oefenomstandigheden en transfer naar de toets
 
-De analyse van de D-toets noemde de oefenomstandigheden als een hoofdoorzaak van het resultaat. Er was geen getimede oefening zonder hulp, en de toets was in een andere IDE. De literatuur ondersteunt die diagnose, met één correctie over wat het zwaarst weegt.
+Hoe en waar je oefent, bepaalt mee hoe goed je vaardigheid meegaat naar de toets. Twee omstandigheden tellen hier: of je getimed en zonder hulp hebt geoefend, en of je hebt geoefend in de IDE die je toets gebruikt. De literatuur ondersteunt dat je op allebei let, met één correctie over wat het zwaarst weegt.
+
+!!! example "Voorbeeld: de situatie van één student"
+    Een tweedejaars student HBO-ICT oefende OOD in Visual Studio, met AI binnen handbereik. Een diagnostische toets bij CHE was in Rider, getimed en zonder AI. De eigen analyse van de student noemde de oefenomstandigheden als een hoofdoorzaak van het resultaat: er was niet getimed geoefend zonder hulp, en de toets was in een andere IDE.
 
 - **Transfergerichte verwerking (transfer-appropriate processing).** Prestaties hangen af van hoe goed de verwerking tijdens het oefenen past bij de verwerking bij de toets (Morris, Bransford & Franks, 1977; zie ook encoderingsspecificiteit, Tulving & Thomson, 1973). Oefenen in de vorm van de toets leidt tot betere transfer:
-  - **Quizzen in de klas:** g ≈ 0.50, afhankelijk van hoe goed de oefenvorm overeenkomt met de toetsvorm (Yang et al., 2021).
-  - **Leren door toetsen (test-enhanced learning):** dit geeft transfer met d ≈ 0.40, vooral naar andere vormen en naar toepassingsvragen. Na correctie voor publicatiebias is er zonder die ondersteunende omstandigheden nauwelijks transfer (Pan & Rickard, 2018).
-- **De ruimte telt minder dan de taak.** Effecten van de fysieke omgeving zijn betrouwbaar maar bescheiden (d ≈ 0.28; Smith & Vela, 2001, zoals samengevat door Smith et al., 2014), en de klassieke onderwaterstudie is niet gerepliceerd (Murre, 2021). Een IDE is echter geen achtergrondcontext. Klassen aanmaken, tests draaien en compileruitvoer lezen in Rider horen bij de procedure die wordt getoetst.
+    - **Quizzen in de klas:** g ≈ 0.50, afhankelijk van hoe goed de oefenvorm overeenkomt met de toetsvorm (Yang et al., 2021).
+    - **Leren door toetsen (test-enhanced learning):** dit geeft transfer met d ≈ 0.40, vooral naar andere vormen en naar toepassingsvragen. Na correctie voor publicatiebias is er zonder die ondersteunende omstandigheden nauwelijks transfer (Pan & Rickard, 2018).
+- **De ruimte telt minder dan de taak.** Effecten van de fysieke omgeving zijn betrouwbaar maar bescheiden (d ≈ 0.28; Smith & Vela, 2001, zoals samengevat door Smith et al., 2014), en de klassieke onderwaterstudie is niet gerepliceerd (Murre, 2021). Een IDE is echter geen achtergrondcontext. Klassen aanmaken, tests draaien en compileruitvoer lezen in de IDE van je toets horen bij de procedure die wordt getoetst.
 - **Stress en belang.** In één studie beschermde ophaaloefening het herinneren tegen acute stress (Smith, Floerke & Thomas, 2016), met wisselende resultaten in vervolgstudies. Quizzen waarbij veel op het spel stond *tijdens het leren*, haalden het voordeel van ophaaloefening weg (Hinze & Rapp, 2014). Trainen onder stress verbetert prestaties onder stress, en dat effect gaat mee naar nieuwe stressoren en taken (Saunders et al., 1996; Driskell, Johnston & Salas, 2001).
-- **Wat dit betekent.** Leer eerst met weinig op het spel, met hints. Oefen in de laatste weken voor een toets getimede sessies zonder AI in de IDE van het examen. Begin kort en bouw op naar volledige proefexamens. Geen enkele studie heeft specifiek gemeten wat een onbekende IDE kost, dus dit is een afleiding uit de principes hierboven.
+- **Wat dit betekent.** Leer eerst met weinig op het spel, met hints. Oefen in de laatste weken voor je toets getimede sessies zonder AI in de IDE van je toets. Begin kort en bouw op naar volledige proeftoetsen. Geen enkele studie heeft specifiek gemeten wat een onbekende IDE kost, dus dit is een afleiding uit de principes hierboven.
 
 ### 2.7 Reflectie, leerdagboeken en zelfregulatie
 
-- **Zelfgereguleerd leren (SRL).** Zimmerman (2002) beschreef een cyclus van *vooruitdenken → uitvoeren → zelfreflectie*. Lerenden die plannen, monitoren en reflecteren, leren meer.
+- **Zelfgereguleerd leren (SRL).** Zimmerman (2002) beschreef een cyclus van *vooruitdenken → uitvoeren → zelfreflectie*. Studenten die plannen, monitoren en reflecteren, leren meer.
 - **Leerprotocollen schrijven.** Nückles, Hübner & Renkl (2009) lieten zien dat dagboekschrijven met **cognitieve en metacognitieve prompts** de leerresultaten verbetert. Nückles et al. (2020) werkten dit uit tot een verklaring van schrijven-om-te-leren vanuit zelfregulatie. Moon (2006) geeft praktische richtlijnen voor leerdagboeken. Schön (1983) en Boud, Keogh & Walker (1985) legden de basis voor reflectieve praktijk.
 - **Feedback** hoort bij de sterkere invloeden op leren, vooral als die veel informatie bevat en gaat over de taak, het proces en de zelfregulatie in plaats van over de persoon (Hattie & Timperley, 2007; Shute, 2008).
-  - **Gemiddeld effect:** de nieuwere meta-analytische schatting is d = 0.48 (95% CI 0.44–0.51) (Wisniewski, Zierer & Hattie, 2020).
-  - **Per soort feedback:** feedback met veel informatie haalt d ≈ 0.99, lof of beloningen d ≈ 0.24 (zelfde bron).
-  - **Schade:** meer dan een derde van de feedbackinterventies maakte de prestaties *slechter* (Kluger & DeNisi, 1996).
+    - **Gemiddeld effect:** de nieuwere meta-analytische schatting is d = 0.48 (95% CI 0.44–0.51) (Wisniewski, Zierer & Hattie, 2020).
+    - **Per soort feedback:** feedback met veel informatie haalt d ≈ 0.99, lof of beloningen d ≈ 0.24 (zelfde bron).
+    - **Schade:** meer dan een derde van de feedbackinterventies maakte de prestaties *slechter* (Kluger & DeNisi, 1996).
 
-  Voor de harnas betekent dit: positieve signalen moeten de specifieke (micro)vaardigheid en strategie noemen die werkte, en niet de persoon prijzen. **Leren van fouten** werkt het best als de fouten worden verbeterd en als erop wordt gereflecteerd (Metcalfe, 2017).
+    Voor de harnas betekent dit: positieve signalen moeten de specifieke (micro)vaardigheid en strategie noemen die werkte, en niet de persoon prijzen. **Leren van fouten** werkt het best als de fouten worden verbeterd en als erop wordt gereflecteerd (Metcalfe, 2017).
+
 - **Zelfdeterminatietheorie.** Ryan & Deci (2000) lieten zien dat autonomie, competentie en verbondenheid de motivatie in stand houden. Een opzet die *jij* instelt en die je voortgang zichtbaar maakt, ondersteunt autonomie en competentie. Een opzet die zeurt en je willekeurig blokkeert, ondermijnt ze.
 
 **Gevolg voor een AI-dagboek:** de *feiten* kunnen automatisch worden gelogd (vaardigheden waaraan is gewerkt, gebruikte hints, niveaus, testresultaten). De *reflectie* moet **door jou worden geschreven**, aangezet door specifieke vragen. Als de AI je reflectie schrijft, verlies je het generatie-effect (Slamecka & Graf, 1978; Bertsch et al., 2007) en het voordeel van schrijven om te leren (Nückles et al., 2009). Fan et al. (2025) worden hier vaak aangehaald, maar zij onderzochten geen door AI geschreven reflecties. Ze vonden dat steun van ChatGPT een essay beter maakte zonder de kenniswinst of transfer te verbeteren, en ze *interpreteerden* dat als metacognitieve luiheid.
@@ -227,8 +246,8 @@ In 2026 scoorden vijf actuele modellen hoger dan de gemiddelde student op de toe
 
 | Studie | Opzet | Belangrijkste bevinding | Graad |
 |---|---|---|---|
-| Kazemitabaar et al. (2023), CHI | Gerandomiseerd; 69 beginners van 10–17 jaar; Codex tegenover niets; retentietoets na een week | Beter code schrijven met Codex, minder frustratie. **Geen significant verschil in retentie na één week**; de Codex-groep deed het iets beter. Lerenden met meer voorkennis hadden er meer baat bij. | A (klein) |
-| Kazemitabaar et al. (2023b), Koli Calling | Observationeel; alleen de 33 lerenden die Codex hadden | Hele opdrachten kopiëren en plakken ging samen met slechtere retentie, en eerst zelf code schrijven en daarna AI vragen ging samen met betere retentie. **Dit waren trends, niet significant.** | C |
+| Kazemitabaar et al. (2023), CHI | Gerandomiseerd; 69 beginners van 10–17 jaar; Codex tegenover niets; retentietoets na een week | Beter code schrijven met Codex, minder frustratie. **Geen significant verschil in retentie na één week**; de Codex-groep deed het iets beter. Studenten met meer voorkennis hadden er meer baat bij. | A (klein) |
+| Kazemitabaar et al. (2023b), Koli Calling | Observationeel; alleen de 33 studenten die Codex hadden | Hele opdrachten kopiëren en plakken ging samen met slechtere retentie, en eerst zelf code schrijven en daarna AI vragen ging samen met betere retentie. **Dit waren trends, niet significant.** | C |
 | Prather et al. (2024b), TOCHI | Kwalitatief; beginners die Copilot gebruiken | Nieuwe metacognitieve problemen: "meegezogen" worden door suggesties, je eigen plan kwijtraken. | C |
 | Prather et al. (2024), ICER "Widening Gap" | Kwalitatieve labstudie; 21 beginners; observatie, eyetracking, interviews | Sterke studenten versnelden, zwakke studenten raakten ontspoord. **Illusie van bekwaamheid.** | C |
 | Margulieux et al. (2024), ITiCSE | Observationeel; beginners met LLM's | Zelfregulatie, geloof in eigen kunnen en faalangst bepaalden *hoe* studenten LLM's gebruikten. | C |
@@ -240,7 +259,7 @@ In 2026 scoorden vijf actuele modellen hoger dan de gemiddelde student op de toe
 | Hellas et al. (2023), ICER | Analyse van LLM-antwoorden op hulpvragen van beginners | Vaak behulpzaam, maar **bevatte vaak onjuiste** inhoud of volledige oplossingen. | C |
 | Leinonen et al. (2023); Sarsa et al. (2022) | Uitleg van foutmeldingen en het maken van oefeningen door LLM's | Nuttig als *generatoren* van uitleg en oefeningen, een goede rol voor AI. | C |
 | Denny et al. (2024b): Prompt Problems | Nieuw soort oefening | Studenten leren problemen precies te specificeren voor AI, een nieuwe vaardigheid die het oefenen waard is. | C |
-| Kazemitabaar et al. (2025), IUI | Gerandomiseerd; 82 in een between-subjects-opzet, daarna 42 in een within-subjects-opzet; zeven manieren om met door AI gegenereerde code om te gaan | De beste techniek leidt lerenden stap voor stap door het probleem en vraagt wat elke fase nodig heeft, *voordat* de code wordt getoond. Technieken die lerenden actief laten meedoen, winnen van passief bekijken. | B |
+| Kazemitabaar et al. (2025), IUI | Gerandomiseerd; 82 in een between-subjects-opzet, daarna 42 in een within-subjects-opzet; zeven manieren om met door AI gegenereerde code om te gaan | De beste techniek leidt studenten stap voor stap door het probleem en vraagt wat elke fase nodig heeft, *voordat* de code wordt getoond. Technieken die studenten actief laten meedoen, winnen van passief bekijken. | B |
 | **Nieuw:** Gardella et al. (2026), ICER | Within-subjects; 22 studenten CS2/CS3; Copilot tegenover een menselijke pairpartner, elk 20 min; een week later een hertoets alleen en zonder AI | Met Copilot steeg de prestatie met 14 punten (g = 0.99) en daalde de werkbelasting. Van de sessie tot de hertoets daalden de scores na de Copilot-ronde 18.9 punten meer (g = −1.13, p_adj = .054). Het absolute verschil op de hertoets was niet significant. | A (klein) |
 | **Nieuw:** Barth et al. (2026), ICER | Vooraf geregistreerde cross-over; 1,059 CS1-studenten gedurende zes weken | De didactiek van de tutor sturen via systeemprompts (scaffolds voor zelfregulatie of ICAP) maakte **geen verschil** op enige vooraf geregistreerde uitkomst. De auteurs concluderen dat de didactiek van een tutor "misschien niet makkelijk alleen met systeemprompts te sturen is". | A |
 | **Nieuw:** Pădurean et al. (2026), ICER | Logstudie; 917 CS1-studenten, 2,636 sessies; realistische bugs ingevoegd in door AI gegenereerde oplossingen | Door ingevoegde bugs gingen studenten de code zelf aanpassen en repareren, met meer succes bij de volgende poging. Als een prompt uit zichzelf mislukte, formuleerden ze in plaats daarvan de prompt anders. | C |
@@ -251,86 +270,90 @@ In 2026 scoorden vijf actuele modellen hoger dan de gemiddelde student op de toe
 **Studies naar AI en leren in het algemeen:**
 
 - **Bastani et al. (2025), PNAS.** *Grade A.* Gerandomiseerd per klas; ongeveer 1,000 leerlingen in leerjaar 9–11 van één Turkse middelbare school.
-  - **GPT Base** (onbeperkt): +48% bij het oefenen, maar **−17% op het examen** nadat de toegang was weggehaald.
-  - **GPT Tutor** (hints, vangrails): +127% bij het oefenen en geen schade op het examen (−0.004, niet significant).
+    - **GPT Base** (onbeperkt): +48% bij het oefenen, maar **−17% op de toets** nadat de toegang was weggehaald.
+    - **GPT Tutor** (hints, vangrails): +127% bij het oefenen en geen schade op de toets (−0.004, niet significant).
 
-  Leerlingen gebruikten de onbeperkte tool "als kruk".
+    Leerlingen gebruikten de onbeperkte tool "als kruk".
+
 - **Shen & Tamkin (2026), arXiv-preprint (Anthropic Fellows).** *Grade A voor het hoofdeffect, C voor de patronen.*
-  - **Opzet:** gerandomiseerd; 52 vooral professionele of freelance ontwikkelaars (ongeveer 25–35 jaar, geworven via een crowdworkplatform) leerden de asynchrone Python-library Trio, met of zonder een assistent op basis van GPT-4o.
-  - **Resultaat:** de AI-groep scoorde **50% tegenover 67%** op de quiz achteraf (d = 0.74, p = 0.01), met het grootste verschil bij debuggen. De groep was maar ongeveer twee minuten sneller, en dat was niet significant. Het artikel noemt het verschil "17%"; de eigen cijfers geven 15.4 punten.
-  - **Patronen:** de zes interactiepatronen met cognitieve betrokkenheid (conceptuele vragen stellen; code laten genereren en daarna je begrip controleren) scoorden 65–86%, tegenover 24–39% bij delegeren. **De patronen zijn achteraf vastgesteld uit schermopnames, met elk 2–7 personen, dus ze zijn correlationeel.** Misschien kiezen sterkere of gemotiveerdere deelnemers ze gewoon.
-  - **Leverancier:** een studie van een leverancier, maar de uitkomst gaat in tegen het commerciële belang van die leverancier.
+    - **Opzet:** gerandomiseerd; 52 vooral professionele of freelance ontwikkelaars (ongeveer 25–35 jaar, geworven via een crowdworkplatform) leerden de asynchrone Python-library Trio, met of zonder een assistent op basis van GPT-4o.
+    - **Resultaat:** de AI-groep scoorde **50% tegenover 67%** op de quiz achteraf (d = 0.74, p = 0.01), met het grootste verschil bij debuggen. De groep was maar ongeveer twee minuten sneller, en dat was niet significant. Het artikel noemt het verschil "17%"; de eigen cijfers geven 15.4 punten.
+    - **Patronen:** de zes interactiepatronen met cognitieve betrokkenheid (conceptuele vragen stellen; code laten genereren en daarna je begrip controleren) scoorden 65–86%, tegenover 24–39% bij delegeren. **De patronen zijn achteraf vastgesteld uit schermopnames, met elk 2–7 personen, dus ze zijn correlationeel.** Misschien kiezen sterkere of gemotiveerdere deelnemers ze gewoon.
+    - **Leverancier:** een studie van een leverancier, maar de uitkomst gaat in tegen het commerciële belang van die leverancier.
 - **Lehmann, Cornelius & Sting (2025), arXiv-preprint, nog niet gepubliceerd.** *Grade A voor het nuleffect, C voor de rest.*
-  - **Opzet:** een veldstudie (observationeel) plus twee vooraf geregistreerde labexperimenten waarin alleen de toegang tot LLM's werd gerandomiseerd.
-  - **Gemiddeld effect:** **geen van beide labexperimenten vond een gemiddeld effect op het leren** (n = 107 en n = 69).
-  - **Oplossingen tegenover uitleg:** het contrast tussen vragen om oplossingen (breedte zonder diepte) en vragen om uitleg (diepte) komt uit de observationele data.
-  - **"Groeiende kloof":** de kloof tussen studenten met weinig en veel voorkennis komt uit een **verkennende** mediaansplitsing (gepoolde n = 176, interactie p = 0.028).
+    - **Opzet:** een veldstudie (observationeel) plus twee vooraf geregistreerde labexperimenten waarin alleen de toegang tot LLM's werd gerandomiseerd.
+    - **Gemiddeld effect:** **geen van beide labexperimenten vond een gemiddeld effect op het leren** (n = 107 en n = 69).
+    - **Oplossingen tegenover uitleg:** het contrast tussen vragen om oplossingen (breedte zonder diepte) en vragen om uitleg (diepte) komt uit de observationele data.
+    - **"Groeiende kloof":** de kloof tussen studenten met weinig en veel voorkennis komt uit een **verkennende** mediaansplitsing (gepoolde n = 176, interactie p = 0.028).
 - **Fan et al. (2025), BJET, "metacognitieve luiheid".** *Grade B.* Labexperiment, 117 studenten in vier condities: ChatGPT, een menselijke expert, schrijfanalysetools, niets. ChatGPT verbeterde het essay als *product* het meest, maar kenniswinst en transfer verschilden niet. "Metacognitieve luiheid" is de interpretatie van de auteurs, geen gemeten uitkomst.
 - **Stadler, Bannert & Sailer (2024), Computers in Human Behavior.** *Grade B.* Gerandomiseerd; 91 studenten; ChatGPT-3.5 tegenover zoeken met Google. LLM's verminderden de mentale inspanning tijdens wetenschappelijk onderzoek, maar de redeneringen waren minder diep.
 - **Darvishi et al. (2024), Computers & Education.** *Grade A.* Gerandomiseerd; 1,625 studenten in 10 cursussen. Studenten leunden op AI-hulp bij peerfeedback, en hun eigen prestaties daalden toen die hulp werd weggehaald. Strategieën voor zelfregulatie hielpen hen de regie te houden.
 - **Kestin et al. (2025), Scientific Reports.** *Grade B, alleen korte termijn.* Cross-over van twee weken in een natuurkundecursus aan Harvard; 194 van de 233 studenten geanalyseerd. Een AI-tutor die was gebouwd op didactische best practices, won van actief leren in de klas (0.73–1.3 SD), in minder tijd (mediaan 49 tegenover ongeveer 60 minuten). Beperkingen:
-  - de natoets kwam **direct na elke les, zonder retentietoets**;
-  - de tutor werd thuis gebruikt;
-  - hij leunde op vooraf geschreven antwoorden.
+    - de natoets kwam **direct na elke les, zonder retentietoets**;
+    - de tutor werd thuis gebruikt;
+    - hij leunde op vooraf geschreven antwoorden.
 - **Kosmyna et al. (2025), arXiv-preprint, niet peer-reviewed.** *Grade C.* 54 deelnemers, en maar 18 in de vierde sessie. Bij een essaytaak liet de LLM-groep de laagste EEG-connectiviteit zien, het laagste gevoel van eigenaarschap en een slechte herinnering aan de eigen essays ("cognitieve schuld"). Er bestaat een formele methodologische kritiek (Stanković et al., 2026).
 - **Gerlich (2025), Societies; Lee et al. (2025), CHI.** *Grade C.* Allebei correlationeel:
-  - Gerlich: een enquête onder 666 mensen, met een gepubliceerde correctie op een tabel.
-  - Lee et al.: een enquête met zelfrapportage onder 319 kenniswerkers (936 voorbeelden), door auteurs van Microsoft.
+    - Gerlich: een enquête onder 666 mensen, met een gepubliceerde correctie op een tabel.
+    - Lee et al.: een enquête met zelfrapportage onder 319 kenniswerkers (936 voorbeelden), door auteurs van Microsoft.
 
-  Meer AI-gebruik en meer vertrouwen in AI gaan samen met minder inspanning voor kritisch denken. Bij kenniswerkers verschuift kritisch denken naar het controleren van output.
+    Meer AI-gebruik en meer vertrouwen in AI gaan samen met minder inspanning voor kritisch denken. Bij kenniswerkers verschuift kritisch denken naar het controleren van uitvoer.
+
 - **Anthropic (2025a), Education Report.** *Grade C, data van de leverancier.* 574,740 gesprekken van studenten; **≈ 47% was "direct"**: de student wilde het antwoord, met zo min mogelijk eigen inbreng. Studenten delegeerden ook taken van hogere orde, zoals creëren en analyseren. Informatica was goed voor 36.8% van de gesprekken (38.6% in de hoofdtekst van het rapport), tegenover 5.4% van de Amerikaanse diploma's.
 - **Productiviteit is geen leren.**
-  - **Peng et al. (2023):** ontwikkelaars waren 55.8% sneller met Copilot (95% CI 21–89%) bij één goed gespecificeerde greenfield-taak. Er werden 95 mensen geworven, en per groep maakten 35 het af. Preprint, door auteurs van GitHub en Microsoft.
-  - **METR (Becker et al., 2025):** 16 ervaren open-sourceontwikkelaars, die aan 246 van hun eigen taken werkten, waren **19% langzamer** met tools uit begin 2025 (CI +2% tot +39%). Vooraf hadden ze 24% versnelling voorspeld, en achteraf dachten ze dat het 20% was geweest.
-  - **METR-vervolgstudie (februari 2026):** 57 ontwikkelaars en meer dan 800 taken gaven geschatte versnellingen van 18% en 4%, allebei met intervallen waarin nul valt. METR noemt de data onbetrouwbaar, omdat 30–50% van de ontwikkelaars taken achterhield die ze niet zonder AI wilden doen. METR ontwerpt de studie opnieuw.
+    - **Peng et al. (2023):** ontwikkelaars waren 55.8% sneller met Copilot (95% CI 21–89%) bij één goed gespecificeerde greenfield-taak. Er werden 95 mensen geworven, en per groep maakten 35 het af. Preprint, door auteurs van GitHub en Microsoft.
+    - **METR (Becker et al., 2025):** 16 ervaren open-sourceontwikkelaars, die aan 246 van hun eigen taken werkten, waren **19% langzamer** met tools uit begin 2025 (CI +2% tot +39%). Vooraf hadden ze 24% versnelling voorspeld, en achteraf dachten ze dat het 20% was geweest.
+    - **METR-vervolgstudie (februari 2026):** 57 ontwikkelaars en meer dan 800 taken gaven geschatte versnellingen van 18% en 4%, allebei met intervallen waarin nul valt. METR noemt de data onbetrouwbaar, omdat 30–50% van de ontwikkelaars taken achterhield die ze niet zonder AI wilden doen. METR ontwerpt de studie opnieuw.
 
-  Gevoelde en werkelijke winst kunnen uit elkaar lopen, zelfs bij experts.
+    Gevoelde en werkelijke winst kunnen uit elkaar lopen, zelfs bij experts.
+
 - **"Leermodi" van leveranciers.** Een aantal producten bouwt didactiek in het gedrag van het model in:
-  - de output style *Learning* van Claude Code, met `TODO(human)`-markeringen;
-  - de study mode van ChatGPT van OpenAI (juli 2025);
-  - Guided Learning van Google in Gemini (augustus 2025); LearnLM is geen apart model meer.
+    - de output style *Learning* van Claude Code, met `TODO(human)`-markeringen;
+    - de study mode van ChatGPT van OpenAI (juli 2025);
+    - Guided Learning van Google in Gemini (augustus 2025); LearnLM is geen apart model meer.
 
-  Ze zijn allemaal **opt-in en makkelijk uit te zetten**, geen enkele houdt beheersing per vaardigheid bij, en er is **geen evaluatie van hun leeropbrengst** gevonden.
+    Ze zijn allemaal **opt-in en makkelijk uit te zetten**, geen enkele houdt beheersing per vaardigheid bij, en er is **geen evaluatie van hun leeropbrengst** gevonden.
 
 **Nieuw bewijs, mei–november 2026:**
 
 - **Experiment in Maryland (Liu et al., 2026; working paper).** *Grade A, niet peer-reviewed.*
-  - **Opzet:** gerandomiseerd per docent; 2,379 bachelorstudenten en 30 docenten. Een GPT-4o-tutor was in de cursus ingebouwd, vooral in een modus met directe antwoorden, en beide groepen hadden ook ChatGPT en Gemini. Maar ongeveer 15% van de studenten gebruikte de tutor.
-  - **Cijfers:** de eindcijfers daalden met **0.37 SD** in vergelijkingen binnen dezelfde cursus. Over de hele steekproef was de daling niet significant.
-  - **Betrokkenheid:** de geregistreerde deelname daalde met 0.90 SD.
-  - **Kansengelijkheid:** eerstegeneratiestudenten verloren meer (−0.50 tegenover −0.22 SD).
-  - **Gebruik:** 73.8% van de verzoeken vroeg om informatie, uitleg of oplossingen; 0.7% vroeg om feedback op eigen werk van de student.
+    - **Opzet:** gerandomiseerd per docent; 2,379 bachelorstudenten en 30 docenten. Een GPT-4o-tutor was in de cursus ingebouwd, vooral in een modus met directe antwoorden, en beide groepen hadden ook ChatGPT en Gemini. Maar ongeveer 15% van de studenten gebruikte de tutor.
+    - **Cijfers:** de eindcijfers daalden met **0.37 SD** in vergelijkingen binnen dezelfde cursus. Over de hele steekproef was de daling niet significant.
+    - **Betrokkenheid:** de geregistreerde deelname daalde met 0.90 SD.
+    - **Kansengelijkheid:** eerstegeneratiestudenten verloren meer (−0.50 tegenover −0.22 SD).
+    - **Gebruik:** 73.8% van de verzoeken vroeg om informatie, uitleg of oplossingen; 0.7% vroeg om feedback op eigen werk van de student.
 - **Experiment in Middlebury (Contractor & Reyes, 2026; working paper).** *Grade A, niet peer-reviewed; één korte taak.*
-  - **Opzet:** gerandomiseerd en onder toezicht; 211 bachelorstudenten hadden een leerfase van 35 minuten over een onbekend onderwerp en maakten daarna alle toetsen zonder AI.
-  - **Resultaat:** toegang tot ChatGPT **verhoogde** de toetsscores zonder AI met 0.28 SD, en een week later met ongeveer 0.21 SD (p = 0.068).
-  - **Soort gebruik:** studenten die het als tutor gebruikten, gingen erop vooruit. Studenten die het voor zich lieten schrijven, verloren hun voorsprong bij het essay zodra AI werd weggehaald. Die tweedeling is zelfgekozen.
-  - **Kanttekeningen:** niet over programmeren; cijfers uit de HTML-versie op arXiv.
+    - **Opzet:** gerandomiseerd en onder toezicht; 211 bachelorstudenten hadden een leerfase van 35 minuten over een onbekend onderwerp en maakten daarna alle toetsen zonder AI.
+    - **Resultaat:** toegang tot ChatGPT **verhoogde** de toetsscores zonder AI met 0.28 SD, en een week later met ongeveer 0.21 SD (p = 0.068).
+    - **Soort gebruik:** studenten die het als tutor gebruikten, gingen erop vooruit. Studenten die het voor zich lieten schrijven, verloren hun voorsprong bij het essay zodra AI werd weggehaald. Die tweedeling is zelfgekozen.
+    - **Kanttekeningen:** niet over programmeren; cijfers uit de HTML-versie op arXiv.
 - **Experiment met beheersingsoefening (Oreopoulos, Liut, Sungu & Low, 2026; working paper; middle school).** *Grade A, K-12.* Individueel gerandomiseerd; meer dan 6,000 leerlingen. Een tutor met vangrails verbeterde een toets na één week met maar **3.1 procentpunt (p = 0.065)**, en alleen binnen een werkwijze gericht op beheersing. Beheersing alleen verbeterde het leren bij een latere meting niet. Eén auteur is co-auteur van Bastani et al.
 - **Veldexperiment bij een MBA (Yang, Van Alstyne & Dellarocas, 2026; preprint).** *Grade B.* Vooraf geregistreerd; 86 studenten. Een gestructureerde tutor die op de cursus was gebaseerd, won met 6.63 punten van vrij beschikbare consumenten-AI (p = .007).
-- **"Leerstraf van generatieve AI" (Strömberg, Lei & Wu, 2026; CEPR working paper).** *Grade B, quasi-experimenteel, geen hoger onderwijs.* Difference-in-differences bij 26,811 leerlingen in het voortgezet onderwijs in China. Na de invoering van AI stegen de huiswerkscores met 18%, terwijl de scores op examens met gesloten boek binnen zes maanden met ongeveer 20% daalden. Ongeveer 80% van de gebruikers liet tekenen zien dat ze hun huiswerk uitbesteedden.
+- **"Leerstraf van generatieve AI" (Strömberg, Lei & Wu, 2026; CEPR working paper).** *Grade B, quasi-experimenteel, geen hoger onderwijs.* Difference-in-differences bij 26,811 leerlingen in het voortgezet onderwijs in China. Na de invoering van AI stegen de huiswerkscores met 18%, terwijl de scores op toetsen met gesloten boek binnen zes maanden met ongeveer 20% daalden. Ongeveer 80% van de gebruikers liet tekenen zien dat ze hun huiswerk uitbesteedden.
 - **AI-tutors helpen te veel (Teo et al., 2026; preprint).** *Grade C.* In simulaties grijpen LLM-"docenten" eerder en vaker in dan menselijke docenten, en delen ze complete oplossingen uit in plaats van gerichte hints.
 - **Meta-analyses.** De strengste (Boolzen et al., 2026, *Artificial Intelligence Review*, vooraf geregistreerd) poolde 49 studies naar AI in het STEM-onderwijs:
-  - de ongecorrigeerde g = 0.84 zakt naar **0.08 na correctie voor publicatiebias**;
-  - geen van de 34 gerandomiseerde experimenten had een laag risico op bias;
-  - 33 studies lieten alleen grote effecten zien omdat de twee groepen ander cognitief werk deden;
-  - AI hielp als die de activiteit van de lerende versterkte, en kon schaden als die de activiteit verving.
+    - de ongecorrigeerde g = 0.84 zakt naar **0.08 na correctie voor publicatiebias**;
+    - geen van de 34 gerandomiseerde experimenten had een laag risico op bias;
+    - 33 studies lieten alleen grote effecten zien omdat de twee groepen ander cognitief werk deden;
+    - AI hielp als die de activiteit van de student versterkte, en kon schaden als die de activiteit verving.
 
-  Twee andere meta-analyses uit 2026 melden g = 0.50 en g = 1.10 zonder correctie voor bias (Fan, Ke, Chen & Lv, 2026; Liu, Xie & Xu, 2026). De meest geciteerde meta-analyse uit 2025 (Wang & Fan, g = 0.87) **werd in 2026 ingetrokken** na kritiek op de methoden. Hij was meer dan 500 keer geciteerd. *Ongecorrigeerde gepoolde effecten moet je niet aanhalen als bewijs dat AI het leren verbetert.*
+    Twee andere meta-analyses uit 2026 melden g = 0.50 en g = 1.10 zonder correctie voor bias (Fan, Ke, Chen & Lv, 2026; Liu, Xie & Xu, 2026). De meest geciteerde meta-analyse uit 2025 (Wang & Fan, g = 0.87) **werd in 2026 ingetrokken** na kritiek op de methoden. Hij was meer dan 500 keer geciteerd. *Ongecorrigeerde gepoolde effecten moet je niet aanhalen als bewijs dat AI het leren verbetert.*
+
 - **Opdrachten geven een te rooskleurig beeld van beheersing.**
-  - **Đức Minh (2026):** *grade C, observationeel.* Bij 1,498 Vietnamese bachelorstudenten was het gemiddelde voor opdrachten met AI-hulp 7.62, terwijl beheersing die willekeurig en zonder apparaten werd gecontroleerd, gemiddeld 5.55 was.
-  - **Eleftheriou, Pallis & Constantinides (2026):** *grade B; april, net voor de zoekperiode; n = 85.* Een standaard-LLM gaf het hoogste *gevoelde* begrip en het laagste *gemeten* leren, en begeleide hints gaven de grootste winst.
+    - **Đức Minh (2026):** *grade C, observationeel.* Bij 1,498 Vietnamese bachelorstudenten was het gemiddelde voor opdrachten met AI-hulp 7.62, terwijl beheersing die willekeurig en zonder apparaten werd gecontroleerd, gemiddeld 5.55 was.
+    - **Eleftheriou, Pallis & Constantinides (2026):** *grade B; april, net voor de zoekperiode; n = 85.* Een standaard-LLM gaf het hoogste *gevoelde* begrip en het laagste *gemeten* leren, en begeleide hints gaven de grootste winst.
 - **Agentische tools en OOD: een bewijsvacuüm.** Er is nog geen gecontroleerde studie die het leren van studenten meet met Claude Code, Cursor, Copilot agent mode of Codex. Geen studie meet ontwerpvaardigheid zonder AI na oefenen met AI-hulp. Het enige UML-experiment (EDULEARN26) mat prestaties en beleving alleen *met* ChatGPT. Alles wat dit document zegt over agentische tools, is doorgetrokken uit studies naar chat en autocomplete.
 
 **Wat het bewijs ondersteunt, en hoe sterk:**
 
 - **Sterk (meerdere grade-A-studies zijn het eens): presteren met AI is geen leren.** Als AI tijdens het oefenen het cognitieve werk doet, zijn de prestaties zonder AI later gelijk of lager (Bastani; Liu; Gardella; Strömberg). Als AI uitlegt of als tutor begeleidt, lopen de resultaten van geen schade tot bescheiden winst (de tutor van Bastani; Contractor & Reyes; Kazemitabaar 2023). De moderator van Boolzen, versterken tegenover vervangen, zegt hetzelfde.
 - **Matig: vangrails werken als ze in de werkwijze worden afgedwongen** (beheersingspoorten, uitlegpoorten, gestructureerde tutors, blokkades buiten het model), en veel minder als er alleen in een systeemprompt om wordt gevraagd (het nulresultaat van Barth; de tutors van Teo die te veel helpen). Dat pleit voor de hooks van de harnas in plaats van te vertrouwen op een prompt voor een "leermodus".
-- **Zwak, alleen correlationeel: dat bepaalde interactiepatronen beter leren veroorzaken.** Het gaat om vragen om uitleg en eerst zelf proberen. In elke studie tot nu toe koos de lerende het patroon zelf (Shen & Tamkin; Contractor & Reyes; Kazemitabaar 2023b). Geen enkel gerandomiseerd experiment heeft eerst zelf proberen vergeleken met eerst AI. Het idee van de patronen is de beste werkhypothese, geen bevinding. Het past bij het experimentele resultaat dat alleen uitleg *zonder* het antwoord tot leren leidde (Gajos & Mamykina, 2022; §2.10).
-- **Kansengelijkheid: zwakkere studenten en eerstegeneratiestudenten lijden meer schade en gebruiken vaker nooduitgangen** (Liu; Kapoor et al., 2025; Lehmann, verkennend; Prather, kwalitatief). **Vangrails zijn het belangrijkst voor de lerenden die er het minst snel zelf voor kiezen.**
+- **Zwak, alleen correlationeel: dat bepaalde interactiepatronen beter leren veroorzaken.** Het gaat om vragen om uitleg en eerst zelf proberen. In elke studie tot nu toe koos de student het patroon zelf (Shen & Tamkin; Contractor & Reyes; Kazemitabaar 2023b). Geen enkel gerandomiseerd experiment heeft eerst zelf proberen vergeleken met eerst AI. Het idee van de patronen is de beste werkhypothese, geen bevinding. Het past bij het experimentele resultaat dat alleen uitleg *zonder* het antwoord tot leren leidde (Gajos & Mamykina, 2022; §2.10).
+- **Kansengelijkheid: zwakkere studenten en eerstegeneratiestudenten lijden meer schade en gebruiken vaker nooduitgangen** (Liu; Kapoor et al., 2025; Lehmann, verkennend; Prather, kwalitatief). **Vangrails zijn het belangrijkst voor de studenten die er het minst snel zelf voor kiezen.**
 - **Onbekend:** retentie na meer dan ongeveer een week in het hoger onderwijs, agentische tools, en OOD-vaardigheid op ontwerpniveau.
 ### 2.9 De verschuiving in gevraagde vaardigheden: banen, de economie van handgeschreven code en wat je moet oefenen
 
-De eerste versie van dit overzicht ging ervan uit dat het doel is om code te schrijven zonder AI. Dat klopt voor de toets van 20 januari. Die staat AI alleen toe op AI-niveau 0/1 en heeft een mondelinge verdediging. Voor de loopbaan daarna is het nooit onderbouwd. Deze paragraaf toetst de bewering dat **code met de hand schrijven niet meer rendabel is**. Ook vraagt ze voor welke vaardigheden werkgevers nu betalen.
+De eerste versie van dit overzicht ging ervan uit dat het doel is om code te schrijven zonder AI. Dat klopt voor een toets zonder AI, bijvoorbeeld een toets die AI alleen toestaat op AI-niveau 0/1 en die een mondelinge verdediging heeft. Voor de loopbaan daarna is het nooit onderbouwd. Deze paragraaf toetst de bewering dat **code met de hand schrijven niet meer rendabel is**. Ook vraagt ze voor welke vaardigheden werkgevers nu betalen.
 
 Het meeste bewijs komt uit de VS. Waar Nederlandse gegevens bestaan, zijn die toegevoegd. De meeste bronnen hier zijn werkpapers, overheidsstatistieken of rapporten uit de branche, geen peer-reviewed studies. De bewijsgraden volgen §2.0.
 
@@ -348,29 +371,33 @@ Het meeste bewijs komt uit de VS. Waar Nederlandse gegevens bestaan, zijn die to
 De richting is bij elke maatstaf duidelijk: sterke groei van 2024 tot 2026, met in 2026 een stap van autocomplete naar pull requests die agents opstellen. "Bij AI-gerichte bedrijven stelt AI de meeste nieuwe code op" is aannemelijk. "Overal schrijft AI de meeste code" is niet aangetoond. Elke bedrijfsclaim voegt eraan toe dat engineers de code goedkeuren. Voor elke gemergede regel blijft dus een mens verantwoordelijk.
 
 **Productiviteit: wie wint er, en waarheen verschoof het knelpunt?**
+
 - **Veldexperimenten met codeaanvulling uit 2022–23** (Cui et al., 2025): 4,867 ontwikkelaars bij Microsoft, Accenture en een Fortune-100-bedrijf voltooiden ongeveer 26% meer taken (SE 10.3%). Minder ervaren ontwikkelaars gebruikten het vaker en wonnen meer. Twee co-auteurs werken bij Microsoft. *Grade A, werkpaper.*
 - **Interne proef van Google** (Paradis et al., 2024): ongeveer 21% minder tijd voor één bedrijfstaak, met 96 Google-engineers. *Grade B, leverancier.*
 - **METR:** ervaren ontwikkelaars waren 19% *trager* in hun eigen volwassen repositories, en het vervolgonderzoek uit 2026 was onbetrouwbaar (§2.8). *Grade A/B.*
 - **Gebruik van Cursor** (He et al., 2026; difference-in-differences op GitHub-projecten): een grote maar **tijdelijke** versnelling, alleen significant in de eerste twee maanden. Die ging samen met een **blijvende** stijging van waarschuwingen uit statische analyse (ongeveer +30%) en van codecomplexiteit (ongeveer +41%). Dat vertraagde de projecten later. *Grade B.*
 - **Soort taak:** winst van ongeveer 35–40% bij eenvoudige greenfield-taken en 10% of minder bij complexe legacy code (Stanford-onderzoek, aangehaald in het ROI-rapport van DORA). *Grade C.*
 - **Het knelpunt is verschoven naar review, testen en goedkeuring van wijzigingen.** De bronnen hieronder hebben verschillende commerciële belangen en zijn het toch eens:
-  - Anthropic: "menselijke code review is een nieuw knelpunt geworden".
-  - DORA: modelleert een "verificatiebelasting".
-  - Sonar: 96% van de ontwikkelaars vertrouwt door AI gegenereerde code niet volledig, maar slechts 48% controleert die altijd voordat ze committen.
+    - Anthropic: "menselijke code review is een nieuw knelpunt geworden".
+    - DORA: modelleert een "verificatiebelasting".
+    - Sonar: 96% van de ontwikkelaars vertrouwt door AI gegenereerde code niet volledig, maar slechts 48% controleert die altijd voordat ze committen.
 
 **Kwaliteit en beveiliging.**
+
 - **De benchmark van Veracode** (Veracode verkoopt beveiligingstests): het gemiddelde slagingspercentage voor beveiliging van door AI gegenereerde code was 55–56% tot juli 2026 en 62% in oktober 2026. C# haalde 59.6%; cross-site scripting (18%) en log injection (12.6%) falen nog grotendeels. De syntax is bijna altijd correct. *Grade C, benchmark van een leverancier.*
 - **GitClear** (verkoopt analyses van ontwikkelaarswerk; correlationeel): gedupliceerde codeblokken stegen met 81% ten opzichte van 2023. Verplaatste code, dus gerefactorde code, daalde van 21% van de wijzigingen (2022) naar 3.8% (2026). *Grade C.*
 - **CodeRabbit** (verkoopt AI-code-review): ongeveer 1.7 keer zoveel problemen in pull requests waaraan AI meeschreef (470 pull requests). *Grade C.*
 - **Incidenten in 2025–26:** dit waren vooral agents met te veel rechten die destructieve acties uitvoerden, zoals het wissen van een productiedatabase en de back-ups daarvan, en niet zozeer subtiele bugs. *Grade D, secundaire berichten.*
 
 **Kosten.** De tool is goedkoop vergeleken met arbeid.
+
 - **Tool:** Anthropic meldt ongeveer $13 per ontwikkelaar per actieve dag ($150–250 per maand) voor Claude Code (leverancier).
 - **Arbeid:** het ROI-model van DORA gaat uit van $176,000 per engineer, inclusief alle bijkomende kosten. Dat is ruwweg $800 per werkdag.
 
 De tool kost dus ongeveer 1–2% van de arbeidskosten (eigen berekening). De economie draait om de menselijke minuten die opgaan aan specificeren, reviewen en herstellen. **Geen enkele studie vergelijkt de totale kosten per opgeleverde feature van gegenereerde en handgeschreven code**, inclusief genereren, review, herstelwerk en incidenten.
 
 **Capaciteit.**
+
 - **METR (mei 2026):** de beste publiek beschikbare modellen voltooien taken van ongeveer 12 uur in de helft van de gevallen, maar betrouwbaar (80% van de tijd) alleen taken van ongeveer 1.5 uur. METR waarschuwt dat een 50%-horizon van X uur "niet betekent dat we taken van minder dan X uur kunnen delegeren".
 - **SWE-bench Verified:** verzadigd en vervuild.
 - **SWE-bench Pro:** onafhankelijk gestandaardiseerde topscores liggen rond 60%; scores die leveranciers zelf melden, lopen op tot 89.9%.
@@ -378,66 +405,71 @@ De tool kost dus ongeveer 1–2% van de arbeidskosten (eigen berekening). De eco
 *Grade B/C.*
 
 **Gebruik en vertrouwen.**
+
 - **Stack Overflow 2026** (meer dan 30,000 respondenten):
-  - 66% gebruikt codeerassistenten of agents; het meest voor het genereren van code in bekende gebieden (69.3%).
-  - 48% vertrouwt AI alleen als ze de antwoorden makkelijk kunnen controleren, en slechts 6.6% vertrouwt AI met belangrijke beslissingen.
-  - Ontwerp (49%) en communicatie (35%) worden het minst nuttig gevonden voor AI.
-  - 17.1% vermijdt AI omdat ze bang zijn vaardigheden voor hun werk te verliezen.
+    - 66% gebruikt codeerassistenten of agents; het meest voor het genereren van code in bekende gebieden (69.3%).
+    - 48% vertrouwt AI alleen als ze de antwoorden makkelijk kunnen controleren, en slechts 6.6% vertrouwt AI met belangrijke beslissingen.
+    - Ontwerp (49%) en communicatie (35%) worden het minst nuttig gevonden voor AI.
+    - 17.1% vermijdt AI omdat ze bang zijn vaardigheden voor hun werk te verliezen.
 - **JetBrains 2026:** 90% gebruikt minstens wekelijks agents (leverancier).
 
 *Grade C.*
 
 **Banen.**
-- **Jonge werknemers in de VS: bewijs voor een AI-effect.** *Grade B, quasi-experimentele werkpapers.*
-  - **Stanford "Canaries"** (herzien in augustus 2026; ADP-salarisgegevens tot juni 2026): de werkgelegenheid van 22–25-jarigen in de beroepen met de meeste blootstelling aan AI ligt 19% lager dan wanneer die gelijk was opgegaan met minder blootgestelde leeftijdsgenoten. Een jaar eerder was dat 15%. Het verschil komt door minder aannemen, niet door ontslagen, en bij oudere werknemers is het er niet. De auteurs noemen het resultaat beschrijvend.
-  - **Fed Board** (Crane & Soto, maart 2026): de groei van de werkgelegenheid voor programmeurs ligt sinds ChatGPT ongeveer 3 procentpunt per jaar lager, na correctie voor schokken per sector.
-  - **Census** (Tucker, april 2026): de werkgelegenheid aan het begin van de loopbaan in de meest blootgestelde sectoren daalde met 12% over 10 kwartalen. Monetair beleid verklaart daar hooguit een kwart van.
-- **Bewijs tegen AI als oorzaak.** *Grade B/C.*
-  - In de landelijke ACS-enquête krimpt het Stanford-verschil tot ongeveer −2%, met een betrouwbaarheidsinterval dat nul bevat. Correctie voor opleiding halveert het.
-  - De NY Fed schrijft 64% van de stijging van de werkloosheid onder jonge afgestudeerden toe aan thuiswerken (juni 2026).
-  - Fairlie & Wu (NBER, september 2026) vinden geen piek in de werkloosheid van pas afgestudeerden in de zomer van 2026.
-  - De tracker van het Yale Budget Lab vindt geen duidelijke AI-voetafdruk (september 2026).
-  - De Deense studie sluit effecten op inkomen en gewerkte uren van meer dan 2% uit (Humlum & Vestergaard, herzien in maart 2026).
-  - LinkedIn (eigendom van Microsoft) vindt dat de reële rente het grootste deel van de variatie in het aannemen van software-engineers verklaart.
-- **Vacatures.** *Grade C.*
-  - **Herstel in de VS:** vacatures voor softwareontwikkeling in de VS herstelden. Op 30 oktober 2026 lagen ze 23.8% hoger dan een jaar eerder, maar nog 18% onder februari 2020.
-  - **Vooral senior:** in Q1 2026 was slechts 4.5% op instapniveau, 71% van de recente stijging was senior, en 37% van de stijging had "AI" in de functietitel (Indeed, een vacatureplatform).
-  - **Europa zwakker:** Duitsland (−14.6% ten opzichte van een jaar eerder, een nieuw dieptepunt in oktober 2026) en Frankrijk (−7.3%).
-  - **Nederland:** er bestaat geen Nederlandse reeks.
-- **Programmeurs vs. ontwikkelaars (US BLS, augustus 2026).** *Grade C, prognose.*
-  - **"Computer programmers"** (110,800 banen): verwacht −7% over 2025–35. Als reden wordt genoemd dat AI "repetitieve programmeertaken" automatiseert.
-  - **"Software developers"** (1,717,800 banen): +10%, omlaag van +15.8% en +17% in de twee vorige prognoses.
 
-  Code schrijven volgens een specificatie is dus het deel dat naar verwachting geautomatiseerd wordt. Het werk eromheen (eisen, ontwerp, integratie, testen) groeit naar verwachting wel, maar minder dan een jaar eerder voorspeld.
+- **Jonge werknemers in de VS: bewijs voor een AI-effect.** *Grade B, quasi-experimentele werkpapers.*
+    - **Stanford "Canaries"** (herzien in augustus 2026; ADP-salarisgegevens tot juni 2026): de werkgelegenheid van 22–25-jarigen in de beroepen met de meeste blootstelling aan AI ligt 19% lager dan wanneer die gelijk was opgegaan met minder blootgestelde leeftijdsgenoten. Een jaar eerder was dat 15%. Het verschil komt door minder aannemen, niet door ontslagen, en bij oudere werknemers is het er niet. De auteurs noemen het resultaat beschrijvend.
+    - **Fed Board** (Crane & Soto, maart 2026): de groei van de werkgelegenheid voor programmeurs ligt sinds ChatGPT ongeveer 3 procentpunt per jaar lager, na correctie voor schokken per sector.
+    - **Census** (Tucker, april 2026): de werkgelegenheid aan het begin van de loopbaan in de meest blootgestelde sectoren daalde met 12% over 10 kwartalen. Monetair beleid verklaart daar hooguit een kwart van.
+- **Bewijs tegen AI als oorzaak.** *Grade B/C.*
+    - In de landelijke ACS-enquête krimpt het Stanford-verschil tot ongeveer −2%, met een betrouwbaarheidsinterval dat nul bevat. Correctie voor opleiding halveert het.
+    - De NY Fed schrijft 64% van de stijging van de werkloosheid onder jonge afgestudeerden toe aan thuiswerken (juni 2026).
+    - Fairlie & Wu (NBER, september 2026) vinden geen piek in de werkloosheid van pas afgestudeerden in de zomer van 2026.
+    - De tracker van het Yale Budget Lab vindt geen duidelijke AI-voetafdruk (september 2026).
+    - De Deense studie sluit effecten op inkomen en gewerkte uren van meer dan 2% uit (Humlum & Vestergaard, herzien in maart 2026).
+    - LinkedIn (eigendom van Microsoft) vindt dat de reële rente het grootste deel van de variatie in het aannemen van software-engineers verklaart.
+- **Vacatures.** *Grade C.*
+    - **Herstel in de VS:** vacatures voor softwareontwikkeling in de VS herstelden. Op 30 oktober 2026 lagen ze 23.8% hoger dan een jaar eerder, maar nog 18% onder februari 2020.
+    - **Vooral senior:** in Q1 2026 was slechts 4.5% op instapniveau, 71% van de recente stijging was senior, en 37% van de stijging had "AI" in de functietitel (Indeed, een vacatureplatform).
+    - **Europa zwakker:** Duitsland (−14.6% ten opzichte van een jaar eerder, een nieuw dieptepunt in oktober 2026) en Frankrijk (−7.3%).
+    - **Nederland:** er bestaat geen Nederlandse reeks.
+- **Programmeurs vs. ontwikkelaars (US BLS, augustus 2026).** *Grade C, prognose.*
+    - **"Computer programmers"** (110,800 banen): verwacht −7% over 2025–35. Als reden wordt genoemd dat AI "repetitieve programmeertaken" automatiseert.
+    - **"Software developers"** (1,717,800 banen): +10%, omlaag van +15.8% en +17% in de twee vorige prognoses.
+
+    Code schrijven volgens een specificatie is dus het deel dat naar verwachting geautomatiseerd wordt. Het werk eromheen (eisen, ontwerp, integratie, testen) groeit naar verwachting wel, maar minder dan een jaar eerder voorspeld.
+
 - **Nederland.** *Grade C.*
-  - **UWV:** de werkgelegenheid in de ICT stijgt nog (589,000 mensen). Maar het aantal ICT-vacatures daalt sinds 2023 (ongeveer 18,900 in Q2 2026), en het aantal WW-uitkeringen in de ICT steeg tot bijna 6,400 in juli 2026, deels door reorganisaties bij banken.
-  - **ROA** (november 2025): de banengroei in de ICT vertraagt van 2.5% per jaar (2019–2024) naar 0.3% (2025–2030). Voor softwareontwikkelaars zijn er in 2030 "vrijwel geen knelpunten", maar ICT-afgestudeerden met een bachelor hebben "goede" vooruitzichten. ROA zegt dat de prognoses het effect van AI niet meenemen.
-  - **Meest directe bewijs voor HBO-ICT:** de werkgelegenheid van ICT-afgestudeerden van hbo en wo was tot en met het cohort van 2024 "nauwelijks" negatief (Cnossen, juli 2026; microdata van het CBS; correlationeel).
-  - **Omstreden:** de −13% van RaboResearch voor jonge werknemers in banen met veel AI-blootstelling wordt betwist door economen die wijzen op monetaire verkrapping (Salomons & van den Berge, 2026).
+    - **UWV:** de werkgelegenheid in de ICT stijgt nog (589,000 mensen). Maar het aantal ICT-vacatures daalt sinds 2023 (ongeveer 18,900 in Q2 2026), en het aantal WW-uitkeringen in de ICT steeg tot bijna 6,400 in juli 2026, deels door reorganisaties bij banken.
+    - **ROA** (november 2025): de banengroei in de ICT vertraagt van 2.5% per jaar (2019–2024) naar 0.3% (2025–2030). Voor softwareontwikkelaars zijn er in 2030 "vrijwel geen knelpunten", maar ICT-afgestudeerden met een bachelor hebben "goede" vooruitzichten. ROA zegt dat de prognoses het effect van AI niet meenemen.
+    - **Meest directe bewijs voor HBO-ICT:** de werkgelegenheid van ICT-afgestudeerden van hbo en wo was tot en met het cohort van 2024 "nauwelijks" negatief (Cnossen, juli 2026; microdata van het CBS; correlationeel).
+    - **Omstreden:** de −13% van RaboResearch voor jonge werknemers in banen met veel AI-blootstelling wordt betwist door economen die wijzen op monetaire verkrapping (Salomons & van den Berge, 2026).
 - **Loonpremies.** *Grade C.*
-  - **Cijfers van verkopers:** PwC (2026) meldt een premie van 62% voor AI-vaardigheden en Lightcast 28%. Beide verkopen AI- of arbeidsmarktdiensten, en beide cijfers zijn correlationeel.
-  - **Onafhankelijke loongegevens:** die wijzen op ervaring en oordeelsvermogen als wat het loon beschermt. Blootstelling aan AI remt de loongroei alleen waar de ervaringspremie laag is (Dallas Fed, 2026).
-  - **De eigen bevinding van PwC:** instapfuncties met AI-blootstelling vragen zeven keer zo vaak om senior "mensintensieve" vaardigheden.
+    - **Cijfers van verkopers:** PwC (2026) meldt een premie van 62% voor AI-vaardigheden en Lightcast 28%. Beide verkopen AI- of arbeidsmarktdiensten, en beide cijfers zijn correlationeel.
+    - **Onafhankelijke loongegevens:** die wijzen op ervaring en oordeelsvermogen als wat het loon beschermt. Blootstelling aan AI remt de loongroei alleen waar de ervaringspremie laag is (Dallas Fed, 2026).
+    - **De eigen bevinding van PwC:** instapfuncties met AI-blootstelling vragen zeven keer zo vaak om senior "mensintensieve" vaardigheden.
 
 **Wat werkgevers nu van junioren vragen.** *Grade D, persberichten over interne memo's.*
+
 - **Verwachting:** werkgevers gingen van AI toestaan naar AI verwachten. Shopify, Microsoft en Coinbase deden dat in 2025, en Meta en JPMorgan koppelden het aan beoordelingsgesprekken.
 - **Gebruikscijfers misleiden:** in september 2026 haalde Meta het aantal tokens uit de beoordelingen, nadat medewerkers hun gebruik kunstmatig hadden opgeblazen.
 - **AI in sollicitatiegesprekken:** Google test vanaf de tweede helft van 2026 een gespreksronde voor junior- en mediorfuncties. Kandidaten gebruiken Gemini om **een bestaande codebase te lezen, te debuggen en te verbeteren**. Ze worden beoordeeld op het valideren van uitvoer en op debuggen.
 - **AI-verboden:** andere bedrijven verbieden AI nog in sommige rondes; Anysphere, de maker van Cursor, doet dat in de eerste programmeerronde.
 
 **Hoe opleidingen reageren.**
-- **CS1-LLM van UC San Diego** (556 studenten): hier kwamen prompten, tracen, uitleggen, testen en debuggen in de plaats van code vanaf nul schrijven, maar de meeste toetsen bleven zonder AI. De toetsencores waren vergelijkbaar met een internationale benchmark en 11% hoger bij het uitleggen van code in gewone taal. Er was geen gerandomiseerde controlegroep.
-- **Npuls** (mei 2025), de Nederlandse landelijke handreiking, kiest voor de **tweesporenaanpak**:
-  - "Spoor 1" borgt cruciale leeruitkomsten op momenten met toezicht, zonder AI.
-  - "Spoor 2" staat AI toe of vereist het zelfs, en vraagt studenten te laten zien hoe ze het gebruikten.
-  - "Studenten moeten uiteindelijk hun beroep zonder AI kunnen uitoefenen waar dat nodig is."
-- **De Green Paper van de University of Sydney** (augustus 2026) vereist basisvaardigheden vóór taken met AI-ondersteuning en "mogelijkheden om te presteren onafhankelijk van AI".
-- **De eigen regels van CHE** (OER 2026–27, ICT, art. 7.11) kennen drie niveaus:
-  - **AI-niveau 0:** geen AI, in een gecontroleerde omgeving.
-  - **AI-niveau 1:** AI als hulpmiddel voor ideeën of structuur.
-  - **AI-niveau 2:** AI ingebouwd in de taak.
 
-  Op AI-niveau 1 en 2 moeten studenten verantwoording afleggen over hun gebruik, hun prompts linken, in APA citeren en de uitvoer controleren op juistheid en relevantie.
+- **CS1-LLM van UC San Diego** (556 studenten): hier kwamen prompten, tracen, uitleggen, testen en debuggen in de plaats van code vanaf nul schrijven, maar de meeste toetsen bleven zonder AI. De toetsscores waren vergelijkbaar met een internationale benchmark en 11% hoger bij het uitleggen van code in gewone taal. Er was geen gerandomiseerde controlegroep.
+- **Npuls** (mei 2025), de Nederlandse landelijke handreiking, kiest voor de **tweesporenaanpak**:
+    - "Spoor 1" borgt cruciale leeruitkomsten op momenten met toezicht, zonder AI.
+    - "Spoor 2" staat AI toe of vereist het zelfs, en vraagt studenten te laten zien hoe ze het gebruikten.
+    - "Studenten moeten uiteindelijk hun beroep zonder AI kunnen uitoefenen waar dat nodig is."
+- **De Green Paper van de University of Sydney** (augustus 2026) vereist basisvaardigheden vóór taken met AI-ondersteuning en "mogelijkheden om te presteren onafhankelijk van AI".
+- **Regels van instellingen** vertalen dit naar AI-niveaus. De regels van CHE (OER 2026–27, ICT, art. 7.11) zijn een voorbeeld, en dit overzicht gebruikt hun drie niveaus:
+    - **AI-niveau 0:** geen AI, in een gecontroleerde omgeving.
+    - **AI-niveau 1:** AI als hulpmiddel voor ideeën of structuur.
+    - **AI-niveau 2:** AI ingebouwd in de taak.
+
+    Op AI-niveau 1 en 2 moeten studenten verantwoording afleggen over hun gebruik, hun prompts linken, in APA citeren en de uitvoer controleren op juistheid en relevantie.
 
 **Oordeel over "code met de hand schrijven is niet meer rendabel":**
 
@@ -450,50 +482,56 @@ De tool kost dus ongeveer 1–2% van de arbeidskosten (eigen berekening). De eco
 | Met de hand oefenen is nog steeds hoe je de vaardigheden opbouwt om AI te controleren | Shen & Tamkin (achterstand bij debuggen); Gardella (onthouden); Yu & Moon (productieve worsteling); CS1-LLM houdt toetsen zonder AI | **Ondersteund voor leren** (bewijsgraad A–C). Geen studie geeft de beste mix |
 
 **Wat dit betekent voor wat je oefent.** De economische bewering en de bewering over leren gaan over verschillende dingen:
+
 - **Als manier om code te produceren** wordt met de hand schrijven minder rendabel.
 - **Als manier om vaardigheid op te bouwen** is het nog steeds de belangrijkste route naar het lezen, het debuggen en het ontwerpoordeel waardoor je AI-uitvoer veilig kunt accepteren. De sollicitatievormen van 2026 testen precies die vaardigheden, en delegeren holt ze het meest uit (§2.8, §2.10).
 
 De verschuiving pleit dus voor het **toevoegen** van bewuste oefening in vaardigheden voor het AI-tijdperk. Ze pleit niet voor stoppen met oefenen met de hand voordat je een vaardigheid hebt geleerd:
-1. **Behouden, met de hand, tot L3:** de kern van OOD en C# (klassen en toestand, inkapseling, overerving en interfaces, de ontwerppatronen). Dat is wat de toets test, en het is de basis om AI-code te beoordelen. AI is ook het zwakst in interfaces, abstracte klassen en overerving (Lepp & Kaimre, 2026).
+
+1. **Behouden, met de hand, tot L3:** de kern van OOD en C# (klassen en toestand, inkapseling, overerving en interfaces, de ontwerppatronen). Dat is wat een toets zonder AI test, en het is de basis om AI-code te beoordelen. AI is ook het zwakst in interfaces, abstracte klassen en overerving (Lepp & Kaimre, 2026).
 2. **Toevoegen, als nieuwe leerlijn voor vaardigheden:**
-   - door AI gegenereerde code lezen en reviewen;
-   - een geplante bug vinden;
-   - tests schrijven die fouten van AI zouden vangen;
-   - een taak zo precies specificeren dat een agent ermee aan de slag kan;
-   - voorspellen wat de AI zal maken en dat vergelijken;
-   - AI-code controleren op veelvoorkomende beveiligingsfouten, zoals ontbrekende invoervalidatie en injectie.
+            - door AI gegenereerde code lezen en reviewen;
+            - een geplante bug vinden;
+            - tests schrijven die fouten van AI zouden vangen;
+            - een taak zo precies specificeren dat een agent ermee aan de slag kan;
+            - voorspellen wat de AI zal maken en dat vergelijken;
+            - AI-code controleren op veelvoorkomende beveiligingsfouten, zoals ontbrekende invoervalidatie en injectie.
 
    Doe dit bij onderwerpen die je al zelf kunt schrijven, zodat je de uitvoer kunt beoordelen.
+
 3. **Delegeren (al L4):** tooling, projectopzet en boilerplate die je beheerst.
 
 ### 2.10 Automatisering, uitbesteden, overmatige afhankelijkheid en vaardigheidsverlies
 
 - **Cognitief uitbesteden.** Mensen besteden denkwerk uit aan externe hulpmiddelen als dat goedkoper is (Risko & Gilbert, 2016). Uitbesteden gaat niet alleen ten koste van het geheugen:
-  - **Vrijgekomen capaciteit:** informatie opslaan kan ruimte vrijmaken voor nieuwe stof ("saving-enhanced memory"; Storm & Stone, 2015, met latere replicaties).
-  - **Parallelle taken:** het verbetert de prestatie op een taak die je tegelijk uitvoert (Grinschgl et al., 2023).
-  - **De prijs:** het verlaagt het geheugen voor de uitbestede inhoud, vooral als er geen expliciet doel is om die te leren. Een expliciet doel heft de prijs bijna op (Grinschgl, Papenmeier & Meyerhoff, 2021).
+    - **Vrijgekomen capaciteit:** informatie opslaan kan ruimte vrijmaken voor nieuwe stof ("saving-enhanced memory"; Storm & Stone, 2015, met latere replicaties).
+    - **Parallelle taken:** het verbetert de prestatie op een taak die je tegelijk uitvoert (Grinschgl et al., 2023).
+    - **De prijs:** het verlaagt het geheugen voor de uitbestede inhoud, vooral als er geen expliciet doel is om die te leren. Een expliciet doel heft de prijs bijna op (Grinschgl, Papenmeier & Meyerhoff, 2021).
 
-  Dat is de grens die de harnas trekt. Besteed tooling en boilerplate vrij uit (L4), maar niet de vaardigheid die je aan het leren bent. Maak het leerdoel expliciet (eerst zelf proberen, uitleggen in je eigen woorden).
+    Dat is de grens die de harnas trekt. Besteed tooling en boilerplate vrij uit (L4), maar niet de vaardigheid die je aan het leren bent. Maak het leerdoel expliciet (eerst zelf proberen, uitleggen in je eigen woorden).
+
 - **Het "Google-effect" is omstreden.** Sparrow, Liu & Wegner (2011) meldden dat mensen onthouden *waar* informatie staat in plaats van de informatie zelf.
-  - **Mislukte replicaties:** hun eerste experiment kon niet worden gerepliceerd (Camerer et al., 2018; Hesselmann, 2020).
-  - **Nooit gerepliceerd:** het experiment over "waar, niet wat" is nooit direct gerepliceerd.
-  - **Wat wel gerepliceerd werd:** opgeslagen informatie wordt minder goed onthouden, maar alleen als het opslaan als betrouwbaar wordt ervaren (Schooler & Storm, 2021).
+    - **Mislukte replicaties:** hun eerste experiment kon niet worden gerepliceerd (Camerer et al., 2018; Hesselmann, 2020).
+    - **Nooit gerepliceerd:** het experiment over "waar, niet wat" is nooit direct gerepliceerd.
+    - **Wat wel gerepliceerd werd:** opgeslagen informatie wordt minder goed onthouden, maar alleen als het opslaan als betrouwbaar wordt ervaren (Schooler & Storm, 2021).
 
-  Een AI-tutor die altijd beschikbaar is, is precies die betrouwbare situatie. Dat pleit voor bewust oefenen zonder AI.
+    Een AI-tutor die altijd beschikbaar is, is precies die betrouwbare situatie. Dat pleit voor bewust oefenen zonder AI.
+
 - **Ironieën van automatisering.** Bainbridge (1983) wees erop dat het automatiseren van routinewerk de oefening weghaalt die operators nodig hebben voor de zeldzame moeilijke gevallen. Hoe betrouwbaarder de automatisering, hoe minder goed de mens het werk kan overnemen.
 - **Zelfgenoegzaamheid en automatiseringsbias.** Parasuraman & Manzey (2010) lieten zien dat mensen betrouwbare automatisering te veel vertrouwen en te weinig in de gaten houden. Endsley & Kiris (1995) lieten zien dat operators die *out-of-the-loop* zijn hun situationeel bewustzijn verliezen. Parasuraman, Sheridan & Wickens (2000) stelden voor om per functie *automatiseringsniveaus* te kiezen. Dat is precies het idee achter niveaus per vaardigheid.
 - **Mensen dwingen eerst na te denken werkt, maar het heeft een prijs.**
-  - **Eerst beslissen:** ontwerpen waarbij mensen beslissen voordat ze het antwoord van de AI zien, of die het antwoord uitstellen of verbergen, verminderen overmatige afhankelijkheid. Dat werkt beter dan alleen een uitleg tonen. Gebruikers beoordelen deze ontwerpen het minst gunstig, en mensen met een hoge behoefte aan cognitie hebben er het meeste aan (Buçinca, Malaya & Gajos, 2021; n = 199).
-  - **Alleen uitleg:** uitleg *verhoogt* de acceptatie van AI-advies, of dat nu goed of fout is (Bansal et al., 2021). Dat is anders als de uitleg controleren goedkoper maakt dan de taak zelf doen (Vasconcelos et al., 2023).
-  - **Leren:** dit is het belangrijkste resultaat voor een tutor. Bij Gajos & Mamykina (2022) leidde eerst beslissen en dan de aanbeveling van de AI zien tot betere beslissingen, maar **niet tot leren**. Alleen een uitleg *zonder* het antwoord, zodat mensen zelf tot het antwoord moesten komen, leverde leerwinst op.
-  - **Nooduitgangen worden gebruikt:** in één cursus gebruikte 50% van 885 studenten minstens één keer een optionele knop "See Solution". Studenten die zwakker presteerden, gebruikten die vaker, en vaker vlak voor deadlines (Kapoor et al., 2025, preprint).
+    - **Eerst beslissen:** ontwerpen waarbij mensen beslissen voordat ze het antwoord van de AI zien, of die het antwoord uitstellen of verbergen, verminderen overmatige afhankelijkheid. Dat werkt beter dan alleen een uitleg tonen. Gebruikers beoordelen deze ontwerpen het minst gunstig, en mensen met een hoge behoefte aan cognitie hebben er het meeste aan (Buçinca, Malaya & Gajos, 2021; n = 199).
+    - **Alleen uitleg:** uitleg *verhoogt* de acceptatie van AI-advies, of dat nu goed of fout is (Bansal et al., 2021). Dat is anders als de uitleg controleren goedkoper maakt dan de taak zelf doen (Vasconcelos et al., 2023).
+    - **Leren:** dit is het belangrijkste resultaat voor een tutor. Bij Gajos & Mamykina (2022) leidde eerst beslissen en dan de aanbeveling van de AI zien tot betere beslissingen, maar **niet tot leren**. Alleen een uitleg *zonder* het antwoord, zodat mensen zelf tot het antwoord moesten komen, leverde leerwinst op.
+    - **Nooduitgangen worden gebruikt:** in één cursus gebruikte 50% van 885 studenten minstens één keer een optionele knop "See Solution". Studenten die zwakker presteerden, gebruikten die vaker, en vaker vlak voor deadlines (Kapoor et al., 2025, preprint).
 - **Vaardigheidsverlies in de beroepspraktijk.** Het eerste sterke signaal uit de praktijk komt uit de geneeskunde. Na routinematig gebruik van AI-ondersteunde coloscopie daalde het adenoomdetectiepercentage van ervaren endoscopisten *zonder* AI van 28.4% naar 22.4% (Budzyń et al., 2025; observationeel, 19 endoscopisten in vier Poolse centra).
-  - **Geen longitudinale softwarestudie:** voor softwareontwikkelaars is er nog geen longitudinale studie naar het afnemen van vaardigheden.
-  - **De studie van Anthropic naar de eigen engineers:** 132 ondervraagd en 53 geïnterviewd; een bron van de leverancier, en niet anoniem. De studie meldt dat het zelfgerapporteerde gebruik van Claude steeg van 28% naar 59% van hun werk, en ze meldt zorgen over het verkommeren van vaardigheden. Ze noemt de **"paradox van het toezicht"**: het controleren van AI-uitvoer vraagt precies de vaardigheden die delegeren aan AI uitholt (Anthropic, 2025b).
-  - **Junioren:** geïnterviewden beschrijven hoe instapwerk wordt opgeslokt door de AI-workflows van senioren. Junioren verliezen zo de "productieve worsteling" waardoor expertise ontstaat (Yu & Moon, 2026; 14 interviews).
-  - **Voor een student is het scherper:** een engineer moet toezichtvaardigheden *behouden*, een student moet ze *verwerven*. Medisch opleiders noemen dit "never-skilling" (Abdulnour, Gin & Boscardin, 2025).
+    - **Geen longitudinale softwarestudie:** voor softwareontwikkelaars is er nog geen longitudinale studie naar het afnemen van vaardigheden.
+    - **De studie van Anthropic naar de eigen engineers:** 132 ondervraagd en 53 geïnterviewd; een bron van de leverancier, en niet anoniem. De studie meldt dat het zelfgerapporteerde gebruik van Claude steeg van 28% naar 59% van hun werk, en ze meldt zorgen over het verkommeren van vaardigheden. Ze noemt de **"paradox van het toezicht"**: het controleren van AI-uitvoer vraagt precies de vaardigheden die delegeren aan AI uitholt (Anthropic, 2025b).
+    - **Junioren:** geïnterviewden beschrijven hoe instapwerk wordt opgeslokt door de AI-workflows van senioren. Junioren verliezen zo de "productieve worsteling" waardoor expertise ontstaat (Yu & Moon, 2026; 14 interviews).
+    - **Voor een student is het scherper:** een engineer moet toezichtvaardigheden *behouden*, een student moet ze *verwerven*. Medisch opleiders noemen dit "never-skilling" (Abdulnour, Gin & Boscardin, 2025).
 
 **Gevolg:** een beheerste vaardigheid automatiseren is prima, en dat is ook het doel van het systeem. Er gelden drie voorwaarden:
+
 - **(a) Toezicht houden:** de mens houdt een *toezichthoudende* rol. Die reviewt AI-uitvoer, voorspelt die en controleert steekproeven.
 - **(b) Onderhouden:** de vaardigheid krijgt *periodieke onderhoudsoefening*, zodat het vermogen om toezicht te houden en het werk over te nemen niet afneemt.
 - **(c) Toezicht zelf trainen:** toezicht is een vaardigheid die je bewust moet oefenen (§2.9). Het komt niet vanzelf door met de hand code te schrijven, en ook niet door te delegeren.
@@ -502,7 +540,7 @@ De verschuiving pleit dus voor het **toevoegen** van bewuste oefening in vaardig
 
 | # | Principe | Bewijsbasis | Sterkte |
 |---|---|---|---|
-| P1 | **Eerst zelf proberen, dan hulp.** De lerende bedenkt eerst zelf iets, voordat de AI iets laat zien. Eerst proberen is op zich niet genoeg: het leren komt uit wat erna volgt. | Generatie-effect; productief falen (Sinha & Kapur 2021); Bastani 2025; Gajos & Mamykina 2022 (eerst proberen en dan het antwoord zien leverde geen leren op) | Matig |
+| P1 | **Eerst zelf proberen, dan hulp.** Je bedenkt eerst zelf iets, voordat de AI iets laat zien. Eerst proberen is op zich niet genoeg: het leren komt uit wat erna volgt. | Generatie-effect; productief falen (Sinha & Kapur 2021); Bastani 2025; Gajos & Mamykina 2022 (eerst proberen en dan het antwoord zien leverde geen leren op) | Matig |
 | P2 | **Hulp volgt de expertise per vaardigheid en wordt afgebouwd.** | Expertise-omkeereffect; afgebouwde uitgewerkte voorbeelden; cognitief leerlingschap | Sterk |
 | P3 | **Getrapte hints die afhangen van je resultaat** (meer na falen, minder na succes). | Wood & Wood 1999; Aleven et al. 2003; Kestin 2025 (korte termijn) | Matig |
 | P4 | **Houd oefening zo moeilijk dat je soms faalt** (als vuistregel ongeveer 70–90% succes), en begrens hoe lang je vastzit. | Wenselijke moeilijkheden; Kapur 2016; D'Mello 2014. Wilson et al. 2019 alleen als computationele inspiratie | Vuistregel |
@@ -510,20 +548,20 @@ De verschuiving pleit dus voor het **toevoegen** van bewuste oefening in vaardig
 | P6 | **Beheersingspoort met transfer en uitleg**, niet alleen "het werkt". | Leren tot beheersing (winst op afgestemde toetsen; Kulik 1990, Slavin 1990); Corbett & Anderson; illusie van bekwaamheid (Đức Minh 2026; Eleftheriou 2026) | Matig |
 | P7 | **Automatiseer pas na beheersing; blijf toezicht houden.** | Fitts & Posner; Bainbridge; Parasuraman & Manzey; vaardigheidsverlies (Budzyń 2025) | Matig |
 | P8 | **Gespreide, afgewisselde ophaaloefening na beheersing; een niveau terug bij falen.** Gespreid oefenen telt zwaarder dan oplopende intervallen. | Cepeda 2008; Latimier 2021; Roediger & Karpicke; Arthur 1998; Tatel & Ackerman 2025 | Sterk (gespreid oefenen), zwak (oplopende intervallen) |
-| P9 | **Reflectie die de lerende zelf schrijft, in een gestructureerd dagboek.** | Nückles 2009; Zimmerman 2002; generatie-effect | Matig |
-| P10 | **Handhaving die autonomie ondersteunt en transparant is**, en die de lerende zelf heeft gekozen. | Ryan & Deci 2000; Ariely & Wertenbroch 2002; acceptatieprijs van forcing functions (Buçinca 2021) | Matig |
+| P9 | **Reflectie die je zelf schrijft, in een gestructureerd dagboek.** | Nückles 2009; Zimmerman 2002; generatie-effect | Matig |
+| P10 | **Handhaving die autonomie ondersteunt en transparant is**, en die je zelf hebt gekozen. | Ryan & Deci 2000; Ariely & Wertenbroch 2002; acceptatieprijs van forcing functions (Buçinca 2021) | Matig |
 | P11 | **Handhaaf vangrails in de workflow, niet alleen in prompts.** | Barth 2026 (alleen prompts: geen effect); Oreopoulos 2026; Sankaranarayanan 2026; Teo 2026 (tutors helpen te veel) | Matig |
-| P12 | **Oefen onder toetsomstandigheden vóór de toets**: op tijd, zonder AI, in de IDE van het toets, na eerst leren zonder druk. | Transfer-appropriate processing (Morris 1977); Pan & Rickard 2018; Hinze & Rapp 2014; Driskell 2001 | Matig (geen IDE-specifieke studie) |
+| P12 | **Oefen onder toetsomstandigheden vóór de toets**: op tijd, zonder AI, in de IDE van je toets, na eerst leren zonder druk. | Transfer-appropriate processing (Morris 1977); Pan & Rickard 2018; Hinze & Rapp 2014; Driskell 2001 | Matig (geen IDE-specifieke studie) |
 | P13 | **Train toezicht als aparte vaardigheid**: AI-uitvoer lezen, testen, debuggen en specificeren, bij onderwerpen die je al zelf kunt schrijven. | Paradox van het toezicht (Anthropic 2025b); sollicitatievormen van werkgevers; CS1-LLM; Pădurean 2026; §2.9 | Afleiding, consistent over bronnen heen |
 
 ---
 
 ## 3. Risicoanalyse
 
-Kans (K) en Impact (I) krijgen een score van 1–5. Risico = K × I. De scores gaan uit van **geen maatregelen** voor een tweedejaarsstudent die een agentische codeerassistent gebruikt, zoals Claude Code.
+Kans (K) en Impact (I) krijgen een score van 1–5. Risico = K × I. De scores gaan uit van **geen maatregelen** voor een student die vóór een toets zonder AI oefent met een agentische codeerassistent, zoals Claude Code.
 
 - **Oordelen, geen metingen:** de scores zijn oordelen. De bewijsgraad tussen haken (A–D, §2.0) laat zien hoe goed elk mechanisme is onderbouwd. Een hoge score met zwak bewijs is een reden om het risico goed in de gaten te houden, geen feit.
-- **Horizon:** *Toets* betekent de toets van 20 januari 2027; *Loopbaan* betekent de arbeidsmarkt vanaf ongeveer 2028.
+- **Horizon:** *Toets* betekent je toets zonder AI; *Loopbaan* betekent de arbeidsmarkt nadat je bent afgestudeerd.
 - **Nieuw en gewijzigd:** R14–R18 zijn nieuw in de herziening van 8 november 2026, en R9 en R12 hebben een nieuwe score gekregen.
 
 | ID | Risico | Mechanisme | Bewijs [bewijsgraad] | K | I | Score | Horizon |
@@ -538,13 +576,13 @@ Kans (K) en Impact (I) krijgen een score van 1–5. Risico = K × I. De scores g
 | R8 | **Beheerste vaardigheden nemen af na automatisering** | Na het overdragen oefen je niet meer, dus je kunt niet meer reviewen of het werk overnemen. | Arthur 1998; Tatel & Ackerman 2025 [A, meta-analyses]; Budzyń 2025 [C]; Bainbridge 1983; Parasuraman & Manzey 2010 | 4 | 4 | **16** | Loopbaan |
 | R9 | **Verkeerde dingen leren van foute AI-uitvoer** *(K verhoogd 3 → 4)* | Verzonnen API's, slechte OO-praktijk, onveilige code of subtiel foute uitleg worden overgenomen. | Hellas 2023 [C]; CodeAid 2024 [C]; Veracode 2026: 38% van de taken introduceert een kwetsbaarheid [C]; Lepp & Kaimre 2026 [C] | 4 | 4 | **16** | Beide |
 | R10 | **Minder eigenaarschap over en geheugen voor je eigen werk** | Je kunt je project niet uitleggen of verdedigen bij een toets. Uitbestede inhoud wordt minder goed onthouden als de opslag betrouwbaar is. | Schooler & Storm 2021; Grinschgl 2021 [A, lab]; Kosmyna 2025 [C, preprint, bekritiseerd] | 4 | 4 | **16** | Toets |
-| R11 | **Problemen met toetsing en integriteit** | Beoordeeld werk is niet van jezelf, of AI-gebruik is niet gemeld. Bij CHE geldt ongeoorloofd AI-gebruik als fraude (OER art. 1.41), en werk op AI-niveau 1 vraagt promptlinks, APA-bronvermelding en een controle van de uitvoer (art. 7.11). Detectie is onbetrouwbaar, dus je eigen vastleggingen zijn je bescherming. | CHE OER 2026–27 [beleid]; Npuls 2025 [beleid]; Scarfe 2024 (94% van de AI-antwoorden onopgemerkt) [B]; Lau & Guo 2023 | 3 | 5 | **15** | Toets |
-| R12 | **De harnas wordt het doel** *(nieuwe score, was 3 × 2)* | Tijd gaat naar het bijstellen van de opzet, of naar onderzoek erover (zoals deze herziening), in plaats van naar oefenen. Of het systeem wordt opgegeven. | Eigen gegevens: de analyse van de D-toets (tijd ging naar het spiekbriefje in plaats van naar oefenen); deze herziening en de hook-fix van 7–8 nov.; SDT | 4 | 3 | **12** | Toets |
-| R13 | **Privacy van het dagboek en de vaardigheidsgegevens** | Reflecties, onderzoeksnotities en transcripten worden gesynchroniseerd naar cloudopslag (OneDrive) of gedeeld. | — | 2 | 2 | **4** | Beide |
-| R14 | **Oefenen past niet bij de toets** *(nieuw)* | Je oefent met AI, zonder tijdsdruk, in Visual Studio. De toets is zonder AI, op tijd, in Rider. Een vaardigheid die je in de ene vorm oefent, geeft weinig transfer naar een andere vorm. | Eigen gegevens: D-toets van 5 nov. 2026; transfer-appropriate processing (Morris 1977); Pan & Rickard 2018 [A, meta]; Hinze & Rapp 2014 [A]; geen IDE-specifieke studie | 5 | 5 | **25** | Toets |
-| R15 | **Te veel investeren in productiecode met de hand schrijven** *(nieuw)* | Oefentijd gaat naar routinecode met de hand schrijven, meer dan nodig is om te leren (boilerplate, syntaxisdrills, beheerste code opnieuw schrijven). Ondertussen betaalt de markt voor specificeren, reviewen en verifiëren. | Routinecode is goedkoop te genereren: tool ongeveer 1–2% van de arbeidskosten [C]; claims van Google en Anthropic over het aandeel code [D]; Octoverse 2026 [C]; BLS: programmeurs −7% [C]. Hier een lage kans, omdat de harnas beheerste vaardigheden al automatiseert (L4) en het toets met de hand schrijven vereist | 2 | 3 | **6** | Loopbaan |
-| R16 | **Toezichtvaardigheden blijven ongetraind** *(nieuw)* | De harnas blokkeert AI-code op L1–L3 en automatiseert op L4, maar niets traint het specificeren, testen, reviewen en debuggen van AI-uitvoer. Werkgevers testen deze vaardigheden nu, en delegeren holt ze uit ("paradox van het toezicht"). | Anthropic 2025b [C, leverancier]; pilot van Google met sollicitatiegesprekken 2026 [D]; Stack Overflow 2026 [C]; Veracode 2026 [C]; CS1-LLM [C]; Pădurean 2026 [C] | 4 | 4 | **16** | Loopbaan (testen ook in het eindassessment) |
-| R17 | **Onzekerheid over het loopbaanpad** *(nieuw)* | De krimp in juniorvacatures: minder instapplekken en kieskeurigere werkgevers. Het bewijs is beschrijvend en omstreden, dus het effect op één lerende is onzeker. | Krimp in juniorvacatures: Canaries 2026 [B, beschrijvend, omstreden]; Crane & Soto 2026; Tucker 2026 [B]; Indeed (4.5% instapniveau) [C]; UWV, ROA, Cnossen 2026 [C]; nulresultaten: Humlum & Vestergaard, Fairlie & Wu, NY Fed [B] | 3 | 4 | **12** | Loopbaan |
+| R11 | **Problemen met toetsing en integriteit** | Beoordeeld werk is niet van jezelf, of AI-gebruik is niet gemeld. Ongeoorloofd AI-gebruik kan als fraude gelden, en werk op AI-niveau 1 kan promptlinks, APA-bronvermelding en een controle van de uitvoer vereisen. De regels van CHE zijn een voorbeeld (OER art. 1.41 en art. 7.11). Detectie is onbetrouwbaar, dus je eigen vastleggingen zijn je bescherming. | CHE OER 2026–27 [beleid]; Npuls 2025 [beleid]; Scarfe 2024 (94% van de AI-antwoorden onopgemerkt) [B]; Lau & Guo 2023 | 3 | 5 | **15** | Toets |
+| R12 | **De harnas wordt het doel** *(nieuwe score, was 3 × 2)* | Tijd gaat naar het bijstellen van de opzet, of naar onderzoek erover (zoals het herzien van dit overzicht), in plaats van naar oefenen. Of het systeem wordt opgegeven. | Een diagnostische toets in de pilot (tijd ging naar een spiekbriefje in plaats van naar oefenen); in de pilot ging ook tijd naar het herzien van dit overzicht en het repareren van een hook; SDT | 4 | 3 | **12** | Toets |
+| R13 | **Privacy van het dagboek en de vaardigheidsgegevens** | Reflecties, onderzoeksnotities en transcripten worden gesynchroniseerd naar cloudopslag (zoals OneDrive) of gedeeld. | — | 2 | 2 | **4** | Beide |
+| R14 | **Oefenen past niet bij de toets** *(nieuw)* | Je oefent met AI, zonder tijdsdruk, in de IDE die je gewend bent. De toets is zonder AI, op tijd, en misschien in een andere IDE. Een vaardigheid die je in de ene vorm oefent, geeft weinig transfer naar een andere vorm. | Een diagnostische toets in de pilot; transfer-appropriate processing (Morris 1977); Pan & Rickard 2018 [A, meta]; Hinze & Rapp 2014 [A]; geen IDE-specifieke studie | 5 | 5 | **25** | Toets |
+| R15 | **Te veel investeren in productiecode met de hand schrijven** *(nieuw)* | Oefentijd gaat naar routinecode met de hand schrijven, meer dan nodig is om te leren (boilerplate, syntaxisdrills, beheerste code opnieuw schrijven). Ondertussen betaalt de markt voor specificeren, reviewen en verifiëren. | Routinecode is goedkoop te genereren: tool ongeveer 1–2% van de arbeidskosten [C]; claims van Google en Anthropic over het aandeel code [D]; Octoverse 2026 [C]; BLS: programmeurs −7% [C]. Lage kans met de harnas, omdat die beheerste vaardigheden al automatiseert (L4), en een toets zonder AI met de hand schrijven vereist | 2 | 3 | **6** | Loopbaan |
+| R16 | **Toezichtvaardigheden blijven ongetraind** *(nieuw)* | De harnas blokkeert AI-code op L1–L3 en automatiseert op L4, maar niets traint het specificeren, testen, reviewen en debuggen van AI-uitvoer. Werkgevers testen deze vaardigheden nu, en delegeren holt ze uit ("paradox van het toezicht"). | Anthropic 2025b [C, leverancier]; pilot van Google met sollicitatiegesprekken 2026 [D]; Stack Overflow 2026 [C]; Veracode 2026 [C]; CS1-LLM [C]; Pădurean 2026 [C] | 4 | 4 | **16** | Loopbaan (testen kan ook meetellen in je eindassessment) |
+| R17 | **Onzekerheid over het loopbaanpad** *(nieuw)* | De krimp in juniorvacatures: minder instapplekken en kieskeurigere werkgevers. Het bewijs is beschrijvend en omstreden, dus het effect op een individuele student is onzeker. | Krimp in juniorvacatures: Canaries 2026 [B, beschrijvend, omstreden]; Crane & Soto 2026; Tucker 2026 [B]; Indeed (4.5% instapniveau) [C]; UWV, ROA, Cnossen 2026 [C]; nulresultaten: Humlum & Vestergaard, Fairlie & Wu, NY Fed [B] | 3 | 4 | **12** | Loopbaan |
 | R18 | **Beslissingen gestuurd door claims van leveranciers of door hype** *(nieuw)* | Je verandert wat je oefent door cijfers van leveranciers ("80–90% van de code is door AI geschreven"), opgeblazen benchmarks of niet-gecorrigeerde meta-analyses. Of je vertrouwt dit document te veel: het is geschreven door een model van Anthropic en leunt op bronnen van Anthropic. | Door leveranciers gemelde vs. onafhankelijke benchmarkscores (89.9% vs. ongeveer 60%) [C]; ingetrokken meta-analyse van Wang & Fan 2025; Boolzen 2026 (g 0.84 → 0.08) [A]; METR over zelfrapportage [A] | 3 | 3 | **9** | Beide |
 
 ```mermaid
@@ -577,11 +615,18 @@ quadrantChart
 ```
 
 **Wat er in het beeld veranderde.**
-- **Grootste risico's:** R1 (vaardigheden ontstaan nooit) en R14 (oefenen past niet bij de toets) delen de hoogste score. R14 is op zich geen AI-risico, maar de D-toets liet zien dat dit het risico is dat echt is gebeurd.
-- **Ongelijke risico's door de verschuiving in vaardigheden:** te veel met de hand schrijven (R15) is een klein risico voor deze lerende, omdat de harnas beheerste vaardigheden al aan de AI overdraagt en het toets met de hand schrijven vereist. Te weinig oefenen met toezicht (R16) is wel een echt risico. Niets in de harnas traint dat nog.
+
+- **Grootste risico's:** R1 (vaardigheden ontstaan nooit) en R14 (oefenen past niet bij de toets) delen de hoogste score. R14 is op zich geen AI-risico, maar in de pilot is dit het risico dat echt is gebeurd (zie het voorbeeld hieronder).
+- **Ongelijke risico's door de verschuiving in vaardigheden:** te veel met de hand schrijven (R15) is een klein risico als je de harnas gebruikt. De harnas draagt beheerste vaardigheden al over aan de AI, en een toets zonder AI vereist dat je met de hand schrijft. Te weinig oefenen met toezicht (R16) is wel een echt risico. Niets in de harnas traint dat nog; §4.1 stelt voor hoe je het toevoegt.
+
+!!! example "Voorbeeld: de situatie van één student"
+    Een tweedejaarsstudent HBO-ICT aan CHE oefende voor een OOD-toets met AI binnen handbereik, zonder tijdsdruk, in Visual Studio. Een diagnostische toets vóór de eigenlijke toets was op tijd, zonder AI en in Rider. De analyse ervan noemde de oefenomstandigheden als een belangrijke oorzaak van het resultaat, en bij debuggen ging het mis. Er was ook tijd naar een spiekbriefje gegaan in plaats van naar oefenen (R12).
+
 ---
 
-## 4. Plan van maatregelen
+## 4. Zo pas je het toe: plan van maatregelen
+
+Deze sectie maakt van de risico's een plan dat je op je eigen toetsdatum legt. De tabel geeft voor elk risico één maatregel. Het stappenplan daarna zegt wanneer je wat doet, gerekend vanaf je toets.
 
 | Risico | Maatregel | Uitgevoerd met | Restrisico |
 |---|---|---|---|
@@ -595,81 +640,88 @@ quadrantChart
 | R8 | Gespreide onderhoudschecks met oplopende intervallen (bijv. 3 → 7 → 21 → 60 → 120 dagen). Een mislukte check zet de vaardigheid terug naar L3. Op L4 moet je de aanpak van de AI bij steekproeven voorspellen of reviewen. | `SessionStart`-hook + `/review-due`-skill | Laag |
 | R9 | De AI moet documentatie citeren, en jij draait de tests zelf (`check.mjs`). Behandel code en uitleg van de AI als onbetrouwbaar. Wees extra voorzichtig met interfaces, abstracte klassen en overerving, waar AI het zwakst is, en met alles wat met beveiliging te maken heeft: controleer die met het cursusmateriaal of de C#-documentatie. Fouten in uitleg die je vindt, worden gelogd als "AI-fouten". | CLAUDE.md, `check.mjs` | Gemiddeld |
 | R10 | Het dagboek legt vast wat *jij* schreef. Voor het inleveren oefen je "verdedig je ontwerp" met `/mastery-check --defend`. | Dagboek + skill | Laag |
-| R11 | Beoordeeld werk: behandel elke vaardigheid als L3 (CLAUDE.md), en houd een log van je AI-gebruik bij voor de AI-verantwoording: promptlinks, wat de AI deed en hoe je het controleerde (CHE OER art. 7.11). Vraag de docent welke delen van het eindassessment op AI-niveau 0 zijn en welke op AI-niveau 1 (§4.2). Volg altijd de regels van de cursus en de instelling. | CLAUDE.md + dagboek | Laag |
-| R12 | Houd de harnas klein (~5 hooks, 1 skill) en bekijk het elke maand. Begrens de tijd voor werk aan de harnas: hooguit één fix per sessie, en alleen onderzoek als dat zou veranderen wat je oefent. Deze herziening telt mee: geen onderzoek meer naar de harnas vóór de toets, tenzij een hook niet goed werkt. | Dagboek (noteer de minuten aan de harnas vs. aan oefenen) | Gemiddeld |
+| R11 | Beoordeeld werk: behandel elke vaardigheid als L3 (CLAUDE.md), en houd een log van je AI-gebruik bij voor de AI-verantwoording: promptlinks, wat de AI deed en hoe je het controleerde (zoals OER art. 7.11 van CHE bijvoorbeeld vraagt). Vraag je docent welke delen van je eindassessment op AI-niveau 0 zijn en welke op AI-niveau 1 (§4.2). Volg altijd de regels van de cursus en de instelling. | CLAUDE.md + dagboek | Laag |
+| R12 | Houd de harnas klein (~5 hooks, 1 skill) en bekijk de opzet elke maand. Begrens de tijd voor werk aan de harnas: hooguit één fix per sessie, en alleen onderzoek als dat zou veranderen wat je oefent. Onderzoek naar de harnas telt ook als werk aan de harnas: stop ermee tot na je toets, tenzij een hook niet goed werkt. | Dagboek (noteer de minuten aan de harnas vs. aan oefenen) | Gemiddeld |
 | R13 | Houd `.learning/`, `research_notes/` en transcripten buiten gedeelde repo's en openbare pagina's (`.gitignore`). Sla alleen op wat nodig is. | `.gitignore` | Laag |
-| R14 | **Oefen onder toetsomstandigheden.** Doe vanaf ongeveer twee weken voor elke toets sessies op tijd, zonder AI, in Rider. Begin kort en doe daarna volledige proeftoetsen (de oefentoetsen van de cursus). Leer eerst zonder druk. Kijk achteraf terug, en gebruik `claude-study` alleen voor wat je zelf hebt gevonden. | Plan in de analyse van de D-toets; dagboek | Gemiddeld |
+| R14 | **Oefen onder toetsomstandigheden.** Doe vanaf ongeveer twee weken voor elke toets sessies op tijd, zonder AI, in de IDE van je toets. Begin kort en doe daarna volledige proeftoetsen (de oefentoetsen van je cursus). Leer eerst zonder druk. Kijk achteraf terug, en gebruik `claude-study` alleen voor wat je zelf hebt gevonden. | Stappenplan hieronder; dagboek | Gemiddeld |
 | R15 | Drill niet wat al op L3/L4 staat. De Fibonacci-herhalingen houden het vers, en boilerplate gaat naar de AI (L4). Oefenen met de hand is voor vaardigheden onder L3. | Vaardighedenregister; L4-beleid | Laag |
-| R16 | **Voeg een leerlijn voor toezicht toe (§4.1):** vind geplante bugs in code die je niet zelf schreef, schrijf tests die fouten vangen, review AI-code aan de hand van OOD-principes, voorspel en vergelijk daarna. Doe dit alleen bij onderwerpen op L3 of hoger, zodat je de uitvoer kunt beoordelen. Beperk het vóór 20 januari tot het deel dat overlapt met het toets (debuggen, testen). Breid het na de toets uit: acceptatiecriteria die tests worden, domeinmodellen in UML, en werk dat AI bouwde daaraan toetsen. | Nieuwe microvaardigheden (jij voegt ze toe); oefencode van Claude in `voorbeelden/` of de chat | Gemiddeld |
+| R16 | **Voeg een leerlijn voor toezicht toe (§4.1):** vind geplante bugs in code die je niet zelf schreef, schrijf tests die fouten vangen, review AI-code aan de hand van OOD-principes, voorspel en vergelijk daarna. Doe dit alleen bij onderwerpen op L3 of hoger, zodat je de uitvoer kunt beoordelen. Beperk het vóór je toets tot het deel dat overlapt met de toets (debuggen, testen). Breid het na je toets uit: acceptatiecriteria die tests worden, domeinmodellen in UML, en werk dat AI bouwde daaraan toetsen. | Nieuwe microvaardigheden (jij voegt ze toe); oefencode van Claude in `voorbeelden/` of de chat | Gemiddeld |
 | R17 | Bouw zichtbaar oordeelsvermogen op dat werkgevers kunnen zien: tests en een testplan, onderbouwing van je ontwerpkeuzes in het verslag, je code hardop uitleggen (mondelinge verdediging). | Eindproject; dagboek | Gemiddeld (buiten jouw invloed) |
 | R18 | Gebruik de bewijsgraden (§2.0). Handel op bewijs van graad A/B, zie C als een signaal en D als een bewering. Controleer belangrijke cijfers in de primaire bron, en houd in gedachten wie dit document schreef. Doe dit overzicht alleen opnieuw als dat zou kunnen veranderen wat je oefent. | Dit document | Laag–gemiddeld |
 
-**Tijdlijn van de maatregelen**
+**Stappenplan, gerekend vanaf je toets**
 
-```mermaid
-gantt
-    title Rollout of the learning harness (example semester)
-    dateFormat  YYYY-MM-DD
-    axisFormat  %d %b
-    section Setup
-    CLAUDE.md pedagogy policy + skill map          :a1, 2026-11-09, 2d
-    Skill record + diary templates                 :a2, after a1, 2d
-    Hooks (SessionStart, UserPromptSubmit, Stop)   :a3, after a2, 3d
-    PreToolUse ownership guard + PostToolUse tests :a4, after a3, 2d
-    section Use
-    Learning OOD skills on the ladder              :b1, after a4, 60d
-    Weekly diary review (15 min)                   :b2, after a4, 60d
-    Timed mocks without AI, in Rider (R14)         :b3, 2027-01-04, 14d
-    Supervision track, full version (R16)          :b4, 2027-01-21, 30d
-    section Evaluate
-    Month-1 check (success rate, overrides)        :milestone, c1, 2026-12-15, 0d
-    Unassisted mini-exam / transfer test           :milestone, c2, 2027-01-20, 0d
-```
+| Fase | Wanneer (ten opzichte van je toets) | Wat |
+|---|---|---|
+| Opzetten | Bij de start, het liefst ongeveer tien weken voor je toets. Reken op ongeveer negen dagen. | Didactisch beleid in CLAUDE.md en de vaardighedenkaart; vaardighedenregister en sjablonen voor het dagboek; hooks (`SessionStart`, `UserPromptSubmit`, `Stop`); `PreToolUse`-guard die je eigen code beschermt, en `PostToolUse`-tests |
+| Leren | Vanaf het einde van het opzetten tot je toets | Leer de OOD-vaardigheden op de ladder. Kijk één keer per week terug in je dagboek (15 minuten). |
+| Check na een maand | Ongeveer een maand na de start, zo'n vijf weken voor je toets | Bekijk je slagingspercentage en je overrides (§6). |
+| Toetsomstandigheden (R14) | De laatste twee weken voor je toets | Proeftoetsen op tijd, zonder AI, in de IDE van je toets. Begin kort en doe daarna volledige proeftoetsen. |
+| Transfertoets | Vlak voor je toets | Een minitoets of transfertoets zonder hulp (§6). |
+| Leerlijn voor toezicht (R16) | Vanaf de dag na je toets, ongeveer een maand | De volledige leerlijn voor toezicht (§4.1). |
 
-### 4.1 Oefening opnieuw verdelen: voorgestelde wijzigingen in het vaardighedenregister (de lerende beslist)
+De tijden komen uit één voorbeeldsemester van ongeveer tien weken. Begin je later, maak dan het opzetten en het leren korter, niet de twee weken onder toetsomstandigheden.
 
-De harnas doet al twee van de drie dingen die §2.9 aanbeveelt: het houdt oefenen met de hand voor vaardigheden die je nog niet beheerst, en het draagt beheerste vaardigheden over aan de AI (L4). Wat ontbreekt, is toezicht (R16).
+### 4.1 Oefening opnieuw verdelen: voorgestelde wijzigingen in het vaardighedenregister (jij beslist)
+
+De harnas doet al twee van de drie dingen die §2.9 aanbeveelt: oefenen met de hand blijft voor vaardigheden die je nog niet beheerst, en beheerste vaardigheden gaan naar de AI (L4). Wat ontbreekt, is toezicht (R16). De wijzigingen hieronder zijn voorstellen. Jij beslist of je ze doorvoert.
 
 | Wanneer | Wat | Waarom |
 |---|---|---|
-| Nu tot 20 januari | Houd je aan het plan uit de analyse van de D-toets. Dicht de OOD-gaten met de hand, en doe vanaf begin januari proeftoetsen op tijd, zonder AI, in Rider (R14). Voeg alleen de overlap tussen toezicht en het toets toe: **code debuggen die je niet zelf schreef**, en **tests schrijven die fouten vangen**. | Beide worden beoordeeld: het testplan, en debuggen, waar het bij de D-toets misging. Sollicitatiegesprekken in het AI-tijdperk testen ook allebei. |
-| Na 20 januari | Voeg een hoofdvaardigheid toe voor toezicht op AI-uitvoer. Die omvat:<br>• een taak of user story zo precies specificeren dat een agent of een team ermee aan de slag kan;<br>• acceptatiecriteria schrijven die tests worden;<br>• werk dat AI bouwde daaraan toetsen, en aan OOD-principes;<br>• voorspellen wat de AI zal maken, en dat daarna vergelijken. | De loopbaanhorizon (§2.9). Dit is geen toetsentof, dus het hoort niet vóór de toets. |
+| Tot je toets | Houd je aan je toetsplan. Dicht de gaten in je OOD-basisvaardigheden met de hand, en doe vanaf ongeveer twee weken voor je toets proeftoetsen op tijd, zonder AI, in de IDE van je toets (R14). Voeg alleen de overlap tussen toezicht en de toets toe: **code debuggen die je niet zelf schreef**, en **tests schrijven die fouten vangen**. | Kijk of je toets die beoordeelt. In het voorbeeld (§3) beoordeelde de toets een testplan, en bij debuggen ging het mis in de diagnostische toets. Sollicitatiegesprekken in het AI-tijdperk testen ook allebei. |
+| Na je toets | Voeg een hoofdvaardigheid toe voor toezicht op AI-uitvoer. Die omvat:<br>• een taak of user story zo precies specificeren dat een agent of een team ermee aan de slag kan;<br>• acceptatiecriteria schrijven die tests worden;<br>• werk dat AI bouwde daaraan toetsen, en aan OOD-principes;<br>• voorspellen wat de AI zal maken, en dat daarna vergelijken. | De loopbaanhorizon (§2.9). Dit is geen stof voor een toets zonder AI, dus het hoort niet vóór je toets. |
 
-**Commando's om te overwegen.** Je voert ze zelf uit, want de guard laat Claude het register niet wijzigen:
+**Voorbeeldcommando's.** Je voert ze zelf uit, want de guard laat Claude het register niet wijzigen:
 
 ```
 ! node .claude/hooks/skill.mjs add-micro debug.zonder-foutmelding debug.code-van-ander L1 "bug vinden in code die je niet zelf schreef" "geplante bug, code van een ander, ai-code debuggen"
 ! node .claude/hooks/skill.mjs add-micro test.unit-tests test.fouten-vangen L1 "tests schrijven die fouten in andermans code vangen" "test die fout vangt, ai-code testen, grenswaarde vergeten"
 ```
 
-Claude schrijft de oefencode, met een geplante bug, in `voorbeelden/` of in de chat. Jij debugt die in je eigen oefenmap, zodat `check.mjs` het resultaat kan loggen. Gebruik alleen onderwerpen die je al op L3 of hoger hebt, zodat je de code kunt beoordelen. Een hoofdvaardigheid zoals `ai.supervisie` kun je niet toevoegen met `add-micro`. Die zou je na de toets zelf aan `skills.json` toevoegen.
+Claude schrijft de oefencode, met een geplante bug, in `voorbeelden/` of in de chat. Jij debugt die in je eigen oefenmap, zodat `check.mjs` het resultaat kan loggen. Gebruik alleen onderwerpen die je al op L3 of hoger hebt, zodat je de code kunt beoordelen. Een hoofdvaardigheid zoals `ai.supervisie` kun je niet toevoegen met `add-micro`. Die zou je na je toets zelf aan `skills.json` toevoegen.
 
-### 4.2 Gesprekspunten voor het gesprek over AI-beleid
+### 4.2 Voor docenten en opleidingen
 
-Deze punten zijn gebaseerd op bewijs, en elk punt eindigt met een vraag die je kunt stellen. Uit het onderzoek bleek dat het een sterkere positie is om het beleid van CHE te steunen en vragen te stellen over de gaten erin, dan om ertegen in te gaan.
+Dit deel is voor docenten, curriculumontwerpers en examencommissies. Elk punt geeft het bewijs en eindigt met wat je kunt doen. Uit het onderzoek bleek dat het een sterkere positie is om toetsing van basisvaardigheden zonder AI te steunen en de gaten eromheen te dichten, dan om ertegen in te gaan.
 
-1. **AI-niveau 0 voor het eindassessment is de consensus, geen uitzondering.**
-   - **Past bij het tweesporenmodel:** het is "spoor 1" in de Nederlandse landelijke visie (Npuls, 2025) en in het tweesporenmodel van de University of Sydney.
-   - **Waarom toezicht nodig is:** een verbod op AI bij werk zonder toezicht valt niet te controleren. In één blinde test bleef 94% van de door AI geschreven toetsantwoorden onopgemerkt (Scarfe et al., 2024).
-   - *Vraag:* welke delen van het eindassessment zijn AI-niveau 0 en welke AI-niveau 1?
-2. **Een regel voor AI-niveau 1 is maar zo sterk als de controle erop.** Regels over toegestaan gebruik zijn "discursieve" veranderingen die studenten kunnen negeren (Corbin, Dawson & Liu, 2025). Wat ze laat werken, is structuur: de promptlinks en vastleggingen die OER art. 7.11 vereist, en een mondelinge check.
-   - *Vraag:* hoe wordt werk op AI-niveau 1 gecontroleerd, en is er een mondelinge verdediging?
-3. **Waar zit spoor 2 in de opleiding?** Npuls zegt dat de twee sporen "elkaar aanvullen", en werkgevers testen nu het lezen, debuggen en valideren van AI-uitvoer (de pilot van Google met sollicitatiegesprekken uit 2026). Art. 7.11 maakt studenten nu al verantwoordelijk voor het controleren van AI-uitvoer "op juistheid en relevantie". Dat zou je als vaardigheid kunnen beoordelen, niet alleen als naleving. CS1-LLM laat zien dat oefenen met AI kan samengaan met toetsen zonder AI, zonder slechtere toetsresultaten.
-   - *Vraag:* is er een cursus of opdracht op AI-niveau 2 waarin het controleren van AI-uitvoer wordt beoordeeld?
-4. **Oefenen onder toetsomstandigheden.** De D-toets was in Rider, op tijd en zonder AI, terwijl het oefenen gebeurde in Visual Studio met AI binnen handbereik. Oefenen geeft de meeste transfer als het past bij de toets (§2.6).
-   - *Vraag:* kunnen oefentoetsen vooraf in de toetsomgeving worden gemaakt?
+1. **Toets basisvaardigheden op AI-niveau 0, onder toezicht.** Dat is de consensus, geen uitzondering.
+            - **Past bij het tweesporenmodel:** het is "spoor 1" in de Nederlandse landelijke visie (Npuls, 2025) en in het tweesporenmodel van de University of Sydney. De Green Paper van Sydney vereist ook basisvaardigheden vóór taken met AI-ondersteuning en "mogelijkheden om te presteren onafhankelijk van AI" (University of Sydney, 2026).
+            - **Waarom toezicht nodig is:** een verbod op AI bij werk zonder toezicht valt niet te controleren. In één blinde test bleef 94% van de door AI geschreven toetsantwoorden onopgemerkt (Scarfe et al., 2024).
+            - **Waarom werk met AI-hulp beheersing overschat:** opdrachten met AI-hulp scoorden gemiddeld 7.62. Beheersing die willekeurig en zonder apparaten werd gecontroleerd, scoorde gemiddeld 5.55 (Đức Minh, 2026; bewijsgraad C).
+            - *Wat je kunt doen:* geef voor elk deel van het eindassessment aan of het AI-niveau 0 of AI-niveau 1 is, en vertel dat aan studenten voordat ze gaan oefenen.
+2. **Werk waarbij AI is toegestaan, is maar zo sterk als de controle erop.** Regels over toegestaan gebruik zijn "discursieve" veranderingen die studenten kunnen negeren (Corbin, Dawson & Liu, 2025). Wat ze laat werken, is structuur: promptlinks en vastleggingen van het AI-gebruik (OER art. 7.11 van CHE vereist die bijvoorbeeld), en een mondelinge check.
+            - **De mondelinge verdediging:** die richt zich op een risico uit §3: studenten die hun eigen werk niet kunnen uitleggen of verdedigen (R10). Code tracen en uitleggen voorspelt hoe goed iemand code kan schrijven (Lopez et al., 2008). Uitleggen is dus een eerlijke toets van vaardigheid. Een verplichte uitleg helpt ook tijdens het oefenen: bij een latere taak waarbij AI was uitgeschakeld, faalde 77% na AI zonder beperkingen, tegenover 39% na een "uitlegpoort" (Sankaranarayanan, 2026; bewijsgraad C).
+            - **Een gat in het bewijs:** geen van de studies in dit overzicht onderzoekt de mondelinge verdediging zelf als toetsvorm.
+            - *Wat je kunt doen:* zet in elke opdracht op AI-niveau 1 hoe die wordt gecontroleerd, bijvoorbeeld met promptlinks, een log van het AI-gebruik en een korte mondelinge verdediging.
+3. **Geef spoor 2 een plek in de opleiding, en beoordeel toezicht op AI-uitvoer.** Npuls zegt dat de twee sporen "elkaar aanvullen", en werkgevers testen nu het lezen, debuggen en valideren van AI-uitvoer (de pilot van Google met sollicitatiegesprekken uit 2026). Studenten moeten toezichtvaardigheden *verwerven*, niet alleen behouden ("never-skilling"; Abdulnour, Gin & Boscardin, 2025). Een regel zoals art. 7.11 van CHE maakt studenten nu al verantwoordelijk voor het controleren van AI-uitvoer "op juistheid en relevantie". Dat zou je als vaardigheid kunnen beoordelen, niet alleen als naleving.
+            - **Geen nadeel voor toetsresultaten:** CS1-LLM laat zien dat oefenen met AI kan samengaan met toetsen zonder AI, zonder slechtere toetsresultaten.
+            - **Oefenvormen met eerste bewijs (bewijsgraad C):** als er realistische bugs in door AI gegenereerde oplossingen waren gezet, repareerden studenten de code zelf. Bij gewone fouten door de prompt herformuleerden ze juist de prompt (Pădurean et al., 2026). "Prompt Problems" trainen precies specificeren (Denny et al., 2024b).
+            - **Volgorde telt:** eerst de basis, dan oefenen met toezicht bij onderwerpen die studenten al zelf kunnen schrijven, zodat ze de uitvoer kunnen beoordelen (P13).
+            - *Wat je kunt doen:* noem minstens één cursus of opdracht op AI-niveau 2 waarin het controleren van AI-uitvoer wordt beoordeeld, en plaats die nadat de basisvaardigheden er zijn.
+4. **Laat studenten oefenen onder toetsomstandigheden.** Oefenen geeft de meeste transfer als het past bij de toets (§2.6). Houd het wel zonder druk: oefentoetsen waar veel van afhing, haalden tijdens het leren het voordeel van ophaaloefening weg (Hinze & Rapp, 2014). Geen studie heeft gemeten wat een onbekende IDE kost. Maar klassen aanmaken, tests draaien en compileruitvoer lezen horen bij wat er wordt getoetst. Het voorbeeld in §3 laat het gat zien: oefenen met AI in de ene IDE, daarna een diagnostische toets zonder AI, op tijd, in een andere.
+            - *Wat je kunt doen:* stel oefentoetsen vooraf beschikbaar in de toetsomgeving (dezelfde IDE, dezelfde tijdslimiet, geen AI), en houd ze zonder druk.
 5. **Claim niet te veel.**
-   - **AI Act:** artikel 4 van de EU AI Act (AI-geletterdheid) gaat over het personeel van aanbieders en gebruiksverantwoordelijken. Sinds 27 juli 2026 vereist het alleen dat organisaties AI-geletterdheid *ondersteunen*. Het vereist geen AI bij het toetsen van studenten.
-   - **Arbeidsmarkt:** het bewijs over juniorbanen is omstreden.
-   - **Cijfers over het aandeel code:** cijfers van leveranciers over hoeveel code AI schrijft, zijn claims, geen bewijs.
-6. **Detectie is geen bewijs.** Npuls stelt dat scores van AI-detectie geen waterdicht bewijs zijn en dat vermoedens menselijk onderzoek nodig hebben, bijvoorbeeld mondelinge vragen. CHE staat Turnitin toe bij fraudeonderzoek. Als je je eigen promptlinks en vastleggingen bewaart, beschermt dat je.
-7. **Bied de harnas aan als voorbeeld** van transparant AI-gebruik dat je zelf begrenst. Het logt hints, overrides en uitleg. Dat is het soort AI-verantwoording waar werk op AI-niveau 1 om vraagt.
+            - **AI Act:** artikel 4 van de EU AI Act (AI-geletterdheid) gaat over het personeel van aanbieders en gebruiksverantwoordelijken. Sinds 27 juli 2026 vereist het alleen dat organisaties AI-geletterdheid *ondersteunen*. Het vereist geen AI bij het toetsen van studenten.
+            - **Arbeidsmarkt:** het bewijs over juniorbanen is omstreden.
+            - **Cijfers over het aandeel code:** cijfers van leveranciers over hoeveel code AI schrijft, zijn claims, geen bewijs.
+            - **Leerwinst:** na correctie voor publicatiebias laat de strengste meta-analyse uit 2026 g = 0.84 krimpen tot 0.08 (Boolzen et al., 2026).
+            - *Wat je kunt doen:* baseer wijzigingen in de opleiding op bewijs van graad A/B (§2.0), en zie cijfers van leveranciers als claims.
+6. **Detectie is geen bewijs.** Npuls stelt dat scores van AI-detectie geen waterdicht bewijs zijn en dat vermoedens menselijk onderzoek nodig hebben, bijvoorbeeld mondelinge vragen. CHE is een van de instellingen die Turnitin toestaan bij fraudeonderzoek. De eigen promptlinks en vastleggingen van studenten beschermen hen.
+            - *Wat je kunt doen:* zie een detectiescore als aanleiding voor een gesprek, niet als bewijs, en vraag studenten hun promptlinks en vastleggingen te bewaren.
+7. **Zie een tool zoals deze harnas als voorbeeld** van transparant AI-gebruik dat de student zelf begrenst. Die logt hints, overrides en uitleg. Dat is het soort AI-verantwoording waar werk op AI-niveau 1 om vraagt. Biedt je cursus een eigen AI-tutor aan, dan pleit het bewijs voor vangrails die in de werkwijze zijn ingebouwd, in plaats van alleen instructies in een prompt.
+            - **Alleen prompts:** de tutor sturen via de systeemprompt maakte geen verschil voor 1,059 CS1-studenten (Barth et al., 2026). Een tutor met vangrails hielp alleen binnen een werkwijze van leren tot beheersing (Oreopoulos et al., 2026).
+            - **Gelijke kansen:** zwakkere studenten en eerstegeneratiestudenten lijden meer schade en gebruiken vaker nooduitgangen (Liu et al., 2026; Kapoor et al., 2025). Vangrails zijn het belangrijkst voor de studenten die er het minst snel zelf voor kiezen.
+            - *Wat je kunt doen:* overweeg logs zoals deze te accepteren als onderdeel van een AI-verantwoording. Vraag bij de keuze van een AI-tutor waar de vangrails worden afgedwongen.
 
 ---
 
 ## 5. Voorgestelde inrichting van Claude Code
 
+Deze sectie beschrijft wat de harnas tijdens een sessie doet, en waarom. Installeer je de harnas, dan is dit waarmee je werkt. Geef je les, dan zie je hier welke regels de harnas afdwingt en welke alleen advies aan de AI zijn.
+
 ### 5.1 Architectuur
+
+De harnas bestaat uit een klein aantal onderdelen in je project: een `CLAUDE.md` met het didactische beleid, een output style, een paar skills, vijf hooks en een lokale map `.learning/` met je gegevens.
 
 ```mermaid
 flowchart LR
@@ -718,13 +770,13 @@ flowchart LR
 
 **Ontwerpkeuzes:**
 
-- **Regels die altijd moeten gelden, horen in hooks.** Hooks zijn deterministisch. Instructies in CLAUDE.md zijn *adviserend*: het model volgt ze meestal, maar in lange sessies kan het ervan afdrijven. De regel "schrijf geen code die van de lerende is" moet daarom een hook zijn.
-- **Didactisch gedrag hoort in Claude Code-skills, CLAUDE.md en de output style.** Het gaat dan om socratische vragen, uitleg en de toon van de feedback.
-- **De toestand staat in gewone bestanden** die je kunt lezen en bewerken (JSON/Markdown). Zo blijft het systeem transparant, en transparantie ondersteunt autonomie (P10).
+- **Regels die altijd moeten gelden, horen in hooks.** Hooks zijn deterministisch. Instructies in CLAUDE.md zijn *adviserend*: het model volgt ze meestal, maar in lange sessies kan het ervan afdrijven. Daarom moet de regel "schrijf geen code die van jou is" een hook zijn.
+- **Didactisch gedrag hoort in skills, CLAUDE.md en de output style.** Het gaat dan om socratische vragen, uitleg en de toon van de feedback.
+- **De harnas bewaart de toestand in gewone bestanden** die je kunt lezen en bewerken (JSON/Markdown). Zo blijft het systeem transparant, en transparantie ondersteunt je autonomie (P10).
 
 ### 5.2 De autonomieladder (per vaardigheid)
 
-De vijf niveaus volgen cognitive apprenticeship en uitgewerkte voorbeelden die stap voor stap worden afgebouwd. Bovenaan staat automatisering.
+De harnas geeft elke vaardigheid een eigen niveau. De vijf niveaus volgen cognitive apprenticeship en uitgewerkte voorbeelden die stap voor stap worden afgebouwd. Bovenaan staat automatisering.
 
 | Niveau | Naam | Wie schrijft de code? | Rol van de AI | Jij moet… | Onderbouwing |
 |---|---|---|---|---|---|
@@ -758,11 +810,11 @@ stateDiagram-v2
     L4_Automated --> [*] : skill retired - no longer relevant
 ```
 
-> **"Alleen tekstinvoer geven" aan het begin** is L0. Je beschrijft je bedoeling en eisen in gewone tekst, en de AI schrijft een volledig toegelicht voorbeeld. Ook hier ben je nooit helemaal passief: bij L0 hoort een korte zelfuitleg of voorspelling voordat de sessie als vooruitgang telt (Chi et al., 1989; Kazemitabaar et al., 2025).
+> **"Alleen tekstinvoer geven" aan het begin** is L0. Je beschrijft je bedoeling en eisen in gewone tekst, en de AI schrijft een volledig toegelicht voorbeeld. Ook hier ben je nooit helemaal passief: op L0 geef je een korte zelfuitleg of voorspelling voordat de sessie als vooruitgang telt (Chi et al., 1989; Kazemitabaar et al., 2025).
 
 ### 5.3 Frictie afstemmen en de hintladder
 
-De hintladder brengt contingente begeleiding en productief worstelen in de praktijk. Elke trede gaat pas open na **(a)** een zichtbare poging, zoals code die je hebt veranderd of een hypothese die je hebt uitgesproken, **of (b)** als een vastloop-timer afloopt. Die regel houdt het worstelen productief. Zo slaat het niet om in doelloos ploeteren.
+De hintladder brengt twee ideeën in de praktijk: contingente begeleiding (meer hulp na een mislukking, minder na succes; §2.3) en productief worstelen (§2.2). Je krijgt de volgende trede pas na **(a)** een zichtbare poging, zoals code die je hebt veranderd of een hypothese die je hebt uitgesproken, **of (b)** als de vastloop-timer afloopt. Die regel houdt het worstelen productief, zodat het niet omslaat in doelloos ploeteren.
 
 ```mermaid
 flowchart TD
@@ -785,15 +837,17 @@ flowchart TD
     M --> O
 ```
 
-**Regels voor het afstemmen** (contingente begeleiding, met ongeveer 85% als vuistregel; §2.2 legt uit waarom dat een heuristiek is en geen bewijs):
+**Regels voor het afstemmen** (contingente begeleiding, met ongeveer 85% succes als vuistregel; §2.2 legt uit waarom dat een heuristiek is en geen bewijs):
 
-- Houd per vaardigheid een **voortschrijdend succespercentage** bij. Tel daarbij de successen met trede ≤ 2.
-- **> 95%** → de taak is te makkelijk. Maak de taken moeilijker, of wissel af met andere vaardigheden (interleaving). Controleer of de criteria voor een hoger niveau zijn gehaald.
+- De harnas houdt per vaardigheid een **voortschrijdend succespercentage** bij. Daarbij tellen alleen successen op trede ≤ 2.
+- **> 95%** → te makkelijk. Maak de taken moeilijker, of wissel af met andere vaardigheden (interleaving). Controleer of je aan de criteria voor het volgende niveau voldoet.
 - **70–95%** → in de zone. Ga zo door.
-- **< 70%** → te moeilijk. Verkort de vastloop-timer `T` (bijv. 15 → 8 min), geef makkelijkere taken of ga één niveau omlaag.
-- `T` begint voor L2 op **10–15 minuten**. Dat valt binnen de periode waarin verwarring nog productief kan zijn (D'Mello et al., 2014). Je kunt `T` zelf instellen.
+- **< 70%** → te moeilijk. Verkort de vastloop-timer `T` (bijv. 15 → 8 min), kies makkelijkere taken of ga één niveau omlaag.
+- Voor L2 begint `T` op **10–15 minuten**. Dat valt binnen de tijd waarin verwarring nog productief kan zijn (D'Mello et al., 2014). Je kunt `T` zelf aanpassen.
 
 ### 5.4 Hook-pipeline
+
+Het diagram volgt één sessie en laat zien wanneer elke hook ingrijpt.
 
 ```mermaid
 sequenceDiagram
@@ -832,15 +886,18 @@ sequenceDiagram
 
 | Hook | Gebeurtenis | Taak | Kan hij blokkeren? |
 |---|---|---|---|
-| `session-start.mjs` | `SessionStart` | Voegt een samenvatting toe van het vaardighedenregister, de herhalingen die vandaag aan de beurt zijn, en de instructie om naar een plan te vragen (*vooruitdenken*) | Nee (alleen context) |
-| `prompt-gate.mjs` | `UserPromptSubmit` | Koppelt de prompt aan een vaardigheid met trefwoorden uit `skill-map.yaml`, voegt het beleid voor het niveau en de huidige hinttrede toe, start de vastloop-timer of werkt die bij, en handelt `/override` af. *Herzien (§10.2, punt 10):* negeert agentrapporten, taakmeldingen en systeemherinneringen, en logt `prompt-ignored` | Kan context toevoegen. Kan alleen blokkeren bij patronen van misbruik (optioneel) |
-| `ownership-guard.mjs` | `PreToolUse` (matcher `Edit\|Write\|MultiEdit\|NotebookEdit`) | Weigert bewerkingen door de AI in bestanden of delen die horen bij een vaardigheid op L1–L3. Op L1 laat hij schrijven alleen toe als er `TODO(human)`-gaten in staan | **Ja** (`permissionDecision: deny`) |
-| ~~`evidence-log.mjs`~~ → `check.mjs` (gebouwd) | CLI, door de lerende gestart met `!` | *Herzien (§10):* omdat de lerende de tests zelf draait, ziet een PostToolUse-hook ze nooit. `check.mjs` draait `dotnet test` met een trx-logger, toont een leesbare samenvatting, onthoudt per testmethode of die groen was, en logt een overgang van rood naar groen als taak, samen met de huidige hinttrede. Het werkt voor elk .NET-testproject (snek-oefeningen en projectwerk) | Nee |
-| `reflect-gate.mjs` | `Stop` | Als er aan een vaardigheid is gewerkt en er nog geen dagboeknotitie is, blokkeert hij **één keer** en zegt hij tegen Claude dat de reflectie moet gebeuren. Gebruikt `stop_hook_active` om lussen te voorkomen. *Herzien (§10):* hij leest ook het laatste antwoord van Claude uit het transcript en verwerkt de markers `[trede N]` en `[uitleg-ok <tid>]`. Die tweede marker telt alleen als het eigen bericht van de lerende door de deterministische uitlegcontrole komt | Ja, één keer |
+| `session-start.mjs` | `SessionStart` | Geeft Claude een samenvatting van je vaardighedenregister, de herhalingen die vandaag aan de beurt zijn, en de instructie om je naar een plan te vragen (*vooruitdenken*) | Nee (alleen context) |
+| `prompt-gate.mjs` | `UserPromptSubmit` | Koppelt je prompt aan een vaardigheid met trefwoorden uit `skill-map.yaml`, voegt het beleid voor dat niveau en de huidige hinttrede toe, start de vastloop-timer of werkt die bij, en handelt `/override` af. *Herzien (§10.2, punt 10):* negeert agentrapporten, taakmeldingen en systeemherinneringen, en logt `prompt-ignored` | Kan context toevoegen. Kan alleen blokkeren bij patronen van misbruik (optioneel) |
+| `ownership-guard.mjs` | `PreToolUse` (matcher `Edit\|Write\|MultiEdit\|NotebookEdit`) | Blokkeert bewerkingen door de AI in bestanden, of delen van bestanden, die horen bij een vaardigheid op L1–L3. Op L1 laat hij een schrijfactie alleen toe als er `TODO(human)`-gaten in staan | **Ja** (`permissionDecision: deny`) |
+| ~~`evidence-log.mjs`~~ → `check.mjs` (gebouwd) | CLI, die je zelf start met `!` | *Herzien (§10):* omdat je de tests zelf draait, ziet een PostToolUse-hook ze nooit. `check.mjs` draait `dotnet test` met een trx-logger, toont een leesbare samenvatting, onthoudt per testmethode of die groen was, en logt een overgang van rood naar groen als taak, samen met de huidige hinttrede. Het werkt voor elk .NET-testproject (oefenopgaven en projectwerk) | Nee |
+| `reflect-gate.mjs` | `Stop` | Als je aan een vaardigheid hebt gewerkt en er nog geen dagboeknotitie is, blokkeert hij **één keer** en zegt hij tegen Claude dat de reflectie moet gebeuren. Hij gebruikt `stop_hook_active` om lussen te voorkomen. *Herzien (§10):* hij leest ook het laatste antwoord van Claude uit het transcript en verwerkt de markers `[trede N]` en `[uitleg-ok <tid>]`. Die tweede marker telt alleen als je eigen bericht door de deterministische uitlegcontrole komt | Ja, één keer |
+
+!!! example "Voorbeeld: de situatie van één student"
+    De harnas werd voor het eerst uitgeprobeerd door een tweedejaarsstudent HBO-ICT die OOD oefende in C#. Bij de oefenopgaven van de cursus hoorden .NET-unittests, en die draaide de student zelf, niet Claude. Daarom draait `check.mjs` het commando `dotnet test`. De diagrammen en voorbeelden in deze sectie gebruiken nog Java uit het oorspronkelijke ontwerp (`mvn test`, `src/Payment.java`).
 
 ### 5.5 Vaardighedenregister (datamodel)
 
-Het vaardighedenregister volgt het idee van knowledge tracing (per vaardigheid een kans op beheersing, die wordt bijgewerkt op basis van bewijs) en de planning van gespreide herhaling. Omdat dit een OOD-cursus is, staat het hier als klassendiagram:
+In het vaardighedenregister houdt de harnas je voortgang bij. Het register volgt het idee van knowledge tracing (per vaardigheid een kans op beheersing, die wordt bijgewerkt op basis van bewijs) en de planning van gespreide herhalingen. Het onderwerp is OOD, dus staat het register hier als klassendiagram:
 
 ```mermaid
 classDiagram
@@ -933,7 +990,7 @@ classDiagram
 }
 ```
 
-**Zoals gebouwd (herziening §10):** het register is platter dan het klassendiagram hierboven. Elk item heeft `id`, `title`, `level`, `paths`, `nextReview`, `intervalIndex`, `failStreak` en `history`. Bewijs wordt niet in de vaardigheid zelf opgeslagen. Het staat in een log waar alleen iets aan wordt toegevoegd, `.learning/state/events.jsonl`, met gebeurtenissen zoals `task`, `task-explained`, `test-green`, `hint-unlock` en `review`. **Microvaardigheden** zijn items met een `parent` en hun eigen `keywords`:
+**Zoals gebouwd (na de eerste sessies, §10):** het register is platter dan het klassendiagram hierboven. Elk item heeft `id`, `title`, `level`, `paths`, `nextReview`, `intervalIndex`, `failStreak` en `history`. De harnas slaat bewijs niet op in de vaardigheid zelf. Het bewijs komt in een log dat alleen groeit (append-only), `.learning/state/events.jsonl`, met gebeurtenissen zoals `task`, `task-explained`, `test-green`, `hint-unlock` en `review`. **Microvaardigheden** zijn onderdelen van een vaardigheid: items met een `parent` en hun eigen `keywords`:
 
 ```json
 { "id": "cs.basis.void-chaining", "parent": "cs.basis", "title": "void-methoden en chainen",
@@ -942,7 +999,7 @@ classDiagram
 
 ### 5.6 AI-dagboek en reflectielus
 
-Het dagboek volgt de cyclus van zelfregulerend leren (Zimmerman, 2002) en gebruikt **leerprotocollen met prompts** (Nückles et al., 2009). De AI legt de feiten vast. Jij schrijft de reflectie.
+Het dagboek volgt de cyclus van zelfregulerend leren (Zimmerman, 2002) en gebruikt **leerprotocollen met prompts** (Nückles et al., 2009): je schrijft als antwoord op een paar vaste vragen. De AI legt de feiten vast. Jij schrijft de reflectie.
 
 ```mermaid
 flowchart LR
@@ -963,7 +1020,7 @@ flowchart LR
     P2 --> S[(skills.json)]
 ```
 
-**Sjabloon voor een dagboeknotitie** (`.learning/diary/2026-11-07.md`):
+**Sjabloon voor een dagboeknotitie** (bijvoorbeeld `.learning/diary/2026-11-07.md`):
 
 ```markdown
 ## Session 2 · 14:05–15:10 · skills: ood.polymorphism (L2), ood.srp (review)
@@ -984,11 +1041,11 @@ flowchart LR
 **Calibration:** predicted 2 → performed at rung ≤2 → under-confident ✅ (good sign)
 ```
 
-**Wekelijkse terugblik op het dagboek** (15 minuten, `/diary --week`): Claude vat de trends van de week samen: het succespercentage per vaardigheid, het aantal overrides, de verschillen in kalibratie en de vaardigheden die het dichtst bij een hoger niveau zitten. *Jij* bepaalt de focus voor volgende week. De wekelijkse terugblik ondersteunt metacognitieve monitoring, zonder dat die het monitoren voor je overneemt.
+**Wekelijkse terugblik op het dagboek** (15 minuten, `/diary --week`): Claude vat de trends van de week samen: het succespercentage per vaardigheid, het aantal overrides, de verschillen in kalibratie en de vaardigheden die het dichtst bij het volgende niveau zitten. *Jij* bepaalt waar je volgende week op focust. Zo helpt de terugblik je om je eigen leren in de gaten te houden, zonder dat de terugblik dat voor je doet.
 
 ### 5.7 Gespreide herhaling na beheersing
 
-Herhalingen gebruiken **groeiende intervallen**. Die worden aangepast aan de resultaten, in de stijl van Leitner en half-life regression. Ook **wisselen** ze vaardigheden **af**, en dat traint het kiezen van het juiste principe. Het is niet bewezen dat groeiende intervallen beter werken dan gelijke intervallen (§2.5). Het werk zit in spreiding en ophalen. Het schema zorgt er vooral voor dat vroege herhalingen lukken en dat ze vóór het toets vallen. Herhalingstaken zijn *ophaal*taken, geen herlezen:
+Als je een vaardigheid beheerst, blijft de harnas die af en toe controleren. Herhalingen gebruiken **groeiende intervallen**, aangepast aan je resultaten in de stijl van Leitner en half-life regression. Ook **wisselen** ze vaardigheden **af**, en dat traint je in het kiezen van het juiste principe. Het is niet bewezen dat groeiende intervallen beter werken dan gelijke intervallen (§2.5). Het werk zit in spreiding en ophalen. Het schema zorgt er vooral voor dat vroege herhalingen lukken en dat herhalingen vóór je toets vallen. Herhalingstaken zijn *ophaal*taken, geen herlezen:
 
 - *"Zonder te kijken: schets het klassendiagram voor een calculator voor verzendkosten die op Strategy is gebaseerd."*
 - *"Hier zijn 3 codefragmenten. Welke schendt LSP, en waarom?"* (onderscheiden bij afwisseling)
@@ -1024,14 +1081,15 @@ timeline
     Month 5 : Review at +60 days passed - long-term maintenance
 ```
 
-De **`SessionStart`-hook** toont aan het begin van elke sessie de herhalingen die aan de beurt zijn. Zo gebeurt het versterken vanzelf, zonder dat je er zelf aan hoeft te denken. Dit is het deel "leren afdwingen zolang dat nodig is": een vaardigheid is *nooit voorgoed buiten beeld*. Ze wordt alleen steeds minder vaak gecontroleerd.
+Aan het begin van elke sessie toont de **`SessionStart`-hook** de herhalingen die aan de beurt zijn. Zo gebeurt het versterken vanzelf, en hoef je er zelf niet aan te denken. Dit is het deel "leren afdwingen zolang dat nodig is": een vaardigheid is *nooit voorgoed buiten beeld*. Ze wordt alleen steeds minder vaak gecontroleerd.
 
-**Zoals gebouwd (herziening §10):** het schema 3 → 7 → 21 → 60 → 120 hierboven is vervangen.
+**Zoals gebouwd (na de eerste sessies, §10):** de harnas verving het schema 3 → 7 → 21 → 60 → 120 hierboven.
+
 - **Fibonacci-intervallen:** 1, 2, 3, 5, 8, 13, 21, 34 … dagen.
 - **Startpunt:** herhalingen beginnen zodra een vaardigheid of microvaardigheid **L3** bereikt, niet pas bij L4. Dat past bij het doel "beheerst → alleen af en toe versterken".
 - **Na een herhaling:** `pass` gaat één stap omhoog in de reeks, `shaky` herhaalt het interval en `fail` gaat **twee stappen terug**.
-- **Na twee keer `fail` op rij:** de harnas *adviseert* om één niveau omlaag te gaan. Het zet een vaardigheid nooit automatisch lager.
-- **Voor het toets:** als `settings.examDate` is ingesteld, wordt elk interval zo ingekort dat de herhaling uiterlijk 3 dagen voor het toets valt.
+- **Na twee keer `fail` op rij:** de harnas *adviseert* je om één niveau omlaag te gaan. De harnas zet een vaardigheid nooit automatisch lager.
+- **Voor je toets:** als je je toetsdatum instelt in `settings.examDate`, kort de harnas elk interval zo in dat de herhaling uiterlijk 3 dagen voor de toets valt.
 
 ```mermaid
 flowchart LR
@@ -1047,7 +1105,7 @@ flowchart LR
 
 ### 5.8 OOD-vaardighedenkaart
 
-`skill-map.yaml` legt de curriculumgraaf vast: welke vaardigheden welke andere vrijspelen, en de trefwoorden waarmee vaardigheden in prompts worden herkend. Een vaardigheid komt beschikbaar op L0 zodra de vereiste vaardigheden op ≥ L2 staan. Wil je een vaardigheid automatiseren (L4), dan moeten de vereiste vaardigheden ook op L4 staan. Zo automatiseert de AI nooit iets waarvan je de basis niet kunt controleren.
+`skill-map.yaml` legt het curriculum vast als graaf: welke vaardigheden welke andere vrijspelen, en met welke trefwoorden de harnas vaardigheden in je prompts herkent. Een vaardigheid komt beschikbaar op L0 zodra de vereiste vaardigheden op L2 of hoger staan. Een vaardigheid kan alleen geautomatiseerd worden (L4) als de vereiste vaardigheden ook op L4 staan. Zo automatiseert de AI nooit iets waarvan je de basis niet kunt controleren.
 
 ```mermaid
 flowchart TD
@@ -1112,16 +1170,16 @@ flowchart TD
 
 ## 6. Evaluatie
 
-Zo controleer je of de opzet het leren beschermt en niet alleen frictie toevoegt:
+Hoe weet je of de harnas je leren beschermt en niet alleen frictie toevoegt? Controleer deze punten:
 
-1. **Transfertests zonder hulp** bij de nulmeting, na maand 1 en voor het toets. Gebruik kleine OOD-taken *zonder AI*: ontwerp een klassendiagram, refactor een klasse met code smells, pas een patroon toe op een nieuw domein. Dit is de meting die telt. Bastani et al. (2025) lieten namelijk zien dat je prestaties tijdens het oefenen met AI weinig zeggen over je prestaties zonder AI.
-2. **Het succespercentage per vaardigheid** moet rond 70–95% liggen. Blijft het > 95%, dan is de frictie te laag. Blijft het < 70%, dan is ze te hoog.
+1. **Transfertests zonder hulp** aan het begin (nulmeting), na ongeveer een maand en kort voor je toets. Gebruik kleine OOD-taken *zonder AI*: ontwerp een klassendiagram, refactor een klasse met code smells, pas een patroon toe op een nieuw domein. Dit is de meting die het meest telt. Bastani et al. (2025) lieten zien dat hoe goed je het doet bij het oefenen met AI, weinig zegt over hoe goed je het doet zonder AI.
+2. **Het succespercentage per vaardigheid** moet rond 70–95% blijven. Blijft het boven 95%, dan is de frictie te laag. Blijft het onder 70%, dan is de frictie te hoog.
 3. **Percentage overrides.** Stijgt dat, dan is dat een teken van frustratie (R6) of van het omzeilen van de regels (R5). Lees de redenen in het dagboek.
-4. **Kalibratie.** Het verschil tussen het vertrouwen dat je vooraf inschat en je werkelijke zelfstandigheid moet in de loop van de tijd kleiner worden (R2).
-5. **Het slagingspercentage van herhalingen** voor L4-vaardigheden moet ≥ 80% zijn. Is dat niet zo, verkort dan de intervallen.
+4. **Kalibratie.** Het verschil tussen het vertrouwen dat je vooraf inschat en hoe zelfstandig je echt werkt, moet in de loop van de tijd kleiner worden (R2).
+5. **Het slagingspercentage van herhalingen** voor L4-vaardigheden moet 80% of hoger zijn. Is het lager, verkort dan de intervallen.
 6. **Tijd tot beheersing per vaardigheid.** Die moet *afnemen* voor latere vaardigheden die voortbouwen op vereiste vaardigheden die je al beheerst. Dit is een transfereffect.
-7. **Proeftoets vs. oefenen (R14).** Vergelijk je score op een proeftoets met tijdslimiet, zonder AI in Rider, met je succespercentage tijdens het oefenen. Is het verschil groot, dan zijn de omstandigheden bij het oefenen te makkelijk, of wijken ze te veel af van de toets.
-8. **Toezichtcontrole (R16, na 20 januari).** Geef jezelf een korte klasse die door AI is geschreven en waarin bewust fouten in OOD en tests zijn verstopt. Tel hoeveel fouten je zonder hulp vindt. Herhaal dit elke maand.
+7. **Proeftoets vs. oefenen (R14).** Maak een proeftoets met tijdslimiet, zonder AI, in dezelfde omgeving (IDE) als je toets. Vergelijk je score met je succespercentage tijdens het oefenen. Is het verschil groot, dan zijn je omstandigheden bij het oefenen te makkelijk, of wijken ze te veel af van de toets.
+8. **Toezichtcontrole (R16, na je toets).** Neem een korte klasse die door AI is geschreven en waarin bewust fouten in OOD en tests zijn verstopt. Tel hoeveel fouten je zonder hulp vindt. Herhaal dit elke maand.
 
 ---
 
@@ -1129,12 +1187,13 @@ Zo controleer je of de opzet het leren beschermt en niet alleen frictie toevoegt
 
 - **De bewijsbasis is jong.** De meeste studies over generatieve AI komen uit 2023–2026. Vaak hebben ze kleine steekproeven of een korte looptijd, of zijn het preprints en working papers (bijv. Kosmyna et al., 2025; Shen & Tamkin, 2026; Lehmann et al., 2025; de meeste experimenten uit 2026 in §2.8). Geen enkel experiment in het hoger onderwijs heeft gemeten wat er na meer dan ongeveer een week is blijven hangen. Effecten kunnen veranderen als de tools veranderen.
 - **Een verhalend literatuuroverzicht, één keer gecorrigeerd.** Er was geen zoekprotocol, en de eerste versie overdreef meerdere bevindingen (§11). Bij de herziening kwamen er bewijsgraden en gerichte zoekacties bij. Toch is het overzicht nog steeds niet systematisch, dus selectiebias is mogelijk.
-- **Weinig AI-onderzoek specifiek over OOD, en geen onderzoek over agentische tools.** De meeste studies naar AI in het informaticaonderwijs gaan over programmeertaken uit CS1. Ze toepassen op ontwerpvaardigheden is een afleiding uit de literatuur over misvattingen bij OOD, aangevuld met algemene leerwetenschap. Er bestaat nog geen gecontroleerde studie naar hoe studenten leren met agentische tools zoals Claude Code.
-- **Het bewijs over verschuivende vaardigheden is vooral Amerikaans, beschrijvend en commercieel.** Causale studies naar de arbeidsmarkt spreken elkaar tegen. Nederlandse gegevens zijn schaars en correlationeel. De cijfers over hoeveel code AI schrijft, komen vooral van bedrijven die AI verkopen. Geen enkele studie meet de beste mix van oefenen met de hand en oefenen in toezicht houden. §2.9 en §4.1 zijn dus afleidingen.
+- **Weinig AI-onderzoek specifiek over OOD, en geen onderzoek over agentische tools.** De meeste studies naar AI in het informaticaonderwijs gaan over programmeertaken uit CS1 (de eerste programmeercursus). Ze toepassen op ontwerpvaardigheden is een afleiding uit onderzoek naar misvattingen bij OOD, aangevuld met algemene leerwetenschap. Er bestaat nog geen gecontroleerde studie naar hoe studenten leren met agentische tools zoals Claude Code.
+- **Het bewijs over de verschuiving in vaardigheden is vooral Amerikaans, beschrijvend en commercieel.** Causale studies naar de arbeidsmarkt spreken elkaar tegen. Nederlandse gegevens zijn schaars en correlationeel. De cijfers over hoeveel code AI schrijft, komen vooral van bedrijven die AI verkopen. Geen enkele studie meet de beste mix van oefenen met de hand en oefenen in toezicht op AI-uitvoer. §2.9 en §4.1 zijn dus afleidingen.
 - **Belangenconflict.** Dit document is geschreven door Claude, een model van Anthropic, en het steunt op sommige plekken op onderzoek van Anthropic. Controleer de belangrijke beweringen via de gelinkte bronnen.
-- **Hooks zijn een middel om jezelf te binden, geen beveiliging.** Je kunt ze altijd uitzetten, en de AI vindt soms routes om de regels heen (bijv. shell-commando's die bestanden schrijven). De opzet werkt omdat *jij* ervoor hebt gekozen. Je kunt de `PreToolUse`-matcher uitbreiden naar `Bash` voor veelgebruikte commando's die bestanden schrijven, maar dit wordt nooit waterdicht. Hooks kunnen ook de andere kant op de fout in gaan. Tot 8 november 2026 werden agentrapporten behandeld als prompts van de lerende, en speelden ze zo hinttreden vrij (§10.2, punt 10).
-- **Drempels voor beheersing zijn heuristieken.** De getallen (85%, 3 successen over 2 dagen, intervallen) komen uit de literatuur, maar zijn niet getoetst voor deze specifieke opzet. Pas ze aan met je eigen evaluatiegegevens (§6).
-- **Vaardigheden herkennen in prompts lukt maar bij benadering.** Koppelen op trefwoorden gaat soms mis. Laat de AI een koppeling voorstellen en bevestig die, of geef de vaardigheid expliciet aan (`/learn ood.strategy`).
+- **Hooks zijn een middel om jezelf te binden (commitment device), geen beveiliging.** Je kunt ze altijd uitzetten, en de AI vindt soms routes om de regels heen (bijv. shell-commando's die bestanden schrijven). Daarom kan de harnas tegenover een docent niet bewijzen dat een student zonder AI heeft gewerkt. De harnas werkt omdat *jij* ervoor hebt gekozen. Je kunt de `PreToolUse`-matcher uitbreiden naar `Bash` voor veelgebruikte commando's die bestanden schrijven, maar dit wordt nooit waterdicht. Hooks kunnen ook de andere kant op de fout in gaan. In de eerste sessies van de pilot werden rapporten van achtergrondagents behandeld als de eigen prompts van de student, en speelden ze zo hinttreden vrij, totdat dit werd opgelost (§10.2, punt 10).
+- **Tot nu toe door één student uitgeprobeerd.** Het ontwerp is voor het eerst uitgeprobeerd in een pilot met één student. Wat §10 beschrijft, komt uit die eerste sessies. Het laat zien wat er misging en wat er is veranderd, niet hoe goed de harnas werkt voor studenten in het algemeen.
+- **Drempels voor beheersing zijn heuristieken.** De getallen (85%, 3 successen over 2 dagen, de intervallen) komen uit de literatuur, maar zijn niet gevalideerd voor deze opzet. Pas ze aan met je eigen evaluatiegegevens (§6).
+- **Vaardigheden herkennen in prompts lukt maar bij benadering.** Koppelen op trefwoorden kiest soms de verkeerde vaardigheid. Laat de AI een vaardigheid voorstellen en bevestig die, of noem de vaardigheid zelf (`/learn ood.strategy`).
 
 ---
 
@@ -1227,7 +1286,7 @@ Zo controleer je of de opzet het leren beschermt en niet alleen frictie toevoegt
 - Wood, H., & Wood, D. (1999). Help seeking, learning and contingent tutoring. *Computers & Education, 33*(2–3), 153–169.
 - Zimmerman, B. J. (2002). Becoming a self-regulated learner: An overview. *Theory Into Practice, 41*(2), 64–70.
 
-**Automatisering en cognitieve offloading**
+**Automatisering en cognitief uitbesteden**
 
 - Bainbridge, L. (1983). Ironies of automation. *Automatica, 19*(6), 775–779.
 - Endsley, M. R., & Kiris, E. O. (1995). The out-of-the-loop performance problem and level of control in automation. *Human Factors, 37*(2), 381–394.
@@ -1343,7 +1402,7 @@ Zo controleer je of de opzet het leren beschermt en niet alleen frictie toevoegt
 - Wang & Fan (2025). [Meta-analysis of ChatGPT and learning performance]. *Humanities and Social Sciences Communications*. **Retracted in 2026.** https://www.nature.com/articles/s41599-025-04787-y
 - Yang, Van Alstyne, & Dellarocas (2026). *When AI tutors speak* [full title not verified]. arXiv:2609.23958 [preprint].
 
-*Verschuiving van vaardigheden: industrie, arbeidsmarkt, deskilling en toetsbeleid*
+*Verschuiving van vaardigheden: industrie, arbeidsmarkt, vaardigheidsverlies en toetsbeleid*
 
 - Abdulnour, Gin, & Boscardin (2025). Educational strategies for clinical supervision of artificial intelligence use. *New England Journal of Medicine, 393*(8), 786–797. https://doi.org/10.1056/NEJMra2503232
 - Anthropic. (2025b, December 2). *How AI is transforming work at Anthropic* [vendor]. https://www.anthropic.com/research/how-ai-is-transforming-work-at-anthropic
@@ -1399,11 +1458,11 @@ Zo controleer je of de opzet het leren beschermt en niet alleen frictie toevoegt
 
 ## Bijlage: implementatieschetsen
 
-> Dit zijn **schetsen** die laten zien dat het ontwerp te bouwen is. Ze zijn nog niet geïnstalleerd in je Claude Code-configuratie. De paden gaan uit van een `.claude/`-map op projectniveau en een `.learning/`-datamap. We gebruiken Node.js, omdat Claude Code dat al nodig heeft. Zo werkt het op Windows, macOS en Linux op dezelfde manier.
+> Dit zijn **schetsen** die laten zien dat het ontwerp te bouwen is. Ze horen pas bij je Claude Code-configuratie als je ze zelf toevoegt. De paden gaan uit van een `.claude/`-map op projectniveau en een `.learning/`-datamap. We gebruiken Node.js, omdat Claude Code dat al nodig heeft. Zo werkt het op Windows, macOS en Linux op dezelfde manier.
 
 ### A. Mapindeling
 
-**Zoals gebouwd (7 nov 2026):**
+**Zoals gebouwd voor de pilot:**
 
 ```text
 ood/
@@ -1592,16 +1651,19 @@ if (state.activeSkill && !diaryHasEntry(input.session_id)) {
 ### G. Protocol van de skill `/mastery-check` (samenvatting)
 
 1. Genereer een **nieuwe transfertaak** voor de vaardigheid, in een onbekend domein (bijv. Strategy voor belastingregels in plaats van verzending).
-2. De lerende lost die op **zonder hints**. De `prompt-gate` behandelt trede = 0 als vergrendeld.
+2. De student lost die op **zonder hints**. De `prompt-gate` behandelt trede = 0 als vergrendeld.
 3. Stel 3 uitlegvragen: *waarom dit ontwerp?*, *wat gaat er mis met alternatief X?*, *wanneer zou je het NIET gebruiken?*
 4. Beoordeel het met een rubric. Geslaagd betekent: een werkende oplossing, ≥ 2/3 uitlegantwoorden goed, en ≥ 2 zelfstandige successen in het vaardighedenregister op verschillende dagen.
 5. Bij slagen: `level = L4`, `nextReview = today + 3d`. Bij zakken: blijf op L3 en log de concrete hiaten als focus voor de volgende sessie.
 
 ---
 
-## 10. Herziening 7 nov 2026: lessen uit de eerste sessies
+## 10. Wat we leerden van de eerste sessies
 
-De harnas draaide voor het eerst op 7 november 2026, in drie leersessies: snek opzetten, `02-namen` en `03-lijsten`. Daarna zijn de transcripten en `events.jsonl` geanalyseerd. Deze sectie legt vast wat er misging en wat er is veranderd. De leidende eis van de lerende: **herken zo snel mogelijk wat beheerst wordt, en versterk dat daarna alleen af en toe, zodat de meeste tijd vóór de toets naar nieuwe stof gaat** (werkdatum `examDate` 2027-01-20; de toetsopdracht verschijnt in week 10).
+In de eerste sessies van de pilot gebruikte één student de harnas in drie leersessies: de snek-oefeningen opzetten, `02-namen` en `03-lijsten`. Daarna zijn de transcripten en `events.jsonl` geanalyseerd. Deze sectie beschrijft wat er misging en wat er daardoor is veranderd. De leidende eis van de student was: **herken zo snel mogelijk wat beheerst wordt, en versterk dat daarna alleen af en toe, zodat de meeste tijd vóór de toets naar nieuwe stof gaat.**
+
+!!! example "Voorbeeld: de situatie van één student"
+    De student in de pilot was een tweedejaars HBO-ICT-student die zich voorbereidde op een OOD-toets zonder AI (AI-niveau 0/1). In de harnas stond `examDate` op de werkdatum 2027-01-20, en de toetsopdracht zou in week 10 verschijnen. De drie sessies vonden plaats op 7 november 2026. Een controle na de eerste maand stond gepland voor 15 december 2026.
 
 ### 10.1 Wat de data lieten zien
 
@@ -1612,62 +1674,70 @@ De harnas draaide voor het eerst op 7 november 2026, in drie leersessies: snek o
 | Vaardigheden waren te grof | `cs.basis` mengt lijsten filteren (beheerst), strings (beheerst), `GetRange` (trede 2), void/chaining en referentie-vs-kopie (moeilijk) | Eén moeilijk deelonderwerp zette na één taak de hele vaardigheid terug van L3 → L2, in strijd met de vastgelegde regel "< 70% of 2 mislukkingen" |
 | Hulp op L3 werd niet gemeten | Op L3 gaf Claude analogieën en uitleg van concepten (in feite trede 2–3), maar er werd geen trede vastgelegd | Een taak kon na flink wat hulp toch als "zelfstandig" gelogd worden |
 | Herhalingen bestonden alleen op L4 | `nextReview` werd alleen ingesteld als een vaardigheid op L4 werd gezet | "Beheerst → af en toe versterken" lag nog weken weg |
-| Tooling vrat leertijd | Ongeveer een uur ging op aan snek, de `.vs`-lock, de mismatch tussen VS 2022 en .NET 10, en usings die verdwenen bij opslaan | Geen examenstof. De guard blokkeerde ook `dotnet --list-sdks` en de alleen-lezen-opdracht `find … 2>/dev/null` (vals-positieven) |
+| Tooling vrat leertijd | Ongeveer een uur ging op aan snek, de `.vs`-lock, de mismatch tussen VS 2022 en .NET 10, en usings die verdwenen bij opslaan | Geen toetsstof. De guard blokkeerde ook `dotnet --list-sdks` en de alleen-lezen-opdracht `find … 2>/dev/null` (vals-positieven) |
 | De consoliderende uitleg kwam nooit | Er werd twee keer om gevraagd zonder antwoord, en toch telde de taak mee | Geen consolidatie |
 | Testuitvoer lezen was maar half beheerst | Expected/But was werd correct beredeneerd, maar de samenvatting was niet leesbaar. "Ligt het aan de test?" liet een misvatting zien over waarneembaar gedrag | Dit is echte leerstof voor de microvaardigheden `test.*` |
 
-### 10.2 Wijzigingen
+### 10.2 Wat er is veranderd
 
-1. **Objectief bewijs: `check.mjs`.** De lerende voert het zelf uit. Het werkt voor elk .NET-testproject, voor snek en voor projectwerk. Een overgang rood→groen wordt gelogd als taak, met de trede die op dat moment gold. De eerste run per map is een nulmeting. Koppeling aan een vaardigheid gaat in deze volgorde: het pad van de solution-map, dan trefwoorden in test- en klassennamen, dan de actieve vaardigheid van de sessie. Claude mag het op L1–L3 niet uitvoeren (guard).
+1. **Objectief bewijs: `check.mjs`.** De student voert het zelf uit. Het werkt voor elk .NET-testproject, voor de snek-oefeningen en voor projectwerk. Een overgang rood→groen wordt gelogd als taak, met de trede die op dat moment gold. De eerste run per map is een nulmeting. Koppeling aan een vaardigheid gaat in deze volgorde: het pad van de solution-map, dan trefwoorden in test- en klassennamen, dan de actieve vaardigheid van de sessie. Claude mag het op L1–L3 niet uitvoeren (guard).
 2. **Strenger loggen op trefwoorden, plus het commando `done`.** "het werkt" telt alleen mee met code- of testcontext, en nooit samen met toolingwoorden. Claude stelt het commando `done` voor bij successen zonder tests, zoals ontwerp of UML.
-3. **Microvaardigheden.** Items met een `parent`, een eigen niveau, eigen trefwoorden en eigen herhalingen. Ze sturen de hintladder. De guard blijft werken op basis van paden, met het niveau van de bovenliggende vaardigheid. Claude stelt nieuwe voor (`add-micro`) en de lerende maakt ze aan. De statistieken van de bovenliggende vaardigheid tellen ook de taken van haar microvaardigheden mee.
+3. **Microvaardigheden.** Items met een `parent`, een eigen niveau, eigen trefwoorden en eigen herhalingen. Ze sturen de hintladder. De guard blijft werken op basis van paden, met het niveau van de bovenliggende vaardigheid. Claude stelt nieuwe voor (`add-micro`) en de student maakt ze aan. De statistieken van de bovenliggende vaardigheid tellen ook de taken van haar microvaardigheden mee.
 4. **Harde controle op uitleg in eigen woorden (twee sleutels).** Een taak blijft open, ook over sessies heen, tot hij is uitgelegd.
-   - Sleutel 1: Claude beoordeelt de inhoud en schrijft `[uitleg-ok <tid>]`.
-   - Sleutel 2: `reflect-gate.mjs` controleert het eigen bericht van de lerende deterministisch: minstens 12 woorden buiten code, een causaal verbindingswoord, en hoogstens 40% van de reeksen van 5 woorden overgenomen uit eerdere tekst van Claude.
-   - Er is geen CLI-commando om een taak als uitgelegd te markeren. Promotie via `set` wordt geweigerd zolang er taken van die vaardigheid open staan. Claude kan niet schrijven in `.learning/state/`.
-   - *Onderbouwing:* zelfuitleg en ophalen uit het geheugen (Chi et al., 1989; Roediger & Karpicke, 2006), en het vermijden van de illusie van competentie (Prather et al., 2024).
+            - Sleutel 1: Claude beoordeelt de inhoud en schrijft `[uitleg-ok <tid>]`.
+            - Sleutel 2: `reflect-gate.mjs` controleert het eigen bericht van de student deterministisch: minstens 12 woorden buiten code, een causaal verbindingswoord, en hoogstens 40% van de reeksen van 5 woorden overgenomen uit eerdere tekst van Claude.
+            - Er is geen CLI-commando om een taak als uitgelegd te markeren. Promotie via `set` wordt geweigerd zolang er taken van die vaardigheid open staan. Claude kan niet schrijven in `.learning/state/`.
+            - *Onderbouwing:* zelfuitleg en ophalen uit het geheugen (Chi et al., 1989; Roediger & Karpicke, 2006), en het vermijden van de illusie van competentie (Prather et al., 2024).
 5. **Eerlijk loggen van treden op elk niveau.** Claude markeert inhoudelijke hulp met `[trede N]`. De Stop-hook verhoogt op basis daarvan de hoogste trede van de taak.
-6. **Actief positieve signalen geven.** Dat gebeurt direct na een taak op trede 0–2, bij de start van een sessie (recente successen op trede 0 en kandidaten voor promotie, met het precieze commando) en in het dagboek. De promotiecriteria zijn *niet* versoepeld. De lerende koos er bewust voor om geen versnelde route via een uitdaging te nemen.
-7. **Fibonacci-herhalingen vanaf L3,** begrensd door de examendatum (§5.7).
+6. **Actief positieve signalen geven.** Dat gebeurt direct na een taak op trede 0–2, bij de start van een sessie (recente successen op trede 0 en kandidaten voor promotie, met het precieze commando) en in het dagboek. De promotiecriteria zijn *niet* versoepeld. De student koos er bewust voor om geen versnelde route via een uitdaging te nemen.
+7. **Fibonacci-herhalingen vanaf L3,** begrensd door de toetsdatum (§5.7).
 8. **Tooling als L4-zone, plus reparaties aan de guard.**
-   - Alleen `dotnet build|test|run|new|add|…` en `check.mjs` tellen als bouwen of testen.
-   - Omleidingen naar `/dev/null` of `$null`, en `=>` / `->`, tellen niet meer als schrijven.
-   - Een `cd <dir> &&` aan het begin bepaalt de werkelijke werkmap.
-   - Paden binnen `.claude/` en `.learning/` zijn geen code van de lerende.
+            - Alleen `dotnet build|test|run|new|add|…` en `check.mjs` tellen als bouwen of testen.
+            - Omleidingen naar `/dev/null` of `$null`, en `=>` / `->`, tellen niet meer als schrijven.
+            - Een `cd <dir> &&` aan het begin bepaalt de werkelijke werkmap.
+            - Paden binnen `.claude/` en `.learning/` zijn geen code van de student.
 9. **Discipline bij degraderen.** Eén worsteling leidt tot een microvaardigheid op een lager niveau of tot een korte override, niet tot degradatie van de bovenliggende vaardigheid.
-10. **Agentberichten zijn niet de woorden van de lerende (8 nov 2026).**
-    - **Het probleem:** in een sessie met onderzoeksagents op de achtergrond kwam elk agentrapport en elke taakmelding bij `UserPromptSubmit` binnen alsof de lerende het had getypt.
-      - `prompt-gate.mjs` herkende vaardigheden in de rapporttekst en ontgrendelde hinttreden als "poging herkend", omdat rapporten woorden bevatten als *error* en *I think*.
-      - Een rapport met "all tests passed" had een nep-taak kunnen loggen.
-      - Het rapport werd ook `lastPrompt`: de tekst die de uitlegcontrole leest.
-      - Er zijn vijf onterechte `hint-unlock`-events gelogd (sessie `afe9df34…`, 7 nov, 22:06–22:16 UTC).
-    - **De oplossing:** `learnerText()` en `isLearnerEntry()` in `lib.mjs`.
-      - Een prompt die begint als een agentrapport of taakmelding wordt in zijn geheel genegeerd.
-      - System-reminder-blokken binnen een echt bericht worden verwijderd.
-      - `prompt-gate` logt dan één `prompt-ignored`-event en stopt.
-      - `reflect-gate` ziet alleen de eigen berichten van de lerende als het begin van "het laatste antwoord".
-    - **Waarom op basis van tekst:** de echte hook-invoer heeft geen veld voor de herkomst (`cwd, hook_event_name, permission_mode, prompt, prompt_id, scratchpad_dir, session_id, transcript_path`). Daarom moet de detectie op de tekst steunen.
+10. **Agentberichten zijn niet de woorden van de student (een latere reparatie).**
+                - **Het probleem:** in een sessie met onderzoeksagents op de achtergrond kwam elk agentrapport en elke taakmelding bij `UserPromptSubmit` binnen alsof de student het had getypt.
+                        - `prompt-gate.mjs` herkende vaardigheden in de rapporttekst en ontgrendelde hinttreden als "poging herkend", omdat rapporten woorden bevatten als *error* en *I think*.
+                        - Een rapport met "all tests passed" had een nep-taak kunnen loggen.
+                        - Het rapport werd ook `lastPrompt`: de tekst die de uitlegcontrole leest.
+                        - Er zijn vijf onterechte `hint-unlock`-events gelogd, binnen tien minuten in één sessie.
+                - **De oplossing:** `learnerText()` en `isLearnerEntry()` in `lib.mjs`.
+                        - Een prompt die begint als een agentrapport of taakmelding wordt in zijn geheel genegeerd.
+                        - System-reminder-blokken binnen een echt bericht worden verwijderd.
+                        - `prompt-gate` logt dan één `prompt-ignored`-event en stopt.
+                        - `reflect-gate` ziet alleen de eigen berichten van de student als het begin van "het laatste antwoord".
+                - **Waarom op basis van tekst:** de echte hook-invoer heeft geen veld voor de herkomst (`cwd, hook_event_name, permission_mode, prompt, prompt_id, scratchpad_dir, session_id, transcript_path`). Daarom moet de detectie op de tekst steunen.
 
-### 10.3 Open punten om te evalueren (controle na maand 1, 15 dec 2026)
+### 10.3 Open punten om na de eerste maand te evalueren
 
 - **Controles van drempels:**
-  - Is 12 woorden / 40% overlap een goede drempel, of wijst die eerlijke korte uitleg af? Bekijk de `explain-rejected`-events.
-  - Werkt de koppeling aan vaardigheden op pad of trefwoord in `check.mjs` voor de projectstructuur van de toets?
+    - Is 12 woorden / 40% overlap een goede drempel, of wijst die eerlijke korte uitleg af? Bekijk de `explain-rejected`-events.
+    - Werkt de koppeling aan vaardigheden op pad of trefwoord in `check.mjs` voor de projectstructuur van de toets?
 - **Controles van gedrag:**
-  - Markeert Claude hulp op L3 echt met `[trede N]`? Vergelijk de `rung-mark`-events met de transcripten.
-  - Blijft het aantal `untask`-events laag? Een hoog aantal zou betekenen dat het loggen nog veel ruis bevat.
+    - Markeert Claude hulp op L3 echt met `[trede N]`? Vergelijk de `rung-mark`-events met de transcripten.
+    - Blijft het aantal `untask`-events laag? Een hoog aantal zou betekenen dat het loggen nog veel ruis bevat.
 - **Guard:** shelltekst die een registercommando alleen maar *noemt* (bijv. in een heredoc), wordt geblokkeerd. Dit is een bewuste afweging: de guard is een zelfbindingsmiddel (commitment device), dus hij kiest bij twijfel voor streng.
 - **Agentverkeer:**
-  - Controleer dat elk agentrapport een `prompt-ignored`-event oplevert, en dat geen enkel echt bericht dat doet.
-  - Filter de vijf onterechte `hint-unlock`-events van 7 nov (sessie `afe9df34…`) uit elke evaluatie.
+    - Controleer dat elk agentrapport een `prompt-ignored`-event oplevert, en dat geen enkel echt bericht dat doet.
+    - Filter de vijf onterechte `hint-unlock`-events van die sessie uit elke evaluatie.
 
 ---
 
 ## 11. Wijzigingslog
 
+### 10 november 2026: herschreven voor studenten en docenten
+
+- **Algemene hoofdtekst.** De hoofdtekst richt zich nu tot studenten die leren programmeren met AI. De situatie van de student voor wie het document eerst geschreven is, blijft staan in korte, geanonimiseerde voorbeeldkaders. Bewijs, bewijsgraden, citaties en literatuur zijn niet veranderd.
+- **§4 als stappenplan.** §4 is nu een algemeen stappenplan, met een timing ten opzichte van de eigen toetsdatum van de lezer. De grafiek met vaste data is een tabel geworden.
+- **§4.2 voor docenten en opleidingen.** §4.2 is nu een apart deel voor docenten en opleidingen.
+- **§10 als ervaringsverslag.** §10 beschrijft nu, in de derde persoon, wat de eerste sessies van de pilot lieten zien en wat er daardoor is veranderd.
+
 ### 8 november 2026: onderzoeksupdate en kritische beoordeling van het literatuuronderzoek
 
 **Waarom.** De eerste versie (7 november) had drie zwakke punten:
+
 - **Geen methode:** er was geen zoekmethode.
 - **Gemengd bewijs:** bewijs van heel verschillende sterkte stond naast elkaar.
 - **Eenzijdige risico's:** alleen de risico's van het *gebruik* van AI kwamen aan bod.
@@ -1678,7 +1748,7 @@ Een kritische lezing en twee citatiecontroles tegen de primaire bronnen brachten
 
 | Waar | Was | Nu | Bron van de correctie |
 |---|---|---|---|
-| §1, §2.8 | "Het interactiepatroon bepaalt het leerresultaat" ("waar het vakgebied het over eens is") | De effecten van de patronen zijn correlationeel; de beste werkhypothese, geen bevinding | In elke studie kozen lerenden zelf hun patroon. De patronen van Shen & Tamkin zijn achteraf vastgesteld, met 2–7 personen per patroon |
+| §1, §2.8 | "Het interactiepatroon bepaalt het leerresultaat" ("waar het vakgebied het over eens is") | De effecten van de patronen zijn correlationeel; de beste werkhypothese, geen bevinding | In elke studie kozen studenten zelf hun patroon. De patronen van Shen & Tamkin zijn achteraf vastgesteld, met 2–7 personen per patroon |
 | §1, §2.8 | Lehmann et al.: oplossingen vs. uitleg; LLM's vergroten verschillen | Geen van beide labexperimenten vond een gemiddeld effect; het contrast is observationeel; de "groeiende kloof" is een verkennende mediaansplitsing | Citatiecontrole |
 | §2.8 | Kazemitabaar 2023b: kopiëren en plakken "hangt samen met slechter onthouden" | Observationeel; trends, niet significant | Citatiecontrole |
 | §2.8 | Lyu 2024: "winst voor AI-gebruikers" | Niet gerandomiseerd; geen directe statistische toets tussen de groepen | Citatiecontrole |
@@ -1691,7 +1761,7 @@ Een kritische lezing en twee citatiecontroles tegen de primaire bronnen brachten
 | §2.5 | Optimale tussenpoos bij spreiding "10–20% van het retentie-interval" | 20–40% bij een uitstel van een week, dalend naar 5–10% bij een uitstel van een jaar | Cepeda et al. 2008 |
 | §2.5, §5.7 | Gesuggereerd dat groeiende intervallen beter zijn | Niet beter dan gelijke tussenpozen bij een uitgestelde test | Latimier et al. 2021; Karpicke & Roediger 2007; Kang et al. 2014 |
 | §2.10 | Het "Google-effect" van Sparrow als bevinding | Omstreden: de replicatie van het eerste experiment mislukte | Camerer et al. 2018; Hesselmann 2020 |
-| §2.10 | Offloading "vermindert het interne geheugen" | Het kan ook capaciteit vrijmaken; het kost vooral geheugen als er geen leerdoel is | Storm & Stone 2015; Grinschgl et al. 2021 |
+| §2.10 | Uitbesteden "vermindert het interne geheugen" | Het kan ook capaciteit vrijmaken; het kost vooral geheugen als er geen leerdoel is | Storm & Stone 2015; Grinschgl et al. 2021 |
 | §2.7 | Feedback d ≈ 0.79 (Hattie & Timperley) | d = 0.48; meer dan een derde van de feedbackinterventies schaadt de prestatie | Wisniewski et al. 2020; Kluger & DeNisi 1996 |
 | §2.8 | Peng et al.: "n = 95" | 95 geworven, 35 per groep maakten het af | Citatiecontrole |
 | §2.8 | METR "19% langzamer" als het actuele beeld | Het vervolgonderzoek van februari 2026 was onbetrouwbaar, en METR ontwerpt de studie opnieuw | METR 2026a |
@@ -1699,22 +1769,24 @@ Een kritische lezing en twee citatiecontroles tegen de primaire bronnen brachten
 | §2.8 | Anthropic Education Report: CS "sterk oververtegenwoordigd" | 36.8% (kernbevindingen) of 38.6% (hoofdtekst) van de gesprekken vs. 5.4% van de Amerikaanse diploma's | Citatiecontrole |
 
 **Toegevoegd:**
+
 - **§2.0:** methode, bewijsgraden A–D, belangenconflicten (ook die van dit document zelf) en de twee tijdshorizonnen.
 - **§2.6:** oefenomstandigheden en transfer naar de toets.
 - **§2.8:** bewijsgraden in de tabellen, de studies van mei–november 2026, de intrekking van Wang & Fan (2025) en conclusies met een bewijsgraad.
-- **§2.9:** de verschuiving in gevraagde vaardigheden: hoeveel code AI schrijft, productiviteit, kwaliteit, kosten, banen (VS, EU, Nederland), verwachtingen van werkgevers, curricula en de eigen AI-niveaus van CHE, en een oordeel met bewijsgraad over "met de hand geschreven code is niet meer rendabel".
-- **§2.10:** cognitive forcing en overmatig vertrouwen, plus deskilling en de "paradox van het toezicht".
+- **§2.9:** de verschuiving in gevraagde vaardigheden: hoeveel code AI schrijft, productiviteit, kwaliteit, kosten, banen (VS, EU, Nederland), verwachtingen van werkgevers, curricula en de eigen AI-niveaus van een instelling, en een oordeel met bewijsgraad over "met de hand geschreven code is niet meer rendabel".
+- **§2.10:** cognitive forcing en overmatig vertrouwen, plus vaardigheidsverlies en de "paradox van het toezicht".
 - **§2.11:** principes P11–P13 en een kolom voor de sterkte van het bewijs.
 - **§3:** bewijsgraden en een horizon voor elk risico; R9 en R12 opnieuw gescoord; nieuwe risico's R14–R18.
 - **§4:** maatregelen voor R14–R18, plus §4.1 (het oefenen opnieuw in balans brengen) en §4.2 (gesprekspunten voor het gesprek over AI-beleid).
 - **Elders:**
-  - §6, punten 7–8, en de beperkingen in §7;
-  - in §8 correcties op bestaande verwijzingen en meer dan 100 nieuwe;
-  - §10.2, punt 10 (de reparatie van de hook).
+    - §6, punten 7–8, en de beperkingen in §7;
+    - in §8 correcties op bestaande verwijzingen en meer dan 100 nieuwe;
+    - §10.2, punt 10 (de reparatie van de hook).
 
-**Niet veranderd:** het ontwerp van de harnas (§5) en de regels ervan (`CLAUDE.md`). De wijzigingen in het vaardighedenregister in §4.1 zijn voorstellen; de lerende voert ze zelf door.
+**Niet veranderd:** het ontwerp van de harnas (§5) en de regels ervan (`CLAUDE.md`). De wijzigingen in het vaardighedenregister in §4.1 zijn voorstellen; de student die de harnas gebruikt, beslist of ze worden doorgevoerd.
 
 **Hoe deze herziening tot stand kwam:**
+
 - **Onderzoek:** zes onderzoeksagents van Claude zochten op 7–8 november 2026 op het web. Vier zochten nieuw bewijs en twee controleerden de oorspronkelijke citaties.
 - **Notities:** hun notities, met een link bij elk cijfer, staan in `research_notes/AI learning and skill shift 2026/`. Cijfers die de agents alleen in zoekfragmenten of in secundaire berichtgeving zagen, zijn daar als zodanig gemarkeerd.
 - **Synthese:** er is een apart syntheserapport geprobeerd, maar de schrijvende agent liep twee keer vast. Daarom is de synthese vanuit de notities direct in dit document geschreven.
