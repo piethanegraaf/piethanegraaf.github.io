@@ -18,8 +18,9 @@ Every chart has a table view. You can switch between Dutch and English, and betw
 ## Publishing your own data
 
 1. Create `.learning/private.json` with the names and terms that must not go online (see [Configuration and privacy](configuration.md#privacy)).
-2. First look at what will be filtered: `node harness/export.mjs ../my-practice-folder --dry-run`
-3. Export: `node harness/export.mjs ../my-practice-folder`
-4. Check the diff of `site-src/dashboard/data/progress.json`, then commit and push it yourself.
+2. Did an approved explanation get lost, for example through a harness bug? Recover it first with `replay` (see the [reference](reference.md)). Otherwise the task shows up online as open or skipped.
+3. Look at what will be filtered: `node harness/export.mjs ../my-practice-folder --dry-run`
+4. Export: `node harness/export.mjs ../my-practice-folder`
+5. Check the diff of `site-src/dashboard/data/progress.json`, then commit and push it yourself. The dashboard shows the date and time of the export, so you can see how current it is.
 
 The dashboard is static: HTML, CSS and JavaScript without dependencies, with a strict Content Security Policy. All text from the data goes into the page through `textContent`.

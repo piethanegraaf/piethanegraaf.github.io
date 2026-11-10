@@ -121,6 +121,10 @@ main:focus { outline: none; }
 .skill-name .id { font-size: 12px; color: var(--muted); font-family: var(--mono); overflow-wrap: anywhere; }
 .skill-name .title { font-size: 14px; overflow-wrap: anywhere; }
 .chip { font-size: 12px; font-weight: 600; padding: 2px 8px; border-radius: 999px; white-space: nowrap; }
+/* Placement open: not on a level yet. The neutral with texture, as for skipped tasks: no new hue. */
+.chip.open { background: var(--surface); color: var(--ink); box-shadow: inset 0 0 0 1px var(--pending); }
+.segbar .block.open { background: repeating-linear-gradient(45deg, var(--pending) 0 3px, var(--surface) 3px 6px); color: var(--ink); box-shadow: inset 0 0 0 1px var(--pending); }
+.legend .sw.open { background: repeating-linear-gradient(45deg, var(--pending) 0 2px, var(--surface) 2px 4px); box-shadow: inset 0 0 0 1px var(--pending); }
 .meter { display: grid; gap: 3px; }
 .meter .track { position: relative; height: 8px; border-radius: 4px; background: var(--track); }
 .meter .fill { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 4px; background: var(--accent); }

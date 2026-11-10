@@ -8,12 +8,13 @@
       loading: "Laden…", loadError: "De data kon niet geladen worden ({file}). Open het dashboard via een webserver, bijvoorbeeld: python -m http.server",
       fallback: "Er is nog geen echte data (data/progress.json). Je ziet de demo met verzonnen data.",
       demoNote: "Demo: alle data is verzonnen. Zo ziet het dashboard eruit na een paar weken oefenen.",
-      subtitle: "{course} · stand van {date}", subtitleNoCourse: "Stand van {date}",
-      filter: "Vaardigheid", all: "Alle vaardigheden", asof: "Alle cijfers gelden op {date}, de dag van de export.",
+      subtitle: "{course} · stand van {date}", subtitleNoCourse: "Stand van {date}", atTime: "{date}, {time}",
+      filter: "Vaardigheid", all: "Alle vaardigheden", asof: "Alle cijfers gelden op het moment van de export: {date}.",
       kSolo: "Zelfstandig gelukt", kSoloSub: "{ok} van {n} uitgelegde taken, trede ≤ 2", kPending: "Wacht op uitleg", kPendingSub: "{skipped} overgeslagen · uitleg hoort direct na het groen worden",
       kReviews: "Herhalingen (L4)", kReviewsSub: "klaar; je doet ze zelf als ze in je werk langskomen", kExam: "Tot de toets", kExamSub: "{date}", kNoExam: "geen datum",
       days: "{n} dagen", day: "1 dag", none: "–",
-      levels: "Niveaus", levelsHint: "Hoeveel vaardigheden (en microvaardigheden) op elk niveau staan.", skillsN: "{n} vaardigheden",
+      levels: "Niveaus", levelsHint: "Hoeveel vaardigheden (en microvaardigheden) op elk niveau staan. Bij een open plaatsing probeer je eerst zelf, met de hintladder van L2; de eerste taak bepaalt het niveau.", skillsN: "{n} vaardigheden",
+      placementGroup: "Plaatsing open", openChip: "Plaatsing open · L2-ladder",
       showTable: "Tabel", showChart: "Grafiek", level: "Niveau", name: "Naam", count: "Aantal", skillsCol: "Vaardigheden",
       skills: "Per vaardigheid", skillsHint: "Gelukt = opgelost met hooguit trede 2, over de laatste 10 uitgelegde taken. Het streepje is het doel ({pct}%).",
       solved: "{ok}/{n} gelukt", noTasks: "nog geen uitgelegde taken", open: "{n} uitleg open", next: "herhaling {date}",
@@ -35,20 +36,22 @@
       diary: "Dagboek", diaryHint: "De feiten logt de harnas; de reflectie staat er in de eigen woorden van de student.",
       plan: "Plan", wentWell: "Ging goed", learned: "Geleerd", confusing: "Verwarrend", confidence: "Zelfvertrouwen", nextStep: "Volgende stap", calib: "Kalibratie",
       noDiary: "Nog geen dagboekentries.", activity: "Activiteit", sessions: "Sessies", hints: "Hints", holds: "Geen nieuwe trede", denials: "Guard-weigeringen", overridesUsed: "Overrides gebruikt",
-      footAi: "AI-verklaring: de leerharnas, dit dashboard en de docs zijn gemaakt met hulp van Claude (Anthropic). De leerdata en de reflecties zijn van de student zelf.",
-      footLicense: "Code: AGPL-3.0 · teksten en data: CC BY-NC 4.0", footSource: "Broncode en uitleg", focus: "Ga naar {id}", tableRegion: "Tabel, scrollbaar",
+      footAi: "De leerharnas, dit dashboard en de docs zijn gemaakt met hulp van Claude (Anthropic). De leerdata en de reflecties zijn van de student zelf.", footAiLink: "AI-verklaring", footAiHref: "../ai-statement/",
+      footCode: "Code", footOr: "of een", footCommercial: "commerciële licentie", footTexts: "teksten en data",
+      footSource: "Broncode op GitHub", footDocs: "Uitleg bij het dashboard", footDocsHref: "../progress-dashboard/", focus: "Ga naar {id}", tableRegion: "Tabel, scrollbaar",
     },
     en: {
       skip: "Skip to content", title: "Learning dashboard", brand: "Learning harness", real: "Real data", demo: "Demo", theme: "Toggle theme",
       loading: "Loading…", loadError: "The data could not be loaded ({file}). Open the dashboard through a web server, for example: python -m http.server",
       fallback: "There is no real data yet (data/progress.json). You see the demo with made-up data.",
       demoNote: "Demo: all data is made up. This is what the dashboard looks like after a few weeks of practice.",
-      subtitle: "{course} · as of {date}", subtitleNoCourse: "As of {date}",
-      filter: "Skill", all: "All skills", asof: "All figures are as of {date}, the day of the export.",
+      subtitle: "{course} · as of {date}", subtitleNoCourse: "As of {date}", atTime: "{date}, {time}",
+      filter: "Skill", all: "All skills", asof: "All figures are as of the moment of the export: {date}.",
       kSolo: "Solved independently", kSoloSub: "{ok} of {n} explained tasks, rung ≤ 2", kPending: "Waiting for an explanation", kPendingSub: "{skipped} skipped · the explanation belongs right after the green",
       kReviews: "Reviews (L4)", kReviewsSub: "ready; you do them yourself when they come by in your work", kExam: "Until the exam", kExamSub: "{date}", kNoExam: "no date",
       days: "{n} days", day: "1 day", none: "–",
-      levels: "Levels", levelsHint: "How many skills (and microskills) are at each level.", skillsN: "{n} skills",
+      levels: "Levels", levelsHint: "How many skills (and microskills) are at each level. With an open placement you try first, with the L2 hint ladder; the first task sets the level.", skillsN: "{n} skills",
+      placementGroup: "Placement open", openChip: "Placement open · L2 ladder",
       showTable: "Table", showChart: "Chart", level: "Level", name: "Name", count: "Count", skillsCol: "Skills",
       skills: "Per skill", skillsHint: "Solved = with at most rung 2, over the last 10 explained tasks. The tick is the target ({pct}%).",
       solved: "{ok}/{n} solved", noTasks: "no explained tasks yet", open: "{n} explanation(s) open", next: "review {date}",
@@ -70,8 +73,9 @@
       diary: "Diary", diaryHint: "The harness logs the facts; the reflection is in the learner's own words.",
       plan: "Plan", wentWell: "Went well", learned: "Learned", confusing: "Confusing", confidence: "Confidence", nextStep: "Next step", calib: "Calibration",
       noDiary: "No diary entries yet.", activity: "Activity", sessions: "Sessions", hints: "Hints", holds: "No new rung", denials: "Guard denials", overridesUsed: "Overrides used",
-      footAi: "AI statement: the learning harness, this dashboard and the docs were made with help from Claude (Anthropic). The learning data and the reflections are the learner's own.",
-      footLicense: "Code: AGPL-3.0 · texts and data: CC BY-NC 4.0", footSource: "Source code and documentation", focus: "Go to {id}", tableRegion: "Table, scrollable",
+      footAi: "The learning harness, this dashboard and the docs were made with help from Claude (Anthropic). The learning data and the reflections are the learner's own.", footAiLink: "AI statement", footAiHref: "../en/ai-statement/",
+      footCode: "Code", footOr: "or a", footCommercial: "commercial licence", footTexts: "texts and data",
+      footSource: "Source code on GitHub", footDocs: "About the dashboard", footDocsHref: "../en/progress-dashboard/", focus: "Go to {id}", tableRegion: "Table, scrollable",
     },
   };
   const LEVELS = ["L0", "L1", "L2", "L3", "L4"];
@@ -155,7 +159,21 @@
   }
 
   // ---------- Data helpers ----------
-  const asOf = () => data.generatedAt || new Date().toISOString().slice(0, 10);
+  // The day of the export in local time (an older export has only a date), and the time if known.
+  const localDay = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+  const asOf = () => {
+    const g = data.generatedAt;
+    if (!g) return localDay(new Date());
+    if (String(g).length <= 10) return g;
+    const d = new Date(g);
+    return Number.isNaN(d.getTime()) ? String(g).slice(0, 10) : localDay(d);
+  };
+  const asOfLabel = () => {
+    const g = data.generatedAt;
+    const d = g && String(g).length > 10 ? new Date(g) : null;
+    if (!d || Number.isNaN(d.getTime())) return fmtLong(asOf());
+    return t("atTime", { date: fmtLong(asOf()), time: d.toLocaleTimeString(lang === "nl" ? "nl-NL" : "en-GB", { hour: "2-digit", minute: "2-digit" }) });
+  };
   const skillById = () => new Map(data.skills.map((s) => [s.id, s]));
   const mains = () => data.skills.filter((s) => !s.parent && s.kind !== "zone");
   const microsOf = (id) => data.skills.filter((s) => s.parent === id);
@@ -223,22 +241,26 @@
 
   function levelsCard() {
     const skills = data.skills.filter((s) => s.kind !== "zone" && inScope(s.id));
-    const counts = LEVELS.map((l) => ({ l, ids: skills.filter((s) => s.level === l).map((s) => s.id) }));
+    const isOpen = (s) => s.placement === "pending";
+    const counts = [
+      ...LEVELS.map((l) => ({ l, cls: `lv${LEVELS.indexOf(l)}`, label: `${l} ${levelName(l)}`, ids: skills.filter((s) => !isOpen(s) && s.level === l).map((s) => s.id) })),
+      { l: "open", cls: "open", label: t("placementGroup"), ids: skills.filter(isOpen).map((s) => s.id) },
+    ];
     const total = skills.length || 1;
-    const bar = el("div", { class: "segbar", role: "group", "aria-label": counts.map((c) => `${c.l} ${levelName(c.l)}: ${c.ids.length}`).join(", ") });
+    const bar = el("div", { class: "segbar", role: "group", "aria-label": counts.map((c) => `${c.label}: ${c.ids.length}`).join(", ") });
     for (const c of counts) {
       if (!c.ids.length) continue;
-      const block = el("div", { class: `block lv${LEVELS.indexOf(c.l)}`, tabindex: "0", role: "img", "aria-label": `${c.l} ${levelName(c.l)}: ${c.ids.length}` });
+      const block = el("div", { class: `block ${c.cls}`, tabindex: "0", role: "img", "aria-label": `${c.label}: ${c.ids.length}` });
       block.style.flexGrow = String(c.ids.length);
       block.style.flexBasis = "0";
       if (c.ids.length / total > 0.07) block.textContent = String(c.ids.length);
-      withTip(block, `${c.l} ${levelName(c.l)}`, [[null, String(c.ids.length), `(${pct(c.ids.length / total)})`]]);
+      withTip(block, c.label, [[null, String(c.ids.length), `(${pct(c.ids.length / total)})`]]);
       bar.append(block);
     }
-    const legend = el("ul", { class: "legend" }, counts.map((c) => el("li", {}, el("span", { class: `sw lv${LEVELS.indexOf(c.l)}`, "aria-hidden": "true" }), `${c.l} ${levelName(c.l)}`)));
+    const legend = el("ul", { class: "legend" }, counts.filter((c) => c.l !== "open" || c.ids.length).map((c) => el("li", {}, el("span", { class: `sw ${c.cls}`, "aria-hidden": "true" }), c.label)));
     const body = el("div", {}, el("div", { class: "muted", text: t("skillsN", { n: skills.length }) }), bar, legend);
     return card(t("levels"), t("levelsHint"), body, () => table([t("level"), t("name"), t("count"), t("skillsCol")],
-      counts.map((c) => [c.l, levelName(c.l), String(c.ids.length), c.ids.join(", ") || t("none")]), [2]), "levels");
+      counts.map((c) => [c.l === "open" ? "–" : c.l, c.l === "open" ? c.label : levelName(c.l), String(c.ids.length), c.ids.join(", ") || t("none")]), [2]), "levels");
   }
 
   function skillDetail(s) {
@@ -279,11 +301,10 @@
         meter.append(track, el("div", { class: "num", text: st.n ? `${t("solved", { ok: st.ok, n: st.n })} (${pct(st.ok / st.n)})` : t("noTasks") }));
         const row = el("div", { class: "skill-row" },
           el("div", { class: "skill-name" }, el("div", { class: "title", text: s.title }), el("div", { class: "id", text: s.id })),
-          el("span", { class: `chip lv${LEVELS.indexOf(s.level)}`, text: `${s.level} ${levelName(s.level)}` }),
+          s.placement === "pending" ? el("span", { class: "chip open", text: t("openChip") }) : el("span", { class: `chip lv${LEVELS.indexOf(s.level)}`, text: `${s.level} ${levelName(s.level)}` }),
           meter,
           el("div", { class: "skill-meta" }, st.pending ? statusBadge("warning", t("open", { n: st.pending })) : null,
             st.skipped ? el("span", { class: "muted", text: t("skippedN", { n: st.skipped }) }) : null,
-            s.placement === "pending" ? el("span", { class: "muted", text: t("placementOpen") }) : null,
             reviewReady(s) ? el("span", { class: "muted", text: t("reviewReady") }) : s.level === "L4" && s.nextReview ? el("span", { class: "muted", text: t("next", { date: fmtDate(s.nextReview) }) }) : null,
             el("span", { class: "muted", text: s.lastSeen ? t("lastSeen", { date: fmtDate(s.lastSeen) }) : t("notSeen") })),
           el("button", { type: "button", class: "expand", "aria-expanded": open ? "true" : "false", "aria-controls": `d-${s.id}`, text: open ? t("less") : t("more"),
@@ -414,7 +435,7 @@
     const select = el("select", { id: "filter", onchange: (e) => { filter = e.target.value; render(); } },
       el("option", { value: "all", text: t("all") }), mains().map((s) => el("option", { value: s.id, text: `${s.id} · ${s.title}` })));
     select.value = filter;
-    return el("div", { class: "filters" }, el("label", { for: "filter", text: t("filter") }), select, el("span", { class: "asof", text: t("asof", { date: fmtLong(asOf()) }) }));
+    return el("div", { class: "filters" }, el("label", { for: "filter", text: t("filter") }), select, el("span", { class: "asof", text: t("asof", { date: asOfLabel() }) }));
   }
 
   // ---------- Page ----------
@@ -429,9 +450,14 @@
     $("theme").setAttribute("aria-label", t("theme"));
     for (const b of document.querySelectorAll("[data-lang]")) b.setAttribute("aria-pressed", String(b.dataset.lang === lang));
     for (const b of document.querySelectorAll("[data-source]")) b.setAttribute("aria-pressed", String(b.dataset.source === (fellBack ? "demo" : source)));
-    $("subtitle").textContent = data ? (data.course ? t("subtitle", { course: data.course, date: fmtLong(asOf()) }) : t("subtitleNoCourse", { date: fmtLong(asOf()) })) : "";
-    $("footer").replaceChildren(el("div", { class: "foot-inner" }, el("p", { text: t("footAi") }), el("p", { text: t("footLicense") }),
-      el("p", {}, el("a", { href: "../", text: t("footSource") }))));
+    $("subtitle").textContent = data ? (data.course ? t("subtitle", { course: data.course, date: asOfLabel() }) : t("subtitleNoCourse", { date: asOfLabel() })) : "";
+    // The licence of the setup: AGPL-3.0 or a commercial licence for the code, CC BY-NC 4.0 for texts and data.
+    const link = (href, text) => el("a", { href, text });
+    $("footer").replaceChildren(el("div", { class: "foot-inner" },
+      el("p", {}, t("footAi") + " ", link(t("footAiHref"), t("footAiLink"))),
+      el("p", {}, `${t("footCode")}: `, link("https://github.com/piethanegraaf/piethanegraaf.github.io/blob/main/LICENSE", "AGPL-3.0"), ` ${t("footOr")} `,
+        link("https://github.com/piethanegraaf/piethanegraaf.github.io#license", t("footCommercial")), ` · ${t("footTexts")}: `, link("https://github.com/piethanegraaf/piethanegraaf.github.io/blob/main/LICENSE-docs", "CC BY-NC 4.0")),
+      el("p", {}, link("https://github.com/piethanegraaf/piethanegraaf.github.io", t("footSource")), " · ", link(t("footDocsHref"), t("footDocs")))));
   }
 
   function render() {

@@ -264,7 +264,8 @@ export async function build(project) {
 
   const out = {
     schema: SCHEMA,
-    generatedAt: new Date().toISOString().slice(0, 10),
+    // The exact moment, so two exports on one day differ and the dashboard can show the time.
+    generatedAt: new Date().toISOString(),
     course: scrub(settings.course || null, "settings.course"),
     language: settings.language,
     examDate: settings.examDate ?? null,
