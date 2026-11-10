@@ -21,13 +21,13 @@ The harness knows how far along you are per skill, and adjusts the AI's help to 
 
     Progress per (micro)skill, with real data and a demo.
 
-    [Go to the dashboard](progress-dashboard.md)
+    [Go to the dashboard](/dashboard/?lang=en)
 
 - **C# OOP cheat sheet**
 
-    The course's reference: classes, inheritance, UML, patterns (in Dutch).
+    The course's reference: classes, inheritance, UML, patterns.
 
-    [Go to the cheat sheet](/cheatsheet/)
+    [Go to the cheat sheet](/en/cheatsheet/)
 
 </div>
 

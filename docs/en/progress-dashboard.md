@@ -1,4 +1,6 @@
-# Dashboard
+# Updating the dashboard
+
+## What the dashboard shows
 
 The [dashboard](/dashboard/?lang=en) shows progress per skill and microskill:
 
@@ -11,7 +13,7 @@ The [dashboard](/dashboard/?lang=en) shows progress per skill and microskill:
 
 Every chart has a table view. You can switch between Dutch and English, and between the real data and the [demo with made-up data](/dashboard/?lang=en&data=demo).
 
-## Updating your own dashboard
+## Publishing your own data
 
 1. Create `.learning/private.json` with the names and terms that must not go online (see [Configuration and privacy](configuration.md#privacy)).
 2. First look at what will be filtered: `node harness/export.mjs ../my-practice-folder --dry-run`

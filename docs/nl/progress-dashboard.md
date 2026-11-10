@@ -1,4 +1,6 @@
-# Dashboard
+# Dashboard bijwerken
+
+## Wat het dashboard laat zien
 
 Het [dashboard](/dashboard/) laat de voortgang per vaardigheid en microvaardigheid zien:
 
@@ -11,7 +13,7 @@ Het [dashboard](/dashboard/) laat de voortgang per vaardigheid en microvaardighe
 
 Elke grafiek heeft een tabelweergave. Je kunt wisselen tussen Nederlands en Engels, en tussen de echte data en de [demo met verzonnen data](/dashboard/?data=demo).
 
-## Je eigen dashboard bijwerken
+## Je eigen data publiceren
 
 1. Maak `.learning/private.json` aan met de namen en termen die niet online mogen (zie [Configuratie en privacy](configuration.md#privacy)).
 2. Bekijk eerst wat er gefilterd wordt: `node harness/export.mjs ../mijn-oefenmap --dry-run`
