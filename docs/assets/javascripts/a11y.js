@@ -198,4 +198,6 @@
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init); else init();
   window.addEventListener("resize", markScrollAreas);
+  // Web fonts can make a code block wider after the first check.
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(markScrollAreas);
 })();
