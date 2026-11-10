@@ -118,7 +118,7 @@ function contentRules(file, text) {
 
 // Long literal quotes in research notes: copyright doubt.
 function copyrightRules(file, text) {
-  if (!/(^|\/)(research[_-]?notes|notes|onderzoek)\//i.test(file) || !/\.md$/i.test(file)) return [];
+  if (!/(^|\/)(research[_-]?notes|research|notes|onderzoek)\//i.test(file) || !/\.md$/i.test(file)) return [];
   const out = [];
   const lines = text.split(/\r?\n/);
   let start = -1, words = 0;

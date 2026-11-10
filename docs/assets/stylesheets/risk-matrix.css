@@ -1,0 +1,30 @@
+/* 5×5 risk matrix in §3 of the research (likelihood × impact).
+   Sequential single-hue ramp from the dataviz reference palette: darker = higher score.
+   Light and dark are both chosen steps; text inside a cell is near-black or white by the fill. */
+.risk-matrix { overflow-x: auto; margin: 1em 0 1.5em; }
+.md-typeset table.risk-grid { border-collapse: separate; border-spacing: 2px; font-size: .8rem; margin: 0; table-layout: fixed; width: 100%; max-width: 34rem; }
+.md-typeset .risk-grid col.label, .md-typeset .risk-grid thead tr:last-child th:first-child { width: 4.5rem; }
+.md-typeset .risk-grid .axis { font-weight: 500; text-align: center; }
+.md-typeset .risk-grid thead tr:last-child th.axis { text-align: left; }
+.md-typeset .risk-grid th,
+.md-typeset .risk-grid td { border: 0; padding: .55em .7em; text-align: center; vertical-align: middle; }
+.md-typeset .risk-grid th { color: var(--md-default-fg-color--light); font-weight: 600; background: none; }
+.md-typeset .risk-grid thead th:first-child { text-align: left; font-weight: 500; }
+.md-typeset .risk-grid td { height: 3.4em; border-radius: 4px; font-weight: 600; line-height: 1.45; padding: .45em .3em; }
+.md-typeset .risk-grid td span { cursor: help; white-space: nowrap; display: inline-block; margin: 0 .12em; }
+.md-typeset .risk-grid thead td { background: none; height: auto; }
+.md-typeset .risk-grid caption { caption-side: bottom; text-align: left; padding-top: .6em; color: var(--md-default-fg-color--light); font-size: .72rem; }
+.md-typeset .risk-legend { font-size: .72rem; color: var(--md-default-fg-color--light); margin: .4em 0 0; }
+.md-typeset .risk-legend .sw { display: inline-block; width: .9em; height: .9em; border-radius: 3px; vertical-align: -.12em; margin: 0 .3em 0 .6em; }
+
+.risk-grid .s1, .risk-legend .s1 { background: #cde2fb; color: #0b0b0b; }
+.risk-grid .s2, .risk-legend .s2 { background: #9ec5f4; color: #0b0b0b; }
+.risk-grid .s3, .risk-legend .s3 { background: #6da7ec; color: #0b0b0b; }
+.risk-grid .s4, .risk-legend .s4 { background: #2a78d6; color: #ffffff; }
+.risk-grid .s5, .risk-legend .s5 { background: #184f95; color: #ffffff; }
+
+[data-md-color-scheme="slate"] .risk-grid .s1, [data-md-color-scheme="slate"] .risk-legend .s1 { background: #0d366b; color: #ffffff; }
+[data-md-color-scheme="slate"] .risk-grid .s2, [data-md-color-scheme="slate"] .risk-legend .s2 { background: #184f95; color: #ffffff; }
+[data-md-color-scheme="slate"] .risk-grid .s3, [data-md-color-scheme="slate"] .risk-legend .s3 { background: #256abf; color: #ffffff; }
+[data-md-color-scheme="slate"] .risk-grid .s4, [data-md-color-scheme="slate"] .risk-legend .s4 { background: #3987e5; color: #0b0b0b; }
+[data-md-color-scheme="slate"] .risk-grid .s5, [data-md-color-scheme="slate"] .risk-legend .s5 { background: #86b6ef; color: #0b0b0b; }

@@ -8,7 +8,7 @@ Dit zijn de werknotities achter het [onderzoek](../research.md): wat de onderzoe
 | [Economie van AI-code](ai_coding_economics.md) | Hoeveel code AI schrijft, productiviteit, kwaliteit en kosten. |
 | [Arbeidsmarkt](labour_market.md) | Banen voor ontwikkelaars in de VS, de EU en Nederland. |
 | [Vaardigheden, onderwijs en toetsing](skills_curriculum_policy.md) | Wat werkgevers vragen, en hoe opleidingen toetsen. |
-| [Citatiecheck: generatieve AI](citation_check_genai.md) | Controle van de AI-studies die het onderzoek aanhaalt. |
-| [Citatiecheck: leerwetenschap](citation_check_learning_science.md) | Controle van de leerwetenschappelijke claims. |
+
+De citatiecontroles, waarin elke bron uit het onderzoek is nagelopen, staan niet op de site maar in de [repository](https://github.com/piethanegraaf/piethanegraaf.github.io/tree/main/research/citation-checks). De correcties die eruit kwamen, staan in §11 van het [onderzoek](../research.md).
 
 Citaten uit bronnen zijn kort gehouden. Zie je een passage die te lang is, meld het dan via de [security-pagina](https://github.com/piethanegraaf/piethanegraaf.github.io/security).
