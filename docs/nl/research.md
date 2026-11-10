@@ -3,7 +3,7 @@
 !!! warning "Machinevertaling"
     Dit is een machinevertaling door Claude (Anthropic) van het [Engelse origineel](../en/research/). Een mens heeft de vertaling niet nagekeken. Bij twijfel geldt de Engelse tekst.
 
-*Opgesteld 7 november 2026 · herzien 8 november 2026 en herschreven voor studenten en docenten op 10 november 2026 (zie §11) · Voor studenten die programmeren en Object-Oriented Design (OOD) leren met AI, en voor hun docenten*
+*Opgesteld 7 november 2026 · herzien 8 november 2026, herschreven voor studenten en docenten op 10 november 2026 en dezelfde dag bijgewerkt met nieuwe literatuur (zie §11) · Voor studenten die programmeren en Object-Oriented Design (OOD) leren met AI, en voor hun docenten*
 
 > **Gepubliceerde versie.** Dit literatuuronderzoek is eerst geschreven voor één student. Deze versie is geschreven voor studenten en docenten in het algemeen; de situatie van die student staat er nog in als voorbeelden in kaders. Bestanden waarnaar het document verwijst, zoals de sessielogs, zijn niet gepubliceerd.
 
@@ -13,7 +13,7 @@
 
 De inhoudsopgave staat in de zijbalk.
 
-> **Statusnotitie.** Secties 1–9 zijn het oorspronkelijke ontwerp. §1–4, §6–8 en §5.3/§5.7 zijn op 8 november 2026 herzien met onderzoek uit mei–november 2026, de verschuiving in benodigde vaardigheden en een kritische beoordeling van het oorspronkelijke literatuuronderzoek. Wat er veranderd is en waarom, staat in het wijzigingslogboek (§11). De harnas zoals die echt is gebouwd, wijkt op punten af: er zijn microvaardigheden, een testrunner (`check.mjs`) in plaats van een PostToolUse-hook voor bewijs, een harde controle op uitleg in eigen woorden, Fibonacci-herhalingen vanaf L3 en een toolingzone. Die verschillen staan samengevat in §10, waarin staat wat de eerste sessies lieten zien. Als je de harnas gebruikt, is de `CLAUDE.md` daarvan leidend voor de dagelijkse regels.
+> **Statusnotitie.** Secties 1–9 zijn het oorspronkelijke ontwerp. §1–4, §6–8 en §5.3/§5.7 zijn op 8 november 2026 herzien met onderzoek uit mei–november 2026, de verschuiving in benodigde vaardigheden en een kritische beoordeling van het oorspronkelijke literatuuronderzoek. Wat er veranderd is en waarom, staat in het wijzigingslogboek (§11). De harnas zoals die echt is gebouwd, wijkt op punten af: er zijn microvaardigheden, een testrunner (`check.mjs`) in plaats van een PostToolUse-hook voor bewijs, een harde controle op uitleg in eigen woorden, Fibonacci-herhalingen vanaf L3 en een toolingzone. Die verschillen staan samengevat in §10, waarin staat wat de eerste sessies lieten zien. Als je de harnas gebruikt, is de `CLAUDE.md` daarvan leidend voor de dagelijkse regels. Een korte literatuurupdate op 10 november 2026 voegde zeven bronnen toe (wijzigingslogboek, §11).
 
 ---
 
@@ -24,11 +24,11 @@ De inhoudsopgave staat in de zijbalk.
 - **Presteren met AI is geen leren.**
     - **Wiskunde op de middelbare school:** onbeperkte GPT-4 verhoogde de oefenscores met 48%, maar verlaagde de toetsscores met **17%** zodra de toegang was weggehaald. Een tutor die hints gaf en geen antwoorden, voorkwam die schade (Bastani et al., 2025).
     - **Universitaire cursus:** in een experiment uit 2026 met 2,379 studenten verlaagde een AI-tutor die vooral voor directe antwoorden werd gebruikt, de eindcijfers met 0.37 SD binnen dezelfde cursus (Liu et al., 2026, working paper).
-    - **Programmeren:** in een kleine studie verhoogde Copilot de scores tijdens de sessie, maar een week later hadden studenten minder onthouden (Gardella et al., 2026).
+    - **Programmeren:** in een kleine studie verhoogde Copilot de scores tijdens de sessie, maar een week later hadden studenten minder onthouden (Gardella et al., 2026). In een quasi-experiment met 152 studenten onthield de groep die zonder AI programmeerde en debugde na zeven weken meer (Albadarin, 2026, proefschrift).
 - **AI kan ook helpen.** In een experiment onder toezicht verhoogde toegang tot ChatGPT de toetsscores zonder AI met 0.28 SD, vooral bij studenten die het als tutor gebruikten (Contractor & Reyes, 2026, working paper). Doorslaggevend is of de AI jouw denken vervangt of ondersteunt (Boolzen et al., 2026).
 - **Ontwikkelaars die een nieuwe library leerden** met een AI-assistent, scoorden 50% tegenover 67% op een quiz achteraf, met het grootste verschil bij debuggen. Ze waren niet significant sneller (Shen & Tamkin, 2026, preprint).
 - **Afgedwongen vangrails werken beter dan gevraagde.** Een tutor in zijn systeemprompt opdragen om scaffolding (ondersteuning) te bieden, veranderde niets in een experiment met 1,059 studenten (Barth et al., 2026). Poorten die in de werkwijze zijn ingebouwd, deden het beter: beheersingsregels, uitlegpoorten, blokkades buiten het model. Dat is het argument voor hooks in plaats van een prompt voor een "leermodus".
-- **Gepoolde positieve effecten zijn vooral publicatiebias.** De strengste meta-analyse uit 2026 laat g = 0.84 na correctie krimpen tot 0.08, en de meest geciteerde meta-analyse uit 2025 is ingetrokken.
+- **Gepoolde positieve effecten zijn vooral publicatiebias.** De strengste meta-analyse uit 2026 laat g = 0.84 na correctie krimpen tot 0.08, en de meest geciteerde meta-analyse uit 2025 is ingetrokken. Een onafhankelijke audit van 14 positieve meta-analyses vond onmogelijke statistiek en verzonnen referenties (O'Neill, 2026, preprint).
 - **Zwakker dan de eerste versie beweerde** (zie het wijzigingslogboek, §11):
     - dat bepaalde interactiepatronen beter leren *veroorzaken*: in elke studie tot nu toe kozen studenten hun eigen patroon;
     - dat LLM's de kloof tussen sterke en zwakke studenten groter maken: dit berust op een verkennende analyse;
@@ -46,7 +46,7 @@ De inhoudsopgave staat in de zijbalk.
     Voor routinematige, goed gespecificeerde code op het werk is met de hand schrijven niet meer de goedkoopste manier.
 
 - **Tegen het schrappen van oefenen met de hand:**
-    - het knelpunt is verschoven naar reviewen en testen;
+    - het knelpunt is verschoven naar reviewen en testen, en een studie bij 655 bedrijven heeft dat nu onafhankelijk gemeten (Chen & Stratton, 2026);
     - AI-code zakt nog steeds voor meer dan een derde van de beveiligingscontroles;
     - in de VS wordt minder aangenomen op instapniveau, maar hoeveel daarvan door AI komt, staat ter discussie;
     - nieuwe vormen van sollicitatiegesprekken toetsen lezen, debuggen en het controleren van AI-uitvoer.
@@ -87,7 +87,7 @@ De hooks zijn een **zelfbindingsmechanisme** (commitment device) dat je zelf kie
 
 Dit is een **narratief literatuuroverzicht**, geen systematisch overzicht. De eerste versie (7 november 2026) had geen zoekprotocol, geen inclusiecriteria en geen kwaliteitsbeoordeling. Ook stonden gerandomiseerde experimenten, kleine interviewstudies en preprints door elkaar in dezelfde tabellen. De herziening van 8 november 2026 voegde toe:
 
-- **Gerichte zoekopdrachten.** Vier zoekopdrachten besloegen mei–november 2026: leeronderzoek, de arbeidsmarkt, de economie van coderen met AI, en beleid over vaardigheden en toetsing. Twee citatiecontroles vergeleken de oorspronkelijke beweringen met hun primaire bronnen. De aantekeningen, met een link bij elk getal, staan in de [onderzoeksnotities](notes/index.md) (Engels). De synthese staat in `reports/` en is niet gepubliceerd.
+- **Gerichte zoekopdrachten.** Vier zoekopdrachten besloegen mei–november 2026: leeronderzoek, de arbeidsmarkt, de economie van coderen met AI, en beleid over vaardigheden en toetsing. Twee citatiecontroles vergeleken de oorspronkelijke beweringen met hun primaire bronnen. De aantekeningen, met een link bij elk getal, staan in de [onderzoeksnotities](notes/index.md) (Engels). De synthese staat in `reports/` en is niet gepubliceerd. Een korte vervolgzoektocht op 10 november 2026 besloeg 8–10 november en studies die de eerste zoekopdrachten hadden gemist (zie de [notities bij de update](/en/notes/update_2026-11-10/){ hreflang="en" }, Engels).
 - **Correcties** overal waar een bewering verder ging dan de bron (opgesomd in het wijzigingslogboek, §11).
 - **Een bewijsgraad** voor elke studie:
 
@@ -266,6 +266,9 @@ In 2026 scoorden vijf actuele modellen hoger dan de gemiddelde student op de toe
 | **Nieuw:** Prather et al. (2026), ICER: "Scaffolding Autocomplete" | Een oefening die traint in het onderscheiden van goede en slechte AI-suggesties | Studenten deden het beter met één suggestie dan met meerdere. Steekproef en opzet niet geverifieerd. | C |
 | **Nieuw:** Ardic, Le Dilavrec & Zaidman (2026), *Empirical Software Engineering* | Observationeel; 12 studenten die met ChatGPT (GPT-3.5) unittests schreven | Vier strategieën, afhankelijk van wie het idee voor de test had en wie de code schreef. Studenten bespaarden tijd, maar vertrouwden de tests minder en voelden minder eigenaarschap. | C |
 | Sankaranarayanan (2026), preprint, februari | 78 online lerenden; handmatig tegenover onbeperkte AI tegenover AI achter een "uitlegpoort" (teach-back), in Cursor | Beide AI-groepen leverden meer werkende code op. Bij een latere onderhoudstaak van 30 minuten, waarbij AI was geblokkeerd, **faalde 77% na onbeperkte AI tegenover 39% na de uitlegpoort**. Randomisatie niet vermeld. | C |
+| **Nieuw (10 nov):** Bergh, Tag, Vassar & Renzella (2026), preprint, september | Gecontroleerd between-subjects-experiment; 55 bachelorstudenten informatica; drie C-opdrachten met ChatGPT tegenover zoeken op het web; geheugentoetsen direct erna en 48 uur later | Met ChatGPT waren de programmeerscores hoger (89% tegenover 69%), maar **onthielden studenten minder**, direct (41% tegenover 53%) en na 48 uur (39% tegenover 52%). Studenten rekenden 45% van hun ingeleverde code aan zichzelf toe, tegen 81% zonder ChatGPT. De mentale inspanning nam over de opdrachten minder toe. Randomisatie niet vermeld in de samenvatting. | B |
+| **Nieuw (10 nov):** Albadarin (2026), proefschrift, University of Eastern Finland | Quasi-experimenteel; 152 studenten; programmeren en debuggen met Llama 3.1 tegenover zonder AI; retentietoets zeven weken later | De AI-groep was beter en sneller bij sommige debugtaken, maar **de groep zonder AI onthield na zeven weken meer**. Cijfers uit een interview van de universiteit (10 nov 2026); scores en effectgroottes nog niet gezien. | B |
+| **Nieuw (10 nov):** Lepp (2026), FIE, preprint | Enquête; 210 eerstejaars in een OOP-vak waarin AI mocht bij opdrachten en verboden was bij toetsen; clusteranalyse | Vijf gebruiksprofielen, waaronder een "slim" profiel (weinig code laten genereren, veel hulp bij begrip en debuggen). **Geen significant verschil in toetsscores** tussen de profielen. | C |
 
 **Studies naar AI en leren in het algemeen:**
 
@@ -339,6 +342,13 @@ In 2026 scoorden vijf actuele modellen hoger dan de gemiddelde student op de toe
 
     Twee andere meta-analyses uit 2026 melden g = 0.50 en g = 1.10 zonder correctie voor bias (Fan, Ke, Chen & Lv, 2026; Liu, Xie & Xu, 2026). De meest geciteerde meta-analyse uit 2025 (Wang & Fan, g = 0.87) **werd in 2026 ingetrokken** na kritiek op de methoden. Hij was meer dan 500 keer geciteerd. *Ongecorrigeerde gepoolde effecten moet je niet aanhalen als bewijs dat AI het leren verbetert.*
 
+    Een onafhankelijke audit (O'Neill, 2026, preprint op EdArXiv) van 14 van de 39 meta-analyses met positieve effecten vond "onmogelijke statistiek", "gehallucineerde referenties", vergelijkingen van studeren met AI-hulp met helemaal niet studeren, en geen correctie voor publicatiebias. Twee derde van de calls for papers leek nul- of negatieve resultaten te ontmoedigen. Zijn voorlopige pooling van 44 goed opgezette experimenten kwam gemiddeld uit op ongeveer nul. *Voorlopig; bekend uit de pers, de preprint zelf is niet gelezen.*
+
+- **Bewijsoverzicht van Stanford SCALE (Walker, Fesler, Martinez Claeys, Agnew & Loeb, 10 november 2026).** *Een gescreende synthese, geen meta-analyse.* Een LLM screende 868 papers van oktober 2025 tot juni 2026 vooraf op de criteria van de What Works Clearinghouse, en minstens twee onderzoekers beoordeelden elke causale paper. 52 papers halen nu de lat voor sterk causaal bewijs, waarvan 32 nieuw. Ondanks de titel ("K-12") komen de meeste nieuwe papers uit het hoger onderwijs, en het grootste deel van de verzameling bestaat uit preprints zonder peer review. De conclusies:
+    - AI "lijkt beter voor het leren als studenten het gebruiken als ondersteuning bij het leren dan om werk te maken, al verbetert geen van beide soorten gebruik het leren consequent";
+    - werk uitbesteden aan AI kan de prestatie verlagen als studenten later zonder AI werken;
+    - AI kan de *ervaring* van het leren verbeteren zonder de leeruitkomsten te verbeteren;
+    - het bewijs "laat nog steeds niet zien of AI-tools blijvende leerwinst kunnen opleveren".
 - **Opdrachten geven een te rooskleurig beeld van beheersing.**
     - **Đức Minh (2026):** *grade C, observationeel.* Bij 1,498 Vietnamese bachelorstudenten was het gemiddelde voor opdrachten met AI-hulp 7.62, terwijl beheersing die willekeurig en zonder apparaten werd gecontroleerd, gemiddeld 5.55 was.
     - **Eleftheriou, Pallis & Constantinides (2026):** *grade B; april, net voor de zoekperiode; n = 85.* Een standaard-LLM gaf het hoogste *gevoelde* begrip en het laagste *gemeten* leren, en begeleide hints gaven de grootste winst.
@@ -346,11 +356,11 @@ In 2026 scoorden vijf actuele modellen hoger dan de gemiddelde student op de toe
 
 **Wat het bewijs ondersteunt, en hoe sterk:**
 
-- **Sterk (meerdere grade-A-studies zijn het eens): presteren met AI is geen leren.** Als AI tijdens het oefenen het cognitieve werk doet, zijn de prestaties zonder AI later gelijk of lager (Bastani; Liu; Gardella; Strömberg). Als AI uitlegt of als tutor begeleidt, lopen de resultaten van geen schade tot bescheiden winst (de tutor van Bastani; Contractor & Reyes; Kazemitabaar 2023). De moderator van Boolzen, versterken tegenover vervangen, zegt hetzelfde.
+- **Sterk (meerdere grade-A-studies zijn het eens): presteren met AI is geen leren.** Als AI tijdens het oefenen het cognitieve werk doet, zijn de prestaties zonder AI later gelijk of lager (Bastani; Liu; Gardella; Strömberg; en met grade B: Bergh na 48 uur en Albadarin na zeven weken). Als AI uitlegt of als tutor begeleidt, lopen de resultaten van geen schade tot bescheiden winst (de tutor van Bastani; Contractor & Reyes; Kazemitabaar 2023). De moderator van Boolzen, versterken tegenover vervangen, zegt hetzelfde, en het overzicht van 52 causale studies van Stanford SCALE ook (november 2026).
 - **Matig: vangrails werken als ze in de werkwijze worden afgedwongen** (beheersingspoorten, uitlegpoorten, gestructureerde tutors, blokkades buiten het model), en veel minder als er alleen in een systeemprompt om wordt gevraagd (het nulresultaat van Barth; de tutors van Teo die te veel helpen). Dat pleit voor de hooks van de harnas in plaats van te vertrouwen op een prompt voor een "leermodus".
-- **Zwak, alleen correlationeel: dat bepaalde interactiepatronen beter leren veroorzaken.** Het gaat om vragen om uitleg en eerst zelf proberen. In elke studie tot nu toe koos de student het patroon zelf (Shen & Tamkin; Contractor & Reyes; Kazemitabaar 2023b). Geen enkel gerandomiseerd experiment heeft eerst zelf proberen vergeleken met eerst AI. Het idee van de patronen is de beste werkhypothese, geen bevinding. Het past bij het experimentele resultaat dat alleen uitleg *zonder* het antwoord tot leren leidde (Gajos & Mamykina, 2022; §2.10).
+- **Zwak, alleen correlationeel: dat bepaalde interactiepatronen beter leren veroorzaken.** Het gaat om vragen om uitleg en eerst zelf proberen. In elke studie tot nu toe koos de student het patroon zelf (Shen & Tamkin; Contractor & Reyes; Kazemitabaar 2023b). Geen enkel gerandomiseerd experiment heeft eerst zelf proberen vergeleken met eerst AI. Het idee van de patronen is de beste werkhypothese, geen bevinding. Het past bij het experimentele resultaat dat alleen uitleg *zonder* het antwoord tot leren leidde (Gajos & Mamykina, 2022; §2.10). Een observationele OOP-studie voegt een nulresultaat toe: studenten met een "slim" gebruiksprofiel scoorden op toetsen zonder AI niet beter dan de andere profielen (Lepp, 2026).
 - **Kansengelijkheid: zwakkere studenten en eerstegeneratiestudenten lijden meer schade en gebruiken vaker nooduitgangen** (Liu; Kapoor et al., 2025; Lehmann, verkennend; Prather, kwalitatief). **Vangrails zijn het belangrijkst voor de studenten die er het minst snel zelf voor kiezen.**
-- **Onbekend:** retentie na meer dan ongeveer een week in het hoger onderwijs, agentische tools, en OOD-vaardigheid op ontwerpniveau.
+- **Onbekend of dun:** retentie na meer dan ongeveer een week in het hoger onderwijs (tot nu toe één quasi-experiment, over debuggen, met een toets na zeven weken: Albadarin, 2026), agentische tools, en OOD-vaardigheid op ontwerpniveau.
 ### 2.9 De verschuiving in gevraagde vaardigheden: banen, de economie van handgeschreven code en wat je moet oefenen
 
 De eerste versie van dit overzicht ging ervan uit dat het doel is om code te schrijven zonder AI. Dat klopt voor een toets zonder AI, bijvoorbeeld een toets die AI alleen toestaat op AI-niveau 0/1 en die een mondelinge verdediging heeft. Voor de loopbaan daarna is het nooit onderbouwd. Deze paragraaf toetst de bewering dat **code met de hand schrijven niet meer rendabel is**. Ook vraagt ze voor welke vaardigheden werkgevers nu betalen.
@@ -377,7 +387,9 @@ De richting is bij elke maatstaf duidelijk: sterke groei van 2024 tot 2026, met 
 - **METR:** ervaren ontwikkelaars waren 19% *trager* in hun eigen volwassen repositories, en het vervolgonderzoek uit 2026 was onbetrouwbaar (§2.8). *Grade A/B.*
 - **Gebruik van Cursor** (He et al., 2026; difference-in-differences op GitHub-projecten): een grote maar **tijdelijke** versnelling, alleen significant in de eerste twee maanden. Die ging samen met een **blijvende** stijging van waarschuwingen uit statische analyse (ongeveer +30%) en van codecomplexiteit (ongeveer +41%). Dat vertraagde de projecten later. *Grade B.*
 - **Soort taak:** winst van ongeveer 35–40% bij eenvoudige greenfield-taken en 10% of minder bij complexe legacy code (Stanford-onderzoek, aangehaald in het ROI-rapport van DORA). *Grade C.*
-- **Het knelpunt is verschoven naar review, testen en goedkeuring van wijzigingen.** De bronnen hieronder hebben verschillende commerciële belangen en zijn het toch eens:
+- **Telemetrie van bedrijven over agents** (Chen & Stratton, 2026; werkpaper van Harvard, versie van 9 november 2026). *Grade B, quasi-experimenteel (moment van invoering).* Gegevens van Jellyfish, een analyseplatform voor softwareteams: 720,542 medewerkers bij 655 bedrijven, januari 2021 – augustus 2026. Twaalf maanden na de invoering van AI-agents stegen de regels code met 44.0% en de pull requests met 35.7%, maar het aantal afgehandelde Jira-issues steeg maar met 13.7% (op de grens van significantie). De tijd van het indienen van een review tot de goedkeuring steeg met **56.1%**. Er was geen meetbaar effect op de werkgelegenheid. Een versie uit augustus met 718 bedrijven gaf andere cijfers; citeer deze versie.
+- **Code schrijven tegenover software opleveren** (Demirer, Musolff & Yang, 2026; NBER-werkpaper, herzien in september 2026). *Grade B.* Meer dan 500,000 GitHub-ontwikkelaars met telemetrie van hun AI-gebruik: autonome agents verhoogden het aantal commits met 240%, maar het aantal projecten met maar 80% en het aantal releases met 30%.
+- **Het knelpunt is verschoven naar review, testen en goedkeuring van wijzigingen.** Chen & Stratton meten dit nu onafhankelijk (hierboven). De bronnen hieronder hebben verschillende commerciële belangen en zijn het toch eens:
     - Anthropic: "menselijke code review is een nieuw knelpunt geworden".
     - DORA: modelleert een "verificatiebelasting".
     - Sonar: 96% van de ontwikkelaars vertrouwt door AI gegenereerde code niet volledig, maar slechts 48% controleert die altijd voordat ze committen.
@@ -476,7 +488,7 @@ De tool kost dus ongeveer 1–2% van de arbeidskosten (eigen berekening). De eco
 | Bewering | Bewijs | Oordeel |
 |---|---|---|
 | Voor routinematige, goed gespecificeerde code op het werk is met de hand schrijven niet meer de goedkoopste manier | Tool kost ongeveer 1–2% van de arbeidskosten; bij AI-gerichte bedrijven stelt AI de meeste nieuwe code op; winst het grootst bij eenvoudige greenfield-taken; BLS verwacht dat banen voor programmeurs krimpen | **Grotendeels ondersteund** (bewijsgraad B–D, veel bronnen van leveranciers) |
-| Met de hand code schrijven heeft geen economische waarde meer | Winst klein of negatief bij complexe legacy code; AI-code heeft meer problemen met beveiliging en onderhoudbaarheid; review is het knelpunt; incidenten vragen menselijk oordeel | **Niet ondersteund** |
+| Met de hand code schrijven heeft geen economische waarde meer | Winst klein of negatief bij complexe legacy code; AI-code heeft meer problemen met beveiliging en onderhoudbaarheid; review is het knelpunt (nu onafhankelijk gemeten: Chen & Stratton); incidenten vragen menselijk oordeel | **Niet ondersteund** |
 | Junioren worden door AI minder vaak aangenomen | Verschil in de VS voor jonge werknemers in blootgestelde banen (−19% in ADP-gegevens) tegenover bijna nul in de ACS; thuiswerken en rente verklaren veel; Nederlandse gegevens tonen afkoeling, geen ineenstorting | **Omstreden.** Richting aannemelijk, omvang onbekend |
 | Werkgevers betalen voor het controleren en beoordelen van AI-uitvoer | Vormen van sollicitatiegesprekken (Google); alleen vertrouwen als het te controleren is (Stack Overflow); "goedgekeurd door engineers" in elke claim; de bevinding van PwC over instapfuncties; de ervaringspremie van de Dallas Fed | **Consistent over bronnen heen**, maar geen studie meet wat specifieke reviewvaardigheden opleveren |
 | Met de hand oefenen is nog steeds hoe je de vaardigheden opbouwt om AI te controleren | Shen & Tamkin (achterstand bij debuggen); Gardella (onthouden); Yu & Moon (productieve worsteling); CS1-LLM houdt toetsen zonder AI | **Ondersteund voor leren** (bewijsgraad A–C). Geen studie geeft de beste mix |
@@ -566,7 +578,7 @@ Kans (K) en Impact (I) krijgen een score van 1–5. Risico = K × I. De scores g
 
 | ID | Risico | Mechanisme | Bewijs [bewijsgraad] | K | I | Score | Horizon |
 |---|---|---|---|---|---|---|---|
-| R1 | **Vaardigheden ontstaan nooit** | De AI schrijft de code en het ontwerp, en je bedenkt zelf nooit oplossingen. Agentische tools maken volledig delegeren de standaard. | Bastani 2025 [A]; Liu 2026 [A]; Shen & Tamkin 2026 [A]; Gardella 2026 [A, klein]; Strömberg 2026 [B] | 5 | 5 | **25** | Beide |
+| R1 | **Vaardigheden ontstaan nooit** | De AI schrijft de code en het ontwerp, en je bedenkt zelf nooit oplossingen. Agentische tools maken volledig delegeren de standaard. | Bastani 2025 [A]; Liu 2026 [A]; Shen & Tamkin 2026 [A]; Gardella 2026 [A, klein]; Strömberg 2026 [B]; Bergh 2026 [B]; Albadarin 2026 [B, zeven weken] | 5 | 5 | **25** | Beide |
 | R2 | **Illusie van bekwaamheid** | Werkende code en vlotte uitleg zorgen ervoor dat je overschat wat je alleen kunt. | Koriat & Bjork 2005 [A]; METR 2025 [A]; Eleftheriou 2026 [B]; Prather 2024 [C]; Đức Minh 2026 [C] | 5 | 4 | **20** | Toets |
 | R3 | **Metacognitieve luiheid** | Plannen, bewaken en debuggen worden uitbesteed aan de AI. | Darvishi 2024 [A]; Liu 2026 (0.7% van de verzoeken vroeg om feedback op eigen werk) [A]; Stadler 2024 [B]; Fan 2025 [B, interpretatie] | 4 | 4 | **16** | Beide |
 | R4 | **Ontwerpoordeel ontwikkelt zich niet (specifiek voor OOD)** | De AI kiest klassen, verantwoordelijkheden en ontwerppatronen, dus je maakt zelf nooit afwegingen. | OOD-misvattingen: Eckerdal & Thuné 2005, Ragonis & Ben-Ari 2005 [C, van vóór AI]; AI het zwakst in interfaces, abstracte klassen en overerving (Lepp & Kaimre 2026) [C]. Er bestaat nog geen studie naar OOD-vaardigheid met AI | 4 | 5 | **20** | Beide |
@@ -575,7 +587,7 @@ Kans (K) en Impact (I) krijgen een score van 1–5. Risico = K × I. De scores g
 | R7 | **Expertise-omkeereffect** | Dezelfde zware scaffolding (ondersteuning) wordt gebruikt voor vaardigheden die je al beheerst. Dat kost tijd en ergert je. | Kalyuga 2003 [A] | 3 | 3 | **9** | Toets |
 | R8 | **Beheerste vaardigheden nemen af na automatisering** | Na het overdragen oefen je niet meer, dus je kunt niet meer reviewen of het werk overnemen. | Arthur 1998; Tatel & Ackerman 2025 [A, meta-analyses]; Budzyń 2025 [C]; Bainbridge 1983; Parasuraman & Manzey 2010 | 4 | 4 | **16** | Loopbaan |
 | R9 | **Verkeerde dingen leren van foute AI-uitvoer** *(K verhoogd 3 → 4)* | Verzonnen API's, slechte OO-praktijk, onveilige code of subtiel foute uitleg worden overgenomen. | Hellas 2023 [C]; CodeAid 2024 [C]; Veracode 2026: 38% van de taken introduceert een kwetsbaarheid [C]; Lepp & Kaimre 2026 [C] | 4 | 4 | **16** | Beide |
-| R10 | **Minder eigenaarschap over en geheugen voor je eigen werk** | Je kunt je project niet uitleggen of verdedigen bij een toets. Uitbestede inhoud wordt minder goed onthouden als de opslag betrouwbaar is. | Schooler & Storm 2021; Grinschgl 2021 [A, lab]; Kosmyna 2025 [C, preprint, bekritiseerd] | 4 | 4 | **16** | Toets |
+| R10 | **Minder eigenaarschap over en geheugen voor je eigen werk** | Je kunt je project niet uitleggen of verdedigen bij een toets. Uitbestede inhoud wordt minder goed onthouden als de opslag betrouwbaar is. | Schooler & Storm 2021; Grinschgl 2021 [A, lab]; Kosmyna 2025 [C, preprint, bekritiseerd]; Bergh 2026 [B]: studenten rekenden met ChatGPT 45% van hun code aan zichzelf toe, tegen 81% zonder | 4 | 4 | **16** | Toets |
 | R11 | **Problemen met toetsing en integriteit** | Beoordeeld werk is niet van jezelf, of AI-gebruik is niet gemeld. Ongeoorloofd AI-gebruik kan als fraude gelden, en werk op AI-niveau 1 kan promptlinks, APA-bronvermelding en een controle van de uitvoer vereisen. De regels van CHE zijn een voorbeeld (OER art. 1.41 en art. 7.11). Detectie is onbetrouwbaar, dus je eigen vastleggingen zijn je bescherming. | CHE OER 2026–27 [beleid]; Npuls 2025 [beleid]; Scarfe 2024 (94% van de AI-antwoorden onopgemerkt) [B]; Lau & Guo 2023 | 3 | 5 | **15** | Toets |
 | R12 | **De harnas wordt het doel** *(nieuwe score, was 3 × 2)* | Tijd gaat naar het bijstellen van de opzet, of naar onderzoek erover (zoals het herzien van dit overzicht), in plaats van naar oefenen. Of het systeem wordt opgegeven. | Een diagnostische toets in de pilot (tijd ging naar een spiekbriefje in plaats van naar oefenen); in de pilot ging ook tijd naar het herzien van dit overzicht en het repareren van een hook; SDT | 4 | 3 | **12** | Toets |
 | R13 | **Privacy van het dagboek en de vaardigheidsgegevens** | Reflecties, onderzoeksnotities en transcripten worden gesynchroniseerd naar cloudopslag (zoals OneDrive) of gedeeld. | — | 2 | 2 | **4** | Beide |
@@ -583,7 +595,7 @@ Kans (K) en Impact (I) krijgen een score van 1–5. Risico = K × I. De scores g
 | R15 | **Te veel investeren in productiecode met de hand schrijven** *(nieuw)* | Oefentijd gaat naar routinecode met de hand schrijven, meer dan nodig is om te leren (boilerplate, syntaxisdrills, beheerste code opnieuw schrijven). Ondertussen betaalt de markt voor specificeren, reviewen en verifiëren. | Routinecode is goedkoop te genereren: tool ongeveer 1–2% van de arbeidskosten [C]; claims van Google en Anthropic over het aandeel code [D]; Octoverse 2026 [C]; BLS: programmeurs −7% [C]. Lage kans met de harnas, omdat die beheerste vaardigheden al automatiseert (L4), en een toets zonder AI met de hand schrijven vereist | 2 | 3 | **6** | Loopbaan |
 | R16 | **Toezichtvaardigheden blijven ongetraind** *(nieuw)* | De harnas blokkeert AI-code op L1–L3 en automatiseert op L4, maar niets traint het specificeren, testen, reviewen en debuggen van AI-uitvoer. Werkgevers testen deze vaardigheden nu, en delegeren holt ze uit ("paradox van het toezicht"). | Anthropic 2025b [C, leverancier]; pilot van Google met sollicitatiegesprekken 2026 [D]; Stack Overflow 2026 [C]; Veracode 2026 [C]; CS1-LLM [C]; Pădurean 2026 [C] | 4 | 4 | **16** | Loopbaan (testen kan ook meetellen in je eindassessment) |
 | R17 | **Onzekerheid over het loopbaanpad** *(nieuw)* | De krimp in juniorvacatures: minder instapplekken en kieskeurigere werkgevers. Het bewijs is beschrijvend en omstreden, dus het effect op een individuele student is onzeker. | Krimp in juniorvacatures: Canaries 2026 [B, beschrijvend, omstreden]; Crane & Soto 2026; Tucker 2026 [B]; Indeed (4.5% instapniveau) [C]; UWV, ROA, Cnossen 2026 [C]; nulresultaten: Humlum & Vestergaard, Fairlie & Wu, NY Fed [B] | 3 | 4 | **12** | Loopbaan |
-| R18 | **Beslissingen gestuurd door claims van leveranciers of door hype** *(nieuw)* | Je verandert wat je oefent door cijfers van leveranciers ("80–90% van de code is door AI geschreven"), opgeblazen benchmarks of niet-gecorrigeerde meta-analyses. Of je vertrouwt dit document te veel: het is geschreven door een model van Anthropic en leunt op bronnen van Anthropic. | Door leveranciers gemelde vs. onafhankelijke benchmarkscores (89.9% vs. ongeveer 60%) [C]; ingetrokken meta-analyse van Wang & Fan 2025; Boolzen 2026 (g 0.84 → 0.08) [A]; METR over zelfrapportage [A] | 3 | 3 | **9** | Beide |
+| R18 | **Beslissingen gestuurd door claims van leveranciers of door hype** *(nieuw)* | Je verandert wat je oefent door cijfers van leveranciers ("80–90% van de code is door AI geschreven"), opgeblazen benchmarks of niet-gecorrigeerde meta-analyses. Of je vertrouwt dit document te veel: het is geschreven door een model van Anthropic en leunt op bronnen van Anthropic. | Door leveranciers gemelde vs. onafhankelijke benchmarkscores (89.9% vs. ongeveer 60%) [C]; ingetrokken meta-analyse van Wang & Fan 2025; Boolzen 2026 (g 0.84 → 0.08) [A]; O'Neill 2026, audit van 14 meta-analyses [preprint]; METR over zelfrapportage [A] | 3 | 3 | **9** | Beide |
 
 <div class="risk-matrix">
 <table class="risk-grid">
@@ -1172,7 +1184,7 @@ Hoe weet je of de harnas je leren beschermt en niet alleen frictie toevoegt? Con
 
 ## 7. Beperkingen
 
-- **De bewijsbasis is jong.** De meeste studies over generatieve AI komen uit 2023–2026. Vaak hebben ze kleine steekproeven of een korte looptijd, of zijn het preprints en working papers (bijv. Kosmyna et al., 2025; Shen & Tamkin, 2026; Lehmann et al., 2025; de meeste experimenten uit 2026 in §2.8). Geen enkel experiment in het hoger onderwijs heeft gemeten wat er na meer dan ongeveer een week is blijven hangen. Effecten kunnen veranderen als de tools veranderen.
+- **De bewijsbasis is jong.** De meeste studies over generatieve AI komen uit 2023–2026. Vaak hebben ze kleine steekproeven of een korte looptijd, of zijn het preprints en working papers (bijv. Kosmyna et al., 2025; Shen & Tamkin, 2026; Lehmann et al., 2025; de meeste experimenten uit 2026 in §2.8). In het hoger onderwijs heeft maar één studie gemeten wat er na meer dan ongeveer een week is blijven hangen: een quasi-experiment met een toets na zeven weken (Albadarin, 2026). Ook het overzicht van Stanford SCALE (november 2026) vindt blijvende leerwinst nog niet aangetoond. Effecten kunnen veranderen als de tools veranderen.
 - **Een verhalend literatuuroverzicht, één keer gecorrigeerd.** Er was geen zoekprotocol, en de eerste versie overdreef meerdere bevindingen (§11). Bij de herziening kwamen er bewijsgraden en gerichte zoekacties bij. Toch is het overzicht nog steeds niet systematisch, dus selectiebias is mogelijk.
 - **Weinig AI-onderzoek specifiek over OOD, en geen onderzoek over agentische tools.** De meeste studies naar AI in het informaticaonderwijs gaan over programmeertaken uit CS1 (de eerste programmeercursus). Ze toepassen op ontwerpvaardigheden is een afleiding uit onderzoek naar misvattingen bij OOD, aangevuld met algemene leerwetenschap. Er bestaat nog geen gecontroleerde studie naar hoe studenten leren met agentische tools zoals Claude Code.
 - **Het bewijs over de verschuiving in vaardigheden is vooral Amerikaans, beschrijvend en commercieel.** Causale studies naar de arbeidsmarkt spreken elkaar tegen. Nederlandse gegevens zijn schaars en correlationeel. De cijfers over hoeveel code AI schrijft, komen vooral van bedrijven die AI verkopen. Geen enkele studie meet de beste mix van oefenen met de hand en oefenen in toezicht op AI-uitvoer. §2.9 en §4.1 zijn dus afleidingen.
@@ -1440,6 +1452,18 @@ Hoe weet je of de harnas je leren beschermt en niet alleen frictie toevoegt? Con
 - Veracode. (2026). *2026 GenAI code security report* (28 July) and *Fall 2026 update* (29 October) [vendor]. https://www.veracode.com/blog/fall-2026-genai-code-security
 - Yale Budget Lab. (2026). *Tracking the impact of AI on the labor market* (updated 15 September 2026). https://budgetlab.yale.edu/research/tracking-impact-ai-labor-market
 - Yu & Moon (2026). Who will become the next senior? How generative AI erodes the development pathway in software engineering. *Proc. AIES 2026*. arXiv:2607.17067.
+
+**Toegevoegd bij de literatuurupdate van 10 november 2026**
+
+*Bronlinks per cijfer staan in de [notities bij de update](/en/notes/update_2026-11-10/){ hreflang="en" } (Engels). Preprints, working papers en het proefschrift zijn niet peer-reviewed.*
+
+- Albadarin, Y. (2026). *Capturing the impact of generative AI on higher-order thinking, creativity, and cognitive dynamics during debugging* [doctoral dissertation, University of Eastern Finland; figures from the university Q&A of 10 November 2026, dissertation not read]. https://phys.org/news/2026-11-qa-exploring-generative-ai-impact.html
+- Bergh, C., Tag, B., Vassar, A., & Renzella, J. (2026). *Your programming students' cognition with ChatGPT: Higher performance, lower retention, and reduced ownership*. arXiv:2609.21194 [preprint]. https://arxiv.org/abs/2609.21194
+- Chen, F., & Stratton, J. (2026). *Artificial intelligence in the firm: Bottlenecks in software production* [working paper, Harvard University; version of 9 November 2026; data from Jellyfish]. https://fion.ac/jellyfish.pdf
+- Demirer, M., Musolff, L., & Yang, L. (2026). *Writing code vs. shipping code: Productivity effects across generations of AI coding tools* (NBER Working Paper 35275; revised September 2026) [working paper]. https://doi.org/10.3386/w35275
+- Lepp, M. (2026). Patterns of learner-AI interaction and academic performance in an object-oriented programming course. *Proc. IEEE FIE 2026*. arXiv:2607.24755 [preprint].
+- O'Neill, P. (2026). [Audit of AI-in-education meta-analyses; title not verified]. EdArXiv preprint, https://osf.io/preprints/edarxiv/n29zd_v3. Reported by Barshay, J. (2026, October 26), *The Hechinger Report*, https://hechingerreport.org/proof-points-ai-education-meta-analysis/
+- Walker, Fesler, Martinez Claeys, Agnew, & Loeb (2026). *The evidence base on AI in K-12: A November 2026 review*. SCALE Initiative, Stanford Graduate School of Education. https://doi.org/10.26300/80wn-ca81
 
 ---
 
@@ -1713,6 +1737,24 @@ In de eerste sessies van de pilot gebruikte één student de harnas in drie leer
 ---
 
 ## 11. Wijzigingslog
+
+### 10 november 2026 (later): literatuurupdate, 8–10 november
+
+Een korte zoektocht naar studies die na de notities van 7 november verschenen, en naar studies die die zoekopdrachten hadden gemist. De notities, met een link bij elk cijfer, staan in de [notities bij de update](/en/notes/update_2026-11-10/){ hreflang="en" } (Engels).
+
+- **Nieuw sinds 8 november:**
+    - Albadarin (2026), proefschrift: in een quasi-experiment onthield de groep zonder AI na zeven weken meer (§1, §2.8, §3 R1, §7);
+    - het bewijsoverzicht van Stanford SCALE over 52 causale studies (§2.8, §7);
+    - Chen & Stratton (2026), versie van 9 november: de eerste onafhankelijke meting van het knelpunt bij review (§1, §2.9).
+- **Gemist door de zoekopdrachten van 7 november:**
+    - Bergh et al. (2026): hogere programmeerscores met ChatGPT, maar minder onthouden en minder eigenaarschap (§2.8; §3 R1 en R10);
+    - Lepp (2026): in een OOP-vak geen verschil in toetsscores zonder AI tussen gebruiksprofielen (§2.8);
+    - O'Neill (2026): een audit van 14 positieve meta-analyses (§1, §2.8, §3 R18);
+    - Demirer, Musolff & Yang (2026): code schrijven tegenover software opleveren (§2.9).
+- **Veranderd:** "Onbekend" in §2.8 heet nu "Onbekend of dun". §7 zegt niet meer dat geen enkele studie in het hoger onderwijs retentie na meer dan ongeveer een week heeft gemeten.
+- **Niet veranderd:** de conclusies van §2.8–2.11 en het ontwerp (§5). De nieuwe studies ondersteunen de bestaande conclusies.
+- **Bekeken en niet toegevoegd:** Nathaniel et al. (2026, *Frontiers in Computer Science*; geen uitkomst gemeten zonder AI), een narratieve review op Zenodo (niets nieuws) en twee rapporten van leveranciers (OpenAI, Google). Het experiment van OpenAI moet nog gecontroleerd worden, omdat de pagina niet te openen was.
+- **Hoe:** ongeveer twintig gerichte zoekopdrachten op het web door Claude in één sessie, en elke vondst gecontroleerd in de primaire bron waar die bereikbaar was. De cijfers van Albadarin komen uit een interview van de universiteit; het proefschrift zelf is niet gelezen.
 
 ### 10 november 2026: herschreven voor studenten en docenten
 

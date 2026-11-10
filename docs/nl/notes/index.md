@@ -8,6 +8,7 @@ Dit zijn de werknotities achter het [onderzoek](../research.md): wat de onderzoe
 | [Economie van AI-code](/en/notes/ai_coding_economics/){ hreflang="en" } | Hoeveel code AI schrijft, productiviteit, kwaliteit en kosten. |
 | [Arbeidsmarkt](/en/notes/labour_market/){ hreflang="en" } | Banen voor ontwikkelaars in de VS, de EU en Nederland. |
 | [Vaardigheden, onderwijs en toetsing](/en/notes/skills_curriculum_policy/){ hreflang="en" } | Wat werkgevers vragen, en hoe opleidingen toetsen. |
+| [Literatuurupdate, 8–10 november 2026](/en/notes/update_2026-11-10/){ hreflang="en" } | Nieuwe studies sinds 8 november, plus studies die de eerste zoekopdrachten misten. |
 
 De citatiecontroles, waarin elke bron uit het onderzoek is nagelopen, staan niet op de site maar in de [repository](https://github.com/piethanegraaf/piethanegraaf.github.io/tree/main/research/citation-checks). De correcties die eruit kwamen, staan in §11 van het [onderzoek](../research.md).
 
