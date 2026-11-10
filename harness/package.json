@@ -1,0 +1,14 @@
+{
+  "name": "leerharnas",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Learning harness for Claude Code: hint ladder, guard, explanation check, spaced reviews and a diary.",
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "test": "node --test \"test/*.test.mjs\""
+  }
+}

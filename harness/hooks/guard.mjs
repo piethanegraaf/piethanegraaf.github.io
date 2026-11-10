@@ -5,15 +5,13 @@
 import fs from "node:fs";
 import path from "node:path";
 import {
-  readStdin, loadSkills, levelForPath, skillForPath, isOverrideActive, logEvent, rel,
-  PROTECTED, LEVEL_NAMES, ROOT,
+  readStdin, loadSkills, levelForPath, isOverrideActive, logEvent, rel, isHarnessPath,
+  codeExtRe, buildCmdRe, PROTECTED, LEVEL_NAMES, ROOT,
 } from "./lib.mjs";
 
-const CODE_EXT = /\.(cs|csproj|sln|slnx)$/i;
-const CODE_IN_CMD = /\.(cs|csproj|sln|slnx)\b/i;
+// Learner code (settings.codeExtensions) and build commands (settings.buildCommands): see lib.mjs.
 // Only commands that build, run or test code (or change the project) are blocked.
-// Information commands such as `dotnet --list-sdks`, `dotnet --info` or `snek ...` are tooling (L4) and allowed.
-const BUILD_CMD = /\bdotnet(\.exe)?\s+(build|test|run|watch|publish|pack|new|add|remove|restore|msbuild|vstest|format|exec|sln)\b|\b(msbuild|csc|devenv|vstest(\.console)?)\b|check\.mjs/i;
+// Information commands such as `dotnet --list-sdks` or `dotnet --info` are tooling (L4) and allowed.
 const WRITE_CMD = /(>|\bSet-Content\b|\bAdd-Content\b|\bOut-File\b|\bNew-Item\b|\btee\b|\bsed\s+-i|\bperl\s+-p?i|\bcp\b|\bmv\b|\brm\b|\bdel\b|\bCopy-Item\b|\bMove-Item\b|\bRemove-Item\b|\bRename-Item\b|WriteAll(Text|Lines)|\bgit\s+(checkout|restore|reset|stash|apply)\b)/i;
 // Redirects to nowhere and arrows (=> in C# lambdas, -> in text) are not writes.
 const stripHarmless = (c) => c
@@ -21,8 +19,12 @@ const stripHarmless = (c) => c
   .replace(/\d?>>?\s*(\/dev\/null|\$null|nul)\b/gi, " ")
   .replace(/[=-]>/g, " ");
 // Everything except list/status changes the learner's record.
-const RECORD_CMD = /skill\.mjs["']?\s+(set|review|override|untask|add-micro|done|setting)\b/i;
+const RECORD_CMD = /skill\.mjs["']?\s+(set|review|override|untask|correct|add-micro|done|setting)\b/i;
 const TODO = "TODO(human)";
+// The harness itself: hooks, diary skill, settings.json and the harness instructions and manifest.
+const HARNESS_IN_CMD = /\.claude[\\/]+(hooks[\\/]|skills[\\/]+diary|settings(\.local)?\.json|leerharnas)/i;
+const HARNESS_DENY = "Leerharnas: de bestanden van de harnas zelf (hooks, diary-skill, .claude/settings.json, .claude/leerharnas*) " +
+  "wijzigt alleen de student, met de hand of met `install.mjs --update`. Stel de wijziging voor in plaats van hem uit te voeren.";
 
 function deny(reason, event) {
   logEvent({ type: "deny", ...event, reason });
@@ -62,6 +64,9 @@ try {
   // Fail closed for code: if the record is unreadable, all project code counts as L2.
   data = { settings: { defaultLevel: "L2" }, skills: [] };
 }
+const CODE_EXT = codeExtRe(data);
+const CODE_IN_CMD = codeExtRe(data, true);
+const BUILD_CMD = buildCmdRe(data);
 
 // 1) The skill record and state belong to the learner.
 const isRecordPath = (p) => {
@@ -75,6 +80,7 @@ if (["Edit", "Write", "MultiEdit", "NotebookEdit"].includes(tool)) {
     deny("Leerharnas: het vaardighedenregister en de state wijzigt alleen de student, via `! node .claude/hooks/skill.mjs ...`. Stel de wijziging voor in plaats van hem uit te voeren.",
       { tool, file: rel(file) });
   }
+  if (isHarnessPath(rel(file))) deny(HARNESS_DENY, { tool, file: rel(file) });
   if (!file || !CODE_EXT.test(file)) process.exit(0);
 
   const { inProject, level, skill } = levelForPath(data, file);
@@ -105,6 +111,7 @@ if (tool === "Bash" || tool === "PowerShell") {
     deny("Leerharnas: niveaus, taken, herhalingen en overrides zet alleen de student zelf (met `!` voor het commando). Je mag `node .claude/hooks/skill.mjs list` en `status` wel draaien.",
       { tool, cmd: cmd.slice(0, 200) });
   }
+  if (HARNESS_IN_CMD.test(cmd) && WRITE_CMD.test(stripHarmless(cmd))) deny(HARNESS_DENY, { tool, cmd: cmd.slice(0, 200) });
   const building = BUILD_CMD.test(cmd);
   const writing = CODE_IN_CMD.test(cmd) && WRITE_CMD.test(stripHarmless(cmd));
   if (!building && !writing) process.exit(0);

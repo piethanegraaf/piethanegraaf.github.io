@@ -6,6 +6,7 @@ import path from "node:path";
 import {
   readStdin, loadSkills, findSkill, globToRegex, logEvent, loadSession, saveSession,
   taskStats, ROOT, LEVEL_NAMES, isMicro, microsOf, keywordMap, logTask, pendingTasks, levelAdvice, learnerText,
+  settingsOf, codeExtRe, toolingRe,
 } from "./lib.mjs";
 
 const RUNGS = {
@@ -22,7 +23,6 @@ const SOLUTION_RE = /\b(oplossing|uitwerking|voorzeggen|schrijf (het|de code|het
 const SOLVED_STRONG_RE = /\b(tests? (zijn |is )?groen|alle tests? (slagen|geslaagd|groen)|test(s)? (slaagt|slagen) nu|all tests pass(ed)?)\b/i;
 const SOLVED_WEAK_RE = /\b(gelukt|het werkt|werkt nu|opgelost|it works|solved)\b/i;
 const CODE_CONTEXT_RE = /\b(test|tests|methode|method|klasse|class|code|opdracht|functie|compileert|build|bouwt)\b/i;
-const TOOLING_RE = /\b(snek|snak|longboi|visual studio|\bvs\b|vs ?code|rider|sdk|\.net \d|dotnet --|install|ide|extensie|extension|nuget|git|onedrive|inlog|login)\b/i;
 const NOT_SOLVED_RE = /\b(niet gelukt|werkt (nog )?niet|not work|niet opgelost)\b/i;
 const END_RE = /^\s*(klaar( voor vandaag)?|ik (ben )?klaar|ik stop|stoppen|stop voor vandaag|einde sessie|tot (morgen|later)|doei|done for today|i'?m done)\b/i;
 const ATTEMPT_RE = /(```|\bCS\d{4}\b|exception|\berror\b|foutmelding|\bassert|expected|but was|\bfailed\b|geprobeerd|ik denk|volgens mij|hypothese|i tried|i think|test(en)? (faalt|falen|rood|fail))/i;
@@ -42,7 +42,11 @@ const prompt = own;
 let data;
 try { data = loadSkills(); } catch { process.exit(0); }
 
-const T = data.settings.stuckTimerMinutes ?? 12;
+const settings = settingsOf(data);
+const T = settings.stuckTimerMinutes;
+// Tooling words (settings.toolingTerms): "it works" about the environment is not a solved task.
+const TOOLING_RE = toolingRe(data);
+const CODE_FILE = codeExtRe(data);
 const now = Date.now();
 const st = loadSession(sid);
 const ctx = [];
@@ -117,7 +121,7 @@ if (detected && detected.id !== st.activeSkill) {
   if (!sameFamily) { st.rung = 0; st.lastRungAt = null; st.taskStartedAt = now; }
 }
 const skill = st.activeSkill ? findSkill(data, st.activeSkill) : null;
-const level = skill ? skill.level : data.settings.defaultLevel;
+const level = skill ? skill.level : settings.defaultLevel;
 
 // ---------- 2. Signals ----------
 function changedSince(since) {
@@ -133,7 +137,7 @@ function changedSince(since) {
       if (e.isDirectory()) {
         if (/^(bin|obj|\.vs|\.idea|\.git|\.claude|\.learning|node_modules)$/i.test(e.name)) continue;
         walk((dir ? dir + "/" : "") + e.name);
-      } else if (/\.cs$/i.test(e.name)) {
+      } else if (CODE_FILE.test(e.name)) {
         const f = (dir ? dir + "/" : "") + e.name;
         try { if (fs.statSync(path.join(ROOT, f)).mtimeMs > since) out.push(f); } catch { /* skip */ }
       }

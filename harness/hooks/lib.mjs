@@ -4,8 +4,11 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-export const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "..");
-// LEERHARNAS_DATA only exists for testing with a copy of the data.
+// The hooks live in <project>/.claude/hooks/, so the project is two levels up.
+// LEERHARNAS_ROOT and LEERHARNAS_DATA only exist for testing (a temporary project and data).
+export const ROOT = process.env.LEERHARNAS_ROOT
+  ? path.resolve(process.env.LEERHARNAS_ROOT)
+  : path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "..");
 export const LEARN = process.env.LEERHARNAS_DATA ?? path.join(ROOT, ".learning");
 export const SKILLS_FILE = path.join(LEARN, "skills.json");
 export const STATE_DIR = path.join(LEARN, "state");
@@ -40,6 +43,64 @@ export function today(offsetDays = 0) {
 }
 
 const dayDiff = (a, b) => Math.round((Date.parse(b) - Date.parse(a)) / 86400000);
+
+// ---- Settings (in skills.json, changed by the learner with `skill.mjs setting`) ----
+// The defaults fit a C#/.NET course. Another language sets codeExtensions and buildCommands.
+export const DEFAULT_SETTINGS = {
+  course: "",
+  language: "nl",
+  examDate: null,
+  defaultLevel: "L2",
+  stuckTimerMinutes: 12,
+  targetSuccess: 0.85,
+  // Files whose content belongs to the learner (the guard protects them at L1-L3).
+  codeExtensions: ["cs", "csproj", "sln", "slnx"],
+  // Commands that build, run or test code (regular expressions, case-insensitive).
+  buildCommands: [
+    "\\bdotnet(\\.exe)?\\s+(build|test|run|watch|publish|pack|new|add|remove|restore|msbuild|vstest|format|exec|sln)\\b",
+    "\\b(msbuild|csc|devenv|vstest(\\.console)?)\\b",
+  ],
+  // Words that point to tooling (environment, IDE): "it works" about these is not a solved task.
+  toolingTerms: ["visual studio", "vs", "vs ?code", "rider", "sdk", "\\.net \\d", "dotnet --", "install", "ide",
+    "extensie", "extension", "nuget", "git", "onedrive", "inlog", "login"],
+};
+
+export function settingsOf(data) {
+  return { ...DEFAULT_SETTINGS, ...(data?.settings ?? {}) };
+}
+
+const escapeRe = (s) => String(s).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+// A list setting; a wrong type falls back to the default (a hook that crashes lets everything through).
+const listSetting = (data, key) => {
+  const v = settingsOf(data)[key];
+  return Array.isArray(v) ? v.map(String) : DEFAULT_SETTINGS[key];
+};
+// A regex from settings; an invalid pattern falls back to the default, so the guard never fails open.
+const safeRe = (make, data, key) => {
+  try { return make(listSetting(data, key)); } catch { return make(DEFAULT_SETTINGS[key]); }
+};
+
+// File extension pattern for learner code, e.g. /\.(cs|csproj)$/i (end) or /\.(cs|csproj)\b/i (in a command).
+export function codeExtRe(data, inCommand = false) {
+  const ext = listSetting(data, "codeExtensions").map((e) => escapeRe(e.replace(/^\./, ""))).filter(Boolean);
+  return new RegExp(`\\.(${ext.join("|") || "(?!)"})${inCommand ? "\\b" : "$"}`, "i");
+}
+
+// Commands that build, run or test code. check.mjs (the harness test runner) always counts.
+export function buildCmdRe(data) {
+  return safeRe((list) => new RegExp([...list, "check\\.mjs"].map((s) => `(?:${s})`).join("|"), "i"), data, "buildCommands");
+}
+
+export function toolingRe(data) {
+  return safeRe((list) => new RegExp(`\\b(${list.join("|")})\\b`, "i"), data, "toolingTerms");
+}
+
+// Files of the harness itself. Only the learner changes them (by hand, with "!" or install.mjs),
+// otherwise the AI could switch off its own guard.
+export function isHarnessPath(r) {
+  return r !== null && /^\.claude\/(hooks\/|skills\/diary\/|settings(\.local)?\.json$|leerharnas)/i.test(r);
+}
 
 export function loadSkills() {
   return JSON.parse(fs.readFileSync(SKILLS_FILE, "utf8"));
@@ -128,7 +189,7 @@ export function globToRegex(glob) {
 export function rel(p) {
   if (!p) return null;
   let s = String(p);
-  const m = s.match(/^\/([a-zA-Z])\/(.*)$/); // Git Bash style /c/Users/...
+  const m = s.match(/^\/([a-zA-Z])\/(.*)$/); // Git Bash style /c/path/to/...
   if (m) s = `${m[1]}:/${m[2]}`;
   const r = path.relative(ROOT, path.resolve(ROOT, s));
   if (r.startsWith("..") || path.isAbsolute(r)) return null;
@@ -156,7 +217,7 @@ export function skillForPath(data, p) {
 export function levelForPath(data, p) {
   if (rel(p) === null) return { inProject: false, level: null, skill: null };
   const skill = skillForPath(data, p);
-  return { inProject: true, level: skill ? skill.level : data.settings.defaultLevel, skill };
+  return { inProject: true, level: skill ? skill.level : settingsOf(data).defaultLevel, skill };
 }
 
 // Keywords per skill: .learning/keywords.json plus the "keywords" field of the skill itself (microskills).
@@ -334,8 +395,9 @@ export function levelAdvice(data, s) {
     const gaps = t.filter((x) => x.success && (x.maxRung ?? 0) <= 1).length;
     if (gaps >= 3) return { dir: "up", text: `${s.id}: ${gaps} gaten gevuld met hooguit 1 hint`, cmd: `set ${s.id} L2 "3 gaten gevuld"` };
   }
-  if (s.level === "L2" && st.n >= 5 && st.rate >= (data.settings.targetSuccess ?? 0.85)) {
-    return { dir: "up", text: `${s.id}: ${st.ok}/${st.n} gelukt (≥ 85%)`, cmd: `set ${s.id} L3 "${st.ok}/${st.n} gelukt"` };
+  const target = settingsOf(data).targetSuccess;
+  if (s.level === "L2" && st.n >= 5 && st.rate >= target) {
+    return { dir: "up", text: `${s.id}: ${st.ok}/${st.n} gelukt (≥ ${Math.round(target * 100)}%)`, cmd: `set ${s.id} L3 "${st.ok}/${st.n} gelukt"` };
   }
   if (s.level === "L3") {
     const solo = clean.filter((x) => (x.maxRung ?? 0) === 0);

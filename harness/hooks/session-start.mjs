@@ -3,7 +3,7 @@
 import fs from "node:fs";
 import {
   readStdin, loadSkills, loadOverrides, today, taskStats, LEVEL_NAMES, DIARY_DIR,
-  isMicro, dueReviews, pendingTasks, recentWins, levelAdvice,
+  isMicro, dueReviews, pendingTasks, recentWins, levelAdvice, settingsOf,
 } from "./lib.mjs";
 
 let input = {};
@@ -26,7 +26,8 @@ const overrides = loadOverrides();
 const pending = pendingTasks();
 const wins = recentWins(data);
 const advice = skills.map((s) => levelAdvice(data, s)).filter(Boolean);
-const exam = data.settings.examDate;
+const settings = settingsOf(data);
+const exam = settings.examDate;
 const daysToExam = exam ? Math.round((Date.parse(exam) - Date.parse(t)) / 86400000) : null;
 
 let lastDiary = null;
@@ -50,8 +51,9 @@ const ritual = source === "startup" || source === "clear"
   : "Sessie hervat of gecomprimeerd: vraag niet opnieuw naar het plan, maar houd je aan de niveaus hieronder.";
 
 const ctx = `LEERHARNAS ACTIEF (zie CLAUDE.md voor de volledige regels). Vandaag: ${t}.` +
+  (settings.course ? ` Vak: ${settings.course}.` : "") +
   (exam ? ` Toets/assessment: ${exam} (nog ${daysToExam} dagen).` : " Geen toetsdatum ingesteld (student: `! node .claude/hooks/skill.mjs setting examDate JJJJ-MM-DD`).") + `
-Standaardniveau voor code die niet gekoppeld is: ${data.settings.defaultLevel}. Herhalingen: Fibonacci-intervallen (1, 2, 3, 5, 8, 13, 21 ... dagen) vanaf L3.
+Standaardniveau voor code die niet gekoppeld is: ${settings.defaultLevel}. Herhalingen: Fibonacci-intervallen (1, 2, 3, 5, 8, 13, 21 ... dagen) vanaf L3.
 
 | id | vaardigheid | niveau | gelukt (≤ trede 2, laatste 10) | paden / trefwoorden | volgende herhaling |
 |---|---|---|---|---|---|

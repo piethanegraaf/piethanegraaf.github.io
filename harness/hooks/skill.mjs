@@ -10,7 +10,7 @@
 //   node .claude/hooks/skill.mjs correct <taak-id> trede <1-5> "reden"   (er was meer hulp dan gelogd; alleen omhoog)
 //   node .claude/hooks/skill.mjs correct <taak-id> schrap "reden"        (één specifieke taak schrappen)
 //   node .claude/hooks/skill.mjs override <id|*> <minuten> "<reden>"
-//   node .claude/hooks/skill.mjs setting <sleutel> <waarde>  (examDate, stuckTimerMinutes, defaultLevel)
+//   node .claude/hooks/skill.mjs setting <sleutel> <waarde>  (examDate, stuckTimerMinutes, defaultLevel, course, language)
 // The guard blocks Claude from running any command except list and status.
 // There is deliberately NO command to mark a task as explained: that only happens via
 // an explanation in your own words in the chat (checked by reflect-gate.mjs).
@@ -41,7 +41,7 @@ function row(s, indent = "") {
 function status() {
   const due = dueReviews(data);
   const pend = pendingTasks();
-  console.log(`Vandaag ${today()}${data.settings.examDate ? ` · toets ${data.settings.examDate}` : " · geen toetsdatum (setting examDate)"}`);
+  console.log(`Vandaag ${today()}${data.settings?.examDate ? ` · toets ${data.settings.examDate}` : " · geen toetsdatum (setting examDate)"}`);
   console.log(`\nHerhalingen vandaag: ${due.length ? due.map((s) => s.id).join(", ") : "geen"}`);
   console.log(`Taken die wachten op uitleg in eigen woorden: ${pend.length ? pend.map((t) => `${t.skill} [${t.tid}] ${t.what ?? ""}`.trim()).join("; ") : "geen"}`);
   const wins = recentWins(data);
@@ -177,11 +177,16 @@ switch (cmd) {
     break;
   }
   case "setting": {
-    const [key, value] = args;
-    const allowed = { examDate: /^\d{4}-\d{2}-\d{2}$/, stuckTimerMinutes: /^\d+$/, defaultLevel: /^L[0-4]$/ };
-    if (!allowed[key] || !allowed[key].test(String(value ?? ""))) {
-      console.error("setting examDate JJJJ-MM-DD | stuckTimerMinutes <getal> | defaultLevel L0..L4"); process.exit(1);
+    const [key, ...rest] = args;
+    const value = rest.join(" ");
+    const allowed = {
+      examDate: /^\d{4}-\d{2}-\d{2}$/, stuckTimerMinutes: /^\d+$/, defaultLevel: /^L[0-4]$/,
+      course: /^[^\r\n<>]{1,80}$/, language: /^(nl|en)$/,
+    };
+    if (!allowed[key] || !allowed[key].test(value)) {
+      console.error('setting examDate JJJJ-MM-DD | stuckTimerMinutes <getal> | defaultLevel L0..L4 | course "<vak>" | language nl|en'); process.exit(1);
     }
+    data.settings = data.settings ?? {};
     data.settings[key] = key === "stuckTimerMinutes" ? Number(value) : value;
     saveSkills(data);
     logEvent({ type: "setting", key, value });
