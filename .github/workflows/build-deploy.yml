@@ -1,0 +1,105 @@
+# Builds the project site (MkDocs + static pages from site-src/) and deploys it
+# to GitHub Pages.
+#
+# Deploying requires Settings > Pages > Source = "GitHub Actions". Until then
+# the site is served the legacy way (branch main, folder /). Switch the source
+# first, and only then merge this workflow into main.
+
+name: Build and deploy site
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    env:
+      # Pinned and integrity-checked (sha512 from the npm registry).
+      # Material for MkDocs 9.x expects mermaid 11.
+      MERMAID_VERSION: 11.17.2
+      MERMAID_INTEGRITY: sha512-V6K3C8EBdEsPFZXSKMJe6ppQOENxuHARr9GvHX4hh47lAbhMRD9qf4oEK7LoaRQxULMa80/qt5gHO73aCleBBg==
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements.txt
+
+      - name: Install MkDocs (pinned)
+        run: python -m pip install -r requirements.txt
+
+      - name: Build docs
+        run: mkdocs build --strict
+
+      - name: Add mermaid (self-hosted)
+        run: |
+          tgz="$RUNNER_TEMP/mermaid.tgz"
+          curl -sSfL -o "$tgz" "https://registry.npmjs.org/mermaid/-/mermaid-${MERMAID_VERSION}.tgz"
+          got="sha512-$(openssl dgst -sha512 -binary "$tgz" | base64 -w0)"
+          if [ "$got" != "$MERMAID_INTEGRITY" ]; then
+            echo "::error::mermaid ${MERMAID_VERSION}: integrity mismatch ($got)"
+            exit 1
+          fi
+          tar -xzf "$tgz" -C "$RUNNER_TEMP" package/dist/mermaid.min.js package/LICENSE
+          mkdir -p site/assets/javascripts/vendor
+          cp "$RUNNER_TEMP/package/dist/mermaid.min.js" site/assets/javascripts/vendor/mermaid.min.js
+          cp "$RUNNER_TEMP/package/LICENSE" site/assets/javascripts/vendor/mermaid.LICENSE.txt
+
+      - name: Add static pages from site-src/
+        run: |
+          for src in site-src/*/; do
+            name="$(basename "$src")"
+            if [ -e "site/$name" ]; then
+              echo "::error::site/$name already exists (a docs page uses the same path)"
+              exit 1
+            fi
+            cp -R "$src" "site/$name"
+          done
+          find site -name .gitkeep -delete
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: "24"
+
+      - name: Add a Content-Security-Policy to every page
+        run: node harness/site-csp.mjs site
+
+      - name: Security check of the built site
+        run: node harness/security-check.mjs --ci --site site
+
+      - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
+        with:
+          path: site
+
+  deploy:
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    needs: build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    concurrency:
+      group: pages
+      cancel-in-progress: false
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1

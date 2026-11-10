@@ -1,0 +1,17 @@
+{
+  "_info": "Decisions about TWIJFEL findings of harness/security-check.mjs. Every entry needs a reason. BLOKKEER can never be allowed here.",
+  "entries": [
+    { "rule": "privacy.*", "path": "harness/test/**", "reason": "Nepdata in tests (verzonnen namen, paden, e-mailadressen en sessie-id): de tests controleren juist dat zulke gegevens worden weggefilterd." },
+
+    { "rule": "web.inline-script", "path": "site-src/cheatsheet/index.html", "reason": "Besluit 10-11-2026: statische scripts van de cheat sheet zelf (themaknop, ingebouwde highlight.js 11.11.1 en de runner die de codeblokken kleurt). Geen invoer van gebruikers. De gebouwde site staat ze toe via sha256-hashes in de CSP (site-csp.mjs)." },
+    { "rule": "web.html-sink", "path": "site-src/cheatsheet/index.html", "reason": "Besluit 10-11-2026: innerHTML krijgt alleen de uitvoer van hljs.highlight(), die de broncode escapet. Er komt geen vrije tekst van buiten in." },
+    { "rule": "web.csp", "path": "site-src/cheatsheet/index.html", "reason": "Besluit 10-11-2026: de bron heeft geen CSP; de gebouwde pagina krijgt er een met hashes van de inline scripts (site-csp.mjs), en de site-check eist die." },
+    { "rule": "privacy.email", "path": "site-src/cheatsheet/index.html", "match": "@voorbeeld.nl", "reason": "Besluit 10-11-2026: verzonnen adres in de C#-voorbeelden over validatie." },
+    { "rule": "privacy.email", "path": "index.html", "match": "@voorbeeld.nl", "reason": "Besluit 10-11-2026: hetzelfde verzonnen adres, in oudere commits waarin de cheat sheet nog in de root stond." },
+
+    { "rule": "copyright.quote", "path": "docs/nl/notes/citation_check_learning_science.md", "reason": "Besluit 10-11-2026: korte letterlijke abstracts met bronvermelding, nodig om de citatiecheck na te kunnen gaan (citaatrecht)." },
+    { "rule": "copyright.quote", "path": "docs/nl/notes/labour_market.md", "reason": "Besluit 10-11-2026: regel 3 is de eigen labellegenda van de notitie; de andere zijn korte citaten met bronvermelding (citaatrecht)." }
+  ],
+  "commitEmails": [],
+  "githubMerges": { "allow": true, "reason": "Besluit 10-11-2026: een merge op github.com mag het e-mailadres van het GitHub-account dragen." }
+}

@@ -1,0 +1,1163 @@
+{
+  "schema": 1,
+  "generatedAt": "2026-11-10",
+  "course": "Object-Oriented Design (C#)",
+  "language": "en",
+  "examDate": "2027-01-20",
+  "settings": {
+    "defaultLevel": "L2",
+    "targetSuccess": 0.85,
+    "stuckTimerMinutes": 12
+  },
+  "skills": [
+    {
+      "id": "zone.voorbeelden",
+      "parent": null,
+      "kind": "zone",
+      "title": "Worked examples (the AI may write here)",
+      "level": "L0",
+      "nextReview": null,
+      "intervalIndex": 0,
+      "lastReview": null,
+      "history": []
+    },
+    {
+      "id": "cs.basis",
+      "parent": null,
+      "kind": null,
+      "title": "C# basics: methods, strings, lists, loops",
+      "level": "L3",
+      "nextReview": "2026-11-09",
+      "intervalIndex": 2,
+      "lastReview": null,
+      "history": [
+        {
+          "at": "2026-10-29",
+          "from": "L2",
+          "to": "L3",
+          "note": "5/6 solved"
+        }
+      ]
+    },
+    {
+      "id": "cs.basis.lussen",
+      "parent": "cs.basis",
+      "kind": null,
+      "title": "loop bounds",
+      "level": "L3",
+      "nextReview": "2026-11-13",
+      "intervalIndex": 3,
+      "lastReview": null,
+      "history": [
+        {
+          "at": "2026-10-31",
+          "from": null,
+          "to": "L3",
+          "note": "created"
+        }
+      ]
+    },
+    {
+      "id": "ood.klassen-properties",
+      "parent": null,
+      "kind": null,
+      "title": "Classes, constructors; variable vs field vs property (private set)",
+      "level": "L3",
+      "nextReview": "2026-11-10",
+      "intervalIndex": 1,
+      "lastReview": null,
+      "history": [
+        {
+          "at": "2026-11-04",
+          "from": "L2",
+          "to": "L3",
+          "note": "5/6 solved"
+        }
+      ]
+    },
+    {
+      "id": "ood.klassen.veld-vs-lokaal",
+      "parent": "ood.klassen-properties",
+      "kind": null,
+      "title": "field vs local variable",
+      "level": "L2",
+      "nextReview": null,
+      "intervalIndex": 0,
+      "lastReview": null,
+      "history": [
+        {
+          "at": "2026-10-31",
+          "from": null,
+          "to": "L2",
+          "note": "created"
+        }
+      ]
+    },
+    {
+      "id": "ood.overerving",
+      "parent": null,
+      "kind": null,
+      "title": "Inheritance, : base(...), abstract, override",
+      "level": "L2",
+      "nextReview": null,
+      "intervalIndex": 0,
+      "lastReview": null,
+      "history": []
+    },
+    {
+      "id": "ood.overerving.base-ctor",
+      "parent": "ood.overerving",
+      "kind": null,
+      "title": "base class constructor",
+      "level": "L1",
+      "nextReview": null,
+      "intervalIndex": 0,
+      "lastReview": null,
+      "history": [
+        {
+          "at": "2026-10-31",
+          "from": null,
+          "to": "L1",
+          "note": "created"
+        }
+      ]
+    },
+    {
+      "id": "ood.associaties",
+      "parent": null,
+      "kind": null,
+      "title": "Associations: one-to-many, many-to-many",
+      "level": "L2",
+      "nextReview": null,
+      "intervalIndex": 0,
+      "lastReview": null,
+      "history": []
+    },
+    {
+      "id": "ood.aggregatie-compositie",
+      "parent": null,
+      "kind": null,
+      "title": "Aggregation and composition (has-a)",
+      "level": "L1",
+      "nextReview": null,
+      "intervalIndex": 0,
+      "lastReview": null,
+      "history": []
+    },
+    {
+      "id": "ood.encapsulatie",
+      "parent": null,
+      "kind": null,
+      "title": "Encapsulation: private fields, validation, state through methods",
+      "level": "L2",
+      "nextReview": null,
+      "intervalIndex": 0,
+      "lastReview": null,
+      "history": []
+    },
+    {
+      "id": "test.unit-tests",
+      "parent": null,
+      "kind": null,
+      "title": "Unit tests (NUnit): boundary values, TDD, test plan",
+      "level": "L2",
+      "nextReview": null,
+      "intervalIndex": 0,
+      "lastReview": null,
+      "history": [
+        {
+          "at": "2026-11-08",
+          "from": "L1",
+          "to": "L2",
+          "note": "5/6 solved"
+        }
+      ]
+    },
+    {
+      "id": "ood.interfaces",
+      "parent": null,
+      "kind": null,
+      "title": "Designing and implementing interfaces",
+      "level": "L1",
+      "nextReview": null,
+      "intervalIndex": 0,
+      "lastReview": null,
+      "history": []
+    },
+    {
+      "id": "ood.exceptions",
+      "parent": null,
+      "kind": null,
+      "title": "Exception hierarchy, type checks, order of checks",
+      "level": "L2",
+      "nextReview": null,
+      "intervalIndex": 0,
+      "lastReview": null,
+      "history": []
+    },
+    {
+      "id": "ood.generics-dictionary",
+      "parent": null,
+      "kind": null,
+      "title": "Generic class with a constraint (where T : ...) + Dictionary",
+      "level": "L0",
+      "nextReview": null,
+      "intervalIndex": 0,
+      "lastReview": null,
+      "history": []
+    },
+    {
+      "id": "pattern.strategy",
+      "parent": null,
+      "kind": null,
+      "title": "Strategy pattern",
+      "level": "L0",
+      "nextReview": null,
+      "intervalIndex": 0,
+      "lastReview": null,
+      "history": []
+    },
+    {
+      "id": "pattern.factory",
+      "parent": null,
+      "kind": null,
+      "title": "Factory (Method) pattern",
+      "level": "L0",
+      "nextReview": null,
+      "intervalIndex": 0,
+      "lastReview": null,
+      "history": []
+    },
+    {
+      "id": "pattern.observer",
+      "parent": null,
+      "kind": null,
+      "title": "Observer pattern",
+      "level": "L0",
+      "nextReview": null,
+      "intervalIndex": 0,
+      "lastReview": null,
+      "history": []
+    },
+    {
+      "id": "debug.zonder-foutmelding",
+      "parent": null,
+      "kind": null,
+      "title": "Debugging without an error message: from symptom to cause",
+      "level": "L1",
+      "nextReview": null,
+      "intervalIndex": 0,
+      "lastReview": null,
+      "history": []
+    },
+    {
+      "id": "uml.klassendiagram",
+      "parent": null,
+      "kind": null,
+      "title": "UML/Mermaid class diagram, is-a vs has-a",
+      "level": "L2",
+      "nextReview": null,
+      "intervalIndex": 0,
+      "lastReview": null,
+      "history": []
+    }
+  ],
+  "tasks": [
+    {
+      "id": "demo001",
+      "at": "2026-10-28T13:00:00.000Z",
+      "skill": "cs.basis",
+      "source": "done",
+      "success": true,
+      "maxRung": 0,
+      "minutes": 23,
+      "what": "TestA",
+      "explained": true,
+      "explanation": "It works now because the property has a private set, so only the class itself can change the value.",
+      "explainedAt": "2026-10-28T13:10:00.000Z",
+      "rejections": [],
+      "corrections": [],
+      "void": false,
+      "voidReason": null
+    },
+    {
+      "id": "demo002",
+      "at": "2026-10-28T14:00:00.000Z",
+      "skill": "cs.basis",
+      "source": "check",
+      "success": true,
+      "maxRung": 1,
+      "minutes": 26,
+      "what": "TestB",
+      "explained": true,
+      "explanation": "I had to call base(name), otherwise the base class got no name and it stayed empty in the test.",
+      "explainedAt": "2026-10-28T14:10:00.000Z",
+      "rejections": [],
+      "corrections": [],
+      "void": false,
+      "voidReason": null
+    },
+    {
+      "id": "demo003",
+      "at": "2026-10-28T15:00:00.000Z",
+      "skill": "cs.basis",
+      "source": "check",
+      "success": true,
+      "maxRung": 1,
+      "minutes": 24,
+      "what": "TestC",
+      "explained": true,
+      "explanation": "The list was a local variable in the method first, so it was empty again after every call.",
+      "explainedAt": "2026-10-28T15:10:00.000Z",
+      "rejections": [],
+      "corrections": [],
+      "void": false,
+      "voidReason": null
+    },
+    {
+      "id": "demo004",
+      "at": "2026-10-29T13:00:00.000Z",
+      "skill": "cs.basis.lussen",
+      "source": "check",
+      "success": true,
+      "maxRung": 0,
+      "minutes": 19,
+      "what": "TestD",
+      "explained": true,
+      "explanation": "I now throw an ArgumentException when the price is negative, so an invalid object cannot exist.",
+      "explainedAt": "2026-10-29T13:10:00.000Z",
+      "rejections": [],
+      "corrections": [],
+      "void": false,
+      "voidReason": null
+    },
+    {
+      "id": "demo005",
+      "at": "2026-10-29T14:00:00.000Z",
+      "skill": "cs.basis.lussen",
+      "source": "check",
+      "success": true,
+      "maxRung": 1,
+      "minutes": 28,
+      "what": "TestE",
+      "explained": true,
+      "explanation": "I use a Dictionary because I want to look things up by code instead of walking the whole list.",
+      "explainedAt": "2026-10-29T14:10:00.000Z",
+      "rejections": [],
+      "corrections": [
+        {
+          "at": "2026-10-29T14:30:00.000Z",
+          "from": 0,
+          "to": 1,
+          "reason": "got a hint from a classmate"
+        }
+      ],
+      "void": false,
+      "voidReason": null
+    },
+    {
+      "id": "demo006",
+      "at": "2026-10-31T13:00:00.000Z",
+      "skill": "ood.klassen-properties",
+      "source": "check",
+      "success": true,
+      "maxRung": 2,
+      "minutes": 12,
+      "what": "TestF",
+      "explained": true,
+      "explanation": "The test failed because my loop started at 1, so I skipped the first element. Now it starts at 0.",
+      "explainedAt": "2026-10-31T13:10:00.000Z",
+      "rejections": [
+        {
+          "at": "2026-10-31T13:05:00.000Z",
+          "by": "hook",
+          "reasons": [
+            "too short (7 words, at least 12 outside code)"
+          ]
+        }
+      ],
+      "corrections": [],
+      "void": false,
+      "voidReason": null
+    },
+    {
+      "id": "demo007",
+      "at": "2026-10-31T14:00:00.000Z",
+      "skill": "ood.klassen-properties",
+      "source": "done",
+      "success": true,
+      "maxRung": 1,
+      "minutes": 16,
+      "what": "TestG",
+      "explained": true,
+      "explanation": "It works now because the property has a private set, so only the class itself can change the value.",
+      "explainedAt": "2026-10-31T14:10:00.000Z",
+      "rejections": [],
+      "corrections": [],
+      "void": false,
+      "voidReason": null
+    },
+    {
+      "id": "demo008",
+      "at": "2026-10-31T15:00:00.000Z",
+      "skill": "ood.klassen-properties",
+      "source": "done",
+      "success": true,
+      "maxRung": 0,
+      "minutes": 15,
+      "what": "TestH",
+      "explained": true,
+      "explanation": "I had to call base(name), otherwise the base class got no name and it stayed empty in the test.",
+      "explainedAt": "2026-10-31T15:10:00.000Z",
+      "rejections": [],
+      "corrections": [],
+      "void": false,
+      "voidReason": null
+    },
+    {
+      "id": "demo009",
+      "at": "2026-11-01T13:00:00.000Z",
+      "skill": "ood.klassen.veld-vs-lokaal",
+      "source": "check",
+      "success": true,
+      "maxRung": 2,
+      "minutes": 20,
+      "what": "TestI",
+      "explained": true,
+      "explanation": "The list was a local variable in the method first, so it was empty again after every call.",
+      "explainedAt": "2026-11-01T13:10:00.000Z",
+      "rejections": [
+        {
+          "at": "2026-11-01T13:05:00.000Z",
+          "by": "hook",
+          "reasons": [
+            "no why (use e.g. 'because', 'so that', 'otherwise', 'instead of')"
+          ]
+        }
+      ],
+      "corrections": [],
+      "void": false,
+      "voidReason": null
+    },
+    {
+      "id": "demo010",
+      "at": "2026-11-01T14:00:00.000Z",
+      "skill": "ood.klassen.veld-vs-lokaal",
+      "source": "check",
+      "success": true,
+      "maxRung": 3,
+      "minutes": 28,
+      "what": "TestJ",
+      "explained": true,
+      "explanation": "I now throw an ArgumentException when the price is negative, so an invalid object cannot exist.",
+      "explainedAt": "2026-11-01T14:10:00.000Z",
+      "rejections": [],
+      "corrections": [],
+      "void": false,
+      "voidReason": null
+    },
+    {
+      "id": "demo011",
+      "at": "2026-11-02T13:00:00.000Z",
+      "skill": "ood.overerving",
+      "source": "check",
+      "success": true,
+      "maxRung": 3,
+      "minutes": 19,
+      "what": "TestK",
+      "explained": true,
+      "explanation": "I use a Dictionary because I want to look things up by code instead of walking the whole list.",
+      "explainedAt": "2026-11-02T13:10:00.000Z",
+      "rejections": [],
+      "corrections": [],
+      "void": false,
+      "voidReason": null
+    },
+    {
+      "id": "demo012",
+      "at": "2026-11-02T14:00:00.000Z",
+      "skill": "ood.overerving",
+      "source": "check",
+      "success": true,
+      "maxRung": 2,
+      "minutes": 16,
+      "what": "TestL",
+      "explained": true,
+      "explanation": "The test failed because my loop started at 1, so I skipped the first element. Now it starts at 0.",
+      "explainedAt": "2026-11-02T14:10:00.000Z",
+      "rejections": [
+        {
+          "at": "2026-11-02T14:05:00.000Z",
+          "by": "hook",
+          "reasons": [
+            "too short (7 words, at least 12 outside code)"
+          ]
+        }
+      ],
+      "corrections": [],
+      "void": false,
+      "voidReason": null
+    },
+    {
+      "id": "demo013",
+      "at": "2026-11-03T13:00:00.000Z",
+      "skill": "ood.overerving.base-ctor",
+      "source": "check",
+      "success": true,
+      "maxRung": 3,
+      "minutes": 30,
+      "what": "TestM",
+      "explained": true,
+      "explanation": "It works now because the property has a private set, so only the class itself can change the value.",
+      "explainedAt": "2026-11-03T13:10:00.000Z",
+      "rejections": [],
+      "corrections": [],
+      "void": false,
+      "voidReason": null
+    },
+    {
+      "id": "demo014",
+      "at": "2026-11-03T14:00:00.000Z",
+      "skill": "ood.overerving.base-ctor",
+      "source": "check",
+      "success": false,
+      "maxRung": 5,
+      "minutes": 38,
+      "what": "TestN",
+      "explained": true,
+      "explanation": "I had to call base(name), otherwise the base class got no name and it stayed empty in the test.",
+      "explainedAt": "2026-11-03T14:10:00.000Z",
+      "rejections": [],
+      "corrections": [],
+      "void": false,
+      "voidReason": null
+    },
+    {
+      "id": "demo015",
+      "at": "2026-11-04T13:00:00.000Z",
+      "skill": "ood.klassen-properties",
+      "source": "check",
+      "success": true,
+      "maxRung": 0,
+      "minutes": 13,
+      "what": "TestO",
+      "explained": true,
+      "explanation": "The list was a local variable in the method first, so it was empty again after every call.",
+      "explainedAt": "2026-11-04T13:10:00.000Z",
+      "rejections": [],
+      "corrections": [],
+      "void": false,
+      "voidReason": null
+    },
+    {
+      "id": "demo016",
+      "at": "2026-11-04T14:00:00.000Z",
+      "skill": "ood.klassen-properties",
+      "source": "done",
+      "success": true,
+      "maxRung": 1,
+      "minutes": 28,
+      "what": "TestP",
+      "explained": true,
+      "explanation": "I now throw an ArgumentException when the price is negative, so an invalid object cannot exist.",
+      "explainedAt": "2026-11-04T14:10:00.000Z",
+      "rejections": [
+        {
+          "at": "2026-11-04T14:05:00.000Z",
+          "by": "claude",
+          "reasons": [
+            "too short (7 words, at least 12 outside code)"
+          ]
+        }
+      ],
+      "corrections": [],
+      "void": false,
+      "voidReason": null
+    },
+    {
+      "id": "demo017",
+      "at": "2026-11-05T13:00:00.000Z",
+      "skill": "ood.associaties",
+      "source": "check",
+      "success": true,
+      "maxRung": 2,
+      "minutes": 18,
+      "what": "TestQ",
+      "explained": true,
+      "explanation": "I use a Dictionary because I want to look things up by code instead of walking the whole list.",
+      "explainedAt": "2026-11-05T13:10:00.000Z",
+      "rejections": [
+        {
+          "at": "2026-11-05T13:05:00.000Z",
+          "by": "claude",
+          "reasons": [
+            "no why (use e.g. 'because', 'so that', 'otherwise', 'instead of')"
+          ]
+        }
+      ],
+      "corrections": [
+        {
+          "at": "2026-11-05T13:30:00.000Z",
+          "from": 1,
+          "to": 2,
+          "reason": "got a hint from a classmate"
+        }
+      ],
+      "void": false,
+      "voidReason": null
+    },
+    {
+      "id": "demo018",
+      "at": "2026-11-05T14:00:00.000Z",
+      "skill": "ood.associaties",
+      "source": "done",
+      "success": true,
+      "maxRung": 2,
+      "minutes": 14,
+      "what": "TestR",
+      "explained": true,
+      "explanation": "The test failed because my loop started at 1, so I skipped the first element. Now it starts at 0.",
+      "explainedAt": "2026-11-05T14:10:00.000Z",
+      "rejections": [],
+      "corrections": [],
+      "void": false,
+      "voidReason": null
+    },
+    {
+      "id": "demo019",
+      "at": "2026-11-05T15:00:00.000Z",
+      "skill": "ood.associaties",
+      "source": "check",
+      "success": true,
+      "maxRung": 0,
+      "minutes": 23,
+      "what": "TestS",
+      "explained": true,
+      "explanation": "It works now because the property has a private set, so only the class itself can change the value.",
+      "explainedAt": "2026-11-05T15:10:00.000Z",
+      "rejections": [],
+      "corrections": [],
+      "void": false,
+      "voidReason": null
+    },
+    {
+      "id": "demo900",
+      "at": "2026-11-05T15:50:00.000Z",
+      "skill": "ood.associaties",
+      "source": "check",
+      "success": true,
+      "maxRung": 0,
+      "minutes": null,
+      "what": "TestHerstel",
+      "explained": false,
+      "explanation": null,
+      "explainedAt": null,
+      "rejections": [],
+      "corrections": [],
+      "void": true,
+      "voidReason": "repair of my own regression, not a new task"
+    },
+    {
+      "id": "demo020",
+      "at": "2026-11-06T13:00:00.000Z",
+      "skill": "ood.encapsulatie",
+      "source": "check",
+      "success": true,
+      "maxRung": 1,
+      "minutes": 20,
+      "what": "TestT",
+      "explained": true,
+      "explanation": "I had to call base(name), otherwise the base class got no name and it stayed empty in the test.",
+      "explainedAt": "2026-11-06T13:10:00.000Z",
+      "rejections": [
+        {
+          "at": "2026-11-06T13:05:00.000Z",
+          "by": "hook",
+          "reasons": [
+            "too short (7 words, at least 12 outside code)"
+          ]
+        }
+      ],
+      "corrections": [],
+      "void": false,
+      "voidReason": null
+    },
+    {
+      "id": "demo021",
+      "at": "2026-11-06T14:00:00.000Z",
+      "skill": "ood.encapsulatie",
+      "source": "done",
+      "success": true,
+      "maxRung": 0,
+      "minutes": 31,
+      "what": "TestU",
+      "explained": true,
+      "explanation": "The list was a local variable in the method first, so it was empty again after every call.",
+      "explainedAt": "2026-11-06T14:10:00.000Z",
+      "rejections": [],
+      "corrections": [],
+      "void": false,
+      "voidReason": null
+    },
+    {
+      "id": "demo022",
+      "at": "2026-11-07T13:00:00.000Z",
+      "skill": "ood.exceptions",
+      "source": "check",
+      "success": true,
+      "maxRung": 2,
+      "minutes": 26,
+      "what": "TestV",
+      "explained": true,
+      "explanation": "I now throw an ArgumentException when the price is negative, so an invalid object cannot exist.",
+      "explainedAt": "2026-11-07T13:10:00.000Z",
+      "rejections": [
+        {
+          "at": "2026-11-07T13:05:00.000Z",
+          "by": "claude",
+          "reasons": [
+            "too short (7 words, at least 12 outside code)"
+          ]
+        }
+      ],
+      "corrections": [],
+      "void": false,
+      "voidReason": null
+    },
+    {
+      "id": "demo023",
+      "at": "2026-11-07T14:00:00.000Z",
+      "skill": "ood.exceptions",
+      "source": "done",
+      "success": true,
+      "maxRung": 1,
+      "minutes": 34,
+      "what": "TestW",
+      "explained": true,
+      "explanation": "I use a Dictionary because I want to look things up by code instead of walking the whole list.",
+      "explainedAt": "2026-11-07T14:10:00.000Z",
+      "rejections": [
+        {
+          "at": "2026-11-07T14:05:00.000Z",
+          "by": "hook",
+          "reasons": [
+            "no why (use e.g. 'because', 'so that', 'otherwise', 'instead of')"
+          ]
+        }
+      ],
+      "corrections": [],
+      "void": false,
+      "voidReason": null
+    },
+    {
+      "id": "demo024",
+      "at": "2026-11-08T13:00:00.000Z",
+      "skill": "test.unit-tests",
+      "source": "done",
+      "success": true,
+      "maxRung": 1,
+      "minutes": 14,
+      "what": "TestX",
+      "explained": true,
+      "explanation": "The test failed because my loop started at 1, so I skipped the first element. Now it starts at 0.",
+      "explainedAt": "2026-11-08T13:10:00.000Z",
+      "rejections": [
+        {
+          "at": "2026-11-08T13:05:00.000Z",
+          "by": "claude",
+          "reasons": [
+            "too short (7 words, at least 12 outside code)"
+          ]
+        }
+      ],
+      "corrections": [],
+      "void": false,
+      "voidReason": null
+    },
+    {
+      "id": "demo025",
+      "at": "2026-11-08T14:00:00.000Z",
+      "skill": "test.unit-tests",
+      "source": "check",
+      "success": true,
+      "maxRung": 0,
+      "minutes": 17,
+      "what": "TestY",
+      "explained": true,
+      "explanation": "It works now because the property has a private set, so only the class itself can change the value.",
+      "explainedAt": "2026-11-08T14:10:00.000Z",
+      "rejections": [
+        {
+          "at": "2026-11-08T14:05:00.000Z",
+          "by": "claude",
+          "reasons": [
+            "no why (use e.g. 'because', 'so that', 'otherwise', 'instead of')"
+          ]
+        }
+      ],
+      "corrections": [],
+      "void": false,
+      "voidReason": null
+    },
+    {
+      "id": "demo026",
+      "at": "2026-11-08T15:00:00.000Z",
+      "skill": "test.unit-tests",
+      "source": "check",
+      "success": true,
+      "maxRung": 1,
+      "minutes": 16,
+      "what": "TestZ",
+      "explained": true,
+      "explanation": "I had to call base(name), otherwise the base class got no name and it stayed empty in the test.",
+      "explainedAt": "2026-11-08T15:10:00.000Z",
+      "rejections": [],
+      "corrections": [],
+      "void": false,
+      "voidReason": null
+    },
+    {
+      "id": "demo027",
+      "at": "2026-11-09T13:00:00.000Z",
+      "skill": "ood.associaties",
+      "source": "check",
+      "success": true,
+      "maxRung": 0,
+      "minutes": 34,
+      "what": "TestA",
+      "explained": true,
+      "explanation": "The list was a local variable in the method first, so it was empty again after every call.",
+      "explainedAt": "2026-11-09T13:10:00.000Z",
+      "rejections": [
+        {
+          "at": "2026-11-09T13:05:00.000Z",
+          "by": "claude",
+          "reasons": [
+            "no why (use e.g. 'because', 'so that', 'otherwise', 'instead of')"
+          ]
+        }
+      ],
+      "corrections": [],
+      "void": false,
+      "voidReason": null
+    },
+    {
+      "id": "demo028",
+      "at": "2026-11-09T14:00:00.000Z",
+      "skill": "ood.associaties",
+      "source": "check",
+      "success": true,
+      "maxRung": 1,
+      "minutes": 10,
+      "what": "TestB",
+      "explained": false,
+      "explanation": null,
+      "explainedAt": null,
+      "rejections": [],
+      "corrections": [],
+      "void": false,
+      "voidReason": null
+    },
+    {
+      "id": "demo029",
+      "at": "2026-11-10T13:00:00.000Z",
+      "skill": "test.unit-tests",
+      "source": "done",
+      "success": true,
+      "maxRung": 1,
+      "minutes": 36,
+      "what": "TestC",
+      "explained": true,
+      "explanation": "I use a Dictionary because I want to look things up by code instead of walking the whole list.",
+      "explainedAt": "2026-11-10T13:10:00.000Z",
+      "rejections": [
+        {
+          "at": "2026-11-10T13:05:00.000Z",
+          "by": "claude",
+          "reasons": [
+            "no why (use e.g. 'because', 'so that', 'otherwise', 'instead of')"
+          ]
+        }
+      ],
+      "corrections": [],
+      "void": false,
+      "voidReason": null
+    },
+    {
+      "id": "demo030",
+      "at": "2026-11-10T14:00:00.000Z",
+      "skill": "test.unit-tests",
+      "source": "check",
+      "success": true,
+      "maxRung": 0,
+      "minutes": 16,
+      "what": "TestD",
+      "explained": false,
+      "explanation": null,
+      "explainedAt": null,
+      "rejections": [],
+      "corrections": [],
+      "void": false,
+      "voidReason": null
+    }
+  ],
+  "reviews": [
+    {
+      "at": "2026-11-04T10:00:00.000Z",
+      "skill": "cs.basis",
+      "result": "pass",
+      "nextReview": "2026-11-06"
+    },
+    {
+      "at": "2026-11-06T10:00:00.000Z",
+      "skill": "cs.basis",
+      "result": "shaky",
+      "nextReview": "2026-11-09"
+    },
+    {
+      "at": "2026-11-08T10:00:00.000Z",
+      "skill": "ood.klassen-properties",
+      "result": "pass",
+      "nextReview": "2026-11-10"
+    }
+  ],
+  "regressions": [
+    {
+      "at": "2026-11-02T15:00:00.000Z",
+      "skill": "ood.overerving",
+      "tests": 2,
+      "fixed": false
+    },
+    {
+      "at": "2026-11-02T15:30:00.000Z",
+      "skill": "ood.overerving",
+      "tests": 2,
+      "fixed": true
+    }
+  ],
+  "overrides": [
+    {
+      "at": "2026-11-07T12:00:00.000Z",
+      "skill": "test.unit-tests",
+      "minutes": 20,
+      "reason": "tooling: reinstalling the SDK"
+    }
+  ],
+  "signals": [
+    {
+      "skill": "ood.overerving",
+      "dir": "down",
+      "text": "ood.overerving: 1/4 solved (< 70%)"
+    }
+  ],
+  "activity": [
+    {
+      "date": "2026-10-28",
+      "sessions": 1,
+      "hints": 2,
+      "holds": 1,
+      "denials": 0,
+      "overridesUsed": 0
+    },
+    {
+      "date": "2026-10-29",
+      "sessions": 1,
+      "hints": 0,
+      "holds": 0,
+      "denials": 0,
+      "overridesUsed": 0
+    },
+    {
+      "date": "2026-10-31",
+      "sessions": 1,
+      "hints": 3,
+      "holds": 2,
+      "denials": 0,
+      "overridesUsed": 0
+    },
+    {
+      "date": "2026-11-01",
+      "sessions": 1,
+      "hints": 5,
+      "holds": 0,
+      "denials": 1,
+      "overridesUsed": 0
+    },
+    {
+      "date": "2026-11-02",
+      "sessions": 1,
+      "hints": 5,
+      "holds": 1,
+      "denials": 1,
+      "overridesUsed": 0
+    },
+    {
+      "date": "2026-11-03",
+      "sessions": 1,
+      "hints": 7,
+      "holds": 1,
+      "denials": 0,
+      "overridesUsed": 0
+    },
+    {
+      "date": "2026-11-04",
+      "sessions": 1,
+      "hints": 1,
+      "holds": 1,
+      "denials": 0,
+      "overridesUsed": 0
+    },
+    {
+      "date": "2026-11-05",
+      "sessions": 1,
+      "hints": 3,
+      "holds": 0,
+      "denials": 0,
+      "overridesUsed": 0
+    },
+    {
+      "date": "2026-11-06",
+      "sessions": 1,
+      "hints": 1,
+      "holds": 0,
+      "denials": 0,
+      "overridesUsed": 0
+    },
+    {
+      "date": "2026-11-07",
+      "sessions": 1,
+      "hints": 3,
+      "holds": 0,
+      "denials": 0,
+      "overridesUsed": 1
+    },
+    {
+      "date": "2026-11-08",
+      "sessions": 1,
+      "hints": 2,
+      "holds": 0,
+      "denials": 0,
+      "overridesUsed": 0
+    },
+    {
+      "date": "2026-11-09",
+      "sessions": 1,
+      "hints": 1,
+      "holds": 0,
+      "denials": 0,
+      "overridesUsed": 0
+    },
+    {
+      "date": "2026-11-10",
+      "sessions": 1,
+      "hints": 1,
+      "holds": 0,
+      "denials": 0,
+      "overridesUsed": 0
+    }
+  ],
+  "diary": [
+    {
+      "date": "2026-10-28",
+      "n": 1,
+      "time": "13:00–14:30",
+      "skills": "cs.basis",
+      "plan": "finish exercises 01 and 02",
+      "confidenceBefore": "2",
+      "wentWell": "read the error message and fixed it myself",
+      "signals": null,
+      "reflection": {
+        "learned": "loops work now, also with a while",
+        "confusing": "the difference between return and Console.WriteLine",
+        "confidenceAfter": "3",
+        "nextStep": "practise strings"
+      },
+      "calibration": "before 2 → solved with rung ≤1 → underestimated"
+    },
+    {
+      "date": "2026-10-31",
+      "n": 1,
+      "time": "13:00–14:30",
+      "skills": "ood.klassen-properties",
+      "plan": "classes with properties (05, 06)",
+      "confidenceBefore": "3",
+      "wentWell": "read the error message and fixed it myself",
+      "signals": null,
+      "reflection": {
+        "learned": "using a private set for fields that must not change from outside",
+        "confusing": "why my field was always empty",
+        "confidenceAfter": "3",
+        "nextStep": "constructors"
+      },
+      "calibration": "before 3 → rung 2 twice → right"
+    },
+    {
+      "date": "2026-11-02",
+      "n": 1,
+      "time": "13:00–14:30",
+      "skills": "ood.overerving",
+      "plan": "inheritance (09)",
+      "confidenceBefore": "4",
+      "wentWell": "read the error message and fixed it myself",
+      "signals": null,
+      "reflection": {
+        "learned": "calling base() in the constructor",
+        "confusing": "abstract versus virtual",
+        "confidenceAfter": "3",
+        "nextStep": "another inheritance exercise"
+      },
+      "calibration": "before 4 → needed rung 3 → overestimated"
+    },
+    {
+      "date": "2026-11-05",
+      "n": 1,
+      "time": "13:00–14:30",
+      "skills": "ood.associaties",
+      "plan": "associations (10, 11)",
+      "confidenceBefore": "3",
+      "wentWell": "read the error message and fixed it myself",
+      "signals": null,
+      "reflection": {
+        "learned": "keeping a list of objects in a class",
+        "confusing": "who should create the list",
+        "confidenceAfter": "4",
+        "nextStep": "aggregation"
+      },
+      "calibration": "before 3 → solved independently → underestimated"
+    },
+    {
+      "date": "2026-11-06",
+      "n": 1,
+      "time": "13:00–14:30",
+      "skills": "ood.encapsulatie",
+      "plan": "review C# basics and encapsulation",
+      "confidenceBefore": "3",
+      "wentWell": "read the error message and fixed it myself",
+      "signals": null,
+      "reflection": {
+        "learned": "validation in the setter with an exception",
+        "confusing": "which exception to choose",
+        "confidenceAfter": "4",
+        "nextStep": "writing unit tests"
+      },
+      "calibration": "before 3 → review passed → right"
+    },
+    {
+      "date": "2026-11-08",
+      "n": 1,
+      "time": "13:00–14:30",
+      "skills": "test.unit-tests",
+      "plan": "unit tests with boundary values",
+      "confidenceBefore": "2",
+      "wentWell": "read the error message and fixed it myself",
+      "signals": null,
+      "reflection": {
+        "learned": "testing boundaries: just below, on and just above",
+        "confusing": "TestCase with several values",
+        "confidenceAfter": "3",
+        "nextStep": "make a test plan"
+      },
+      "calibration": "before 2 → rung 1 → underestimated"
+    }
+  ]
+}

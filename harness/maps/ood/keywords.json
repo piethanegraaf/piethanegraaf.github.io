@@ -1,0 +1,29 @@
+{
+  "_uitleg": "Trefwoorden om een prompt aan een vaardigheid te koppelen. Mag je vrij aanpassen. Expliciet kan ook: #ood.encapsulatie in je prompt. Mapnamen van opdrachten (bv. 'bankrekening') worden automatisch herkend. / Keywords to link a prompt to a skill. Dutch and English both work; you may edit them freely.",
+  "cs.basis": ["list<", "foreach", "for-lus", "lus", "loop", "string", "stringbuilder", "concatenat"],
+  "ood.klassen-properties": ["property", "properties", "private set", "{ get", "veld", "field", "constructor", "getter", "setter", "this.", "klasse", "object", "class "],
+  "ood.overerving": ["overerving", "inheritance", "base(", ": base", "abstract", "override", "virtual", "subklasse", "superklasse"],
+  "ood.associaties": ["associatie", "association", "een-op-veel", "één-op-veel", "veel-op-veel", "one-to-many", "many-to-many"],
+  "ood.aggregatie-compositie": ["aggregatie", "aggregation", "compositie", "composition", "heeft-een", "has-a"],
+  "ood.encapsulatie": ["encapsulatie", "encapsulation", "inkapseling", "private", "validatie", "validation"],
+  "test.unit-tests": [
+    "unit test",
+    "unittest",
+    "nunit",
+    "[test]",
+    "[testcase",
+    "assert",
+    "tdd",
+    "testplan",
+    "grenswaarde",
+    "boundary"
+  ],
+  "ood.interfaces": ["interface", "implementeer", "implements"],
+  "ood.exceptions": ["exception", "throw", "try", "catch", "argumentexception", "argumentoutofrange", "invalidoperation"],
+  "ood.generics-dictionary": ["generic", "generiek", "<t>", "where t", "dictionary", "ireadonlydictionary"],
+  "pattern.strategy": ["strategy", "strategie"],
+  "pattern.factory": ["factory", "fabriek"],
+  "pattern.observer": ["observer", "subscribe", "notify", "event handler", "eventhandler"],
+  "debug.zonder-foutmelding": ["debug", "debugger", "breakpoint", "nullreference", "blijft false", "blijft null", "geen foutmelding"],
+  "uml.klassendiagram": ["uml", "klassendiagram", "class diagram", "mermaid", "is-een", "is-a", "drawio"]
+}

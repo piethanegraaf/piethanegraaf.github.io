@@ -1,0 +1,65 @@
+# Configuratie en privacy
+
+## Instellingen
+
+De instellingen staan in `.learning/skills.json`, onder `settings`. Je wijzigt ze met `! node .claude/hooks/skill.mjs setting <sleutel> <waarde>`, of met de hand.
+
+| Sleutel | Standaard | Betekenis |
+|---|---|---|
+| `course` | `""` | De naam van het vak, voor de sessiestart en het dashboard. |
+| `language` | `nl` | `nl` of `en`: de taal van de meldingen. De herkenning werkt altijd in beide talen. |
+| `examDate` | geen | De toetsdatum. Herhalingen vallen uiterlijk 3 dagen ervoor. |
+| `defaultLevel` | `L2` | Het niveau van code die bij geen vaardigheid hoort. |
+| `stuckTimerMinutes` | `12` | Na zoveel minuten vastzitten mag een nieuwe trede, ook zonder poging. |
+| `targetSuccess` | `0.85` | Het doel voor doorstromen van L2 naar L3. |
+| `codeExtensions` | `cs, csproj, sln, slnx` | Welke bestanden code van de student zijn. |
+| `buildCommands` | `dotnet build/test/run …`, `msbuild` | Reguliere expressies voor commando's die bouwen of testen. `check.mjs` telt altijd mee. |
+| `toolingTerms` | `rider, sdk, nuget …` | Woorden over tooling: "het werkt" daarover is geen opgeloste taak. |
+
+Een ongeldige waarde valt terug op de standaard. De guard laat dan dus nooit alles door.
+
+## Een eigen vak
+
+Een kaart staat in `harness/maps/<id>/`:
+
+- `skills.json`: de vaardigheden met hun paden (globs), en de standaardinstellingen. Titels mogen tweetalig zijn: `{"nl": "…", "en": "…"}`.
+- `keywords.json`: trefwoorden om een prompt aan een vaardigheid te koppelen.
+- `notes.nl.md` en `notes.en.md`: vakspecifieke afspraken voor Claude.
+
+Voor een andere taal dan C# zet je `codeExtensions` en `buildCommands`. `check.mjs` werkt voorlopig alleen met `dotnet test`.
+
+## Privacy
+
+Je leerdata blijft lokaal in `.learning/`. De installer zet die map in `.gitignore`.
+
+Wil je je voortgang laten zien, zoals in het [dashboard](progress-dashboard.md), dan gebruik je de export:
+
+```bash
+node harness/export.mjs ../mijn-oefenmap --dry-run   # rapport, schrijft niets
+node harness/export.mjs ../mijn-oefenmap             # schrijft site-src/dashboard/data/progress.json
+```
+
+- **Alleen een whitelist.** Niveaus, taken (trede, bron, uitleg, afwijzingen, correcties), herhalingen, signalen, en uit het dagboek alleen het plan, wat goed ging, de reflectie en de kalibratie. Nooit ruwe events, sessie-id's, testnamen of paden.
+- **Vaste filters** op alle vrije tekst: e-mailadressen, absolute paden, je gebruikersnaam, sessie- en transcript-id's, en HTML-commentaar. De naam in `skills.json` (`learner`) wordt ook gefilterd.
+- **Je eigen filter** in `.learning/private.json`:
+
+```json
+{
+  "terms": ["Voornaam", "Achternaam", "Naam van je werkgever"],
+  "replace": { "Naam van een medestudent": "een medestudent" }
+}
+```
+
+Controleer de diff van `progress.json` altijd zelf voordat je commit of pusht.
+
+## De security check
+
+`harness/security-check.mjs` draait in CI bij elke push en pull request, en lokaal als pre-push-hook (`--install-hook`). Elke bevinding is **BLOKKEER**, **TWIJFEL** of **OK**:
+
+- geheimen (tokens, sleutels), privacy (e-mail, paden, sessie-id's, je privé-termen, het e-mailadres van commits), verboden bestanden (pdf, docx, zip, drawio, ruwe leerdata, toetsmateriaal);
+- lange citaten in de onderzoeksnotities (auteursrecht);
+- de webpagina's: externe scripts alleen met SRI, een CSP, geen `innerHTML` met vrije tekst, geen `eval`;
+- de CI: actions gepind op een commit-SHA, minimale rechten, geen `pull_request_target`;
+- de harnas zelf: geen netwerk, geen `eval`, geen shell.
+
+Een TWIJFEL wordt pas OK met een regel in `.security-allowlist.json`, met een reden. Een BLOKKEER kan nooit worden toegestaan.

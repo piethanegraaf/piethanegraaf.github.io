@@ -1,0 +1,42 @@
+# Security check (harness/security-check.mjs) on every push to main and every pull request:
+# secrets, privacy, forbidden files, web safety, CI settings and the harness code.
+# Also scans every commit of the push or pull request, not only the final files.
+name: Security check
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: security-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  security:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: "24"
+
+      - name: Security check
+        env:
+          BASE: ${{ github.event.pull_request.base.sha || github.event.before }}
+          # For a pull request: the PR's own commits, not the temporary merge commit GitHub makes for the test.
+          HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          if [ -n "$BASE" ] && ! echo "$BASE" | grep -qE '^0+$' && git cat-file -e "$BASE^{commit}" 2>/dev/null; then
+            node harness/security-check.mjs --ci --range "$BASE..$HEAD_SHA"
+          else
+            node harness/security-check.mjs --ci
+          fi
