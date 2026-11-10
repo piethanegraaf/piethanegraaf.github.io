@@ -90,11 +90,13 @@ function contentRules(file, text) {
       if (userEmail && e.toLowerCase() === userEmail.toLowerCase()) add(B, "privacy.email", i, "jouw eigen e-mailadres");
       else if (!ALLOWED_EMAIL.test(e) && !/@[\w-]+\.(png|jpg|svg|webp|gif|mjs|js|json|css|md|html)$/i.test(e)) add(T, "privacy.email", i, `e-mailadres ${e}`);
     }
+    // Web addresses are not file paths, and an id in a public URL is not a session id.
+    const noUrl = line.replace(/\bhttps?:\/\/[^\s)>\]"'`]+/gi, " ");
     if (userPath.test(line)) add(B, "privacy.user-path", i, "pad met jouw gebruikersnaam");
-    else if (anyUserPath.test(line)) add(T, "privacy.path", i, `absoluut gebruikerspad (${line.match(anyUserPath)[0]})`);
+    else if (anyUserPath.test(noUrl)) add(T, "privacy.path", i, `absoluut gebruikerspad (${noUrl.match(anyUserPath)[0]})`);
     else if (userWord && userWord.test(line)) add(T, "privacy.user-name", i, `jouw gebruikersnaam '${userName}'`);
     if (/\.claude[\\/]+projects[\\/]/i.test(line)) add(B, "privacy.transcript", i, "pad naar een Claude-transcript");
-    if (/\b[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\b/i.test(line)) add(T, "privacy.uuid", i, "lijkt een sessie-id");
+    if (/\b[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\b/i.test(noUrl)) add(T, "privacy.uuid", i, "lijkt een sessie-id");
     if (privRe && privRe.test(line)) add(B, "privacy.private-term", i, `term uit private.json: '${line.match(privRe)[1]}'`);
   });
   // Very long lines (minified code): only secrets and private terms, in chunks.
@@ -151,10 +153,14 @@ function webRules(file, text, { built = false } = {}) {
       if (m[1].toLowerCase() === "link" && !/\brel\s*=\s*["']?[^"'>]*\b(stylesheet|preload|modulepreload|prefetch|preconnect|icon|manifest)\b/i.test(m[2])) continue;
       if (!/^(https?:)?\/\/(fonts\.googleapis\.com|fonts\.gstatic\.com)(\/|$)/i.test(url)) add(T, "web.external-resource", lineOf(m.index), `externe bron: ${url}`);
     }
-    if (!built) {
-      const csp = text.match(/<meta[^>]+http-equiv\s*=\s*["']?Content-Security-Policy["']?[^>]*content\s*=\s*(["'])(.*?)\1/i);
-      if (!csp) add(strict ? B : T, "web.csp", 1, "geen Content-Security-Policy-meta-tag");
-      else if (!/default-src\s+'self'/.test(csp[2])) add(strict ? B : T, "web.csp", lineOf(csp.index), "CSP zonder default-src 'self'");
+    // Built pages must all have a CSP (site-csp.mjs adds it); sources only for the dashboard (the rest is TWIJFEL).
+    const level = built || strict ? B : T;
+    const csp = text.match(/<meta[^>]+http-equiv\s*=\s*["']?Content-Security-Policy["']?[^>]*content\s*=\s*(["'])(.*?)\1/i);
+    if (!csp) add(level, "web.csp", 1, "geen Content-Security-Policy-meta-tag");
+    else {
+      if (!/default-src\s+'self'/.test(csp[2])) add(level, "web.csp", lineOf(csp.index), "CSP zonder default-src 'self'");
+      const scriptSrc = (csp[2].match(/script-src([^;]*)/) ?? [])[1] ?? "";
+      if (/'unsafe-(inline|eval)'/.test(scriptSrc)) add(level, "web.csp", lineOf(csp.index), "script-src met 'unsafe-inline' of 'unsafe-eval'");
     }
   }
   if (/\.(m?js|html?)$/i.test(file) && !built) {

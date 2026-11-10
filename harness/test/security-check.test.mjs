@@ -40,6 +40,8 @@ test("privacy: e-mails, paths, session ids and transcripts", () => {
   assert.ok(has(contentRules("x.md", "C:\\Users\\iemand\\x"), "TWIJFEL", "privacy.path"));
   assert.ok(has(contentRules("x.md", "id 1b8a483e-bd12-4b28-b493-d351e79a6c31"), "TWIJFEL", "privacy.uuid"));
   assert.ok(has(contentRules("x.md", "zie ~/.claude/" + "projects/x/y.jsonl"), "BLOKKEER", "privacy.transcript"));
+  assert.deepEqual(contentRules("x.md", "[pdf](https://www.example.org/_assets/1b8a483e-bd12-4b28-b493-d351e79a6c31/x.pdf) en https://hrw.example.org/nl/home/verslagen/"), [],
+    "ids and paths inside web addresses are fine");
 });
 
 test("web: external scripts need SRI, the dashboard needs CSP and no HTML sinks", () => {

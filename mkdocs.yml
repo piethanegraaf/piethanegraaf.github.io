@@ -8,7 +8,8 @@ site_dir: site
 strict: true
 
 copyright: >-
-  Code: MIT · Teksten, docs en data: CC BY-NC 4.0
+  Code: MIT · Teksten, docs en data: CC BY-NC 4.0 ·
+  Gemaakt met hulp van Claude (Anthropic), zie de AI-verklaring
 
 theme:
   name: material
@@ -54,6 +55,45 @@ plugins:
           name: English
           build: true
           site_name: Learning harness
+          copyright: >-
+            Code: MIT · Texts, docs and data: CC BY-NC 4.0 ·
+            Made with help from Claude (Anthropic), see the AI statement
+          nav_translations:
+            Start: Home
+            Installeren: Install
+            Hoe het werkt: How it works
+            Naslag: Reference
+            Configuratie en privacy: Configuration and privacy
+            Onderzoek: Research
+            Literatuuronderzoek: Literature review
+            Onderzoeksnotities: Research notes
+            C# OOP-cheat sheet: C# OOP cheat sheet
+            "Nieuw bewijs: AI en leren": "New evidence: AI and learning"
+            Economie van AI-code: Economics of AI-written code
+            Arbeidsmarkt: Labour market
+            Vaardigheden en toetsing: Skills and assessment
+            "Citatiecheck: generatieve AI": "Citation check: generative AI"
+            "Citatiecheck: leerwetenschap": "Citation check: learning science"
+            AI-verklaring: AI statement
+
+nav:
+  - Start: index.md
+  - Installeren: install.md
+  - Hoe het werkt: how-it-works.md
+  - Naslag: reference.md
+  - Configuratie en privacy: configuration.md
+  - Dashboard: progress-dashboard.md
+  - Onderzoek:
+      - Literatuuronderzoek: research.md
+      - Onderzoeksnotities: notes/index.md
+      - "Nieuw bewijs: AI en leren": notes/genai_learning_evidence.md
+      - Economie van AI-code: notes/ai_coding_economics.md
+      - Arbeidsmarkt: notes/labour_market.md
+      - Vaardigheden en toetsing: notes/skills_curriculum_policy.md
+      - "Citatiecheck: generatieve AI": notes/citation_check_genai.md
+      - "Citatiecheck: leerwetenschap": notes/citation_check_learning_science.md
+  - C# OOP-cheat sheet: /cheatsheet/
+  - AI-verklaring: ai-statement.md
 
 markdown_extensions:
   - admonition
@@ -79,3 +119,4 @@ markdown_extensions:
 # Material does not load mermaid from its CDN (unpkg).
 extra_javascript:
   - assets/javascripts/vendor/mermaid.min.js
+  - assets/javascripts/cheatsheet-redirect.js

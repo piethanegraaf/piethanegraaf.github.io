@@ -76,6 +76,9 @@ jobs:
         with:
           node-version: "24"
 
+      - name: Add a Content-Security-Policy to every page
+        run: node harness/site-csp.mjs site
+
       - name: Security check of the built site
         run: node harness/security-check.mjs --ci --site site
 

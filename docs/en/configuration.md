@@ -1,0 +1,65 @@
+# Configuration and privacy
+
+## Settings
+
+The settings live in `.learning/skills.json`, under `settings`. Change them with `! node .claude/hooks/skill.mjs setting <key> <value>`, or by hand.
+
+| Key | Default | Meaning |
+|---|---|---|
+| `course` | `""` | The name of the course, for the session start and the dashboard. |
+| `language` | `nl` | `nl` or `en`: the language of the messages. Recognition always works in both languages. |
+| `examDate` | none | The exam date. Reviews fall at least 3 days before it. |
+| `defaultLevel` | `L2` | The level of code that belongs to no skill. |
+| `stuckTimerMinutes` | `12` | After this many minutes of being stuck, a new rung may unlock without an attempt. |
+| `targetSuccess` | `0.85` | The target for moving from L2 to L3. |
+| `codeExtensions` | `cs, csproj, sln, slnx` | Which files are the learner's code. |
+| `buildCommands` | `dotnet build/test/run …`, `msbuild` | Regular expressions for commands that build or test. `check.mjs` always counts. |
+| `toolingTerms` | `rider, sdk, nuget …` | Tooling words: "it works" about these is not a solved task. |
+
+An invalid value falls back to the default, so the guard never lets everything through.
+
+## Your own course
+
+A map lives in `harness/maps/<id>/`:
+
+- `skills.json`: the skills with their paths (globs), and the default settings. Titles may be bilingual: `{"nl": "…", "en": "…"}`.
+- `keywords.json`: keywords that link a prompt to a skill.
+- `notes.nl.md` and `notes.en.md`: course-specific agreements for Claude.
+
+For a language other than C#, set `codeExtensions` and `buildCommands`. For now `check.mjs` only works with `dotnet test`.
+
+## Privacy
+
+Your learning data stays local in `.learning/`. The installer adds that folder to `.gitignore`.
+
+To show your progress, as in the [dashboard](progress-dashboard.md), use the export:
+
+```bash
+node harness/export.mjs ../my-practice-folder --dry-run   # report, writes nothing
+node harness/export.mjs ../my-practice-folder             # writes site-src/dashboard/data/progress.json
+```
+
+- **A whitelist only.** Levels, tasks (rung, source, explanation, rejections, corrections), reviews, signals, and from the diary only the plan, what went well, the reflection and the calibration. Never raw events, session ids, test names or paths.
+- **Fixed filters** on all free text: e-mail addresses, absolute paths, your user name, session and transcript ids, and HTML comments. The name in `skills.json` (`learner`) is filtered too.
+- **Your own filter** in `.learning/private.json`:
+
+```json
+{
+  "terms": ["First name", "Last name", "Name of your employer"],
+  "replace": { "Name of a classmate": "a classmate" }
+}
+```
+
+Always check the diff of `progress.json` yourself before you commit or push.
+
+## The security check
+
+`harness/security-check.mjs` runs in CI on every push and pull request, and locally as a pre-push hook (`--install-hook`). Every finding is **BLOKKEER** (block), **TWIJFEL** (doubt) or **OK**:
+
+- secrets (tokens, keys), privacy (e-mail, paths, session ids, your private terms, the e-mail address of commits), forbidden files (pdf, docx, zip, drawio, raw learning data, exam material);
+- long quotes in the research notes (copyright);
+- the web pages: external scripts only with SRI, a CSP, no `innerHTML` with free text, no `eval`;
+- the CI: actions pinned to a commit SHA, minimal permissions, no `pull_request_target`;
+- the harness itself: no network, no `eval`, no shell.
+
+A TWIJFEL only becomes OK through an entry with a reason in `.security-allowlist.json`. A BLOKKEER can never be allowed.

@@ -6,7 +6,6 @@ Commons Attribution-NonCommercial 4.0 International License (CC BY-NC 4.0):
   - docs/                    documentation, research document and notes
   - site-src/cheatsheet/     the C# OOP cheat sheet
   - site-src/dashboard/data/ the progress data shown on the dashboard
-  - index.html               the cheat sheet, until it moves to site-src/cheatsheet/
 
 All other files (the code) are licensed under the MIT License, see LICENSE.
 Third-party files keep their own licenses.
