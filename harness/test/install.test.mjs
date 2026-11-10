@@ -65,8 +65,14 @@ test("a fresh install: code, data from the map, settings with $CLAUDE_PROJECT_DI
 test("--lang en: English rules, diary skill, titles and messages", () => {
   const d = tmp();
   try {
+    const plan = install(d, "--lang", "en");
+    assert.match(plan.stdout, /^Learning harness .* · installing in /);
+    assert.match(plan.stdout, /new\s+\.claude\/hooks\/guard\.mjs/);
+    assert.match(plan.stdout, /Run it again with --yes/);
+    assert.match(install(d, "--lang", "en", "--exam", "tomorrow").stderr, /^Error: --exam must be YYYY-MM-DD/);
     const r = install(d, "--lang", "en", "--yes");
     assert.equal(r.code, 0, r.stderr);
+    assert.match(r.stdout, /Done: \d+ change\(s\)\.[\s\S]*Next steps:/);
     assert.match(read(d, ".claude/leerharnas.md"), /^# Learning harness/);
     assert.match(read(d, ".claude/leerharnas.md"), /About this course/);
     assert.match(read(d, ".claude/skills/diary/SKILL.md"), /<!-- session: <session-id> -->/);
