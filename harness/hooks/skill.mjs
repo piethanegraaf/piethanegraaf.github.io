@@ -1,55 +1,64 @@
 #!/usr/bin/env node
 // Leerharnas CLI. You run it yourself (in Claude Code with a leading "!"):
-//   node .claude/hooks/skill.mjs list                      overzicht, incl. microvaardigheden
-//   node .claude/hooks/skill.mjs status                    herhalingen, open uitleg, doorstroom-signalen
-//   node .claude/hooks/skill.mjs set <id> <L0..L4> ["notitie"]
+//   node .claude/hooks/skill.mjs list                      overview, including microskills
+//   node .claude/hooks/skill.mjs status                    reviews, open explanations, promotion signals
+//   node .claude/hooks/skill.mjs set <id> <L0..L4> ["note"]
 //   node .claude/hooks/skill.mjs review <id> pass|shaky|fail
-//   node .claude/hooks/skill.mjs add-micro <parent> <id> <L0..L4> "titel" "trefwoord1, trefwoord2"
-//   node .claude/hooks/skill.mjs done <id> "wat is gelukt"  (taak afmelden; telt pas na uitleg in eigen woorden)
-//   node .claude/hooks/skill.mjs untask <id>               (schrap de laatst gelogde taak, bv. onterecht gelogd)
-//   node .claude/hooks/skill.mjs correct <taak-id> trede <1-5> "reden"   (er was meer hulp dan gelogd; alleen omhoog)
-//   node .claude/hooks/skill.mjs correct <taak-id> schrap "reden"        (één specifieke taak schrappen)
-//   node .claude/hooks/skill.mjs override <id|*> <minuten> "<reden>"
-//   node .claude/hooks/skill.mjs setting <sleutel> <waarde>  (examDate, stuckTimerMinutes, defaultLevel, course, language)
+//   node .claude/hooks/skill.mjs add-micro <parent> <id> <L0..L4> "title" "keyword1, keyword2"
+//   node .claude/hooks/skill.mjs done <id> "what worked"   (log a task; counts only after an explanation in your own words)
+//   node .claude/hooks/skill.mjs untask <id>               (void the last logged task, e.g. logged by mistake)
+//   node .claude/hooks/skill.mjs correct <task-id> trede|rung <1-5> "reason"   (more help than logged; only upwards)
+//   node .claude/hooks/skill.mjs correct <task-id> schrap|void "reason"        (void one specific task)
+//   node .claude/hooks/skill.mjs override <id|*> <minutes> "<reason>"
+//   node .claude/hooks/skill.mjs setting <key> <value>     (examDate, stuckTimerMinutes, defaultLevel, course, language)
 // The guard blocks Claude from running any command except list and status.
 // There is deliberately NO command to mark a task as explained: that only happens via
 // an explanation in your own words in the chat (checked by reflect-gate.mjs).
 import {
   loadSkills, saveSkills, findSkill, addOverride, loadOverrides, logEvent, today, taskStats,
-  LEVELS, LEVEL_NAMES, isMicro, microsOf, familyIds, scheduleOnLevel, scheduleOnReview, dueReviews,
-  pendingTasks, allTasks, logTask, levelAdvice, recentWins, latestSessionId, loadSession, saveSession,
+  LEVELS, levelName, isMicro, microsOf, familyIds, scheduleOnLevel, scheduleOnReview, dueReviews,
+  pendingTasks, allTasks, logTask, levelAdvice, recentWins, latestSessionId, loadSession, saveSession, t, language,
 } from "./lib.mjs";
 
 const [cmd, ...args] = process.argv.slice(2);
 const data = loadSkills();
+const exit = (key, vars) => { console.error(t(key, vars)); process.exit(1); };
 
 function need(id) {
   const s = findSkill(data, id);
-  if (!s) { console.error(`Onbekende vaardigheid '${id}'. Kies uit: ${data.skills.map((x) => x.id).join(", ")}`); process.exit(1); }
+  if (!s) exit("cli.unknownSkill", { id, list: data.skills.map((x) => x.id).join(", ") });
   return s;
 }
 
 function row(s, indent = "") {
   const st = taskStats(s.id, 10, isMicro(s) ? null : data);
-  const rate = st.n ? `${st.ok}/${st.n} gelukt` : "";
-  const pend = st.pending ? ` (${st.pending} uitleg open)` : "";
-  const due = s.nextReview && s.nextReview <= today() ? "  << HERHALING" : "";
-  return `${s.level} ${LEVEL_NAMES[s.level].padEnd(15)} ${(indent + s.id).padEnd(34)} ${(rate + pend).padEnd(24)} ${s.title}` +
-    `${s.nextReview ? `  (herhaling ${s.nextReview})` : ""}${due}`;
+  const rate = st.n ? t("cli.row.rate", { ok: st.ok, n: st.n }) : "";
+  const pend = st.pending ? t("cli.row.pending", { n: st.pending }) : "";
+  const due = s.nextReview && s.nextReview <= today() ? t("cli.row.due") : "";
+  return `${s.level} ${levelName(s.level).padEnd(15)} ${(indent + s.id).padEnd(34)} ${(rate + pend).padEnd(24)} ${s.title}` +
+    `${s.nextReview ? t("cli.row.next", { date: s.nextReview }) : ""}${due}`;
 }
 
 function status() {
   const due = dueReviews(data);
   const pend = pendingTasks();
-  console.log(`Vandaag ${today()}${data.settings?.examDate ? ` · toets ${data.settings.examDate}` : " · geen toetsdatum (setting examDate)"}`);
-  console.log(`\nHerhalingen vandaag: ${due.length ? due.map((s) => s.id).join(", ") : "geen"}`);
-  console.log(`Taken die wachten op uitleg in eigen woorden: ${pend.length ? pend.map((t) => `${t.skill} [${t.tid}] ${t.what ?? ""}`.trim()).join("; ") : "geen"}`);
+  console.log(t("cli.status.today", { day: today() }) +
+    (data.settings?.examDate ? t("cli.status.exam", { exam: data.settings.examDate }) : t("cli.status.noExam")));
+  console.log("\n" + t("cli.status.reviews", { list: due.length ? due.map((s) => s.id).join(", ") : t("cli.none") }));
+  console.log(t("cli.status.pending", { list: pend.length ? pend.map((x) => `${x.skill} [${x.tid}] ${x.what ?? ""}`.trim()).join("; ") : t("cli.none") }));
   const wins = recentWins(data);
-  console.log(`Zelfstandig gelukt (trede 0, 7 dagen): ${wins.length ? wins.map((w) => `${w.id} ${w.n}x`).join(", ") : "-"}`);
+  console.log(t("cli.status.wins", { list: wins.length ? wins.map((w) => `${w.id} ${w.n}x`).join(", ") : "-" }));
   const adv = data.skills.filter((s) => s.kind !== "zone").map((s) => levelAdvice(data, s)).filter(Boolean);
-  console.log(`Doorstroom-signalen: ${adv.length ? "" : "geen"}`);
+  console.log(t("cli.status.signals", { list: adv.length ? "" : t("cli.none") }));
   for (const a of adv) console.log(`  ${a.dir === "up" ? "↑" : "↓"} ${a.text}\n    ! node .claude/hooks/skill.mjs ${a.cmd}`);
 }
+
+const parseLevel = (raw) => {
+  const lvl = String(raw ?? "").toUpperCase();
+  if (!LEVELS.includes(lvl)) exit("cli.badLevel");
+  return lvl;
+};
+const stats = (id) => taskStats(id, 10, isMicro(need(id)) ? null : data);
 
 switch (cmd) {
   case "list":
@@ -59,7 +68,7 @@ switch (cmd) {
       for (const m of microsOf(data, s.id)) console.log(row(m, "  ↳ "));
     }
     const o = loadOverrides();
-    if (o.length) console.log("\nActieve overrides:", o.map((x) => `${x.skill} tot ${x.until.slice(11, 16)} UTC — ${x.reason}`).join("; "));
+    if (o.length) console.log("\n" + t("cli.list.overrides", { list: o.map((x) => t("cli.list.override", { skill: x.skill, until: x.until.slice(11, 16), reason: x.reason })).join("; ") }));
     break;
   }
   case "status": status(); break;
@@ -67,54 +76,49 @@ switch (cmd) {
   case "set": {
     const [id, lvlRaw, ...note] = args;
     const s = need(id);
-    const lvl = String(lvlRaw ?? "").toUpperCase();
-    if (!LEVELS.includes(lvl)) { console.error("Niveau moet L0, L1, L2, L3 of L4 zijn."); process.exit(1); }
+    const lvl = parseLevel(lvlRaw);
     const from = s.level;
     // No promotion while tasks of this skill (or its microskills) still wait for an explanation.
     const ids = new Set(familyIds(data, s.id));
-    const open = pendingTasks().filter((t) => ids.has(t.skill));
+    const open = pendingTasks().filter((x) => ids.has(x.skill));
     if (LEVELS.indexOf(lvl) > LEVELS.indexOf(from) && open.length) {
-      console.error(`Niet doorgezet: ${open.length} taak/taken van ${s.id} wachten nog op je uitleg in eigen woorden ` +
-        `(${open.map((t) => t.tid).join(", ")}). Leg in de chat uit waarom je oplossing werkt; daarna kan het.`);
-      process.exit(1);
+      exit("cli.set.pending", { n: open.length, id: s.id, tids: open.map((x) => x.tid).join(", ") });
     }
     s.level = lvl;
     scheduleOnLevel(data, s);
     s.history = [...(s.history ?? []), { at: today(), from, to: lvl, note: note.join(" ") || undefined }];
     saveSkills(data);
     logEvent({ type: "level", skill: s.id, from, to: lvl, note: note.join(" ") });
-    console.log(`${s.id}: ${from} -> ${lvl} ${LEVEL_NAMES[lvl]}${s.nextReview ? `, eerste herhaling ${s.nextReview}` : ""}`);
+    console.log(t("cli.set.done", { id: s.id, from, to: lvl, name: levelName(lvl) }) + (s.nextReview ? t("cli.set.firstReview", { date: s.nextReview }) : ""));
     break;
   }
   case "review": {
     const [id, result] = args;
     const s = need(id);
-    if (!["pass", "shaky", "fail"].includes(result)) { console.error("Uitkomst: pass | shaky | fail"); process.exit(1); }
+    if (!["pass", "shaky", "fail"].includes(result)) exit("cli.review.bad");
     const advice = scheduleOnReview(data, s, result);
     s.lastReview = { at: today(), result };
     saveSkills(data);
     logEvent({ type: "review", skill: s.id, result, nextReview: s.nextReview });
-    const word = { pass: "geslaagd, interval omhoog", shaky: "wankel, interval blijft gelijk", fail: "mislukt, interval 2 stappen terug" }[result];
-    console.log(`${s.id}: ${word} -> volgende herhaling ${s.nextReview}`);
+    console.log(t(`cli.review.${result}`, { id: s.id, date: s.nextReview }));
     if (advice) console.log(advice);
     break;
   }
   case "add-micro": {
     const [parentId, id, lvlRaw, title, kws] = args;
     const parent = need(parentId);
-    if (isMicro(parent)) { console.error("Een microvaardigheid hangt onder een hoofdvaardigheid, niet onder een andere microvaardigheid."); process.exit(1); }
-    if (!id || !/^[a-z0-9.-]+$/i.test(id)) { console.error("Geef een id, bv. cs.basis.void-chaining"); process.exit(1); }
-    if (findSkill(data, id)) { console.error(`'${id}' bestaat al.`); process.exit(1); }
-    const lvl = String(lvlRaw ?? "").toUpperCase();
-    if (!LEVELS.includes(lvl)) { console.error("Niveau moet L0, L1, L2, L3 of L4 zijn."); process.exit(1); }
-    if (!title) { console.error('Geef een titel: add-micro <parent> <id> <niveau> "titel" "trefwoorden"'); process.exit(1); }
-    const m = { id, parent: parent.id, title, level: lvl, keywords: String(kws ?? "").split(",").map((k) => k.trim()).filter(Boolean), history: [{ at: today(), to: lvl, note: "aangemaakt" }] };
+    if (isMicro(parent)) exit("cli.micro.nested");
+    if (!id || !/^[a-z0-9.-]+$/i.test(id)) exit("cli.micro.badId");
+    if (findSkill(data, id)) exit("cli.micro.exists", { id });
+    const lvl = parseLevel(lvlRaw);
+    if (!title) exit("cli.micro.noTitle");
+    const m = { id, parent: parent.id, title, level: lvl, keywords: String(kws ?? "").split(",").map((k) => k.trim()).filter(Boolean), history: [{ at: today(), to: lvl, note: t("note.created") }] };
     scheduleOnLevel(data, m);
     const at = data.skills.indexOf(parent) + 1 + microsOf(data, parent.id).length;
     data.skills.splice(at, 0, m);
     saveSkills(data);
     logEvent({ type: "micro-add", skill: id, parent: parent.id, level: lvl });
-    console.log(`Microvaardigheid ${id} (${lvl} ${LEVEL_NAMES[lvl]}) toegevoegd onder ${parent.id}. Trefwoorden: ${m.keywords.join(", ") || "-"}`);
+    console.log(t("cli.micro.done", { id, level: lvl, name: levelName(lvl), parent: parent.id, keywords: m.keywords.join(", ") || "-" }));
     break;
   }
   case "done": {
@@ -124,45 +128,43 @@ switch (cmd) {
     const st = sid ? loadSession(sid) : null;
     // All help since the last logged task counts, whatever skill the session detected (see check.mjs).
     const maxRung = st?.maxRung ?? 0;
-    const t = logTask({ skill: s.id, success: maxRung < 5, maxRung, source: "done", what: what.join(" ") || undefined, session: sid });
+    const task = logTask({ skill: s.id, success: maxRung < 5, maxRung, source: "done", what: what.join(" ") || undefined, session: sid });
     if (st) { st.rung = 0; st.maxRung = 0; st.lastRungAt = null; st.taskStartedAt = Date.now(); st.lastTaskAt = Date.now(); saveSession(sid, st); }
-    console.log(`Taak gelogd voor ${s.id} [${t.tid}], hoogste trede ${maxRung}. ` +
-      `Hij telt pas mee als je in de chat in eigen woorden uitlegt waarom het werkt.`);
+    console.log(t("cli.done", { id: s.id, tid: task.tid, rung: maxRung }));
     break;
   }
   case "untask": {
     const [id] = args;
     const s = need(id);
-    const open = pendingTasks().filter((t) => t.skill === s.id).pop();
+    const open = pendingTasks().filter((x) => x.skill === s.id).pop();
     logEvent({ type: "task-void", skill: s.id, tid: open?.tid });
-    const st = taskStats(s.id, 10, isMicro(s) ? null : data);
-    console.log(`${s.id}: laatst gelogde taak geschrapt${open ? ` [${open.tid}]` : ""}. Nu ${st.ok}/${st.n} gelukt. (Wordt in het dagboek vermeld.)`);
+    const st = stats(s.id);
+    console.log(t("cli.untask", { id: s.id, tid: open ? ` [${open.tid}]` : "", ok: st.ok, n: st.n }));
     break;
   }
   case "correct": {
     // Set the log straight for ONE task. Rungs can only go up (more help than logged): lowering
     // them would make the evidence look better than it was. Logged, and shown in the diary.
     const [tid, what, ...rest] = args;
-    const t = allTasks().find((x) => x.tid === tid);
-    if (!t) { console.error(`Onbekende taak '${tid ?? ""}'. De taak-id's staan in de uitvoer van check.mjs en in het dagboek.`); process.exit(1); }
-    if (what === "trede") {
+    const task = allTasks().find((x) => x.tid === tid);
+    if (!task) exit("cli.correct.unknown", { tid: tid ?? "" });
+    if (what === "trede" || what === "rung") {
       const n = Number(rest[0]);
       const reason = rest.slice(1).join(" ");
-      if (!Number.isInteger(n) || n < 1 || n > 5) { console.error('Gebruik: correct <taak-id> trede <1-5> "reden"'); process.exit(1); }
-      if (n <= (t.maxRung ?? 0)) { console.error(`Taak ${tid} staat al op trede ${t.maxRung ?? 0}. Corrigeren kan alleen omhoog: lager zetten zou het bewijs mooier maken dan het was.`); process.exit(1); }
-      if (!reason) { console.error('Geef een reden: correct <taak-id> trede <1-5> "reden"'); process.exit(1); }
-      logEvent({ type: "task-correct", tid, skill: t.skill, from: t.maxRung ?? 0, maxRung: n, reason });
-      const st = taskStats(t.skill, 10, isMicro(need(t.skill)) ? null : data);
-      console.log(`${t.skill} [${tid}]: trede ${t.maxRung ?? 0} -> ${n}${n >= 5 ? " (telt nu als niet gelukt)" : ""}. Nu ${st.ok}/${st.n} gelukt. (Wordt in het dagboek vermeld.)`);
-    } else if (what === "schrap") {
+      if (!Number.isInteger(n) || n < 1 || n > 5) exit("cli.correct.usageRung");
+      if (n <= (task.maxRung ?? 0)) exit("cli.correct.onlyUp", { tid, rung: task.maxRung ?? 0 });
+      if (!reason) exit("cli.correct.usageRung");
+      logEvent({ type: "task-correct", tid, skill: task.skill, from: task.maxRung ?? 0, maxRung: n, reason });
+      const st = stats(task.skill);
+      console.log(t("cli.correct.rung", { id: task.skill, tid, from: task.maxRung ?? 0, to: n, failed: n >= 5 ? t("cli.correct.nowFailed") : "", ok: st.ok, n: st.n }));
+    } else if (what === "schrap" || what === "void") {
       const reason = rest.join(" ");
-      if (!reason) { console.error('Geef een reden: correct <taak-id> schrap "reden"'); process.exit(1); }
-      logEvent({ type: "task-void", skill: t.skill, tid, reason });
-      const st = taskStats(t.skill, 10, isMicro(need(t.skill)) ? null : data);
-      console.log(`${t.skill} [${tid}] geschrapt. Nu ${st.ok}/${st.n} gelukt. (Wordt in het dagboek vermeld.)`);
+      if (!reason) exit("cli.correct.usageVoid");
+      logEvent({ type: "task-void", skill: task.skill, tid, reason });
+      const st = stats(task.skill);
+      console.log(t("cli.correct.void", { id: task.skill, tid, ok: st.ok, n: st.n }));
     } else {
-      console.error('Gebruik: correct <taak-id> trede <1-5> "reden"  of  correct <taak-id> schrap "reden"');
-      process.exit(1);
+      exit("cli.correct.usage");
     }
     break;
   }
@@ -170,10 +172,10 @@ switch (cmd) {
     const [id, minRaw, ...reason] = args;
     if (id !== "*") need(id);
     const minutes = Math.max(1, Math.min(240, Number(minRaw) || 30));
-    if (!reason.length) { console.error('Geef een reden: override <id> <minuten> "<reden>"'); process.exit(1); }
+    if (!reason.length) exit("cli.override.noReason");
     const o = addOverride(id, minutes, reason.join(" "));
     logEvent({ type: "override", skill: id, minutes, reason: o.reason });
-    console.log(`Override voor ${id} actief tot ${new Date(o.until).toLocaleTimeString("nl-NL")}. Wordt in het dagboek vermeld.`);
+    console.log(t("cli.override.done", { id, until: new Date(o.until).toLocaleTimeString(language() === "en" ? "en-GB" : "nl-NL") }));
     break;
   }
   case "setting": {
@@ -183,9 +185,7 @@ switch (cmd) {
       examDate: /^\d{4}-\d{2}-\d{2}$/, stuckTimerMinutes: /^\d+$/, defaultLevel: /^L[0-4]$/,
       course: /^[^\r\n<>]{1,80}$/, language: /^(nl|en)$/,
     };
-    if (!allowed[key] || !allowed[key].test(value)) {
-      console.error('setting examDate JJJJ-MM-DD | stuckTimerMinutes <getal> | defaultLevel L0..L4 | course "<vak>" | language nl|en'); process.exit(1);
-    }
+    if (!allowed[key] || !allowed[key].test(value)) exit("cli.setting.usage");
     data.settings = data.settings ?? {};
     data.settings[key] = key === "stuckTimerMinutes" ? Number(value) : value;
     saveSkills(data);
@@ -194,6 +194,5 @@ switch (cmd) {
     break;
   }
   default:
-    console.error("Commando's: list | status | set | review | add-micro | done | untask | correct | override | setting  (zie de kop van skill.mjs)");
-    process.exit(1);
+    exit("cli.usage");
 }

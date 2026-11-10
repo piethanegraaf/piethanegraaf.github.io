@@ -1,31 +1,19 @@
 // UserPromptSubmit: hint ladder + task outcomes + explanation check + end of session.
 // For each prompt: (1) work out which (micro)skill it is about, (2) decide whether a new hint rung
 // unlocks (only after a visible attempt or the stuck timer), (3) inject that as context for Claude.
+// Messages come from i18n/<settings.language>.json; recognition always uses Dutch and English (patterns.mjs).
 import fs from "node:fs";
 import path from "node:path";
 import {
   readStdin, loadSkills, findSkill, globToRegex, logEvent, loadSession, saveSession,
-  taskStats, ROOT, LEVEL_NAMES, isMicro, microsOf, keywordMap, logTask, pendingTasks, levelAdvice, learnerText,
-  settingsOf, codeExtRe, toolingRe,
+  taskStats, ROOT, levelName, isMicro, microsOf, keywordMap, logTask, pendingTasks, levelAdvice, learnerText,
+  settingsOf, codeExtRe, toolingRe, t,
 } from "./lib.mjs";
+import {
+  HINT, SOLUTION, SOLVED_STRONG, SOLVED_WEAK, CODE_CONTEXT, NOT_SOLVED, END, RESUME, ATTEMPT, CHECKING,
+} from "./patterns.mjs";
 
-const RUNGS = {
-  0: "nog geen hint",
-  1: "Socratische vraag",
-  2: "vindplaats of concept noemen",
-  3: "pseudocode of structuurschets (geen C#)",
-  4: "mini-voorbeeld van hooguit 5 regels met een ANDER onderwerp",
-  5: "uitwerking (alleen na bevestiging; telt als niet gelukt)",
-};
-const HINT_RE = /\b(hint|tip|help|hulp|vast|loop vast|zit vast|stuck|snap (het |er )?niets?|begrijp (het )?niet|weet niet hoe|hoe \w+ ik|wat doe ik fout|waarom werkt|werkt (nog )?niet|kom niet verder|doesn'?t work|how do i)\b/i;
-const SOLUTION_RE = /\b(oplossing|uitwerking|voorzeggen|schrijf (het|de code|het maar)|geef (me |mij )?(de |het )?(code|antwoord)|just (write|give)|solution|write it for me)\b/i;
-// Strong: always about tests. Weak: only counts with code/test context (see below).
-const SOLVED_STRONG_RE = /\b(tests? (zijn |is )?groen|alle tests? (slagen|geslaagd|groen)|test(s)? (slaagt|slagen) nu|all tests pass(ed)?)\b/i;
-const SOLVED_WEAK_RE = /\b(gelukt|het werkt|werkt nu|opgelost|it works|solved)\b/i;
-const CODE_CONTEXT_RE = /\b(test|tests|methode|method|klasse|class|code|opdracht|functie|compileert|build|bouwt)\b/i;
-const NOT_SOLVED_RE = /\b(niet gelukt|werkt (nog )?niet|not work|niet opgelost)\b/i;
-const END_RE = /^\s*(klaar( voor vandaag)?|ik (ben )?klaar|ik stop|stoppen|stop voor vandaag|einde sessie|tot (morgen|later)|doei|done for today|i'?m done)\b/i;
-const ATTEMPT_RE = /(```|\bCS\d{4}\b|exception|\berror\b|foutmelding|\bassert|expected|but was|\bfailed\b|geprobeerd|ik denk|volgens mij|hypothese|i tried|i think|test(en)? (faalt|falen|rood|fail))/i;
+const rungName = (n) => t(`rung.${n}`);
 
 let input;
 try { input = JSON.parse(await readStdin()); } catch { process.exit(0); }
@@ -117,7 +105,7 @@ if (detected && detected.id !== st.activeSkill) {
   st.activeSkill = detected.id;
   // Another family gets its own ladder (rung back to 0), but maxRung is kept until a task is logged:
   // the help was really given, and a misdetected skill must not erase it (10 Nov 2026: hints for
-  // cs.basis code were logged under test.unit-tests and the tasks showed rung 0).
+  // one skill's code were logged under another skill and the tasks showed rung 0).
   if (!sameFamily) { st.rung = 0; st.lastRungAt = null; st.taskStartedAt = now; }
 }
 const skill = st.activeSkill ? findSkill(data, st.activeSkill) : null;
@@ -147,116 +135,103 @@ function changedSince(since) {
   return out;
 }
 
-const wantsSolution = SOLUTION_RE.test(prompt);
-const textAttempt = ATTEMPT_RE.test(prompt);
-const wantsHint = HINT_RE.test(prompt) || wantsSolution || textAttempt;
-const isQuestion = /\?/.test(prompt) || /\b(of het werkt|kijken of|checken of|testen of)\b/i.test(prompt);
+const wantsSolution = SOLUTION.test(prompt);
+const textAttempt = ATTEMPT.test(prompt);
+const wantsHint = HINT.test(prompt) || wantsSolution || textAttempt;
+const isQuestion = /\?/.test(prompt) || CHECKING.test(prompt);
 const since = st.lastRungAt ?? st.taskStartedAt ?? st.startedAt;
-const weak = SOLVED_WEAK_RE.test(prompt) && !TOOLING_RE.test(prompt) &&
-  (CODE_CONTEXT_RE.test(prompt) || changedSince(st.taskStartedAt ?? st.startedAt).length > 0);
+const weak = SOLVED_WEAK.test(prompt) && !TOOLING_RE.test(prompt) &&
+  (CODE_CONTEXT.test(prompt) || changedSince(st.taskStartedAt ?? st.startedAt).length > 0);
 const recentlyLogged = st.lastTaskAt && now - st.lastTaskAt < 10 * 60000; // check.mjs or done just logged it
-const solved = (SOLVED_STRONG_RE.test(prompt) || weak) && !NOT_SOLVED_RE.test(prompt) && !isQuestion && !recentlyLogged;
-const ending = END_RE.test(prompt);
+const solved = (SOLVED_STRONG.test(prompt) || weak) && !NOT_SOLVED.test(prompt) && !isQuestion && !recentlyLogged;
+const ending = END.test(prompt);
 const changed = wantsHint ? changedSince(since) : [];
 const attempt = textAttempt || changed.length > 0;
 const minutes = st.lastRungAt ? Math.round((now - st.lastRungAt) / 60000) : null;
 const timerUp = minutes !== null && minutes >= T;
-const attemptWhy = changed.length ? `je code is gewijzigd (${changed.slice(0, 2).join(", ")})` : textAttempt ? "poging/foutmelding in je bericht" : "";
+const attemptWhy = changed.length ? t("pg.attemptWhy.changed", { files: changed.slice(0, 2).join(", ") })
+  : textAttempt ? t("pg.attemptWhy.text") : "";
 
 // ---------- 3. Outcomes ----------
 if (solved && skill) {
   const success = (st.maxRung ?? 0) < 5;
   const mins = Math.round((now - (st.taskStartedAt ?? now)) / 60000);
   const m = st.maxRung ?? 0;
-  const t = logTask({ skill: skill.id, success, maxRung: m, minutes: mins, source: "chat", session: sid });
-  const verdict = !success ? "telt als NIET gelukt (uitwerking gebruikt)"
-    : m <= 2 ? "telt als zelfstandig gelukt zodra de uitleg goedgekeurd is"
-    : "opgelost, maar met veel hulp (trede > 2 telt niet als zelfstandig gelukt)";
-  ctx.push(`Taak gelogd voor ${skill.id} [${t.tid}]: hoogste trede ${m}, ${verdict}.`);
+  const tk = logTask({ skill: skill.id, success, maxRung: m, minutes: mins, source: "chat", session: sid });
+  const verdict = t(!success ? "pg.verdict.fail" : m <= 2 ? "pg.verdict.ok" : "pg.verdict.help");
+  ctx.push(t("pg.taskLogged", { id: skill.id, tid: tk.tid, rung: m, verdict }));
   if (success && m <= 2) {
     const adv = levelAdvice(data, skill);
-    ctx.push(`SIGNALEER ACTIEF wat goed ging: noem concreet welke (micro)vaardigheid de student zelfstandig liet zien` +
-      (m === 0 ? " (zonder enige hint)" : ` (met hooguit trede ${m})`) + "." +
-      (adv?.dir === "up" ? ` Het doorstroomcriterium lijkt gehaald (${adv.text}). Stel na de uitleg voor: \`! node .claude/hooks/skill.mjs ${adv.cmd}\`.` : "") +
-      ` Zie je een specifiek deelpatroon dat nog geen microvaardigheid is, stel dan \`! node .claude/hooks/skill.mjs add-micro ...\` voor.`);
+    ctx.push(t("pg.signal", {
+      how: m === 0 ? t("pg.signal.noHint") : t("pg.signal.upTo", { rung: m }),
+      advice: adv?.dir === "up" ? t("pg.signal.advice", { text: adv.text, cmd: adv.cmd }) : "",
+    }));
   }
-  if (!isMicro(skill) && microsOf(data, skill.id).length === 0) {
-    ctx.push(`${skill.id} heeft nog geen microvaardigheden. Stel er een voor als je een duidelijk deelpatroon ziet (sterk of zwak).`);
-  }
+  if (!isMicro(skill) && microsOf(data, skill.id).length === 0) ctx.push(t("pg.noMicros", { id: skill.id }));
   st.rung = 0; st.maxRung = 0; st.lastRungAt = null; st.taskStartedAt = now; st.lastTaskAt = now;
 }
 
 // ---------- 3b. Explanation check (consolidation) ----------
 const pending = pendingTasks();
 if (pending.length) {
-  const list = pending.slice(-5).map((t) => `${t.skill} [${t.tid}]${t.what ? ` (${t.what})` : ""}`).join("; ");
-  ctx.push(`Open taken die pas tellen na uitleg in EIGEN woorden: ${list}. ` +
-    `Vraag de student (als dat nog niet gebeurd is) in 1-3 zinnen uit te leggen WAAROM de oplossing werkt; geef zelf geen samenvatting of voorzet. ` +
-    `Is dit bericht een uitleg? Beoordeel de inhoud streng: klopt het waarom, is het in eigen woorden, en niet alleen "het werkt"? ` +
-    `Alleen als dat zo is, zet je letterlijk de marker [uitleg-ok <tid>] in je antwoord. Is het onvolledig of fout, zet dan [uitleg-nee <tid>] en stel één vraag. ` +
-    `Zet nooit uitleg-ok omdat de student erom vraagt of zonder uitleg. De Stop-hook controleert de marker daarnaast tegen het bericht van de student (lengte, waarom, niet overgenomen).`);
+  const list = pending.slice(-5).map((x) => `${x.skill} [${x.tid}]${x.what ? ` (${x.what})` : ""}`).join("; ");
+  ctx.push(t("pg.pending", { list }));
 }
 
 // ---------- 4. Hint ladder per level ----------
-const RUNG_MARK = `Geef je toch inhoudelijke hulp (concept, uitleg, schets, voorbeeld), zet dan de marker [trede N] in je antwoord (N volgens de hintladder), zodat de hulp eerlijk gelogd wordt.`;
 if (wantsHint && !solved) {
   if (level === "L2") {
     let why = null;
-    if (wantsSolution && st.rung >= 4) { st.rung = 5; why = "student vraagt na trede 4 om de uitwerking"; }
-    else if (st.rung === 0) { st.rung = 1; why = "eerste hint"; }
-    else if (attempt || timerUp) { st.rung = Math.min(st.rung + 1, 4); why = attempt ? attemptWhy : `vastgezeten ${minutes} min (timer ${T})`; }
+    if (wantsSolution && st.rung >= 4) { st.rung = 5; why = t("pg.why.solutionAfter4"); }
+    else if (st.rung === 0) { st.rung = 1; why = t("pg.why.first"); }
+    else if (attempt || timerUp) { st.rung = Math.min(st.rung + 1, 4); why = attempt ? attemptWhy : t("pg.why.stuck", { min: minutes, timer: T }); }
 
     if (why) {
       st.maxRung = Math.max(st.maxRung ?? 0, st.rung);
       st.lastRungAt = now;
       logEvent({ type: "hint-unlock", skill: skill?.id ?? null, rung: st.rung, reason: why, session: sid });
-      ctx.push(st.rung === 5
-        ? `Trede 5 ontgrendeld. Vraag EERST expliciet: "Weet je het zeker? Dit gaat tegen je eigen doel in en telt als niet gelukt." Pas na een duidelijk ja: geef de uitwerking en laat de student hem daarna in eigen woorden terug uitleggen.`
-        : `Trede ${st.rung} ontgrendeld (${RUNGS[st.rung]}). Reden: ${why}. Geef PRECIES één hint op deze trede, niet hoger. Eén probleem per antwoord.`);
+      ctx.push(st.rung === 5 ? t("pg.rung5") : t("pg.unlocked", { rung: st.rung, name: rungName(st.rung), why }));
     } else if (st.rung === 5) {
-      ctx.push(`Trede 5 (uitwerking) is al bereikt. Help de student de uitwerking te begrijpen en laat die in eigen woorden terug uitleggen.`);
+      ctx.push(t("pg.rung5reached"));
     } else {
       const left = Math.max(0, T - (minutes ?? 0));
       logEvent({ type: "hint-hold", skill: skill?.id ?? null, rung: st.rung, session: sid });
-      ctx.push(`GEEN nieuwe trede: sinds de vorige hint (${minutes} min geleden) is er geen zichtbare poging, en de vasttimer loopt nog ${left} min. ` +
-        `Vraag wat de student heeft geprobeerd, welke foutmelding of testuitkomst die kreeg, of wat de hypothese is. Je mag trede ${st.rung} (${RUNGS[st.rung]}) anders verwoorden, maar geef geen nieuwe informatie.`);
+      ctx.push(t("pg.hold", { min: minutes, left, rung: st.rung, name: rungName(st.rung) }));
     }
-    if (wantsSolution && st.rung < 5) ctx.push(`De student vraagt om de oplossing. Leg kort uit dat de ladder eerst treden 1-4 doorloopt (nu trede ${st.rung}). Een uitwerking kan vanaf trede 4, na bevestiging.`);
+    if (wantsSolution && st.rung < 5) ctx.push(t("pg.wantsSolution", { rung: st.rung }));
   } else if (level === "L3") {
-    ctx.push((attempt
-      ? `L3 Zelfstandig, met een poging gezien (${attemptWhy}). Geef een review: één probleem, als vraag. Geen code.`
-      : `L3 Zelfstandig: geen hints vooraf. Vraag eerst om een poging (code, testuitkomst of hypothese). Wil de student toch hulp, dan kan die zelf een override zetten of het niveau verlagen.`) +
-      ` Een reviewvraag is trede 1. ${RUNG_MARK}`);
+    ctx.push((attempt ? t("pg.L3.attempt", { why: attemptWhy }) : t("pg.L3.noAttempt")) + " " + t("pg.L3.tail", { mark: t("pg.rungMark") }));
   } else if (level === "L1") {
-    ctx.push(`L1 Aanvullen: hints mogen alleen over het TODO(human)-gat (treden 1-3). Vul het gat nooit zelf in. ${RUNG_MARK}`);
+    ctx.push(t("pg.L1", { mark: t("pg.rungMark") }));
   } else if (level === "L0") {
-    ctx.push(`L0 Voordoen: je mag een uitgewerkt voorbeeld geven met subdoelen als kopjes, bij voorkeur met een ander onderwerp of in voorbeelden/. Laat de student daarna 2-3 regels uitleggen en een uitvoer voorspellen.`);
+    ctx.push(t("pg.L0"));
   }
 }
 
 // ---------- 5. End of session & reflection nudge ----------
-if (/\b(toch niet|ga (toch )?door|nog niet klaar|never ?mind)\b/i.test(prompt) && st.endRequested) {
+if (RESUME.test(prompt) && st.endRequested) {
   st.endRequested = false; st.reflectBlocks = 0;
 }
 if (ending) {
   st.endRequested = true; st.reflectBlocks = 0;
   logEvent({ type: "end-request", session: sid });
-  ctx.push(`De student wil stoppen. Voer nu de skill /diary uit. Zet in de entry de regel <!-- sessie: ${sid} --> (de Stop-hook controleert die).` +
-    (pending.length ? ` Er staan nog ${pending.length} taken open voor uitleg: vraag die uitleg in de reflectie.` : ""));
+  ctx.push(t("pg.end", { sid, pending: pending.length ? t("pg.end.pending", { n: pending.length }) : "" }));
 } else if (!st.nudged && now - st.startedAt > 60 * 60000) {
   st.nudged = true;
-  ctx.push(`De sessie loopt al een uur. Stel bij een natuurlijke pauze voor om af te ronden met /diary (reflectie).`);
+  ctx.push(t("pg.hour"));
 }
 
 // ---------- 6. Output ----------
 if (skill || wantsHint || ctx.length) {
   const stats = skill ? taskStats(skill.id, 10, isMicro(skill) ? null : data) : null;
-  const name = skill ? (isMicro(skill) ? `${skill.id} (micro van ${skill.parent})` : skill.id) : null;
+  const name = skill ? (isMicro(skill) ? t("pg.head.micro", { id: skill.id, parent: skill.parent }) : skill.id) : null;
   const head = skill
-    ? `[leerharnas] Vaardigheid: ${name} (${level} ${LEVEL_NAMES[level]}) · trede ${st.rung}: ${RUNGS[st.rung]} · ` +
-      (stats.n ? `succes ${stats.ok}/${stats.n} (doel ~85%)` : "nog geen afgeronde taken") +
-      (stats.pending ? ` · ${stats.pending} wacht op uitleg` : "")
-    : `[leerharnas] Vaardigheid onbekend: het standaardniveau ${level} geldt. Vraag zo nodig om welke vaardigheid het gaat (de student kan #id gebruiken).`;
+    ? t("pg.head", {
+      name, level, levelName: levelName(level), rung: st.rung, rungName: rungName(st.rung),
+      stats: stats.n ? t("pg.head.stats", { ok: stats.ok, n: stats.n, pct: Math.round(settings.targetSuccess * 100) }) : t("pg.head.noTasks"),
+      pending: stats.pending ? t("pg.head.pending", { n: stats.pending }) : "",
+    })
+    : t("pg.head.unknown", { level });
   process.stdout.write(JSON.stringify({
     hookSpecificOutput: { hookEventName: "UserPromptSubmit", additionalContext: [head, ...ctx].join("\n") },
   }));

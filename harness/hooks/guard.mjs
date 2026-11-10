@@ -6,7 +6,7 @@ import fs from "node:fs";
 import path from "node:path";
 import {
   readStdin, loadSkills, levelForPath, isOverrideActive, logEvent, rel, isHarnessPath,
-  codeExtRe, buildCmdRe, PROTECTED, LEVEL_NAMES, ROOT,
+  codeExtRe, buildCmdRe, PROTECTED, levelName, t, ROOT,
 } from "./lib.mjs";
 
 // Learner code (settings.codeExtensions) and build commands (settings.buildCommands): see lib.mjs.
@@ -23,8 +23,6 @@ const RECORD_CMD = /skill\.mjs["']?\s+(set|review|override|untask|correct|add-mi
 const TODO = "TODO(human)";
 // The harness itself: hooks, diary skill, settings.json and the harness instructions and manifest.
 const HARNESS_IN_CMD = /\.claude[\\/]+(hooks[\\/]|skills[\\/]+diary|settings(\.local)?\.json|leerharnas)/i;
-const HARNESS_DENY = "Leerharnas: de bestanden van de harnas zelf (hooks, diary-skill, .claude/settings.json, .claude/leerharnas*) " +
-  "wijzigt alleen de student, met de hand of met `install.mjs --update`. Stel de wijziging voor in plaats van hem uit te voeren.";
 
 function deny(reason, event) {
   logEvent({ type: "deny", ...event, reason });
@@ -37,19 +35,12 @@ function deny(reason, event) {
 const count = (s, sub) => (s ? String(s).split(sub).length - 1 : 0);
 
 function describe(level, skill) {
-  const name = skill ? `'${skill.title}' (${skill.id})` : "niet-gekoppelde code (standaardniveau)";
-  return `${name} staat op ${level} ${LEVEL_NAMES[level] ?? ""}`;
+  const name = skill ? `'${skill.title}' (${skill.id})` : t("guard.unmapped");
+  return t("guard.describe", { name, level, levelName: levelName(level) });
 }
 
 function protectedReason(level, skill, what) {
-  const advice = {
-    L1: "Je mag alleen een skelet schrijven waarin de kern als TODO(human) open blijft. Vul nooit een TODO(human) zelf in.",
-    L2: "Geef de volgende hint uit de hintladder in plaats van code.",
-    L3: "Geef pas feedback of een review nadat de student het zelf heeft geprobeerd.",
-  }[level];
-  return `Leerharnas: ${what} geblokkeerd. ${describe(level, skill)}, dus de student doet dit zelf. ${advice} ` +
-    `Probeer dit niet via een andere weg (scripts, andere tools). Wil de student het toch laten doen, dan typt die zelf: ` +
-    `! node .claude/hooks/skill.mjs override ${skill ? skill.id : "*"} 30 "<reden>"  (wordt gelogd).`;
+  return t("guard.protected", { what, describe: describe(level, skill), advice: t(`guard.advice.${level}`), id: skill ? skill.id : "*" });
 }
 
 let input;
@@ -77,10 +68,9 @@ const isRecordPath = (p) => {
 if (["Edit", "Write", "MultiEdit", "NotebookEdit"].includes(tool)) {
   const file = ti.file_path ?? ti.notebook_path;
   if (isRecordPath(file)) {
-    deny("Leerharnas: het vaardighedenregister en de state wijzigt alleen de student, via `! node .claude/hooks/skill.mjs ...`. Stel de wijziging voor in plaats van hem uit te voeren.",
-      { tool, file: rel(file) });
+    deny(t("guard.recordFile"), { tool, file: rel(file) });
   }
-  if (isHarnessPath(rel(file))) deny(HARNESS_DENY, { tool, file: rel(file) });
+  if (isHarnessPath(rel(file))) deny(t("guard.harness"), { tool, file: rel(file) });
   if (!file || !CODE_EXT.test(file)) process.exit(0);
 
   const { inProject, level, skill } = levelForPath(data, file);
@@ -102,16 +92,15 @@ if (["Edit", "Write", "MultiEdit", "NotebookEdit"].includes(tool)) {
       if (count(after, TODO) > 0 && count(after, TODO) >= count(before, TODO)) process.exit(0);
     }
   }
-  deny(protectedReason(level, skill, `code schrijven in ${rel(file)}`), { tool, file: rel(file), skill: skill?.id ?? null, level });
+  deny(protectedReason(level, skill, t("guard.what.write", { file: rel(file) })), { tool, file: rel(file), skill: skill?.id ?? null, level });
 }
 
 if (tool === "Bash" || tool === "PowerShell") {
   const cmd = String(ti.command ?? "");
   if (RECORD_CMD.test(cmd) || (/skills\.json|\.learning[\\/]+state/i.test(cmd) && WRITE_CMD.test(stripHarmless(cmd)))) {
-    deny("Leerharnas: niveaus, taken, herhalingen en overrides zet alleen de student zelf (met `!` voor het commando). Je mag `node .claude/hooks/skill.mjs list` en `status` wel draaien.",
-      { tool, cmd: cmd.slice(0, 200) });
+    deny(t("guard.recordCmd"), { tool, cmd: cmd.slice(0, 200) });
   }
-  if (HARNESS_IN_CMD.test(cmd) && WRITE_CMD.test(stripHarmless(cmd))) deny(HARNESS_DENY, { tool, cmd: cmd.slice(0, 200) });
+  if (HARNESS_IN_CMD.test(cmd) && WRITE_CMD.test(stripHarmless(cmd))) deny(t("guard.harness"), { tool, cmd: cmd.slice(0, 200) });
   const building = BUILD_CMD.test(cmd);
   const writing = CODE_IN_CMD.test(cmd) && WRITE_CMD.test(stripHarmless(cmd));
   if (!building && !writing) process.exit(0);
@@ -138,8 +127,7 @@ if (tool === "Bash" || tool === "PowerShell") {
   for (const [, { level, skill }] of hits) {
     if (!PROTECTED.has(level)) continue;
     if (isOverrideActive(skill ? skill.id : "*")) { logEvent({ type: "override-used", tool, skill: skill?.id ?? "*", cmd: cmd.slice(0, 200) }); continue; }
-    deny(protectedReason(level, skill, building ? "bouwen/testen" : "code wijzigen via de shell") +
-      (building ? " Vraag de student zelf te bouwen/testen en de uitkomst of foutmelding te delen." : ""),
+    deny(protectedReason(level, skill, t(building ? "guard.what.build" : "guard.what.shellWrite")) + (building ? " " + t("guard.buildAsk") : ""),
       { tool, cmd: cmd.slice(0, 200), skill: skill?.id ?? null, level });
   }
 }

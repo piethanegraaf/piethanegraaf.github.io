@@ -1,5 +1,8 @@
 {
-  "_uitleg": "Vaardighedenkaart voor Object-Oriented Design in C#/.NET met NUnit. install.mjs kopieert dit naar .learning/skills.json. Alle vaardigheden starten op L2 (Begeleid). Kalibreer de niveaus met een nulmeting zonder AI en zet ze daarna zelf met `! node .claude/hooks/skill.mjs set <id> <niveau>`. Microvaardigheden voeg je toe met `add-micro` zodra je een deelpatroon ziet.",
+  "_info": {
+    "nl": "Vaardighedenkaart voor Object-Oriented Design in C#/.NET met NUnit. install.mjs kopieert dit naar .learning/skills.json. Alle vaardigheden starten op L2 (Begeleid). Kalibreer de niveaus met een nulmeting zonder AI en zet ze daarna zelf met `! node .claude/hooks/skill.mjs set <id> <niveau>`. Microvaardigheden voeg je toe met `add-micro` zodra je een deelpatroon ziet.",
+    "en": "Skill map for Object-Oriented Design in C#/.NET with NUnit. install.mjs copies it to .learning/skills.json. All skills start at L2 (Guided). Calibrate the levels with a baseline test without AI and then set them yourself with `! node .claude/hooks/skill.mjs set <id> <level>`. Add microskills with `add-micro` as soon as you see a sub-pattern."
+  },
   "settings": {
     "course": "Object-Oriented Design (C#)",
     "language": "nl",
@@ -43,7 +46,10 @@
     {
       "id": "zone.voorbeelden",
       "kind": "zone",
-      "title": "Uitgewerkte voorbeelden (AI mag hier schrijven)",
+      "title": {
+        "nl": "Uitgewerkte voorbeelden (AI mag hier schrijven)",
+        "en": "Worked examples (the AI may write here)"
+      },
       "level": "L0",
       "paths": [
         "voorbeelden/**"
@@ -52,7 +58,10 @@
     },
     {
       "id": "cs.basis",
-      "title": "C#-basis: methoden, strings, lijsten, lussen",
+      "title": {
+        "nl": "C#-basis: methoden, strings, lijsten, lussen",
+        "en": "C# basics: methods, strings, lists, loops"
+      },
       "level": "L2",
       "paths": [
         "ood-opdrachten-01/01-*/**",
@@ -63,7 +72,10 @@
     },
     {
       "id": "ood.klassen-properties",
-      "title": "Klassen, constructors; variabele vs veld vs property (private set)",
+      "title": {
+        "nl": "Klassen, constructors; variabele vs veld vs property (private set)",
+        "en": "Classes, constructors; variable vs field vs property (private set)"
+      },
       "level": "L2",
       "paths": [
         "ood-opdrachten-01/05-*/**",
@@ -74,7 +86,10 @@
     },
     {
       "id": "ood.overerving",
-      "title": "Overerving, : base(...), abstract, override",
+      "title": {
+        "nl": "Overerving, : base(...), abstract, override",
+        "en": "Inheritance, : base(...), abstract, override"
+      },
       "level": "L2",
       "paths": [
         "ood-opdrachten-01/09-*/**"
@@ -82,7 +97,10 @@
     },
     {
       "id": "ood.associaties",
-      "title": "Associaties: een-op-veel, veel-op-veel",
+      "title": {
+        "nl": "Associaties: een-op-veel, veel-op-veel",
+        "en": "Associations: one-to-many, many-to-many"
+      },
       "level": "L2",
       "paths": [
         "ood-opdrachten-01/10-*/**",
@@ -92,7 +110,10 @@
     },
     {
       "id": "ood.aggregatie-compositie",
-      "title": "Aggregatie en compositie (heeft-een)",
+      "title": {
+        "nl": "Aggregatie en compositie (heeft-een)",
+        "en": "Aggregation and composition (has-a)"
+      },
       "level": "L2",
       "paths": [
         "ood-opdrachten-01/13-*/**",
@@ -107,7 +128,10 @@
     },
     {
       "id": "ood.encapsulatie",
-      "title": "Encapsulatie: private velden, validatie, toestand via methoden",
+      "title": {
+        "nl": "Encapsulatie: private velden, validatie, toestand via methoden",
+        "en": "Encapsulation: private fields, validation, state through methods"
+      },
       "level": "L2",
       "paths": [
         "ood-opdrachten-01/21-*/**",
@@ -118,7 +142,10 @@
     },
     {
       "id": "test.unit-tests",
-      "title": "Unit tests (NUnit): grenswaarden, TDD, testplan",
+      "title": {
+        "nl": "Unit tests (NUnit): grenswaarden, TDD, testplan",
+        "en": "Unit tests (NUnit): boundary values, TDD, test plan"
+      },
       "level": "L2",
       "paths": [
         "**/*Test/**",
@@ -128,49 +155,73 @@
     },
     {
       "id": "ood.interfaces",
-      "title": "Interfaces ontwerpen en implementeren",
+      "title": {
+        "nl": "Interfaces ontwerpen en implementeren",
+        "en": "Designing and implementing interfaces"
+      },
       "level": "L2",
       "paths": []
     },
     {
       "id": "ood.exceptions",
-      "title": "Exception-hierarchie, type checks, volgorde van controles",
+      "title": {
+        "nl": "Exception-hierarchie, type checks, volgorde van controles",
+        "en": "Exception hierarchy, type checks, order of checks"
+      },
       "level": "L2",
       "paths": []
     },
     {
       "id": "ood.generics-dictionary",
-      "title": "Generieke klasse met constraint + Dictionary (Stock<T> where T : IStockItem)",
+      "title": {
+        "nl": "Generieke klasse met constraint (where T : ...) + Dictionary",
+        "en": "Generic class with a constraint (where T : ...) + Dictionary"
+      },
       "level": "L2",
       "paths": []
     },
     {
       "id": "pattern.strategy",
-      "title": "Strategy pattern",
+      "title": {
+        "nl": "Strategy pattern",
+        "en": "Strategy pattern"
+      },
       "level": "L2",
       "paths": []
     },
     {
       "id": "pattern.factory",
-      "title": "Factory (Method) pattern",
+      "title": {
+        "nl": "Factory (Method) pattern",
+        "en": "Factory (Method) pattern"
+      },
       "level": "L2",
       "paths": []
     },
     {
       "id": "pattern.observer",
-      "title": "Observer pattern",
+      "title": {
+        "nl": "Observer pattern",
+        "en": "Observer pattern"
+      },
       "level": "L2",
       "paths": []
     },
     {
       "id": "debug.zonder-foutmelding",
-      "title": "Debuggen zonder foutmelding: van symptoom naar oorzaak",
+      "title": {
+        "nl": "Debuggen zonder foutmelding: van symptoom naar oorzaak",
+        "en": "Debugging without an error message: from symptom to cause"
+      },
       "level": "L2",
       "paths": []
     },
     {
       "id": "uml.klassendiagram",
-      "title": "UML/Mermaid klassendiagram, is-een vs heeft-een",
+      "title": {
+        "nl": "UML/Mermaid klassendiagram, is-een vs heeft-een",
+        "en": "UML/Mermaid class diagram, is-a vs has-a"
+      },
       "level": "L2",
       "paths": []
     }

@@ -3,6 +3,10 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { t, setLanguage, language } from "./i18n.mjs";
+import { CAUSAL, sessionMarker } from "./patterns.mjs";
+
+export { t, setLanguage, language };
 
 // The hooks live in <project>/.claude/hooks/, so the project is two levels up.
 // LEERHARNAS_ROOT and LEERHARNAS_DATA only exist for testing (a temporary project and data).
@@ -18,13 +22,8 @@ const EVENTS_FILE = path.join(STATE_DIR, "events.jsonl");
 export const TESTS_FILE = path.join(STATE_DIR, "tests.json");
 
 export const LEVELS = ["L0", "L1", "L2", "L3", "L4"];
-export const LEVEL_NAMES = {
-  L0: "Voordoen",
-  L1: "Aanvullen",
-  L2: "Begeleid",
-  L3: "Zelfstandig",
-  L4: "Geautomatiseerd",
-};
+// Level names in the learner's language (i18n: level.L0 ... level.L4).
+export const levelName = (l) => (LEVELS.includes(l) ? t(`level.${l}`) : "");
 // Levels at which the AI must not write or run the learner's code.
 export const PROTECTED = new Set(["L1", "L2", "L3"]);
 // Levels that get spaced reviews (mastered or nearly mastered).
@@ -102,8 +101,11 @@ export function isHarnessPath(r) {
   return r !== null && /^\.claude\/(hooks\/|skills\/diary\/|settings(\.local)?\.json$|leerharnas)/i.test(r);
 }
 
+// Reading the record also sets the language of all messages (settings.language).
 export function loadSkills() {
-  return JSON.parse(fs.readFileSync(SKILLS_FILE, "utf8"));
+  const data = JSON.parse(fs.readFileSync(SKILLS_FILE, "utf8"));
+  setLanguage(settingsOf(data).language);
+  return data;
 }
 
 export function saveSkills(data) {
@@ -162,7 +164,7 @@ export function scheduleOnReview(data, s, result) {
   s.nextReview = reviewDate(data, i);
   if (result === "fail" && s.failStreak >= 2) {
     const lower = LEVELS[Math.max(0, LEVELS.indexOf(s.level) - 1)];
-    return `Twee herhalingen op rij mislukt. Advies: een niveau terug, met: node .claude/hooks/skill.mjs set ${s.id} ${lower} "2x herhaling mislukt"`;
+    return t("review.twoFails", { cmd: `node .claude/hooks/skill.mjs set ${s.id} ${lower} "${t("note.twoReviewFails")}"` });
   }
   return null;
 }
@@ -384,26 +386,26 @@ export function levelAdvice(data, s) {
   const lastTwo = t.slice(-2);
   if (lastTwo.length === 2 && lastTwo.every((x) => !x.success)) {
     const lower = LEVELS[Math.max(0, LEVELS.indexOf(s.level) - 1)];
-    return { dir: "down", text: `${s.id}: twee taken op rij mislukt`, cmd: `set ${s.id} ${lower} "2x op rij mislukt"` };
+    return { dir: "down", text: t("advice.twoFailed", { id: s.id }), cmd: `set ${s.id} ${lower} "${t("note.twoFailed")}"` };
   }
   if (st.n >= 3 && st.rate < 0.7) {
     const lower = LEVELS[Math.max(0, LEVELS.indexOf(s.level) - 1)];
-    return { dir: "down", text: `${s.id}: ${st.ok}/${st.n} gelukt (< 70%)`, cmd: `set ${s.id} ${lower} "onder 70%"` };
+    return { dir: "down", text: t("advice.below70", { id: s.id, ok: st.ok, n: st.n }), cmd: `set ${s.id} ${lower} "${t("note.below70")}"` };
   }
   const clean = t.filter((x) => x.success && (x.maxRung ?? 0) <= 2);
   if (s.level === "L1") {
     const gaps = t.filter((x) => x.success && (x.maxRung ?? 0) <= 1).length;
-    if (gaps >= 3) return { dir: "up", text: `${s.id}: ${gaps} gaten gevuld met hooguit 1 hint`, cmd: `set ${s.id} L2 "3 gaten gevuld"` };
+    if (gaps >= 3) return { dir: "up", text: t("advice.gapsFilled", { id: s.id, n: gaps }), cmd: `set ${s.id} L2 "${t("note.gapsFilled")}"` };
   }
   const target = settingsOf(data).targetSuccess;
   if (s.level === "L2" && st.n >= 5 && st.rate >= target) {
-    return { dir: "up", text: `${s.id}: ${st.ok}/${st.n} gelukt (≥ ${Math.round(target * 100)}%)`, cmd: `set ${s.id} L3 "${st.ok}/${st.n} gelukt"` };
+    return { dir: "up", text: t("advice.target", { id: s.id, ok: st.ok, n: st.n, pct: Math.round(target * 100) }), cmd: `set ${s.id} L3 "${t("note.solved", { ok: st.ok, n: st.n })}"` };
   }
   if (s.level === "L3") {
     const solo = clean.filter((x) => (x.maxRung ?? 0) === 0);
     const days = new Set(solo.map((x) => x.at.slice(0, 10)));
     if (solo.length >= 3 && days.size >= 2) {
-      return { dir: "up", text: `${s.id}: ${solo.length}x zelfstandig op ${days.size} dagen; nog een nieuwe transfertaak met uitleg nodig`, cmd: `set ${s.id} L4 "3x zelfstandig + transfertaak"` };
+      return { dir: "up", text: t("advice.solo", { id: s.id, n: solo.length, days: days.size }), cmd: `set ${s.id} L4 "${t("note.solo")}"` };
     }
   }
   return null;
@@ -424,7 +426,6 @@ export function recentWins(data, days = 7) {
 // A task only counts after an explanation in the learner's OWN words. Two keys are needed:
 // (1) Claude judges the content and writes the marker [uitleg-ok <tid>], and
 // (2) this deterministic check on the learner's own message passes.
-const CAUSAL = /\b(omdat|want|doordat|zodat|daardoor|waardoor|daarom|dus|anders|in plaats van|because|since|so that|otherwise|instead of)\b/i;
 const words = (s) => String(s).toLowerCase().replace(/```[\s\S]*?```/g, " ").replace(/`[^`]*`/g, " x ")
   .split(/[^\p{L}\p{N}_]+/u).filter(Boolean);
 
@@ -432,16 +433,16 @@ export function checkExplanation(text, assistantTexts = []) {
   const reasons = [];
   const raw = String(text ?? "");
   const w = words(raw);
-  if (/<bash-(input|stdout)>|<pasted_content/i.test(raw)) reasons.push("dit is geplakte of commando-uitvoer, geen uitleg");
-  if (w.length < 12) reasons.push(`te kort (${w.length} woorden, minimaal 12 buiten code)`);
-  if (!CAUSAL.test(raw)) reasons.push("geen waarom (gebruik bv. 'omdat', 'doordat', 'zodat', 'anders')");
+  if (/<bash-(input|stdout)>|<pasted_content/i.test(raw)) reasons.push(t("explain.pasted"));
+  if (w.length < 12) reasons.push(t("explain.tooShort", { n: w.length }));
+  if (!CAUSAL.test(raw)) reasons.push(t("explain.noWhy"));
   // Copied from Claude? Share of 5-word sequences that also occur in Claude's messages.
   const hay = " " + assistantTexts.map((t) => words(t).join(" ")).join(" | ") + " ";
   const sh = [];
   for (let i = 0; i + 5 <= w.length; i++) sh.push(w.slice(i, i + 5).join(" "));
   if (sh.length) {
     const copied = sh.filter((x) => hay.includes(" " + x + " ")).length / sh.length;
-    if (copied > 0.4) reasons.push(`te veel letterlijk overgenomen uit Claude's tekst (${Math.round(copied * 100)}%)`);
+    if (copied > 0.4) reasons.push(t("explain.copied", { pct: Math.round(copied * 100) }));
   }
   return { ok: reasons.length === 0, reasons };
 }
@@ -449,6 +450,6 @@ export function checkExplanation(text, assistantTexts = []) {
 export function diaryHasSession(sid) {
   try {
     return fs.readdirSync(DIARY_DIR).filter((f) => f.endsWith(".md")).sort().slice(-3)
-      .some((f) => fs.readFileSync(path.join(DIARY_DIR, f), "utf8").includes(`sessie: ${sid}`));
+      .some((f) => fs.readFileSync(path.join(DIARY_DIR, f), "utf8").match(sessionMarker(sid)) !== null);
   } catch { return false; }
 }

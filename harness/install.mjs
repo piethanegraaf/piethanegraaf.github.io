@@ -120,6 +120,10 @@ const code = new Map(); // rel -> content (owned by the harness, replaced on upd
 for (const f of fs.readdirSync(path.join(HARNESS, "hooks")).filter((f) => f.endsWith(".mjs")).sort()) {
   code.set(`.claude/hooks/${f}`, fs.readFileSync(path.join(HARNESS, "hooks", f), "utf8"));
 }
+// Messages for all languages, so `skill.mjs setting language` works without reinstalling.
+for (const f of fs.readdirSync(path.join(HARNESS, "i18n")).filter((f) => /^[a-z]{2}\.json$/.test(f)).sort()) {
+  code.set(`.claude/hooks/i18n/${f}`, fs.readFileSync(path.join(HARNESS, "i18n", f), "utf8"));
+}
 const skill = localized(path.join(HARNESS, "skills", "diary"), "SKILL");
 if (skill === null) fail("de diary-skill ontbreekt in de harnas");
 code.set(".claude/skills/diary/SKILL.md", skill);
@@ -148,8 +152,13 @@ function mergeSettings(text) {
   return JSON.stringify({ ...cfg, hooks }, null, 2) + "\n";
 }
 
+// A text in the map can be { nl, en }: the record gets the language of choice (Dutch as fallback).
+const pickLang = (v) => (v && typeof v === "object" && !Array.isArray(v) ? v[lang] ?? v.nl ?? Object.values(v)[0] : v);
+
 function initialSkills() {
   const map = JSON.parse(fs.readFileSync(path.join(HARNESS, "maps", mapId, "skills.json"), "utf8"));
+  if (map._info !== undefined) map._info = pickLang(map._info);
+  map.skills = (map.skills ?? []).map((s) => ({ ...s, title: pickLang(s.title) }));
   map.settings = { ...(map.settings ?? {}), language: lang };
   if (opts.course !== null) map.settings.course = opts.course;
   if (opts.exam !== null) map.settings.examDate = opts.exam;

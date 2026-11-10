@@ -62,6 +62,25 @@ test("a fresh install: code, data from the map, settings with $CLAUDE_PROJECT_DI
   } finally { fs.rmSync(d, { recursive: true, force: true }); }
 });
 
+test("--lang en: English rules, diary skill, titles and messages", () => {
+  const d = tmp();
+  try {
+    const r = install(d, "--lang", "en", "--yes");
+    assert.equal(r.code, 0, r.stderr);
+    assert.match(read(d, ".claude/leerharnas.md"), /^# Learning harness/);
+    assert.match(read(d, ".claude/leerharnas.md"), /About this course/);
+    assert.match(read(d, ".claude/skills/diary/SKILL.md"), /<!-- session: <session-id> -->/);
+    assert.match(read(d, "CLAUDE.md"), /Own agreements/);
+    assert.ok(exists(d, ".claude/hooks/i18n/en.json") && exists(d, ".claude/hooks/i18n/nl.json"));
+    const skills = JSON.parse(read(d, ".learning/skills.json"));
+    assert.equal(skills.settings.language, "en");
+    assert.equal(skills.skills.find((s) => s.id === "ood.overerving").title, "Inheritance, : base(...), abstract, override");
+    assert.match(skills._info, /^Skill map/);
+    const start = run(path.join(d, ".claude/hooks/session-start.mjs"), [], { env: cleanEnv(), cwd: d, input: "{}" });
+    assert.match(start.json.systemMessage, /^Learning harness: 15 skills/);
+  } finally { fs.rmSync(d, { recursive: true, force: true }); }
+});
+
 test("the installed hooks work in the target folder", () => {
   const d = tmp();
   try {
