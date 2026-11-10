@@ -1,0 +1,51 @@
+# Security
+
+*Nederlands: zie [hieronder](#nederlands).*
+
+## Reporting a vulnerability
+
+Please **do not open a public issue** for a security problem. Report it privately through GitHub:
+**Security → Report a vulnerability** on this repository (GitHub private vulnerability reporting).
+You will get an answer there. Please give a short description, the steps to reproduce it and the affected files.
+
+## What the harness does on your computer
+
+The learning harness runs Node.js scripts as Claude Code hooks on your own computer. They are designed to be safe:
+
+- **No network traffic.** The hooks, `install.mjs` and `export.mjs` never connect to the internet.
+- **No `eval` and no shell.** Commands such as `dotnet test` are started with an argument list, never through a shell with your input in it.
+- **Your data stays local.** Learning data lives in `.learning/` in your project, which the installer adds to `.gitignore`.
+- **The installer never overwrites without a backup.** It first shows what it will do, only changes files after `--yes`, and copies every file it changes to `.claude/leerharnas-backup/<time>/`. `--update` never touches your data or your own `CLAUDE.md`.
+- **The export is filtered.** `export.mjs` only exports a whitelist of fields, filters e-mail addresses, paths, user names, session ids and your own terms in `.learning/private.json`, and shows what it filtered with `--dry-run`.
+
+`harness/security-check.mjs` checks these rules, plus secrets, forbidden files, the web pages and the CI settings, on every push and pull request.
+
+## Supported versions
+
+Only the latest version on `main` gets fixes.
+
+---
+
+## Nederlands
+
+### Een kwetsbaarheid melden
+
+Open voor een beveiligingsprobleem **geen openbare issue**. Meld het privé via GitHub:
+**Security → Report a vulnerability** in deze repository (GitHub private vulnerability reporting).
+Je krijgt daar antwoord. Geef een korte beschrijving, de stappen om het na te doen en de betrokken bestanden.
+
+### Wat de harnas op je computer doet
+
+De leerharnas draait Node.js-scripts als hooks van Claude Code op je eigen computer. Ze zijn zo gemaakt dat dat veilig is:
+
+- **Geen netwerkverkeer.** De hooks, `install.mjs` en `export.mjs` maken nooit verbinding met internet.
+- **Geen `eval` en geen shell.** Commando's als `dotnet test` starten met een lijst van argumenten, nooit via een shell met jouw invoer erin.
+- **Je data blijft lokaal.** De leerdata staat in `.learning/` in je project. De installer zet die map in `.gitignore`.
+- **De installer overschrijft nooit zonder backup.** Hij laat eerst zien wat hij gaat doen, wijzigt pas iets na `--yes`, en kopieert elk bestand dat hij wijzigt naar `.claude/leerharnas-backup/<tijd>/`. `--update` laat je data en je eigen `CLAUDE.md` altijd staan.
+- **De export wordt gefilterd.** `export.mjs` exporteert alleen een whitelist van velden, filtert e-mailadressen, paden, gebruikersnamen, sessie-id's en je eigen termen uit `.learning/private.json`, en toont met `--dry-run` wat er is weggefilterd.
+
+`harness/security-check.mjs` controleert deze regels, en ook geheimen, verboden bestanden, de webpagina's en de CI-instellingen, bij elke push en pull request.
+
+### Ondersteunde versies
+
+Alleen de nieuwste versie op `main` krijgt reparaties.

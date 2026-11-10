@@ -1,0 +1,7 @@
+{
+  "_info": "Decisions about TWIJFEL findings of harness/security-check.mjs. Every entry needs a reason. BLOKKEER can never be allowed here.",
+  "entries": [
+    { "rule": "privacy.*", "path": "harness/test/**", "reason": "Nepdata in tests (verzonnen namen, paden, e-mailadressen en sessie-id): de tests controleren juist dat zulke gegevens worden weggefilterd." }
+  ],
+  "commitEmails": []
+}

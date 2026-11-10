@@ -6,8 +6,11 @@ import fs from "node:fs";
 import path from "node:path";
 import { HARNESS } from "./helpers.mjs";
 
+// The tests themselves contain fake personal-looking data on purpose (example.com, jdoe, a fake UUID).
 const files = fs.readdirSync(HARNESS, { recursive: true })
-  .map((f) => path.join(HARNESS, String(f)))
+  .map((f) => String(f))
+  .filter((f) => !f.split(/[\\/]/).includes("test") && !f.split(/[\\/]/).includes("node_modules"))
+  .map((f) => path.join(HARNESS, f))
   .filter((f) => fs.statSync(f).isFile() && /\.(mjs|js|json|md)$/i.test(f));
 
 const PATTERNS = [
