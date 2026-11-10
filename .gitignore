@@ -1,0 +1,15 @@
+# Build output
+site/
+
+# Local tooling
+.venv/
+__pycache__/
+node_modules/
+
+# Local only, never commit: plans, personal learning data, secrets
+*.local.md
+.learning/
+events.jsonl
+session-*.json
+.env
+.env.*
