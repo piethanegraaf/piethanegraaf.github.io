@@ -10,7 +10,7 @@
 
 The table of contents is in the sidebar.
 
-> **Status note.** Sections 1–9 are the original design. §1–4, §6–8 and §5.3/§5.7 were revised on 8 November 2026 with research from May–November 2026, the shift in skill needs, and a critical review of the original literature review; what changed and why is in the change log (§11). The harness as actually built differs in places: there are microskills, a test runner (`check.mjs`) instead of a PostToolUse evidence hook, a hard own-words explanation check, Fibonacci reviews from L3 and a tooling zone. Those differences are summarized in §10, which reports what the first sessions showed. If you use the harness, its `CLAUDE.md` is authoritative for day-to-day rules. A short literature update on 10 November 2026 added seven sources (change log, §11).
+> **Status note.** Sections 1–9 are the original design. §1–4, §6–8 and §5.3/§5.7 were revised on 8 November 2026 with research from May–November 2026, the shift in skill needs, and a critical review of the original literature review; what changed and why is in the change log (§11). The harness as actually built differs in places: there are microskills, a test runner (`check.mjs`) instead of a PostToolUse evidence hook, a hard own-words explanation check, placement of a new skill by a first attempt, automatic demotion on evidence, Fibonacci reviews at L4 through real work, and a tooling zone. Those differences are summarized in §10, which reports what the first sessions showed; §10.4 covers the revision of 10 November 2026. If you use the harness, its `CLAUDE.md` is authoritative for day-to-day rules. A short literature update on 10 November 2026 added seven sources (change log, §11).
 
 ---
 
@@ -783,29 +783,65 @@ The harness gives each skill its own level. The five levels follow cognitive app
 | **L3** | *Independent* | You | Reviews **after** your attempt: code review, design critique, test ideas | Solve it alone, then defend your choices | Deliberate practice, feedback |
 | **L4** | *Automated* | AI | Writes the code. You **review** the diff and predict the approach on samples | Supervise, plus periodic maintenance retrieval | Autonomous stage, levels of automation, ironies of automation |
 
+**As built (10 November 2026, §10.4):** a new skill starts with your attempt, and its first task places it on a level. Going down is automatic when the evidence shows it. Going up stays your decision. Maintenance reviews exist at L4 only.
+
 ```mermaid
 stateDiagram-v2
     direction LR
-    [*] --> L0_Demonstrate : new skill encountered
+    [*] --> Placement : new skill - attempt first, L2 hint ladder, no unlock on time
+
+    Placement --> L3_Independent : first task at rung 0
+    Placement --> L2_Guided : first task at rung 1-2
+    Placement --> L1_Complete : first task at rung 3-4
+    Placement --> L0_Demonstrate : first task needed a worked solution (rung 5)
 
     L0_Demonstrate --> L1_Complete : 2 correct self-explanations + predicted output right
-    L1_Complete --> L2_Guided : 3 gaps filled, tests pass, ≤1 hint per gap
-    L2_Guided --> L3_Independent : success rate ≥85% over ≥5 tasks, avg hint rung ≤1
-    L3_Independent --> MasteryCheck : 3 independent successes on ≥2 different days
-    MasteryCheck --> L4_Automated : novel transfer task passed + explanation correct
-    MasteryCheck --> L3_Independent : failed → targeted practice
+    L1_Complete --> L2_Guided : 3 gaps filled, tests pass, max 1 hint per gap
+    L2_Guided --> L3_Independent : about 85% solved over 5+ tasks (learner decides)
+    L3_Independent --> MasteryCheck : 3x rung 0 on 2+ different days
+    MasteryCheck --> L4_Automated : novel transfer task + explanation (learner decides)
+    MasteryCheck --> L3_Independent : failed - targeted practice
 
-    L1_Complete --> L0_Demonstrate : stuck twice / under 50% success
-    L2_Guided --> L1_Complete : success rate under 70%
-    L3_Independent --> L2_Guided : 2 failures in a row
+    L1_Complete --> L0_Demonstrate : auto-demote
+    L2_Guided --> L1_Complete : auto-demote
+    L3_Independent --> L2_Guided : auto-demote
 
-    L4_Automated --> Maintenance : spaced review due
-    L3_Independent --> Maintenance : spaced review due (revised: reviews start at L3)
-    Maintenance --> L4_Automated : retrieval passed → interval grows
-    Maintenance --> L3_Independent : 2 failed reviews in a row → advice to demote (learner decides)
+    L4_Automated --> Maintenance : Fibonacci date passed
+    Maintenance --> L4_Automated : next time in real work, done by the learner - new date
+    Maintenance --> L3_Independent : 2 failed reviews in a row - auto-demote
 
     L4_Automated --> [*] : skill retired - no longer relevant
 ```
+
+- **Placement.** A skill below L4 with no history and no tasks of its own has an open placement. Until its first task it counts as L2, for the hint ladder and for the guard. So a new skill no longer starts at L0: L0 and L1 are forms of help that come *after* an attempt. The highest rung of the first task sets the level (§5.3).
+- **Auto-demote** happens only when `settings.autoDemote` is on; it is off by default. The rule looks at the skill's own explained tasks since its last level change, at most the last 10. With at least 3 of them, it applies when under 70% were solved (at rung ≤ 2) or the last 2 were not solved. It also applies after 2 failed reviews in a row. A microskill then goes down one level. For a parent skill, the demotion analyst first decides whether a microskill or the parent goes down (§10.4.2).
+- **Up** never happens automatically. You can undo any automatic change with `set`.
+
+??? note "Earlier version (7–9 November 2026)"
+
+    ```mermaid
+    stateDiagram-v2
+        direction LR
+        [*] --> L0_Demonstrate : new skill encountered
+
+        L0_Demonstrate --> L1_Complete : 2 correct self-explanations + predicted output right
+        L1_Complete --> L2_Guided : 3 gaps filled, tests pass, ≤1 hint per gap
+        L2_Guided --> L3_Independent : success rate ≥85% over ≥5 tasks, avg hint rung ≤1
+        L3_Independent --> MasteryCheck : 3 independent successes on ≥2 different days
+        MasteryCheck --> L4_Automated : novel transfer task passed + explanation correct
+        MasteryCheck --> L3_Independent : failed → targeted practice
+
+        L1_Complete --> L0_Demonstrate : stuck twice / under 50% success
+        L2_Guided --> L1_Complete : success rate under 70%
+        L3_Independent --> L2_Guided : 2 failures in a row
+
+        L4_Automated --> Maintenance : spaced review due
+        L3_Independent --> Maintenance : spaced review due (revised: reviews start at L3)
+        Maintenance --> L4_Automated : retrieval passed → interval grows
+        Maintenance --> L3_Independent : 2 failed reviews in a row → advice to demote (learner decides)
+
+        L4_Automated --> [*] : skill retired - no longer relevant
+    ```
 
 > **"Just giving text input" at the start** is L0. You describe your intent and requirements in prose, and the AI writes a fully annotated example. Even here you are never fully passive: at L0 you give a short self-explanation or prediction before the session counts as progress (Chi et al., 1989; Kazemitabaar et al., 2025).
 
@@ -841,6 +877,14 @@ flowchart TD
 - **70–95%** → in the zone. Keep going.
 - **< 70%** → too hard. Shorten the stuck timer `T` (e.g. 15 → 8 min), choose easier tasks, or go down one level.
 - For L2, `T` starts at **10–15 minutes**. That is within the time in which confusion can still be productive (D'Mello et al., 2014). You can change `T`.
+
+**As built (10 November 2026, §10.4):** for a **new skill** whose placement is still open (§5.2), rungs do **not** unlock on time. A rung goes up only when:
+
+- you say you are stuck;
+- you share the same error or test outcome twice;
+- you say you do not know the concept.
+
+If you ask for more explanation after an attempt of your own, Claude may go straight up to rung 4. The rung Claude really gives is logged through its `[trede N]` marker, and it counts towards the placement. For normal L2 tasks the stuck timer `T` stays at 12 minutes, but it counts active time only: a break longer than `idleMinutes` (default 20) does not count.
 
 ### 5.4 Hook pipeline
 
@@ -1080,25 +1124,53 @@ timeline
 
 At the start of each session, the **`SessionStart` hook** shows the reviews that are due. So reinforcement happens automatically, and you do not have to remember it. This is the "enforce learning as long as needed" part: a skill is *never permanently out of the loop*. It just gets checked less and less often.
 
-**As built (after the first sessions, §10):** the harness replaced the 3 → 7 → 21 → 60 → 120 schedule above.
+**As built (10 November 2026, §10.4):** reviews now happen in your real work, and only at L4.
 
-- **Fibonacci intervals:** 1, 2, 3, 5, 8, 13, 21, 34 … days.
-- **Starting point:** reviews start as soon as a skill or microskill reaches **L3**, not L4. That fits the goal "mastered → only occasional reinforcement".
-- **After a review:** `pass` moves one step up the sequence, `shaky` repeats the interval, and `fail` moves **two steps back**.
-- **After two fails in a row:** the harness *advises* you to go down one level. It never demotes a skill automatically.
-- **Before your exam:** if you set your exam date in `settings.examDate`, the harness shortens every interval so that the review falls no later than 3 days before the exam.
+- **No separate review exercises.** A review is the **next time the skill comes up in your real work** after its date: through its folder, its keywords, or a `check.mjs` run that is mapped to it. The hook then says so once. This time you do that part yourself, not the AI: while the review is due, the guard treats the skill's paths as L3.
+- **Fibonacci intervals:** 1, 2, 3, 5, 8, 13, 21, 34 … days, for **L4 skills and microskills only**. An L3 skill needs no schedule, because you do it yourself whenever it comes up.
+- **The rung of that task sets the outcome:**
+    - rung 0 → `pass`, one step up the sequence;
+    - rung 1–2 → `shaky`, the interval repeats;
+    - rung 3–5 or a failed task → `fail`, **two steps back**.
+- **After two fails in a row:** the rule for automatic demotion applies (§5.2, §10.4.2). With `autoDemote` off, you get advice to go down one level.
+- **If the skill does not come up:** nothing happens, and the review waits. Nothing appears at the start of a session. The dashboard shows no "overdue", only when you last saw the skill.
+- **Before your exam:** with `settings.examDate` set, a review falls no later than 3 days before the exam. The safety net before the exam is your course's practice exams. They are deliberately outside the harness.
 
 ```mermaid
 flowchart LR
-    S[Skill or microskill reaches L3] --> I["Interval i = 0 → 1 day"]
-    I --> Q{Retrieval review<br/>~5 min, no help}
-    Q -- pass --> UP["i + 1<br/>1, 2, 3, 5, 8, 13, 21 …"]
-    Q -- shaky --> SAME[same interval]
-    Q -- fail --> BACK["i − 2"]
+    S[Skill or microskill reaches L4] --> I["Interval i = 0 → 1 day"]
+    I --> D{Date passed and<br/>skill comes up<br/>in real work?}
+    D -- not yet --> W["The review waits<br/>nothing shown, no 'overdue'"]
+    D -- yes --> Q["Learner does it, AI does not<br/>(paths treated as L3)"]
+    Q -- rung 0 --> UP["pass: i + 1<br/>1, 2, 3, 5, 8, 13, 21 …"]
+    Q -- rung 1–2 --> SAME[shaky: same interval]
+    Q -- rung 3–5 or failed --> BACK["fail: i − 2"]
     BACK --> F{2nd fail<br/>in a row?}
-    F -- yes --> ADV[Advice: one level down<br/>learner decides]
-    UP & SAME & BACK --> C["clamp: ≤ examDate − 3 days"] --> Q
+    F -- yes --> DEM["Automatic demotion rule, §10.4.2<br/>advice only if autoDemote is off"]
+    UP & SAME & BACK --> C["clamp: ≤ examDate − 3 days"] --> D
 ```
+
+??? note "Earlier version as built (§10, 7 November 2026)"
+
+    The harness replaced the 3 → 7 → 21 → 60 → 120 schedule above.
+
+    - **Fibonacci intervals:** 1, 2, 3, 5, 8, 13, 21, 34 … days.
+    - **Starting point:** reviews start as soon as a skill or microskill reaches **L3**, not L4. That fits the goal "mastered → only occasional reinforcement".
+    - **After a review:** `pass` moves one step up the sequence, `shaky` repeats the interval, and `fail` moves **two steps back**.
+    - **After two fails in a row:** the harness *advises* you to go down one level. It never demotes a skill automatically.
+    - **Before your exam:** if you set your exam date in `settings.examDate`, the harness shortens every interval so that the review falls no later than 3 days before the exam.
+
+    ```mermaid
+    flowchart LR
+        S[Skill or microskill reaches L3] --> I["Interval i = 0 → 1 day"]
+        I --> Q{Retrieval review<br/>~5 min, no help}
+        Q -- pass --> UP["i + 1<br/>1, 2, 3, 5, 8, 13, 21 …"]
+        Q -- shaky --> SAME[same interval]
+        Q -- fail --> BACK["i − 2"]
+        BACK --> F{2nd fail<br/>in a row?}
+        F -- yes --> ADV[Advice: one level down<br/>learner decides]
+        UP & SAME & BACK --> C["clamp: ≤ examDate − 3 days"] --> Q
+    ```
 
 ### 5.8 OOD skill map
 
@@ -1691,15 +1763,15 @@ In the first sessions of the pilot, one student used the harness for three learn
 
 1. **Objective evidence: `check.mjs`.** The student runs it. It works for any .NET test project, snek exercises or project work. A red→green transition is logged as a task with the rung that applied at that moment. The first run per folder is a baseline. Skill mapping, in order: the path of the solution folder, then keywords in test and class names, then the active session skill. Claude may not run it at L1–L3 (guard).
 2. **Stricter keyword logging, plus the `done` command.** "het werkt" counts only with code or test context and never with tooling words. Claude proposes the `done` command for successes without tests, such as design or UML.
-3. **Microskills.** Entries with a `parent`, their own level, keywords and reviews. They drive the hint ladder. The guard stays path-based on the parent's level. Claude proposes new ones (`add-micro`) and the student creates them. Parent statistics include microskill tasks.
-4. **Hard own-words explanation check (two keys).** A task stays open, also across sessions, until it is explained.
+3. **Microskills.** Entries with a `parent`, their own level, keywords and reviews. They drive the hint ladder. The guard stays path-based on the parent's level. Claude proposes new ones (`add-micro`) and the student creates them. Parent statistics include microskill tasks. *Changed on 10 November 2026 (§10.4.2): with `autoDemote` on, the demotion analyst can also create one.*
+4. **Hard own-words explanation check (two keys).** A task stays open, also across sessions, until it is explained. *Changed on 10 November 2026 (§10.4.1, D4): the explanation is asked right away, and an open task lapses when the session ends or the student starts another exercise.*
             - Key 1: Claude judges the content and writes `[uitleg-ok <tid>]`.
             - Key 2: `reflect-gate.mjs` checks the student's own message deterministically: at least 12 words outside code, a causal connective, and at most 40% of its 5-word sequences copied from Claude's earlier text.
             - There is no CLI command to mark a task explained. Promotion via `set` is refused while tasks of that skill are open. Claude cannot write `.learning/state/`.
             - *Rationale:* self-explanation and retrieval (Chi et al., 1989; Roediger & Karpicke, 2006), and avoiding the illusion of competence (Prather et al., 2024).
 5. **Honest rung logging at every level.** Claude marks substantive help with `[trede N]`, and the Stop hook raises the task's maximum rung from it.
 6. **Active positive signalling.** This happens right after a task at rung 0–2, at session start (recent rung-0 wins and promotion candidates with the exact command) and in the diary. Promotion criteria were *not* loosened. The student explicitly chose against a fast-track challenge route.
-7. **Fibonacci reviews from L3,** clamped to the exam date (§5.7).
+7. **Fibonacci reviews from L3,** clamped to the exam date (§5.7). *Changed on 10 November 2026 (§10.4.1, D3): reviews at L4 only, through real work.*
 8. **Tooling as an L4 zone, plus guard fixes.**
             - Only `dotnet build|test|run|new|add|…` and `check.mjs` count as building or testing.
             - Redirects to `/dev/null` or `$null`, and `=>` / `->`, no longer count as writes.
@@ -1732,9 +1804,100 @@ In the first sessions of the pilot, one student used the harness for three learn
     - Check that every agent report produces a `prompt-ignored` event and that no real message does.
     - Filter the five spurious `hint-unlock` events of that session out of any evaluation.
 
+### 10.4 Revision of 10 November 2026: learning order, reviews and explanations
+
+A later session of the pilot covered two more exercises, `05-de-auto` and `06-studenten`. Afterwards the setup was reviewed again: a fresh check of the literature, a diagnosis of the bugs with evidence from the code, and a build plan. That review is not published. The student made six decisions (D1–D6). Each was first checked against this literature review, and all of them are now built into the harness. Where the build differs in detail from the plan, this section describes the build.
+
+**Process rule (new):** the student's ideas for the harness are first checked against this literature review (§2, P1–P13). Only then are they decided and built.
+
+#### 10.4.1 Decisions
+
+| # | Decision | Checked against | Verdict and condition |
+|---|---|---|---|
+| D1 | **Attempt first, also for a new skill.** A skill below L4 with no history and no tasks of its own has an open *placement*. Until its first task it counts as L2, for the hint ladder and the guard. The first task places it by its highest rung: 0 → L3, 1–2 → L2, 3–4 → L1, 5 → L0. The hint ladder stays, because it measures the level. With an open placement, a rung never unlocks on time. It goes up only on a stuck signal: the student says so, shares the same error or test outcome twice, or does not know the concept. After an own attempt, an explicit request for more explanation may go straight up to rung 4. The rung Claude really gives is logged. | P1, P2; generation effect; productive failure (Sinha & Kapur 2021); expertise reversal (Kalyuga et al. 2003); help abuse (Aleven et al. 2003) | **Supported.** The consolidation that productive failure needs comes from D4. Help abuse corrects itself, because a requested rung lowers the placement. A placement after one task is noisy: D2 catches a placement that is too high, and the student fixes one that is too low with `set`. |
+| D2 | **Automatic demotion, manual promotion.** The rule: at least 3 explained tasks of the skill itself (the last 10 since its last level change), and under 70% solved (rung ≤ 2) or the last 2 not solved; or 2 failed reviews in a row. A microskill goes down one level right away. For a parent skill the **demotion analyst** decides first (§10.4.2). Backstop: if two different microskills of the same parent go down (or are created by the analyst) within 14 days, the parent goes down too. Up never happens automatically. | P2, P3 (contingent tutoring, Wood & Wood 1999); illusion of competence (Koriat & Bjork 2005); P10 (autonomy through a rule you chose yourself) | **Supported, but only on reliable data.** So it sits behind `settings.autoDemote`, which is off by default. The student turns it on once the fixed logging (§10.4.3) has given reliable data for a few sessions. It is an exception to "only the student changes the record", and the student chose it: whether a skill is mastered shows in practice, which is why there are tests at all. Every change is logged, and the student can undo it with `set`. |
+| D3 | **Reviews only through real work, Fibonacci only at L4** (§5.7). No separate review exercises, nothing at the session start, no "overdue". When a due L4 skill comes up in real work, the student does it, not the AI: rung 0 pass, 1–2 shaky, 3–5 or failed fail. If the skill does not come up, the review waits. | P8 (spacing: strong); skill decay (Arthur et al. 1998; Tatel & Ackerman 2025); transfer-appropriate processing (P12); P7 (maintenance after automation) | **Partly supported. The one real tension:** "it happens to come up" does not guarantee spacing. Accepted because the snek exercises build on each other (natural interleaving), and because the safety net is the course's practice exams, **deliberately outside the harness**. The student's reason: a work context differs from a test context. Only rung 0 counts as a pass. |
+| D4 | **Own-words explanation only right away.** A task is open from the moment it is logged. It lapses at the first of these: the session ends (after the diary, or at the next session start if the session was left open), or the student starts another exercise (`check.mjs` in another folder, or `done` for a skill of another family). A next task in the same folder does not lapse it, and one message may explain several tasks. A lapsed task does not count. The dashboard shows it as "skipped", apart from failed. The follow-up questions are as strict as before. | Self-explanation (Chi et al. 1989); consolidation after struggle (D'Mello et al. 2014); the cost of a strict gate (§2.4) | **Supported.** It removes the pile of stale explanations that blocked promotion. |
+| D5 | Mastery gate unchanged (3× rung 0 on ≥ 2 days, plus a transfer task). Stuck timer for normal L2 tasks unchanged (12 min), but it now counts active time. A recap after a break only on request ("Where was I?"): the status, with no new information. | P6 | No change. |
+| D6 | **Tooling:** Claude Code's prompt suggestions off (`"promptSuggestionEnabled": false`), because a suggested next prompt gave hints away. AI completion in the IDE off (for example Rider's Full Line Code Completion). | P11; Gajos & Mamykina 2022 | The installer sets the first. The install guide lists the second. |
+
+#### 10.4.2 The demotion analyst
+
+`check.mjs` almost always logs a task under the **parent** skill, so one weak sub-pattern could take the parent down. That would give the AI more freedom in *every* exercise of that skill. So for a parent skill, a read-only Claude agent, `demotie-analist`, first looks at the failed tasks:
+
+- It reads the test output, the code and the hint exchange in the transcript.
+- It links each failure to a sub-pattern: an existing microskill (matched on meaning, not on keywords), or a new one. A one-off slip or a tooling problem is left out.
+- It returns a JSON verdict: `micro` when all failures share one sub-pattern, or `ouder` (parent) when there are two or more sub-patterns, or when a failure hits the core of the parent skill. In doubt, it chooses `micro` and says it is in doubt.
+
+How a verdict is applied:
+
+1. When the rule is met for a parent skill, the Stop hook sets a pending demotion.
+2. With the next prompt, `prompt-gate` asks Claude to call the agent after the student's current point, not in the middle of a hint.
+3. Claude puts the agent's JSON in its answer, in a `[demotie {...}]` marker.
+4. The Stop hook applies the verdict only if:
+    - the schema is valid;
+    - the tasks it names are failed tasks of that family;
+    - it goes down one level at most. A new microskill always gets the parent's level minus 1, set by the harness, not by the agent;
+    - the agent really ran in that turn: the transcript shows a call to the subagent `demotie-analist`.
+
+With `micro`, only that microskill goes down one level, or it is created, and the failed tasks are moved to it. With `ouder`, the parent goes down one level. A doubt is noted in the diary. As a backstop, the parent goes down too when two different microskills of it go down, or are created by the analyst, within 14 days. If the agent does not run in that session, nothing changes automatically; the rule is checked again after the next explained task.
+
+```mermaid
+flowchart TD
+    T["Task explained (two keys),<br/>or a review failed"] --> K{"Rule met?<br/>3+ explained tasks of the last 10:<br/>under 70% solved or last 2 not,<br/>or 2 failed reviews in a row"}
+    K -- no --> N[Nothing]
+    K -->|"yes, microskill"| MD[Microskill one level down]
+    K -->|"yes, parent skill"| P[Demotion pending]
+    P --> A["After the learner's current point:<br/>Claude calls the agent<br/>demotie-analist (read-only)"]
+    P -. agent not run this session .-> N2[Nothing changes<br/>automatically]
+    A --> H{"Stop hook checks the JSON:<br/>schema, failed tasks of this family,<br/>one level down, agent call in this turn"}
+    H -- invalid --> N2
+    H -- valid --> V{Failures map to}
+    V -->|"one sub-pattern"| M["Microskill: one level down,<br/>or new at parent level − 1"]
+    V -- doubt --> M2["Microskill, and 'doubt'<br/>noted in the diary"]
+    V -->|"2+ sub-patterns, or the core of the parent"| O[Parent: one level down]
+    MD & M & M2 --> B{"2 microskills of this parent<br/>down or created in 14 days?"}
+    B -- yes --> O2[Backstop: parent one level down]
+    B -- no --> N3[Done]
+```
+
+#### 10.4.3 Bugs found in the same session (all fixed)
+
+1. **The Stop hook missed 10 of 19 markers.** The cause was a race with Claude Code's buffered transcript writer: it flushes every 100 ms, and not before the hook runs. *Fixed:* the Stop hook also reads the `last_assistant_message` field of its input. Four approved explanations had been lost. The new `replay` command checks both keys again from the transcript and logs only what passes (source `replay`), also for a task that has lapsed in the meantime.
+2. **A failed build was not stored as a starting point,** so the first green after fixing compile errors was never logged. *Fixed:* a compile error is now a starting point for `check.mjs`.
+3. **A keyword beat the folder.** `prompt-gate` never looked at the folder, and rung marks went to the active skill instead of the task's skill. *Fixed:* the folder decides the skill family. A keyword can only pick a microskill within it; `#id` or the name of an exercise switches to another family.
+4. **Guard false positives:** `msbuild` and `check.mjs` were matched anywhere in the command text. *Fixed:* the guard splits a shell command into simple commands and judges each one by its program. It refuses `eval` and `iex`, because it cannot see what they run.
+5. **Session time was wall-clock time.** The one-hour nudge fired after about 8 minutes of real work, and a break of 12 minutes or more could unlock a rung without an attempt. *Fixed:* the session hour, the task minutes and the stuck timer count active time. A break longer than `idleMinutes` (default 20) does not count.
+6. **Minor:** `!` commands bypass `prompt-gate`, and `check.mjs` attached itself to the most recently changed session file, which is wrong with two sessions open at once. *Fixed:* a `!` command now picks the session that is working on that skill family.
+
+#### 10.4.4 Task lifecycle (D4)
+
+A task waits for its explanation only as long as the student is still on that exercise.
+
+```mermaid
+stateDiagram-v2
+    [*] --> Open : test red to green, done, or solved in chat
+    Open --> Explained : uitleg-ok + own-words check (two keys)
+    Open --> Open : uitleg-nee + follow-up, or next task in the same folder
+    Open --> Lapsed : session ends, or the learner starts another exercise
+    Lapsed --> Explained : replay finds both keys in the transcript
+    Explained --> [*] : counts towards the success rate
+    Lapsed --> [*] : does not count - shown as skipped
+```
+
 ---
 
 ## 11. Change log
+
+### 11 November 2026: learning order, reviews and explanations revised (decisions of 10 November)
+
+The pilot student decided these changes after a later session, and each was first checked against §2. They are now built into the harness. Details and verdicts are in §10.4.
+
+- **§5.2:** a new autonomy-ladder diagram: placement by a first attempt, automatic demotion, and maintenance at L4 only. The earlier diagram is in a collapsed block.
+- **§5.3:** unlock rules for new skills: no unlock on time, only on stuck signals, or on an explicit request after a first attempt.
+- **§5.7:** reviews through real work, at L4 only, with a new diagram. The earlier "as built" version is in a collapsed block.
+- **§10.4:** new: decisions D1–D6, the demotion analyst, the bugs found in the same session (all fixed), and the task lifecycle.
+- **Elsewhere:** the status note at the top, and short notes in §10.2, items 3, 4 and 7.
 
 ### 10 November 2026 (later): literature update, 8–10 November
 

@@ -13,7 +13,7 @@
 
 De inhoudsopgave staat in de zijbalk.
 
-> **Statusnotitie.** Secties 1–9 zijn het oorspronkelijke ontwerp. §1–4, §6–8 en §5.3/§5.7 zijn op 8 november 2026 herzien met onderzoek uit mei–november 2026, de verschuiving in benodigde vaardigheden en een kritische beoordeling van het oorspronkelijke literatuuronderzoek. Wat er veranderd is en waarom, staat in het wijzigingslogboek (§11). De harnas zoals die echt is gebouwd, wijkt op punten af: er zijn microvaardigheden, een testrunner (`check.mjs`) in plaats van een PostToolUse-hook voor bewijs, een harde controle op uitleg in eigen woorden, Fibonacci-herhalingen vanaf L3 en een toolingzone. Die verschillen staan samengevat in §10, waarin staat wat de eerste sessies lieten zien. Als je de harnas gebruikt, is de `CLAUDE.md` daarvan leidend voor de dagelijkse regels. Een korte literatuurupdate op 10 november 2026 voegde zeven bronnen toe (wijzigingslogboek, §11).
+> **Statusnotitie.** Secties 1–9 zijn het oorspronkelijke ontwerp. §1–4, §6–8 en §5.3/§5.7 zijn op 8 november 2026 herzien met onderzoek uit mei–november 2026, de verschuiving in benodigde vaardigheden en een kritische beoordeling van het oorspronkelijke literatuuronderzoek. Wat er veranderd is en waarom, staat in het wijzigingslogboek (§11). De harnas zoals die echt is gebouwd, wijkt op punten af: er zijn microvaardigheden, een testrunner (`check.mjs`) in plaats van een PostToolUse-hook voor bewijs, een harde controle op uitleg in eigen woorden, plaatsing van een nieuwe vaardigheid door een eerste poging, automatisch omlaag op bewijs, Fibonacci-herhalingen op L4 via echt werk, en een toolingzone. Die verschillen staan samengevat in §10, waarin staat wat de eerste sessies lieten zien; §10.4 gaat over de herziening van 10 november 2026. Als je de harnas gebruikt, is de `CLAUDE.md` daarvan leidend voor de dagelijkse regels. Een korte literatuurupdate op 10 november 2026 voegde zeven bronnen toe (wijzigingslogboek, §11).
 
 ---
 
@@ -785,29 +785,65 @@ De harnas geeft elke vaardigheid een eigen niveau. De vijf niveaus volgen cognit
 | **L3** | *Zelfstandig* | Jij | Beoordeelt **na** je poging: codereview, ontwerpkritiek, ideeën voor tests | Het alleen oplossen en daarna je keuzes verdedigen | Doelbewust oefenen (deliberate practice), feedback |
 | **L4** | *Geautomatiseerd* | AI | Schrijft de code. Jij **controleert** de diff en voorspelt bij steekproeven de aanpak | Toezicht houden, plus af en toe een ophaaloefening om het bij te houden | Autonome fase, automatiseringsniveaus, ironieën van automatisering |
 
+**Zoals gebouwd (10 november 2026, §10.4):** een nieuwe vaardigheid begint met jouw poging, en de eerste taak plaatst haar op een niveau. Omlaag gaat automatisch als het bewijs dat laat zien. Omhoog blijft jouw beslissing. Herhalingen om een vaardigheid bij te houden bestaan alleen op L4.
+
 ```mermaid
 stateDiagram-v2
     direction LR
-    [*] --> L0_Demonstrate : new skill encountered
+    [*] --> Placement : new skill - attempt first, L2 hint ladder, no unlock on time
+
+    Placement --> L3_Independent : first task at rung 0
+    Placement --> L2_Guided : first task at rung 1-2
+    Placement --> L1_Complete : first task at rung 3-4
+    Placement --> L0_Demonstrate : first task needed a worked solution (rung 5)
 
     L0_Demonstrate --> L1_Complete : 2 correct self-explanations + predicted output right
-    L1_Complete --> L2_Guided : 3 gaps filled, tests pass, ≤1 hint per gap
-    L2_Guided --> L3_Independent : success rate ≥85% over ≥5 tasks, avg hint rung ≤1
-    L3_Independent --> MasteryCheck : 3 independent successes on ≥2 different days
-    MasteryCheck --> L4_Automated : novel transfer task passed + explanation correct
-    MasteryCheck --> L3_Independent : failed → targeted practice
+    L1_Complete --> L2_Guided : 3 gaps filled, tests pass, max 1 hint per gap
+    L2_Guided --> L3_Independent : about 85% solved over 5+ tasks (learner decides)
+    L3_Independent --> MasteryCheck : 3x rung 0 on 2+ different days
+    MasteryCheck --> L4_Automated : novel transfer task + explanation (learner decides)
+    MasteryCheck --> L3_Independent : failed - targeted practice
 
-    L1_Complete --> L0_Demonstrate : stuck twice / under 50% success
-    L2_Guided --> L1_Complete : success rate under 70%
-    L3_Independent --> L2_Guided : 2 failures in a row
+    L1_Complete --> L0_Demonstrate : auto-demote
+    L2_Guided --> L1_Complete : auto-demote
+    L3_Independent --> L2_Guided : auto-demote
 
-    L4_Automated --> Maintenance : spaced review due
-    L3_Independent --> Maintenance : spaced review due (revised: reviews start at L3)
-    Maintenance --> L4_Automated : retrieval passed → interval grows
-    Maintenance --> L3_Independent : 2 failed reviews in a row → advice to demote (learner decides)
+    L4_Automated --> Maintenance : Fibonacci date passed
+    Maintenance --> L4_Automated : next time in real work, done by the learner - new date
+    Maintenance --> L3_Independent : 2 failed reviews in a row - auto-demote
 
     L4_Automated --> [*] : skill retired - no longer relevant
 ```
+
+- **Plaatsing.** Een vaardigheid onder L4 zonder geschiedenis en zonder eigen taken heeft een open plaatsing. Tot haar eerste taak telt ze als L2, voor de hintladder en voor de guard. Een nieuwe vaardigheid begint dus niet meer op L0: L0 en L1 zijn vormen van hulp die pas *na* een poging komen. De hoogste trede van de eerste taak bepaalt het niveau (§5.3).
+- **Automatisch omlaag** gebeurt alleen als `settings.autoDemote` aan staat; standaard staat het uit. De regel kijkt naar de eigen uitgelegde taken van de vaardigheid sinds haar laatste niveauwijziging, hooguit de laatste 10. Bij minstens 3 daarvan geldt hij als minder dan 70% gelukt is (op trede ≤ 2) of als de laatste 2 niet gelukt zijn. Hij geldt ook na 2 mislukte herhalingen op rij. Een microvaardigheid gaat dan één niveau omlaag. Bij een hoofdvaardigheid beslist eerst de demotie-analist of een microvaardigheid of de hoofdvaardigheid omlaag gaat (§10.4.2).
+- **Omhoog** gaat nooit automatisch. Elke automatische wijziging kun je terugdraaien met `set`.
+
+??? note "Eerdere versie (7–9 november 2026)"
+
+    ```mermaid
+    stateDiagram-v2
+        direction LR
+        [*] --> L0_Demonstrate : new skill encountered
+
+        L0_Demonstrate --> L1_Complete : 2 correct self-explanations + predicted output right
+        L1_Complete --> L2_Guided : 3 gaps filled, tests pass, ≤1 hint per gap
+        L2_Guided --> L3_Independent : success rate ≥85% over ≥5 tasks, avg hint rung ≤1
+        L3_Independent --> MasteryCheck : 3 independent successes on ≥2 different days
+        MasteryCheck --> L4_Automated : novel transfer task passed + explanation correct
+        MasteryCheck --> L3_Independent : failed → targeted practice
+
+        L1_Complete --> L0_Demonstrate : stuck twice / under 50% success
+        L2_Guided --> L1_Complete : success rate under 70%
+        L3_Independent --> L2_Guided : 2 failures in a row
+
+        L4_Automated --> Maintenance : spaced review due
+        L3_Independent --> Maintenance : spaced review due (revised: reviews start at L3)
+        Maintenance --> L4_Automated : retrieval passed → interval grows
+        Maintenance --> L3_Independent : 2 failed reviews in a row → advice to demote (learner decides)
+
+        L4_Automated --> [*] : skill retired - no longer relevant
+    ```
 
 > **"Alleen tekstinvoer geven" aan het begin** is L0. Je beschrijft je bedoeling en eisen in gewone tekst, en de AI schrijft een volledig toegelicht voorbeeld. Ook hier ben je nooit helemaal passief: op L0 geef je een korte zelfuitleg of voorspelling voordat de sessie als vooruitgang telt (Chi et al., 1989; Kazemitabaar et al., 2025).
 
@@ -843,6 +879,14 @@ flowchart TD
 - **70–95%** → in de zone. Ga zo door.
 - **< 70%** → te moeilijk. Verkort de vastloop-timer `T` (bijv. 15 → 8 min), kies makkelijkere taken of ga één niveau omlaag.
 - Voor L2 begint `T` op **10–15 minuten**. Dat valt binnen de tijd waarin verwarring nog productief kan zijn (D'Mello et al., 2014). Je kunt `T` zelf aanpassen.
+
+**Zoals gebouwd (10 november 2026, §10.4):** bij een **nieuwe vaardigheid** waarvan de plaatsing nog open is (§5.2), ontgrendelen treden **niet** op tijd. Een trede gaat alleen omhoog als:
+
+- je zegt dat je vastzit;
+- je dezelfde fout of testuitkomst twee keer deelt;
+- je zegt dat je het concept niet kent.
+
+Vraag je na een eigen poging om meer uitleg, dan mag Claude meteen naar trede 4 gaan. De trede die Claude echt geeft, wordt gelogd via de marker `[trede N]`, en die telt mee voor de plaatsing. Bij gewone L2-taken blijft de vastloop-timer `T` op 12 minuten, maar hij telt alleen actieve tijd: een pauze langer dan `idleMinutes` (standaard 20) telt niet mee.
 
 ### 5.4 Hook-pipeline
 
@@ -1082,25 +1126,53 @@ timeline
 
 Aan het begin van elke sessie toont de **`SessionStart`-hook** de herhalingen die aan de beurt zijn. Zo gebeurt het versterken vanzelf, en hoef je er zelf niet aan te denken. Dit is het deel "leren afdwingen zolang dat nodig is": een vaardigheid is *nooit voorgoed buiten beeld*. Ze wordt alleen steeds minder vaak gecontroleerd.
 
-**Zoals gebouwd (na de eerste sessies, §10):** de harnas verving het schema 3 → 7 → 21 → 60 → 120 hierboven.
+**Zoals gebouwd (10 november 2026, §10.4):** herhalingen gebeuren nu in je echte werk, en alleen op L4.
 
-- **Fibonacci-intervallen:** 1, 2, 3, 5, 8, 13, 21, 34 … dagen.
-- **Startpunt:** herhalingen beginnen zodra een vaardigheid of microvaardigheid **L3** bereikt, niet pas bij L4. Dat past bij het doel "beheerst → alleen af en toe versterken".
-- **Na een herhaling:** `pass` gaat één stap omhoog in de reeks, `shaky` herhaalt het interval en `fail` gaat **twee stappen terug**.
-- **Na twee keer `fail` op rij:** de harnas *adviseert* je om één niveau omlaag te gaan. De harnas zet een vaardigheid nooit automatisch lager.
-- **Voor je toets:** als je je toetsdatum instelt in `settings.examDate`, kort de harnas elk interval zo in dat de herhaling uiterlijk 3 dagen voor de toets valt.
+- **Geen losse herhaaloefeningen.** Een herhaling is de **eerstvolgende keer dat de vaardigheid in je echte werk langskomt** na haar datum: via haar map, haar trefwoorden of een run van `check.mjs` die eraan gekoppeld is. De hook meldt dat dan één keer. Deze keer doe jij dat deel zelf, niet de AI: zolang de herhaling klaarstaat, behandelt de guard de paden van de vaardigheid als L3.
+- **Fibonacci-intervallen:** 1, 2, 3, 5, 8, 13, 21, 34 … dagen, **alleen voor vaardigheden en microvaardigheden op L4**. Een vaardigheid op L3 heeft geen schema nodig, want die doe je zelf zodra ze langskomt.
+- **De trede van die taak bepaalt de uitkomst:**
+    - trede 0 → `pass`, één stap omhoog in de reeks;
+    - trede 1–2 → `shaky`, het interval herhaalt zich;
+    - trede 3–5 of een mislukte taak → `fail`, **twee stappen terug**.
+- **Na twee keer `fail` op rij:** de regel voor automatisch omlaag geldt (§5.2, §10.4.2). Staat `autoDemote` uit, dan krijg je het advies om één niveau omlaag te gaan.
+- **Als de vaardigheid niet langskomt:** dan gebeurt er niets, en wacht de herhaling. Bij het begin van een sessie verschijnt niets. Het dashboard toont geen "te laat", alleen wanneer je de vaardigheid het laatst zag.
+- **Voor je toets:** als `settings.examDate` is ingesteld, valt een herhaling uiterlijk 3 dagen voor de toets. Het vangnet vóór de toets zijn de oefentoetsen van je opleiding. Die staan bewust buiten de harnas.
 
 ```mermaid
 flowchart LR
-    S[Skill or microskill reaches L3] --> I["Interval i = 0 → 1 day"]
-    I --> Q{Retrieval review<br/>~5 min, no help}
-    Q -- pass --> UP["i + 1<br/>1, 2, 3, 5, 8, 13, 21 …"]
-    Q -- shaky --> SAME[same interval]
-    Q -- fail --> BACK["i − 2"]
+    S[Skill or microskill reaches L4] --> I["Interval i = 0 → 1 day"]
+    I --> D{Date passed and<br/>skill comes up<br/>in real work?}
+    D -- not yet --> W["The review waits<br/>nothing shown, no 'overdue'"]
+    D -- yes --> Q["Learner does it, AI does not<br/>(paths treated as L3)"]
+    Q -- rung 0 --> UP["pass: i + 1<br/>1, 2, 3, 5, 8, 13, 21 …"]
+    Q -- rung 1–2 --> SAME[shaky: same interval]
+    Q -- rung 3–5 or failed --> BACK["fail: i − 2"]
     BACK --> F{2nd fail<br/>in a row?}
-    F -- yes --> ADV[Advice: one level down<br/>learner decides]
-    UP & SAME & BACK --> C["clamp: ≤ examDate − 3 days"] --> Q
+    F -- yes --> DEM["Automatic demotion rule, §10.4.2<br/>advice only if autoDemote is off"]
+    UP & SAME & BACK --> C["clamp: ≤ examDate − 3 days"] --> D
 ```
+
+??? note "Eerdere versie zoals gebouwd (§10, 7 november 2026)"
+
+    De harnas verving het schema 3 → 7 → 21 → 60 → 120 hierboven.
+
+    - **Fibonacci-intervallen:** 1, 2, 3, 5, 8, 13, 21, 34 … dagen.
+    - **Startpunt:** herhalingen beginnen zodra een vaardigheid of microvaardigheid **L3** bereikt, niet pas bij L4. Dat past bij het doel "beheerst → alleen af en toe versterken".
+    - **Na een herhaling:** `pass` gaat één stap omhoog in de reeks, `shaky` herhaalt het interval en `fail` gaat **twee stappen terug**.
+    - **Na twee keer `fail` op rij:** de harnas *adviseert* je om één niveau omlaag te gaan. De harnas zet een vaardigheid nooit automatisch lager.
+    - **Voor je toets:** als je je toetsdatum instelt in `settings.examDate`, kort de harnas elk interval zo in dat de herhaling uiterlijk 3 dagen voor de toets valt.
+
+    ```mermaid
+    flowchart LR
+        S[Skill or microskill reaches L3] --> I["Interval i = 0 → 1 day"]
+        I --> Q{Retrieval review<br/>~5 min, no help}
+        Q -- pass --> UP["i + 1<br/>1, 2, 3, 5, 8, 13, 21 …"]
+        Q -- shaky --> SAME[same interval]
+        Q -- fail --> BACK["i − 2"]
+        BACK --> F{2nd fail<br/>in a row?}
+        F -- yes --> ADV[Advice: one level down<br/>learner decides]
+        UP & SAME & BACK --> C["clamp: ≤ examDate − 3 days"] --> Q
+    ```
 
 ### 5.8 OOD-vaardighedenkaart
 
@@ -1693,15 +1765,15 @@ In de eerste sessies van de pilot gebruikte één student de harnas in drie leer
 
 1. **Objectief bewijs: `check.mjs`.** De student voert het zelf uit. Het werkt voor elk .NET-testproject, voor de snek-oefeningen en voor projectwerk. Een overgang rood→groen wordt gelogd als taak, met de trede die op dat moment gold. De eerste run per map is een nulmeting. Koppeling aan een vaardigheid gaat in deze volgorde: het pad van de solution-map, dan trefwoorden in test- en klassennamen, dan de actieve vaardigheid van de sessie. Claude mag het op L1–L3 niet uitvoeren (guard).
 2. **Strenger loggen op trefwoorden, plus het commando `done`.** "het werkt" telt alleen mee met code- of testcontext, en nooit samen met toolingwoorden. Claude stelt het commando `done` voor bij successen zonder tests, zoals ontwerp of UML.
-3. **Microvaardigheden.** Items met een `parent`, een eigen niveau, eigen trefwoorden en eigen herhalingen. Ze sturen de hintladder. De guard blijft werken op basis van paden, met het niveau van de bovenliggende vaardigheid. Claude stelt nieuwe voor (`add-micro`) en de student maakt ze aan. De statistieken van de bovenliggende vaardigheid tellen ook de taken van haar microvaardigheden mee.
-4. **Harde controle op uitleg in eigen woorden (twee sleutels).** Een taak blijft open, ook over sessies heen, tot hij is uitgelegd.
+3. **Microvaardigheden.** Items met een `parent`, een eigen niveau, eigen trefwoorden en eigen herhalingen. Ze sturen de hintladder. De guard blijft werken op basis van paden, met het niveau van de bovenliggende vaardigheid. Claude stelt nieuwe voor (`add-micro`) en de student maakt ze aan. De statistieken van de bovenliggende vaardigheid tellen ook de taken van haar microvaardigheden mee. *Gewijzigd op 10 november 2026 (§10.4.2): met `autoDemote` aan kan ook de demotie-analist er een aanmaken.*
+4. **Harde controle op uitleg in eigen woorden (twee sleutels).** Een taak blijft open, ook over sessies heen, tot hij is uitgelegd. *Gewijzigd op 10 november 2026 (§10.4.1, D4): de uitleg wordt direct gevraagd, en een open taak vervalt als de sessie eindigt of de student aan een andere opdracht begint.*
             - Sleutel 1: Claude beoordeelt de inhoud en schrijft `[uitleg-ok <tid>]`.
             - Sleutel 2: `reflect-gate.mjs` controleert het eigen bericht van de student deterministisch: minstens 12 woorden buiten code, een causaal verbindingswoord, en hoogstens 40% van de reeksen van 5 woorden overgenomen uit eerdere tekst van Claude.
             - Er is geen CLI-commando om een taak als uitgelegd te markeren. Promotie via `set` wordt geweigerd zolang er taken van die vaardigheid open staan. Claude kan niet schrijven in `.learning/state/`.
             - *Onderbouwing:* zelfuitleg en ophalen uit het geheugen (Chi et al., 1989; Roediger & Karpicke, 2006), en het vermijden van de illusie van competentie (Prather et al., 2024).
 5. **Eerlijk loggen van treden op elk niveau.** Claude markeert inhoudelijke hulp met `[trede N]`. De Stop-hook verhoogt op basis daarvan de hoogste trede van de taak.
 6. **Actief positieve signalen geven.** Dat gebeurt direct na een taak op trede 0–2, bij de start van een sessie (recente successen op trede 0 en kandidaten voor promotie, met het precieze commando) en in het dagboek. De promotiecriteria zijn *niet* versoepeld. De student koos er bewust voor om geen versnelde route via een uitdaging te nemen.
-7. **Fibonacci-herhalingen vanaf L3,** begrensd door de toetsdatum (§5.7).
+7. **Fibonacci-herhalingen vanaf L3,** begrensd door de toetsdatum (§5.7). *Gewijzigd op 10 november 2026 (§10.4.1, D3): herhalingen alleen op L4, via echt werk.*
 8. **Tooling als L4-zone, plus reparaties aan de guard.**
             - Alleen `dotnet build|test|run|new|add|…` en `check.mjs` tellen als bouwen of testen.
             - Omleidingen naar `/dev/null` of `$null`, en `=>` / `->`, tellen niet meer als schrijven.
@@ -1734,9 +1806,100 @@ In de eerste sessies van de pilot gebruikte één student de harnas in drie leer
     - Controleer dat elk agentrapport een `prompt-ignored`-event oplevert, en dat geen enkel echt bericht dat doet.
     - Filter de vijf onterechte `hint-unlock`-events van die sessie uit elke evaluatie.
 
+### 10.4 Herziening van 10 november 2026: leervolgorde, herhalingen en uitleg
+
+Een latere sessie van de pilot behandelde nog twee opgaven, `05-de-auto` en `06-studenten`. Daarna is de opzet opnieuw beoordeeld: een nieuwe controle van de literatuur, een diagnose van de bugs met bewijs uit de code, en een bouwplan. Die beoordeling is niet gepubliceerd. De student nam zes besluiten (D1–D6). Elk besluit is eerst getoetst aan dit literatuuronderzoek, en ze zijn nu allemaal in de harnas gebouwd. Waar de bouw in details afwijkt van het plan, beschrijft deze sectie de bouw.
+
+**Werkregel (nieuw):** ideeën van de student voor de harnas worden eerst getoetst aan dit literatuuronderzoek (§2, P1–P13). Pas daarna worden ze besloten en gebouwd.
+
+#### 10.4.1 Besluiten
+
+| # | Besluit | Getoetst aan | Oordeel en voorwaarde |
+|---|---|---|---|
+| D1 | **Eerst proberen, ook bij een nieuwe vaardigheid.** Een vaardigheid onder L4 zonder geschiedenis en zonder eigen taken heeft een open *plaatsing*. Tot haar eerste taak telt ze als L2, voor de hintladder en de guard. De eerste taak plaatst haar op basis van de hoogste trede: 0 → L3, 1–2 → L2, 3–4 → L1, 5 → L0. De hintladder blijft, omdat die het niveau meet. Bij een open plaatsing ontgrendelt een trede nooit op tijd. Een trede gaat alleen omhoog bij een signaal van vastzitten: de student zegt het, deelt dezelfde fout of testuitkomst twee keer, of kent het concept niet. Na een eigen poging mag een uitdrukkelijke vraag om meer uitleg meteen naar trede 4 gaan. De trede die Claude echt geeft, wordt gelogd. | P1, P2; generatie-effect; productief falen (Sinha & Kapur 2021); expertise-omkeereffect (Kalyuga et al. 2003); misbruik van hulp (Aleven et al. 2003) | **Ondersteund.** De consolidatie die productief falen nodig heeft, komt uit D4. Misbruik van hulp corrigeert zichzelf, omdat een gevraagde trede de plaatsing verlaagt. Een plaatsing na één taak is onzeker: D2 vangt een te hoge plaatsing op, en een te lage herstelt de student met `set`. |
+| D2 | **Automatisch omlaag, met de hand omhoog.** De regel: minstens 3 uitgelegde taken van de vaardigheid zelf (de laatste 10 sinds haar laatste niveauwijziging), en minder dan 70% gelukt (trede ≤ 2) of de laatste 2 niet gelukt; of 2 mislukte herhalingen op rij. Een microvaardigheid gaat meteen één niveau omlaag. Bij een hoofdvaardigheid beslist eerst de **demotie-analist** (§10.4.2). Achtervang: gaan er binnen 14 dagen twee verschillende microvaardigheden van dezelfde ouder omlaag (of maakt de analist ze aan), dan gaat de ouder ook omlaag. Omhoog gaat nooit automatisch. | P2, P3 (contingente begeleiding, Wood & Wood 1999); illusie van competentie (Koriat & Bjork 2005); P10 (autonomie via een regel die je zelf kiest) | **Ondersteund, maar alleen op betrouwbare data.** Daarom zit het achter `settings.autoDemote`, dat standaard uit staat. De student zet het aan zodra het gerepareerde loggen (§10.4.3) een paar sessies betrouwbare data heeft opgeleverd. Het is een uitzondering op "alleen de student wijzigt het register", en de student koos daar zelf voor: of je een vaardigheid beheerst, blijkt in de praktijk, en daarom zijn er überhaupt tests. Elke wijziging wordt gelogd, en de student kan haar terugdraaien met `set`. |
+| D3 | **Herhalingen alleen via echt werk, Fibonacci alleen op L4** (§5.7). Geen losse herhaaloefeningen, niets bij de start van een sessie, geen "te laat". Komt een L4-vaardigheid waarvan de herhaling klaarstaat langs in echt werk, dan doet de student het, niet de AI: trede 0 `pass`, 1–2 `shaky`, 3–5 of mislukt `fail`. Komt de vaardigheid niet langs, dan wacht de herhaling. | P8 (spreiding: sterk); verval van vaardigheden (Arthur et al. 1998; Tatel & Ackerman 2025); transfer-appropriate processing (P12); P7 (bijhouden na automatisering) | **Deels ondersteund. De enige echte spanning:** "het komt toevallig langs" garandeert geen spreiding. Geaccepteerd omdat de snek-oefeningen op elkaar voortbouwen (vanzelf afwisseling), en omdat het vangnet de oefentoetsen van de opleiding zijn, **bewust buiten de harnas**. De reden van de student: een werkcontext is iets anders dan een toetscontext. Alleen trede 0 telt als `pass`. |
+| D4 | **Uitleg in eigen woorden alleen direct.** Een taak staat open vanaf het moment dat hij gelogd is. Hij vervalt bij het eerste van deze twee: de sessie eindigt (na het dagboek, of bij de start van de volgende sessie als de sessie open bleef), of de student begint aan een andere opdracht (`check.mjs` in een andere map, of `done` voor een vaardigheid uit een andere familie). Een volgende taak in dezelfde map laat hem niet vervallen, en één bericht mag meer taken uitleggen. Een vervallen taak telt niet mee. Het dashboard toont hem als "overgeslagen", apart van mislukt. De vervolgvragen zijn even streng als eerst. | Zelfuitleg (Chi et al. 1989); consolidatie na worstelen (D'Mello et al. 2014); de kosten van een strenge poort (§2.4) | **Ondersteund.** Het ruimt de stapel verouderde uitleg op die promotie blokkeerde. |
+| D5 | Beheersingspoort ongewijzigd (3× trede 0 op ≥ 2 dagen, plus een transfertaak). Vastloop-timer voor gewone L2-taken ongewijzigd (12 min), maar hij telt nu actieve tijd. Een samenvatting na een pauze alleen op verzoek ("Waar was ik?"): de status, zonder nieuwe informatie. | P6 | Geen wijziging. |
+| D6 | **Tooling:** promptsuggesties van Claude Code uit (`"promptSuggestionEnabled": false`), omdat een voorgestelde volgende prompt hints weggaf. AI-aanvulling in de IDE uit (bijvoorbeeld Full Line Code Completion in Rider). | P11; Gajos & Mamykina 2022 | Het installatiescript zet het eerste. De installatiehandleiding noemt het tweede. |
+
+#### 10.4.2 De demotie-analist
+
+`check.mjs` logt een taak bijna altijd onder de **hoofdvaardigheid**, dus één zwak deelpatroon zou de hoofdvaardigheid omlaag kunnen halen. Dat zou de AI meer vrijheid geven in *elke* opgave van die vaardigheid. Daarom kijkt bij een hoofdvaardigheid eerst een Claude-agent die alleen leest, `demotie-analist`, naar de mislukte taken:
+
+- Hij leest de testuitvoer, de code en de uitwisseling over hints in het transcript.
+- Hij koppelt elke mislukking aan een deelpatroon: een bestaande microvaardigheid (gekoppeld op betekenis, niet op trefwoorden), of een nieuwe. Een eenmalige vergissing of een toolingprobleem telt niet mee.
+- Hij geeft een oordeel in JSON: `micro` als alle mislukkingen één deelpatroon delen, of `ouder` als het om twee of meer deelpatronen gaat, of als een mislukking de kern van de hoofdvaardigheid raakt. Bij twijfel kiest hij `micro` en meldt hij dat hij twijfelt.
+
+Zo wordt een oordeel toegepast:
+
+1. Is aan de regel voldaan voor een hoofdvaardigheid, dan zet de Stop-hook een demotie klaar.
+2. Bij de volgende prompt vraagt `prompt-gate` Claude om de agent aan te roepen na het punt waar de student nu is, niet midden in een hint.
+3. Claude zet de JSON van de agent in zijn antwoord, in een marker `[demotie {...}]`.
+4. De Stop-hook voert het oordeel alleen uit als:
+    - het schema klopt;
+    - de genoemde taken mislukte taken van die familie zijn;
+    - het hooguit één niveau omlaag gaat. Een nieuwe microvaardigheid krijgt altijd het niveau van de ouder min 1, ingesteld door de harnas en niet door de agent;
+    - de agent in die beurt echt gedraaid heeft: het transcript toont een aanroep van de subagent `demotie-analist`.
+
+Bij `micro` gaat alleen die microvaardigheid één niveau omlaag, of ze wordt aangemaakt, en de mislukte taken gaan naar haar over. Bij `ouder` gaat de hoofdvaardigheid één niveau omlaag. Twijfel wordt in het dagboek genoteerd. Als achtervang gaat de ouder ook omlaag wanneer binnen 14 dagen twee verschillende microvaardigheden ervan omlaag gaan, of door de analist worden aangemaakt. Draait de agent niet in die sessie, dan verandert er niets automatisch; de regel wordt na de volgende uitgelegde taak opnieuw gecontroleerd.
+
+```mermaid
+flowchart TD
+    T["Task explained (two keys),<br/>or a review failed"] --> K{"Rule met?<br/>3+ explained tasks of the last 10:<br/>under 70% solved or last 2 not,<br/>or 2 failed reviews in a row"}
+    K -- no --> N[Nothing]
+    K -->|"yes, microskill"| MD[Microskill one level down]
+    K -->|"yes, parent skill"| P[Demotion pending]
+    P --> A["After the learner's current point:<br/>Claude calls the agent<br/>demotie-analist (read-only)"]
+    P -. agent not run this session .-> N2[Nothing changes<br/>automatically]
+    A --> H{"Stop hook checks the JSON:<br/>schema, failed tasks of this family,<br/>one level down, agent call in this turn"}
+    H -- invalid --> N2
+    H -- valid --> V{Failures map to}
+    V -->|"one sub-pattern"| M["Microskill: one level down,<br/>or new at parent level − 1"]
+    V -- doubt --> M2["Microskill, and 'doubt'<br/>noted in the diary"]
+    V -->|"2+ sub-patterns, or the core of the parent"| O[Parent: one level down]
+    MD & M & M2 --> B{"2 microskills of this parent<br/>down or created in 14 days?"}
+    B -- yes --> O2[Backstop: parent one level down]
+    B -- no --> N3[Done]
+```
+
+#### 10.4.3 Bugs die in dezelfde sessie zijn gevonden (allemaal gerepareerd)
+
+1. **De Stop-hook miste 10 van de 19 markers.** De oorzaak was een race met de gebufferde transcriptschrijver van Claude Code: die schrijft elke 100 ms weg, en niet voordat de hook draait. *Gerepareerd:* de Stop-hook leest ook het veld `last_assistant_message` uit zijn invoer. Vier goedgekeurde uitleggen waren verloren gegaan. Het nieuwe commando `replay` controleert beide sleutels opnieuw vanuit het transcript en logt alleen wat slaagt (bron `replay`), ook voor een taak die intussen vervallen is.
+2. **Een mislukte build werd niet opgeslagen als startpunt,** dus het eerste groen na het oplossen van compileerfouten werd nooit gelogd. *Gerepareerd:* een compileerfout is nu een startpunt voor `check.mjs`.
+3. **Een trefwoord won van de map.** `prompt-gate` keek nooit naar de map, en treden-markers gingen naar de actieve vaardigheid in plaats van naar de vaardigheid van de taak. *Gerepareerd:* de map bepaalt de familie van de vaardigheid. Een trefwoord kan alleen een microvaardigheid binnen die familie kiezen; `#id` of de naam van een opgave wisselt naar een andere familie.
+4. **Vals-positieven van de guard:** `msbuild` en `check.mjs` werden overal in de commandotekst herkend. *Gerepareerd:* de guard splitst een shellcommando in enkelvoudige commando's en beoordeelt elk commando op zijn programma. Hij weigert `eval` en `iex`, omdat hij niet kan zien wat die uitvoeren.
+5. **Sessietijd was kloktijd.** De herinnering na een uur kwam na ongeveer 8 minuten echt werk, en een pauze van 12 minuten of meer kon zonder poging een trede ontgrendelen. *Gerepareerd:* het sessie-uur, de minuten per taak en de vastloop-timer tellen actieve tijd. Een pauze langer dan `idleMinutes` (standaard 20) telt niet mee.
+6. **Klein:** `!`-commando's gaan langs `prompt-gate` heen, en `check.mjs` hing zich aan het sessiebestand dat het laatst was gewijzigd, wat fout gaat als er twee sessies tegelijk open zijn. *Gerepareerd:* een `!`-commando kiest nu de sessie die aan die familie van vaardigheden werkt.
+
+#### 10.4.4 Levensloop van een taak (D4)
+
+Een taak wacht alleen op uitleg zolang de student nog met die opgave bezig is.
+
+```mermaid
+stateDiagram-v2
+    [*] --> Open : test red to green, done, or solved in chat
+    Open --> Explained : uitleg-ok + own-words check (two keys)
+    Open --> Open : uitleg-nee + follow-up, or next task in the same folder
+    Open --> Lapsed : session ends, or the learner starts another exercise
+    Lapsed --> Explained : replay finds both keys in the transcript
+    Explained --> [*] : counts towards the success rate
+    Lapsed --> [*] : does not count - shown as skipped
+```
+
 ---
 
 ## 11. Wijzigingslog
+
+### 11 november 2026: leervolgorde, herhalingen en uitleg herzien (besluiten van 10 november)
+
+De student in de pilot besloot tot deze wijzigingen na een latere sessie, en elke wijziging is eerst getoetst aan §2. Ze zijn nu in de harnas gebouwd. Details en oordelen staan in §10.4.
+
+- **§5.2:** een nieuw diagram van de autonomieladder: plaatsing door een eerste poging, automatisch omlaag, en bijhouden alleen op L4. Het eerdere diagram staat in een ingeklapt blok.
+- **§5.3:** regels voor het ontgrendelen bij nieuwe vaardigheden: niet op tijd, alleen bij signalen van vastzitten, of bij een uitdrukkelijke vraag na een eerste poging.
+- **§5.7:** herhalingen via echt werk, alleen op L4, met een nieuw diagram. De eerdere versie "zoals gebouwd" staat in een ingeklapt blok.
+- **§10.4:** nieuw: besluiten D1–D6, de demotie-analist, de bugs die in dezelfde sessie zijn gevonden (allemaal gerepareerd), en de levensloop van een taak.
+- **Elders:** de statusnotitie bovenaan, en korte notities bij §10.2, punten 3, 4 en 7.
 
 ### 10 november 2026 (later): literatuurupdate, 8–10 november
 
