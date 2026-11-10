@@ -2,8 +2,9 @@
    Light and dark are both selected steps, not an automatic flip. */
 :root {
   color-scheme: light;
-  --page: #f9f9f7;
+  --page: #ffffff;
   --surface: #fcfcfb;
+  --brand: #7e56c2; --on-brand: #ffffff; --link: #6a45ad;
   --ink: #0b0b0b;
   --ink-2: #52514e;
   --muted: #6f6d68;
@@ -14,66 +15,70 @@
   --track: #cde2fb;
   --focus: #2a78d6;
   /* Ordinal ramp for levels L0..L4 (darker = more mastered). */
-  --lv0: #86b6ef; --lv1: #5598e7; --lv2: #2a78d6; --lv3: #1c5cab; --lv4: #104281;
+  --lv0: #86b6ef; --lv1: #5598e7; --lv2: #256abf; --lv3: #184f95; --lv4: #0d366b;
   --on-lv0: #0b0b0b; --on-lv1: #0b0b0b; --on-lv2: #ffffff; --on-lv3: #ffffff; --on-lv4: #ffffff;
   /* Ordinal ramp for help: rung 3-5 (much help), 1-2 (hint), 0 (independent). */
   --r-help: #86b6ef; --r-hint: #2a78d6; --r-solo: #104281;
   --pending: #c3c2b7;
   /* Status (fixed). */
   --good: #0ca30c; --good-text: #006300; --warning: #fab219; --serious: #ec835a; --critical: #d03b3b;
-  --font: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Consolas, monospace;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     color-scheme: dark;
-    --page: #0d0d0d; --surface: #1a1a19; --ink: #f0efec; --ink-2: #c3c2b7; --muted: #9a9890;
+    --page: #1e2129; --surface: #1a1a19; --link: #b39ddb; --ink: #f0efec; --ink-2: #c3c2b7; --muted: #9a9890;
     --grid: #2c2c2a; --axis: #383835; --ring: rgba(255, 255, 255, 0.10); --accent: #3987e5; --track: #0d366b; --focus: #6da7ec;
     --lv0: #184f95; --lv1: #256abf; --lv2: #3987e5; --lv3: #6da7ec; --lv4: #9ec5f4;
-    --on-lv0: #ffffff; --on-lv1: #ffffff; --on-lv2: #ffffff; --on-lv3: #0b0b0b; --on-lv4: #0b0b0b;
+    --on-lv0: #ffffff; --on-lv1: #ffffff; --on-lv2: #0b0b0b; --on-lv3: #0b0b0b; --on-lv4: #0b0b0b;
     --r-help: #184f95; --r-hint: #3987e5; --r-solo: #9ec5f4; --pending: #52514e; --good-text: #0ca30c;
   }
 }
 :root[data-theme="dark"] {
   color-scheme: dark;
-  --page: #0d0d0d; --surface: #1a1a19; --ink: #f0efec; --ink-2: #c3c2b7; --muted: #9a9890;
+  --page: #1e2129; --surface: #1a1a19; --link: #b39ddb; --ink: #f0efec; --ink-2: #c3c2b7; --muted: #9a9890;
   --grid: #2c2c2a; --axis: #383835; --ring: rgba(255, 255, 255, 0.10); --accent: #3987e5; --track: #0d366b; --focus: #6da7ec;
   --lv0: #184f95; --lv1: #256abf; --lv2: #3987e5; --lv3: #6da7ec; --lv4: #9ec5f4;
-  --on-lv0: #ffffff; --on-lv1: #ffffff; --on-lv2: #ffffff; --on-lv3: #0b0b0b; --on-lv4: #0b0b0b;
+  --on-lv0: #ffffff; --on-lv1: #ffffff; --on-lv2: #0b0b0b; --on-lv3: #0b0b0b; --on-lv4: #0b0b0b;
   --r-help: #184f95; --r-hint: #3987e5; --r-solo: #9ec5f4; --pending: #52514e; --good-text: #0ca30c;
 }
 
 *, *::before, *::after { box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; }
 body { margin: 0; background: var(--page); color: var(--ink); font: 15px/1.55 var(--font); }
-a { color: var(--accent); }
+a { color: var(--link); }
 button { font: inherit; color: inherit; }
 :focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; border-radius: 4px; }
 .skip { position: absolute; left: -9999px; }
 .skip:focus { left: 16px; top: 8px; background: var(--surface); padding: 6px 10px; z-index: 10; }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 
-.top { background: var(--surface); border-bottom: 1px solid var(--grid); }
+.top { background: var(--brand); color: var(--on-brand); box-shadow: 0 0 .2rem rgba(0,0,0,.1), 0 .2rem .4rem rgba(0,0,0,.2); position: sticky; top: 0; z-index: 5; }
 .top-inner, main, .foot-inner { max-width: 1120px; margin: 0 auto; padding: 0 16px; }
-.top-inner { display: flex; flex-wrap: wrap; gap: 12px 24px; align-items: flex-end; justify-content: space-between; padding-top: 18px; padding-bottom: 16px; }
-.brand { font-size: 13px; font-weight: 600; color: var(--ink-2); text-decoration: none; }
+.top-inner { display: flex; flex-wrap: wrap; gap: 8px 24px; align-items: center; justify-content: space-between; min-height: 48px; padding-top: 6px; padding-bottom: 6px; }
+.brand { font-size: 18px; font-weight: 700; color: var(--on-brand); text-decoration: none; }
 .brand:hover { text-decoration: underline; }
-h1 { margin: 2px 0 2px; font-size: 26px; line-height: 1.2; font-weight: 650; }
+.page-head { margin: 4px 0 0; }
+h1 { margin: 0 0 2px; font-size: 30px; line-height: 1.25; font-weight: 300; }
 .subtitle { margin: 0; color: var(--ink-2); font-size: 14px; }
 .controls { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
-.seg { display: inline-flex; border: 1px solid var(--axis); border-radius: 8px; overflow: hidden; }
-.seg button { border: 0; background: transparent; padding: 5px 11px; cursor: pointer; font-size: 13px; }
-.seg button + button { border-left: 1px solid var(--axis); }
-.seg button[aria-pressed="true"] { background: var(--ink); color: var(--surface); }
-.theme { border: 1px solid var(--axis); background: transparent; border-radius: 8px; padding: 4px 10px; cursor: pointer; }
+.seg { display: inline-flex; border: 1px solid rgba(255,255,255,.6); border-radius: 8px; overflow: hidden; }
+.seg button { border: 0; background: transparent; color: var(--on-brand); padding: 5px 11px; min-height: 30px; cursor: pointer; font-size: 13px; }
+.seg button + button { border-left: 1px solid rgba(255,255,255,.6); }
+.seg button[aria-pressed="true"] { background: #ffffff; color: #4a2c86; font-weight: 600; }
+.theme { border: 1px solid rgba(255,255,255,.6); background: transparent; color: var(--on-brand); border-radius: 8px; padding: 4px 10px; min-height: 30px; min-width: 32px; cursor: pointer; }
+.top :focus-visible { outline-color: #ffffff; }
 
 main { padding-top: 20px; padding-bottom: 40px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 18px; }
 main:focus { outline: none; }
+.content { display: grid; grid-template-columns: minmax(0, 1fr); gap: 18px; }
 .loading { color: var(--ink-2); }
 .notice { margin: 0; padding: 10px 14px; border-radius: 8px; border: 1px solid var(--ring); background: var(--surface); color: var(--ink-2); font-size: 14px; }
 
 .filters { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; }
 .filters label { font-size: 13px; color: var(--ink-2); }
-.filters select { font: inherit; padding: 5px 8px; border-radius: 8px; border: 1px solid var(--axis); background: var(--surface); color: var(--ink); min-width: 0; max-width: 100%; flex: 0 1 auto; }
+.filters select { font: inherit; padding: 5px 8px; min-height: 32px; border-radius: 8px; border: 1px solid var(--axis); background: var(--surface); color: var(--ink); min-width: 0; max-width: 100%; flex: 0 1 auto; }
 .asof { font-size: 13px; color: var(--muted); }
 
 .card { background: var(--surface); border: 1px solid var(--ring); border-radius: 12px; padding: 16px; min-width: 0; }
@@ -81,7 +86,7 @@ main:focus { outline: none; }
 .card > .hint { margin: 0 0 12px; font-size: 13px; color: var(--ink-2); }
 .card-head { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; flex-wrap: wrap; }
 .card-head h2 { margin: 0; font-size: 16px; font-weight: 650; }
-.toggle-table { border: 1px solid var(--axis); background: transparent; border-radius: 6px; padding: 2px 8px; font-size: 12px; cursor: pointer; color: var(--ink-2); }
+.toggle-table { border: 1px solid var(--axis); background: transparent; border-radius: 6px; padding: 2px 10px; min-height: 28px; font-size: 12px; cursor: pointer; color: var(--ink-2); }
 
 .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; }
 .tile { background: var(--surface); border: 1px solid var(--ring); border-radius: 12px; padding: 14px 16px; }
@@ -111,7 +116,7 @@ main:focus { outline: none; }
 .skill-row { display: grid; grid-template-columns: minmax(0, 2.2fr) auto minmax(110px, 1.2fr) minmax(0, 1fr) auto; gap: 6px 14px; align-items: center; padding: 10px 0; }
 .skill.micro .skill-row { padding-left: 18px; }
 .skill-name { min-width: 0; }
-.skill-name .id { font-size: 12px; color: var(--muted); font-family: ui-monospace, SFMono-Regular, Consolas, monospace; overflow-wrap: anywhere; }
+.skill-name .id { font-size: 12px; color: var(--muted); font-family: var(--mono); overflow-wrap: anywhere; }
 .skill-name .title { font-size: 14px; overflow-wrap: anywhere; }
 .chip { font-size: 12px; font-weight: 600; padding: 2px 8px; border-radius: 999px; white-space: nowrap; }
 .meter { display: grid; gap: 3px; }
@@ -120,7 +125,7 @@ main:focus { outline: none; }
 .meter .target { position: absolute; top: -3px; bottom: -3px; width: 1px; background: var(--ink-2); }
 .meter .num { font-size: 12px; color: var(--ink-2); font-variant-numeric: tabular-nums; }
 .skill-meta { font-size: 13px; color: var(--ink-2); display: grid; gap: 2px; }
-.expand { border: 1px solid var(--axis); background: transparent; border-radius: 6px; padding: 2px 8px; font-size: 12px; cursor: pointer; color: var(--ink-2); white-space: nowrap; }
+.expand { border: 1px solid var(--axis); background: transparent; border-radius: 6px; padding: 2px 10px; min-height: 28px; font-size: 12px; cursor: pointer; color: var(--ink-2); white-space: nowrap; }
 .detail { padding: 4px 0 14px 0; display: grid; gap: 12px; }
 .skill.micro .detail { padding-left: 18px; }
 .detail h3 { margin: 0 0 4px; font-size: 13px; font-weight: 650; color: var(--ink-2); }
@@ -133,6 +138,7 @@ main:focus { outline: none; }
 
 /* Tables */
 .table-wrap { overflow-x: auto; }
+.table-wrap:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
 table { border-collapse: collapse; width: 100%; font-size: 13px; }
 th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--grid); vertical-align: top; }
 th { color: var(--ink-2); font-weight: 600; white-space: nowrap; }

@@ -20,7 +20,7 @@
 .risk-grid .s1, .risk-legend .s1 { background: #cde2fb; color: #0b0b0b; }
 .risk-grid .s2, .risk-legend .s2 { background: #9ec5f4; color: #0b0b0b; }
 .risk-grid .s3, .risk-legend .s3 { background: #6da7ec; color: #0b0b0b; }
-.risk-grid .s4, .risk-legend .s4 { background: #2a78d6; color: #ffffff; }
+.risk-grid .s4, .risk-legend .s4 { background: #256abf; color: #ffffff; }
 .risk-grid .s5, .risk-legend .s5 { background: #184f95; color: #ffffff; }
 
 [data-md-color-scheme="slate"] .risk-grid .s1, [data-md-color-scheme="slate"] .risk-legend .s1 { background: #0d366b; color: #ffffff; }

@@ -115,7 +115,9 @@ markdown_extensions:
 # Material does not load mermaid from its CDN (unpkg).
 extra_css:
   - assets/stylesheets/risk-matrix.css
+  - assets/stylesheets/a11y.css
 
 extra_javascript:
   - assets/javascripts/vendor/mermaid.min.js
   - assets/javascripts/cheatsheet-redirect.js
+  - assets/javascripts/a11y.js
