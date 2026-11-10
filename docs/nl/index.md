@@ -31,6 +31,12 @@ De harnas weet per vaardigheid hoe ver je bent, en past daar de hulp van de AI o
 
 </div>
 
+## Aanleiding
+
+Bij de eerste toets waarbij geen AI mocht, liep ik vast. Dat wilde ik niet nog eens laten gebeuren. Daarom heb ik uitgezocht of Claude mijn leerproces had ondermijnd, en dat bleek deels zo te zijn. Ook de wetenschappelijke literatuur laat zien dat dit een reëel risico is: als je de AI het denkwerk laat doen tijdens het oefenen, kun je daarna minder zonder AI. Een AI-agent zoals Claude Code maakt dat uitbesteden juist heel makkelijk (zie de [risicoanalyse](research.md#3-risicoanalyse)). Daarop heb ik deze harnas gebouwd.
+
+Kort gezegd helpt de harnas je genoeg om niet vast te lopen, en houdt hij het moeilijk genoeg om echt te leren. Op het [dashboard](progress-dashboard.md) volg je hoe het met je vaardigheden gaat.
+
 ## Het idee in drie zinnen
 
 1. **De AI schrijft je oefencode niet.** Bij elke vaardigheid hoort een niveau van L0 (*voordoen*) tot L4 (*geautomatiseerd*). Op L1–L3 blokkeert een hook dat de AI jouw code schrijft, bouwt of test.
