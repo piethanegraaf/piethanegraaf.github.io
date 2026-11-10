@@ -585,34 +585,21 @@ Kans (K) en Impact (I) krijgen een score van 1–5. Risico = K × I. De scores g
 | R17 | **Onzekerheid over het loopbaanpad** *(nieuw)* | De krimp in juniorvacatures: minder instapplekken en kieskeurigere werkgevers. Het bewijs is beschrijvend en omstreden, dus het effect op een individuele student is onzeker. | Krimp in juniorvacatures: Canaries 2026 [B, beschrijvend, omstreden]; Crane & Soto 2026; Tucker 2026 [B]; Indeed (4.5% instapniveau) [C]; UWV, ROA, Cnossen 2026 [C]; nulresultaten: Humlum & Vestergaard, Fairlie & Wu, NY Fed [B] | 3 | 4 | **12** | Loopbaan |
 | R18 | **Beslissingen gestuurd door claims van leveranciers of door hype** *(nieuw)* | Je verandert wat je oefent door cijfers van leveranciers ("80–90% van de code is door AI geschreven"), opgeblazen benchmarks of niet-gecorrigeerde meta-analyses. Of je vertrouwt dit document te veel: het is geschreven door een model van Anthropic en leunt op bronnen van Anthropic. | Door leveranciers gemelde vs. onafhankelijke benchmarkscores (89.9% vs. ongeveer 60%) [C]; ingetrokken meta-analyse van Wang & Fan 2025; Boolzen 2026 (g 0.84 → 0.08) [A]; METR over zelfrapportage [A] | 3 | 3 | **9** | Beide |
 
-```mermaid
-quadrantChart
-    title Risk heat map (before mitigation)
-    x-axis Low likelihood --> High likelihood
-    y-axis Low impact --> High impact
-    quadrant-1 Critical - mitigate first
-    quadrant-2 Monitor closely
-    quadrant-3 Accept
-    quadrant-4 Reduce
-    R1 Skills never form: [0.95, 0.95]
-    R2 Illusion of competence: [0.92, 0.75]
-    R3 Metacognitive laziness: [0.75, 0.72]
-    R4 No design judgment: [0.78, 0.93]
-    R5 Hint abuse: [0.70, 0.68]
-    R6 Unproductive struggle: [0.55, 0.74]
-    R7 Expertise reversal: [0.55, 0.52]
-    R8 Skill decay: [0.68, 0.80]
-    R9 Wrong AI output: [0.74, 0.84]
-    R10 Lost ownership: [0.82, 0.68]
-    R11 Integrity: [0.50, 0.90]
-    R12 Harness overhead: [0.72, 0.50]
-    R13 Privacy: [0.30, 0.25]
-    R14 Practice-test mismatch: [0.90, 0.98]
-    R15 Too much hand-writing: [0.30, 0.52]
-    R16 Supervision untrained: [0.80, 0.78]
-    R17 Career-path uncertainty: [0.56, 0.76]
-    R18 Vendor hype: [0.52, 0.56]
-```
+<div class="risk-matrix">
+<table class="risk-grid">
+<caption>Risico's naar kans en impact, vóór maatregelen. Donkerder = hogere score (kans × impact). Ga met de muis over een nummer voor de naam; de tabel hierboven noemt elk risico.</caption>
+<thead><tr><td></td><th scope="colgroup" colspan="5" class="axis">Kans →</th></tr>
+<tr><th scope="col" class="axis">Impact ↓</th><th scope="col">1</th><th scope="col">2</th><th scope="col">3</th><th scope="col">4</th><th scope="col">5</th></tr></thead>
+<tbody>
+<tr><th scope="row">5</th><td class="s2"></td><td class="s3"></td><td class="s4"><span title="R11 Problemen met toetsing en integriteit">R11</span></td><td class="s5"><span title="R4 Ontwerpoordeel ontwikkelt zich niet (specifiek voor OOD)">R4</span></td><td class="s5"><span title="R1 Vaardigheden ontstaan nooit">R1</span> <span title="R14 Oefenen past niet bij de toets">R14</span></td></tr>
+<tr><th scope="row">4</th><td class="s1"></td><td class="s2"></td><td class="s3"><span title="R6 Onproductieve worsteling → frustratie → opgeven">R6</span> <span title="R17 Onzekerheid over het loopbaanpad">R17</span></td><td class="s4"><span title="R3 Metacognitieve luiheid">R3</span> <span title="R5 Misbruik van hints / vangrails omzeilen">R5</span> <span title="R8 Beheerste vaardigheden nemen af na automatisering">R8</span> <span title="R9 Verkeerde dingen leren van foute AI-uitvoer">R9</span> <span title="R10 Minder eigenaarschap over en geheugen voor je eigen werk">R10</span> <span title="R16 Toezichtvaardigheden blijven ongetraind">R16</span></td><td class="s5"><span title="R2 Illusie van bekwaamheid">R2</span></td></tr>
+<tr><th scope="row">3</th><td class="s1"></td><td class="s2"><span title="R15 Te veel investeren in productiecode met de hand schrijven">R15</span></td><td class="s3"><span title="R7 Expertise-omkeereffect">R7</span> <span title="R18 Beslissingen gestuurd door claims van leveranciers of door hype">R18</span></td><td class="s3"><span title="R12 De harnas wordt het doel">R12</span></td><td class="s4"></td></tr>
+<tr><th scope="row">2</th><td class="s1"></td><td class="s1"><span title="R13 Privacy van het dagboek en de vaardigheidsgegevens">R13</span></td><td class="s2"></td><td class="s2"></td><td class="s3"></td></tr>
+<tr><th scope="row">1</th><td class="s1"></td><td class="s1"></td><td class="s1"></td><td class="s1"></td><td class="s2"></td></tr>
+</tbody>
+</table>
+<p class="risk-legend">Score: <span class="sw s1"></span>1–4 <span class="sw s2"></span>5–8 <span class="sw s3"></span>9–12 <span class="sw s4"></span>13–16 <span class="sw s5"></span>17–25</p>
+</div>
 
 **Wat er in het beeld veranderde.**
 
@@ -1742,7 +1729,7 @@ In de eerste sessies van de pilot gebruikte één student de harnas in drie leer
 - **Gemengd bewijs:** bewijs van heel verschillende sterkte stond naast elkaar.
 - **Eenzijdige risico's:** alleen de risico's van het *gebruik* van AI kwamen aan bod.
 
-Een kritische lezing en twee citatiecontroles tegen de primaire bronnen brachten de problemen hieronder aan het licht. Vier gerichte zoekrondes besloegen mei–november 2026.
+Een kritische lezing en twee citatiecontroles tegen de primaire bronnen brachten de problemen hieronder aan het licht. Vier gerichte zoekrondes besloegen mei–november 2026. De volledige citatiecontroles staan in de [repository](https://github.com/piethanegraaf/piethanegraaf.github.io/tree/main/research/citation-checks).
 
 **Ter plekke gecorrigeerde beweringen:**
 

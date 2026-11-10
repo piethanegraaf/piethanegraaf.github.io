@@ -35,7 +35,7 @@
       plan: "Plan", wentWell: "Ging goed", learned: "Geleerd", confusing: "Verwarrend", confidence: "Zelfvertrouwen", nextStep: "Volgende stap", calib: "Kalibratie",
       noDiary: "Nog geen dagboekentries.", activity: "Activiteit", sessions: "Sessies", hints: "Hints", holds: "Geen nieuwe trede", denials: "Guard-weigeringen", overridesUsed: "Overrides gebruikt",
       footAi: "AI-verklaring: de leerharnas, dit dashboard en de docs zijn gemaakt met hulp van Claude (Anthropic). De leerdata en de reflecties zijn van de student zelf.",
-      footLicense: "Code: MIT · teksten en data: CC BY-NC 4.0", footSource: "Broncode en uitleg", focus: "Ga naar {id}",
+      footLicense: "Code: MIT · teksten en data: CC BY-NC 4.0", footSource: "Broncode en uitleg", focus: "Ga naar {id}", tableRegion: "Tabel, scrollbaar",
     },
     en: {
       skip: "Skip to content", title: "Learning dashboard", brand: "Learning harness", real: "Real data", demo: "Demo", theme: "Toggle theme",
@@ -69,7 +69,7 @@
       plan: "Plan", wentWell: "Went well", learned: "Learned", confusing: "Confusing", confidence: "Confidence", nextStep: "Next step", calib: "Calibration",
       noDiary: "No diary entries yet.", activity: "Activity", sessions: "Sessions", hints: "Hints", holds: "No new rung", denials: "Guard denials", overridesUsed: "Overrides used",
       footAi: "AI statement: the learning harness, this dashboard and the docs were made with help from Claude (Anthropic). The learning data and the reflections are the learner's own.",
-      footLicense: "Code: MIT · texts and data: CC BY-NC 4.0", footSource: "Source code and documentation", focus: "Go to {id}",
+      footLicense: "Code: MIT · texts and data: CC BY-NC 4.0", footSource: "Source code and documentation", focus: "Go to {id}", tableRegion: "Table, scrollable",
     },
   };
   const LEVELS = ["L0", "L1", "L2", "L3", "L4"];
@@ -202,7 +202,7 @@
     };
     const head = el("thead", {}, el("tr", {}, headers.map((h, i) => el("th", { class: numCols.includes(i) ? "num" : null, scope: "col", text: h }))));
     const body = el("tbody", {}, rows.map((r) => el("tr", {}, r.map(cell))));
-    return el("div", { class: "table-wrap" }, el("table", {}, head, body));
+    return el("div", { class: "table-wrap", tabindex: "0", role: "region", "aria-label": t("tableRegion") }, el("table", {}, head, body));
   }
   const statusBadge = (cls, label) => el("span", { class: "status" }, el("span", { class: `dot ${cls}`, "aria-hidden": "true" }), label);
 
@@ -229,10 +229,10 @@
     const skills = data.skills.filter((s) => s.kind !== "zone" && inScope(s.id));
     const counts = LEVELS.map((l) => ({ l, ids: skills.filter((s) => s.level === l).map((s) => s.id) }));
     const total = skills.length || 1;
-    const bar = el("div", { class: "segbar", role: "img", "aria-label": counts.map((c) => `${c.l} ${levelName(c.l)}: ${c.ids.length}`).join(", ") });
+    const bar = el("div", { class: "segbar", role: "group", "aria-label": counts.map((c) => `${c.l} ${levelName(c.l)}: ${c.ids.length}`).join(", ") });
     for (const c of counts) {
       if (!c.ids.length) continue;
-      const block = el("div", { class: `block lv${LEVELS.indexOf(c.l)}`, tabindex: "0", "aria-label": `${c.l} ${levelName(c.l)}: ${c.ids.length}` });
+      const block = el("div", { class: `block lv${LEVELS.indexOf(c.l)}`, tabindex: "0", role: "img", "aria-label": `${c.l} ${levelName(c.l)}: ${c.ids.length}` });
       block.style.flexGrow = String(c.ids.length);
       block.style.flexBasis = "0";
       if (c.ids.length / total > 0.07) block.textContent = String(c.ids.length);
@@ -312,7 +312,7 @@
       const W = Math.max(320, per.length * 44 + 40), H = 200, L = 28, B = 26, PT = 10;
       const ph = H - B - PT, slot = (W - L) / per.length, bw = Math.min(24, slot * 0.6);
       const y = (v) => PT + ph - (v / top) * ph;
-      const chart = svg("svg", { class: "chart", viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": t("tasksChart") });
+      const chart = svg("svg", { class: "chart", viewBox: `0 0 ${W} ${H}`, role: "group", "aria-label": t("tasksChart") });
       for (let v = 0; v <= top; v += step) {
         chart.append(svg("line", { class: v === 0 ? "baseline" : "gridline", x1: L, x2: W, y1: y(v), y2: y(v) }));
         chart.append(svg("text", { x: L - 6, y: y(v) + 4, "text-anchor": "end", text: v }));
@@ -330,7 +330,7 @@
           acc += p.c[k];
         });
         if (per.length <= 16 || i % Math.ceil(per.length / 12) === 0) chart.append(svg("text", { x: cx, y: H - 8, "text-anchor": "middle", text: fmtDate(p.d) }));
-        const hit = svg("rect", { class: "hit", x: cx - slot / 2, y: PT, width: slot, height: ph, tabindex: "0", "aria-label": `${fmtDate(p.d)}: ${p.total}` });
+        const hit = svg("rect", { class: "hit", x: cx - slot / 2, y: PT, width: slot, height: ph, tabindex: "0", role: "img", "aria-label": `${fmtDate(p.d)}: ${p.total}` });
         withTip(hit, fmtLong(p.d), [...BUCKETS.map(([k, cls, key]) => [cls, String(p.c[k]), t(key)]), [null, String(p.total), t("total")]]);
         chart.append(g, hit);
       });
@@ -370,7 +370,7 @@
     else {
       const W = 520, rowH = 30, L = 150, R = 20, T = 24, H = T + points.length * rowH + 10;
       const x = (v) => L + ((v - 1) / 4) * (W - L - R);
-      const chart = svg("svg", { class: "chart", viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": t("calibration") });
+      const chart = svg("svg", { class: "chart", viewBox: `0 0 ${W} ${H}`, role: "group", "aria-label": t("calibration") });
       for (let v = 1; v <= 5; v++) {
         chart.append(svg("line", { class: "gridline", x1: x(v), x2: x(v), y1: T - 6, y2: H - 6 }));
         chart.append(svg("text", { x: x(v), y: T - 10, "text-anchor": "middle", text: v }));
@@ -381,7 +381,7 @@
         if (p.b !== null && p.a !== null) chart.append(svg("line", { class: "link", x1: x(p.b), x2: x(p.a), y1: cy, y2: cy }));
         if (p.b !== null) chart.append(svg("circle", { class: "before", cx: x(p.b), cy, r: 5 }));
         if (p.a !== null) chart.append(svg("circle", { class: "after", cx: x(p.a), cy, r: 5 }));
-        const hit = svg("rect", { class: "hit", x: 0, y: cy - rowH / 2, width: W, height: rowH, tabindex: "0", "aria-label": `${fmtDate(p.d.date)}: ${p.b ?? "?"} → ${p.a ?? "?"}` });
+        const hit = svg("rect", { class: "hit", x: 0, y: cy - rowH / 2, width: W, height: rowH, tabindex: "0", role: "img", "aria-label": `${fmtDate(p.d.date)}: ${p.b ?? "?"} → ${p.a ?? "?"}` });
         withTip(hit, `${fmtLong(p.d.date)} · ${t("session")} ${p.d.n}`, [[null, String(p.b ?? t("none")), t("before")], [null, String(p.a ?? t("none")), t("after")]]);
         chart.append(hit);
       });
@@ -434,7 +434,7 @@
 
   function render() {
     chrome();
-    const main = $("main");
+    const main = $("content");
     if (!data) return;
     const notes = [];
     if (fellBack) notes.push(el("p", { class: "notice", text: t("fallback") }));
@@ -462,7 +462,7 @@
     } catch {
       data = null;
       chrome();
-      $("main").replaceChildren(el("p", { class: "notice", text: t("loadError", { file }) }));
+      $("content").replaceChildren(el("p", { class: "notice", text: t("loadError", { file }) }));
     }
   }
 

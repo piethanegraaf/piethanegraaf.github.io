@@ -583,34 +583,21 @@ Likelihood (L) and Impact (I) are scored 1–5. Risk = L × I. Scores assume **n
 | R17 | **Career-path uncertainty** *(new)* | The junior-developer squeeze: fewer entry-level openings and choosier employers. The evidence is descriptive and contested, so its effect on any one student is uncertain. | Junior squeeze: Canaries 2026 [B, descriptive, contested]; Crane & Soto 2026; Tucker 2026 [B]; Indeed (4.5% entry-level) [C]; UWV, ROA, Cnossen 2026 [C]; null results: Humlum & Vestergaard, Fairlie & Wu, NY Fed [B] | 3 | 4 | **12** | Career |
 | R18 | **Decisions driven by vendor claims or hype** *(new)* | You change what you practise because of vendor numbers ("80–90% of code is AI-written"), inflated benchmarks or uncorrected meta-analyses. Or you trust this document too much: it was written by an Anthropic model and leans on Anthropic sources. | Vendor-reported vs. independent benchmark scores (89.9% vs. about 60%) [C]; retracted Wang & Fan 2025 meta-analysis; Boolzen 2026 (g 0.84 → 0.08) [A]; METR on self-reports [A] | 3 | 3 | **9** | Both |
 
-```mermaid
-quadrantChart
-    title Risk heat map (before mitigation)
-    x-axis Low likelihood --> High likelihood
-    y-axis Low impact --> High impact
-    quadrant-1 Critical - mitigate first
-    quadrant-2 Monitor closely
-    quadrant-3 Accept
-    quadrant-4 Reduce
-    R1 Skills never form: [0.95, 0.95]
-    R2 Illusion of competence: [0.92, 0.75]
-    R3 Metacognitive laziness: [0.75, 0.72]
-    R4 No design judgment: [0.78, 0.93]
-    R5 Hint abuse: [0.70, 0.68]
-    R6 Unproductive struggle: [0.55, 0.74]
-    R7 Expertise reversal: [0.55, 0.52]
-    R8 Skill decay: [0.68, 0.80]
-    R9 Wrong AI output: [0.74, 0.84]
-    R10 Lost ownership: [0.82, 0.68]
-    R11 Integrity: [0.50, 0.90]
-    R12 Harness overhead: [0.72, 0.50]
-    R13 Privacy: [0.30, 0.25]
-    R14 Practice-test mismatch: [0.90, 0.98]
-    R15 Too much hand-writing: [0.30, 0.52]
-    R16 Supervision untrained: [0.80, 0.78]
-    R17 Career-path uncertainty: [0.56, 0.76]
-    R18 Vendor hype: [0.52, 0.56]
-```
+<div class="risk-matrix">
+<table class="risk-grid">
+<caption>Risks by likelihood and impact, before mitigation. Darker = higher score (likelihood × impact). Hover over a number for its name; the table above lists every risk.</caption>
+<thead><tr><td></td><th scope="colgroup" colspan="5" class="axis">Likelihood →</th></tr>
+<tr><th scope="col" class="axis">Impact ↓</th><th scope="col">1</th><th scope="col">2</th><th scope="col">3</th><th scope="col">4</th><th scope="col">5</th></tr></thead>
+<tbody>
+<tr><th scope="row">5</th><td class="s2"></td><td class="s3"></td><td class="s4"><span title="R11 Assessment and integrity problems">R11</span></td><td class="s5"><span title="R4 Design judgment does not develop (OOD-specific)">R4</span></td><td class="s5"><span title="R1 Skills never form">R1</span> <span title="R14 Practice does not match the test">R14</span></td></tr>
+<tr><th scope="row">4</th><td class="s1"></td><td class="s2"></td><td class="s3"><span title="R6 Unproductive struggle → frustration → giving up">R6</span> <span title="R17 Career-path uncertainty">R17</span></td><td class="s4"><span title="R3 Metacognitive laziness">R3</span> <span title="R5 Hint abuse / bypassing guardrails">R5</span> <span title="R8 Mastered skills decay after automation">R8</span> <span title="R9 Learning wrong things from wrong AI output">R9</span> <span title="R10 Weaker ownership and memory of your own work">R10</span> <span title="R16 Supervision skills stay untrained">R16</span></td><td class="s5"><span title="R2 Illusion of competence">R2</span></td></tr>
+<tr><th scope="row">3</th><td class="s1"></td><td class="s2"><span title="R15 Investing too much in hand-writing production code">R15</span></td><td class="s3"><span title="R7 Expertise reversal">R7</span> <span title="R18 Decisions driven by vendor claims or hype">R18</span></td><td class="s3"><span title="R12 The harness becomes the goal">R12</span></td><td class="s4"></td></tr>
+<tr><th scope="row">2</th><td class="s1"></td><td class="s1"><span title="R13 Privacy of the diary and skill data">R13</span></td><td class="s2"></td><td class="s2"></td><td class="s3"></td></tr>
+<tr><th scope="row">1</th><td class="s1"></td><td class="s1"></td><td class="s1"></td><td class="s1"></td><td class="s2"></td></tr>
+</tbody>
+</table>
+<p class="risk-legend">Score: <span class="sw s1"></span>1–4 <span class="sw s2"></span>5–8 <span class="sw s3"></span>9–12 <span class="sw s4"></span>13–16 <span class="sw s5"></span>17–25</p>
+</div>
 
 **What changed in the picture.**
 
@@ -1740,7 +1727,7 @@ In the first sessions of the pilot, one student used the harness for three learn
 - **Mixed evidence:** it put evidence of very different strength side by side.
 - **One-sided risks:** it looked only at the risks of *using* AI.
 
-A critical read and two citation checks against primary sources found the problems below. Four targeted searches covered May–November 2026.
+A critical read and two citation checks against primary sources found the problems below. Four targeted searches covered May–November 2026. The full citation checks are in the [repository](https://github.com/piethanegraaf/piethanegraaf.github.io/tree/main/research/citation-checks).
 
 **Claims corrected in place:**
 

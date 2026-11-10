@@ -3,10 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; font-src 'self'; base-uri 'none'; form-action 'none'; object-src 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; base-uri 'none'; form-action 'none'; object-src 'none'">
 <meta name="referrer" content="no-referrer">
 <meta name="description" content="Leerdashboard van de leerharnas: niveaus, taken, herhalingen en reflecties per vaardigheid.">
 <title>Leerdashboard</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;600&amp;display=swap">
 <link rel="stylesheet" href="style.css">
 <script src="app.js" defer></script>
 </head>
@@ -14,17 +16,13 @@
 <a class="skip" href="#main" id="skip">Naar de inhoud</a>
 <header class="top">
   <div class="top-inner">
-    <div>
-      <a class="brand" href="../" id="brand">Leerharnas</a>
-      <h1 id="title">Leerdashboard</h1>
-      <p class="subtitle" id="subtitle"></p>
-    </div>
+    <a class="brand" href="../" id="brand">Leerharnas</a>
     <div class="controls" role="group" id="controls">
-      <div class="seg" role="group" id="lang-group">
+      <div class="seg" role="group" id="lang-group" aria-label="Taal">
         <button type="button" data-lang="nl" aria-pressed="true">NL</button>
         <button type="button" data-lang="en" aria-pressed="false">EN</button>
       </div>
-      <div class="seg" role="group" id="source-group">
+      <div class="seg" role="group" id="source-group" aria-label="Data">
         <button type="button" data-source="progress" aria-pressed="true" id="src-real">Echte data</button>
         <button type="button" data-source="demo" aria-pressed="false" id="src-demo">Demo</button>
       </div>
@@ -33,7 +31,11 @@
   </div>
 </header>
 <main id="main" tabindex="-1">
-  <p class="loading" id="status">Laden…</p>
+  <div class="page-head">
+    <h1 id="title">Leerdashboard</h1>
+    <p class="subtitle" id="subtitle"></p>
+  </div>
+  <div class="content" id="content"><p class="loading" id="status">Laden…</p></div>
 </main>
 <footer class="foot" id="footer"></footer>
 <div class="tooltip" id="tooltip" role="tooltip" hidden></div>

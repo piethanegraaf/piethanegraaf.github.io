@@ -72,8 +72,6 @@ plugins:
             Economie van AI-code: Economics of AI-written code
             Arbeidsmarkt: Labour market
             Vaardigheden en toetsing: Skills and assessment
-            "Citatiecheck: generatieve AI": "Citation check: generative AI"
-            "Citatiecheck: leerwetenschap": "Citation check: learning science"
             AI-verklaring: AI statement
 
 nav:
@@ -90,8 +88,6 @@ nav:
       - Economie van AI-code: notes/ai_coding_economics.md
       - Arbeidsmarkt: notes/labour_market.md
       - Vaardigheden en toetsing: notes/skills_curriculum_policy.md
-      - "Citatiecheck: generatieve AI": notes/citation_check_genai.md
-      - "Citatiecheck: leerwetenschap": notes/citation_check_learning_science.md
   - C# OOP-cheat sheet: /cheatsheet/
   - AI-verklaring: ai-statement.md
 
@@ -117,6 +113,11 @@ markdown_extensions:
 # Mermaid is self-hosted: CI downloads a pinned, integrity-checked copy into
 # site/assets/javascripts/vendor/. Because window.mermaid then exists,
 # Material does not load mermaid from its CDN (unpkg).
+extra_css:
+  - assets/stylesheets/risk-matrix.css
+  - assets/stylesheets/a11y.css
+
 extra_javascript:
   - assets/javascripts/vendor/mermaid.min.js
   - assets/javascripts/cheatsheet-redirect.js
+  - assets/javascripts/a11y.js

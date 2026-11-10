@@ -4,6 +4,7 @@ The following parts of this repository are licensed under the Creative
 Commons Attribution-NonCommercial 4.0 International License (CC BY-NC 4.0):
 
   - docs/                    documentation, research document and notes
+  - research/                working notes behind the research (citation checks)
   - site-src/cheatsheet/     the C# OOP cheat sheet
   - site-src/dashboard/data/ the progress data shown on the dashboard
 

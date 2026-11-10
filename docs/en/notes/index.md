@@ -8,7 +8,7 @@ These are the working notes behind the [research](../research.md): what the rese
 | [Economics of AI-written code](ai_coding_economics.md) | How much code AI writes, productivity, quality and cost. |
 | [Labour market](labour_market.md) | Developer jobs in the US, the EU and the Netherlands. |
 | [Skills, education and assessment](skills_curriculum_policy.md) | What employers ask, and how programmes assess. |
-| [Citation check: generative AI](citation_check_genai.md) | Check of the AI studies the review cites. |
-| [Citation check: learning science](citation_check_learning_science.md) | Check of the learning-science claims. |
+
+The citation checks, in which every source of the review was checked, are not on the site but in the [repository](https://github.com/piethanegraaf/piethanegraaf.github.io/tree/main/research/citation-checks). The corrections that came out of them are in §11 of the [research](../research.md).
 
 Quotes from sources are kept short. If you find a passage that is too long, please report it through the [security page](https://github.com/piethanegraaf/piethanegraaf.github.io/security).

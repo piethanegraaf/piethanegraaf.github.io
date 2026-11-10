@@ -1,0 +1,35 @@
+/* WCAG AA fixes on top of MkDocs Material (contrast at least 4.5:1 for normal text). */
+
+/* Footer: the copyright line was #7f7f7f on #171717 (4.47:1). */
+.md-copyright,
+.md-copyright__highlight { color: var(--md-footer-fg-color--light); }
+
+/* Code: comments and generic tokens were rgba(0,0,0,.54) on the code background (4.47:1). */
+:root,
+[data-md-color-scheme="default"] {
+  --md-code-hl-comment-color: rgba(0, 0, 0, 0.64);
+  --md-code-hl-generic-color: rgba(0, 0, 0, 0.64);
+}
+[data-md-color-scheme="slate"] {
+  --md-code-hl-comment-color: hsla(var(--md-hue), 15%, 75%, 1);
+  --md-code-hl-generic-color: hsla(var(--md-hue), 15%, 75%, 1);
+  --md-code-hl-number-color: #f08070; /* was #e6695b on the code background (4.44:1) */
+  --md-code-hl-constant-color: #a99cf0; /* was #9383e2 (4.48:1) */
+}
+
+/* Links in running text are underlined, so they are not told apart by colour alone (WCAG 1.4.1). */
+.md-typeset p a,
+.md-typeset li a,
+.md-typeset td a,
+.md-typeset dd a,
+.md-typeset blockquote a {
+  text-decoration: underline;
+  text-decoration-thickness: from-font;
+  text-underline-offset: .18em;
+}
+
+/* Scroll areas made focusable by a11y.js get a visible focus ring. */
+.md-typeset [data-a11y-scroll]:focus-visible {
+  outline: 2px solid var(--md-accent-fg-color);
+  outline-offset: 2px;
+}
