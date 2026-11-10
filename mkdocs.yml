@@ -8,7 +8,7 @@ site_dir: site
 strict: true
 
 copyright: >-
-  Code: MIT · Teksten, docs en data: CC BY-NC 4.0 ·
+  Code: AGPL-3.0 · Teksten, docs en data: CC BY-NC 4.0 ·
   Gemaakt met hulp van Claude (Anthropic), zie de AI-verklaring
 
 theme:
@@ -56,7 +56,7 @@ plugins:
           build: true
           site_name: Learning harness
           copyright: >-
-            Code: MIT · Texts, docs and data: CC BY-NC 4.0 ·
+            Code: AGPL-3.0 · Texts, docs and data: CC BY-NC 4.0 ·
             Made with help from Claude (Anthropic), see the AI statement
           # Own nav: the dashboard and the cheat sheet have an English URL of their own.
           nav:
