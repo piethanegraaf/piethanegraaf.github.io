@@ -149,7 +149,9 @@ function mergeSettings(text) {
     const group = { ...(h.matcher ? { matcher: h.matcher } : {}), hooks: [{ type: "command", command: hookCommand(h.script) }] };
     hooks[h.event] = [...(hooks[h.event] ?? []), group];
   }
-  return JSON.stringify({ ...cfg, hooks }, null, 2) + "\n";
+  // Claude Code's suggestion for your next prompt can give away a hint (setup review §4): off,
+  // unless you chose otherwise yourself.
+  return JSON.stringify({ promptSuggestionEnabled: false, ...cfg, hooks }, null, 2) + "\n";
 }
 
 // A text in the map can be { nl, en }: the record gets the language of choice (Dutch as fallback).

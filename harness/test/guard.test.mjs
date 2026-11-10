@@ -90,6 +90,50 @@ test("building or testing L2 code is denied, information commands are allowed", 
   assert.equal(decision(bash("dotnet test", p.abs("opdrachten/04-x"))), "allow");
 });
 
+// Setup review 3.4: a build is recognised by the program, not by a word in its arguments.
+test("a build word in a grep pattern or a path is not a build", () => {
+  const dir = p.abs("opdrachten/02-lijst");
+  // The command that was refused on 10 Nov 2026: cd into an L2 folder, then only information and grep.
+  assert.equal(decision(bash(`cd "${dir}" && dotnet --list-sdks | grep -i "msbuild"`)), "allow");
+  assert.equal(decision(bash("sed -n 1p .claude/hooks/check.mjs")), "allow");
+  assert.equal(decision(bash("grep -rn check.mjs .claude/hooks/")), "allow");
+});
+
+test("a build is found through call operators, nested shells and later commands", () => {
+  const dir = p.abs("opdrachten/02-lijst");
+  assert.equal(decision(bash(`& "C:\\Program Files\\Microsoft Visual Studio\\MSBuild.exe" Lijst.csproj`, dir)), "deny");
+  assert.equal(decision(bash('bash -c "dotnet test"', dir)), "deny");
+  assert.equal(decision(bash('powershell -Command "dotnet test"', dir)), "deny");
+  assert.equal(decision(bash(`echo start; cd "${dir}" && dotnet test`)), "deny");
+  assert.equal(decision(bash("dotnet test opdrachten/04-x")), "allow", "the named L4 folder decides, not the working directory");
+});
+
+test("eval and iex are refused: the guard cannot see what they run", () => {
+  const r = bash('eval "dotnet test"');
+  assert.equal(decision(r), "deny");
+  assert.match(r.json.hookSpecificOutput.permissionDecisionReason, /eval/);
+  assert.equal(decision(bash("iex 'dotnet test'")), "deny");
+});
+
+// Setup review 3.6: reading the state is fine; only writing to it is refused.
+test("reading the state while writing elsewhere is allowed; writing to the state is not", () => {
+  assert.equal(decision(bash("cat .learning/state/tests.json > scratch.txt")), "allow");
+  assert.equal(decision(bash("node -e \"console.log(1)\" > out.txt && cat .learning/skills.json")), "allow");
+  assert.equal(decision(bash("cp backup.json .learning/skills.json")), "deny");
+  assert.equal(decision(bash("echo x >> .learning/state/events.jsonl")), "deny");
+});
+
+test("only the real harness files are protected, not every path with 'leerharnas' in it", () => {
+  assert.equal(decision(bash("cp a.jsonl ~/.claude/leerharnas-backup/")), "allow");
+  assert.equal(decision(write(".claude/leerharnas-backup/2026/x.md", "x")), "allow");
+  assert.equal(decision(bash("cp x.mjs .claude/hooks/guard.mjs")), "deny");
+  assert.equal(decision(write(".claude/leerharnas.md", "x")), "deny");
+});
+
+test("the harness records and replay are learner commands", () => {
+  assert.equal(decision(bash("node .claude/hooks/skill.mjs replay x.jsonl")), "deny");
+});
+
 test("shell writes to code are denied; harmless redirects and lambdas are not writes", () => {
   assert.equal(decision(bash("echo x > opdrachten/02-lijst/Lijst.cs")), "deny");
   assert.equal(decision(bash("cat opdrachten/02-lijst/Lijst.cs 2>/dev/null")), "allow");

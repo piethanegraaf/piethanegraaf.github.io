@@ -6,7 +6,7 @@
 |---|---|---|
 | `SessionStart` | `session-start.mjs` | Puts the record, today's reviews, open explanations and promotion signals in the context, and asks for your goal. |
 | `UserPromptSubmit` | `prompt-gate.mjs` | Recognises the skill, decides whether a new rung may unlock, logs solved tasks and asks for explanations. Agent messages, notifications and system reminders do not count as your words. |
-| `PreToolUse` | `guard.mjs` | Blocks writing, building and testing code at L1–L3, and every change to the record, the state and the harness itself. |
+| `PreToolUse` | `guard.mjs` | Blocks writing, building and testing code at L1–L3, and every change to the record, the state and the harness itself. It judges a shell command per simple command, by the program that runs. It always refuses `eval`, `iex` and `Invoke-Expression`. |
 | `Stop` | `reflect-gate.mjs` | Processes the markers in Claude's answer, checks your explanation, and asks for the diary when you want to stop. |
 
 ## `skill.mjs` (you run it yourself, with `!`)
@@ -22,7 +22,8 @@
 | `correct <task-id> rung <1-5> "reason"` | More help than logged: only raises the rung. |
 | `correct <task-id> void "reason"` | Void one task. |
 | `override <id\|*> <minutes> "reason"` | Temporarily allow Claude to write code (at most 240 minutes, logged). |
-| `setting <key> <value>` | `examDate`, `stuckTimerMinutes`, `defaultLevel`, `course`, `language`. |
+| `setting <key> <value>` | `examDate`, `stuckTimerMinutes`, `idleMinutes`, `defaultLevel`, `course`, `language`. |
+| `replay <transcript.jsonl> [--dry-run]` | Recovers explanations that were approved in the chat but not logged. It finds the markers `[explain-ok <tid>]` and checks your message with the same check as the Stop hook. Only what passes both keys counts, with source `replay`. |
 
 The Dutch forms `correct <task-id> trede …` and `correct <task-id> schrap …` work too.
 
@@ -33,6 +34,11 @@ The Dutch forms `correct <task-id> trede …` and `correct <task-id> schrap …`
 ```
 
 Runs `dotnet test` with a trx logger and shows a short summary. A test that goes from red to green becomes a task, with the rung of that moment. The first run per folder is a baseline. A repair after a regression does not count as a task.
+
+- **A compile error is a starting point.** If the folder does not build (`error CSxxxx`), `check.mjs` remembers that. A test that is green at the first build that works then counts as new green. A tooling error (`NETSDK`, `MSB`) does not count.
+- **The folder decides the skill.** After a run in a folder, a keyword in your prompt can only choose a microskill within that family. You switch to another family with `#id` or the name of the exercise.
+- **`global.json`:** if it asks for an older SDK than the project targets, without `rollForward` to a newer major version, `check.mjs` warns you.
+- A folder relative to the project also works when your shell stands in another folder.
 
 ## Markers in Claude's answer
 

@@ -12,6 +12,7 @@ Doel van de setup: **wat de student beheerst snel herkennen en alleen nog met he
   - Bij de start van elke sessie zet een hook dit register in je context.
 - **Guard** (`.claude/hooks/guard.mjs`): deze hook blokkeert code schrijven, verwijderen, bouwen of testen bij L1–L3. Welke bestanden code zijn en welke commando's bouwen of testen, staat in `settings.codeExtensions` en `settings.buildCommands`. `check.mjs` telt altijd als testen.
   - Ook wijzigingen aan het register, aan `.learning/state/` en aan de harnas zelf (`.claude/hooks/`, `.claude/settings.json`, de diary-skill en dit bestand) blokkeert hij.
+  - De guard beoordeelt elk los commando op het programma dat het draait. Een woord als "msbuild" in een grep-patroon is dus geen build. `eval`, `iex` en `Invoke-Expression` weigert hij altijd, omdat hij niet kan zien wat er dan draait.
 - **Weigert de guard iets?** Zoek dan **geen omweg** (geen script, ander tool of kopie). Bied de volgende hint aan, of leg uit hoe de student een override kan zetten.
 - **Wie wijzigt het register?** Alleen de student. Jij mag `list` en `status` draaien en de exacte commando's *voorstellen*:
   - `! node .claude/hooks/skill.mjs list` / `status`: overzicht, herhalingen, open uitleg, doorstroom-signalen.
@@ -26,12 +27,15 @@ Doel van de setup: **wat de student beheerst snel herkennen en alleen nog met he
   - `! node .claude/hooks/skill.mjs override <id|*> <minuten> "reden"`: maximaal 240 minuten, wordt gelogd.
   - `! node .claude/hooks/skill.mjs setting examDate JJJJ-MM-DD`: de toetsdatum. Herhalingen worden zo gepland dat ze vóór de toets vallen.
   - `! node .claude/hooks/skill.mjs setting course "<vak>"` en `setting language nl|en`: het vak en de taal van de harnas.
+  - `! node .claude/hooks/skill.mjs setting idleMinutes <minuten>`: een pauze die langer duurt, telt niet als actieve tijd (standaard 20).
+  - `! node .claude/hooks/skill.mjs replay <transcript.jsonl> [--dry-run]`: herstelt uitleggen die in de chat zijn goedgekeurd maar niet gelogd. Alleen wat beide sleutels haalt, telt.
 - **Testrunner** (`! node .claude/hooks/check.mjs [map]`): de student draait hem zelf.
   - Werkt voor elk .NET-testproject (`dotnet test`).
   - Toont een leesbare samenvatting: groen, rood, en Expected/But was.
   - Een test die van rood naar groen gaat, logt hij als taak, met de trede van dat moment. Dat is objectief bewijs, zonder sleutelwoorden.
   - Een test die al eens groen was, rood werd en weer groen is, is herstel van een regressie en telt niet als nieuwe taak.
-  - De eerste run per map is een basislijn.
+  - De eerste run per map is een basislijn. Was die run een compileerfout (`error CSxxxx`), dan telt een test die bij de eerste build die wel lukt groen is, als nieuw groen.
+  - Spreken `global.json` en `TargetFramework` elkaar tegen, dan waarschuwt hij.
 
 ## Wat jij per niveau doet
 
@@ -61,9 +65,10 @@ Een hoofdvaardigheid bestaat uit deelpatronen die elk in hun eigen tempo door de
 ## Hintladder (L2): afgedwongen door `prompt-gate.mjs`
 Bij elke prompt zet de hook een regel `[leerharnas] Vaardigheid: … · trede N` in je context, plus een instructie: **trede N ontgrendeld** of **GEEN nieuwe trede**.
 - **Volg die instructie.** Ga nooit hoger dan de ontgrendelde trede.
-- **Wanneer een trede ontgrendelt:** de eerste hint mag meteen. Daarna gaat een trede pas omhoog na **een zichtbare poging**, of na 12 minuten vastzitten (`stuckTimerMinutes`).
+- **Wanneer een trede ontgrendelt:** de eerste hint mag meteen. Daarna gaat een trede pas omhoog na **een zichtbare poging**, of na 12 minuten vastzitten (`stuckTimerMinutes`). Dat zijn minuten **actieve tijd**: een pauze langer dan `idleMinutes` (standaard 20) telt niet mee.
   - Een zichtbare poging is gewijzigde code van die vaardigheid, een gedeelde foutmelding of testuitkomst, of een hypothese.
 - **Herkenning van de vaardigheid** gaat via mapnamen van opdrachten, `.learning/keywords.json`, de trefwoorden van microvaardigheden of een expliciete `#id` in de prompt.
+  - **De map bepaalt de familie.** Na `check.mjs` of `done`, of als de student code in een map wijzigt, kiest een trefwoord alleen nog een microvaardigheid binnen die familie. Wisselen naar een andere familie kan met `#id` of de naam van de opdracht.
 - **Eerlijk loggen op elk niveau:** geef je op L1 of L3, of boven de ontgrendelde trede, toch inhoudelijke hulp? Zet dan `[trede N]` in je antwoord. Op L3 telt een conceptuele uitleg als trede 2 of hoger. De Stop-hook leest deze marker en logt hem als hoogste trede.
 
 De treden:
@@ -115,12 +120,14 @@ Zie je dat een criterium gehaald lijkt, stel dan het commando voor, maar voer he
   - de herhalingen van vandaag;
   - de taken die nog op uitleg wachten;
   - wat de laatste tijd zelfstandig lukte, en de doorstroom-signalen.
-  Daarna vraag je naar het doel, de vaardigheid en het zelfvertrouwen (1–5).
+  Daarna vraag je naar het doel en de vaardigheid, en naar het zelfvertrouwen (1–5) over **één concrete opdracht**, niet over de vaardigheid in het algemeen.
 - **Einde:** als de student stopt of "klaar" zegt, gebruik je `/diary`. Die schrijft de feiten op en de reflectie **in de woorden van de student**.
 - **Reflectie wordt afgedwongen:** zonder de marker `<!-- sessie: <id> -->` in het dagboek blokkeert de Stop-hook het afsluiten. Dat gebeurt hooguit 2 keer per stopverzoek. "toch niet" of "ga door" heft het stopverzoek op.
-- **Na een uur:** de hook stelt eenmalig voor om af te ronden.
+- **Na een uur actieve tijd:** de hook stelt eenmalig voor om af te ronden.
 
 ## Verder
 - Voeg geen uitleg over een fout toe aan naslagwerk (cheat sheets) zolang de student die fout niet zelf heeft opgelost. Vlak voor een toets geldt: oefenen levert meer op dan naslag.
 - Twijfel je over een API of over het gedrag van de taal, zeg dat en verwijs naar de docs. Verzin niets.
+- **Laat de shell in de projectmap.** Gebruik paden in plaats van een `cd` die blijft staan: de `!`-commando's van de student draaien in dezelfde shell.
+- **Opmerkingen over de harnas tijdens het oefenen:** noteer ze in één regel en bespreek ze pas na de sessie. Een uitstapje midden in een opdracht kost de student de context.
 - Werk dat beoordeeld wordt en waarbij AI niet of maar beperkt mag: behandel elke vaardigheid als L3 en houd het AI-gebruik bij voor de verantwoording.

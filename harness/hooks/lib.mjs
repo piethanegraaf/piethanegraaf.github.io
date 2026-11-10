@@ -51,6 +51,8 @@ export const DEFAULT_SETTINGS = {
   examDate: null,
   defaultLevel: "L2",
   stuckTimerMinutes: 12,
+  // A break longer than this does not count as active time (session hour, task minutes, stuck timer).
+  idleMinutes: 20,
   targetSuccess: 0.85,
   // Files whose content belongs to the learner (the guard protects them at L1-L3).
   codeExtensions: ["cs", "csproj", "sln", "slnx"],
@@ -87,8 +89,15 @@ export function codeExtRe(data, inCommand = false) {
 }
 
 // Commands that build, run or test code. check.mjs (the harness test runner) always counts.
+// A loose match on the whole text; the guard itself uses buildRes() per command (see shell.mjs).
 export function buildCmdRe(data) {
   return safeRe((list) => new RegExp([...list, "check\\.mjs"].map((s) => `(?:${s})`).join("|"), "i"), data, "buildCommands");
+}
+
+// The build patterns from settings, one RegExp each. The guard counts a command as a build only
+// when a pattern matches at the START of the command (its program), not in its arguments.
+export function buildRes(data) {
+  return safeRe((list) => list.map((s) => new RegExp(s, "i")), data, "buildCommands");
 }
 
 export function toolingRe(data) {
@@ -96,9 +105,10 @@ export function toolingRe(data) {
 }
 
 // Files of the harness itself. Only the learner changes them (by hand, with "!" or install.mjs),
-// otherwise the AI could switch off its own guard.
+// otherwise the AI could switch off its own guard. Only the real harness files of this project:
+// .claude/leerharnas-backup/ or a "leerharnas" folder elsewhere are not (setup review 3.6).
 export function isHarnessPath(r) {
-  return r !== null && /^\.claude\/(hooks\/|skills\/diary\/|settings(\.local)?\.json$|leerharnas)/i.test(r);
+  return r !== null && /^\.claude\/(hooks\/|skills\/diary\/|settings(\.local)?\.json$|leerharnas[^/]*\.(md|json)$)/i.test(r);
 }
 
 // Reading the record also sets the language of all messages (settings.language).
@@ -120,6 +130,8 @@ export function findSkill(data, id) {
 // Microskills: entries with "parent". They have their own level, keywords and reviews,
 // but no paths: the guard keeps using the parent's level for files.
 export const isMicro = (s) => Boolean(s?.parent);
+// The family of a skill: the id of the parent skill.
+export const familyOf = (s) => (s ? (s.parent ?? s.id) : null);
 export const microsOf = (data, parentId) => data.skills.filter((s) => s.parent === parentId);
 export const familyIds = (data, id) => [id, ...microsOf(data, id).map((m) => m.id)];
 
@@ -282,23 +294,47 @@ export function learnerText(text, originKind = null) {
   return s ? { own: s, why: null } : { own: null, why: raw.trim() ? "harness-only" : "empty" };
 }
 
+// ---- Transcripts ----
+// The text blocks of a transcript entry (tool calls and results left out).
+export function entryText(e) {
+  const c = e?.message?.content;
+  if (typeof c === "string") return c;
+  return Array.isArray(c) ? c.filter((p) => p.type === "text").map((p) => p.text).join("\n") : "";
+}
+const originOf = (e) => (typeof e?.origin === "string" ? e.origin : e?.origin?.kind ?? null);
+
 // A transcript entry the learner typed: not a tool result, agent report, notification or reminder.
 export function isLearnerEntry(e) {
   if (e?.type !== "user" || e.isMeta || e.promptSource === "system") return false;
   const c = e.message?.content;
   if (Array.isArray(c) && c.some((p) => p.type === "tool_result")) return false;
-  const text = typeof c === "string" ? c
-    : Array.isArray(c) ? c.filter((p) => p.type === "text").map((p) => p.text).join("\n") : "";
-  const origin = typeof e.origin === "string" ? e.origin : e.origin?.kind ?? null;
-  return learnerText(text, origin).own !== null;
+  return learnerText(entryText(e), originOf(e)).own !== null;
 }
 
-// ---- Per-session state (hint ladder, end-of-session) ----
+// The learner's own words in a transcript entry, or null.
+export const learnerEntryText = (e) => (isLearnerEntry(e) ? learnerText(entryText(e), originOf(e)).own : null);
+
+export function readTranscript(p) {
+  try {
+    return fs.readFileSync(p, "utf8").split("\n").filter(Boolean).map((l) => { try { return JSON.parse(l); } catch { return null; } }).filter(Boolean);
+  } catch { return []; }
+}
+
+// ---- Per-session state (hint ladder, active time, end-of-session) ----
 const sessionFile = (sid) => path.join(STATE_DIR, `session-${String(sid).replace(/[^\w-]/g, "_")}.json`);
 
+// startedAt is set at the learner's first prompt (touch), not when a file happens to be created.
+const newSession = () => ({
+  startedAt: null, lastActiveAt: null, activeMs: 0, activeSkill: null, folderSkill: null, folderSkillAt: null,
+  rung: 0, maxRung: 0, lastRungAt: null, lastRungActive: null, taskStartedAt: null, taskStartedActive: null,
+  endRequested: false, nudged: false,
+});
+
+export const sessionExists = (sid) => fs.existsSync(sessionFile(sid));
+
 export function loadSession(sid) {
-  try { return JSON.parse(fs.readFileSync(sessionFile(sid), "utf8")); }
-  catch { return { startedAt: Date.now(), activeSkill: null, rung: 0, maxRung: 0, lastRungAt: null, taskStartedAt: Date.now(), endRequested: false, nudged: false }; }
+  try { return { ...newSession(), ...JSON.parse(fs.readFileSync(sessionFile(sid), "utf8")) }; }
+  catch { return newSession(); }
 }
 
 export function saveSession(sid, st) {
@@ -306,14 +342,58 @@ export function saveSession(sid, st) {
   fs.writeFileSync(sessionFile(sid), JSON.stringify(st, null, 2) + "\n");
 }
 
-// The most recently touched session (for CLI commands run with "!", which get no session id).
-export function latestSessionId() {
-  try {
-    const files = fs.readdirSync(STATE_DIR).filter((f) => /^session-.*\.json$/.test(f))
-      .map((f) => ({ f, t: fs.statSync(path.join(STATE_DIR, f)).mtimeMs })).sort((a, b) => b.t - a.t);
-    return files.length ? files[0].f.replace(/^session-|\.json$/g, "") : null;
-  } catch { return null; }
+// The learner is active now (a prompt, or a "!" run of check/skill). Active time only grows by
+// breaks of at most settings.idleMinutes: a meal or a long break does not count (setup review 3.5).
+// The session hour, the minutes per task and the stuck timer all use active time.
+export function touch(st, now = Date.now(), data = null) {
+  const idle = Math.max(1, Number(settingsOf(data).idleMinutes) || DEFAULT_SETTINGS.idleMinutes) * 60000;
+  if (!st.startedAt) st.startedAt = now;
+  if (typeof st.activeMs !== "number") st.activeMs = 0; // older session file: active time starts now
+  else if (st.lastActiveAt && now >= st.lastActiveAt && now - st.lastActiveAt <= idle) st.activeMs += now - st.lastActiveAt;
+  st.lastActiveAt = now;
+  if (!st.taskStartedAt) st.taskStartedAt = now;
+  if (typeof st.taskStartedActive !== "number") st.taskStartedActive = st.activeMs;
+  return st;
 }
+
+// Active minutes since a mark (a value of st.activeMs taken earlier).
+export const activeMinutesSince = (st, mark) => Math.max(0, Math.round(((st.activeMs ?? 0) - (mark ?? st.activeMs ?? 0)) / 60000));
+
+// A new task starts: the ladder and the task clock start again.
+export function startTask(st, now = Date.now()) {
+  Object.assign(st, { rung: 0, maxRung: 0, lastRungAt: null, lastRungActive: null, taskStartedAt: now, taskStartedActive: st.activeMs ?? 0, lastTaskAt: now });
+  return st;
+}
+
+function sessionsOnDisk() {
+  let files = [];
+  try { files = fs.readdirSync(STATE_DIR).filter((f) => /^session-.*\.json$/.test(f)); } catch { return []; }
+  return files.map((f) => {
+    const sid = f.replace(/^session-|\.json$/g, "");
+    try {
+      const st = JSON.parse(fs.readFileSync(path.join(STATE_DIR, f), "utf8"));
+      const seen = st.lastActiveAt ?? st.lastPromptAt ?? fs.statSync(path.join(STATE_DIR, f)).mtimeMs;
+      return { sid, st, seen };
+    } catch { return null; }
+  }).filter(Boolean).sort((a, b) => b.seen - a.seen);
+}
+
+// The session a "!" command belongs to: "!" commands get no session id, and two sessions can be
+// open in one project (setup review 3.6). Among the sessions where the learner was active in the
+// last idleMinutes, prefer one that works on this family (activeSkill or folderSkill); otherwise
+// the session where the learner was active most recently.
+export function pickSession(family = null, data = null) {
+  const all = sessionsOnDisk();
+  if (!all.length) return null;
+  const idle = Math.max(1, Number(settingsOf(data).idleMinutes) || DEFAULT_SETTINGS.idleMinutes) * 60000;
+  const fam = family ? new Set(family) : null;
+  const recent = all.filter((x) => Date.now() - x.seen <= idle);
+  const match = fam ? recent.find((x) => fam.has(x.st.activeSkill) || fam.has(x.st.folderSkill)) : null;
+  return (match ?? recent[0] ?? all[0]).sid;
+}
+
+// Kept for older callers: the session where the learner was active most recently.
+export const latestSessionId = () => pickSession();
 
 export function readEvents() {
   try {

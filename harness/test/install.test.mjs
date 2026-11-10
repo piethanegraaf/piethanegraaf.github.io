@@ -45,6 +45,7 @@ test("a fresh install: code, data from the map, settings with $CLAUDE_PROJECT_DI
     for (const c of cmds) assert.match(c, /^node "\$CLAUDE_PROJECT_DIR\/\.claude\/hooks\/[a-z-]+\.mjs"$/);
     assert.equal(settings.hooks.PreToolUse[0].matcher, "Edit|Write|MultiEdit|NotebookEdit|Bash|PowerShell");
     assert.ok(!read(d, ".claude/settings.json").includes(d), "no absolute paths");
+    assert.equal(settings.promptSuggestionEnabled, false, "prompt suggestions can give away hints (setup review §4)");
 
     const skills = JSON.parse(read(d, ".learning/skills.json"));
     assert.equal(skills.settings.course, "OOD");
@@ -142,6 +143,7 @@ test("--update of an older install: absolute hook paths are replaced, your own s
     const abs = path.join(d, ".claude/hooks").split(path.sep).join("/");
     fs.writeFileSync(path.join(d, ".claude/settings.json"), JSON.stringify({
       permissions: { allow: ["Bash(git status)"] },
+      promptSuggestionEnabled: true,
       hooks: {
         PreToolUse: [
           { matcher: "Edit|Write", hooks: [{ type: "command", command: `node "${abs}/guard.mjs"` }] },
@@ -157,6 +159,7 @@ test("--update of an older install: absolute hook paths are replaced, your own s
     assert.match(r.stdout, /oudere installatie/);
     const s = JSON.parse(read(d, ".claude/settings.json"));
     assert.deepEqual(s.permissions, { allow: ["Bash(git status)"] });
+    assert.equal(s.promptSuggestionEnabled, true, "your own choice stays");
     const cmds = Object.values(s.hooks).flat().flatMap((g) => g.hooks.map((h) => h.command));
     assert.ok(cmds.includes("node scripts/eigen-hook.mjs"));
     assert.ok(!cmds.some((c) => c.includes(abs)), "absolute paths are gone");

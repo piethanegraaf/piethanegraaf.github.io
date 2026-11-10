@@ -10,13 +10,18 @@ The settings live in `.learning/skills.json`, under `settings`. Change them with
 | `language` | `nl` | `nl` or `en`: the language of the messages. Recognition always works in both languages. |
 | `examDate` | none | The exam date. Reviews fall at least 3 days before it. |
 | `defaultLevel` | `L2` | The level of code that belongs to no skill. |
-| `stuckTimerMinutes` | `12` | After this many minutes of being stuck, a new rung may unlock without an attempt. |
+| `stuckTimerMinutes` | `12` | After this many minutes of **active time** being stuck, a new rung may unlock without an attempt. |
+| `idleMinutes` | `20` | A longer break does not count as active time: not for the stuck timer, not for the minutes per task and not for the message after an hour. |
 | `targetSuccess` | `0.85` | The target for moving from L2 to L3. |
 | `codeExtensions` | `cs, csproj, sln, slnx` | Which files are the learner's code. |
 | `buildCommands` | `dotnet build/test/run …`, `msbuild` | Regular expressions for commands that build or test. `check.mjs` always counts. |
 | `toolingTerms` | `rider, sdk, nuget …` | Tooling words: "it works" about these is not a solved task. |
 
 An invalid value falls back to the default, so the guard never lets everything through.
+
+## Claude Code settings
+
+The installer also sets `"promptSuggestionEnabled": false` in `.claude/settings.json`. Otherwise Claude Code suggests your next prompt itself, and such a suggestion can give a hint away. If you set the value to `true` yourself, the installer keeps your choice.
 
 ## Your own course
 

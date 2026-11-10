@@ -42,6 +42,15 @@ node harness/install.mjs ../my-practice-folder --update --yes
 
 An older install without a manifest (with absolute paths in `settings.json`) is recognised and converted too.
 
+## Before you practise
+
+Turn off AI help outside Claude Code. Otherwise your IDE completes the code you are supposed to write yourself, and the harness sees none of it.
+
+- **Rider:** turn off *Full Line Code Completion* (Settings → Plugins), and *JetBrains AI Assistant* if you have it.
+- **Visual Studio:** turn off *IntelliCode* (whole-line completions) and *GitHub Copilot*.
+- **VS Code:** turn off *GitHub Copilot* and other inline-suggestion extensions for this folder.
+- **Claude Code:** the installer turns prompt suggestions off (`promptSuggestionEnabled: false`), because a suggested prompt can give a hint away.
+
 ## After installing
 
 1. Start Claude Code in your project folder. The session-start hook shows your skills and reviews.

@@ -124,3 +124,26 @@ test("globToRegex and fib", () => {
   assert.ok(globToRegex("**/*Test/**").test("x/WiskundeTest/T.cs"));
   assert.deepEqual([0, 1, 2, 3, 4, 5, 6].map(fib), [1, 2, 3, 5, 8, 13, 21]);
 });
+
+// ---------- Active time and the session of a "!" command (setup review 3.5 and 3.6) ----------
+test("touch: breaks up to idleMinutes count as active time, longer breaks do not", async () => {
+  const { touch } = await import("../hooks/lib.mjs");
+  const MIN = 60000, t0 = 1_000_000_000_000;
+  const st = touch({ startedAt: null, activeMs: 0, lastActiveAt: null }, t0, {});
+  assert.equal(st.startedAt, t0);
+  touch(st, t0 + 15 * MIN, {});
+  assert.equal(st.activeMs, 15 * MIN);
+  touch(st, t0 + 75 * MIN, {}); // a break of an hour
+  assert.equal(st.activeMs, 15 * MIN);
+  touch(st, t0 + 80 * MIN, { settings: { idleMinutes: 2 } }); // 5 minutes > idleMinutes 2
+  assert.equal(st.activeMs, 15 * MIN);
+  const old = touch({ startedAt: t0, lastActiveAt: t0 }, t0 + 5 * MIN, {}); // older file without activeMs
+  assert.equal(old.activeMs, 0);
+});
+
+test("isHarnessPath: the real harness files, not the backups", () => {
+  assert.equal(isHarnessPath(".claude/leerharnas.md"), true);
+  assert.equal(isHarnessPath(".claude/leerharnas.json"), true);
+  assert.equal(isHarnessPath(".claude/leerharnas-backup/2026/x.md"), false);
+  assert.equal(isHarnessPath(".claude/hooks/guard.mjs"), true);
+});

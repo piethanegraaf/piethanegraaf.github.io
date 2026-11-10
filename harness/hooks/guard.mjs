@@ -3,26 +3,36 @@
 //
 // Matcher: Edit|Write|MultiEdit|NotebookEdit|Bash|PowerShell
 import fs from "node:fs";
+import os from "node:os";
 import path from "node:path";
 import {
   readStdin, loadSkills, levelForPath, isOverrideActive, logEvent, rel, isHarnessPath,
-  codeExtRe, buildCmdRe, PROTECTED, levelName, t, ROOT,
+  codeExtRe, buildRes, PROTECTED, levelName, t, ROOT,
 } from "./lib.mjs";
+import { parseCommand, commandName } from "./shell.mjs";
 
 // Learner code (settings.codeExtensions) and build commands (settings.buildCommands): see lib.mjs.
 // Only commands that build, run or test code (or change the project) are blocked.
 // Information commands such as `dotnet --list-sdks` or `dotnet --info` are tooling (L4) and allowed.
-const WRITE_CMD = /(>|\bSet-Content\b|\bAdd-Content\b|\bOut-File\b|\bNew-Item\b|\btee\b|\bsed\s+-i|\bperl\s+-p?i|\bcp\b|\bmv\b|\brm\b|\bdel\b|\bCopy-Item\b|\bMove-Item\b|\bRemove-Item\b|\bRename-Item\b|WriteAll(Text|Lines)|\bgit\s+(checkout|restore|reset|stash|apply)\b)/i;
-// Redirects to nowhere and arrows (=> in C# lambdas, -> in text) are not writes.
-const stripHarmless = (c) => c
-  .replace(/\d?>&\d/g, " ")
-  .replace(/\d?>>?\s*(\/dev\/null|\$null|nul)\b/gi, " ")
-  .replace(/[=-]>/g, " ");
+// A shell command is split into its simple commands first (shell.mjs), and each one is judged by
+// the program it runs: "msbuild" in a grep pattern is not a build (setup review 3.4).
+const WRITE_PROGRAMS = new Set(["cp", "mv", "rm", "del", "erase", "copy", "move", "ren", "rename", "tee", "touch", "truncate", "dd",
+  "set-content", "sc", "add-content", "ac", "out-file", "new-item", "ni", "copy-item", "cpi", "move-item", "mi",
+  "remove-item", "ri", "rename-item", "rni", "clear-content", "clc", "install", "rsync", "ln", "unzip", "tar"]);
+// A command that writes the files it names (not counting redirects, which have their own targets).
+function writesFiles(argv, raw) {
+  const name = commandName(argv[0]);
+  if (WRITE_PROGRAMS.has(name)) return true;
+  if (name === "sed" && argv.some((a) => /^-[a-z]*i/i.test(a) || a === "--in-place")) return true;
+  if (name === "perl" && argv.some((a) => /^-[a-z]*i/.test(a))) return true;
+  if (name === "git" && /^(checkout|restore|reset|stash|apply|rm|mv|clean)$/i.test(argv[1] ?? "")) return true;
+  return /WriteAll(Text|Lines|Bytes)|\bAppendAll(Text|Lines)\b/i.test(raw);
+}
 // Everything except list/status changes the learner's record.
-const RECORD_CMD = /skill\.mjs["']?\s+(set|review|override|untask|correct|add-micro|done|setting)\b/i;
+const RECORD_CMD = /skill\.mjs["']?\s+(set|review|override|untask|correct|add-micro|done|setting|replay)\b/i;
 const TODO = "TODO(human)";
-// The harness itself: hooks, diary skill, settings.json and the harness instructions and manifest.
-const HARNESS_IN_CMD = /\.claude[\\/]+(hooks[\\/]|skills[\\/]+diary|settings(\.local)?\.json|leerharnas)/i;
+const CD = new Set(["cd", "pushd", "set-location", "sl", "chdir", "push-location"]);
+const NOWHERE = /^(\/dev\/null|\$null|nul)$/i;
 
 function deny(reason, event) {
   logEvent({ type: "deny", ...event, reason });
@@ -70,8 +80,7 @@ try {
   data = { settings: { defaultLevel: "L2" }, skills: [] };
 }
 const CODE_EXT = codeExtRe(data);
-const CODE_IN_CMD = codeExtRe(data, true);
-const BUILD_CMD = buildCmdRe(data);
+const BUILD_RES = buildRes(data);
 
 // 1) The skill record and state belong to the learner.
 const isRecordPath = (p) => {
@@ -111,38 +120,73 @@ if (["Edit", "Write", "MultiEdit", "NotebookEdit"].includes(tool)) {
 
 if (tool === "Bash" || tool === "PowerShell") {
   const cmd = String(ti.command ?? "");
-  if (RECORD_CMD.test(cmd) || (/skills\.json|\.learning[\\/]+state/i.test(cmd) && WRITE_CMD.test(stripHarmless(cmd)))) {
-    deny(t("guard.recordCmd"), { tool, cmd: cmd.slice(0, 200) });
-  }
-  if (HARNESS_IN_CMD.test(cmd) && WRITE_CMD.test(stripHarmless(cmd))) deny(t("guard.harness"), { tool, cmd: cmd.slice(0, 200) });
-  const building = BUILD_CMD.test(cmd);
-  const writing = CODE_IN_CMD.test(cmd) && WRITE_CMD.test(stripHarmless(cmd));
-  if (!building && !writing) process.exit(0);
+  const short = cmd.slice(0, 200);
+  if (RECORD_CMD.test(cmd)) deny(t("guard.recordCmd"), { tool, cmd: short });
+  const parsed = parseCommand(cmd);
+  // eval, iex, Invoke-Expression, powershell -EncodedCommand: the guard cannot see what runs.
+  if (parsed.opaque) deny(t("guard.opaque"), { tool, cmd: short });
 
-  // Which skills does this command touch? The working directory plus any path segments in the command.
-  const hits = new Map();
-  // A leading `cd <dir> &&` (or `;`) sets the effective working directory.
-  const cdm = cmd.match(/^\s*cd\s+(?:"([^"]+)"|'([^']+)'|(\S+))\s*(?:&&|;)/);
-  const cwd = cdm ? path.resolve(input.cwd ?? process.cwd(), (cdm[1] ?? cdm[2] ?? cdm[3]).replace(/^\/([a-zA-Z])\//, "$1:/")) : (input.cwd ?? process.cwd());
-  const addPath = (p) => {
+  // A path as the shell sees it: ~ and $HOME are the home folder, /c/... is C:/..., relative to cwd.
+  const home = os.homedir();
+  const resolvePath = (cwd, p) => path.resolve(cwd, String(p)
+    .replace(/^~(?=$|[\\/])/, home).replace(/^\$(HOME|env:USERPROFILE)(?=$|[\\/])/i, home)
+    .replace(/^\/([a-zA-Z])\//, "$1:/"));
+  const looksLikePath = (w) => /[\\/]/.test(w) || CODE_EXT.test(w) || /^\.\.?$/.test(w);
+
+  // Which skills does this command touch? Per simple command: the working directory at that point
+  // (cd, pushd, Set-Location) plus the paths in its arguments. A directory gets a probe file inside it.
+  const hits = new Map(); // skill id -> { level, skill, building }
+  const addPath = (p, building) => {
     const r = rel(p);
     if (r !== null && /^\.(claude|learning)\//i.test(r)) return; // harness scripts/data are not learner code
     const { inProject, level, skill } = levelForPath(data, p);
-    if (inProject) hits.set(skill?.id ?? "(standaard)", { level, skill });
+    if (!inProject) return;
+    const key = skill?.id ?? "(standaard)";
+    hits.set(key, { level, skill, building: building || hits.get(key)?.building || false });
   };
-  addPath(path.join(cwd, "__probe__.cs"));
-  // Path-like tokens in the command, resolved against cwd. A directory gets a probe file inside it.
-  for (const tok of cmd.split(/[\s"'`=;|&()]+/)) {
-    if (!/[\\/]/.test(tok) && !CODE_EXT.test(tok)) continue;
-    if (/^-/.test(tok) || /^https?:/i.test(tok)) continue;
-    const abs = path.resolve(cwd, tok.replace(/^\/([a-zA-Z])\//, "$1:/"));
-    addPath(CODE_EXT.test(tok) ? abs : path.join(abs, "__probe__.cs"));
+  let cwd = input.cwd ?? process.cwd();
+  for (const { argv, redirects, raw } of parsed.commands) {
+    const name = commandName(argv[0]);
+    const args = argv.slice(1);
+    if (CD.has(name)) {
+      const target = args.find((a) => !/^-/.test(a));
+      if (target) cwd = resolvePath(cwd, target);
+      continue;
+    }
+    // Writes: redirect targets, plus the files named by a command that writes (cp, sed -i, Set-Content ...).
+    const targets = redirects.filter((r) => !NOWHERE.test(r)).map((r) => resolvePath(cwd, r));
+    if (argv.length && writesFiles(argv, raw)) for (const a of args) if (!/^-/.test(a) && looksLikePath(a)) targets.push(resolvePath(cwd, a));
+    for (const p of targets) {
+      const r = rel(p);
+      if (r !== null && (/^\.learning\/skills\.json$/i.test(r) || /^\.learning\/state(\/|$)/i.test(r))) deny(t("guard.recordCmd"), { tool, cmd: short });
+      if (isHarnessPath(r)) deny(t("guard.harness"), { tool, cmd: short });
+      if (CODE_EXT.test(p)) addPath(p, false);
+    }
+    // Builds: a build pattern that matches at the START of the command (the program itself), or check.mjs run by node.
+    const line = [name, ...args].join(" ");
+    const isCheck = name === "node" && args.some((a) => !/^-/.test(a) && commandName(a) === "check.mjs");
+    const isBuild = isCheck || BUILD_RES.some((re) => re.exec(line)?.index === 0);
+    if (!isBuild) continue;
+    if (isCheck) {
+      // check.mjs [folder]: the folder after the script, or the working directory.
+      const k = args.findIndex((a) => commandName(a) === "check.mjs");
+      const folder = args[k + 1] && !/^-/.test(args[k + 1]) ? args[k + 1] : ".";
+      addPath(path.join(resolvePath(cwd, folder), "__probe__.cs"), true);
+      continue;
+    }
+    // The paths the build names, or else the working directory.
+    const named = args.filter((a) => !/^-/.test(a) && !/^https?:/i.test(a) && looksLikePath(a));
+    if (!named.length) addPath(path.join(cwd, "__probe__.cs"), true);
+    for (const a of named) {
+      const abs = resolvePath(cwd, a);
+      addPath(CODE_EXT.test(a) ? abs : path.join(abs, "__probe__.cs"), true);
+    }
   }
-  for (const [, { level, skill }] of hits) {
+  for (const [, { level, skill, building }] of hits) {
     if (!PROTECTED.has(level)) continue;
-    if (isOverrideActive(skill ? skill.id : "*")) { logEvent({ type: "override-used", tool, skill: skill?.id ?? "*", cmd: cmd.slice(0, 200) }); continue; }
+    if (isOverrideActive(skill ? skill.id : "*")) { logEvent({ type: "override-used", tool, skill: skill?.id ?? "*", cmd: short }); continue; }
     deny(protectedReason(level, skill, t(building ? "guard.what.build" : "guard.what.shellWrite")) + (building ? " " + t("guard.buildAsk") : ""),
-      { tool, cmd: cmd.slice(0, 200), skill: skill?.id ?? null, level });
+      { tool, cmd: short, skill: skill?.id ?? null, level });
   }
 }
 process.exit(0);
