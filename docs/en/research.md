@@ -1,6 +1,6 @@
 # Learning to Code (and OOD) with AI: Literature Review, Risk Assessment & a Learning-Preserving Claude Code Setup
 
-*Prepared 7 November 2026 · revised 8 November 2026 and rewritten for students and teachers on 10 November 2026 (see §11) · For students who learn programming and Object-Oriented Design (OOD) with AI, and for their teachers*
+*Prepared 7 November 2026 · revised 8 November 2026, rewritten for students and teachers on 10 November 2026 and updated with new literature the same day (see §11) · For students who learn programming and Object-Oriented Design (OOD) with AI, and for their teachers*
 
 > **Published version.** This review was first written for one student. This version is written for students and teachers in general; that student's situation remains as examples in boxes. Files it refers to, such as the session logs, are not published.
 
@@ -10,7 +10,7 @@
 
 The table of contents is in the sidebar.
 
-> **Status note.** Sections 1–9 are the original design. §1–4, §6–8 and §5.3/§5.7 were revised on 8 November 2026 with research from May–November 2026, the shift in skill needs, and a critical review of the original literature review; what changed and why is in the change log (§11). The harness as actually built differs in places: there are microskills, a test runner (`check.mjs`) instead of a PostToolUse evidence hook, a hard own-words explanation check, Fibonacci reviews from L3 and a tooling zone. Those differences are summarized in §10, which reports what the first sessions showed. If you use the harness, its `CLAUDE.md` is authoritative for day-to-day rules.
+> **Status note.** Sections 1–9 are the original design. §1–4, §6–8 and §5.3/§5.7 were revised on 8 November 2026 with research from May–November 2026, the shift in skill needs, and a critical review of the original literature review; what changed and why is in the change log (§11). The harness as actually built differs in places: there are microskills, a test runner (`check.mjs`) instead of a PostToolUse evidence hook, a hard own-words explanation check, Fibonacci reviews from L3 and a tooling zone. Those differences are summarized in §10, which reports what the first sessions showed. If you use the harness, its `CLAUDE.md` is authoritative for day-to-day rules. A short literature update on 10 November 2026 added seven sources (change log, §11).
 
 ---
 
@@ -21,11 +21,11 @@ The table of contents is in the sidebar.
 - **Performance with AI is not learning.**
     - **High-school maths:** unrestricted GPT-4 raised practice scores by 48% but lowered exam scores by **17%** once access was removed. A tutor that gave hints and no answers avoided the harm (Bastani et al., 2025).
     - **University course:** in a 2026 trial with 2,379 students, an AI tutor used mostly for direct answers lowered final grades by 0.37 SD within the same course (Liu et al., 2026, working paper).
-    - **Programming:** in a small study, Copilot raised scores during the session, but students retained less a week later (Gardella et al., 2026).
+    - **Programming:** in a small study, Copilot raised scores during the session, but students retained less a week later (Gardella et al., 2026). In a quasi-experiment with 152 students, the group that programmed and debugged without AI retained more after seven weeks (Albadarin, 2026, dissertation).
 - **AI can also help.** In a proctored trial, ChatGPT access raised test scores without AI by 0.28 SD, mainly for students who used it like a tutor (Contractor & Reyes, 2026, working paper). What decides it is whether the AI replaces your thinking or supports it (Boolzen et al., 2026).
 - **Developers learning a new library** with an AI assistant scored 50% vs. 67% on a follow-up quiz, with the largest gap on debugging, and were not significantly faster (Shen & Tamkin, 2026, preprint).
 - **Enforced guardrails work better than requested ones.** Telling a tutor in its system prompt to scaffold changed nothing in a trial with 1,059 students (Barth et al., 2026). Gates built into the workflow did better: mastery rules, explanation gates, blocks outside the model. That is the case for hooks over a "learning mode" prompt.
-- **Pooled positive effects are mostly publication bias.** The most rigorous 2026 meta-analysis shrinks g = 0.84 to 0.08 after correction, and the most-cited 2025 meta-analysis was retracted.
+- **Pooled positive effects are mostly publication bias.** The most rigorous 2026 meta-analysis shrinks g = 0.84 to 0.08 after correction, and the most-cited 2025 meta-analysis was retracted. An independent audit of 14 positive meta-analyses found impossible statistics and fabricated references (O'Neill, 2026, preprint).
 - **Weaker than the first version claimed** (see the change log, §11):
     - that specific interaction patterns *cause* better learning: every study so far let students choose their own pattern;
     - that LLMs widen the gap between strong and weak students: this rests on an exploratory analysis;
@@ -43,7 +43,7 @@ The table of contents is in the sidebar.
     For routine, well-specified code at work, writing it by hand is no longer the cheapest way.
 
 - **Against dropping hand practice:**
-    - the bottleneck has moved to reviewing and testing;
+    - the bottleneck has moved to reviewing and testing, which a study of 655 firms has now measured independently (Chen & Stratton, 2026);
     - AI code still fails more than a third of security checks;
     - entry-level hiring has weakened in the US, but how much of that is due to AI is contested;
     - new interview formats test reading, debugging and checking AI output.
@@ -84,7 +84,7 @@ The hooks are a **commitment device** you choose for yourself (Ariely & Wertenbr
 
 This is a **narrative review**, not a systematic one. The first version (7 November 2026) had no search protocol, no inclusion criteria and no quality appraisal, and it mixed randomized trials, small interview studies and preprints in single tables. The revision of 8 November 2026 added:
 
-- **Targeted searches.** Four searches covered May–November 2026: learning research, the labour market, the economics of AI coding, and skills and assessment policy. Two citation checks compared the original claims with their primary sources. The notes, with a link for every figure, are in the [research notes](notes/index.md); the synthesis is in `reports/` and is not published.
+- **Targeted searches.** Four searches covered May–November 2026: learning research, the labour market, the economics of AI coding, and skills and assessment policy. Two citation checks compared the original claims with their primary sources. The notes, with a link for every figure, are in the [research notes](notes/index.md); the synthesis is in `reports/` and is not published. A short follow-up search on 10 November 2026 covered 8–10 November and studies the first searches had missed (see the [notes of the update](notes/update_2026-11-10.md)).
 - **Corrections** wherever a claim went further than its source (listed in the change log, §11).
 - **An evidence grade** for each study:
 
@@ -263,6 +263,9 @@ By 2026, five current models scored above the average student on the tests and e
 | **New:** Prather et al. (2026), ICER: "Scaffolding Autocomplete" | An exercise that trains telling good from bad AI suggestions | Students did better with one suggestion than with several. Sample and design not verified. | C |
 | **New:** Ardic, Le Dilavrec & Zaidman (2026), *Empirical Software Engineering* | Observational; 12 students using ChatGPT (GPT-3.5) to write unit tests | Four strategies, depending on who had the test idea and who wrote the code. Students saved time but trusted the tests less and felt less ownership. | C |
 | Sankaranarayanan (2026), preprint, February | 78 online learners; manual vs. unrestricted AI vs. AI behind an "explanation gate" (teach-back), in Cursor | Both AI arms produced more working code. On a later 30-minute maintenance task with AI blacked out, **77% failed after unrestricted AI vs. 39% after the explanation gate**. Randomization not stated. | C |
+| **New (10 Nov):** Bergh, Tag, Vassar & Renzella (2026), preprint, September | Controlled between-subjects experiment; 55 CS undergraduates; three C tasks with ChatGPT vs. web search; recall quizzes right after and 48 hours later | With ChatGPT, coding scores were higher (89% vs. 69%), but **recall was lower** right away (41% vs. 53%) and after 48 hours (39% vs. 52%). Students credited themselves with 45% of their submitted code, against 81% without ChatGPT. Mental effort rose less across the tasks. Randomization not stated in the abstract. | B |
+| **New (10 Nov):** Albadarin (2026), doctoral dissertation, University of Eastern Finland | Quasi-experimental; 152 university students; programming and debugging with Llama 3.1 vs. without AI; retention test seven weeks later | The AI group was better and faster on some debugging tasks, but **the group without AI retained more after seven weeks**. Figures from a university Q&A (10 Nov 2026); scores and effect sizes not yet seen. | B |
+| **New (10 Nov):** Lepp (2026), FIE, preprint | Survey; 210 first-year students in an OOP course where AI was allowed for coursework and banned in assessments; cluster analysis | Five usage profiles, including a "smart" one (little code generation, much conceptual and debugging help). **No significant difference in assessment scores** between the profiles. | C |
 
 **Studies of AI and learning in general:**
 
@@ -336,6 +339,13 @@ By 2026, five current models scored above the average student on the tests and e
 
     Two other 2026 meta-analyses report g = 0.50 and g = 1.10 without bias correction (Fan, Ke, Chen & Lv, 2026; Liu, Xie & Xu, 2026). The most-cited 2025 meta-analysis (Wang & Fan, g = 0.87) **was retracted in 2026** after a critique of its methods; it had been cited more than 500 times. *Uncorrected pooled effects should not be cited as evidence that AI improves learning.*
 
+    An independent audit (O'Neill, 2026, EdArXiv preprint) of 14 of the 39 meta-analyses that reported positive effects found "impossible statistics", "hallucinated references", comparisons of AI-supported study with no study at all, and no correction for publication bias. Two-thirds of the calls for papers seemed to discourage null or negative results. His preliminary pooling of 44 well-designed experiments averaged out to roughly zero. *Preliminary; known from press coverage, the preprint itself was not read.*
+
+- **Stanford SCALE evidence review (Walker, Fesler, Martinez Claeys, Agnew & Loeb, 10 November 2026).** *A screened synthesis, not a meta-analysis.* An LLM pre-screened 868 papers from October 2025 to June 2026 on What Works Clearinghouse criteria, and at least two researchers reviewed each causal paper. 52 papers now meet its bar for strong causal evidence, 32 of them new. Despite the "K-12" title, most new papers come from higher education, and most of the repository is unreviewed preprints. Its conclusions:
+    - AI "appears to be better for learning when students use it for learning support than when they use it for producing work, although neither type of use consistently improves learning";
+    - outsourcing work to AI can lower performance when students later work without it;
+    - AI can improve the learning *experience* without improving learning outcomes;
+    - the evidence "still does not show whether AI tools can produce long-term learning gains".
 - **Assignments overstate mastery.**
     - **Đức Minh (2026):** *grade C, observational.* In 1,498 Vietnamese undergraduates, AI-assisted assignments averaged 7.62, while mastery checked at random without devices averaged 5.55.
     - **Eleftheriou, Pallis & Constantinides (2026):** *grade B; April, just before the window; n = 85.* A standard LLM gave the highest *perceived* understanding and the lowest *measured* learning, and guided hints gave the largest gains.
@@ -343,11 +353,11 @@ By 2026, five current models scored above the average student on the tests and e
 
 **What the evidence supports, and how strongly:**
 
-- **Strong (several grade-A studies agree): performance with AI is not learning.** When AI does the cognitive work during practice, performance without AI later is the same or lower (Bastani; Liu; Gardella; Strömberg). When AI explains or tutors, results range from no harm to modest gains (Bastani's tutor; Contractor & Reyes; Kazemitabaar 2023). Boolzen's moderator, augment vs. substitute, says the same.
+- **Strong (several grade-A studies agree): performance with AI is not learning.** When AI does the cognitive work during practice, performance without AI later is the same or lower (Bastani; Liu; Gardella; Strömberg; and at grade B, Bergh after 48 hours and Albadarin after seven weeks). When AI explains or tutors, results range from no harm to modest gains (Bastani's tutor; Contractor & Reyes; Kazemitabaar 2023). Boolzen's moderator, augment vs. substitute, says the same, and so does the Stanford SCALE review of 52 causal studies (November 2026).
 - **Moderate: guardrails work when they are enforced in the workflow** (mastery gates, explanation gates, structured tutors, blocks outside the model), and much less when they are only asked for in a system prompt (Barth's null result; Teo's over-helping tutors). That supports the harness's hooks over relying on a "learning mode" prompt.
-- **Weak, correlational only: that specific interaction patterns cause better learning.** This covers asking for explanations and attempting first. In every study so far the student chose the pattern (Shen & Tamkin; Contractor & Reyes; Kazemitabaar 2023b). No randomized trial has compared attempt-first with AI-first. The pattern idea is the best working hypothesis, not a finding. It fits the experimental result that only explanation *without* the answer produced learning (Gajos & Mamykina, 2022; §2.10).
+- **Weak, correlational only: that specific interaction patterns cause better learning.** This covers asking for explanations and attempting first. In every study so far the student chose the pattern (Shen & Tamkin; Contractor & Reyes; Kazemitabaar 2023b). No randomized trial has compared attempt-first with AI-first. The pattern idea is the best working hypothesis, not a finding. It fits the experimental result that only explanation *without* the answer produced learning (Gajos & Mamykina, 2022; §2.10). An observational OOP study adds a null: students with a "smart" usage profile did not score better on AI-free assessments than the other profiles (Lepp, 2026).
 - **Equity: weaker and first-generation students are hurt more and use escape hatches more** (Liu; Kapoor et al., 2025; Lehmann, exploratory; Prather, qualitative). **Guardrails matter most for the students least likely to choose them.**
-- **Unknown:** retention beyond about a week in higher education, agentic tools, and design-level OOD skill.
+- **Unknown or thin:** retention beyond about a week in higher education (so far one quasi-experiment, on debugging, with a seven-week test: Albadarin, 2026), agentic tools, and design-level OOD skill.
 
 ### 2.9 The shift in skill needs: jobs, the economics of hand-written code, and what to practise
 
@@ -375,7 +385,9 @@ The direction is clear on every measure: steep growth from 2024 to 2026, with a 
 - **METR:** experienced developers were 19% *slower* on their own mature repositories, and the 2026 follow-up was unreliable (§2.8). *Grade A/B.*
 - **Cursor adoption** (He et al., 2026; difference-in-differences on GitHub projects): a large but **transient** speed-up, significant only in the first two months. It came with a **persistent** rise in static-analysis warnings (about +30%) and code complexity (about +41%), which later slowed the projects down. *Grade B.*
 - **Task type:** gains of about 35–40% on simple greenfield tasks and 10% or less on complex legacy code (Stanford research cited in DORA's ROI report). *Grade C.*
-- **The bottleneck has moved to review, testing and change approval.** The sources below have different commercial interests and still agree:
+- **Firm telemetry on agents** (Chen & Stratton, 2026; Harvard working paper, version of 9 November 2026). *Grade B, quasi-experimental (timing of adoption).* Data from the engineering-analytics platform Jellyfish: 720,542 workers at 655 firms, January 2021 – August 2026. Twelve months after adopting AI agents, lines of code rose 44.0% and pull requests 35.7%, but resolved Jira issues rose only 13.7% (borderline significant). The time from review submission to approval rose **56.1%**. There was no detectable effect on employment. An August version with 718 firms reported different figures, so cite this one.
+- **Writing code vs. shipping code** (Demirer, Musolff & Yang, 2026; NBER working paper, revised September 2026). *Grade B.* Over 500,000 GitHub developers with AI-usage telemetry: autonomous agents raised commits by 240%, but projects by only 80% and releases by 30%.
+- **The bottleneck has moved to review, testing and change approval.** Chen & Stratton now measure this independently (above). The sources below have different commercial interests and still agree:
     - Anthropic: "human code review has become a new bottleneck".
     - DORA: models a "verification tax".
     - Sonar: 96% of developers do not fully trust AI-generated code, yet only 48% always check it before committing.
@@ -474,7 +486,7 @@ So the tool costs about 1–2% of labour (own arithmetic). The economics turn on
 | Claim | Evidence | Verdict |
 |---|---|---|
 | For routine, well-specified code at work, writing it by hand is no longer the cheapest way | Tool cost about 1–2% of labour; most new code at AI-forward firms is drafted by AI; gains largest on simple greenfield tasks; BLS expects programmer jobs to shrink | **Largely supported** (grades B–D, many vendor sources) |
-| Writing code by hand has no economic value any more | Gains small or negative on complex legacy code; AI code has more security and maintainability problems; review is the bottleneck; incidents need human judgement | **Not supported** |
+| Writing code by hand has no economic value any more | Gains small or negative on complex legacy code; AI code has more security and maintainability problems; review is the bottleneck (now measured independently: Chen & Stratton); incidents need human judgement | **Not supported** |
 | Juniors are hired less because of AI | US gap for young workers in exposed jobs (−19% in ADP data) vs. near zero in the ACS; remote work and interest rates explain much; Dutch data show cooling, not collapse | **Contested.** Direction plausible, size unknown |
 | Employers pay for checking and judging AI output | Interview formats (Google); trust only when checkable (Stack Overflow); "approved by engineers" in every claim; PwC's entry-level finding; the Dallas Fed experience premium | **Consistent across sources**, but no study measures the return to specific review skills |
 | Practising by hand is still how you build the skills to check AI | Shen & Tamkin (debugging gap); Gardella (retention); Yu & Moon (productive struggle); CS1-LLM keeps AI-free exams | **Supported for learning** (grades A–C). No study gives the best mix |
@@ -564,7 +576,7 @@ Likelihood (L) and Impact (I) are scored 1–5. Risk = L × I. Scores assume **n
 
 | ID | Risk | Mechanism | Evidence [grade] | L | I | Score | Horizon |
 |---|---|---|---|---|---|---|---|
-| R1 | **Skills never form** | The AI writes the code and design, and you never generate solutions yourself. Agentic tools make full delegation the default. | Bastani 2025 [A]; Liu 2026 [A]; Shen & Tamkin 2026 [A]; Gardella 2026 [A, small]; Strömberg 2026 [B] | 5 | 5 | **25** | Both |
+| R1 | **Skills never form** | The AI writes the code and design, and you never generate solutions yourself. Agentic tools make full delegation the default. | Bastani 2025 [A]; Liu 2026 [A]; Shen & Tamkin 2026 [A]; Gardella 2026 [A, small]; Strömberg 2026 [B]; Bergh 2026 [B]; Albadarin 2026 [B, seven weeks] | 5 | 5 | **25** | Both |
 | R2 | **Illusion of competence** | Working code and fluent explanations make you overestimate what you can do alone. | Koriat & Bjork 2005 [A]; METR 2025 [A]; Eleftheriou 2026 [B]; Prather 2024 [C]; Đức Minh 2026 [C] | 5 | 4 | **20** | Exam |
 | R3 | **Metacognitive laziness** | Planning, monitoring and debugging are offloaded to the AI. | Darvishi 2024 [A]; Liu 2026 (0.7% of requests asked for feedback on own work) [A]; Stadler 2024 [B]; Fan 2025 [B, interpretation] | 4 | 4 | **16** | Both |
 | R4 | **Design judgment does not develop (OOD-specific)** | The AI picks classes, responsibilities and patterns, so you never weigh trade-offs. | OOD misconceptions: Eckerdal & Thuné 2005, Ragonis & Ben-Ari 2005 [C, pre-AI]; AI weakest on interfaces, abstract classes and inheritance (Lepp & Kaimre 2026) [C]. No study of OOD skill with AI exists yet | 4 | 5 | **20** | Both |
@@ -573,7 +585,7 @@ Likelihood (L) and Impact (I) are scored 1–5. Risk = L × I. Scores assume **n
 | R7 | **Expertise reversal** | The same heavy scaffolding is used for skills you have already mastered, which wastes time and annoys you. | Kalyuga 2003 [A] | 3 | 3 | **9** | Exam |
 | R8 | **Mastered skills decay after automation** | No practice after hand-off, so you can no longer review or take over. | Arthur 1998; Tatel & Ackerman 2025 [A, meta-analyses]; Budzyń 2025 [C]; Bainbridge 1983; Parasuraman & Manzey 2010 | 4 | 4 | **16** | Career |
 | R9 | **Learning wrong things from wrong AI output** *(L raised 3 → 4)* | Hallucinated APIs, bad OO practice, insecure code or subtly wrong explanations get absorbed. | Hellas 2023 [C]; CodeAid 2024 [C]; Veracode 2026: 38% of tasks introduce a vulnerability [C]; Lepp & Kaimre 2026 [C] | 4 | 4 | **16** | Both |
-| R10 | **Weaker ownership and memory of your own work** | You cannot explain or defend your project in an assessment. Offloaded content is remembered less when the store is reliable. | Schooler & Storm 2021; Grinschgl 2021 [A, lab]; Kosmyna 2025 [C, preprint, critiqued] | 4 | 4 | **16** | Exam |
+| R10 | **Weaker ownership and memory of your own work** | You cannot explain or defend your project in an assessment. Offloaded content is remembered less when the store is reliable. | Schooler & Storm 2021; Grinschgl 2021 [A, lab]; Kosmyna 2025 [C, preprint, critiqued]; Bergh 2026 [B]: students credited themselves with 45% of their code with ChatGPT vs. 81% without | 4 | 4 | **16** | Exam |
 | R11 | **Assessment and integrity problems** | Graded work isn't your own, or AI use isn't declared. Unauthorized AI use can count as fraud, and level-1 work can require prompt links, APA citation and a check of the output. CHE's rules are an example (OER art. 1.41 and art. 7.11). Detection is unreliable, so your own records are your protection. | CHE OER 2026–27 [policy]; Npuls 2025 [policy]; Scarfe 2024 (94% of AI answers undetected) [B]; Lau & Guo 2023 | 3 | 5 | **15** | Exam |
 | R12 | **The harness becomes the goal** *(re-scored from 3 × 2)* | Time goes into tuning the setup, or into research about it (such as revising this review), instead of practice. Or the system gets abandoned. | A diagnostic test in the pilot (time went to a cheat sheet instead of practice); in the pilot, time also went to revising this review and fixing a hook; SDT | 4 | 3 | **12** | Exam |
 | R13 | **Privacy of the diary and skill data** | Reflections, research notes and transcripts are synced to cloud storage (such as OneDrive) or shared. | — | 2 | 2 | **4** | Both |
@@ -581,7 +593,7 @@ Likelihood (L) and Impact (I) are scored 1–5. Risk = L × I. Scores assume **n
 | R15 | **Investing too much in hand-writing production code** *(new)* | Practice time goes to writing routine code by hand beyond what learning requires (boilerplate, syntax drills, re-writing mastered code), while the market pays for specifying, reviewing and verifying. | Routine code is cheap to generate: tool about 1–2% of labour cost [C]; Google, Anthropic code-share claims [D]; Octoverse 2026 [C]; BLS: programmers −7% [C]. Low likelihood with the harness, because it already automates mastered skills (L4), and an exam without AI requires hand-writing | 2 | 3 | **6** | Career |
 | R16 | **Supervision skills stay untrained** *(new)* | The harness blocks AI code at L1–L3 and automates at L4, but nothing trains specifying, testing, reviewing and debugging AI output. Employers now test these skills, and delegation erodes them ("paradox of supervision"). | Anthropic 2025b [C, vendor]; Google interview pilot 2026 [D]; Stack Overflow 2026 [C]; Veracode 2026 [C]; CS1-LLM [C]; Pădurean 2026 [C] | 4 | 4 | **16** | Career (testing may also count in your final assessment) |
 | R17 | **Career-path uncertainty** *(new)* | The junior-developer squeeze: fewer entry-level openings and choosier employers. The evidence is descriptive and contested, so its effect on any one student is uncertain. | Junior squeeze: Canaries 2026 [B, descriptive, contested]; Crane & Soto 2026; Tucker 2026 [B]; Indeed (4.5% entry-level) [C]; UWV, ROA, Cnossen 2026 [C]; null results: Humlum & Vestergaard, Fairlie & Wu, NY Fed [B] | 3 | 4 | **12** | Career |
-| R18 | **Decisions driven by vendor claims or hype** *(new)* | You change what you practise because of vendor numbers ("80–90% of code is AI-written"), inflated benchmarks or uncorrected meta-analyses. Or you trust this document too much: it was written by an Anthropic model and leans on Anthropic sources. | Vendor-reported vs. independent benchmark scores (89.9% vs. about 60%) [C]; retracted Wang & Fan 2025 meta-analysis; Boolzen 2026 (g 0.84 → 0.08) [A]; METR on self-reports [A] | 3 | 3 | **9** | Both |
+| R18 | **Decisions driven by vendor claims or hype** *(new)* | You change what you practise because of vendor numbers ("80–90% of code is AI-written"), inflated benchmarks or uncorrected meta-analyses. Or you trust this document too much: it was written by an Anthropic model and leans on Anthropic sources. | Vendor-reported vs. independent benchmark scores (89.9% vs. about 60%) [C]; retracted Wang & Fan 2025 meta-analysis; Boolzen 2026 (g 0.84 → 0.08) [A]; O'Neill 2026, audit of 14 meta-analyses [preprint]; METR on self-reports [A] | 3 | 3 | **9** | Both |
 
 <div class="risk-matrix">
 <table class="risk-grid">
@@ -1170,7 +1182,7 @@ How do you know whether the harness protects your learning and does not just add
 
 ## 7. Limitations
 
-- **The evidence base is young.** Most studies on generative AI date from 2023–2026. They often have small samples or short durations, or they are preprints and working papers (e.g. Kosmyna et al., 2025; Shen & Tamkin, 2026; Lehmann et al., 2025; most of the 2026 trials in §2.8). No trial in higher education has measured retention beyond about a week. Effects may change as the tools change.
+- **The evidence base is young.** Most studies on generative AI date from 2023–2026. They often have small samples or short durations, or they are preprints and working papers (e.g. Kosmyna et al., 2025; Shen & Tamkin, 2026; Lehmann et al., 2025; most of the 2026 trials in §2.8). In higher education, only one study has measured retention beyond about a week: a quasi-experiment with a seven-week test (Albadarin, 2026). The Stanford SCALE review (November 2026) also finds long-term gains still unshown. Effects may change as the tools change.
 - **A narrative review, corrected once.** There was no search protocol, and the first version overstated several findings (§11). The revision added evidence grades and targeted searches. It is still not systematic, so selection bias is possible.
 - **Little OOD-specific AI research, and none on agentic tools.** Most studies of AI in computing education focus on programming tasks from CS1 (the first programming course). Applying them to design skills is an inference from research on OOD misconceptions plus general learning science. No controlled study yet exists of how students learn with agentic tools like Claude Code.
 - **The evidence on the skill shift is mostly American, descriptive and commercial.** Causal labour-market studies disagree. Dutch data are thin and correlational. The figures on how much code AI writes come mainly from companies that sell AI. No study measures the best mix of practice by hand and practice in supervision, so §2.9 and §4.1 are inferences.
@@ -1438,6 +1450,18 @@ How do you know whether the harness protects your learning and does not just add
 - Veracode. (2026). *2026 GenAI code security report* (28 July) and *Fall 2026 update* (29 October) [vendor]. https://www.veracode.com/blog/fall-2026-genai-code-security
 - Yale Budget Lab. (2026). *Tracking the impact of AI on the labor market* (updated 15 September 2026). https://budgetlab.yale.edu/research/tracking-impact-ai-labor-market
 - Yu & Moon (2026). Who will become the next senior? How generative AI erodes the development pathway in software engineering. *Proc. AIES 2026*. arXiv:2607.17067.
+
+**Added in the literature update of 10 November 2026**
+
+*Per-figure source links are in the [notes of the update](notes/update_2026-11-10.md). Preprints, working papers and the dissertation are not peer reviewed.*
+
+- Albadarin, Y. (2026). *Capturing the impact of generative AI on higher-order thinking, creativity, and cognitive dynamics during debugging* [doctoral dissertation, University of Eastern Finland; figures from the university Q&A of 10 November 2026, dissertation not read]. https://phys.org/news/2026-11-qa-exploring-generative-ai-impact.html
+- Bergh, C., Tag, B., Vassar, A., & Renzella, J. (2026). *Your programming students' cognition with ChatGPT: Higher performance, lower retention, and reduced ownership*. arXiv:2609.21194 [preprint]. https://arxiv.org/abs/2609.21194
+- Chen, F., & Stratton, J. (2026). *Artificial intelligence in the firm: Bottlenecks in software production* [working paper, Harvard University; version of 9 November 2026; data from Jellyfish]. https://fion.ac/jellyfish.pdf
+- Demirer, M., Musolff, L., & Yang, L. (2026). *Writing code vs. shipping code: Productivity effects across generations of AI coding tools* (NBER Working Paper 35275; revised September 2026) [working paper]. https://doi.org/10.3386/w35275
+- Lepp, M. (2026). Patterns of learner-AI interaction and academic performance in an object-oriented programming course. *Proc. IEEE FIE 2026*. arXiv:2607.24755 [preprint].
+- O'Neill, P. (2026). [Audit of AI-in-education meta-analyses; title not verified]. EdArXiv preprint, https://osf.io/preprints/edarxiv/n29zd_v3. Reported by Barshay, J. (2026, October 26), *The Hechinger Report*, https://hechingerreport.org/proof-points-ai-education-meta-analysis/
+- Walker, Fesler, Martinez Claeys, Agnew, & Loeb (2026). *The evidence base on AI in K-12: A November 2026 review*. SCALE Initiative, Stanford Graduate School of Education. https://doi.org/10.26300/80wn-ca81
 
 ---
 
@@ -1711,6 +1735,24 @@ In the first sessions of the pilot, one student used the harness for three learn
 ---
 
 ## 11. Change log
+
+### 10 November 2026 (later): literature update, 8–10 November
+
+A short search for studies that appeared after the notes of 7 November, and for studies those searches had missed. The notes, with a link for every figure, are in the [notes of the update](notes/update_2026-11-10.md).
+
+- **New since 8 November:**
+    - Albadarin (2026), dissertation: in a quasi-experiment, the group without AI retained more after seven weeks (§1, §2.8, §3 R1, §7);
+    - the Stanford SCALE evidence review of 52 causal studies (§2.8, §7);
+    - Chen & Stratton (2026), version of 9 November: the first independent measurement of the review bottleneck (§1, §2.9).
+- **Missed by the searches of 7 November:**
+    - Bergh et al. (2026): higher coding scores with ChatGPT, but lower recall and less ownership (§2.8; §3 R1 and R10);
+    - Lepp (2026): in an OOP course, no difference in AI-free assessment scores between usage profiles (§2.8);
+    - O'Neill (2026): an audit of 14 positive meta-analyses (§1, §2.8, §3 R18);
+    - Demirer, Musolff & Yang (2026): writing code vs. shipping code (§2.9).
+- **Changed:** "Unknown" in §2.8 now reads "Unknown or thin". §7 no longer says that no study in higher education measured retention beyond about a week.
+- **Not changed:** the conclusions of §2.8–2.11 and the design (§5). The new studies support the existing conclusions.
+- **Checked and not added:** Nathaniel et al. (2026, *Frontiers in Computer Science*; no outcome measured without AI), a narrative review on Zenodo (nothing new), and two vendor reports (OpenAI, Google). The OpenAI trial still has to be checked, because its page could not be opened.
+- **How:** about twenty targeted web searches by Claude in one session, each finding checked against its primary source where that could be reached. The Albadarin figures come from a university Q&A; the dissertation itself was not read.
 
 ### 10 November 2026: rewritten for students and teachers
 
