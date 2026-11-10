@@ -46,6 +46,20 @@ function protectedReason(level, skill, what) {
 let input;
 try { input = JSON.parse(await readStdin()); } catch { process.exit(0); }
 const tool = input.tool_name ?? "";
+
+// Claude Code treats a crashed hook as "no objection". So for the tools this guard judges,
+// an unexpected error becomes a deny with the error message: fail closed, not open.
+const GUARDED = new Set(["Edit", "Write", "MultiEdit", "NotebookEdit", "Bash", "PowerShell"]);
+const failClosed = (e) => {
+  try {
+    if (GUARDED.has(tool)) {
+      process.stdout.write(JSON.stringify({ hookSpecificOutput: {
+        hookEventName: "PreToolUse", permissionDecision: "deny", permissionDecisionReason: t("guard.crash", { error: String(e?.message ?? e).slice(0, 200) }) } }));
+    }
+  } finally { process.exit(0); }
+};
+process.on("uncaughtException", failClosed);
+process.on("unhandledRejection", failClosed);
 const ti = input.tool_input ?? {};
 
 let data;

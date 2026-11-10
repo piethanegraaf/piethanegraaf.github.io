@@ -118,6 +118,17 @@ test("an unreadable record fails closed: project code counts as L2", () => {
   } finally { q.cleanup(); }
 });
 
+test("an unexpected error in the guard fails closed, not open", () => {
+  const q = makeProject({ skills: { settings: {}, skills: { kapot: true } } }); // valid JSON, wrong shape
+  try {
+    const r = q.hook("guard.mjs", { tool_name: "Write", tool_input: { file_path: q.abs("opdrachten/04-x/X.cs"), content: "" } });
+    assert.equal(decision(r), "deny");
+    assert.match(r.json.hookSpecificOutput.permissionDecisionReason, /guard/i);
+    const ok = q.hook("guard.mjs", { tool_name: "Read", tool_input: { file_path: q.abs("README.md") } });
+    assert.equal(decision(ok), "allow", "tools the guard does not judge stay allowed");
+  } finally { q.cleanup(); }
+});
+
 function fakeSkillsWithPy() {
   return {
     settings: { defaultLevel: "L4", codeExtensions: ["py"] },

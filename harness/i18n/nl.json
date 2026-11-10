@@ -44,6 +44,7 @@
   "guard.what.build": "bouwen/testen",
   "guard.what.shellWrite": "code wijzigen via de shell",
   "guard.buildAsk": "Vraag de student zelf te bouwen/testen en de uitkomst of foutmelding te delen.",
+  "guard.crash": "Leerharnas: de guard liep vast ({error}). Uit voorzorg is deze actie geblokkeerd. Vraag de student om .learning/skills.json te controleren.",
 
   "pg.attemptWhy.changed": "je code is gewijzigd ({files})",
   "pg.attemptWhy.text": "poging/foutmelding in je bericht",

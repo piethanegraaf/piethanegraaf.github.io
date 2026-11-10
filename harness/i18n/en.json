@@ -44,6 +44,7 @@
   "guard.what.build": "building/testing",
   "guard.what.shellWrite": "changing code through the shell",
   "guard.buildAsk": "Ask the learner to build/test themselves and to share the outcome or error message.",
+  "guard.crash": "Learning harness: the guard crashed ({error}). As a precaution this action is blocked. Ask the learner to check .learning/skills.json.",
 
   "pg.attemptWhy.changed": "your code changed ({files})",
   "pg.attemptWhy.text": "attempt/error message in your message",
