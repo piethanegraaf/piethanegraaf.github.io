@@ -8,7 +8,10 @@ Commons Attribution-NonCommercial 4.0 International License (CC BY-NC 4.0):
   - site-src/cheatsheet/     the C# OOP cheat sheet
   - site-src/dashboard/data/ the progress data shown on the dashboard
 
-All other files (the code) are licensed under the MIT License, see LICENSE.
+All other files (the code) are licensed under the GNU Affero General Public
+License, version 3 only (AGPL-3.0-only), see LICENSE. A commercial license
+for the code is available on request, see README.md. Versions up to and
+including commit d8a4399 (10 November 2026) were licensed under MIT.
 Third-party files keep their own licenses.
 
 Summary: https://creativecommons.org/licenses/by-nc/4.0/

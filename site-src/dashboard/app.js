@@ -35,7 +35,7 @@
       plan: "Plan", wentWell: "Ging goed", learned: "Geleerd", confusing: "Verwarrend", confidence: "Zelfvertrouwen", nextStep: "Volgende stap", calib: "Kalibratie",
       noDiary: "Nog geen dagboekentries.", activity: "Activiteit", sessions: "Sessies", hints: "Hints", holds: "Geen nieuwe trede", denials: "Guard-weigeringen", overridesUsed: "Overrides gebruikt",
       footAi: "AI-verklaring: de leerharnas, dit dashboard en de docs zijn gemaakt met hulp van Claude (Anthropic). De leerdata en de reflecties zijn van de student zelf.",
-      footLicense: "Code: MIT · teksten en data: CC BY-NC 4.0", footSource: "Broncode en uitleg", focus: "Ga naar {id}", tableRegion: "Tabel, scrollbaar",
+      footLicense: "Code: AGPL-3.0 · teksten en data: CC BY-NC 4.0", footSource: "Broncode en uitleg", focus: "Ga naar {id}", tableRegion: "Tabel, scrollbaar",
     },
     en: {
       skip: "Skip to content", title: "Learning dashboard", brand: "Learning harness", real: "Real data", demo: "Demo", theme: "Toggle theme",
@@ -69,7 +69,7 @@
       plan: "Plan", wentWell: "Went well", learned: "Learned", confusing: "Confusing", confidence: "Confidence", nextStep: "Next step", calib: "Calibration",
       noDiary: "No diary entries yet.", activity: "Activity", sessions: "Sessions", hints: "Hints", holds: "No new rung", denials: "Guard denials", overridesUsed: "Overrides used",
       footAi: "AI statement: the learning harness, this dashboard and the docs were made with help from Claude (Anthropic). The learning data and the reflections are the learner's own.",
-      footLicense: "Code: MIT · texts and data: CC BY-NC 4.0", footSource: "Source code and documentation", focus: "Go to {id}", tableRegion: "Table, scrollable",
+      footLicense: "Code: AGPL-3.0 · texts and data: CC BY-NC 4.0", footSource: "Source code and documentation", focus: "Go to {id}", tableRegion: "Table, scrollable",
     },
   };
   const LEVELS = ["L0", "L1", "L2", "L3", "L4"];

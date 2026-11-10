@@ -47,7 +47,9 @@ The harness, the dashboard, the documentation and the research were made with he
 
 ## License
 
-- **Code** (the harness in `harness/`, the dashboard code, the workflows and the build configuration): [MIT](LICENSE).
+- **Code** (the harness in `harness/`, the dashboard code, the workflows and the build configuration): [AGPL-3.0-only](LICENSE). Do you want to use the code in a product or service without the AGPL obligations, such as sharing your source code? A **commercial licence** is available on request: hanegraafpiet@gmail.com.
 - **Texts** (the docs and the research in `docs/`, the cheat sheet and the dashboard data): [CC BY-NC 4.0](LICENSE-docs).
 
-Contributions: see [CONTRIBUTING.md](CONTRIBUTING.md).
+Up to and including commit [`d8a4399`](https://github.com/piethanegraaf/piethanegraaf.github.io/tree/d8a4399) (10 November 2026) the code was MIT-licensed. Anyone who has that version may keep using it under MIT. Every later version is AGPL-3.0-only.
+
+Contributions: see [CONTRIBUTING.md](CONTRIBUTING.md). They fall under a contributor licence agreement (CLA), so that the code can keep both licences.

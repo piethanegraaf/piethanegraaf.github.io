@@ -47,7 +47,9 @@ De harnas, het dashboard, de documentatie en het onderzoek zijn gemaakt met hulp
 
 ## Licentie
 
-- **Code** (de harnas in `harness/`, de code van het dashboard, de workflows en de buildconfiguratie): [MIT](LICENSE).
+- **Code** (de harnas in `harness/`, de code van het dashboard, de workflows en de buildconfiguratie): [AGPL-3.0-only](LICENSE). Wil je de code gebruiken in een product of dienst zonder de verplichtingen van de AGPL, zoals het delen van je broncode? Een **commerciële licentie** is op aanvraag beschikbaar: hanegraafpiet@gmail.com.
 - **Teksten** (de docs en het onderzoek in `docs/`, de cheat sheet en de dashboarddata): [CC BY-NC 4.0](LICENSE-docs).
 
-Bijdragen: zie [CONTRIBUTING.md](CONTRIBUTING.md).
+Tot en met commit [`d8a4399`](https://github.com/piethanegraaf/piethanegraaf.github.io/tree/d8a4399) (10 november 2026) viel de code onder MIT. Wie die versie heeft, mag hem onder MIT blijven gebruiken. Elke latere versie is AGPL-3.0-only.
+
+Bijdragen: zie [CONTRIBUTING.md](CONTRIBUTING.md). Ze vallen onder een bijdragersovereenkomst (CLA), zodat de code onder beide licenties kan blijven vallen.
