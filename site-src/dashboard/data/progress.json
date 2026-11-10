@@ -1,0 +1,630 @@
+{
+  "schema": 1,
+  "generatedAt": "2026-11-10",
+  "course": null,
+  "language": "nl",
+  "examDate": "2027-01-20",
+  "settings": {
+    "defaultLevel": "L2",
+    "targetSuccess": 0.85,
+    "stuckTimerMinutes": 12
+  },
+  "skills": [
+    {
+      "id": "zone.voorbeelden",
+      "parent": null,
+      "kind": "zone",
+      "title": "Uitgewerkte voorbeelden (AI mag hier schrijven)",
+      "level": "L0",
+      "nextReview": null,
+      "intervalIndex": 0,
+      "lastReview": null,
+      "history": []
+    },
+    {
+      "id": "cs.basis",
+      "parent": null,
+      "kind": null,
+      "title": "C#-basis: methoden, strings, lijsten, lussen",
+      "level": "L2",
+      "nextReview": null,
+      "intervalIndex": 0,
+      "lastReview": null,
+      "history": [
+        {
+          "at": "2026-11-07",
+          "from": "L3",
+          "to": "L2",
+          "note": "vast op Reverse (void) en chainen"
+        }
+      ]
+    },
+    {
+      "id": "cs.basis.lijst-filteren",
+      "parent": "cs.basis",
+      "kind": null,
+      "title": "lijst filteren met foreach",
+      "level": "L3",
+      "nextReview": "2026-11-08",
+      "intervalIndex": 0,
+      "lastReview": null,
+      "history": [
+        {
+          "at": "2026-11-07",
+          "from": null,
+          "to": "L3",
+          "note": "aangemaakt"
+        }
+      ]
+    },
+    {
+      "id": "cs.basis.strings",
+      "parent": "cs.basis",
+      "kind": null,
+      "title": "strings en StringBuilder",
+      "level": "L3",
+      "nextReview": "2026-11-08",
+      "intervalIndex": 0,
+      "lastReview": null,
+      "history": [
+        {
+          "at": "2026-11-07",
+          "from": null,
+          "to": "L3",
+          "note": "aangemaakt"
+        }
+      ]
+    },
+    {
+      "id": "cs.basis.void-chaining",
+      "parent": "cs.basis",
+      "kind": null,
+      "title": "void-methoden en chainen",
+      "level": "L2",
+      "nextReview": null,
+      "intervalIndex": 0,
+      "lastReview": null,
+      "history": [
+        {
+          "at": "2026-11-07",
+          "from": null,
+          "to": "L2",
+          "note": "aangemaakt"
+        }
+      ]
+    },
+    {
+      "id": "cs.basis.referentie-vs-kopie",
+      "parent": "cs.basis",
+      "kind": null,
+      "title": "referentie vs kopie, bijwerkingen",
+      "level": "L2",
+      "nextReview": null,
+      "intervalIndex": 0,
+      "lastReview": null,
+      "history": [
+        {
+          "at": "2026-11-07",
+          "from": null,
+          "to": "L2",
+          "note": "aangemaakt"
+        }
+      ]
+    },
+    {
+      "id": "cs.basis.lus-grenzen",
+      "parent": "cs.basis",
+      "kind": null,
+      "title": "lusgrenzen en off-by-one",
+      "level": "L2",
+      "nextReview": null,
+      "intervalIndex": 0,
+      "lastReview": null,
+      "history": [
+        {
+          "at": "2026-11-10",
+          "from": null,
+          "to": "L2",
+          "note": "aangemaakt"
+        }
+      ]
+    },
+    {
+      "id": "ood.klassen-properties",
+      "parent": null,
+      "kind": null,
+      "title": "Klassen, constructors; variabele vs veld vs property (private set)",
+      "level": "L2",
+      "nextReview": null,
+      "intervalIndex": 0,
+      "lastReview": null,
+      "history": []
+    },
+    {
+      "id": "ood.klassen.veld-vs-lokaal",
+      "parent": "ood.klassen-properties",
+      "kind": null,
+      "title": "veld vs lokale variabele vs property",
+      "level": "L2",
+      "nextReview": null,
+      "intervalIndex": 0,
+      "lastReview": null,
+      "history": [
+        {
+          "at": "2026-11-07",
+          "from": null,
+          "to": "L2",
+          "note": "aangemaakt"
+        }
+      ]
+    },
+    {
+      "id": "ood.overerving",
+      "parent": null,
+      "kind": null,
+      "title": "Overerving, : base(...), abstract, override",
+      "level": "L3",
+      "nextReview": "2026-11-08",
+      "intervalIndex": 0,
+      "lastReview": null,
+      "history": [
+        {
+          "at": "2026-11-07",
+          "from": "L3",
+          "to": "L3",
+          "note": "herhalingen starten"
+        }
+      ]
+    },
+    {
+      "id": "ood.associaties",
+      "parent": null,
+      "kind": null,
+      "title": "Associaties: een-op-veel, veel-op-veel",
+      "level": "L2",
+      "nextReview": null,
+      "intervalIndex": 0,
+      "lastReview": null,
+      "history": []
+    },
+    {
+      "id": "ood.aggregatie-compositie",
+      "parent": null,
+      "kind": null,
+      "title": "Aggregatie en compositie (heeft-een)",
+      "level": "L2",
+      "nextReview": null,
+      "intervalIndex": 0,
+      "lastReview": null,
+      "history": []
+    },
+    {
+      "id": "ood.encapsulatie",
+      "parent": null,
+      "kind": null,
+      "title": "Encapsulatie: private velden, validatie, toestand via methoden",
+      "level": "L2",
+      "nextReview": null,
+      "intervalIndex": 0,
+      "lastReview": null,
+      "history": []
+    },
+    {
+      "id": "test.unit-tests",
+      "parent": null,
+      "kind": null,
+      "title": "Unit tests (NUnit): grenswaarden, TDD, testplan",
+      "level": "L1",
+      "nextReview": null,
+      "intervalIndex": 0,
+      "lastReview": null,
+      "history": []
+    },
+    {
+      "id": "test.uitvoer-lezen",
+      "parent": "test.unit-tests",
+      "kind": null,
+      "title": "testuitvoer lezen",
+      "level": "L2",
+      "nextReview": null,
+      "intervalIndex": 0,
+      "lastReview": null,
+      "history": [
+        {
+          "at": "2026-11-07",
+          "from": null,
+          "to": "L2",
+          "note": "aangemaakt"
+        }
+      ]
+    },
+    {
+      "id": "test.zichtbaar-gedrag",
+      "parent": "test.unit-tests",
+      "kind": null,
+      "title": "wat een test controleert: zichtbaar gedrag",
+      "level": "L2",
+      "nextReview": null,
+      "intervalIndex": 0,
+      "lastReview": null,
+      "history": [
+        {
+          "at": "2026-11-07",
+          "from": null,
+          "to": "L2",
+          "note": "aangemaakt"
+        }
+      ]
+    },
+    {
+      "id": "ood.interfaces",
+      "parent": null,
+      "kind": null,
+      "title": "Interfaces ontwerpen en implementeren",
+      "level": "L2",
+      "nextReview": null,
+      "intervalIndex": 0,
+      "lastReview": null,
+      "history": []
+    },
+    {
+      "id": "ood.exceptions",
+      "parent": null,
+      "kind": null,
+      "title": "Exception-hierarchie, type checks, volgorde van controles",
+      "level": "L2",
+      "nextReview": null,
+      "intervalIndex": 0,
+      "lastReview": null,
+      "history": []
+    },
+    {
+      "id": "ood.generics-dictionary",
+      "parent": null,
+      "kind": null,
+      "title": "Generieke klasse met constraint + Dictionary (Stock<T> where T : IStockItem)",
+      "level": "L0",
+      "nextReview": null,
+      "intervalIndex": 0,
+      "lastReview": null,
+      "history": []
+    },
+    {
+      "id": "pattern.strategy",
+      "parent": null,
+      "kind": null,
+      "title": "Strategy pattern",
+      "level": "L0",
+      "nextReview": null,
+      "intervalIndex": 0,
+      "lastReview": null,
+      "history": []
+    },
+    {
+      "id": "pattern.factory",
+      "parent": null,
+      "kind": null,
+      "title": "Factory (Method) pattern",
+      "level": "L0",
+      "nextReview": null,
+      "intervalIndex": 0,
+      "lastReview": null,
+      "history": []
+    },
+    {
+      "id": "pattern.observer",
+      "parent": null,
+      "kind": null,
+      "title": "Observer pattern",
+      "level": "L0",
+      "nextReview": null,
+      "intervalIndex": 0,
+      "lastReview": null,
+      "history": []
+    },
+    {
+      "id": "debug.zonder-foutmelding",
+      "parent": null,
+      "kind": null,
+      "title": "Debuggen zonder foutmelding: van symptoom naar oorzaak",
+      "level": "L1",
+      "nextReview": null,
+      "intervalIndex": 0,
+      "lastReview": null,
+      "history": []
+    },
+    {
+      "id": "uml.klassendiagram",
+      "parent": null,
+      "kind": null,
+      "title": "UML/Mermaid klassendiagram, is-een vs heeft-een",
+      "level": "L2",
+      "nextReview": null,
+      "intervalIndex": 0,
+      "lastReview": null,
+      "history": []
+    }
+  ],
+  "tasks": [
+    {
+      "id": "legacy-1",
+      "at": "2026-11-07T20:31:58.050Z",
+      "skill": "cs.basis",
+      "source": null,
+      "success": true,
+      "maxRung": 3,
+      "minutes": 36,
+      "what": null,
+      "explained": true,
+      "explanation": null,
+      "explainedAt": null,
+      "rejections": [],
+      "corrections": [],
+      "void": false,
+      "voidReason": null
+    },
+    {
+      "id": "legacy-2",
+      "at": "2026-11-07T20:55:35.251Z",
+      "skill": "test.unit-tests",
+      "source": null,
+      "success": true,
+      "maxRung": 0,
+      "minutes": 8,
+      "what": null,
+      "explained": true,
+      "explanation": null,
+      "explainedAt": null,
+      "rejections": [],
+      "corrections": [],
+      "void": true,
+      "voidReason": null
+    },
+    {
+      "id": "mwamitzelnw3",
+      "at": "2026-11-10T11:45:36.842Z",
+      "skill": "cs.basis",
+      "source": "check",
+      "success": true,
+      "maxRung": 1,
+      "minutes": null,
+      "what": "TestGeefEvenGetallenNegatief, TestGeefEvenGetallenTwee, TestGeefEvenGetallenTien",
+      "explained": true,
+      "explanation": "als je in de eerste regel voor de functienaam belooft wat terug te geven moet je dat ook datwerkelijk doen dus daarom ging het fout",
+      "explainedAt": "2026-11-10T11:47:48.536Z",
+      "rejections": [],
+      "corrections": [
+        {
+          "at": "2026-11-10T13:49:39.697Z",
+          "from": 0,
+          "to": 1,
+          "reason": "Socratische vraag bij CS0161"
+        }
+      ],
+      "void": false,
+      "voidReason": null
+    },
+    {
+      "id": "mwaomkq65jd3",
+      "at": "2026-11-10T12:44:30.703Z",
+      "skill": "cs.basis",
+      "source": "check",
+      "success": true,
+      "maxRung": 1,
+      "minutes": null,
+      "what": "TestGeefEvenGetallenElf",
+      "explained": true,
+      "explanation": "< nu omdat het niet logisch is om als het getal al gelijk is aan het maximum er dan nog een aan toe te voegen en die vervolgens ook aan de lijst toe te voegen, dan krijg je te hoge getallen, aan het begin van de while loop moet soms het startgetal ook aan de lijst toegevoegd worden maar dat gebeurd nu nog niet, daar ga ik nu naar kijken",
+      "explainedAt": "2026-11-10T12:58:16.973Z",
+      "rejections": [
+        {
+          "at": "2026-11-10T12:52:51.543Z",
+          "by": "claude",
+          "reasons": []
+        }
+      ],
+      "corrections": [
+        {
+          "at": "2026-11-10T13:49:51.708Z",
+          "from": 0,
+          "to": 1,
+          "reason": "vragen over lusvoorwaarde bij Elf"
+        }
+      ],
+      "void": false,
+      "voidReason": null
+    },
+    {
+      "id": "mwaoti66wdhc",
+      "at": "2026-11-10T12:49:53.982Z",
+      "skill": "cs.basis",
+      "source": "check",
+      "success": true,
+      "maxRung": 0,
+      "minutes": null,
+      "what": "TestGeefEvenGetallenTien, TestGeefEvenGetallenTwee, TestGeefEvenGetallenElf",
+      "explained": true,
+      "explanation": "< nu omdat het niet logisch is om als het getal al gelijk is aan het maximum er dan nog een aan toe te voegen en die vervolgens ook aan de lijst toe te voegen, dan krijg je te hoge getallen, aan het begin van de while loop moet soms het startgetal ook aan de lijst toegevoegd worden maar dat gebeurd nu nog niet, daar ga ik nu naar kijken",
+      "explainedAt": "2026-11-10T12:58:16.977Z",
+      "rejections": [
+        {
+          "at": "2026-11-10T12:52:51.544Z",
+          "by": "claude",
+          "reasons": []
+        }
+      ],
+      "corrections": [],
+      "void": true,
+      "voidReason": "herstel van eigen regressie, geen nieuwe taak"
+    },
+    {
+      "id": "mwap7637x7ps",
+      "at": "2026-11-10T13:00:31.507Z",
+      "skill": "cs.basis",
+      "source": "check",
+      "success": true,
+      "maxRung": 2,
+      "minutes": null,
+      "what": "TestEvenGetallenReeks, TestEvenGetallenReeksNegatief",
+      "explained": false,
+      "explanation": null,
+      "explainedAt": null,
+      "rejections": [
+        {
+          "at": "2026-11-10T13:03:38.392Z",
+          "by": "claude",
+          "reasons": []
+        },
+        {
+          "at": "2026-11-10T14:12:42.446Z",
+          "by": "claude",
+          "reasons": []
+        }
+      ],
+      "corrections": [
+        {
+          "at": "2026-11-10T13:50:26.763Z",
+          "from": 0,
+          "to": 2,
+          "reason": "off-by-one-concept en tabel voor Reeks"
+        }
+      ],
+      "void": false,
+      "voidReason": null
+    },
+    {
+      "id": "mwapms9xdydx",
+      "at": "2026-11-10T13:12:40.102Z",
+      "skill": "cs.basis",
+      "source": "check",
+      "success": true,
+      "maxRung": 1,
+      "minutes": null,
+      "what": "TestAantalEvenGetallen",
+      "explained": true,
+      "explanation": "omdat Getallenterug.Count() exact terug geeft wat we willen weten, mamelijk of we al genoeg getallen hebben verzameld volgens de gebruikers input",
+      "explainedAt": "2026-11-10T13:16:29.354Z",
+      "rejections": [
+        {
+          "at": "2026-11-10T13:14:23.970Z",
+          "by": "claude",
+          "reasons": []
+        }
+      ],
+      "corrections": [
+        {
+          "at": "2026-11-10T13:50:36.110Z",
+          "from": 0,
+          "to": 1,
+          "reason": "vragen over type en betekenis van aantal"
+        }
+      ],
+      "void": false,
+      "voidReason": null
+    },
+    {
+      "id": "mwauva89krib",
+      "at": "2026-11-10T15:39:14.697Z",
+      "skill": "ood.klassen-properties",
+      "source": "done",
+      "success": true,
+      "maxRung": 1,
+      "minutes": null,
+      "what": "constructor + properties Merk/Model/Bouwjaar, eigenschappentest groen",
+      "explained": true,
+      "explanation": "omdat er nog geen fields waren voor merk bouwjaar en model, dit verwachte de test wel en daarom ging het compilen fout",
+      "explainedAt": "2026-11-10T15:44:54.014Z",
+      "rejections": [],
+      "corrections": [
+        {
+          "at": "2026-11-10T16:08:17.523Z",
+          "from": 0,
+          "to": 1,
+          "reason": "Socratische vraag over CS1729/CS1061"
+        }
+      ],
+      "void": false,
+      "voidReason": null
+    },
+    {
+      "id": "mwavm7sla2k8",
+      "at": "2026-11-10T16:00:11.253Z",
+      "skill": "ood.klassen-properties",
+      "source": "check",
+      "success": true,
+      "maxRung": 1,
+      "minutes": null,
+      "what": "AutoInfoTest, AutoConstructorTest",
+      "explained": false,
+      "explanation": null,
+      "explainedAt": null,
+      "rejections": [
+        {
+          "at": "2026-11-10T16:03:02.898Z",
+          "by": "claude",
+          "reasons": []
+        }
+      ],
+      "corrections": [],
+      "void": false,
+      "voidReason": null
+    }
+  ],
+  "reviews": [],
+  "regressions": [],
+  "overrides": [],
+  "signals": [],
+  "activity": [
+    {
+      "date": "2026-11-07",
+      "sessions": 3,
+      "hints": 8,
+      "holds": 0,
+      "denials": 4,
+      "overridesUsed": 0
+    },
+    {
+      "date": "2026-11-08",
+      "sessions": 1,
+      "hints": 0,
+      "holds": 0,
+      "denials": 0,
+      "overridesUsed": 0
+    },
+    {
+      "date": "2026-11-09",
+      "sessions": 1,
+      "hints": 0,
+      "holds": 0,
+      "denials": 0,
+      "overridesUsed": 0
+    },
+    {
+      "date": "2026-11-10",
+      "sessions": 3,
+      "hints": 1,
+      "holds": 0,
+      "denials": 2,
+      "overridesUsed": 0
+    }
+  ],
+  "diary": [
+    {
+      "date": "2026-11-10",
+      "n": 1,
+      "time": "±12:35–14:20",
+      "skills": "cs.basis (L2), cs.basis.lus-grenzen (L2, nieuw), test.unit-tests (L1)",
+      "plan": "opdracht 04-even-getallen afmaken (niet expliciet benoemd)",
+      "confidenceBefore": "onbekend",
+      "wentWell": "Compileerfouten lezen en oplossen met hooguit één Socratische vraag. · `cs.basis.lus-grenzen`: zelf de boven- en ondergrens van de lus doorzien en de oorzaak van de ontbrekende `min` gevonden zonder nieuwe hint. · `GeefAantalEvenGetallen`: het return-type en de betekenis van `aantal` uit de test afgeleid, en de lus laten stoppen op `Count()`.",
+      "signals": "geen. cs.basis heeft 4 goedgekeurde taken van de minstens 5 die nodig zijn voor het advies L2 → L3.",
+      "reflection": {
+        "learned": "while loops, nadeken over list en filers",
+        "confusing": "twee schermen gebruiken, werkt slecht als je maar een schermpje hebt",
+        "confidenceAfter": "niet heel zeker",
+        "nextStep": "ik wil in de volgende sessie door naar het volgende onderwerp"
+      },
+      "calibration": "vooraf onbekend → alles groen, met trede ≤2 en zonder uitwerking → gevoel \"niet heel zeker\" is mogelijk een onderschatting."
+    }
+  ]
+}
