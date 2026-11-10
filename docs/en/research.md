@@ -912,8 +912,8 @@ sequenceDiagram
     U->>C: attempts, then "just write it for me"
     C->>PT: Edit(src/Payment.java)
     PT->>FS: file owned by ood.polymorphism @ L2
-    PT-->>C: DENY: "learner-owned at L2;<br/>offer next hint instead"
-    C->>U: rung 2 hint + "or /override <reason>"
+    PT-->>C: DENY: "learner-owned at L2#59;<br/>offer next hint instead"
+    C->>U: rung 2 hint + "or /override #lt;reason#gt;"
     U->>C: writes code, runs tests
     C->>PO: Bash(mvn test)
     PO->>FS: log evidence: tests passed, rung=2
