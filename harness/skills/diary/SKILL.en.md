@@ -17,11 +17,14 @@ Goal: self-regulation (plan → execution → reflection). The learner writes th
    - Events of this session in `.learning/state/events.jsonl`. Read the file with Read, not through the shell.
      - `hint-unlock`: rung and reason. `hint-hold`: rung refused because there was no attempt. `rung-mark`: help you marked with `[rung N]`.
      - `task` (with `tid`, `source`: chat, check or done): a finished task, with success and the highest rung. `test-green`: which tests turned green.
-     - `task-explained`: explanation approved (counts). `explain-rejected`: explanation rejected, by you (`claude`) or by the check (`hook`).
+     - `task-explained`: explanation approved (counts); with `source: replay` recovered afterwards. `explain-rejected`: explanation rejected, by you (`claude`) or by the check (`hook`).
+     - `task-lapsed`: the explanation did not come right away, so the task lapsed (`other-exercise` or `session-end`). List those tasks as **skipped**, apart from failed.
      - `task-void`: voided by the learner. Mention this explicitly. `task-correct`: rung raised afterwards by the learner, with a reason. Mention this too.
      - `regression`: tests that were green and turned red. `regression-fixed`: green again after a relapse (no new task). Many of both in a short time can point to guessing.
      - `deny`, `override`, `override-used`: what the guard did.
      - `review`, `level`, `micro-add`, `setting`: reviews, level changes, new microskills, settings.
+     - Done automatically by the harness, mention it separately: `placement` (level of a new skill after its first task), `level` with `auto: true` (automatic demotion; `by` says by whom: harness, demotion analyst or backstop), `micro-add` with `auto: true` and `task-retag` (the analyst linked tasks to a microskill), `demotion-verdict` (the analyst's verdict, with reason). If it says `doubt: true`, note "the analyst was in doubt".
+     - `review` with `auto: true`: the outcome of an L4 review, from normal work. `review-due`: the review came by.
    - The plan and confidence from the start, if there are any.
 
 2. **Ask for the reflection in one message** and then wait:
@@ -29,9 +32,9 @@ Goal: self-regulation (plan → execution → reflection). The learner writes th
    > 2. What was confusing, or what would you do differently next time?
    > 3. How confident are you now (1–5), and what is your next step?
 
-   Are there still tasks waiting for an explanation? Then ask for that explanation in this message too. Per task: why does it work now?
+   Are there still tasks waiting for an explanation? Then ask for that explanation in this message too: it is the last chance. Per task: why does it work now?
    - Judge that explanation as in CLAUDE.md: write `[explain-ok <tid>]` or `[explain-no <tid>]`.
-   - An open task is **not** closed because the session stops. It stays until the next session.
+   - What is still open after the diary **lapses**: it does not count and the dashboard shows it as skipped. No open explanation goes on to the next session.
 
    Copy the answers **literally**: do not correct or add anything. If the learner does not want to reflect, write "skipped".
 
@@ -47,11 +50,12 @@ Goal: self-regulation (plan → execution → reflection). The learner writes th
 
 **Facts (logged):**
 - Hint rungs: <e.g. 1, 2> · marked help: <[rung N] ...> · refused without an attempt: <n> · worked solution given: <yes/no>
-- Tasks: <id [tid]: solved/not, highest rung, source (check/done/chat), explanation approved/rejected/open>
+- Tasks: <id [tid]: solved/not, highest rung, source (check/done/chat), explanation approved/rejected/skipped>
 - Written by the learner: <...> · written by the AI: <...>
 - Tests (by the learner, check.mjs): <green/red, new green>
 - Guard denials: <n> · overrides: <n, with reason> · voided tasks: <n>
-- Reviews: <id: pass/shaky/fail → next date>
+- Reviews (L4, from normal work): <id: pass/shaky/fail → next date, or "none">
+- Automatic: <placements, automatic demotions, microskills from the analyst, doubt of the analyst, or "nothing">
 
 **What went well (independently):** <(micro)skills that worked at rung 0–2, concretely>
 **Promotion signals:** <from `status`, with command, or "none">
@@ -65,6 +69,6 @@ Goal: self-regulation (plan → execution → reflection). The learner writes th
 **Calibration:** before <x> → <what really happened, e.g. "solved with rung ≤1"> → <underestimated / right / overestimated>
 ```
 
-4. **Suggest, do not run:** if a promotion criterion from CLAUDE.md seems to be met, or a relapse, name the command the learner can run themselves. For example:
+4. **Up: suggest, do not run.** If a promotion criterion from CLAUDE.md seems to be met, name the command the learner can run themselves. The harness goes down by itself when `autoDemote` is on: then say what happened and how to revert it. When it is off, name the command for a relapse too. For example:
    `! node .claude/hooks/skill.mjs set ood.encapsulatie L3 "5/5 solved, mostly rung 0-1"`.
    The decision is the learner's. Raising a level is only possible when no tasks of that skill wait for an explanation anymore.

@@ -31,7 +31,7 @@ test("replay --dry-run shows what would be recovered and writes nothing", () => 
     assert.equal(r.code, 0, r.stderr);
     assert.match(r.stdout, /\[t1\].*zou gelogd worden/);
     assert.match(r.stdout, /\[t2\].*harde check niet/);
-    assert.match(r.stdout, /\[t3\] overgeslagen/);
+    assert.match(r.stdout, /\[t3\] niet nodig/);
     assert.equal(p.events().filter((e) => e.type === "task-explained").length, 1, "only the existing one");
   } finally { p.cleanup(); }
 });

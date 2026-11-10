@@ -166,7 +166,8 @@ export async function build(project) {
       const tk = {
         id: e.tid ?? `legacy-${tasks.length + 1}`, at: e.at, skill: knownSkill(e.skill), source: ["check", "done", "chat"].includes(e.source) ? e.source : null,
         success: Boolean(e.success), maxRung: Number(e.maxRung ?? 0), minutes: Number.isFinite(e.minutes) ? e.minutes : null,
-        what: scrub(e.what ?? null, "task.what"), explained: !e.tid, explanation: null, explainedAt: null,
+        what: scrub(e.what ?? null, "task.what"), explained: !e.tid, explanation: null, explainedAt: null, explainedBy: null,
+        lapsed: false, lapseReason: null, retaggedFrom: null,
         rejections: [], corrections: [], void: false, voidReason: null,
       };
       tasks.push(tk);
@@ -176,7 +177,18 @@ export async function build(project) {
       if (tk) { tk.void = true; tk.voidReason = scrub(e.reason ?? null, "task.voidReason"); }
     } else if (e.type === "task-explained") {
       const tk = byTid.get(e.tid);
-      if (tk) { tk.explained = true; tk.explanation = scrub(e.text ?? null, "task.explanation"); tk.explainedAt = e.at; }
+      if (tk) {
+        tk.explained = true; tk.explanation = scrub(e.text ?? null, "task.explanation"); tk.explainedAt = e.at;
+        tk.explainedBy = e.source === "replay" ? "replay" : null; tk.lapsed = false; tk.lapseReason = null;
+      }
+    } else if (e.type === "task-lapsed") {
+      // Skipped: the explanation did not come right away (setup review S1).
+      const tk = byTid.get(e.tid);
+      if (tk && !tk.explained) { tk.lapsed = true; tk.lapseReason = ["other-exercise", "session-end"].includes(e.reason) ? e.reason : null; }
+    } else if (e.type === "task-retag") {
+      // The demotion analyst linked the task to a microskill (S3a).
+      const tk = byTid.get(e.tid);
+      if (tk && knownSkill(e.to)) { tk.retaggedFrom = tk.retaggedFrom ?? tk.skill; tk.skill = e.to; }
     } else if (e.type === "explain-rejected") {
       const tk = byTid.get(e.tid);
       if (tk) tk.rejections.push({ at: e.at, by: e.by === "hook" ? "hook" : "claude", reasons: (e.reasons ?? []).map((r) => scrub(r, "task.rejection")) });
@@ -214,12 +226,21 @@ export async function build(project) {
   }));
   const reviews = events.filter((e) => e.type === "review").map((e) => ({
     at: e.at, skill: knownSkill(e.skill), result: ["pass", "shaky", "fail"].includes(e.result) ? e.result : null, nextReview: e.nextReview ?? null,
+    auto: e.auto === true,
   }));
 
+  // "Last seen": the last task of the skill, neutral instead of "overdue" (setup review S2).
+  const lastSeen = new Map();
+  for (const tk of tasks) if (tk.skill && !tk.void) lastSeen.set(tk.skill, day(tk.at));
   const skills = data.skills.map((s) => ({
     id: s.id, parent: s.parent ?? null, kind: s.kind ?? null, title: scrub(s.title, "skill.title"), level: s.level,
-    nextReview: s.nextReview ?? null, intervalIndex: s.intervalIndex ?? 0, lastReview: s.lastReview ? { at: s.lastReview.at, result: s.lastReview.result } : null,
-    history: (s.history ?? []).map((h) => ({ at: h.at, from: h.from ?? null, to: h.to, note: scrub(h.note ?? null, "skill.history") })),
+    // Reviews are only for L4; an older schedule on a lower level is not shown.
+    nextReview: lib.REVIEWED.has(s.level) ? s.nextReview ?? null : null, intervalIndex: s.intervalIndex ?? 0,
+    lastReview: s.lastReview ? { at: s.lastReview.at, result: s.lastReview.result } : null,
+    lastSeen: lastSeen.get(s.id) ?? null,
+    placement: s.kind === "zone" ? null : lib.isPlacementPending(data, s) ? "pending" : "done",
+    history: (s.history ?? []).map((h) => ({ at: h.at, from: h.from ?? null, to: h.to, note: scrub(h.note ?? null, "skill.history"),
+      auto: h.auto === true, placement: h.placement === true })),
   }));
 
   const signals = data.skills.filter((s) => s.kind !== "zone").map((s) => {

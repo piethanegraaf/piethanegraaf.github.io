@@ -99,7 +99,8 @@ test("session start in English", () => {
   const p = enProject();
   try {
     const r = p.hook("session-start.mjs", { source: "startup" });
-    assert.match(r.json.systemMessage, /^Learning harness: 5 skills · no reviews today/);
+    assert.match(r.json.systemMessage, /^Learning harness: 5 skills/);
+    assert.doesNotMatch(r.json.systemMessage, /review/i, "nothing about reviews at the session start (setup review S2)");
     assert.match(r.json.hookSpecificOutput.additionalContext, /LEARNING HARNESS ACTIVE/);
     assert.match(r.json.hookSpecificOutput.additionalContext, /\| demo\.l2 \| Begeleid \| L2 Guided \|/);
   } finally { p.cleanup(); }

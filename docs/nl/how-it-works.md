@@ -12,19 +12,24 @@ flowchart LR
   C --> S[reflect-gate<br/>markers, dagboek]
   S --> R[(.learning/)]
   G1 --> R
+  C -.->|omlaag voor een hoofdvaardigheid| A[demotie-analist<br/>alleen lezen]
+  A -.->|oordeel als JSON| C
+  S -.->|controleert het oordeel| R
 ```
 
 ## Niveaus per vaardigheid
 
 | Niveau | Claude | Jij |
 |---|---|---|
-| **L0 Voordoen** | maakt een uitgewerkt voorbeeld met een ander onderwerp | legt het uit en voorspelt de uitvoer |
-| **L1 Aanvullen** | schrijft een skelet, de kern blijft `TODO(human)` | vult de gaten, bouwt en test |
+| **L0 Voordoen** | maakt een uitgewerkt voorbeeld met een ander onderwerp; bij een nieuwe vaardigheid pas na jouw poging | legt het uit en voorspelt de uitvoer |
+| **L1 Aanvullen** | schrijft een skelet, de kern blijft `TODO(human)`; bij een nieuwe vaardigheid pas na jouw poging | vult de gaten, bouwt en test |
 | **L2 Begeleid** | geeft geen oplossingscode, alleen hints uit de ladder | schrijft alles zelf |
 | **L3 Zelfstandig** | niets vooraf; review pas na jouw poging | maakt en verdedigt het |
-| **L4 Geautomatiseerd** | mag het direct doen | superviseert en doet herhalingen |
+| **L4 Geautomatiseerd** | mag het direct doen | superviseert; is de herhaling aan de beurt, dan doe je het zelf |
 
 Een vaardigheid kan **microvaardigheden** hebben: deelpatronen met een eigen niveau. Lijsten filteren kan al op L3 staan, terwijl void-methoden chainen nog op L2 staat.
+
+**Een nieuwe vaardigheid** (zonder taken en zonder geschiedenis) heeft nog geen vaste plaats. Je probeert het eerst zelf, met de hintladder van L2. De hoogste trede van je eerste taak bepaalt het niveau: trede 0 → L3, 1–2 → L2, 3–4 → L1, 5 → L0. Plaatst de harnas je te laag, dan zet je het zelf hoger.
 
 ## De hintladder (L2)
 
@@ -35,6 +40,8 @@ Een vaardigheid kan **microvaardigheden** hebben: deelpatronen met een eigen niv
 5. Een uitwerking, alleen na bevestiging. De taak telt dan als **niet gelukt**.
 
 De eerste hint mag meteen. Een volgende trede komt pas na een **zichtbare poging**: gewijzigde code, een foutmelding of testuitkomst, of een hypothese. Of na 12 minuten vastzitten. Dat zijn minuten **actieve tijd**: een pauze van meer dan 20 minuten (`idleMinutes`) telt niet mee. Na het eten krijg je dus niet vanzelf een hogere trede.
+
+Bij een **nieuwe vaardigheid** telt de tijd niet. Een trede gaat pas omhoog als je zegt dat je vastzit, twee keer dezelfde foutmelding of testuitkomst deelt, of het concept niet kent. Vraag je na een eigen poging zelf om meer uitleg, dan mag Claude meteen naar een hogere trede, en die trede wordt eerlijk gelogd.
 
 ## De guard
 
@@ -54,13 +61,15 @@ Een taak wordt gelogd als een test van rood naar groen gaat (`check.mjs`), als j
 1. Claude beoordeelt de inhoud en zet `[uitleg-ok <tid>]` of `[uitleg-nee <tid>]`.
 2. De Stop-hook controleert jouw bericht: minstens 12 woorden buiten code, een *waarom* (omdat, doordat, zodat …) en niet overgenomen uit Claude's tekst.
 
+De uitleg hoort **direct** na het groen worden. Een volgende taak in dezelfde map mag eerst, en één bericht mag meer taken uitleggen. Begin je aan een andere opdracht, of eindigt de sessie, dan **vervalt** de taak: hij telt niet mee en staat op het dashboard als overgeslagen. Ging een goedgekeurde uitleg verloren door een fout van de harnas, dan herstel je hem met `replay`.
+
 Een test die al eens groen was, rood werd en weer groen is, is **herstel van een regressie** en telt niet als nieuwe taak.
 
 ## Doorstromen en herhalingen
 
-- **L2 → L3** bij ongeveer 85% gelukt (hooguit trede 2) over minstens 5 taken. **Terug** bij minder dan 70%, of twee keer op rij mislukt.
-- Vanaf L3 krijg je **herhalingen** met Fibonacci-intervallen: 1, 2, 3, 5, 8, 13 … dagen. Geslaagd is een stap verder, wankel blijft gelijk, mislukt is twee stappen terug. Met een toetsdatum valt elke herhaling vóór de toets.
-- De harnas **adviseert**; jij zet het niveau zelf.
+- **Omhoog** beslis jij: **L2 → L3** bij ongeveer 85% gelukt (hooguit trede 2) over minstens 5 taken. De harnas geeft het advies, jij zet het niveau met `set`.
+- **Omlaag** volgt het bewijs, als `autoDemote` aan staat: bij minstens 3 uitgelegde taken met minder dan 70% gelukt, of de laatste 2 niet gelukt. Een microvaardigheid zakt meteen één niveau. Bij een hoofdvaardigheid beslist eerst de **demotie-analist**: een agent die alleen leest, de testuitvoer, je code en het transcript bekijkt, en bepaalt of het probleem in één deelpatroon zit (dan zakt of ontstaat alleen die microvaardigheid) of breed is (dan zakt de hoofdvaardigheid). Zakken er binnen 14 dagen twee microvaardigheden van dezelfde ouder, dan zakt de ouder ook. Je krijgt een melding en kunt het terugdraaien met `set`.
+- **Herhalingen** krijg je alleen op L4, met Fibonacci-intervallen: 1, 2, 3, 5, 8, 13 … dagen. Er zijn geen losse herhaaloefeningen. Komt zo'n vaardigheid langs in je werk als de herhaling klaarstaat, dan doe je dat deel zelf, zonder AI. Je eerstvolgende taak bepaalt de uitkomst: trede 0 is geslaagd (een stap verder), trede 1–2 wankel (gelijk), meer hulp is mislukt (twee stappen terug). Komt hij niet langs, dan gebeurt er niets; de oefentoetsen zijn het vangnet.
 
 ## Het dagboek
 

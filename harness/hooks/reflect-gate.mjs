@@ -13,7 +13,8 @@
 // logged when it is higher than maxRung, and an explanation marker has a dedupe key.
 import {
   readStdin, loadSession, saveSession, sessionExists, diaryHasSession, logEvent, pendingTasks, checkExplanation,
-  isLearnerEntry, learnerEntryText, entryText, readTranscript, loadSkills, findSkill, familyIds, t,
+  isLearnerEntry, learnerEntryText, entryText, readTranscript, loadSkills, findSkill, familyIds, autoDemote,
+  applyVerdict, findVerdict, lapseTasks, t,
 } from "./lib.mjs";
 import { RUNG_MARK, EXPLAIN_MARK } from "./patterns.mjs";
 
@@ -27,9 +28,18 @@ const st = loadSession(sid);
 let data = null;
 try { data = loadSkills(); } catch { /* messages stay in the default language */ }
 
+// Automatic changes (demotion, verdict of the analyst): shown to the learner now, and passed to
+// Claude with the next prompt (st.notices, read by prompt-gate).
+const notices = [];
+const notice = (m) => { if (m) { notices.push(m); st.notices = [...(st.notices ?? []), m].slice(-10); } };
 const block = (reason) => {
   saveSession(sid, st);
-  process.stdout.write(JSON.stringify({ decision: "block", reason }));
+  process.stdout.write(JSON.stringify({ decision: "block", reason, ...(notices.length ? { systemMessage: notices.join("\n\n") } : {}) }));
+  process.exit(0);
+};
+const done = () => {
+  saveSession(sid, st);
+  if (notices.length) process.stdout.write(JSON.stringify({ systemMessage: notices.join("\n\n") }));
   process.exit(0);
 };
 const sleep = (ms) => Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, ms);
@@ -75,25 +85,58 @@ for (const m of answer.matchAll(EXPLAIN_MARK)) {
   if (verdict === "nee") { logEvent({ type: "explain-rejected", tid, by: "claude", session: sid }); continue; }
   const chk = checkExplanation(learnerMsg, earlierClaude);
   if (chk.ok) {
-    logEvent({ type: "task-explained", tid, skill: pending.get(tid).skill, text: String(learnerMsg).slice(0, 600), session: sid });
+    const skillId = pending.get(tid).skill;
+    logEvent({ type: "task-explained", tid, skill: skillId, text: String(learnerMsg).slice(0, 600), session: sid });
     pending.delete(tid);
+    // Explained tasks are the evidence for automatic demotion (S3): a microskill goes down now,
+    // for a parent the demotion analyst decides first.
+    if (data) {
+      const r = autoDemote(data, skillId);
+      for (const m of r?.messages ?? []) notice(m);
+      if (r?.pending && !st.demotionPending) { st.demotionPending = r.pending; logEvent({ type: "demotion-pending", skill: r.pending.skill, tids: r.pending.tids, session: sid }); }
+    }
   } else {
     logEvent({ type: "explain-rejected", tid, by: "hook", reasons: chk.reasons, session: sid });
     if (!input.stop_hook_active) block(t("rg.badExplain", { tid, reasons: chk.reasons.join("; ") }));
   }
 }
 
+// ---------- 1b. Verdict of the demotion analyst (S3a) ----------
+// Only with a pending demotion, and only when the agent demonstrably ran in this turn.
+if (st.demotionPending && data) {
+  const found = findVerdict(answer);
+  if (found) {
+    const turn = entries.slice(lastPromptIdx + 1);
+    const agentRan = turn.some((e) => e.type === "assistant" && Array.isArray(e.message?.content) && e.message.content.some((p) =>
+      p.type === "tool_use" && ["Task", "Agent"].includes(p.name) && p.input?.subagent_type === "demotie-analist"));
+    if (!agentRan) {
+      logEvent({ type: "demotion-rejected", why: "no-agent", session: sid });
+      if (!input.stop_hook_active) block(t("rg.verdictNoAgent"));
+    } else {
+      const r = found.json ? applyVerdict(data, st.demotionPending, found.json) : { ok: false, error: found.error };
+      if (r.ok) { r.messages.forEach(notice); st.demotionPending = null; }
+      else {
+        logEvent({ type: "demotion-rejected", why: r.error, session: sid });
+        if (!input.stop_hook_active) block(t("rg.verdictBad", { error: r.error }));
+      }
+    }
+  }
+}
+
 // ---------- 2. End of session: diary ----------
-if (input.stop_hook_active || !st.endRequested) { saveSession(sid, st); process.exit(0); }
+if (input.stop_hook_active || !st.endRequested) done();
 
 if (diaryHasSession(sid)) {
+  // The session ends: explanations are only asked right away, so open tasks lapse now (S1). A
+  // pending demotion that the analyst did not judge in this session changes nothing (S3a).
+  lapseTasks("session-end", (x) => x.session && x.session !== sid, sid);
+  st.demotionPending = null;
   st.endRequested = false;
-  saveSession(sid, st);
-  process.exit(0);
+  done();
 }
 
 // Never nag endlessly: at most 2 blocks per stop request.
 st.reflectBlocks = (st.reflectBlocks ?? 0) + 1;
-if (st.reflectBlocks > 2) { st.endRequested = false; st.reflectBlocks = 0; saveSession(sid, st); process.exit(0); }
+if (st.reflectBlocks > 2) { st.endRequested = false; st.reflectBlocks = 0; done(); }
 logEvent({ type: "reflect-block", session: sid });
 block(t("rg.diary", { sid }));

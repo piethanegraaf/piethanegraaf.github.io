@@ -1,7 +1,7 @@
 # Leerharnas
 
 Een leerharnas voor [Claude Code](https://docs.claude.com/en/docs/claude-code/overview) die zorgt dat je **zelf** leert programmeren, ook als er een AI meekijkt.
-De harnas weet per vaardigheid hoe ver je bent, en past daar de hulp van de AI op aan. Wat je al beheerst, onderhoud je met korte herhalingen. Wat je nog leert, doe je zelf, met hints in plaats van oplossingen.
+De harnas weet per vaardigheid hoe ver je bent, en past daar de hulp van de AI op aan. Wat je al beheerst, onderhoud je door het af en toe weer zelf te doen als het in je werk langskomt. Wat je nog leert, doe je zelf, met hints in plaats van oplossingen.
 
 <div class="grid cards" markdown>
 

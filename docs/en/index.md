@@ -1,7 +1,7 @@
 # Learning harness
 
 A learning harness for [Claude Code](https://docs.claude.com/en/docs/claude-code/overview) that makes sure you learn to program **yourself**, even with an AI looking over your shoulder.
-The harness knows how far along you are per skill, and adjusts the AI's help to that. What you have mastered, you maintain with short reviews. What you are still learning, you do yourself, with hints instead of solutions.
+The harness knows how far along you are per skill, and adjusts the AI's help to that. What you have mastered, you maintain by doing it yourself again now and then, when it comes by in your work. What you are still learning, you do yourself, with hints instead of solutions.
 
 <div class="grid cards" markdown>
 

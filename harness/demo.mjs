@@ -15,7 +15,7 @@ const ANCHOR = "2026-11-10";
 const TEXT = {
   nl: {
     course: "Object-Oriented Design (C#)",
-    notes: { down: "vast op void-methoden", up: "5/6 gelukt", micro: "aangemaakt", review: "herhalingen starten" },
+    notes: { down: "vast op void-methoden", up: "5/6 gelukt", micro: "aangemaakt", review: "herhalingen starten", placement: "plaatsing: hoogste trede 2 bij de eerste taak", auto: "automatisch: 0 van 3 gelukt (0%), laatste 2 niet" },
     micro: { "cs.basis.lussen": "lusgrenzen", "ood.klassen.veld-vs-lokaal": "veld vs lokale variabele", "ood.overerving.base-ctor": "constructor van de basisklasse" },
     explanations: [
       "De test faalde omdat mijn lus bij 1 begon, daardoor sloeg ik het eerste element over. Nu begint hij bij 0.",
@@ -41,7 +41,7 @@ const TEXT = {
   },
   en: {
     course: "Object-Oriented Design (C#)",
-    notes: { down: "stuck on void methods", up: "5/6 solved", micro: "created", review: "reviews start" },
+    notes: { down: "stuck on void methods", up: "5/6 solved", micro: "created", review: "reviews start", placement: "placement: highest rung 2 at the first task", auto: "automatic: 0 of 3 solved (0%), last 2 not" },
     micro: { "cs.basis.lussen": "loop bounds", "ood.klassen.veld-vs-lokaal": "field vs local variable", "ood.overerving.base-ctor": "base class constructor" },
     explanations: [
       "The test failed because my loop started at 1, so I skipped the first element. Now it starts at 0.",
@@ -86,18 +86,23 @@ function makeProject(lang) {
   const skills = map.skills.map((s) => ({ ...s, title: pick(s.title), level: s.kind === "zone" ? s.level : level[s.id] ?? "L2" }));
   const find = (id) => skills.find((s) => s.id === id);
   find("cs.basis").history = [{ at: day(-12), from: "L2", to: "L3", note: X.notes.up }];
-  Object.assign(find("cs.basis"), { nextReview: day(-1), intervalIndex: 2 });
   find("ood.klassen-properties").history = [{ at: day(-6), from: "L2", to: "L3", note: X.notes.up }];
-  Object.assign(find("ood.klassen-properties"), { nextReview: day(0), intervalIndex: 1 });
   find("test.unit-tests").history = [{ at: day(-2), from: "L1", to: "L2", note: X.notes.up }];
+  // A new skill placed by its first task (S4); uml.klassendiagram has no tasks yet: placement open.
+  find("ood.exceptions").history = [{ at: day(-3), from: "L0", to: "L2", note: X.notes.placement, placement: true }];
   const micros = [
-    { id: "cs.basis.lussen", parent: "cs.basis", level: "L3", nextReview: day(3), intervalIndex: 3 },
+    // Reviews only at L4, through real work (S2).
+    { id: "cs.basis.lussen", parent: "cs.basis", level: "L4", nextReview: day(2), intervalIndex: 3 },
     { id: "ood.klassen.veld-vs-lokaal", parent: "ood.klassen-properties", level: "L2" },
-    { id: "ood.overerving.base-ctor", parent: "ood.overerving", level: "L1" },
+    { id: "ood.overerving.base-ctor", parent: "ood.overerving", level: "L0" },
   ];
   for (const m of micros) {
     const i = skills.findIndex((s) => s.id === m.parent);
-    skills.splice(i + 1, 0, { ...m, title: X.micro[m.id], keywords: [], history: [{ at: day(-10), to: m.level, note: X.notes.micro }] });
+    const history = m.id === "ood.overerving.base-ctor"
+      ? [{ at: day(-10), to: "L1", note: X.notes.micro }, { at: day(-7), from: "L1", to: "L0", note: X.notes.auto, auto: true }]
+      : m.id === "cs.basis.lussen" ? [{ at: day(-10), to: "L3", note: X.notes.micro }, { at: day(-8), from: "L3", to: "L4", note: X.notes.up }]
+        : [{ at: day(-10), to: m.level, note: X.notes.micro }];
+    skills.splice(i + 1, 0, { ...m, title: X.micro[m.id], keywords: [], placement: "done", history });
   }
 
   // Tasks over two weeks, mostly explained, with some rejections, corrections and one voided task.
@@ -119,7 +124,10 @@ function makeProject(lang) {
       if (random() < 0.3) events.push({ at: at(offset, base - 1, 40), type: "hint-hold", skill, rung: Math.max(1, rung), session: sid(offset) });
       events.push({ at: at(offset, base), type: "task", tid, skill, success: rung < 5, maxRung: rung, minutes: 10 + Math.round(random() * 30), source: random() < 0.75 ? "check" : "done", what: `Test${String.fromCharCode(64 + ((n % 26) || 26))}`, session: sid(offset) });
       if (offset === 0 && k === 1) continue; // still waiting for an explanation
-      if (offset === -1 && k === 1) continue;
+      if (offset === -1 && k === 1) { // not explained right away: lapsed when the next exercise started (S1)
+        events.push({ at: at(offset, base + 2), type: "task-lapsed", tid, skill, reason: "other-exercise", session: sid(offset) });
+        continue;
+      }
       if (random() < 0.3) events.push({ at: at(offset, base, 5), type: "explain-rejected", tid, by: random() < 0.5 ? "hook" : "claude", reasons: [X.rejections[n % 2]], session: sid(offset) });
       events.push({ at: at(offset, base, 10), type: "task-explained", tid, skill, text: X.explanations[n % X.explanations.length], session: sid(offset) });
       if (n === 5 || n === 17) events.push({ at: at(offset, base, 30), type: "task-correct", tid, skill, from: rung, maxRung: Math.min(5, rung + 1), reason: X.corrections[n % 2] });
@@ -132,9 +140,11 @@ function makeProject(lang) {
   events.push({ at: at(-5, 15, 55), type: "task-void", tid: "demo900", skill: "ood.associaties", reason: X.voidReason });
   events.push({ at: at(-3, 12), type: "override", skill: "test.unit-tests", minutes: 20, reason: X.override });
   events.push({ at: at(-3, 12, 5), type: "override-used", skill: "test.unit-tests", session: sid(-3) });
-  events.push({ at: at(-6, 10), type: "review", skill: "cs.basis", result: "pass", nextReview: day(-4) });
-  events.push({ at: at(-4, 10), type: "review", skill: "cs.basis", result: "shaky", nextReview: day(-1) });
-  events.push({ at: at(-2, 10), type: "review", skill: "ood.klassen-properties", result: "pass", nextReview: day(0) });
+  // L4 reviews as the outcome of the next task in real work (S2), and one automatic demotion (S3).
+  events.push({ at: at(-6, 10), type: "review", skill: "cs.basis.lussen", result: "pass", nextReview: day(-1), auto: true });
+  events.push({ at: at(-1, 10), type: "review", skill: "cs.basis.lussen", result: "shaky", nextReview: day(2), auto: true });
+  events.push({ at: at(-7, 16), type: "level", skill: "ood.overerving.base-ctor", from: "L1", to: "L0", auto: true, by: "harnas", reason: X.notes.auto });
+  events.push({ at: at(-3, 13), type: "placement", skill: "ood.exceptions", rung: 2, from: "L0", to: "L2" });
   events.sort((a, b) => a.at.localeCompare(b.at));
 
   const root = fs.mkdtempSync(path.join(os.tmpdir(), "leerharnas-demo-"));

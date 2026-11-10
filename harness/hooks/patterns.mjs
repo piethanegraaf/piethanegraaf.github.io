@@ -56,6 +56,32 @@ export const ATTEMPT = any(
   String.raw`\bi tried\b|\bi think\b|my guess|maybe it'?s|hypothesis|\bi changed\b|stack ?trace|tests? (fail|fails|failing|is red|are red)`,
 );
 
+// New skill, placement open (setup review S4): only these signals raise a rung, never the clock.
+// The learner says they are stuck.
+export const STUCK = any(
+  String.raw`\b(zit vast|loop vast|ik weet niet hoe|weet niet hoe ik|kom niet verder|snap (het |er )?niets?|ik snap het niet)\b`,
+  String.raw`\b(i'?m stuck|i am stuck|no idea how|can'?t figure( it)? out|i don'?t know how|i'?m lost)\b`,
+);
+// The learner admits not knowing the concept (e.g. "weet ik niet" to a Socratic question).
+export const DONT_KNOW = any(
+  String.raw`\b(weet ik niet|geen idee|ken ik niet|nooit van gehoord|wat (is|betekent) (een |dat |dit )?\w+\s*\?)`,
+  String.raw`\b(i don'?t know|no idea|never heard of|what (is|does) (a |an |that |this )?\w+( mean)?\s*\?)`,
+);
+// The learner asks for more explanation (allowed straight to a higher rung, after an own attempt).
+export const MORE_EXPLANATION = any(
+  String.raw`\b(meer uitleg|leg (het |dit |dat )?(eens |maar )?uit|uitleg (graag|aub|alsjeblieft)|kun je (het |dit )?uitleggen)\b`,
+  String.raw`\b(explain (it|this|that)( to me)?|more explanation|can you explain|explain more|more detail)\b`,
+);
+// A comparable signature of an error or test outcome: compiler codes, exception types, Expected/But was.
+export function errorSignature(text) {
+  const s = String(text ?? "");
+  const parts = new Set([...s.matchAll(/\bCS\d{4}\b/g)].map((m) => m[0]));
+  for (const m of s.matchAll(/\b(\w+Exception)\b/g)) parts.add(m[1]);
+  const eb = s.match(/Expected:?\s*([^\s,;]+)[\s\S]{0,80}?But was:?\s*([^\s,;]+)/i);
+  if (eb) parts.add(`${eb[1]}≠${eb[2]}`);
+  return parts.size ? [...parts].sort().join("|") : null;
+}
+
 // A question about whether something works ("is it solved?" is not "it is solved").
 export const CHECKING = any(
   String.raw`\b(of het werkt|kijken of|checken of|testen of)\b`,

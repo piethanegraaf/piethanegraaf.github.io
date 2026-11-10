@@ -19,6 +19,8 @@
       "nextReview": null,
       "intervalIndex": 0,
       "lastReview": null,
+      "lastSeen": null,
+      "placement": null,
       "history": []
     },
     {
@@ -27,15 +29,19 @@
       "kind": null,
       "title": "C# basics: methods, strings, lists, loops",
       "level": "L3",
-      "nextReview": "2026-11-09",
-      "intervalIndex": 2,
+      "nextReview": null,
+      "intervalIndex": 0,
       "lastReview": null,
+      "lastSeen": "2026-10-28",
+      "placement": "done",
       "history": [
         {
           "at": "2026-10-29",
           "from": "L2",
           "to": "L3",
-          "note": "5/6 solved"
+          "note": "5/6 solved",
+          "auto": false,
+          "placement": false
         }
       ]
     },
@@ -44,16 +50,28 @@
       "parent": "cs.basis",
       "kind": null,
       "title": "loop bounds",
-      "level": "L3",
-      "nextReview": "2026-11-13",
+      "level": "L4",
+      "nextReview": "2026-11-12",
       "intervalIndex": 3,
       "lastReview": null,
+      "lastSeen": "2026-10-29",
+      "placement": "done",
       "history": [
         {
           "at": "2026-10-31",
           "from": null,
           "to": "L3",
-          "note": "created"
+          "note": "created",
+          "auto": false,
+          "placement": false
+        },
+        {
+          "at": "2026-11-02",
+          "from": "L3",
+          "to": "L4",
+          "note": "5/6 solved",
+          "auto": false,
+          "placement": false
         }
       ]
     },
@@ -63,15 +81,19 @@
       "kind": null,
       "title": "Classes, constructors; variable vs field vs property (private set)",
       "level": "L3",
-      "nextReview": "2026-11-10",
-      "intervalIndex": 1,
+      "nextReview": null,
+      "intervalIndex": 0,
       "lastReview": null,
+      "lastSeen": "2026-11-04",
+      "placement": "done",
       "history": [
         {
           "at": "2026-11-04",
           "from": "L2",
           "to": "L3",
-          "note": "5/6 solved"
+          "note": "5/6 solved",
+          "auto": false,
+          "placement": false
         }
       ]
     },
@@ -84,12 +106,16 @@
       "nextReview": null,
       "intervalIndex": 0,
       "lastReview": null,
+      "lastSeen": "2026-11-01",
+      "placement": "done",
       "history": [
         {
           "at": "2026-10-31",
           "from": null,
           "to": "L2",
-          "note": "created"
+          "note": "created",
+          "auto": false,
+          "placement": false
         }
       ]
     },
@@ -102,6 +128,8 @@
       "nextReview": null,
       "intervalIndex": 0,
       "lastReview": null,
+      "lastSeen": "2026-11-02",
+      "placement": "done",
       "history": []
     },
     {
@@ -109,16 +137,28 @@
       "parent": "ood.overerving",
       "kind": null,
       "title": "base class constructor",
-      "level": "L1",
+      "level": "L0",
       "nextReview": null,
       "intervalIndex": 0,
       "lastReview": null,
+      "lastSeen": "2026-11-03",
+      "placement": "done",
       "history": [
         {
           "at": "2026-10-31",
           "from": null,
           "to": "L1",
-          "note": "created"
+          "note": "created",
+          "auto": false,
+          "placement": false
+        },
+        {
+          "at": "2026-11-03",
+          "from": "L1",
+          "to": "L0",
+          "note": "automatic: 0 of 3 solved (0%), last 2 not",
+          "auto": true,
+          "placement": false
         }
       ]
     },
@@ -131,6 +171,8 @@
       "nextReview": null,
       "intervalIndex": 0,
       "lastReview": null,
+      "lastSeen": "2026-11-09",
+      "placement": "done",
       "history": []
     },
     {
@@ -142,6 +184,8 @@
       "nextReview": null,
       "intervalIndex": 0,
       "lastReview": null,
+      "lastSeen": null,
+      "placement": "pending",
       "history": []
     },
     {
@@ -153,6 +197,8 @@
       "nextReview": null,
       "intervalIndex": 0,
       "lastReview": null,
+      "lastSeen": "2026-11-06",
+      "placement": "done",
       "history": []
     },
     {
@@ -164,12 +210,16 @@
       "nextReview": null,
       "intervalIndex": 0,
       "lastReview": null,
+      "lastSeen": "2026-11-10",
+      "placement": "done",
       "history": [
         {
           "at": "2026-11-08",
           "from": "L1",
           "to": "L2",
-          "note": "5/6 solved"
+          "note": "5/6 solved",
+          "auto": false,
+          "placement": false
         }
       ]
     },
@@ -182,6 +232,8 @@
       "nextReview": null,
       "intervalIndex": 0,
       "lastReview": null,
+      "lastSeen": null,
+      "placement": "pending",
       "history": []
     },
     {
@@ -193,7 +245,18 @@
       "nextReview": null,
       "intervalIndex": 0,
       "lastReview": null,
-      "history": []
+      "lastSeen": "2026-11-07",
+      "placement": "done",
+      "history": [
+        {
+          "at": "2026-11-07",
+          "from": "L0",
+          "to": "L2",
+          "note": "placement: highest rung 2 at the first task",
+          "auto": false,
+          "placement": true
+        }
+      ]
     },
     {
       "id": "ood.generics-dictionary",
@@ -204,6 +267,8 @@
       "nextReview": null,
       "intervalIndex": 0,
       "lastReview": null,
+      "lastSeen": null,
+      "placement": "pending",
       "history": []
     },
     {
@@ -215,6 +280,8 @@
       "nextReview": null,
       "intervalIndex": 0,
       "lastReview": null,
+      "lastSeen": null,
+      "placement": "pending",
       "history": []
     },
     {
@@ -226,6 +293,8 @@
       "nextReview": null,
       "intervalIndex": 0,
       "lastReview": null,
+      "lastSeen": null,
+      "placement": "pending",
       "history": []
     },
     {
@@ -237,6 +306,8 @@
       "nextReview": null,
       "intervalIndex": 0,
       "lastReview": null,
+      "lastSeen": null,
+      "placement": "pending",
       "history": []
     },
     {
@@ -248,6 +319,8 @@
       "nextReview": null,
       "intervalIndex": 0,
       "lastReview": null,
+      "lastSeen": null,
+      "placement": "pending",
       "history": []
     },
     {
@@ -259,6 +332,8 @@
       "nextReview": null,
       "intervalIndex": 0,
       "lastReview": null,
+      "lastSeen": null,
+      "placement": "pending",
       "history": []
     }
   ],
@@ -275,6 +350,10 @@
       "explained": true,
       "explanation": "It works now because the property has a private set, so only the class itself can change the value.",
       "explainedAt": "2026-10-28T13:10:00.000Z",
+      "explainedBy": null,
+      "lapsed": false,
+      "lapseReason": null,
+      "retaggedFrom": null,
       "rejections": [],
       "corrections": [],
       "void": false,
@@ -292,6 +371,10 @@
       "explained": true,
       "explanation": "I had to call base(name), otherwise the base class got no name and it stayed empty in the test.",
       "explainedAt": "2026-10-28T14:10:00.000Z",
+      "explainedBy": null,
+      "lapsed": false,
+      "lapseReason": null,
+      "retaggedFrom": null,
       "rejections": [],
       "corrections": [],
       "void": false,
@@ -309,6 +392,10 @@
       "explained": true,
       "explanation": "The list was a local variable in the method first, so it was empty again after every call.",
       "explainedAt": "2026-10-28T15:10:00.000Z",
+      "explainedBy": null,
+      "lapsed": false,
+      "lapseReason": null,
+      "retaggedFrom": null,
       "rejections": [],
       "corrections": [],
       "void": false,
@@ -326,6 +413,10 @@
       "explained": true,
       "explanation": "I now throw an ArgumentException when the price is negative, so an invalid object cannot exist.",
       "explainedAt": "2026-10-29T13:10:00.000Z",
+      "explainedBy": null,
+      "lapsed": false,
+      "lapseReason": null,
+      "retaggedFrom": null,
       "rejections": [],
       "corrections": [],
       "void": false,
@@ -343,6 +434,10 @@
       "explained": true,
       "explanation": "I use a Dictionary because I want to look things up by code instead of walking the whole list.",
       "explainedAt": "2026-10-29T14:10:00.000Z",
+      "explainedBy": null,
+      "lapsed": false,
+      "lapseReason": null,
+      "retaggedFrom": null,
       "rejections": [],
       "corrections": [
         {
@@ -367,6 +462,10 @@
       "explained": true,
       "explanation": "The test failed because my loop started at 1, so I skipped the first element. Now it starts at 0.",
       "explainedAt": "2026-10-31T13:10:00.000Z",
+      "explainedBy": null,
+      "lapsed": false,
+      "lapseReason": null,
+      "retaggedFrom": null,
       "rejections": [
         {
           "at": "2026-10-31T13:05:00.000Z",
@@ -392,6 +491,10 @@
       "explained": true,
       "explanation": "It works now because the property has a private set, so only the class itself can change the value.",
       "explainedAt": "2026-10-31T14:10:00.000Z",
+      "explainedBy": null,
+      "lapsed": false,
+      "lapseReason": null,
+      "retaggedFrom": null,
       "rejections": [],
       "corrections": [],
       "void": false,
@@ -409,6 +512,10 @@
       "explained": true,
       "explanation": "I had to call base(name), otherwise the base class got no name and it stayed empty in the test.",
       "explainedAt": "2026-10-31T15:10:00.000Z",
+      "explainedBy": null,
+      "lapsed": false,
+      "lapseReason": null,
+      "retaggedFrom": null,
       "rejections": [],
       "corrections": [],
       "void": false,
@@ -426,6 +533,10 @@
       "explained": true,
       "explanation": "The list was a local variable in the method first, so it was empty again after every call.",
       "explainedAt": "2026-11-01T13:10:00.000Z",
+      "explainedBy": null,
+      "lapsed": false,
+      "lapseReason": null,
+      "retaggedFrom": null,
       "rejections": [
         {
           "at": "2026-11-01T13:05:00.000Z",
@@ -451,6 +562,10 @@
       "explained": true,
       "explanation": "I now throw an ArgumentException when the price is negative, so an invalid object cannot exist.",
       "explainedAt": "2026-11-01T14:10:00.000Z",
+      "explainedBy": null,
+      "lapsed": false,
+      "lapseReason": null,
+      "retaggedFrom": null,
       "rejections": [],
       "corrections": [],
       "void": false,
@@ -468,6 +583,10 @@
       "explained": true,
       "explanation": "I use a Dictionary because I want to look things up by code instead of walking the whole list.",
       "explainedAt": "2026-11-02T13:10:00.000Z",
+      "explainedBy": null,
+      "lapsed": false,
+      "lapseReason": null,
+      "retaggedFrom": null,
       "rejections": [],
       "corrections": [],
       "void": false,
@@ -485,6 +604,10 @@
       "explained": true,
       "explanation": "The test failed because my loop started at 1, so I skipped the first element. Now it starts at 0.",
       "explainedAt": "2026-11-02T14:10:00.000Z",
+      "explainedBy": null,
+      "lapsed": false,
+      "lapseReason": null,
+      "retaggedFrom": null,
       "rejections": [
         {
           "at": "2026-11-02T14:05:00.000Z",
@@ -510,6 +633,10 @@
       "explained": true,
       "explanation": "It works now because the property has a private set, so only the class itself can change the value.",
       "explainedAt": "2026-11-03T13:10:00.000Z",
+      "explainedBy": null,
+      "lapsed": false,
+      "lapseReason": null,
+      "retaggedFrom": null,
       "rejections": [],
       "corrections": [],
       "void": false,
@@ -527,6 +654,10 @@
       "explained": true,
       "explanation": "I had to call base(name), otherwise the base class got no name and it stayed empty in the test.",
       "explainedAt": "2026-11-03T14:10:00.000Z",
+      "explainedBy": null,
+      "lapsed": false,
+      "lapseReason": null,
+      "retaggedFrom": null,
       "rejections": [],
       "corrections": [],
       "void": false,
@@ -544,6 +675,10 @@
       "explained": true,
       "explanation": "The list was a local variable in the method first, so it was empty again after every call.",
       "explainedAt": "2026-11-04T13:10:00.000Z",
+      "explainedBy": null,
+      "lapsed": false,
+      "lapseReason": null,
+      "retaggedFrom": null,
       "rejections": [],
       "corrections": [],
       "void": false,
@@ -561,6 +696,10 @@
       "explained": true,
       "explanation": "I now throw an ArgumentException when the price is negative, so an invalid object cannot exist.",
       "explainedAt": "2026-11-04T14:10:00.000Z",
+      "explainedBy": null,
+      "lapsed": false,
+      "lapseReason": null,
+      "retaggedFrom": null,
       "rejections": [
         {
           "at": "2026-11-04T14:05:00.000Z",
@@ -586,6 +725,10 @@
       "explained": true,
       "explanation": "I use a Dictionary because I want to look things up by code instead of walking the whole list.",
       "explainedAt": "2026-11-05T13:10:00.000Z",
+      "explainedBy": null,
+      "lapsed": false,
+      "lapseReason": null,
+      "retaggedFrom": null,
       "rejections": [
         {
           "at": "2026-11-05T13:05:00.000Z",
@@ -618,6 +761,10 @@
       "explained": true,
       "explanation": "The test failed because my loop started at 1, so I skipped the first element. Now it starts at 0.",
       "explainedAt": "2026-11-05T14:10:00.000Z",
+      "explainedBy": null,
+      "lapsed": false,
+      "lapseReason": null,
+      "retaggedFrom": null,
       "rejections": [],
       "corrections": [],
       "void": false,
@@ -635,6 +782,10 @@
       "explained": true,
       "explanation": "It works now because the property has a private set, so only the class itself can change the value.",
       "explainedAt": "2026-11-05T15:10:00.000Z",
+      "explainedBy": null,
+      "lapsed": false,
+      "lapseReason": null,
+      "retaggedFrom": null,
       "rejections": [],
       "corrections": [],
       "void": false,
@@ -652,6 +803,10 @@
       "explained": false,
       "explanation": null,
       "explainedAt": null,
+      "explainedBy": null,
+      "lapsed": false,
+      "lapseReason": null,
+      "retaggedFrom": null,
       "rejections": [],
       "corrections": [],
       "void": true,
@@ -669,6 +824,10 @@
       "explained": true,
       "explanation": "I had to call base(name), otherwise the base class got no name and it stayed empty in the test.",
       "explainedAt": "2026-11-06T13:10:00.000Z",
+      "explainedBy": null,
+      "lapsed": false,
+      "lapseReason": null,
+      "retaggedFrom": null,
       "rejections": [
         {
           "at": "2026-11-06T13:05:00.000Z",
@@ -694,6 +853,10 @@
       "explained": true,
       "explanation": "The list was a local variable in the method first, so it was empty again after every call.",
       "explainedAt": "2026-11-06T14:10:00.000Z",
+      "explainedBy": null,
+      "lapsed": false,
+      "lapseReason": null,
+      "retaggedFrom": null,
       "rejections": [],
       "corrections": [],
       "void": false,
@@ -711,6 +874,10 @@
       "explained": true,
       "explanation": "I now throw an ArgumentException when the price is negative, so an invalid object cannot exist.",
       "explainedAt": "2026-11-07T13:10:00.000Z",
+      "explainedBy": null,
+      "lapsed": false,
+      "lapseReason": null,
+      "retaggedFrom": null,
       "rejections": [
         {
           "at": "2026-11-07T13:05:00.000Z",
@@ -736,6 +903,10 @@
       "explained": true,
       "explanation": "I use a Dictionary because I want to look things up by code instead of walking the whole list.",
       "explainedAt": "2026-11-07T14:10:00.000Z",
+      "explainedBy": null,
+      "lapsed": false,
+      "lapseReason": null,
+      "retaggedFrom": null,
       "rejections": [
         {
           "at": "2026-11-07T14:05:00.000Z",
@@ -761,6 +932,10 @@
       "explained": true,
       "explanation": "The test failed because my loop started at 1, so I skipped the first element. Now it starts at 0.",
       "explainedAt": "2026-11-08T13:10:00.000Z",
+      "explainedBy": null,
+      "lapsed": false,
+      "lapseReason": null,
+      "retaggedFrom": null,
       "rejections": [
         {
           "at": "2026-11-08T13:05:00.000Z",
@@ -786,6 +961,10 @@
       "explained": true,
       "explanation": "It works now because the property has a private set, so only the class itself can change the value.",
       "explainedAt": "2026-11-08T14:10:00.000Z",
+      "explainedBy": null,
+      "lapsed": false,
+      "lapseReason": null,
+      "retaggedFrom": null,
       "rejections": [
         {
           "at": "2026-11-08T14:05:00.000Z",
@@ -811,6 +990,10 @@
       "explained": true,
       "explanation": "I had to call base(name), otherwise the base class got no name and it stayed empty in the test.",
       "explainedAt": "2026-11-08T15:10:00.000Z",
+      "explainedBy": null,
+      "lapsed": false,
+      "lapseReason": null,
+      "retaggedFrom": null,
       "rejections": [],
       "corrections": [],
       "void": false,
@@ -828,6 +1011,10 @@
       "explained": true,
       "explanation": "The list was a local variable in the method first, so it was empty again after every call.",
       "explainedAt": "2026-11-09T13:10:00.000Z",
+      "explainedBy": null,
+      "lapsed": false,
+      "lapseReason": null,
+      "retaggedFrom": null,
       "rejections": [
         {
           "at": "2026-11-09T13:05:00.000Z",
@@ -853,6 +1040,10 @@
       "explained": false,
       "explanation": null,
       "explainedAt": null,
+      "explainedBy": null,
+      "lapsed": true,
+      "lapseReason": "other-exercise",
+      "retaggedFrom": null,
       "rejections": [],
       "corrections": [],
       "void": false,
@@ -870,6 +1061,10 @@
       "explained": true,
       "explanation": "I use a Dictionary because I want to look things up by code instead of walking the whole list.",
       "explainedAt": "2026-11-10T13:10:00.000Z",
+      "explainedBy": null,
+      "lapsed": false,
+      "lapseReason": null,
+      "retaggedFrom": null,
       "rejections": [
         {
           "at": "2026-11-10T13:05:00.000Z",
@@ -895,6 +1090,10 @@
       "explained": false,
       "explanation": null,
       "explainedAt": null,
+      "explainedBy": null,
+      "lapsed": false,
+      "lapseReason": null,
+      "retaggedFrom": null,
       "rejections": [],
       "corrections": [],
       "void": false,
@@ -904,21 +1103,17 @@
   "reviews": [
     {
       "at": "2026-11-04T10:00:00.000Z",
-      "skill": "cs.basis",
+      "skill": "cs.basis.lussen",
       "result": "pass",
-      "nextReview": "2026-11-06"
+      "nextReview": "2026-11-09",
+      "auto": true
     },
     {
-      "at": "2026-11-06T10:00:00.000Z",
-      "skill": "cs.basis",
+      "at": "2026-11-09T10:00:00.000Z",
+      "skill": "cs.basis.lussen",
       "result": "shaky",
-      "nextReview": "2026-11-09"
-    },
-    {
-      "at": "2026-11-08T10:00:00.000Z",
-      "skill": "ood.klassen-properties",
-      "result": "pass",
-      "nextReview": "2026-11-10"
+      "nextReview": "2026-11-12",
+      "auto": true
     }
   ],
   "regressions": [

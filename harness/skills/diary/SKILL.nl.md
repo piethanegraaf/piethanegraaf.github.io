@@ -17,11 +17,14 @@ Doel: zelfregulatie (plan → uitvoering → reflectie). De student schrijft de 
    - Events van deze sessie in `.learning/state/events.jsonl`. Lees het bestand met Read, niet via de shell.
      - `hint-unlock`: trede en reden. `hint-hold`: geweigerde trede omdat er geen poging was. `rung-mark`: hulp die jij met `[trede N]` markeerde.
      - `task` (met `tid`, `source`: chat, check of done): afgeronde taak, met succes en de hoogste trede. `test-green`: welke tests groen werden.
-     - `task-explained`: uitleg goedgekeurd (telt). `explain-rejected`: uitleg afgewezen, door jou (`claude`) of door de check (`hook`).
+     - `task-explained`: uitleg goedgekeurd (telt); met `source: replay` achteraf hersteld. `explain-rejected`: uitleg afgewezen, door jou (`claude`) of door de check (`hook`).
+     - `task-lapsed`: de uitleg kwam niet direct, dus de taak is vervallen (`other-exercise` of `session-end`). Noem die taken als **overgeslagen**, los van mislukt.
      - `task-void`: door de student geschrapt. Noem dit expliciet. `task-correct`: trede achteraf verhoogd door de student, met reden. Noem dit ook.
      - `regression`: tests die groen waren en rood werden. `regression-fixed`: weer groen na een terugval (geen nieuwe taak). Veel van beide in korte tijd kan op gokken wijzen.
      - `deny`, `override`, `override-used`: wat de guard deed.
      - `review`, `level`, `micro-add`, `setting`: herhalingen, niveauwijzigingen, nieuwe microvaardigheden, instellingen.
+     - Automatisch gedaan door de harnas, noem het apart: `placement` (niveau van een nieuwe vaardigheid na de eerste taak), `level` met `auto: true` (automatisch omlaag; `by` zegt door wie: harnas, demotie-analist of achtervang), `micro-add` met `auto: true` en `task-retag` (de analist koppelde taken aan een microvaardigheid), `demotion-verdict` (het oordeel van de analist, met reden). Staat daar `doubt: true`, noteer dan "twijfel van de analist".
+     - `review` met `auto: true`: de uitkomst van een L4-herhaling, uit gewoon werk. `review-due`: de herhaling kwam langs.
    - Het plan en zelfvertrouwen van het begin, als die er zijn.
 
 2. **Vraag de reflectie in één bericht** en wacht dan:
@@ -29,9 +32,9 @@ Doel: zelfregulatie (plan → uitvoering → reflectie). De student schrijft de 
    > 2. Wat was verwarrend, of wat zou je de volgende keer anders doen?
    > 3. Hoe zeker ben je nu (1–5), en wat is je volgende stap?
 
-   Staan er nog taken open voor uitleg? Vraag die uitleg dan ook in dit bericht. Per taak: waarom werkt het nu?
+   Staan er nog taken open voor uitleg? Vraag die uitleg dan ook in dit bericht: het is de laatste kans. Per taak: waarom werkt het nu?
    - Beoordeel die uitleg zoals in CLAUDE.md: zet `[uitleg-ok <tid>]` of `[uitleg-nee <tid>]`.
-   - Een open taak wordt **niet** gesloten omdat de sessie stopt. Hij blijft staan tot de volgende sessie.
+   - Wat na het dagboek nog open staat, **vervalt**: het telt niet en staat op het dashboard als overgeslagen. Er gaat geen open uitleg mee naar de volgende sessie.
 
    Neem de antwoorden **letterlijk** over: niet verbeteren en niet aanvullen. Wil de student niet reflecteren, noteer dan "overgeslagen".
 
@@ -47,11 +50,12 @@ Doel: zelfregulatie (plan → uitvoering → reflectie). De student schrijft de 
 
 **Feiten (gelogd):**
 - Hinttredes: <bv. 1, 2> · gemarkeerde hulp: <[trede N] ...> · geweigerd zonder poging: <n> · uitwerking gegeven: <ja/nee>
-- Taken: <id [tid]: gelukt/niet, hoogste trede, bron (check/done/chat), uitleg goedgekeurd/afgewezen/open>
+- Taken: <id [tid]: gelukt/niet, hoogste trede, bron (check/done/chat), uitleg goedgekeurd/afgewezen/overgeslagen>
 - Zelf geschreven: <...> · AI schreef: <...>
 - Tests (door student, check.mjs): <groen/rood, nieuw groen>
 - Guard-weigeringen: <n> · overrides: <n, met reden> · geschrapte taken: <n>
-- Herhalingen: <id: pass/shaky/fail → volgende datum>
+- Herhalingen (L4, uit gewoon werk): <id: pass/shaky/fail → volgende datum, of "geen">
+- Automatisch: <plaatsingen, automatische verlagingen, microvaardigheden van de analist, twijfel van de analist, of "niets">
 
 **Wat ging goed (zelfstandig):** <(micro)vaardigheden die op trede 0–2 lukten, concreet>
 **Doorstroom-signalen:** <uit `status`, met commando, of "geen">
@@ -65,6 +69,6 @@ Doel: zelfregulatie (plan → uitvoering → reflectie). De student schrijft de 
 **Kalibratie:** vooraf <x> → <wat er werkelijk gebeurde, bv. "lukte met trede ≤1"> → <onderschat / klopt / overschat>
 ```
 
-4. **Voorstel doen, niet uitvoeren:** lijkt een doorstroomcriterium uit CLAUDE.md gehaald, of juist een terugval, noem dan het commando dat de student zelf kan draaien. Bijvoorbeeld:
+4. **Omhoog: voorstel doen, niet uitvoeren.** Lijkt een doorstroomcriterium uit CLAUDE.md gehaald, noem dan het commando dat de student zelf kan draaien. Omlaag doet de harnas zelf als `autoDemote` aan staat: noem dan wat er gebeurde en hoe het terug kan. Staat het uit, noem dan ook bij een terugval het commando. Bijvoorbeeld:
    `! node .claude/hooks/skill.mjs set ood.encapsulatie L3 "5/5 gelukt, meestal trede 0-1"`.
    De beslissing ligt bij de student. Omhoog zetten kan pas als er geen taken van die vaardigheid meer op uitleg wachten.

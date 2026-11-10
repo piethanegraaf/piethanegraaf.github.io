@@ -22,6 +22,7 @@ import {
   loadSkills, saveSkills, findSkill, addOverride, loadOverrides, logEvent, today, taskStats,
   LEVELS, levelName, isMicro, microsOf, familyIds, familyOf, scheduleOnLevel, scheduleOnReview, dueReviews,
   pendingTasks, allTasks, logTask, levelAdvice, recentWins, pickSession, loadSession, saveSession, touch, startTask,
+  lapseTasks, afterTask, isReviewDue, isPlacementPending,
   activeMinutesSince, readTranscript, isLearnerEntry, learnerEntryText, entryText, checkExplanation, t, language,
 } from "./lib.mjs";
 import { EXPLAIN_MARK } from "./patterns.mjs";
@@ -40,9 +41,11 @@ function row(s, indent = "") {
   const st = taskStats(s.id, 10, isMicro(s) ? null : data);
   const rate = st.n ? t("cli.row.rate", { ok: st.ok, n: st.n }) : "";
   const pend = st.pending ? t("cli.row.pending", { n: st.pending }) : "";
-  const due = s.nextReview && s.nextReview <= today() ? t("cli.row.due") : "";
+  // Neutral: a due review is not "late", it waits until the skill comes by in real work (S2).
+  const due = isReviewDue(s) ? t("cli.row.due") : "";
+  const place = isPlacementPending(data, s) ? t("cli.row.placement") : "";
   return `${s.level} ${levelName(s.level).padEnd(15)} ${(indent + s.id).padEnd(34)} ${(rate + pend).padEnd(24)} ${s.title}` +
-    `${s.nextReview ? t("cli.row.next", { date: s.nextReview }) : ""}${due}`;
+    `${place}${due}`;
 }
 
 function status() {
@@ -51,6 +54,8 @@ function status() {
   console.log(t("cli.status.today", { day: today() }) +
     (data.settings?.examDate ? t("cli.status.exam", { exam: data.settings.examDate }) : t("cli.status.noExam")));
   console.log("\n" + t("cli.status.reviews", { list: due.length ? due.map((s) => s.id).join(", ") : t("cli.none") }));
+  const lapsed = allTasks().filter((x) => x.lapsed).slice(-5);
+  if (lapsed.length) console.log(t("cli.status.lapsed", { list: lapsed.map((x) => `${x.skill} [${x.tid}]`).join(", ") }));
   console.log(t("cli.status.pending", { list: pend.length ? pend.map((x) => `${x.skill} [${x.tid}] ${x.what ?? ""}`.trim()).join("; ") : t("cli.none") }));
   const wins = recentWins(data);
   console.log(t("cli.status.wins", { list: wins.length ? wins.map((w) => `${w.id} ${w.n}x`).join(", ") : "-" }));
@@ -92,7 +97,8 @@ switch (cmd) {
     }
     s.level = lvl;
     scheduleOnLevel(data, s);
-    s.history = [...(s.history ?? []), { at: today(), from, to: lvl, note: note.join(" ") || undefined }];
+    s.history = [...(s.history ?? []), { at: today(), atIso: new Date().toISOString(), from, to: lvl, note: note.join(" ") || undefined }];
+    if (s.placement === "pending") s.placement = "done";
     saveSkills(data);
     logEvent({ type: "level", skill: s.id, from, to: lvl, note: note.join(" ") });
     console.log(t("cli.set.done", { id: s.id, from, to: lvl, name: levelName(lvl) }) + (s.nextReview ? t("cli.set.firstReview", { date: s.nextReview }) : ""));
@@ -135,14 +141,20 @@ switch (cmd) {
     // All help since the last logged task counts, whatever skill the session detected (see check.mjs).
     const maxRung = st?.maxRung ?? 0;
     const minutes = st ? activeMinutesSince(st, st.taskStartedActive) : null;
+    // A task of another family: the learner started another exercise, so open tasks lapse (S1).
+    const lapsed = lapseTasks("other-exercise", (x) => familyOf(findSkill(data, x.skill)) === familyOf(s), sid);
     const task = logTask({ skill: s.id, success: maxRung < 5, maxRung, minutes, source: "done", what: what.join(" ") || undefined, session: sid });
+    const after = afterTask(data, s.id, task);
     if (st) {
       // The family of this task is what the learner works on now (setup review 3.3).
       st.folderSkill = familyOf(s); st.folderSkillAt = Date.now();
+      if (after.pending) st.demotionPending = after.pending;
       startTask(st);
       saveSession(sid, st);
     }
     console.log(t("cli.done", { id: s.id, tid: task.tid, rung: maxRung }));
+    if (lapsed.length) console.log(t("cli.lapsed", { list: lapsed.map((x) => `${x.skill} [${x.tid}]`).join(", ") }));
+    for (const m of after.messages) console.log(m);
     break;
   }
   case "replay": {
@@ -155,7 +167,8 @@ switch (cmd) {
     if (!fs.existsSync(path.resolve(file))) exit("cli.replay.noFile", { file });
     const entries = readTranscript(path.resolve(file));
     const session = path.basename(file).replace(/\.jsonl$/i, "");
-    const open = new Map(pendingTasks().map((x) => [x.tid, x]));
+    // Open and lapsed tasks: a lapsed task whose marker a bug lost was not really skipped (S1).
+    const open = new Map(allTasks().filter((x) => !x.explained).map((x) => [x.tid, x]));
     const results = new Map(); // tid -> { ok, reasons, text }
     let lastLearner = -1;
     entries.forEach((e, i) => {
@@ -232,11 +245,11 @@ switch (cmd) {
     const value = rest.join(" ");
     const allowed = {
       examDate: /^\d{4}-\d{2}-\d{2}$/, stuckTimerMinutes: /^\d+$/, idleMinutes: /^[1-9]\d*$/, defaultLevel: /^L[0-4]$/,
-      course: /^[^\r\n<>]{1,80}$/, language: /^(nl|en)$/,
+      course: /^[^\r\n<>]{1,80}$/, language: /^(nl|en)$/, autoDemote: /^(true|false)$/,
     };
     if (!allowed[key] || !allowed[key].test(value)) exit("cli.setting.usage");
     data.settings = data.settings ?? {};
-    data.settings[key] = ["stuckTimerMinutes", "idleMinutes"].includes(key) ? Number(value) : value;
+    data.settings[key] = ["stuckTimerMinutes", "idleMinutes"].includes(key) ? Number(value) : key === "autoDemote" ? value === "true" : value;
     saveSkills(data);
     logEvent({ type: "setting", key, value });
     console.log(`${key} = ${value}`);

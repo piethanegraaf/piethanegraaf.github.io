@@ -53,7 +53,7 @@ Zet de AI-hulp buiten Claude Code uit. Anders vult je IDE de code aan die je zel
 
 ## Na de installatie
 
-1. Start Claude Code in je projectmap. De hook bij de sessiestart laat je vaardigheden en herhalingen zien.
+1. Start Claude Code in je projectmap. De hook bij de sessiestart laat je vaardigheden zien.
 2. Zet je toetsdatum: `! node .claude/hooks/skill.mjs setting examDate 2027-01-20`
 3. Kalibreer je niveaus met een korte nulmeting zonder AI, en zet ze zelf: `! node .claude/hooks/skill.mjs set ood.overerving L3 "nulmeting: zelf gelukt"`
 

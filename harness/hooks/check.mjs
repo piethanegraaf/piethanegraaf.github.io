@@ -19,7 +19,8 @@ import path from "node:path";
 import { spawnSync } from "node:child_process";
 import {
   ROOT, TESTS_FILE, STATE_DIR, loadSkills, skillForPath, rel, keywordMap, findSkill, isMicro, familyIds, familyOf,
-  pickSession, loadSession, saveSession, touch, startTask, activeMinutesSince, logTask, logEvent, levelAdvice, taskStats, t,
+  pickSession, loadSession, saveSession, touch, startTask, activeMinutesSince, logTask, logEvent, levelAdvice, taskStats,
+  lapseTasks, afterTask, t,
 } from "./lib.mjs";
 
 let data0 = null;
@@ -53,6 +54,15 @@ const sid = pickSession(mapped ? familyIds(data0, mapped.id) : null, data0);
     }
     saveSession(sid, st0);
   }
+}
+
+// ---------- 0b. Another exercise: open explanations lapse (setup review S1) ----------
+// The explanation belongs right after the green, before the next exercise. A task of this folder
+// stays open (one explanation may cover two tasks); so does a task without a folder of the same family.
+{
+  const sameExercise = (x) => (x.dir ? x.dir === relDir : Boolean(mapped) && familyOf(findSkill(data0, x.skill)) === familyOf(mapped));
+  const lapsed = data0 ? lapseTasks("other-exercise", sameExercise, sid) : [];
+  if (lapsed.length) console.log(t("cli.lapsed", { list: lapsed.map((x) => `${x.skill} [${x.tid}]`).join(", ") }) + "\n");
 }
 
 // global.json asks for an older SDK than the project targets, without rolling forward to a newer
@@ -214,13 +224,15 @@ if (newlyGreen.length) {
   const maxRung = st?.maxRung ?? 0;
   const what = newlyGreen.map((r) => r.name).join(", ");
   const minutes = st ? activeMinutesSince(st, st.taskStartedActive) : null;
-  const task = logTask({ skill: skill.id, success: maxRung < 5, maxRung, minutes, source: "check", what, session: sid });
+  const task = logTask({ skill: skill.id, success: maxRung < 5, maxRung, minutes, source: "check", what, session: sid, dir: relDir });
   logEvent({ type: "test-green", skill: skill.id, tid: task.tid, tests: newlyGreen.map((r) => `${r.className}.${r.name}`), dir: relDir });
-  if (st) { startTask(st); saveSession(sid, st); }
+  const after = afterTask(data, skill.id, task);
+  if (st) { if (after.pending) st.demotionPending = after.pending; startTask(st); saveSession(sid, st); }
 
   console.log("\n" + t("check.newGreen", { tests: what }));
   console.log("  " + t("check.logged", { id: skill.id, tid: task.tid, rung: maxRung }) +
     t(maxRung === 0 ? "check.logged.solo" : maxRung <= 2 ? "check.logged.ok" : "check.logged.help"));
+  for (const m of after.messages) console.log("  " + m);
   console.log("  " + t("check.explain"));
   const adv = levelAdvice(data, skill);
   const stt = taskStats(skill.id, 10, isMicro(skill) ? null : data);

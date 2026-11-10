@@ -4,19 +4,19 @@
 
 | Event | Script | What it does |
 |---|---|---|
-| `SessionStart` | `session-start.mjs` | Puts the record, today's reviews, open explanations and promotion signals in the context, and asks for your goal. |
+| `SessionStart` | `session-start.mjs` | Puts the record, open explanations and promotion signals in the context, and asks for your goal. Open explanations of earlier sessions lapse here. It does not mention reviews. |
 | `UserPromptSubmit` | `prompt-gate.mjs` | Recognises the skill, decides whether a new rung may unlock, logs solved tasks and asks for explanations. Agent messages, notifications and system reminders do not count as your words. |
 | `PreToolUse` | `guard.mjs` | Blocks writing, building and testing code at L1–L3, and every change to the record, the state and the harness itself. It judges a shell command per simple command, by the program that runs. It always refuses `eval`, `iex` and `Invoke-Expression`. |
-| `Stop` | `reflect-gate.mjs` | Processes the markers in Claude's answer, checks your explanation, and asks for the diary when you want to stop. |
+| `Stop` | `reflect-gate.mjs` | Processes the markers in Claude's answer, checks your explanation and the verdict of the demotion analyst, and asks for the diary when you want to stop. After the diary, what is still open lapses. |
 
 ## `skill.mjs` (you run it yourself, with `!`)
 
 | Command | What |
 |---|---|
-| `list` / `status` | Overview; reviews, open explanations and signals. Claude may run these two as well. |
+| `list` / `status` | Overview; L4 reviews that are ready, open and skipped explanations, and signals. Claude may run these two as well. |
 | `set <id> <L0..L4> "note"` | Set a level. Raising it only works when no tasks wait for an explanation. |
-| `review <id> pass\|shaky\|fail` | The outcome of a review. |
-| `add-micro <parent> <id> <level> "title" "keywords"` | Add a microskill. |
+| `review <id> pass\|shaky\|fail` | Record the outcome of a review yourself. Usually not needed: the next task of an L4 skill decides it. |
+| `add-micro <parent> <id> <level> "title" "keywords"` | Add a microskill. With `autoDemote` the demotion analyst also creates one itself, at the parent's level minus 1. |
 | `done <id> "what"` | Log a task without a test (design, UML). |
 | `untask <id>` | Void the last logged task of a skill. |
 | `correct <task-id> rung <1-5> "reason"` | More help than logged: only raises the rung. |
@@ -47,7 +47,23 @@ Runs `dotnet test` with a trx logger and shows a short summary. A test that goes
 | `[rung N]` / `[trede N]` | Substantive help was given at rung N. |
 | `[explain-ok <tid>]` / `[uitleg-ok <tid>]` | The explanation is right; the Stop hook still checks it. |
 | `[explain-no <tid>]` / `[uitleg-nee <tid>]` | The explanation is incomplete; the task stays open. |
+| `[demotie {...}]` / `[demotion {...}]` | The verdict of the demotion analyst (JSON). The Stop hook only applies it when the agent really ran in that turn. |
 | `<!-- session: <id> -->` / `<!-- sessie: <id> -->` | In the diary: the entry of this session. |
+
+## Events
+
+Everything the harness does is in `.learning/state/events.jsonl`. The events of the review of 10 November 2026:
+
+| Event | Meaning |
+|---|---|
+| `task-lapsed` | The explanation did not come right away: the task lapses (`other-exercise` or `session-end`). Does not count; *skipped* on the dashboard. |
+| `task-explained` with `source: replay` | An explanation recovered afterwards with `replay`. |
+| `placement` | The level of a new skill, set after its first task. |
+| `review` with `auto: true` | The outcome of an L4 review, from the next task. `review-due`: the review came by. |
+| `level` with `auto: true` | Automatic demotion; `by` says by whom: `harnas`, `demotie-analist` or `achtervang` (backstop). |
+| `demotion-pending`, `demotion-verdict`, `demotion-rejected` | The analyst is needed, its verdict, or a verdict the Stop hook refused. |
+| `micro-add` with `auto: true`, `task-retag` | The analyst created a microskill and linked tasks to it. |
+| `build-failed` | A compile error, remembered as the starting point of the folder. |
 
 ## Files
 

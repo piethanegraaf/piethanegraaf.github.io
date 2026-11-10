@@ -1,9 +1,10 @@
-// SessionStart: put the skill record, due reviews, open explanations, positive signals
-// and the session ritual into Claude's context.
+// SessionStart: put the skill record, open explanations, positive signals and the session ritual
+// into Claude's context. Reviews are not mentioned here: an L4 review waits until the skill comes by
+// in real work (setup review S2). Open tasks of earlier sessions lapse here (S1).
 import fs from "node:fs";
 import {
-  readStdin, loadSkills, loadOverrides, today, taskStats, levelName, DIARY_DIR,
-  isMicro, dueReviews, pendingTasks, recentWins, levelAdvice, settingsOf, t,
+  readStdin, loadSkills, loadOverrides, today, taskStats, levelName, DIARY_DIR, lapseTasks, readEvents,
+  isMicro, pendingTasks, recentWins, levelAdvice, settingsOf, isPlacementPending, effectiveLevel, t,
 } from "./lib.mjs";
 
 let input = {};
@@ -21,8 +22,15 @@ try { data = loadSkills(); } catch (e) {
 
 const day = today();
 const skills = data.skills.filter((s) => s.kind !== "zone");
-const due = dueReviews(data, day);
 const overrides = loadOverrides();
+// A new session (not a resume): open tasks of sessions where the learner is not active any more
+// lapse. A session that is still active in parallel (within idleMinutes) keeps its tasks.
+if (source === "startup" || source === "clear") {
+  const idle = Math.max(1, Number(settingsOf(data).idleMinutes) || 20) * 60000;
+  const active = new Set();
+  for (const e of readEvents()) if (e.session && Date.now() - Date.parse(e.at) <= idle) active.add(e.session);
+  lapseTasks("session-end", (x) => x.session === input.session_id || active.has(x.session), input.session_id ?? null);
+}
 const pending = pendingTasks();
 const wins = recentWins(data);
 const advice = skills.map((s) => levelAdvice(data, s)).filter(Boolean);
@@ -36,11 +44,14 @@ try {
 } catch { /* no diary yet */ }
 
 const rate = (s) => { const x = taskStats(s.id, 10, isMicro(s) ? null : data); return (x.n ? `${x.ok}/${x.n}` : "-") + (x.pending ? ` (+${x.pending} open)` : ""); };
+const lvl = (s) => {
+  const eff = effectiveLevel(data, s);
+  return `${s.level} ${levelName(s.level)}${isPlacementPending(data, s) ? t("ss.placementOpen") : eff !== s.level ? ` (→ ${eff})` : ""}`;
+};
 const rows = data.skills.map((s) =>
-  `| ${isMicro(s) ? "↳ " : ""}${s.id} | ${s.title} | ${s.level} ${levelName(s.level)} | ${rate(s)} | ${isMicro(s) ? `${t("ss.microOf", { parent: s.parent })} ${(s.keywords ?? []).join(", ")}` : (s.paths ?? []).join(", ") || "-"} | ${s.nextReview ?? "-"} |`).join("\n");
+  `| ${isMicro(s) ? "↳ " : ""}${s.id} | ${s.title} | ${lvl(s)} | ${rate(s)} | ${isMicro(s) ? `${t("ss.microOf", { parent: s.parent })} ${(s.keywords ?? []).join(", ")}` : (s.paths ?? []).join(", ") || "-"} |`).join("\n");
 
 const steps = [];
-if (due.length) steps.push(t("ss.step.reviews", { ids: due.map((s) => s.id).join(", ") }));
 if (pending.length) steps.push(t("ss.step.pending", { n: pending.length, list: pending.map((x) => `${x.skill} [${x.tid}]`).join(", ") }));
 if (wins.length || advice.length) {
   steps.push(t("ss.step.signal", {
@@ -61,7 +72,7 @@ const ctx = [
   t("ss.levels", { level: settings.defaultLevel }),
   "",
   t("ss.table.head"),
-  "|---|---|---|---|---|---|",
+  "|---|---|---|---|---|",
   rows,
   "",
   t("ss.overrides", { list: overrides.length ? overrides.map((o) => t("ss.override", { skill: o.skill, until: o.until, reason: o.reason })).join("; ") : t("ss.none") }),
@@ -73,7 +84,6 @@ const ctx = [
 ].join("\n");
 
 const msg = t("ss.msg", { n: skills.length }) +
-  (due.length ? t("ss.msg.reviews", { n: due.length, ids: due.map((s) => s.id).join(", ") }) : t("ss.msg.noReviews")) +
   (pending.length ? t("ss.msg.pending", { n: pending.length }) : "") +
   (overrides.length ? t("ss.msg.overrides", { n: overrides.length }) : "");
 

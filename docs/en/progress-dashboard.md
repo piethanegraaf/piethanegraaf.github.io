@@ -7,7 +7,9 @@ The [dashboard](/dashboard/?lang=en) shows progress per skill and microskill:
 - your **level** and its history;
 - how many tasks were **solved** with at most rung 2, over the last 10 explained tasks, against the 85% target;
 - per task: the rung, the source (test, logged yourself, chat), your **explanation**, and when it was **rejected** or **corrected**;
-- the **reviews** (Fibonacci) and which ones are overdue;
+- the **reviews** (only L4, Fibonacci), neutral: when the next one is ready, and when you **last** saw the skill in your work. Nothing is "overdue": a review waits until the skill comes by;
+- **skipped** tasks: the explanation did not come right away, so they do not count. They are shown apart from failed and from waiting for an explanation, and hatched in the chart;
+- what the harness did **automatically**: the placement of a new skill and automatic demotion, marked in the level history;
 - **promotion and relapse signals**, **regressions** and **overrides**;
 - a **diary timeline** with your reflections and the **calibration**: your confidence before and after.
 
