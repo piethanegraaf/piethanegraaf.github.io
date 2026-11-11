@@ -183,7 +183,12 @@ Dit document is geschreven met Claude, het model van Anthropic, en Claude-agents
 - **Cognitief leerlingschap** (cognitive apprenticeship; Collins, Brown & Newman, 1989) doorloopt *voordoen → coachen → scaffolding → afbouwen → verwoorden → reflecteren → verkennen*. Deze volgorde is vrijwel de blauwdruk voor de Autonomieladder in §5.
 - **Afgebouwde uitgewerkte voorbeelden.** Renkl & Atkinson (2003) en Atkinson, Renkl & Merrill (2003) lieten zien dat het geleidelijk weghalen van oplossingsstappen uit uitgewerkte voorbeelden (*backward fading*) beter werkt dan in één keer overstappen van voorbeelden naar opgaven.
 - **Expertise-omkeereffect.** Kalyuga et al. (2003) lieten zien dat begeleiding die beginners helpt, *overbodig en schadelijk* wordt voor gevorderde studenten. **Het hulpniveau moet daarom per vaardigheid jouw expertise volgen.** Een vaste "tutormodus" is te veel voor sommige vaardigheden en te weinig voor andere.
-- **Contingente begeleiding.** Wood & Wood (1999) vonden dat de meest effectieve tutors één regel volgen: *geef meer hulp na falen, minder na succes*. Die regel kun je direct implementeren (§5.3).
+- **Contingente begeleiding.** De regel *geef meer hulp na falen, minder na succes* gaat terug op observaties van moeders die hun jonge kind hielpen (Wood & Middleton 1975) en op een experiment met vier manieren van lesgeven (Wood, Wood & Middleton 1978). Wood & Wood (1999) bouwden hem in een computertutor. Je kunt de regel direct implementeren (§5.3), maar het bewijs dat het meebewegen zelf helpt, is zwak:
+    - een vooraf geregistreerde directe replicatie van het experiment uit 1978, met 285 driejarigen, vond het effect op zelfstandig presteren niet terug (Smit et al. 2025);
+    - in een meta-analyse van hulp in leersoftware voor STEM hielp die hulp (ḡ = 0,46 over 144 studies), maar het effect hing er niet van af of en hoe de hulp in de tijd veranderde (Belland et al. 2017);
+    - in een klasexperiment hielp meebewegende hulp alleen als leerlingen eerst langer zelfstandig hadden gewerkt (van de Pol et al. 2015).
+
+    Hulp in stappen is dus goed onderbouwd; dat die hulp elk succes en elke mislukking moet volgen, niet.
 
 ### 2.4 Beheersing, fasen van vaardigheidsverwerving en wanneer je automatiseert
 
@@ -580,7 +585,7 @@ De verschuiving pleit dus voor het **toevoegen** van bewuste oefening in vaardig
 |---|---|---|---|
 | P1 | **Eerst zelf proberen, dan hulp.** Je bedenkt eerst zelf iets, voordat de AI iets laat zien. Eerst proberen is op zich niet genoeg: het leren komt uit wat erna volgt. | Generatie-effect; productief falen (Sinha & Kapur 2021); Bastani 2025; Gajos & Mamykina 2022 (eerst proberen en dan het antwoord zien leverde geen leren op) | Matig |
 | P2 | **Hulp volgt de expertise per vaardigheid en wordt afgebouwd.** | Expertise-omkeereffect; afgebouwde uitgewerkte voorbeelden; cognitief leerlingschap | Sterk |
-| P3 | **Getrapte hints die afhangen van je resultaat** (meer na falen, minder na succes). | Wood & Wood 1999; Aleven et al. 2003; Kestin 2025 (korte termijn) | Matig |
+| P3 | **Getrapte hints, na een eigen poging** (meer na falen, minder na succes). Dat de hulp elk succes en elke mislukking volgt, is het zwakkere deel. | Hulp in stappen: Belland et al. 2017 (meta-analyse, ḡ = 0,46); Aleven et al. 2003; Kestin 2025 (korte termijn). Het meebewegen: Wood & Wood 1999 (een tutor die het toepast); geen extra effect in Belland et al. 2017; alleen na langer zelfstandig werken in van de Pol et al. 2015; het klassieke experiment is niet gerepliceerd (Smit et al. 2025) | Laag tot matig: matig (getrapte hints), zwak (meebewegen) |
 | P4 | **Houd oefening zo moeilijk dat je soms faalt** (als vuistregel ongeveer 70–90% succes), en begrens hoe lang je vastzit. | Wenselijke moeilijkheden; Kapur 2016; D'Mello 2014. Wilson et al. 2019 alleen als computationele inspiratie | Vuistregel |
 | P5 | **Liever uitleg zonder het antwoord dan oplossingen.** Leg AI-uitvoer aan jezelf uit. | Gajos & Mamykina 2022; Bastani 2025 (tutorarm); Kazemitabaar 2025; Chi 1989 | Matig |
 | P6 | **Beheersingspoort met transfer en uitleg**, niet alleen "het werkt". | Leren tot beheersing (winst op afgestemde toetsen; Kulik 1990, Slavin 1990); Corbett & Anderson; illusie van bekwaamheid (Đức Minh 2026; Eleftheriou 2026) | Matig |
@@ -939,7 +944,7 @@ In de autonomieladder zoals gebouwd bepaalt de hoogste hinttrede van de eerste t
 
 ### 5.3 Frictie afstemmen en de hintladder
 
-De hintladder brengt twee ideeën in de praktijk: contingente begeleiding (meer hulp na een mislukking, minder na succes; §2.3) en productief worstelen (§2.2). Je krijgt de volgende trede pas na **(a)** een zichtbare poging, zoals code die je hebt veranderd of een hypothese die je hebt uitgesproken, **of (b)** als de vastloop-timer afloopt. Die regel houdt het worstelen productief, zodat het niet omslaat in doelloos ploeteren.
+De hintladder brengt twee ideeën in de praktijk: contingente begeleiding (meer hulp na een mislukking, minder na succes; §2.3) en productief worstelen (§2.2). Het bewijs voor hulp in stappen is goed; voor het meebewegen zelf is het zwak (§2.3). Hulp pas na een eigen poging past bij de ene klasstudie waarin meebewegen wel hielp: na een langere tijd zelfstandig werken (van de Pol et al. 2015). Je krijgt de volgende trede pas na **(a)** een zichtbare poging, zoals code die je hebt veranderd of een hypothese die je hebt uitgesproken, **of (b)** als de vastloop-timer afloopt. Die regel houdt het worstelen productief, zodat het niet omslaat in doelloos ploeteren.
 
 ```mermaid
 flowchart TD
@@ -1776,6 +1781,11 @@ Geschreven door Piet Hanegraaf met Claude (Anthropic); zie de [AI-verklaring](ai
 - Wood, D., & Middleton, D. (1975). A study of assisted problem-solving. *British Journal of Psychology, 66*(2), 181–191. https://doi.org/10.1111/j.2044-8295.1975.tb01454.x
 - Wood, D., Wood, H., & Middleton, D. (1978). An experimental evaluation of four face-to-face teaching strategies. *International Journal of Behavioral Development, 1*(2), 131–147. https://doi.org/10.1177/016502547800100203
 
+**Toegevoegd op 11 november 2026 (nacht): hulp in stappen en meebewegen**
+
+- Belland, B. R., Walker, A. E., Kim, N. J., & Lefler, M. (2017). Synthesizing results from empirical research on computer-based scaffolding in STEM education: A meta-analysis. *Review of Educational Research, 87*(2), 309–344. https://doi.org/10.3102/0034654316670999
+- van de Pol, J., Volman, M., Oort, F., & Beishuizen, J. (2015). The effects of scaffolding in the classroom: Support contingency and student independent working time in relation to student achievement, task effort and appreciation of support. *Instructional Science, 43*(5), 615–641. https://doi.org/10.1007/s11251-015-9351-z
+
 ---
 
 <a id="bijlage-implementatieschetsen"></a>
@@ -2227,6 +2237,16 @@ Hulp over een concept van een andere familie blijft bij de taak en wordt ook bij
 <a id="11-wijzigingslog"></a>
 
 ## 11. Wijzigingslog {#changelog}
+
+### 11 november 2026 (nacht, laatste): het bewijs voor meebewegende hints (P3)
+
+De pilotstudent koos deze wijziging na de controle van de bronnen van de middagreview (§10.6, besluit 24).
+
+- **§2.3:** de regel "meer hulp na falen, minder na succes" staat nu bij waar hij vandaan komt (Wood & Middleton 1975; Wood, Wood & Middleton 1978), niet bij Wood & Wood (1999), die hem in een tutor bouwden. Toegevoegd: de mislukte replicatie van het experiment uit 1978 (Smit et al. 2025), een meta-analyse waarin het niet uitmaakte of de hulp in de tijd veranderde (Belland et al. 2017), en een klasexperiment waarin meebewegen alleen hielp na langer zelfstandig werken (van de Pol et al. 2015).
+- **§2.11, P3:** het bewijs gaat van matig naar laag tot matig: matig voor getrapte hints, zwak voor het meebewegen zelf.
+- **§5.3:** één zin over wat dit betekent voor de hintladder.
+- **§8:** nieuwe bronnen. Elke bron is eerst aan de samenvatting getoetst; de notities staan in [de citatiecheck](https://github.com/piethanegraaf/piethanegraaf.github.io/blob/main/research/citation-checks/citation_check_learning_science.md), sectie E.
+- **Niet veranderd:** de harnas, en de conclusies van §2.
 
 ### 11 november 2026 (nacht, later): de kaart naast de toets en de cheatsheet
 
