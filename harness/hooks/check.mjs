@@ -20,7 +20,7 @@ import { spawnSync } from "node:child_process";
 import {
   ROOT, TESTS_FILE, STATE_DIR, loadSkills, skillForPath, rel, keywordMap, findSkill, isMicro, familyIds, familyOf,
   pickSession, loadSession, saveSession, touch, startTask, activeMinutesSince, logTask, logEvent, levelAdvice, taskStats,
-  lapseTasks, afterTask, t,
+  lapseTasks, afterTask, effectiveLevel, t,
 } from "./lib.mjs";
 
 let data0 = null;
@@ -224,7 +224,7 @@ if (newlyGreen.length) {
   const maxRung = st?.maxRung ?? 0;
   const what = newlyGreen.map((r) => r.name).join(", ");
   const minutes = st ? activeMinutesSince(st, st.taskStartedActive) : null;
-  const task = logTask({ skill: skill.id, success: maxRung < 5, maxRung, minutes, source: "check", what, session: sid, dir: relDir });
+  const task = logTask({ skill: skill.id, success: maxRung < 5, maxRung, minutes, source: "check", what, session: sid, dir: relDir, level: effectiveLevel(data, skill) });
   logEvent({ type: "test-green", skill: skill.id, tid: task.tid, tests: newlyGreen.map((r) => `${r.className}.${r.name}`), dir: relDir });
   const after = afterTask(data, skill.id, task);
   if (st) { if (after.pending) st.demotionPending = after.pending; startTask(st); saveSession(sid, st); }
@@ -234,8 +234,11 @@ if (newlyGreen.length) {
     t(maxRung === 0 ? "check.logged.solo" : maxRung <= 2 ? "check.logged.ok" : "check.logged.help"));
   for (const m of after.messages) console.log("  " + m);
   console.log("  " + t("check.explain"));
-  const adv = levelAdvice(data, skill);
+  // What becomes possible once this task is explained (setup review §9.2): the harness then makes
+  // the proposal itself, right after the explanation, and the learner confirms with "ja, doorzetten".
+  const adv = levelAdvice(data, skill, { assume: [task.tid] });
   const stt = taskStats(skill.id, 10, isMicro(skill) ? null : data);
-  if (adv?.dir === "up") console.log("  " + t("check.signal", { text: adv.text }) + `\n    ! node .claude/hooks/skill.mjs ${adv.cmd}`);
+  if (adv?.dir === "up") console.log("  " + t("check.signal", { text: adv.text, id: adv.id, from: adv.from, to: adv.to }));
+  else if (adv?.dir === "transfer") console.log("  " + t("check.transfer", { text: adv.text, show: adv.show }));
   else if (stt.n) console.log("  " + t("check.stand", { id: skill.id, ok: stt.ok, n: stt.n }));
 }

@@ -4,17 +4,17 @@
 
 | Event | Script | What it does |
 |---|---|---|
-| `SessionStart` | `session-start.mjs` | Puts the record, open explanations and promotion signals in the context, and asks for your goal. Open explanations of earlier sessions lapse here. It does not mention reviews. |
-| `UserPromptSubmit` | `prompt-gate.mjs` | Recognises the skill, decides whether a new rung may unlock, logs solved tasks and asks for explanations. Agent messages, notifications and system reminders do not count as your words. |
+| `SessionStart` | `session-start.mjs` | Puts the record, open explanations and promotion proposals in the context, and asks for your goal. You also see an open proposal yourself, in the message at the start. Open explanations of earlier sessions lapse here. It does not mention reviews. |
+| `UserPromptSubmit` | `prompt-gate.mjs` | Recognises the skill, decides whether a new rung may unlock, logs solved tasks and asks for explanations. Sets the level when you confirm a proposal with "yes, promote". During a transfer task no rung unlocks. Agent messages, notifications and system reminders do not count as your words. |
 | `PreToolUse` | `guard.mjs` | Blocks writing, building and testing code at L1–L3, and every change to the record, the state and the harness itself. It judges a shell command per simple command, by the program that runs. It always refuses `eval`, `iex` and `Invoke-Expression`. |
-| `Stop` | `reflect-gate.mjs` | Processes the markers in Claude's answer, checks your explanation and the verdict of the demotion analyst, and asks for the diary when you want to stop. After the diary, what is still open lapses. |
+| `Stop` | `reflect-gate.mjs` | Processes the markers in Claude's answer, checks your explanation, the transfer task and the verdict of the demotion analyst, and asks for the diary when you want to stop. When an explanation meets a promotion criterion, it shows you the proposal right away. After the diary, what is still open lapses. |
 
 ## `skill.mjs` (you run it yourself, with `!`)
 
 | Command | What |
 |---|---|
 | `list` / `status` | Overview; L4 reviews that are ready, open and skipped explanations, and signals. Claude may run these two as well. |
-| `set <id> <L0..L4> "note"` | Set a level. Raising it only works when no tasks wait for an explanation. |
+| `set <id> <L0..L4> "note"` | Set a level. Raising it only works when no tasks wait for an explanation. A proposal of the harness is easier to confirm in the chat: type "yes, promote" (optionally with the id). |
 | `review <id> pass\|shaky\|fail` | Record the outcome of a review yourself. Usually not needed: the next task of an L4 skill decides it. |
 | `add-micro <parent> <id> <level> "title" "keywords"` | Add a microskill. With `autoDemote` the demotion analyst also creates one itself, at the parent's level minus 1. |
 | `done <id> "what"` | Log a task without a test (design, UML). |
@@ -48,7 +48,16 @@ Runs `dotnet test` with a trx logger and shows a short summary. A test that goes
 | `[explain-ok <tid>]` / `[uitleg-ok <tid>]` | The explanation is right; the Stop hook still checks it. |
 | `[explain-no <tid>]` / `[uitleg-nee <tid>]` | The explanation is incomplete; the task stays open. |
 | `[demotie {...}]` / `[demotion {...}]` | The verdict of the demotion analyst (JSON). The Stop hook only applies it when the agent really ran in that turn. |
+| `[transfer-start <id>]` | Start of the transfer task (`/mastery-check`), only at L2 or L3. From then on every `[rung N]` counts against the transfer task. |
+| `[transfer-ok <id>]` / `[transfer-no <id>]` (`[transfer-nee <id>]`) | The transfer task passed or not. `ok` only counts without help since the start, and when your last message passes the same check as an explanation. |
 | `<!-- session: <id> -->` / `<!-- sessie: <id> -->` | In the diary: the entry of this session. |
+
+## Skills
+
+| Skill | What |
+|---|---|
+| `/diary` | Closes the session: the facts from Claude, the reflection from you. |
+| `/mastery-check <id>` | The transfer task for the step to L4: a new exercise in another domain, without help, followed by three why-questions. |
 
 ## Events
 
@@ -64,6 +73,17 @@ Everything the harness does is in `.learning/state/events.jsonl`. The events of 
 | `demotion-pending`, `demotion-verdict`, `demotion-rejected` | The analyst is needed, its verdict, or a verdict the Stop hook refused. |
 | `micro-add` with `auto: true`, `task-retag` | The analyst created a microskill and linked tasks to it. |
 | `build-failed` | A compile error, remembered as the starting point of the folder. |
+
+And of the addition of 11 November 2026 (promotion):
+
+| Event | Meaning |
+|---|---|
+| `task` with `level` | The level of the skill when the task was logged. A task at L0 or L1 does not carry a jump. |
+| `promotion-offered` | The harness showed a proposal to promote (`from`, `to`), or the hint that only the transfer task is missing (`to: transfer`). |
+| `promotion-confirmed`, `promotion-refused` | You typed "yes, promote"; promoted, or refused because a task still waits for its explanation. |
+| `level` with `by: learner`, `via: voorstel` | The level, set after your confirmation. |
+| `promotion-declined` | You said "no" or "later" to a proposal. It comes back after a new task that meets the criterion. |
+| `transfer-start`, `transfer-passed`, `transfer-failed`, `transfer-rejected` | The transfer task: started, passed, not passed (`why: help` or `claude`), or a marker the Stop hook refused. |
 
 ## Files
 
