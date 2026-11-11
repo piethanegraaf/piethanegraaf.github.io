@@ -4,6 +4,7 @@
 //   node .claude/hooks/skill.mjs status                    reviews, open explanations, promotion signals
 //   node .claude/hooks/skill.mjs set <id> <L0..L4> ["note"]
 //   node .claude/hooks/skill.mjs review <id> pass|shaky|fail
+//   node .claude/hooks/skill.mjs add <id> "title" ["keyword1, keyword2"]   (a new main skill; its first task places it)
 //   node .claude/hooks/skill.mjs add-micro <parent> <id> <L0..L4> "title" "keyword1, keyword2"
 //   node .claude/hooks/skill.mjs done <id> "what worked"   (log a task; counts only after an explanation in your own words)
 //   node .claude/hooks/skill.mjs untask <id>               (void the last logged task, e.g. logged by mistake)
@@ -21,7 +22,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import {
-  loadSkills, saveSkills, findSkill, addOverride, loadOverrides, logEvent, today, taskStats,
+  loadSkills, saveSkills, findSkill, settingsOf, addOverride, loadOverrides, logEvent, today, taskStats,
   LEVELS, levelName, isMicro, microsOf, familyIds, familyOf, scheduleOnLevel, scheduleOnReview, dueReviews,
   pendingTasks, allTasks, logTask, levelAdvice, recentWins, pickSession, loadSession, saveSession, touch, taskRung, taskLogged,
   lapseTasks, afterTask, isReviewDue, isPlacementPending, effectiveLevel, adviceCommand, openOffer,
@@ -129,6 +130,22 @@ switch (cmd) {
     logEvent({ type: "review", skill: s.id, result, nextReview: s.nextReview });
     console.log(t(`cli.review.${result}`, { id: s.id, date: s.nextReview }));
     if (advice) console.log(advice);
+    break;
+  }
+  case "add": {
+    // A new main skill, e.g. for a part of the exam that the map does not have yet. It starts with an
+    // open placement: the first task sets the level. Folders with `paths`, microskills with `add-micro`.
+    const [id, title, kws] = args;
+    if (!id || !/^[a-z][a-z0-9-]*(\.[a-z0-9-]+)+$/.test(id)) exit("cli.add.badId");
+    if (findSkill(data, id)) exit("cli.micro.exists", { id });
+    const parent = data.skills.find((x) => !isMicro(x) && x.kind !== "zone" && id.startsWith(x.id + "."));
+    if (parent) exit("cli.add.isMicro", { id, parent: parent.id });
+    if (!title || !String(title).trim() || String(title).length > 80 || /[\r\n<>]/.test(title)) exit("cli.add.noTitle");
+    const s = { id, title: String(title).trim(), level: settingsOf(data).defaultLevel, keywords: String(kws ?? "").split(",").map((k) => k.trim()).filter(Boolean), paths: [] };
+    data.skills.push(s);
+    saveSkills(data);
+    logEvent({ type: "skill-add", skill: id });
+    console.log(t("cli.add.done", { id, title: s.title, keywords: s.keywords.join(", ") || "-" }));
     break;
   }
   case "add-micro": {
@@ -289,10 +306,14 @@ switch (cmd) {
     const allowed = {
       examDate: /^\d{4}-\d{2}-\d{2}$/, stuckTimerMinutes: /^\d+$/, idleMinutes: /^[1-9]\d*$/, defaultLevel: /^L[0-4]$/,
       course: /^[^\r\n<>]{1,80}$/, language: /^(nl|en)$/, autoDemote: /^(true|false)$/,
+      // Which files are the learner's code (the guard protects them at L1-L3): comma-separated.
+      codeExtensions: /^\.?[a-z0-9]{1,10}(\s*,\s*\.?[a-z0-9]{1,10})*$/i, codeFiles: /^[\w.*-]{1,60}(\s*,\s*[\w.*-]{1,60})*$/,
     };
     if (!allowed[key] || !allowed[key].test(value)) exit("cli.setting.usage");
     data.settings = data.settings ?? {};
-    data.settings[key] = ["stuckTimerMinutes", "idleMinutes"].includes(key) ? Number(value) : key === "autoDemote" ? value === "true" : value;
+    const list = (v) => v.split(",").map((x) => x.trim()).filter(Boolean).map((x) => (key === "codeExtensions" ? x.replace(/^\./, "") : x));
+    data.settings[key] = ["stuckTimerMinutes", "idleMinutes"].includes(key) ? Number(value) : key === "autoDemote" ? value === "true"
+      : ["codeExtensions", "codeFiles"].includes(key) ? list(value) : value;
     saveSkills(data);
     logEvent({ type: "setting", key, value });
     console.log(`${key} = ${value}`);

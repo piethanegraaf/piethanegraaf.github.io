@@ -59,6 +59,9 @@ export const DEFAULT_SETTINGS = {
   targetSuccess: 0.85,
   // Files whose content belongs to the learner (the guard protects them at L1-L3).
   codeExtensions: ["cs", "csproj", "sln", "slnx"],
+  // Files without a telling extension that are also the learner's work, by name (* = anything but /),
+  // for example "Dockerfile" or "appsettings*.json".
+  codeFiles: [],
   // Commands that build, run or test code (regular expressions, case-insensitive).
   buildCommands: [
     "\\bdotnet(\\.exe)?\\s+(build|test|run|watch|publish|pack|new|add|remove|restore|msbuild|vstest|format|exec|sln)\\b",
@@ -85,10 +88,15 @@ const safeRe = (make, data, key) => {
   try { return make(listSetting(data, key)); } catch { return make(DEFAULT_SETTINGS[key]); }
 };
 
-// File extension pattern for learner code, e.g. /\.(cs|csproj)$/i (end) or /\.(cs|csproj)\b/i (in a command).
+// Pattern for learner code: an extension from codeExtensions, e.g. /\.(cs|csproj)$/i (end) or
+// /\.(cs|csproj)\b/i (in a command), or a file name from codeFiles ("Dockerfile", "appsettings*.json").
 export function codeExtRe(data, inCommand = false) {
   const ext = listSetting(data, "codeExtensions").map((e) => escapeRe(e.replace(/^\./, ""))).filter(Boolean);
-  return new RegExp(`\\.(${ext.join("|") || "(?!)"})${inCommand ? "\\b" : "$"}`, "i");
+  const names = listSetting(data, "codeFiles").map((n) => n.trim()).filter((n) => n && !/[\\/]/.test(n))
+    .map((n) => n.split("*").map(escapeRe).join("[^\\\\/]*"));
+  const end = inCommand ? "\\b" : "$";
+  const byName = names.length ? `|(?:^|[\\\\/${inCommand ? "\\s\"'" : ""}])(?:${names.join("|")})${end}` : "";
+  return new RegExp(`\\.(?:${ext.join("|") || "(?!)"})${end}${byName}`, "i");
 }
 
 // Commands that build, run or test code. check.mjs (the harness test runner) always counts.

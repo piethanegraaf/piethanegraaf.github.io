@@ -86,7 +86,7 @@ test("--lang en: English rules, diary skill, titles and messages", () => {
     assert.equal(skills.skills.find((s) => s.id === "ood.overerving").title, "Inheritance, : base(...), abstract, override");
     assert.match(skills._info, /^Skill map/);
     const start = run(path.join(d, ".claude/hooks/session-start.mjs"), [], { env: cleanEnv(), cwd: d, input: "{}" });
-    assert.match(start.json.systemMessage, /^Learning harness: 15 skills/);
+    assert.match(start.json.systemMessage, /^Learning harness: 19 skills/);
   } finally { fs.rmSync(d, { recursive: true, force: true }); }
 });
 

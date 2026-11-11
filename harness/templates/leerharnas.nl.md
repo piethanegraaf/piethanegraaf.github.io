@@ -20,6 +20,7 @@ Doel van de setup: **wat de student beheerst snel herkennen en alleen nog met he
   - `! node .claude/hooks/skill.mjs set <id> <L0..L4> "notitie"`
     - Omhoog zetten wordt geweigerd zolang er taken van die vaardigheid op uitleg wachten.
   - `! node .claude/hooks/skill.mjs review <id> pass|shaky|fail`: een herhaling zelf opgeven. Meestal niet nodig: de eerstvolgende taak bepaalt de uitkomst.
+  - `! node .claude/hooks/skill.mjs add <id> "titel" ["trefwoord1, trefwoord2"]`: een nieuwe hoofdvaardigheid, met plaatsing open. Stel dit voor als de student werkt aan iets wat niet in het register staat, bijvoorbeeld een onderdeel van de toets.
   - `! node .claude/hooks/skill.mjs add-micro <parent> <id> <niveau> "titel" "trefwoord1, trefwoord2"`
   - `! node .claude/hooks/skill.mjs done <id> "wat"`: een taak afmelden als er geen test is, bijvoorbeeld bij ontwerp of UML.
   - `! node .claude/hooks/skill.mjs untask <id>`: schrapt een onterecht gelogde taak.
@@ -29,6 +30,7 @@ Doel van de setup: **wat de student beheerst snel herkennen en alleen nog met he
   - `! node .claude/hooks/skill.mjs setting examDate JJJJ-MM-DD`: de toetsdatum. Herhalingen worden zo gepland dat ze vóór de toets vallen.
   - `! node .claude/hooks/skill.mjs setting autoDemote true|false`: automatisch omlaag aan of uit (standaard uit).
   - `! node .claude/hooks/skill.mjs setting course "<vak>"` en `setting language nl|en`: het vak en de taal van de harnas.
+  - `! node .claude/hooks/skill.mjs setting codeExtensions "cs, csproj, sql"` en `setting codeFiles "Dockerfile, appsettings*.json"`: welke bestanden werk van de student zijn. De guard beschermt ze bij L1–L3.
   - `! node .claude/hooks/skill.mjs setting idleMinutes <minuten>`: een pauze die langer duurt, telt niet als actieve tijd (standaard 20).
   - `! node .claude/hooks/skill.mjs paths <id> add|remove "<glob>"`: welke opdrachtmappen bij een vaardigheid horen. De map bepaalt de vaardigheid van een taak en het niveau dat de guard gebruikt. Klopt een koppeling niet, stel dan dit commando voor.
   - `! node .claude/hooks/skill.mjs replay <transcript.jsonl> [--dry-run]`: herstelt uitleggen die in de chat zijn goedgekeurd maar niet gelogd. Alleen wat beide sleutels haalt, telt.

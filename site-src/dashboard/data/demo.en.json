@@ -317,6 +317,23 @@
       "history": []
     },
     {
+      "id": "ood.polymorfie",
+      "parent": null,
+      "kind": null,
+      "title": "Polymorphism: working through a base type or interface, virtual and override, late binding",
+      "titles": {
+        "nl": "Polymorfie: via een basistype of interface werken, virtual en override, late binding",
+        "en": "Polymorphism: working through a base type or interface, virtual and override, late binding"
+      },
+      "level": "L2",
+      "nextReview": null,
+      "intervalIndex": 0,
+      "lastReview": null,
+      "lastSeen": null,
+      "placement": "pending",
+      "history": []
+    },
+    {
       "id": "ood.exceptions",
       "parent": null,
       "kind": null,
@@ -416,6 +433,40 @@
       "history": []
     },
     {
+      "id": "ood.solid",
+      "parent": null,
+      "kind": null,
+      "title": "SOLID and modularity: one responsibility, extend without changing, depend on abstractions",
+      "titles": {
+        "nl": "SOLID en modulariteit: één verantwoordelijkheid, uitbreiden zonder wijzigen, afhangen van abstracties",
+        "en": "SOLID and modularity: one responsibility, extend without changing, depend on abstractions"
+      },
+      "level": "L2",
+      "nextReview": null,
+      "intervalIndex": 0,
+      "lastReview": null,
+      "lastSeen": null,
+      "placement": "pending",
+      "history": []
+    },
+    {
+      "id": "arch.lagen",
+      "parent": null,
+      "kind": null,
+      "title": "Layers: UI, backend and database apart, with controllers and dependency injection",
+      "titles": {
+        "nl": "Lagen: UI, backend en database gescheiden, met controllers en dependency injection",
+        "en": "Layers: UI, backend and database apart, with controllers and dependency injection"
+      },
+      "level": "L2",
+      "nextReview": null,
+      "intervalIndex": 0,
+      "lastReview": null,
+      "lastSeen": null,
+      "placement": "pending",
+      "history": []
+    },
+    {
       "id": "debug.zonder-foutmelding",
       "parent": null,
       "kind": null,
@@ -440,6 +491,23 @@
       "titles": {
         "nl": "UML/Mermaid klassendiagram, is-een vs heeft-een",
         "en": "UML/Mermaid class diagram, is-a vs has-a"
+      },
+      "level": "L2",
+      "nextReview": null,
+      "intervalIndex": 0,
+      "lastReview": null,
+      "lastSeen": null,
+      "placement": "pending",
+      "history": []
+    },
+    {
+      "id": "uml.sequentiediagram",
+      "parent": null,
+      "kind": null,
+      "title": "UML sequence and component diagrams: how objects and components work together",
+      "titles": {
+        "nl": "UML-sequentie- en componentdiagram: hoe objecten en componenten samenwerken",
+        "en": "UML sequence and component diagrams: how objects and components work together"
       },
       "level": "L2",
       "nextReview": null,

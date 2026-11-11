@@ -25,5 +25,9 @@
   "pattern.factory": ["factory", "fabriek"],
   "pattern.observer": ["observer", "subscribe", "notify", "event handler", "eventhandler"],
   "debug.zonder-foutmelding": ["debug", "debugger", "breakpoint", "nullreference", "blijft false", "blijft null", "geen foutmelding"],
-  "uml.klassendiagram": ["uml", "klassendiagram", "class diagram", "mermaid", "is-een", "is-a", "drawio"]
+  "uml.klassendiagram": ["uml", "klassendiagram", "class diagram", "mermaid", "is-een", "is-a", "drawio"],
+  "ood.polymorfie": ["polymorf", "polymorphism", "late binding", "dynamic dispatch", "basistype", "base type"],
+  "ood.solid": ["solid", "single responsibility", "open/closed", "open-closed", "liskov", "dependency inversion", "modulair", "modular"],
+  "arch.lagen": ["controller", "dependency injection", "lagenarchitectuur", "layered architecture", "backend", "repository", "servicelaag", "service layer"],
+  "uml.sequentiediagram": ["sequentiediagram", "sequence diagram", "sequencediagram", "componentdiagram", "component diagram"]
 }

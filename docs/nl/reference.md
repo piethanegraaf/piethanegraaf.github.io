@@ -21,13 +21,14 @@ description: "De vier Claude Code-hooks van de leerharnas, elk commando van skil
 | `since-export` | Wat er nieuw is sinds de laatste export naar het dashboard, in één regel: taken, dagboeksessies en niveauwijzigingen. Niets als er nog geen export was. Het leest alleen, dus Claude mag het ook draaien: `/diary` sluit ermee af. Zie [Sinds de laatste export](progress-dashboard.md#sinds-de-laatste-export). |
 | `set <id> <L0..L4> "notitie"` | Niveau zetten. Omhoog kan pas als er geen taken meer op uitleg wachten. Een voorstel van de harnas bevestig je makkelijker in de chat: typ "ja, doorzetten" (eventueel met de id). |
 | `review <id> pass\|shaky\|fail` | De uitkomst van een herhaling zelf opgeven. Meestal niet nodig: de eerstvolgende taak van een L4-vaardigheid bepaalt hem. |
+| `add <id> "titel" ["trefwoorden"]` | Een nieuwe hoofdvaardigheid toevoegen, bijvoorbeeld voor een onderdeel van de toets dat niet in de kaart staat. Hij begint met een open plaatsing: je eerste taak bepaalt het niveau. Mappen koppel je met `paths`. Gelogd als event `skill-add`. |
 | `add-micro <parent> <id> <niveau> "titel" "trefwoorden"` | Een microvaardigheid toevoegen. Met `autoDemote` maakt de demotie-analist er ook zelf een aan, op het niveau van de ouder min 1. |
 | `done <id> "wat"` | Een taak zonder test afmelden (ontwerp, UML). |
 | `untask <id>` | De laatst gelogde taak van een vaardigheid schrappen. |
 | `correct <taak-id> trede <1-5> "reden"` | Meer hulp dan gelogd: de trede alleen **omhoog** zetten. |
 | `correct <taak-id> schrap "reden"` | Eén taak schrappen. |
 | `override <id\|*> <minuten> "reden"` | Tijdelijk toestaan dat Claude code schrijft (hooguit 240 minuten, gelogd). |
-| `setting <sleutel> <waarde>` | `examDate`, `stuckTimerMinutes`, `idleMinutes`, `defaultLevel`, `course`, `language`. |
+| `setting <sleutel> <waarde>` | `examDate`, `stuckTimerMinutes`, `idleMinutes`, `defaultLevel`, `course`, `language`, `autoDemote`, en `codeExtensions` en `codeFiles` als lijst met komma's. |
 | `paths <id> add|remove "<glob>"` | Welke opdrachtmappen bij een vaardigheid horen, bijvoorbeeld `paths ood.associaties add "ood-opdrachten-01/09-*/**"`. De map bepaalt de vaardigheid van een taak en het niveau dat de guard gebruikt. Niet voor een microvaardigheid: die gebruikt het niveau van de hoofdvaardigheid. Heeft een andere vaardigheid hetzelfde pad, dan waarschuwt hij. Gelogd als event `paths`. |
 | `replay <transcript.jsonl> [--dry-run]` | Herstelt uitleggen die in de chat zijn goedgekeurd maar niet gelogd. Hij zoekt de markers `[uitleg-ok <tid>]` en controleert jouw bericht met dezelfde check als de Stop-hook. Alleen wat beide sleutels haalt, telt, met bron `replay`. |
 

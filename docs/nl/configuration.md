@@ -18,7 +18,8 @@ De instellingen staan in `.learning/skills.json`, onder `settings`. Je wijzigt z
 | `idleMinutes` | `20` | Een pauze die langer duurt, telt niet als actieve tijd: niet voor de vasttimer, niet voor de minuten per taak en niet voor de melding na een uur. |
 | `targetSuccess` | `0.85` | Het doel voor doorstromen van L2 naar L3. |
 | `autoDemote` | `false` | Automatisch omlaag op bewijs, met de demotie-analist voor een hoofdvaardigheid. Zet het pas aan als het loggen een paar sessies betrouwbaar was: `setting autoDemote true`. |
-| `codeExtensions` | `cs, csproj, sln, slnx` | Welke bestanden code van de student zijn. |
+| `codeExtensions` | `cs, csproj, sln, slnx` | Welke bestanden code van de student zijn. De OOD-kaart voegt `razor, cshtml, sql, yml, yaml` toe, voor een project met een UI, een database en een pipeline. |
+| `codeFiles` | (leeg) | Bestanden zonder sprekende extensie die ook werk van de student zijn, op naam. `*` staat voor alles behalve `/`. De OOD-kaart zet `Dockerfile, appsettings*.json`. |
 | `buildCommands` | `dotnet build/test/run …`, `msbuild` | Reguliere expressies voor commando's die bouwen of testen. `check.mjs` telt altijd mee. |
 | `toolingTerms` | `rider, sdk, nuget …` | Woorden over tooling: "het werkt" daarover is geen opgeloste taak. |
 
