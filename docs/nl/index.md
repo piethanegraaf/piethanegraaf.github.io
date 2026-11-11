@@ -23,7 +23,7 @@ Junior developers lopen in dezelfde val: de agent krijgt het werk af, maar de va
 
 ## Wat denk jij? {#poll}
 
-<div class="poll" data-poll="judge-code" data-t-loading="De resultaten laden…" data-t-results="Resultaten tot nu toe: {n} stemmen" data-t-yours="jouw stem" data-t-delay="De totalen kunnen een paar uur achterlopen." data-t-unavailable="Dank je voor je stem. De resultaten zijn nu niet te tonen." data-t-thanks="Dank je wel!">
+<div class="poll" data-poll="judge-code" data-t-loading="De resultaten laden…" data-t-results="Resultaten tot nu toe: {n} stemmen" data-t-results-one="Resultaten tot nu toe: 1 stem" data-t-yours="jouw stem" data-t-delay="Nieuwe stemmen kunnen er een paar uur over doen voor ze in de totalen staan." data-t-unavailable="Dank je voor je stem. De resultaten zijn nu niet te tonen." data-t-thanks="Dank je wel!">
 <p class="poll__premise">AI schrijft bij AI-gedreven bedrijven al de eerste versie van de meeste nieuwe code.</p>
 <p class="poll__question" id="poll-question">Is leren om code te beoordelen (reviewen, testen, debuggen, ontwerpen) nog je tijd waard, of neemt AI dat binnen een jaar ook over?</p>
 <div class="poll__answers" role="group" aria-labelledby="poll-question">
