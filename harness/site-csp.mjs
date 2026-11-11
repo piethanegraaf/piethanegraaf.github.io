@@ -3,7 +3,8 @@
 //   node harness/site-csp.mjs site
 // - Inline scripts are allowed by their sha256 hash, per page: no 'unsafe-inline' and no 'unsafe-eval' for scripts.
 // - External scripts are only allowed when they carry an integrity attribute (SRI); their origin is added.
-// - Styles may be inline (MkDocs Material and mermaid set them); fonts only from Google Fonts.
+// - Styles may be inline (MkDocs Material and mermaid set them). Styles and fonts only from this site: the
+//   privacy plugin and the build self-host the Google Fonts.
 // Pages with their own CSP (the dashboard) are left alone.
 // connect-src also allows the GoatCounter endpoint: count.js (self-hosted) sends page views there with sendBeacon.
 import fs from "node:fs";
@@ -43,8 +44,8 @@ export function cspFor(html) {
   return [
     "default-src 'self'",
     `script-src 'self' ${[...hashes, ...origins].join(" ")}`.trim(),
-    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-    "font-src 'self' https://fonts.gstatic.com data:",
+    "style-src 'self' 'unsafe-inline'",
+    "font-src 'self' data:",
     "img-src 'self' data:",
     `connect-src 'self' ${ANALYTICS_ENDPOINT}`,
     "worker-src 'self' blob:",

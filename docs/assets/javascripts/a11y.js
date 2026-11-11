@@ -191,7 +191,14 @@
     syncMenu();
   }
 
+  // 4. The search of Material is a dialog without a name (WCAG 4.1.2): give it one.
+  function nameSearchDialog() {
+    var dialog = document.querySelector('.md-search[role="dialog"]');
+    if (dialog && !dialog.hasAttribute("aria-label")) dialog.setAttribute("aria-label", en ? "Search" : "Zoeken");
+  }
+
   function init() {
+    nameSearchDialog();
     markScrollAreas();
     markCurrentPage();
     setupMenu();
