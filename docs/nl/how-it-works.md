@@ -1,3 +1,7 @@
+---
+title: "Hoe het werkt: niveaus L0–L4 en hints in stappen"
+description: "Vijf niveaus per vaardigheid, van L0 (voordoen) tot L4 (geautomatiseerd). Op L1–L3 blokkeert een hook AI-code; op L2 komt hulp als vraag, wijzer en schets."
+---
 # Hoe het werkt
 
 De harnas bestaat uit vier hooks van Claude Code, een vaardighedenregister en een paar commando's die alleen jij draait.
@@ -18,6 +22,8 @@ flowchart LR
   S -.->|uitleg haalt criterium:<br/>voorstel om door te zetten| J[Jij]
   J -.->|ja, doorzetten| G1
 ```
+
+In de harnas gaat elke prompt door de prompt-gate, en bij L1–L3 blokkeert de guard dat Claude code schrijft of test. Een niveau gaat nooit vanzelf omhoog: je bevestigt het voorstel van de reflect-gate met "ja, doorzetten", of je zet het zelf.
 
 ## Niveaus per vaardigheid
 

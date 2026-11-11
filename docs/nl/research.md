@@ -1,3 +1,7 @@
+---
+title: "Leren programmeren met AI: literatuuronderzoek (2026)"
+description: "AI die tijdens het oefenen voor je denkt, verlaagt wat je daarna zonder AI kunt; AI als tutor doet dat niet. Een review uit 2026 met een opzet voor Claude Code."
+---
 # Leren programmeren (en OOD) met AI: literatuuronderzoek, risicoanalyse en een Claude Code-opzet die het leren beschermt
 
 !!! warning "Machinevertaling"
@@ -823,6 +827,8 @@ flowchart LR
     MAP --> H2
 ```
 
+De harnas zet vijf deterministische hooks rond de Claude-agent, en bewaart je vaardighedenregister, dagboek en sessietoestand in een lokale map `.learning/`. CLAUDE.md, de output style en de skills bepalen het didactische gedrag van de agent, maar alleen de hooks dwingen regels af.
+
 **Ontwerpkeuzes:**
 
 - **Regels die altijd moeten gelden, horen in hooks.** Hooks zijn deterministisch. Instructies in CLAUDE.md zijn *adviserend*: het model volgt ze meestal, maar in lange sessies kan het ervan afdrijven. Daarom moet de regel "schrijf geen code die van jou is" een hook zijn.
@@ -872,6 +878,8 @@ stateDiagram-v2
     L4_Automated --> [*] : skill retired - no longer relevant
 ```
 
+In de autonomieladder zoals gebouwd bepaalt de hoogste hinttrede van de eerste taak het niveau van een nieuwe vaardigheid. Daarna kan een vaardigheid automatisch omlaag, maar omhoog blijft altijd jouw beslissing, en herhalingen om haar bij te houden bestaan alleen op L4.
+
 - **Plaatsing.** Een vaardigheid onder L4 zonder geschiedenis en zonder eigen taken heeft een open plaatsing. Tot haar eerste taak telt ze als L2, voor de hintladder en voor de guard. Een nieuwe vaardigheid begint dus niet meer op L0: L0 en L1 zijn vormen van hulp die pas *na* een poging komen. De hoogste trede van de eerste taak bepaalt het niveau (§5.3).
 - **Automatisch omlaag** gebeurt alleen als `settings.autoDemote` aan staat; standaard staat het uit. De regel kijkt naar de eigen uitgelegde taken van de vaardigheid sinds haar laatste niveauwijziging, hooguit de laatste 10. Bij minstens 3 daarvan geldt hij als minder dan 70% gelukt is (op trede ≤ 2) of als de laatste 2 niet gelukt zijn. Hij geldt ook na 2 mislukte herhalingen op rij. Een microvaardigheid gaat dan één niveau omlaag. Bij een hoofdvaardigheid beslist eerst de demotie-analist of een microvaardigheid of de hoofdvaardigheid omlaag gaat (§10.4.2).
 - **Omhoog** gaat nooit automatisch. Elke automatische wijziging kun je terugdraaien met `set`.
@@ -902,6 +910,8 @@ stateDiagram-v2
         L4_Automated --> [*] : skill retired - no longer relevant
     ```
 
+    In de eerdere autonomieladder (7–9 november 2026) begon elke nieuwe vaardigheid op L0 en ging ze omhoog op vaste criteria. Herhalingen begonnen op L3, en twee mislukte herhalingen op rij gaven je alleen het advies om omlaag te gaan; de beslissing bleef bij jou.
+
 > **"Alleen tekstinvoer geven" aan het begin** is L0. Je beschrijft je bedoeling en eisen in gewone tekst, en de AI schrijft een volledig toegelicht voorbeeld. Ook hier ben je nooit helemaal passief: op L0 geef je een korte zelfuitleg of voorspelling voordat de sessie als vooruitgang telt (Chi et al., 1989; Kazemitabaar et al., 2025).
 
 ### 5.3 Frictie afstemmen en de hintladder
@@ -928,6 +938,8 @@ flowchart TD
     N -- no --> A
     M --> O
 ```
+
+Op niveau L2 ontgrendelt de volgende trede van de hintladder pas na een zichtbare poging, of als de vastloop-timer afloopt. De vijf treden lopen van een socratische vraag tot een uitgewerkte oplossing; een taak die de uitgewerkte oplossing nodig heeft, telt als mislukt.
 
 **Regels voor het afstemmen** (contingente begeleiding, met ongeveer 85% succes als vuistregel; §2.2 legt uit waarom dat een heuristiek is en geen bewijs):
 
@@ -983,6 +995,8 @@ sequenceDiagram
     U->>C: answers in own words
     C->>FS: append diary entry, update skill record
 ```
+
+In een voorbeeldsessie blokkeert de PreToolUse-hook dat Claude een bestand van een L2-vaardigheid bewerkt, dus geeft Claude in plaats daarvan de volgende hint. Aan het eind blokkeert de Stop-hook één keer, zodat Claude drie reflectievragen stelt en jij die in je eigen woorden beantwoordt.
 
 | Hook | Gebeurtenis | Taak | Kan hij blokkeren? |
 |---|---|---|---|
@@ -1068,6 +1082,8 @@ classDiagram
     Evidence ..> DiaryEntry : diaryRef
 ```
 
+Zoals ontworpen geeft het vaardighedenregister elke vaardigheid een niveau (L0–L4), een kans op beheersing, datums voor herhalingen en eigen bewijs. Elk bewijsstuk legt vast of het lukte, met welke hinttrede en in hoeveel minuten, en kan verwijzen naar een dagboeknotitie.
+
 **Voorbeeld van een item in `skills.json`:**
 
 ```json
@@ -1120,6 +1136,8 @@ flowchart LR
     P2 --> S[(skills.json)]
 ```
 
+De dagboek- en reflectielus loopt van vooruitdenken (doel en vertrouwen) via uitvoering (werk, gelogd als bewijs) naar zelfreflectie bij de Stop-hook. Een kalibratiecontrole vergelijkt je vertrouwen met je werkelijke hinttrede en succes, en dat neem je mee in je volgende plan.
+
 **Sjabloon voor een dagboeknotitie** (bijvoorbeeld `.learning/diary/2026-11-07.md`):
 
 ```markdown
@@ -1165,6 +1183,8 @@ flowchart TD
     UP -- 120d passed twice --> RET[Long-term maintenance:<br/>yearly spot check +<br/>continuous supervision<br/>of AI output]
 ```
 
+In het oorspronkelijke ontwerp krijgt een L4-vaardigheid herhalingen met een ophaaltaak zonder AI, op groeiende intervallen: 3, 7, 21, 60 en 120 dagen. Is de herhaling wankel, dan blijft het interval gelijk; mislukt ze, dan gaat de vaardigheid terug naar L3 en stopt de AI met automatiseren.
+
 ```mermaid
 timeline
     title Example life of the skill "Strategy pattern"
@@ -1180,6 +1200,8 @@ timeline
     Week 11 : Review at +21 days passed
     Month 5 : Review at +60 days passed - long-term maintenance
 ```
+
+In een voorbeeldtijdlijn uit het oorspronkelijke ontwerp gaat de vaardigheid "Strategy pattern" van L0 in week 1 naar L4 in week 4. Daarna wordt ze nog gecontroleerd, steeds minder vaak, en na een wankele herhaling op +21 dagen blijft dat interval gelijk.
 
 Aan het begin van elke sessie toont de **`SessionStart`-hook** de herhalingen die aan de beurt zijn. Zo gebeurt het versterken vanzelf, en hoef je er zelf niet aan te denken. Dit is het deel "leren afdwingen zolang dat nodig is": een vaardigheid is *nooit voorgoed buiten beeld*. Ze wordt alleen steeds minder vaak gecontroleerd.
 
@@ -1209,6 +1231,8 @@ flowchart LR
     UP & SAME & BACK --> C["clamp: ≤ examDate − 3 days"] --> D
 ```
 
+Zoals gebouwd wordt een L4-vaardigheid herhaald zodra ze na haar datum in je echte werk langskomt; dat deel doe je dan zelf. Trede 0 zet het Fibonacci-interval één stap omhoog, trede 1–2 herhaalt het, en trede 3–5 of een mislukking zet het twee stappen terug.
+
 ??? note "Eerdere versie zoals gebouwd (§10, 7 november 2026)"
 
     De harnas verving het schema 3 → 7 → 21 → 60 → 120 hierboven.
@@ -1230,6 +1254,8 @@ flowchart LR
         F -- yes --> ADV[Advice: one level down<br/>learner decides]
         UP & SAME & BACK --> C["clamp: ≤ examDate − 3 days"] --> Q
     ```
+
+    In de eerdere versie zoals gebouwd (7 november 2026) waren herhalingen korte ophaaltaken zonder hulp, op Fibonacci-intervallen vanaf L3. Na twee keer `fail` op rij kreeg je het advies om één niveau omlaag te gaan; de harnas zette een vaardigheid nooit automatisch lager.
 
 ### 5.8 OOD-vaardighedenkaart
 
@@ -1294,6 +1320,8 @@ flowchart TD
     D5 --> F3
 ```
 
+De OOD-vaardighedenkaart laat zien welke vaardigheden welke andere vrijspelen: van klassen en objecten, via relaties en modelleren, naar principes en daarna patronen. Een vaardigheid kan pas naar L4, het niveau waarop de AI haar automatiseert, als de vereiste vaardigheden ook op L4 staan.
+
 ---
 
 ## 6. Evaluatie
@@ -1340,6 +1368,8 @@ De controles hierboven zijn voor één lerende. Of de harnas in het algemeen wer
 ## 8. Literatuur
 
 *Klassieke bronnen zijn aangehaald uit gevestigde literatuur. Recente studies over generatieve AI zijn bij het schrijven gecontroleerd aan de hand van de gegevens van de uitgever of van arXiv. Preprints (niet door vakgenoten beoordeeld) zijn gemarkeerd.*
+
+**Hoe de bronnen zijn gecontroleerd.** Twee citatiecontroles vergeleken de claims in dit onderzoek met hun primaire bronnen: één voor de [studies over generatieve AI](https://github.com/piethanegraaf/piethanegraaf.github.io/blob/main/research/citation-checks/citation_check_genai.md) en één voor de [leerwetenschap](https://github.com/piethanegraaf/piethanegraaf.github.io/blob/main/research/citation-checks/citation_check_learning_science.md). De correcties die daaruit kwamen, staan in het [wijzigingslog](#11-wijzigingslog). De controles zelf zijn in het Engels.
 
 **Leren programmeren en OOD**
 
@@ -1944,6 +1974,8 @@ flowchart TD
     B -- no --> N3[Done]
 ```
 
+Geldt de regel voor omlaag bij een hoofdvaardigheid, dan beslist de demotie-analist, die alleen leest, of een microvaardigheid of de hoofdvaardigheid omlaag gaat. De Stop-hook voert het oordeel van de agent alleen uit als de JSON door de controles komt; anders verandert er niets automatisch.
+
 #### 10.4.3 Bugs die in dezelfde sessie zijn gevonden (allemaal gerepareerd)
 
 1. **De Stop-hook miste 10 van de 19 markers.** De oorzaak was een race met de gebufferde transcriptschrijver van Claude Code: die schrijft elke 100 ms weg, en niet voordat de hook draait. *Gerepareerd:* de Stop-hook leest ook het veld `last_assistant_message` uit zijn invoer. Vier goedgekeurde uitleggen waren verloren gegaan. Het nieuwe commando `replay` controleert beide sleutels opnieuw vanuit het transcript en logt alleen wat slaagt (bron `replay`), ook voor een taak die intussen vervallen is.
@@ -1967,6 +1999,8 @@ stateDiagram-v2
     Explained --> [*] : counts towards the success rate
     Lapsed --> [*] : does not count - shown as skipped
 ```
+
+Een taak staat open tot de uitleg in eigen woorden is goedgekeurd, en vervalt als de sessie eindigt of een andere opdracht begint. Alleen een uitgelegde taak telt mee voor het succespercentage; een vervallen taak wordt als overgeslagen getoond, tenzij `replay` de uitleg herstelt.
 
 ---
 

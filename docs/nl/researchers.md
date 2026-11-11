@@ -1,4 +1,5 @@
 ---
+title: "Voor onderzoekers: de leerharnas toetsen in een experiment"
 description: Een uitnodiging om de leerharnas voor Claude Code te toetsen in een gerandomiseerd experiment, met hypothesen, groepen, uitkomsten en wat de harnas al vastlegt.
 ---
 

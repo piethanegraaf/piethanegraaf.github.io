@@ -1,3 +1,7 @@
+---
+title: "Onderzoeksnotities over AI, programmeren en onderwijs"
+description: "Gedateerde werknotities achter het literatuuronderzoek, in het Engels: nieuw bewijs over AI en leren programmeren, AI-code, banen, vaardigheden en toetsing."
+---
 # Onderzoeksnotities
 
 Dit zijn de werknotities achter het [onderzoek](../research.md): wat de onderzoeksagents vonden, met de bron en de kwaliteit van het bewijs bij elke claim. Ze zijn in het Engels en niet vertaald, en staan daarom in het Engelse deel van de site.

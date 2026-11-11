@@ -23,6 +23,8 @@ flowchart LR
   Y -.->|yes, promote| G1
 ```
 
+In the harness, every prompt passes the prompt-gate, and the guard blocks Claude from writing or testing code at levels L1–L3. A level never goes up by itself: you confirm the reflect-gate's proposal with "yes, promote", or set it yourself.
+
 ## Levels per skill
 
 | Level | Claude | You |

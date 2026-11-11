@@ -825,6 +825,8 @@ flowchart LR
     MAP --> H2
 ```
 
+The harness puts five deterministic hooks around the Claude agent, and keeps your skill record, diary and session state in a local `.learning/` folder. CLAUDE.md, the output style and the skills shape how the agent teaches, but only the hooks enforce rules.
+
 **Design choices:**
 
 - **Rules that must hold go in hooks.** Hooks are deterministic. Instructions in CLAUDE.md are *advisory*: the model usually follows them, but it can drift from them in long sessions. So the rule "do not write code that you own" has to be a hook.
@@ -874,6 +876,8 @@ stateDiagram-v2
     L4_Automated --> [*] : skill retired - no longer relevant
 ```
 
+In the autonomy ladder as built, a new skill's level is set by the highest hint rung of its first task. After that, a skill can go down automatically, but going up is always your decision, and maintenance reviews happen only at L4.
+
 - **Placement.** A skill below L4 with no history and no tasks of its own has an open placement. Until its first task it counts as L2, for the hint ladder and for the guard. So a new skill no longer starts at L0: L0 and L1 are forms of help that come *after* an attempt. The highest rung of the first task sets the level (§5.3).
 - **Auto-demote** happens only when `settings.autoDemote` is on; it is off by default. The rule looks at the skill's own explained tasks since its last level change, at most the last 10. With at least 3 of them, it applies when under 70% were solved (at rung ≤ 2) or the last 2 were not solved. It also applies after 2 failed reviews in a row. A microskill then goes down one level. For a parent skill, the demotion analyst first decides whether a microskill or the parent goes down (§10.4.2).
 - **Up** never happens automatically. You can undo any automatic change with `set`.
@@ -904,6 +908,8 @@ stateDiagram-v2
         L4_Automated --> [*] : skill retired - no longer relevant
     ```
 
+    In the earlier autonomy ladder (7–9 November 2026), every new skill started at L0 and moved up on fixed criteria. Reviews started at L3, and two failed reviews in a row only gave you advice to demote; the decision stayed yours.
+
 > **"Just giving text input" at the start** is L0. You describe your intent and requirements in prose, and the AI writes a fully annotated example. Even here you are never fully passive: at L0 you give a short self-explanation or prediction before the session counts as progress (Chi et al., 1989; Kazemitabaar et al., 2025).
 
 ### 5.3 Friction calibration & the hint ladder
@@ -930,6 +936,8 @@ flowchart TD
     N -- no --> A
     M --> O
 ```
+
+At level L2, the next hint rung unlocks only after a visible attempt, or when the stuck timer runs out. The five rungs run from a Socratic question to a worked solution; a task that needs the worked solution counts as failed.
 
 **Calibration rules** (contingent tutoring, with about 85% success as a rule of thumb; §2.2 explains why this is a heuristic and not evidence):
 
@@ -985,6 +993,8 @@ sequenceDiagram
     U->>C: answers in own words
     C->>FS: append diary entry, update skill record
 ```
+
+In an example session, the PreToolUse hook denies Claude's edit to a file of an L2 skill, so Claude gives the next hint instead. At the end, the Stop hook blocks once, so that Claude asks three reflection questions and you answer them in your own words.
 
 | Hook | Event | Job | Can it block? |
 |---|---|---|---|
@@ -1070,6 +1080,8 @@ classDiagram
     Evidence ..> DiaryEntry : diaryRef
 ```
 
+As designed, the skill record gives each skill a level (L0–L4), a probability of mastery, review dates and its own evidence. Each evidence item records success, hint rung and minutes, and can link to a diary entry.
+
 **Example `skills.json` entry:**
 
 ```json
@@ -1122,6 +1134,8 @@ flowchart LR
     P2 --> S[(skills.json)]
 ```
 
+The diary and reflection loop runs from forethought (goal and confidence) through performance (work, logged as evidence) to self-reflection at the Stop hook. A calibration check compares your confidence with your actual hint rung and success, and informs your next plan.
+
 **Diary entry template** (for example `.learning/diary/2026-11-07.md`):
 
 ```markdown
@@ -1167,6 +1181,8 @@ flowchart TD
     UP -- 120d passed twice --> RET[Long-term maintenance:<br/>yearly spot check +<br/>continuous supervision<br/>of AI output]
 ```
 
+In the original design, an L4 skill gets retrieval reviews without AI at growing intervals: 3, 7, 21, 60 and 120 days. A shaky pass repeats the interval, and a fail demotes the skill to L3, so the AI stops automating it.
+
 ```mermaid
 timeline
     title Example life of the skill "Strategy pattern"
@@ -1182,6 +1198,8 @@ timeline
     Week 11 : Review at +21 days passed
     Month 5 : Review at +60 days passed - long-term maintenance
 ```
+
+In an example timeline from the original design, the skill "Strategy pattern" goes from L0 in week 1 to L4 in week 4. After that it is still checked, less and less often, and a shaky review at +21 days repeats that interval.
 
 At the start of each session, the **`SessionStart` hook** shows the reviews that are due. So reinforcement happens automatically, and you do not have to remember it. This is the "enforce learning as long as needed" part: a skill is *never permanently out of the loop*. It just gets checked less and less often.
 
@@ -1211,6 +1229,8 @@ flowchart LR
     UP & SAME & BACK --> C["clamp: ≤ examDate − 3 days"] --> D
 ```
 
+As built, an L4 skill is reviewed when it first comes up in real work after its date; you do that part yourself. Rung 0 moves the Fibonacci interval one step up, rung 1–2 repeats it, and rung 3–5 or a fail moves it two steps back.
+
 ??? note "Earlier version as built (§10, 7 November 2026)"
 
     The harness replaced the 3 → 7 → 21 → 60 → 120 schedule above.
@@ -1232,6 +1252,8 @@ flowchart LR
         F -- yes --> ADV[Advice: one level down<br/>learner decides]
         UP & SAME & BACK --> C["clamp: ≤ examDate − 3 days"] --> Q
     ```
+
+    In the earlier version as built (7 November 2026), reviews were short retrieval tasks without help, on Fibonacci intervals from L3 onwards. After two fails in a row, the harness only advised you to go down one level and never demoted a skill automatically.
 
 ### 5.8 OOD skill map
 
@@ -1296,6 +1318,8 @@ flowchart TD
     D5 --> F3
 ```
 
+The OOD skill map shows which skills unlock which: from classes and objects, through relationships and modelling, to principles and then patterns. A skill can only reach L4, the level where the AI automates it, once its prerequisites are at L4 too.
+
 ---
 
 ## 6. Evaluation
@@ -1342,6 +1366,8 @@ The checks above are for one learner. Whether the harness works in general needs
 ## 8. References
 
 *Classic references are cited from established literature. Recent generative AI studies were checked against the publisher or arXiv records at the time of writing. Preprints (not peer reviewed) are marked.*
+
+**How the sources were verified.** Two citation checks compared the claims in this review with their primary sources: one for the [generative AI studies](https://github.com/piethanegraaf/piethanegraaf.github.io/blob/main/research/citation-checks/citation_check_genai.md) and one for the [learning science](https://github.com/piethanegraaf/piethanegraaf.github.io/blob/main/research/citation-checks/citation_check_learning_science.md). The corrections that came out of them are in the [change log](#11-change-log).
 
 **Learning to program & OOD**
 
@@ -1946,6 +1972,8 @@ flowchart TD
     B -- no --> N3[Done]
 ```
 
+When the demotion rule is met for a parent skill, the read-only demotion analyst decides whether a microskill or the parent goes down. The Stop hook applies the agent's verdict only if its JSON passes the checks; otherwise nothing changes automatically.
+
 #### 10.4.3 Bugs found in the same session (all fixed)
 
 1. **The Stop hook missed 10 of 19 markers.** The cause was a race with Claude Code's buffered transcript writer: it flushes every 100 ms, and not before the hook runs. *Fixed:* the Stop hook also reads the `last_assistant_message` field of its input. Four approved explanations had been lost. The new `replay` command checks both keys again from the transcript and logs only what passes (source `replay`), also for a task that has lapsed in the meantime.
@@ -1969,6 +1997,8 @@ stateDiagram-v2
     Explained --> [*] : counts towards the success rate
     Lapsed --> [*] : does not count - shown as skipped
 ```
+
+A task stays open until its own-words explanation is approved, and lapses when the session ends or another exercise starts. Only an explained task counts towards the success rate; a lapsed task shows as skipped unless `replay` recovers its explanation.
 
 ---
 

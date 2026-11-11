@@ -1,6 +1,11 @@
+---
+title: "Leerharnas voor Claude Code: leer zelf programmeren met AI"
+description: "Gratis Claude Code-opzet voor studenten en junior developers: hooks houden de AI van je oefencode af, hints komen in stappen, een dashboard volgt je groei."
+jsonld: software
+---
 # Leerharnas
 
-Een leerharnas voor [Claude Code](https://docs.claude.com/en/docs/claude-code/overview) die zorgt dat je **zelf** leert programmeren, ook als er een AI meekijkt. Hij is er voor studenten, en voor junior developers op hun werk die niet junior willen blijven omdat de AI al het werk doet.
+Een gratis, open-source opzet voor [Claude Code](https://docs.claude.com/en/docs/claude-code/overview) die voorkomt dat de AI de code schrijft die je nog aan het leren bent, zodat je **zelf** leert programmeren, ook als er een AI meekijkt. Hij is er voor studenten, en voor junior developers op hun werk die niet junior willen blijven omdat de AI al het werk doet.
 De harnas weet per vaardigheid hoe ver je bent, en past daar de hulp van de AI op aan. Wat je nog leert, doe je zelf, met hints in plaats van oplossingen. Wat je beheerst, mag de AI meteen doen, en je onderhoudt het door het af en toe weer zelf te doen als het in je werk langskomt.
 
 <div class="grid cards" markdown>
@@ -56,8 +61,35 @@ Elk onderdeel volgt een principe met empirische steun uit de leerwetenschap en u
 ## Voor wie
 
 - **Studenten** die met Claude Code willen oefenen zonder dat de AI het leren overneemt. De meegeleverde kaart is voor **Object-Oriented Design in C#** (HBO-ICT).
-- **Junior developers op hun werk** die willen blijven groeien terwijl ze met een AI-agent werken. Er is een voorbeeldkaart voor C#/.NET (`junior-dotnet`): code die bij geen vaardigheid hoort, mag de AI schrijven, en alleen wat je leert, is beschermd. Je past die aan op je eigen codebase (zie [Een eigen vak](configuration.md#een-eigen-vak) en [In de repository van een team](install.md#in-de-repository-van-een-team)). Taken worden voorlopig alleen met `dotnet test` automatisch vastgelegd vanuit tests; anders meld je ze zelf af.
+- **Junior developers op hun werk** die willen blijven groeien terwijl ze met een AI-agent werken. Er is een voorbeeldkaart voor C#/.NET (`junior-dotnet`): code die bij geen vaardigheid hoort, mag de AI schrijven, en alleen wat je leert, is beschermd. Je past die aan op je eigen codebase (zie [Een eigen vak](configuration.md#een-eigen-vak) en [In de repository van een team](install.md#in-de-repository-van-een-team)). Taken worden voorlopig alleen met `dotnet test` automatisch vastgelegd vanuit tests; anders meld je ze zelf af. Zie [Voor junior developers](for-juniors.md).
+- **Docenten en vakcoördinatoren** die hem in een vak willen gebruiken: zie [Voor docenten](for-educators.md).
 - **Onderzoekers** die de harnas willen toetsen: zie [Voor onderzoekers](researchers.md).
+
+## Veelgestelde vragen
+
+### Is oefenen met Claude Code spieken?
+
+Of je AI mag gebruiken, bepaalt je vak, niet de harnas. De harnas zorgt dat de AI het oefenen niet van je overneemt: op L1–L3 blokkeert een hook dat de AI je code schrijft, bouwt of test, en elke uitzondering die je toestaat wordt gelogd. Kijk in de AI-regels van je vak.
+
+### Kan ik voorkomen dat Claude Code mijn code schrijft?
+
+Ja. Dat doet de guard-hook: per vaardigheid, op niveau L1–L3, blokkeert hij dat Claude je code schrijft, verwijdert, bouwt of test. Je kunt het tijdelijk toch toestaan met een override die je zelf zet, en die wordt gelogd. Zie [Hoe het werkt](how-it-works.md#de-guard).
+
+### Werkt het ook voor andere vakken dan C#?
+
+Ja, met een kaart met vaardigheden voor je vak: de vaardigheden, trefwoorden en notities in `harness/maps/<id>/`. De meegeleverde kaarten zijn Object-Oriented Design in C# voor studenten, en een voorbeeld voor een junior developer in C#/.NET. Voor een andere taal stel je in welke bestanden code zijn en welke commando's bouwen; de testrunner `check.mjs` werkt voorlopig alleen met `dotnet test`. Zie [Configuratie](configuration.md#een-eigen-vak).
+
+### Blijf ik junior als AI mijn werk doet?
+
+Dat kan. Een junior die werk aan een agent overlaat voordat hij het zelf kan, krijgt het werk af, maar bouwt misschien niet de vaardigheden op die je medior maken: debuggen, code lezen, ontwerpkeuzes en AI-output controleren. In een korte gerandomiseerde studie scoorden engineers die met AI een nieuwe library leerden daarna 50% tegen 67% op een quiz (Shen & Tamkin, 2026). Met de harnas bouw je zelf op wat je leert en besteed je de rest uit. Zie [Voor junior developers](for-juniors.md).
+
+### Welke data slaat het op, en waar?
+
+Alles blijft op je eigen computer, in `.learning/` in je projectmap, en de installer houdt die map buiten git. De hooks maken geen netwerkverbindingen. Alleen als je zelf een dashboard publiceert, gaat er een gefilterde export de map uit, met een whitelist van velden en filters voor namen, paden en e-mailadressen. Zie [Configuratie en privacy](configuration.md#privacy).
+
+### Is het gratis?
+
+Ja. De code is open source onder AGPL-3.0, en de teksten, docs en data vallen onder CC BY-NC 4.0. Je hebt wel toegang tot Claude Code zelf nodig, via een abonnement van Claude of de API.
 
 !!! info "AI-verklaring"
     De leerharnas, het dashboard en deze documentatie zijn gemaakt met hulp van Claude (Anthropic). De leerdata en de reflecties in het dashboard zijn van de student zelf. Zie [AI-verklaring](ai-statement.md).

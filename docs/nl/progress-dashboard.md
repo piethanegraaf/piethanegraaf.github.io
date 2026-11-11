@@ -1,6 +1,14 @@
+---
+title: "Voortgangsdashboard: niveaus, taken en reflecties"
+description: "Wat het voortgangsdashboard per vaardigheid laat zien, van niveaus en taken tot herhalingen en reflecties, en hoe je je data publiceert met de export."
+---
 # Dashboard bijwerken
 
 ## Wat het dashboard laat zien
+
+![Het leerdashboard met verzonnen demodata: 86% zelfstandig opgelost, het aantal vaardigheden per niveau, en de voortgang per vaardigheid en microvaardigheid](../assets/images/dashboard-demo-nl.png)
+
+*Het dashboard met verzonnen demodata.*
 
 Het [dashboard](/dashboard/) laat de voortgang per vaardigheid en microvaardigheid zien:
 

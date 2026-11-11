@@ -1,0 +1,27 @@
+# Learning harness
+
+> A free, open-source Claude Code setup for students and junior developers who want to keep learning to program. Hooks stop the AI from writing practice code, help comes in steps, and a dashboard tracks skill levels.
+
+The site is in English (under /en/) and Dutch (at the root). The code is AGPL-3.0-only; texts, docs, research and data are CC BY-NC 4.0.
+
+## Docs
+- [How it works](https://piethanegraaf.github.io/en/how-it-works/): skill levels L0–L4, the hint ladder and the guard hook
+- [Install](https://piethanegraaf.github.io/en/install/): set up the harness in a Claude Code project
+- [Configuration and privacy](https://piethanegraaf.github.io/en/configuration/): settings, skill maps and what data is stored
+- [Reference](https://piethanegraaf.github.io/en/reference/): every hook, command and file
+- [Progress dashboard](https://piethanegraaf.github.io/en/progress-dashboard/): what the dashboard shows and how to publish your own data
+- [For junior developers](https://piethanegraaf.github.io/en/for-juniors/): keep learning at work while the AI writes the rest
+- [For educators](https://piethanegraaf.github.io/en/for-educators/): what the harness enforces in a course, and what it cannot
+
+## Research
+- [Literature review](https://piethanegraaf.github.io/en/research/): generative AI and learning to program, with a risk assessment and a learning-preserving Claude Code setup
+- [Research notes](https://piethanegraaf.github.io/en/notes/): dated evidence updates behind the review
+- [The eternal-junior problem](https://piethanegraaf.github.io/en/notes/eternal_junior/): do juniors stay junior when an AI agent does the work?
+- [For researchers](https://piethanegraaf.github.io/en/researchers/): an invitation to test the harness in a randomized trial
+
+## Tools
+- [C# OOP cheat sheet](https://piethanegraaf.github.io/en/cheatsheet/): classes, interfaces, UML class diagrams and design patterns, with example code
+
+## Optional
+- [Source code](https://github.com/piethanegraaf/piethanegraaf.github.io): the harness, the site and the citation checks
+- [AI statement](https://piethanegraaf.github.io/en/ai-statement/): what Claude helped make and what was checked by hand

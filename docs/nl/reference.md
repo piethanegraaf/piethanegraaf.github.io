@@ -1,3 +1,7 @@
+---
+title: "Naslag: hooks, commando's en bestanden"
+description: "De vier Claude Code-hooks van de leerharnas, elk commando van skill.mjs, de testrunner, markers, events en bestanden: wat ze doen en wanneer ze draaien."
+---
 # Naslag: hooks en commando's
 
 ## Hooks
