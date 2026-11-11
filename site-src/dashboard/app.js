@@ -85,6 +85,10 @@
       noDiary: "Nog geen dagboekentries.", activity: "Activiteit", sessions: "Sessies", hints: "Hints", holds: "Geen nieuwe trede", denials: "Guard-weigeringen", overridesUsed: "Overrides gebruikt",
       reviewHelp: "Review-hulp", helpDropped: "Hulp vervallen", viaReview: "via review", reviewOf: "na taak {id}", concept: "Concept", noReviewHelp: "Geen review-hulp.",
       reviewHelpHint: "Hulp in een review na een taak telt alleen mee voor de volgende taak over hetzelfde concept.",
+      conceptHelp: "Hulp tijdens een andere taak", conceptHelpHint: "Hulp over deze vaardigheid tijdens een taak van een andere vaardigheid. De taak hield die trede; hier telt het niet als taak en niet in het percentage gelukt.",
+      duringTask: "Tijdens een taak van", microProposals: "Voorstellen voor een microvaardigheid", microProposalsHint: "De harnas stelt een microvaardigheid voor na echte hulp (trede 2 of hoger). Alleen een ja van de lerende voegt hem toe.",
+      microskill: "Microvaardigheid", why: "Waarom", outcome: "Uitkomst",
+      evidence: { review: "review-hulp", concept: "hulp over een ander concept", task: "taak" }, mOutcome: { added: "toegevoegd", declined: "nee", noAnswer: "geen antwoord" },
       footAi: "De leerharnas, dit dashboard en de docs zijn gemaakt met hulp van Claude (Anthropic). De leerdata en de reflecties zijn van de student zelf; de vertalingen ervan zijn van Claude.", footAiLink: "AI-verklaring", footAiHref: "../ai-statement/",
       footCode: "Code", footOr: "of een", footCommercial: "commerciële licentie", footTexts: "teksten en data",
       footSource: "Broncode op GitHub", footDocs: "Uitleg bij het dashboard", footDocsHref: "../progress-dashboard/", focus: "Ga naar {id}", tableRegion: "Tabel, scrollbaar",
@@ -169,6 +173,10 @@
       noDiary: "No diary entries yet.", activity: "Activity", sessions: "Sessions", hints: "Hints", holds: "No new rung", denials: "Guard denials", overridesUsed: "Overrides used",
       reviewHelp: "Review help", helpDropped: "Help dropped", viaReview: "via review", reviewOf: "after task {id}", concept: "Concept", noReviewHelp: "No review help.",
       reviewHelpHint: "Help in a review after a task only counts for the next task about the same concept.",
+      conceptHelp: "Help during another task", conceptHelpHint: "Help about this skill during a task of another skill. That task kept the rung; here it does not count as a task or in the success rate.",
+      duringTask: "During a task of", microProposals: "Proposals for a microskill", microProposalsHint: "The harness proposes a microskill after real help (rung 2 or higher). Only the learner's yes adds it.",
+      microskill: "Microskill", why: "Why", outcome: "Outcome",
+      evidence: { review: "review help", concept: "help about another concept", task: "task" }, mOutcome: { added: "added", declined: "no", noAnswer: "no answer" },
       footAi: "The learning harness, this dashboard and the docs were made with help from Claude (Anthropic). The learning data and the reflections are the learner's own; their translations are by Claude.", footAiLink: "AI statement", footAiHref: "../en/ai-statement/",
       footCode: "Code", footOr: "or a", footCommercial: "commercial licence", footTexts: "texts and data",
       footSource: "Source code on GitHub", footDocs: "About the dashboard", footDocsHref: "../en/progress-dashboard/", focus: "Go to {id}", tableRegion: "Table, scrollable",
@@ -450,6 +458,11 @@
     const hist = s.history ?? [];
     const rungLabel = (x) => String(x.maxRung) + (x.reviewRung ? ` (${t("viaReview")})` : "") + (x.corrections.length ? " *" : "");
     const review = (data.reviewHelp ?? []).filter((r) => ids.has(r.skill));
+    // Help about this skill during a task of another family, and proposals for a microskill below it
+    // (setup review of 11 Nov, afternoon, #26 and #22). Shown only; neither counts as a task.
+    const conceptHelp = (data.conceptHelp ?? []).filter((c) => ids.has(c.skill));
+    const proposals = (data.microProposals ?? []).filter((p) => ids.has(p.parent));
+    const fromMap = (key, value) => t(key)?.[value] ?? value ?? t("none");
     const explainCell = (x) => {
       if (x.void) return el("span", { class: "muted" }, t("voided"), x.voidReason ? [": ", tx(x.voidReason)] : null);
       if (x.lapsed) return el("span", { class: "muted", text: `${t("skipped")}${x.lapseReason && t("lapse")?.[x.lapseReason] ? `: ${t("lapse")[x.lapseReason]}` : ""}` });
@@ -468,7 +481,14 @@
       el("div", {}, el("h3", { text: t("reviews") }), reviews.length ? table([t("date"), t("result"), t("nextReview")],
         reviews.map((r) => [fmtDate(r.at), t(`res.${r.result}`), fmtDate(r.nextReview)])) : el("p", { class: "muted", text: t("noReviewRows") })),
       review.length ? el("div", {}, el("h3", { text: t("reviewHelp") }), el("p", { class: "muted", text: t("reviewHelpHint") }), table([t("date"), t("concept"), t("rung"), t("task")],
-        review.map((r) => [fmtDate(r.at), r.skill, String(r.rung), r.reviewOf ? t("reviewOf", { id: r.reviewOf }) : t("none")]), [2])) : null);
+        review.map((r) => [fmtDate(r.at), r.skill, String(r.rung), r.reviewOf ? t("reviewOf", { id: r.reviewOf }) : t("none")]), [2])) : null,
+      conceptHelp.length ? el("div", {}, el("h3", { text: t("conceptHelp") }), el("p", { class: "muted", text: t("conceptHelpHint") }),
+        table([t("date"), t("concept"), t("rung"), t("duringTask"), t("task")],
+          conceptHelp.map((c) => [fmtDate(c.at), c.skill, String(c.rung), c.taskSkill ?? t("none"), c.task ?? t("none")]), [2])) : null,
+      proposals.length ? el("div", {}, el("h3", { text: t("microProposals") }), el("p", { class: "muted", text: t("microProposalsHint") }),
+        table([t("date"), t("microskill"), t("why"), t("outcome")],
+          proposals.map((p) => [fmtDate(p.at), p.id ? `${p.id}${p.level ? ` (${p.level})` : ""}` : t("none"),
+            `${fromMap("evidence", p.evidence)}, ${t("rung").toLowerCase()} ${p.rung}`, fromMap("mOutcome", p.outcome)]))) : null);
   }
 
   // What a skill still needs for the next level, in the shape of that level's criterion (next-step.js,
@@ -722,7 +742,7 @@
       if (!res.ok) throw new Error(String(res.status));
       const json = await res.json();
       if (json.schema !== 1) throw new Error("schema");
-      for (const k of ["skills", "tasks", "reviews", "regressions", "overrides", "signals", "activity", "diary", "reviewHelp", "helpDropped", "transfers"]) json[k] = Array.isArray(json[k]) ? json[k] : [];
+      for (const k of ["skills", "tasks", "reviews", "regressions", "overrides", "signals", "activity", "diary", "reviewHelp", "helpDropped", "transfers", "conceptHelp", "microProposals"]) json[k] = Array.isArray(json[k]) ? json[k] : [];
       for (const x of json.tasks) { x.rejections = x.rejections ?? []; x.corrections = x.corrections ?? []; }
       data = json;
       render();

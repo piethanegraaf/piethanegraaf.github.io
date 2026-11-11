@@ -20,6 +20,8 @@ Het [dashboard](/dashboard/) laat de voortgang per vaardigheid en microvaardighe
 - de **herhalingen** (alleen L4, Fibonacci), neutraal: wanneer de volgende klaarstaat, en wanneer je de vaardigheid **laatst** in je werk zag. Niets is "te laat": een herhaling wacht tot de vaardigheid langskomt;
 - **overgeslagen** taken: de uitleg kwam niet direct, dus ze tellen niet. Ze staan apart van mislukt en van wacht op uitleg, en in de grafiek gearceerd;
 - wat de harnas **automatisch** deed: de plaatsing van een nieuwe vaardigheid en automatisch omlaag, gemarkeerd in de niveaugeschiedenis;
+- **hulp tijdens een andere taak**: hulp over deze vaardigheid terwijl je aan een opdracht van een andere vaardigheid werkte (`[trede N #id]`). Die taak hield de trede; hier telt het niet als taak en niet in het percentage gelukt;
+- de **voorstellen voor een microvaardigheid** die de harnas je liet zien, met de reden (review-hulp, hulp over een ander concept, of een taak op trede 2 of hoger) en je antwoord: toegevoegd, nee of geen antwoord;
 - **doorstroom- en terugvalsignalen**, **regressies** en **overrides**;
 - een **dagboektijdlijn** met je reflecties en de **kalibratie**: je zelfvertrouwen vooraf en achteraf.
 

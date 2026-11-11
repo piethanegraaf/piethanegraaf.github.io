@@ -201,6 +201,41 @@ test("export: skipped and replayed tasks, retags, placement, last seen, no revie
   } finally { p.cleanup(); }
 });
 
+test("export: concept help and proposals for a microskill, with ids and numbers only (11 Nov, afternoon, #26, #22)", () => {
+  const at = (m) => `2026-11-11T21:${String(m).padStart(2, "0")}:00.000Z`;
+  const p = makeProject({
+    events: [
+      { at: at(0), type: "concept-help", skill: "demo.l3", rung: 2, taskSkill: "demo.l2", taskTid: "x1abc", session: SID },
+      { at: at(1), type: "concept-help", skill: "bestaat.niet", rung: 1, taskSkill: "demo.l2", taskTid: "../pad", session: SID },
+      { at: at(2), type: "micro-offered", skill: "demo.l3.lussen", parent: "demo.l3", level: "L2", title: "Lussen van Jan", keywords: ["lus"], evidence: "concept", rung: 2, session: SID },
+      { at: at(3), type: "micro-add", skill: "demo.l3.lussen", parent: "demo.l3", level: "L2", by: "learner", via: "voorstel" },
+      { at: at(4), type: "micro-offered", skill: "demo.l2.jan", parent: "demo.l2", level: "L1", evidence: "task", rung: 3, session: SID },
+      { at: at(5), type: "micro-declined", skill: "demo.l2.jan", parent: "demo.l2", session: SID },
+      { at: at(6), type: "micro-offered", skill: "demo.l2.open", parent: "demo.l2", level: "L1", evidence: "review", rung: 2, session: SID },
+      { at: at(7), type: "micro-offered", skill: "elders.x", parent: "demo.l2", level: "L1", evidence: "raar", rung: 2, session: SID },
+    ],
+    files: { ".learning/private.json": JSON.stringify({ terms: ["Jan"] }) },
+  });
+  try {
+    const out = path.join(p.root, "out.json");
+    const r = run(EXPORT, [p.root, "--out", out, "--allow-untranslated"]);
+    assert.equal(r.code, 0, r.stderr);
+    const j = JSON.parse(fs.readFileSync(out, "utf8"));
+    assert.deepEqual(j.conceptHelp, [
+      { at: at(0), skill: "demo.l3", rung: 2, taskSkill: "demo.l2", task: "x1abc" },
+      { at: at(1), skill: null, rung: 1, taskSkill: "demo.l2", task: null },
+    ]);
+    assert.deepEqual(j.microProposals.map((x) => [x.parent, x.id, x.level, x.evidence, x.rung, x.outcome]), [
+      ["demo.l3", "demo.l3.lussen", "L2", "concept", 2, "added"],
+      ["demo.l2", null, "L1", "task", 3, "declined"], // a private term in the id: no id
+      ["demo.l2", "demo.l2.open", "L1", "review", 2, "noAnswer"],
+      ["demo.l2", null, "L1", null, 2, "noAnswer"], // not below its parent, and an unknown kind of evidence
+    ]);
+    const text = JSON.stringify(j);
+    for (const leak of ["Jan", "Lussen van", SID, "../pad"]) assert.ok(!text.includes(leak), `leak: ${leak}`);
+  } finally { p.cleanup(); }
+});
+
 // ---------- The dashboard is bilingual; a cached older app.js must keep working ----------
 test("export: generatedAt stays a date, exportedAt is the moment; both languages for map titles, signals and fixed notes", () => {
   const s = fakeSkills();

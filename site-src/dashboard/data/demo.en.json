@@ -1612,5 +1612,34 @@
       "rung": 1
     }
   ],
-  "transfers": []
+  "transfers": [],
+  "conceptHelp": [
+    {
+      "at": "2026-11-08T14:20:00.000Z",
+      "skill": "cs.basis",
+      "rung": 2,
+      "taskSkill": "ood.associaties",
+      "task": "demo950"
+    }
+  ],
+  "microProposals": [
+    {
+      "at": "2026-11-08T14:50:00.000Z",
+      "parent": "cs.basis",
+      "id": "cs.basis.foreach-index",
+      "level": "L2",
+      "evidence": "concept",
+      "rung": 2,
+      "outcome": "declined"
+    },
+    {
+      "at": "2026-11-08T15:30:00.000Z",
+      "parent": "ood.associaties",
+      "id": "ood.associaties.dubbel-toevoegen",
+      "level": "L1",
+      "evidence": "task",
+      "rung": 2,
+      "outcome": "noAnswer"
+    }
+  ]
 }
