@@ -1,6 +1,7 @@
 {
   "schema": 1,
-  "generatedAt": "2026-11-10T23:41:04.492Z",
+  "generatedAt": "2026-11-11",
+  "exportedAt": "2026-11-11T00:00:15.363Z",
   "course": null,
   "language": "nl",
   "examDate": "2027-01-20",
@@ -15,6 +16,10 @@
       "parent": null,
       "kind": "zone",
       "title": "Uitgewerkte voorbeelden (AI mag hier schrijven)",
+      "titles": {
+        "nl": "Uitgewerkte voorbeelden (AI mag hier schrijven)",
+        "en": "Worked examples (the AI may write here)"
+      },
       "level": "L0",
       "nextReview": null,
       "intervalIndex": 0,
@@ -28,6 +33,10 @@
       "parent": null,
       "kind": null,
       "title": "C#-basis: methoden, strings, lijsten, lussen",
+      "titles": {
+        "nl": "C#-basis: methoden, strings, lijsten, lussen",
+        "en": "C# basics: methods, strings, lists, loops"
+      },
       "level": "L2",
       "nextReview": null,
       "intervalIndex": 0,
@@ -40,6 +49,7 @@
           "from": "L3",
           "to": "L2",
           "note": "vast op Reverse (void) en chainen",
+          "notes": null,
           "auto": false,
           "placement": false
         }
@@ -50,6 +60,7 @@
       "parent": "cs.basis",
       "kind": null,
       "title": "lijst filteren met foreach",
+      "titles": null,
       "level": "L3",
       "nextReview": null,
       "intervalIndex": 0,
@@ -62,6 +73,10 @@
           "from": null,
           "to": "L3",
           "note": "aangemaakt",
+          "notes": {
+            "nl": "aangemaakt",
+            "en": "created"
+          },
           "auto": false,
           "placement": false
         }
@@ -72,6 +87,7 @@
       "parent": "cs.basis",
       "kind": null,
       "title": "strings en StringBuilder",
+      "titles": null,
       "level": "L3",
       "nextReview": null,
       "intervalIndex": 0,
@@ -84,6 +100,10 @@
           "from": null,
           "to": "L3",
           "note": "aangemaakt",
+          "notes": {
+            "nl": "aangemaakt",
+            "en": "created"
+          },
           "auto": false,
           "placement": false
         }
@@ -94,6 +114,7 @@
       "parent": "cs.basis",
       "kind": null,
       "title": "void-methoden en chainen",
+      "titles": null,
       "level": "L2",
       "nextReview": null,
       "intervalIndex": 0,
@@ -106,6 +127,10 @@
           "from": null,
           "to": "L2",
           "note": "aangemaakt",
+          "notes": {
+            "nl": "aangemaakt",
+            "en": "created"
+          },
           "auto": false,
           "placement": false
         }
@@ -116,6 +141,7 @@
       "parent": "cs.basis",
       "kind": null,
       "title": "referentie vs kopie, bijwerkingen",
+      "titles": null,
       "level": "L2",
       "nextReview": null,
       "intervalIndex": 0,
@@ -128,6 +154,10 @@
           "from": null,
           "to": "L2",
           "note": "aangemaakt",
+          "notes": {
+            "nl": "aangemaakt",
+            "en": "created"
+          },
           "auto": false,
           "placement": false
         }
@@ -138,6 +168,7 @@
       "parent": "cs.basis",
       "kind": null,
       "title": "lusgrenzen en off-by-one",
+      "titles": null,
       "level": "L2",
       "nextReview": null,
       "intervalIndex": 0,
@@ -150,6 +181,10 @@
           "from": null,
           "to": "L2",
           "note": "aangemaakt",
+          "notes": {
+            "nl": "aangemaakt",
+            "en": "created"
+          },
           "auto": false,
           "placement": false
         }
@@ -160,6 +195,10 @@
       "parent": null,
       "kind": null,
       "title": "Klassen, constructors; variabele vs veld vs property (private set)",
+      "titles": {
+        "nl": "Klassen, constructors; variabele vs veld vs property (private set)",
+        "en": "Classes, constructors; variable vs field vs property (private set)"
+      },
       "level": "L2",
       "nextReview": null,
       "intervalIndex": 0,
@@ -173,6 +212,7 @@
       "parent": "ood.klassen-properties",
       "kind": null,
       "title": "veld vs lokale variabele vs property",
+      "titles": null,
       "level": "L2",
       "nextReview": null,
       "intervalIndex": 0,
@@ -185,6 +225,10 @@
           "from": null,
           "to": "L2",
           "note": "aangemaakt",
+          "notes": {
+            "nl": "aangemaakt",
+            "en": "created"
+          },
           "auto": false,
           "placement": false
         }
@@ -195,6 +239,10 @@
       "parent": null,
       "kind": null,
       "title": "Overerving, : base(...), abstract, override",
+      "titles": {
+        "nl": "Overerving, : base(...), abstract, override",
+        "en": "Inheritance, : base(...), abstract, override"
+      },
       "level": "L3",
       "nextReview": null,
       "intervalIndex": 0,
@@ -207,6 +255,7 @@
           "from": "L3",
           "to": "L3",
           "note": "herhalingen starten",
+          "notes": null,
           "auto": false,
           "placement": false
         }
@@ -217,6 +266,10 @@
       "parent": null,
       "kind": null,
       "title": "Associaties: een-op-veel, veel-op-veel",
+      "titles": {
+        "nl": "Associaties: een-op-veel, veel-op-veel",
+        "en": "Associations: one-to-many, many-to-many"
+      },
       "level": "L2",
       "nextReview": null,
       "intervalIndex": 0,
@@ -230,6 +283,10 @@
       "parent": null,
       "kind": null,
       "title": "Aggregatie en compositie (heeft-een)",
+      "titles": {
+        "nl": "Aggregatie en compositie (heeft-een)",
+        "en": "Aggregation and composition (has-a)"
+      },
       "level": "L2",
       "nextReview": null,
       "intervalIndex": 0,
@@ -243,6 +300,10 @@
       "parent": null,
       "kind": null,
       "title": "Encapsulatie: private velden, validatie, toestand via methoden",
+      "titles": {
+        "nl": "Encapsulatie: private velden, validatie, toestand via methoden",
+        "en": "Encapsulation: private fields, validation, state through methods"
+      },
       "level": "L2",
       "nextReview": null,
       "intervalIndex": 0,
@@ -256,6 +317,10 @@
       "parent": null,
       "kind": null,
       "title": "Unit tests (NUnit): grenswaarden, TDD, testplan",
+      "titles": {
+        "nl": "Unit tests (NUnit): grenswaarden, TDD, testplan",
+        "en": "Unit tests (NUnit): boundary values, TDD, test plan"
+      },
       "level": "L1",
       "nextReview": null,
       "intervalIndex": 0,
@@ -269,6 +334,7 @@
       "parent": "test.unit-tests",
       "kind": null,
       "title": "testuitvoer lezen",
+      "titles": null,
       "level": "L2",
       "nextReview": null,
       "intervalIndex": 0,
@@ -281,6 +347,10 @@
           "from": null,
           "to": "L2",
           "note": "aangemaakt",
+          "notes": {
+            "nl": "aangemaakt",
+            "en": "created"
+          },
           "auto": false,
           "placement": false
         }
@@ -291,6 +361,7 @@
       "parent": "test.unit-tests",
       "kind": null,
       "title": "wat een test controleert: zichtbaar gedrag",
+      "titles": null,
       "level": "L2",
       "nextReview": null,
       "intervalIndex": 0,
@@ -303,6 +374,10 @@
           "from": null,
           "to": "L2",
           "note": "aangemaakt",
+          "notes": {
+            "nl": "aangemaakt",
+            "en": "created"
+          },
           "auto": false,
           "placement": false
         }
@@ -313,6 +388,10 @@
       "parent": null,
       "kind": null,
       "title": "Interfaces ontwerpen en implementeren",
+      "titles": {
+        "nl": "Interfaces ontwerpen en implementeren",
+        "en": "Designing and implementing interfaces"
+      },
       "level": "L2",
       "nextReview": null,
       "intervalIndex": 0,
@@ -326,6 +405,10 @@
       "parent": null,
       "kind": null,
       "title": "Exception-hierarchie, type checks, volgorde van controles",
+      "titles": {
+        "nl": "Exception-hierarchie, type checks, volgorde van controles",
+        "en": "Exception hierarchy, type checks, order of checks"
+      },
       "level": "L2",
       "nextReview": null,
       "intervalIndex": 0,
@@ -339,6 +422,10 @@
       "parent": null,
       "kind": null,
       "title": "Generieke klasse met constraint + Dictionary (Stock<T> where T : IStockItem)",
+      "titles": {
+        "nl": "Generieke klasse met constraint + Dictionary (Stock<T> where T : IStockItem)",
+        "en": "Generic class with a constraint (where T : ...) + Dictionary"
+      },
       "level": "L0",
       "nextReview": null,
       "intervalIndex": 0,
@@ -352,6 +439,10 @@
       "parent": null,
       "kind": null,
       "title": "Strategy pattern",
+      "titles": {
+        "nl": "Strategy pattern",
+        "en": "Strategy pattern"
+      },
       "level": "L0",
       "nextReview": null,
       "intervalIndex": 0,
@@ -365,6 +456,10 @@
       "parent": null,
       "kind": null,
       "title": "Factory (Method) pattern",
+      "titles": {
+        "nl": "Factory (Method) pattern",
+        "en": "Factory (Method) pattern"
+      },
       "level": "L0",
       "nextReview": null,
       "intervalIndex": 0,
@@ -378,6 +473,10 @@
       "parent": null,
       "kind": null,
       "title": "Observer pattern",
+      "titles": {
+        "nl": "Observer pattern",
+        "en": "Observer pattern"
+      },
       "level": "L0",
       "nextReview": null,
       "intervalIndex": 0,
@@ -391,6 +490,10 @@
       "parent": null,
       "kind": null,
       "title": "Debuggen zonder foutmelding: van symptoom naar oorzaak",
+      "titles": {
+        "nl": "Debuggen zonder foutmelding: van symptoom naar oorzaak",
+        "en": "Debugging without an error message: from symptom to cause"
+      },
       "level": "L1",
       "nextReview": null,
       "intervalIndex": 0,
@@ -404,6 +507,10 @@
       "parent": null,
       "kind": null,
       "title": "UML/Mermaid klassendiagram, is-een vs heeft-een",
+      "titles": {
+        "nl": "UML/Mermaid klassendiagram, is-een vs heeft-een",
+        "en": "UML/Mermaid class diagram, is-a vs has-a"
+      },
       "level": "L2",
       "nextReview": null,
       "intervalIndex": 0,
@@ -782,7 +889,11 @@
     {
       "skill": "ood.klassen-properties",
       "dir": "up",
-      "text": "ood.klassen-properties: 5/5 gelukt (≥ 85%)"
+      "text": "ood.klassen-properties: 5/5 gelukt (≥ 85%)",
+      "texts": {
+        "nl": "ood.klassen-properties: 5/5 gelukt (≥ 85%)",
+        "en": "ood.klassen-properties: 5/5 solved (≥ 85%)"
+      }
     }
   ],
   "activity": [
