@@ -79,6 +79,10 @@ Yes. That is what the guard hook does: per skill, at levels L1–L3, it blocks C
 
 Yes, with a skill map for your course: the skills, keywords and notes in `harness/maps/<id>/`. The included maps are Object-Oriented Design in C# for students, and an example for a junior developer in C#/.NET. For another language you set which files are code and which commands build; the test runner `check.mjs` only supports `dotnet test` for now. See [Configuration](configuration.md#your-own-course).
 
+### Will AI make me stay a junior developer?
+
+It can. A junior who hands work to an agent before they can do it themselves gets the work done, but may not build the skills that make a medior: debugging, reading code, design judgement and checking AI output. In one short randomized trial, engineers who learned a new library with AI scored 50% against 67% on a quiz afterwards (Shen & Tamkin, 2026). With the harness you build what you are learning yourself and delegate the rest. See [For junior developers](for-juniors.md).
+
 ### What data does it store, and where?
 
 Everything stays on your computer, in `.learning/` in your project folder, which the installer keeps out of git. The hooks make no network connections. Only if you choose to publish a dashboard does a filtered export leave the folder, with a whitelist of fields and filters for names, paths and e-mail addresses. See [Configuration and privacy](configuration.md#privacy).

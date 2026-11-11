@@ -79,6 +79,10 @@ Ja. Dat doet de guard-hook: per vaardigheid, op niveau L1–L3, blokkeert hij da
 
 Ja, met een kaart met vaardigheden voor je vak: de vaardigheden, trefwoorden en notities in `harness/maps/<id>/`. De meegeleverde kaarten zijn Object-Oriented Design in C# voor studenten, en een voorbeeld voor een junior developer in C#/.NET. Voor een andere taal stel je in welke bestanden code zijn en welke commando's bouwen; de testrunner `check.mjs` werkt voorlopig alleen met `dotnet test`. Zie [Configuratie](configuration.md#een-eigen-vak).
 
+### Blijf ik junior als AI mijn werk doet?
+
+Dat kan. Een junior die werk aan een agent overlaat voordat hij het zelf kan, krijgt het werk af, maar bouwt misschien niet de vaardigheden op die je medior maken: debuggen, code lezen, ontwerpkeuzes en AI-output controleren. In een korte gerandomiseerde studie scoorden engineers die met AI een nieuwe library leerden daarna 50% tegen 67% op een quiz (Shen & Tamkin, 2026). Met de harnas bouw je zelf op wat je leert en besteed je de rest uit. Zie [Voor junior developers](for-juniors.md).
+
 ### Welke data slaat het op, en waar?
 
 Alles blijft op je eigen computer, in `.learning/` in je projectmap, en de installer houdt die map buiten git. De hooks maken geen netwerkverbindingen. Alleen als je zelf een dashboard publiceert, gaat er een gefilterde export de map uit, met een whitelist van velden en filters voor namen, paden en e-mailadressen. Zie [Configuratie en privacy](configuration.md#privacy).
