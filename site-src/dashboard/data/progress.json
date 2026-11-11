@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "generatedAt": "2026-11-11",
-  "exportedAt": "2026-11-11T20:13:56.415Z",
+  "exportedAt": "2026-11-11T21:38:29.093Z",
   "course": null,
   "language": "nl",
   "examDate": "2027-01-20",
@@ -323,13 +323,27 @@
         "nl": "Aggregatie en compositie (heeft-een)",
         "en": "Aggregation and composition (has-a)"
       },
-      "level": "L2",
+      "level": "L3",
       "nextReview": null,
       "intervalIndex": 0,
       "lastReview": null,
-      "lastSeen": null,
-      "placement": "pending",
-      "history": []
+      "lastSeen": "2026-11-11",
+      "placement": "done",
+      "history": [
+        {
+          "at": "2026-11-11",
+          "changedAt": "2026-11-11T21:27:33.308Z",
+          "from": "L2",
+          "to": "L3",
+          "note": "plaatsing: hoogste trede 0 bij de eerste taak",
+          "notes": {
+            "nl": "plaatsing: hoogste trede 0 bij de eerste taak",
+            "en": "placement: highest rung 0 at the first task"
+          },
+          "auto": false,
+          "placement": true
+        }
+      ]
     },
     {
       "id": "ood.encapsulatie",
@@ -1100,6 +1114,102 @@
       "corrections": [],
       "void": false,
       "voidReason": null
+    },
+    {
+      "id": "mwck92mj1esf",
+      "at": "2026-11-11T20:17:34.603Z",
+      "skill": "ood.associaties",
+      "source": "check",
+      "success": true,
+      "maxRung": 2,
+      "minutes": 3,
+      "reviewRung": 2,
+      "what": "StudentSchrijftInVoorCursus",
+      "explained": true,
+      "explanation": "dan zou er ook een studentenlijst aan de class Cursus moeten worden toegevoegd en vanuit schrijfin zou dan een self object aan die lijst in cusus moeten worden doegevoegd om dit mogelijk te maken\nals je het op een plek doet kan het minder makkelijk out of sync raken\nals je het op een plek doet kan het minder makkelijk out of sync raken omdat je dan op meerdere plekken met het zelfde bezig bent en dan het overzicht makkelijker verliest",
+      "explainedAt": "2026-11-11T20:23:56.723Z",
+      "explainedBy": null,
+      "lapsed": false,
+      "lapseReason": null,
+      "retaggedFrom": null,
+      "rejections": [
+        {
+          "at": "2026-11-11T20:20:18.229Z",
+          "by": "claude",
+          "reasons": []
+        },
+        {
+          "at": "2026-11-11T20:22:30.598Z",
+          "by": "hook",
+          "reasons": [
+            "geen waarom (gebruik bv. 'omdat', 'doordat', 'zodat', 'anders')"
+          ]
+        }
+      ],
+      "corrections": [],
+      "void": false,
+      "voidReason": null
+    },
+    {
+      "id": "mwckq492t8i2",
+      "at": "2026-11-11T20:30:49.862Z",
+      "skill": "ood.associaties",
+      "source": "done",
+      "success": true,
+      "maxRung": 0,
+      "minutes": 1,
+      "reviewRung": null,
+      "what": "12: methode op Vlucht om passagier toe te voegen",
+      "explained": true,
+      "explanation": "Met de methode houd je het overzicht omdat je het single resposibliltiy pattern toepast. Hierdoor houd je beter overzicht\ndie controle zou je ook in de methode kunnen zetten en op het single resposiblity pattern is wel van toepassing op de methode , de methode toet een ding namelijk pagagiers toevoegen en alles wat daarbij komt kijken en niets anders daardoor houd je overizht\ndan word die controle overgeslagen",
+      "explainedAt": "2026-11-11T20:35:07.780Z",
+      "explainedBy": null,
+      "lapsed": false,
+      "lapseReason": null,
+      "retaggedFrom": null,
+      "rejections": [
+        {
+          "at": "2026-11-11T20:32:31.074Z",
+          "by": "claude",
+          "reasons": []
+        },
+        {
+          "at": "2026-11-11T20:34:18.458Z",
+          "by": "claude",
+          "reasons": []
+        }
+      ],
+      "corrections": [],
+      "void": false,
+      "voidReason": null
+    },
+    {
+      "id": "mwcmr2d61txn",
+      "at": "2026-11-11T21:27:33.306Z",
+      "skill": "ood.aggregatie-compositie",
+      "source": "check",
+      "success": true,
+      "maxRung": 0,
+      "minutes": 8,
+      "reviewRung": null,
+      "what": "TotaalPrijsWinkelwagen",
+      "explained": true,
+      "explanation": "omdat een winkelwagen kan bestaan zonder dat er producten in zitten en het dan nog steeds een winkelwagen is en het soort winkelwagen niet afhankelijk is van het soort producten wat er in zit\ndan blijft het gewoon een product dus omdat producten gewoon op zich zelf kunnen bestaan gaat het om argegatie en niet compositie",
+      "explainedAt": "2026-11-11T21:30:43.611Z",
+      "explainedBy": null,
+      "lapsed": false,
+      "lapseReason": null,
+      "retaggedFrom": null,
+      "rejections": [
+        {
+          "at": "2026-11-11T21:29:24.404Z",
+          "by": "claude",
+          "reasons": []
+        }
+      ],
+      "corrections": [],
+      "void": false,
+      "voidReason": null
     }
   ],
   "reviews": [],
@@ -1175,7 +1285,7 @@
     },
     {
       "date": "2026-11-11",
-      "sessions": 4,
+      "sessions": 5,
       "hints": 1,
       "holds": 0,
       "denials": 1,
@@ -1252,6 +1362,23 @@
         "nextStep": "niet genoemd"
       },
       "calibration": "vooraf onbekend → de opdracht lukte met trede 2 en de uitleg na 1 vervolgvraag; de reviewvraag (recursie) lukte niet → niet te bepalen (geen score vooraf). De 2 van nu lijkt vooral over de review te gaan, niet over de opdracht zelf."
+    },
+    {
+      "date": "2026-11-11",
+      "n": 3,
+      "time": "±21:11–22:35",
+      "skills": "ood.associaties (L3), ood.aggregatie-compositie (L2 → L3, plaatsing)",
+      "plan": "verder met 11-cursusinschrijving",
+      "confidenceBefore": "3 (over opdracht 11)",
+      "wentWell": "`ood.associaties`: een een-op-veel-associatie met een toevoegmethode, twee keer zonder hint in deze sessie (11 en 12). Zelf bedacht dat een dubbelzijdige variant beide kanten in één methode moet bijwerken: \"als je het op een plek doet kan het minder makkelijk out of sync raken\". `ood.aggregatie-compositie`: de totaalprijs over de lijst zelf geschreven, op trede 0, en daarmee meteen op L3 geplaatst.",
+      "signals": "geen (`status`)",
+      "reflection": {
+        "learned": "\"het verschil tussen compositie en argagatie\"",
+        "confusing": "\"dat het niet gaat om de spreekwoordelijke mand maar dat het gaat om de items in de mand, als die op zichzelf kunnen bestaan spreek je van argagatie.\"",
+        "confidenceAfter": "4",
+        "nextStep": "niet genoemd"
+      },
+      "calibration": "vooraf 3 (opdracht 11) → de code van 11 lukte zonder hint in deze sessie (gelogd op trede 2 door de review van sessie 2); de uitleg vroeg 3 rondes → onderschat voor de code, klopt voor de uitleg."
     }
   ],
   "reviewHelp": [
@@ -1315,6 +1442,13 @@
       "nee, omdat dit niet word opgeslagen in een propertie in de student class": "no, because this isn't stored in a property in the student class",
       "WijsPatientToeAanArts, WijsArtsToeAanPatient": "WijsPatientToeAanArts, WijsArtsToeAanPatient",
       "omdat je met het woord this de instatie van de klasse toevoegd aan de lijst\nomdat ik vergat om ook bij de patient de art toe te voegen en andersom": "because with the word this you add the instance of the class to the list\nbecause I forgot to also add the doctor to the patient and the other way round",
+      "StudentSchrijftInVoorCursus": "StudentSchrijftInVoorCursus",
+      "dan zou er ook een studentenlijst aan de class Cursus moeten worden toegevoegd en vanuit schrijfin zou dan een self object aan die lijst in cusus moeten worden doegevoegd om dit mogelijk te maken\nals je het op een plek doet kan het minder makkelijk out of sync raken\nals je het op een plek doet kan het minder makkelijk out of sync raken omdat je dan op meerdere plekken met het zelfde bezig bent en dan het overzicht makkelijker verliest": "then a student list would also have to be added to the class Cursus and from schrijfin a self object would then have to be added to that list in Cursus to make this possible\nif you do it in one place it can get out of sync less easily\nif you do it in one place it can get out of sync less easily because then you're working on the same thing in several places and lose track more easily",
+      "geen waarom (gebruik bv. 'omdat', 'doordat', 'zodat', 'anders')": "no why (use e.g. 'because', 'as a result of', 'so that', 'otherwise')",
+      "12: methode op Vlucht om passagier toe te voegen": "12: method on Vlucht to add a passenger",
+      "Met de methode houd je het overzicht omdat je het single resposibliltiy pattern toepast. Hierdoor houd je beter overzicht\ndie controle zou je ook in de methode kunnen zetten en op het single resposiblity pattern is wel van toepassing op de methode , de methode toet een ding namelijk pagagiers toevoegen en alles wat daarbij komt kijken en niets anders daardoor houd je overizht\ndan word die controle overgeslagen": "With the method you keep track because you apply the single responsibility pattern. This way you keep better track\nyou could also put that check in the method and the single responsibility pattern does apply to the method, the method does one thing, namely adding passengers and everything that comes with it and nothing else, that way you keep track\nthen that check gets skipped",
+      "TotaalPrijsWinkelwagen": "TotaalPrijsWinkelwagen",
+      "omdat een winkelwagen kan bestaan zonder dat er producten in zitten en het dan nog steeds een winkelwagen is en het soort winkelwagen niet afhankelijk is van het soort producten wat er in zit\ndan blijft het gewoon een product dus omdat producten gewoon op zich zelf kunnen bestaan gaat het om argegatie en niet compositie": "because a shopping cart can exist without any products in it and then it's still a shopping cart and the kind of shopping cart doesn't depend on the kind of products that are in it\nthen it just stays a product so because products can just exist on their own it's aggregation and not composition",
       "securitycheck site (tooling)": "security check site (tooling)",
       "cs.basis (L2), cs.basis.lus-grenzen (L2, nieuw), test.unit-tests (L1)": "cs.basis (L2), cs.basis.lus-grenzen (L2, new), test.unit-tests (L1)",
       "opdracht 04-even-getallen afmaken (niet expliciet benoemd)": "finish exercise 04-even-getallen (not stated explicitly)",
@@ -1353,7 +1487,15 @@
       "vooraf onbekend → de opdracht lukte met trede 2 en de uitleg na 1 vervolgvraag; de reviewvraag (recursie) lukte niet → niet te bepalen (geen score vooraf). De 2 van nu lijkt vooral over de review te gaan, niet over de opdracht zelf.": "beforehand unknown → the exercise succeeded at rung 2 and the explanation after 1 follow-up question; the review question (recursion) did not → cannot be determined (no score beforehand). The 2 now seems to be mostly about the review, not about the exercise itself.",
       "\"hoe this te gebruiken als je een instatie van een object in een fuctie van die klasse wilt meegeven.\"": "\"how to use this when you want to pass an instance of an object in a function of that class.\"",
       "\"de review vraag was verwarrend en kwam ik niet uit. ook ging ik geen nivau omhoog of kreeg ik het advies niet om een nivau omlaag te gaan nadat ik het niet snapte, dat is vreemd en een puntje voor de review.\"": "\"the review question was confusing and I couldn't work it out. also I didn't go up a level or get the advice to go down a level after I didn't get it, that is strange and a point for the review.\"",
-      "\"2, viel tegen\"": "\"2, disappointing\""
+      "\"2, viel tegen\"": "\"2, disappointing\"",
+      "ood.associaties (L3), ood.aggregatie-compositie (L2 → L3, plaatsing)": "ood.associaties (L3), ood.aggregatie-compositie (L2 → L3, placement)",
+      "verder met 11-cursusinschrijving": "continue with 11-cursusinschrijving",
+      "3 (over opdracht 11)": "3 (about exercise 11)",
+      "`ood.associaties`: een een-op-veel-associatie met een toevoegmethode, twee keer zonder hint in deze sessie (11 en 12). Zelf bedacht dat een dubbelzijdige variant beide kanten in één methode moet bijwerken: \"als je het op een plek doet kan het minder makkelijk out of sync raken\". `ood.aggregatie-compositie`: de totaalprijs over de lijst zelf geschreven, op trede 0, en daarmee meteen op L3 geplaatst.": "`ood.associaties`: a one-to-many association with an add method, twice without a hint in this session (11 and 12). Came up with the idea that a bidirectional variant must update both sides in one method: \"if you do it in one place it can get out of sync less easily\". `ood.aggregatie-compositie`: wrote the total price over the list without help, at rung 0, and with that placed straight at L3.",
+      "geen (`status`)": "none (`status`)",
+      "vooraf 3 (opdracht 11) → de code van 11 lukte zonder hint in deze sessie (gelogd op trede 2 door de review van sessie 2); de uitleg vroeg 3 rondes → onderschat voor de code, klopt voor de uitleg.": "before 3 (exercise 11) → the code of 11 succeeded without a hint in this session (logged at rung 2 because of the review in session 2); the explanation took 3 rounds → underestimated for the code, accurate for the explanation.",
+      "\"het verschil tussen compositie en argagatie\"": "\"the difference between composition and aggregation\"",
+      "\"dat het niet gaat om de spreekwoordelijke mand maar dat het gaat om de items in de mand, als die op zichzelf kunnen bestaan spreek je van argagatie.\"": "\"that it's not about the proverbial basket but about the items in the basket, if they can exist on their own you call it aggregation.\""
     }
   }
 }
