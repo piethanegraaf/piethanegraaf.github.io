@@ -1,0 +1,36 @@
+/* The poll on the home page (poll.js). Loaded only on pages with a poll (overrides/main.html). */
+.md-typeset .poll {
+  margin: 1.5em 0;
+  padding: 1em 1.2em;
+  border: .05rem solid var(--md-default-fg-color--lightest);
+  border-left: .2rem solid var(--md-primary-fg-color);
+  border-radius: .2rem;
+}
+.md-typeset .poll__premise { margin: 0 0 .4em; color: var(--md-default-fg-color--light); }
+.md-typeset .poll__question { margin: 0 0 .8em; font-size: 1.1em; font-weight: 700; }
+.md-typeset .poll__answers,
+.md-typeset .poll__roles { display: flex; flex-wrap: wrap; gap: .5em; margin: 0 0 .6em; }
+.md-typeset .poll__answers .md-button,
+.md-typeset .poll__roles .md-button { margin: 0; text-align: left; }
+.md-typeset .poll--voted .poll__answers { display: none; }
+.md-typeset .poll__note { margin: .4em 0 0; font-size: .8em; color: var(--md-default-fg-color--light); }
+.md-typeset .poll__status { margin: 0 0 .6em; font-weight: 700; }
+.md-typeset .poll__bars { list-style: none; margin: 0; padding: 0; }
+.md-typeset .poll__bars li.poll__bar { margin: 0 0 .7em; }
+.md-typeset .poll__label { display: block; }
+.md-typeset .poll__bar--mine .poll__label { font-weight: 700; }
+.md-typeset .poll__track {
+  display: inline-block;
+  vertical-align: middle;
+  width: calc(100% - 6.5em);
+  height: .7em;
+  margin-right: .5em;
+  border-radius: .35em;
+  background: var(--md-default-fg-color--lightest);
+  overflow: hidden;
+}
+.md-typeset .poll__fill { display: block; height: 100%; background: var(--md-primary-fg-color); }
+.md-typeset .poll__pct { font-variant-numeric: tabular-nums; }
+.md-typeset .poll__role { margin-top: 1em; }
+.md-typeset .poll__role p { margin: 0 0 .5em; }
+.md-typeset .poll__thanks { font-weight: 700; }

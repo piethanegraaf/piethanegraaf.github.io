@@ -21,6 +21,31 @@ Daarom bouwde ik een harnas die het leren bij mij houdt. Ik oefen er nu mee; het
 
 Junior developers lopen in dezelfde val: de agent krijgt het werk af, maar de vaardigheden die je medior maken, groeien niet ([§2.12 van het onderzoek](research.md#212-het-eeuwige-juniorprobleem)).
 
+## Wat denk jij? {#poll}
+
+<div class="poll" data-poll="judge-code" data-t-loading="De resultaten laden…" data-t-results="Resultaten tot nu toe: {n} stemmen" data-t-yours="jouw stem" data-t-delay="De totalen kunnen een paar uur achterlopen." data-t-unavailable="Dank je voor je stem. De resultaten zijn nu niet te tonen." data-t-thanks="Dank je wel!">
+<p class="poll__premise">AI schrijft bij AI-gedreven bedrijven al de eerste versie van de meeste nieuwe code.</p>
+<p class="poll__question" id="poll-question">Is leren om code te beoordelen (reviewen, testen, debuggen, ontwerpen) nog je tijd waard, of neemt AI dat binnen een jaar ook over?</p>
+<div class="poll__answers" role="group" aria-labelledby="poll-question">
+<button type="button" class="md-button" data-answer="more-than-ever">Ja, meer dan ooit: iemand moet het werk van AI controleren</button>
+<button type="button" class="md-button" data-answer="for-now">Ja, voorlopig, maar niet lang meer</button>
+<button type="button" class="md-button" data-answer="not-sure">Weet ik niet</button>
+<button type="button" class="md-button" data-answer="ai-takes-over">Nee, AI beoordeelt code binnen een jaar zelf</button>
+</div>
+<div class="poll__result" aria-live="polite" hidden></div>
+<div class="poll__role" hidden>
+<p id="poll-role">En jij bent…?</p>
+<div class="poll__roles" role="group" aria-labelledby="poll-role">
+<button type="button" class="md-button" data-role="student">Student</button>
+<button type="button" class="md-button" data-role="junior">Junior developer</button>
+<button type="button" class="md-button" data-role="experienced">Ervaren developer</button>
+<button type="button" class="md-button" data-role="teacher-researcher">Docent of onderzoeker</button>
+<button type="button" class="md-button" data-role="other">Iets anders</button>
+</div>
+</div>
+<p class="poll__note">Anoniem: geteld met GoatCounter, zonder cookies. Eén stem per browser; de totalen zijn openbaar.</p>
+</div>
+
 <div class="grid cards" markdown>
 
 - **Installeren**
