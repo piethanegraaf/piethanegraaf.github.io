@@ -38,11 +38,11 @@
   // 3. The menu on narrow screens (phone, or a desktop zoomed to 200-400%): Material shows it as a drawer
   //    that slides in, with a submenu per section. Its buttons are <label> elements without a name that the
   //    keyboard cannot reach, while Tab does walk through the links of the closed, invisible drawer
-  //    (WCAG 2.1.1, 2.4.3, 2.4.7, 4.1.2). Here the labels become named buttons, and whatever is out of view
-  //    becomes inert, so Tab only reaches what you can see.
+  //    (WCAG 2.1.1, 2.4.3, 2.4.7, 4.1.2). Here the labels become real, named buttons, and whatever is out of
+  //    view becomes inert, so Tab only reaches what you can see.
   var narrow = window.matchMedia("(max-width: 76.234375em)");
   var drawer = document.getElementById("__drawer");
-  var opener = document.querySelector('label.md-header__button[for="__drawer"]');
+  var opener = document.querySelector('.md-header__button[for="__drawer"]');
   var sidebar = document.querySelector(".md-sidebar--primary");
   var root = sidebar && sidebar.querySelector(".md-nav--primary");
 
@@ -60,18 +60,41 @@
     return narrow.matches && !!sub && getComputedStyle(sub).display !== "none";
   }
 
-  function setButton(label, on, name) {
-    if (on) {
-      label.setAttribute("tabindex", "0");
-      label.setAttribute("role", "button");
-      if (name) label.setAttribute("aria-label", name);
-    } else {
-      label.removeAttribute("tabindex");
-      label.removeAttribute("role");
-      label.removeAttribute("aria-label");
-      label.removeAttribute("aria-expanded");
-    }
+  // A <label> may not have role="button" (ARIA in HTML), so a toggle that has to work as a button becomes a
+  // real <button> with the same classes, id and for attribute: Material styles the toggles by class and [for],
+  // and a11y.css removes the look of a browser button. The button flips its checkbox itself. Where the toggle
+  // does not apply (a wide screen), Material's own label comes back. Returns the element now in the page.
+  function setButton(el, on, name) {
+    if (!el) return el;
+    if (on && el.tagName === "LABEL") el = swap(el, "button");
+    else if (!on && el.tagName === "BUTTON" && el.a11yLabel) el = swap(el, "label");
+    if (on && name) el.setAttribute("aria-label", name);
+    return el;
   }
+
+  function swap(el, tag) {
+    var next = document.createElement(tag);
+    var attrs = tag === "button" ? el.attributes : el.a11yLabel;
+    for (var i = 0; i < attrs.length; i++) next.setAttribute(attrs[i].name, attrs[i].value);
+    if (tag === "button") {
+      next.a11yLabel = [].map.call(el.attributes, function (a) { return { name: a.name, value: a.value }; });
+      next.type = "button";
+      next.removeAttribute("tabindex");
+      next.addEventListener("click", function () {
+        var input = document.getElementById(next.getAttribute("for"));
+        if (!input) return;
+        input.checked = !input.checked;
+        input.dispatchEvent(new Event("change", { bubbles: true }));
+      });
+    }
+    while (el.firstChild) next.appendChild(el.firstChild);
+    var focused = document.activeElement === el;
+    el.parentNode.replaceChild(next, el);
+    if (focused) next.focus({ preventScroll: true });
+    return next;
+  }
+
+  function toggleOf(t) { return t.parentElement.querySelector(":scope > .md-nav__link[for]"); }
 
   function setInert(el, on) {
     if (!el) return;
@@ -99,7 +122,7 @@
     for (var j = 0; j < items.length; j++) {
       var item = items[j];
       if (item === open) {
-        setInert(item.querySelector(":scope > label.md-nav__link"), true);
+        setInert(item.querySelector(":scope > .md-nav__link[for]"), true);
         setInert(item.querySelector(":scope > a.md-nav__link"), true);
         var child = item.querySelector(":scope > nav.md-nav");
         setInert(child, false);
@@ -114,16 +137,16 @@
     if (!drawer || !opener || !sidebar || !root) return;
     clearInert();
     var small = narrow.matches;
-    setButton(opener, true, T.menu);
+    opener = setButton(opener, true, T.menu);
     opener.setAttribute("aria-expanded", drawer.checked ? "true" : "false");
     var toggles = menuToggles();
     for (var i = 0; i < toggles.length; i++) {
       var t = toggles[i];
       var on = applies(t);
-      var label = t.parentElement.querySelector(":scope > label.md-nav__link");
-      var back = t.parentElement.querySelector(":scope > nav.md-nav > label.md-nav__title");
+      var label = toggleOf(t);
+      var back = t.parentElement.querySelector(":scope > nav.md-nav > .md-nav__title[for]");
       if (label) {
-        setButton(label, on);
+        label = setButton(label, on);
         if (on) label.setAttribute("aria-expanded", t.checked ? "true" : "false");
       }
       if (back) setButton(back, on, on ? back.textContent.trim() + T.back : null);
@@ -137,20 +160,11 @@
   }
 
   function firstFocusable() {
-    var els = sidebar.querySelectorAll('a[href], [tabindex="0"]');
+    var els = sidebar.querySelectorAll('a[href], button, [tabindex="0"]');
     for (var i = 0; i < els.length; i++) {
       if (!els[i].closest("[inert]") && els[i].getClientRects().length) return els[i];
     }
     return null;
-  }
-
-  // Enter and Space press the button. Material also clicks a focused label on Enter (on window), so the
-  // event stops here: otherwise the toggle would flip twice.
-  function pressable(label) {
-    label.addEventListener("keydown", function (e) {
-      if (label.getAttribute("role") !== "button") return;
-      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); e.stopPropagation(); label.click(); }
-    });
   }
 
   // Move focus after the key event is done, so no other key handler acts on the new element. Without
@@ -163,20 +177,17 @@
     if (!drawer || !opener || !sidebar || !root) return;
     if (!sidebar.id) sidebar.id = "a11y-drawer";
     opener.setAttribute("aria-controls", sidebar.id);
-    pressable(opener);
+    // Real buttons answer Enter and Space themselves. Material only clicks a focused <label> on Enter, so a
+    // toggle does not flip twice.
     var toggles = menuToggles();
     for (var i = 0; i < toggles.length; i++) {
       (function (t) {
-        var label = t.parentElement.querySelector(":scope > label.md-nav__link");
-        var back = t.parentElement.querySelector(":scope > nav.md-nav > label.md-nav__title");
-        if (label) pressable(label);
-        if (back) pressable(back);
         t.addEventListener("change", function () {
           syncMenu();
           if (!applies(t)) return;
           // Opened a submenu: go to its first item. Closed it: back to the section button.
           if (t.checked) focusLater(firstFocusable);
-          else if (label) focusLater(function () { return label; });
+          else focusLater(function () { return toggleOf(t); });
         });
       })(toggles[i]);
     }
