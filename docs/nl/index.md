@@ -5,8 +5,21 @@ jsonld: software
 ---
 # Leerharnas
 
-Een gratis, open-source opzet voor [Claude Code](https://docs.claude.com/en/docs/claude-code/overview) die voorkomt dat de AI de code schrijft die je nog aan het leren bent, zodat je **zelf** leert programmeren, ook als er een AI meekijkt. Hij is er voor studenten, en voor junior developers op hun werk die niet junior willen blijven omdat de AI al het werk doet.
-De harnas weet per vaardigheid hoe ver je bent, en past daar de hulp van de AI op aan. Wat je nog leert, doe je zelf, met hints in plaats van oplossingen. Wat je beheerst, mag de AI meteen doen, en je onderhoudt het door het af en toe weer zelf te doen als het in je werk langskomt.
+**AI kan je tegelijk sneller en slechter maken in programmeren.**
+
+Deze gratis, open-source harnas voor [Claude Code](https://docs.claude.com/en/docs/claude-code/overview) houdt het leren bij jou, op school en op je werk: hints in plaats van de code die je nog leert schrijven, tot je het zelf kunt. Daarna mag de AI het overnemen, en houd je de vaardigheid bij door het af en toe weer zelf te doen.
+
+[Installeren](install.md){ .md-button .md-button--primary } [Hoe het werkt](how-it-works.md){ .md-button } [Het onderzoek](research.md#key-findings){ .md-button }
+
+## Waarom ik hem bouwde
+
+De oefentoets van mijn vak objectgeoriënteerd programmeren op de hogeschool ging goed. Ik deed die grotendeels zonder AI, en vroeg om hulp als ik vastliep. De diagnostische toets daarna was anders: een half gebouwd project met een bestaand ontwerp, ontwerptaken om af te maken, en unit tests om aan te vullen, en die waren nieuw voor me. Ik wilde er gewoon doorheen komen. Ik was gestrest en van slag, en uiteindelijk leverde ik alleen het solution-bestand in, zonder het project.
+
+Achteraf had ik de code waarmee ik oefende zelden aan mezelf uitgelegd, en mijn ervaring met AI-agents op mijn werk had me een vals gevoel van zekerheid gegeven. Onderzoek laat hetzelfde risico zien: in een studie met wiskunde op de middelbare school verhoogde onbeperkte AI de oefenscores met 48%, maar verlaagde die de toetsscores met 17% zodra de AI weg was ([Bastani et al., 2025](research.md#key-findings)).
+
+Daarom bouwde ik een harnas die het leren bij mij houdt. Ik oefen er nu mee; het echte tentamen moet nog komen, en op het [dashboard](/dashboard/) kun je mijn voortgang volgen.
+
+Junior developers lopen in dezelfde val: de agent krijgt het werk af, maar de vaardigheden die je medior maken, groeien niet ([§2.12 van het onderzoek](research.md#212-het-eeuwige-juniorprobleem)).
 
 <div class="grid cards" markdown>
 
@@ -22,6 +35,12 @@ De harnas weet per vaardigheid hoe ver je bent, en past daar de hulp van de AI o
 
     [Naar de uitleg](how-it-works.md)
 
+- **Het onderzoek**
+
+    Wat studies zeggen over leren programmeren met AI: de belangrijkste bevindingen, een risicoanalyse en de bronnen.
+
+    [Naar de bevindingen](research.md#key-findings)
+
 - **Dashboard**
 
     Voortgang per (micro)vaardigheid, met echte data en een demo.
@@ -34,21 +53,7 @@ De harnas weet per vaardigheid hoe ver je bent, en past daar de hulp van de AI o
 
     [Naar de cheat sheet](/cheatsheet/)
 
-- **Voor onderzoekers**
-
-    Toets de harnas in een gerandomiseerd experiment: hypothesen, groepen en uitkomsten.
-
-    [Naar de uitnodiging](researchers.md)
-
 </div>
-
-## Aanleiding
-
-Bij de eerste toets waarbij geen AI mocht, liep ik vast. Dat wilde ik niet nog eens laten gebeuren. Daarom heb ik uitgezocht of Claude mijn leerproces had ondermijnd, en dat bleek deels zo te zijn. Ook de wetenschappelijke literatuur laat zien dat dit een reëel risico is: als je de AI het denkwerk laat doen tijdens het oefenen, kun je daarna minder zonder AI. Een AI-agent zoals Claude Code maakt dat uitbesteden juist heel makkelijk (zie de [risicoanalyse](research.md#3-risicoanalyse)). Daarop heb ik deze harnas gebouwd.
-
-Hetzelfde risico houdt niet op na je studie. Een junior developer die een agent al het werk laat doen, krijgt het werk wel af, maar slaat het oefenen over waardoor je medior of senior wordt: zelf schrijven, debuggen en ontwerpen. Zo'n junior kan junior blijven. Interviews met juniors en seniors beschrijven dit patroon, en ontwikkelaars waarschuwen ervoor in talks en blogs (zie [§2.12](research.md#212-het-eeuwige-juniorprobleem)). Dat is het tweede doel van de harnas.
-
-Kort gezegd helpt de harnas je genoeg om niet vast te lopen, en houdt hij het moeilijk genoeg om echt te leren. Op het [dashboard](progress-dashboard.md) volg je hoe het met je vaardigheden gaat.
 
 ## Het idee: eerst opbouwen, dan uitbesteden, en onderhouden
 
@@ -90,6 +95,12 @@ Alles blijft op je eigen computer, in `.learning/` in je projectmap, en de insta
 ### Is het gratis?
 
 Ja. De code is open source onder AGPL-3.0, en de teksten, docs en data vallen onder CC BY-NC 4.0. Je hebt wel toegang tot Claude Code zelf nodig, via een abonnement van Claude of de API.
+
+## Aan de slag
+
+Installeer de harnas in je eigen project, bekijk hoe hij werkt, of lees het onderzoek erachter.
+
+[Installeren](install.md){ .md-button .md-button--primary } [Hoe het werkt](how-it-works.md){ .md-button } [Het onderzoek](research.md#key-findings){ .md-button }
 
 !!! info "AI-verklaring"
     De leerharnas, het dashboard en deze documentatie zijn gemaakt met hulp van Claude (Anthropic). De leerdata en de reflecties in het dashboard zijn van de student zelf. Zie [AI-verklaring](ai-statement.md).

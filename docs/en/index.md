@@ -5,8 +5,21 @@ jsonld: software
 ---
 # Learning harness
 
-A free, open-source [Claude Code](https://docs.claude.com/en/docs/claude-code/overview) setup that stops the AI from writing the code you are still learning to write, so you learn to program **yourself**, even with an AI looking over your shoulder. It is for students, and for junior developers at work who do not want to stay junior because the AI does all the work.
-The harness knows how far along you are per skill, and adjusts the AI's help to that. What you are still learning, you do yourself, with hints instead of solutions. What you have mastered, the AI may do straight away, and you maintain it by doing it yourself again now and then, when it comes by in your work.
+**AI can make you faster at programming and worse at it at the same time.**
+
+This free, open-source harness for [Claude Code](https://docs.claude.com/en/docs/claude-code/overview) keeps the learning with you, at school and at work: hints instead of the code you are still learning to write, until you can do it yourself. Then the AI may take over, and you keep the skill up by doing it yourself now and then.
+
+[Install it](install.md){ .md-button .md-button--primary } [How it works](how-it-works.md){ .md-button } [The research](research.md#key-findings){ .md-button }
+
+## Why I built it
+
+The practice test of my university course on object-oriented programming went fine. I did most of it without AI, and asked for help when I got stuck. The diagnostic test after it was different: a half-built project with an existing design, design tasks to finish, and unit tests to complete, which were new to me. I just wanted to get through it. I was stressed and upset, and in the end I handed in only the solution file, without the project.
+
+Looking back, I had rarely explained to myself the code I practised with, and my experience with AI agents at work had given me a false sense of security. Research shows the same risk: in a high-school maths trial, unlimited AI raised practice scores by 48% but lowered exam scores by 17% once it was gone ([Bastani et al., 2025](research.md#key-findings)).
+
+So I built a harness that keeps the learning with me. I practise with it now; the real exam is still to come, and you can follow my progress on the [dashboard](/dashboard/?lang=en).
+
+Junior developers face the same trap: the agent gets the work done, but the skills that make you a medior do not grow ([§2.12 of the research](research.md#212-the-eternal-junior-problem)).
 
 <div class="grid cards" markdown>
 
@@ -22,6 +35,12 @@ The harness knows how far along you are per skill, and adjusts the AI's help to 
 
     [Go to the explanation](how-it-works.md)
 
+- **The research**
+
+    What studies say about learning to program with AI: the key findings, a risk assessment and the sources.
+
+    [Go to the key findings](research.md#key-findings)
+
 - **Dashboard**
 
     Progress per (micro)skill, with real data and a demo.
@@ -34,21 +53,7 @@ The harness knows how far along you are per skill, and adjusts the AI's help to 
 
     [Go to the cheat sheet](/en/cheatsheet/)
 
-- **For researchers**
-
-    Test the harness in a randomized trial: hypotheses, arms and outcomes.
-
-    [Go to the invitation](researchers.md)
-
 </div>
-
-## Background
-
-On the first test where AI was not allowed, I got stuck. I did not want that to happen again. So I looked into whether Claude had undermined my learning, and partly it had. The scientific literature also shows that this is a real risk: if you let the AI do the thinking while you practise, you can do less without it afterwards. An AI agent such as Claude Code makes that kind of offloading very easy (see the [risk assessment](research.md#3-risk-assessment)). That is why I built this harness.
-
-The same risk does not stop at graduation. A junior developer who lets an agent do all the work gets the work done, but skips the practice through which you become a medior or senior: writing, debugging and designing yourself. That junior can stay junior. Interviews with juniors and seniors describe this pattern, and so do practitioners in talks and blog posts (see [§2.12](research.md#212-the-eternal-junior-problem)). That is the second goal of the harness.
-
-In short, the harness helps you enough that you do not get stuck, but keeps things hard enough that you really learn. On the [dashboard](progress-dashboard.md) you can follow how your skills are developing.
 
 ## The idea: build first, then delegate, and maintain
 
@@ -90,6 +95,12 @@ Everything stays on your computer, in `.learning/` in your project folder, which
 ### Is it free?
 
 Yes. The code is open source under AGPL-3.0, and the texts, docs and data are under CC BY-NC 4.0. You do need access to Claude Code itself, through a Claude plan or the API.
+
+## Get started
+
+Install the harness in your own project, see how it works, or read the research behind it.
+
+[Install it](install.md){ .md-button .md-button--primary } [How it works](how-it-works.md){ .md-button } [The research](research.md#key-findings){ .md-button }
 
 !!! info "AI statement"
     The learning harness, the dashboard and this documentation were made with help from Claude (Anthropic). The learning data and the reflections in the dashboard are the learner's own. See [AI statement](ai-statement.md).
