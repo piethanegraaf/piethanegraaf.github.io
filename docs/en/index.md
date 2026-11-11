@@ -1,6 +1,7 @@
 ---
 title: "Learning harness for Claude Code: practise coding yourself"
 description: "Free Claude Code setup for students: hooks stop the AI from writing your practice code, hints come in steps, and a dashboard tracks your skills."
+jsonld: software
 ---
 # Learning harness
 
