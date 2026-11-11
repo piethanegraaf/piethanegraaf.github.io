@@ -8,6 +8,8 @@
       loading: "Laden…", loadError: "De data kon niet geladen worden ({file}). Open het dashboard via een webserver, bijvoorbeeld: python -m http.server",
       fallback: "Er is nog geen echte data (data/progress.json). Je ziet de demo met verzonnen data.",
       ownLanguage: "De eigen teksten van de student (uitleg, dagboek en eigen notities en microvaardigheden) staan in de taal waarin ze geschreven zijn: {language}.", langNames: { nl: "Nederlands", en: "Engels" },
+      translated: "De eigen teksten van de student (uitleg, dagboek, reflecties, eigen notities en microvaardigheden) zijn door Claude vertaald uit het {language}. Een vertaling is onderstreept met puntjes: wijs hem aan of ga er met Tab naartoe voor het origineel.",
+      original: "Origineel ({language}), vertaald door Claude",
       demoNote: "Demo: alle data is verzonnen. Zo ziet het dashboard eruit na een paar weken oefenen.",
       subtitle: "{course} · stand van {date}", subtitleNoCourse: "Stand van {date}", atTime: "{date}, {time}",
       filter: "Vaardigheid", all: "Alle vaardigheden", asof: "Alle cijfers gelden op het moment van de export: {date}.",
@@ -37,7 +39,7 @@
       diary: "Dagboek", diaryHint: "De feiten logt de harnas; de reflectie staat er in de eigen woorden van de student.",
       plan: "Plan", wentWell: "Ging goed", learned: "Geleerd", confusing: "Verwarrend", confidence: "Zelfvertrouwen", nextStep: "Volgende stap", calib: "Kalibratie",
       noDiary: "Nog geen dagboekentries.", activity: "Activiteit", sessions: "Sessies", hints: "Hints", holds: "Geen nieuwe trede", denials: "Guard-weigeringen", overridesUsed: "Overrides gebruikt",
-      footAi: "De leerharnas, dit dashboard en de docs zijn gemaakt met hulp van Claude (Anthropic). De leerdata en de reflecties zijn van de student zelf.", footAiLink: "AI-verklaring", footAiHref: "../ai-statement/",
+      footAi: "De leerharnas, dit dashboard en de docs zijn gemaakt met hulp van Claude (Anthropic). De leerdata en de reflecties zijn van de student zelf; de vertalingen ervan zijn van Claude.", footAiLink: "AI-verklaring", footAiHref: "../ai-statement/",
       footCode: "Code", footOr: "of een", footCommercial: "commerciële licentie", footTexts: "teksten en data",
       footSource: "Broncode op GitHub", footDocs: "Uitleg bij het dashboard", footDocsHref: "../progress-dashboard/", focus: "Ga naar {id}", tableRegion: "Tabel, scrollbaar",
     },
@@ -46,6 +48,8 @@
       loading: "Loading…", loadError: "The data could not be loaded ({file}). Open the dashboard through a web server, for example: python -m http.server",
       fallback: "There is no real data yet (data/progress.json). You see the demo with made-up data.",
       ownLanguage: "The learner's own texts (explanations, the diary, own notes and microskills) are shown in the language they were written in: {language}.", langNames: { nl: "Dutch", en: "English" },
+      translated: "The learner's own texts (explanations, the diary, reflections, own notes and microskills) were translated from {language} by Claude. A translation has a dotted underline: point at it, or Tab to it, to see the original.",
+      original: "Original ({language}), translated by Claude",
       demoNote: "Demo: all data is made up. This is what the dashboard looks like after a few weeks of practice.",
       subtitle: "{course} · as of {date}", subtitleNoCourse: "As of {date}", atTime: "{date}, {time}",
       filter: "Skill", all: "All skills", asof: "All figures are as of the moment of the export: {date}.",
@@ -75,7 +79,7 @@
       diary: "Diary", diaryHint: "The harness logs the facts; the reflection is in the learner's own words.",
       plan: "Plan", wentWell: "Went well", learned: "Learned", confusing: "Confusing", confidence: "Confidence", nextStep: "Next step", calib: "Calibration",
       noDiary: "No diary entries yet.", activity: "Activity", sessions: "Sessions", hints: "Hints", holds: "No new rung", denials: "Guard denials", overridesUsed: "Overrides used",
-      footAi: "The learning harness, this dashboard and the docs were made with help from Claude (Anthropic). The learning data and the reflections are the learner's own.", footAiLink: "AI statement", footAiHref: "../en/ai-statement/",
+      footAi: "The learning harness, this dashboard and the docs were made with help from Claude (Anthropic). The learning data and the reflections are the learner's own; their translations are by Claude.", footAiLink: "AI statement", footAiHref: "../en/ai-statement/",
       footCode: "Code", footOr: "or a", footCommercial: "commercial licence", footTexts: "texts and data",
       footSource: "Source code on GitHub", footDocs: "About the dashboard", footDocsHref: "../en/progress-dashboard/", focus: "Go to {id}", tableRegion: "Table, scrollable",
     },
@@ -107,7 +111,7 @@
       else if (k.startsWith("on") && typeof v === "function") e.addEventListener(k.slice(2), v);
       else e.setAttribute(k, v === true ? "" : String(v));
     }
-    for (const kid of kids.flat()) if (kid !== null && kid !== undefined && kid !== false) e.append(kid instanceof Node ? kid : document.createTextNode(String(kid)));
+    for (const kid of kids.flat(Infinity)) if (kid !== null && kid !== undefined && kid !== false) e.append(kid instanceof Node ? kid : document.createTextNode(String(kid)));
     return e;
   }
   const NS = "http://www.w3.org/2000/svg";
@@ -140,8 +144,9 @@
   // ---------- Tooltip (hover and keyboard focus) ----------
   const tip = $("tooltip");
   function showTip(evt, title, rows) {
-    tip.replaceChildren(el("div", { class: "tt-title", text: title }), ...rows.map(([cls, value, label]) =>
-      el("div", { class: "tt-row" }, cls ? el("span", { class: `ln ${cls}` }) : null, el("strong", { text: value }), el("span", { text: label }))));
+    // rows: [class, value, label] per row, or one plain text (the original of a translation).
+    tip.replaceChildren(el("div", { class: "tt-title", text: title }), ...(typeof rows === "string" ? [el("div", { class: "tt-text", lang: data?.language, text: rows })] : rows.map(([cls, value, label]) =>
+      el("div", { class: "tt-row" }, cls ? el("span", { class: `ln ${cls}` }) : null, el("strong", { text: value }), el("span", { text: label })))));
     tip.hidden = false;
     let x, y;
     if (evt && "clientX" in evt && evt.type.startsWith("pointer")) { x = evt.clientX; y = evt.clientY; }
@@ -182,7 +187,23 @@
   };
   const skillById = () => new Map(data.skills.map((s) => [s.id, s]));
   // Texts in the language of the page where the export has both (titles from the map, fixed notes, signals).
-  const titleOf = (s) => s.titles?.[lang] ?? s.title;
+  // The learner's own texts are in the language of the record; the export adds Claude's translations
+  // (data.translations[lang][text]). tx() marks a translation and shows the original on hover and focus;
+  // txs() gives it as a plain string (option labels). An older export without translations shows the original.
+  const langName = (l) => t("langNames")?.[l] ?? l;
+  const trOf = (text) => {
+    if (typeof text !== "string" || !data?.language || lang === data.language) return null;
+    const tr = data.translations?.[lang]?.[text];
+    return typeof tr === "string" && tr && tr !== text ? tr : null;
+  };
+  const txs = (text) => trOf(text) ?? text;
+  const tx = (text) => {
+    const tr = trOf(text);
+    if (!tr) return text ?? null;
+    return withTip(el("span", { class: "tr", tabindex: "0" }, tr), t("original", { language: langName(data.language) }), text);
+  };
+  const joinNodes = (parts, sep) => parts.flatMap((p, i) => (i ? [sep, p] : [p]));
+  const titleOf = (s) => s.titles?.[lang] ?? txs(s.title);
   const mains = () => data.skills.filter((s) => !s.parent && s.kind !== "zone");
   const microsOf = (id) => data.skills.filter((s) => s.parent === id);
   const family = (s) => (s.parent ? [s.id] : [s.id, ...microsOf(s.id).map((m) => m.id)]);
@@ -219,7 +240,7 @@
   }
   function table(headers, rows, numCols = []) {
     const cell = (c, i) => {
-      if (c instanceof Node) return el("td", {}, c);
+      if (c instanceof Node) return el("td", { class: c.textContent.length > 60 ? "text" : null }, c);
       const cls = numCols.includes(i) ? "num" : String(c ?? "").length > 60 ? "text" : null;
       return el("td", { class: cls, text: c ?? t("none") });
     };
@@ -278,19 +299,20 @@
     const hist = s.history ?? [];
     const rungLabel = (x) => String(x.maxRung) + (x.corrections.length ? " *" : "");
     const explainCell = (x) => {
-      if (x.void) return el("span", { class: "muted", text: `${t("voided")}${x.voidReason ? `: ${x.voidReason}` : ""}` });
+      if (x.void) return el("span", { class: "muted" }, t("voided"), x.voidReason ? [": ", tx(x.voidReason)] : null);
       if (x.lapsed) return el("span", { class: "muted", text: `${t("skipped")}${x.lapseReason && t("lapse")?.[x.lapseReason] ? `: ${t("lapse")[x.lapseReason]}` : ""}` });
       if (!x.explained) return statusBadge("warning", t("pendingExpl"));
-      return el("span", {}, statusBadge("good", t(x.explainedBy === "replay" ? "replayed" : "explained")), x.explanation ? el("div", { text: `“${x.explanation}”` }) : null);
+      return el("span", {}, statusBadge("good", t(x.explainedBy === "replay" ? "replayed" : "explained")), x.explanation ? el("div", {}, "“", tx(x.explanation), "”") : null);
     };
     return el("div", { class: "detail" },
       el("div", {}, el("h3", { text: t("history") }), hist.length ? table([t("date"), t("from"), t("to"), t("note")],
         hist.map((h) => [fmtDate(h.at), h.from ?? t("none"), `${h.to} ${levelName(h.to)}`,
-          `${h.auto ? `[${t("auto")}] ` : h.placement ? `[${t("placementNote")}] ` : ""}${h.notes?.[lang] ?? h.note ?? ""}`])) : el("p", { class: "muted", text: t("noHistory") })),
+          el("span", {}, h.auto ? `[${t("auto")}] ` : h.placement ? `[${t("placementNote")}] ` : null, h.notes?.[lang] ?? tx(h.note))])) : el("p", { class: "muted", text: t("noHistory") })),
       el("div", {}, el("h3", { text: t("tasks") }), tasks.length ? table([t("date"), t("task"), t("rung"), t("source"), t("explanation"), t("rejections"), t("corrections")],
-        tasks.map((x) => [fmtDate(x.at), `${x.skill !== s.id ? `${x.skill}: ` : ""}${x.what ?? x.id}`, rungLabel(x), t(`src.${x.source}`) === `src.${x.source}` ? (x.source ?? t("none")) : t(`src.${x.source}`),
-          explainCell(x), x.rejections.map((r) => `${t(`by.${r.by}`)}${r.reasons.length ? `: ${r.reasons.join("; ")}` : ""}`).join(" · ") || t("none"),
-          x.corrections.map((c) => `${c.from} → ${c.to}${c.reason ? ` (${c.reason})` : ""}`).join(" · ") || t("none")]), [2]) : el("p", { class: "muted", text: t("noTaskRows") })),
+        tasks.map((x) => [fmtDate(x.at), el("span", {}, x.skill !== s.id ? `${x.skill}: ` : null, x.what ? tx(x.what) : x.id), rungLabel(x), t(`src.${x.source}`) === `src.${x.source}` ? (x.source ?? t("none")) : t(`src.${x.source}`),
+          explainCell(x),
+          x.rejections.length ? el("span", {}, joinNodes(x.rejections.map((r) => el("span", {}, t(`by.${r.by}`), r.reasons.length ? [": ", joinNodes(r.reasons.map(tx), "; ")] : null)), " · ")) : t("none"),
+          x.corrections.length ? el("span", {}, joinNodes(x.corrections.map((c) => el("span", {}, `${c.from} → ${c.to}`, c.reason ? [" (", tx(c.reason), ")"] : null)), " · ")) : t("none")]), [2]) : el("p", { class: "muted", text: t("noTaskRows") })),
       el("div", {}, el("h3", { text: t("reviews") }), reviews.length ? table([t("date"), t("result"), t("nextReview")],
         reviews.map((r) => [fmtDate(r.at), t(`res.${r.result}`), fmtDate(r.nextReview)])) : el("p", { class: "muted", text: t("noReviewRows") })));
   }
@@ -308,7 +330,7 @@
         const tick = el("div", { class: "target", "aria-hidden": "true" }); tick.style.left = pct(target); track.append(tick);
         meter.append(track, el("div", { class: "num", text: st.n ? `${t("solved", { ok: st.ok, n: st.n })} (${pct(st.ok / st.n)})` : t("noTasks") }));
         const row = el("div", { class: "skill-row" },
-          el("div", { class: "skill-name" }, el("div", { class: "title", text: titleOf(s) }), el("div", { class: "id", text: s.id })),
+          el("div", { class: "skill-name" }, el("div", { class: "title" }, s.titles?.[lang] ?? tx(s.title)), el("div", { class: "id", text: s.id })),
           s.placement === "pending" ? el("span", { class: "chip open", text: t("openChip") }) : el("span", { class: `chip lv${LEVELS.indexOf(s.level)}`, text: `${s.level} ${levelName(s.level)}` }),
           meter,
           el("div", { class: "skill-meta" }, st.pending ? statusBadge("warning", t("open", { n: st.pending })) : null,
@@ -378,13 +400,13 @@
   function signalsCard() {
     const items = [];
     for (const s of data.signals.filter((x) => inScope(x.skill))) {
-      items.push({ at: data.generatedAt, icon: s.dir === "up" ? "↑" : "↓", cls: s.dir === "up" ? "good" : "serious", label: s.dir === "up" ? t("signalsUp") : t("signalsDown"), text: s.texts?.[lang] ?? s.text });
+      items.push({ at: data.generatedAt, icon: s.dir === "up" ? "↑" : "↓", cls: s.dir === "up" ? "good" : "serious", label: s.dir === "up" ? t("signalsUp") : t("signalsDown"), text: s.texts?.[lang] ?? tx(s.text) });
     }
     for (const r of data.regressions.filter((x) => !x.skill || inScope(x.skill))) {
       items.push({ at: r.at, icon: r.fixed ? "↺" : "!", cls: r.fixed ? "good" : "critical", label: r.skill ?? "", text: r.fixed ? t("regressionFixed", { n: r.tests }) : t("regression", { n: r.tests }) });
     }
     for (const o of data.overrides.filter((x) => x.skill === "*" || inScope(x.skill))) {
-      items.push({ at: o.at, icon: "⚑", cls: "warning", label: o.skill, text: `${t("override", { min: o.minutes })}${o.reason ? `: ${o.reason}` : ""}` });
+      items.push({ at: o.at, icon: "⚑", cls: "warning", label: o.skill, text: el("span", {}, t("override", { min: o.minutes }), o.reason ? [": ", tx(o.reason)] : null) });
     }
     items.sort((a, b) => String(b.at).localeCompare(String(a.at)));
     const list = items.length ? el("ul", { class: "signals" }, items.map((it) => el("li", {},
@@ -420,17 +442,17 @@
       body = el("div", {}, chart, legend);
     }
     return card(t("calibration"), t("calibrationHint"), body, () => table([t("date"), t("session"), t("before"), t("after"), t("calib")],
-      rows.map((d) => [fmtDate(d.date), String(d.n), d.confidenceBefore ?? t("none"), d.reflection?.confidenceAfter ?? t("none"), d.calibration ?? t("none")])), "calibration");
+      rows.map((d) => [fmtDate(d.date), String(d.n), tx(d.confidenceBefore) ?? t("none"), tx(d.reflection?.confidenceAfter) ?? t("none"), tx(d.calibration) ?? t("none")])), "calibration");
   }
 
   function diaryCard() {
     const rows = data.diary.filter((d) => filter === "all" || String(d.skills ?? "").includes(filter)).slice().reverse();
-    const field = (label, value) => (value ? [el("dt", { text: label }), el("dd", { text: value })] : []);
+    const field = (label, value) => (value ? [el("dt", { text: label }), el("dd", {}, value)] : []);
     const list = rows.length ? el("ol", { class: "diary" }, rows.map((d) => el("li", { class: "entry" },
-      el("div", { class: "when", text: [fmtLong(d.date), `${t("session")} ${d.n}`, d.time, d.skills].filter(Boolean).join(" · ") }),
-      el("dl", {}, field(t("plan"), d.plan), field(t("wentWell"), d.wentWell), field(t("learned"), d.reflection?.learned), field(t("confusing"), d.reflection?.confusing),
-        field(t("confidence"), [d.confidenceBefore, d.reflection?.confidenceAfter].every(Boolean) ? `${d.confidenceBefore} → ${d.reflection.confidenceAfter}` : d.reflection?.confidenceAfter),
-        field(t("nextStep"), d.reflection?.nextStep), field(t("calib"), d.calibration))))) : el("p", { class: "muted", text: t("noDiary") });
+      el("div", { class: "when" }, joinNodes([fmtLong(d.date), `${t("session")} ${d.n}`, tx(d.time), tx(d.skills)].filter(Boolean), " · ")),
+      el("dl", {}, field(t("plan"), tx(d.plan)), field(t("wentWell"), tx(d.wentWell)), field(t("learned"), tx(d.reflection?.learned)), field(t("confusing"), tx(d.reflection?.confusing)),
+        field(t("confidence"), [d.confidenceBefore, d.reflection?.confidenceAfter].every(Boolean) ? el("span", {}, tx(d.confidenceBefore), " → ", tx(d.reflection.confidenceAfter)) : tx(d.reflection?.confidenceAfter)),
+        field(t("nextStep"), tx(d.reflection?.nextStep)), field(t("calib"), tx(d.calibration)))))) : el("p", { class: "muted", text: t("noDiary") });
     return card(t("diary"), t("diaryHint"), list, null, "diary");
   }
 
@@ -458,7 +480,7 @@
     $("theme").setAttribute("aria-label", t("theme"));
     for (const b of document.querySelectorAll("[data-lang]")) b.setAttribute("aria-pressed", String(b.dataset.lang === lang));
     for (const b of document.querySelectorAll("[data-source]")) b.setAttribute("aria-pressed", String(b.dataset.source === (fellBack ? "demo" : source)));
-    $("subtitle").textContent = data ? (data.course ? t("subtitle", { course: data.course, date: asOfLabel() }) : t("subtitleNoCourse", { date: asOfLabel() })) : "";
+    $("subtitle").textContent = data ? (data.course ? t("subtitle", { course: txs(data.course), date: asOfLabel() }) : t("subtitleNoCourse", { date: asOfLabel() })) : "";
     // The licence of the setup: AGPL-3.0 or a commercial licence for the code, CC BY-NC 4.0 for texts and data.
     const link = (href, text) => el("a", { href, text });
     $("footer").replaceChildren(el("div", { class: "foot-inner" },
@@ -474,7 +496,11 @@
     if (!data) return;
     const notes = [];
     if (fellBack) notes.push(el("p", { class: "notice", text: t("fallback") }));
-    if (!fellBack && source !== "demo" && data.language && data.language !== lang) notes.push(el("p", { class: "notice", text: t("ownLanguage", { language: t("langNames")[data.language] ?? data.language }) }));
+    if (!fellBack && source !== "demo" && data.language && data.language !== lang) {
+      // An export with translations (export.mjs adds them) says so; an older one is in one language.
+      const translated = Object.keys(data.translations?.[lang] ?? {}).length > 0;
+      notes.push(el("p", { class: "notice", text: t(translated ? "translated" : "ownLanguage", { language: langName(data.language) }) }));
+    }
     else if (source === "demo") notes.push(el("p", { class: "notice", text: t("demoNote") }));
     if (filter !== "all" && !mains().some((s) => s.id === filter)) filter = "all";
     main.replaceChildren(...notes, filters(), kpis(), levelsCard(), skillsCard(), el("div", { class: "two" }, tasksCard(), signalsCard()),

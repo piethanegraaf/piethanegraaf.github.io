@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "generatedAt": "2026-11-11",
-  "exportedAt": "2026-11-11T00:00:15.363Z",
+  "exportedAt": "2026-11-11T06:32:39.089Z",
   "course": null,
   "language": "nl",
   "examDate": "2027-01-20",
@@ -928,6 +928,14 @@
       "holds": 1,
       "denials": 7,
       "overridesUsed": 0
+    },
+    {
+      "date": "2026-11-11",
+      "sessions": 1,
+      "hints": 1,
+      "holds": 0,
+      "denials": 1,
+      "overridesUsed": 0
     }
   ],
   "diary": [
@@ -965,5 +973,65 @@
       },
       "calibration": "vooraf niet gegeven → 05 en 06 af met trede ≤2, zonder uitwerking, en het D-toets-zwaktepunt zelf opgelost → een 4 nu lijkt te kloppen."
     }
-  ]
+  ],
+  "translations": {
+    "en": {
+      "vast op Reverse (void) en chainen": "stuck on Reverse (void) and chaining",
+      "lijst filteren met foreach": "filtering a list with foreach",
+      "strings en StringBuilder": "strings and StringBuilder",
+      "void-methoden en chainen": "void methods and chaining",
+      "referentie vs kopie, bijwerkingen": "reference vs copy, side effects",
+      "lusgrenzen en off-by-one": "loop bounds and off-by-one",
+      "veld vs lokale variabele vs property": "field vs local variable vs property",
+      "herhalingen starten": "start the reviews",
+      "testuitvoer lezen": "reading test output",
+      "wat een test controleert: zichtbaar gedrag": "what a test checks: visible behaviour",
+      "TestGeefEvenGetallenNegatief, TestGeefEvenGetallenTwee, TestGeefEvenGetallenTien": "TestGeefEvenGetallenNegatief, TestGeefEvenGetallenTwee, TestGeefEvenGetallenTien",
+      "als je in de eerste regel voor de functienaam belooft wat terug te geven moet je dat ook datwerkelijk doen dus daarom ging het fout": "if in the first line before the function name you promise to return something you have to actually do that too so that's why it went wrong",
+      "Socratische vraag bij CS0161": "Socratic question at CS0161",
+      "TestGeefEvenGetallenElf": "TestGeefEvenGetallenElf",
+      "< nu omdat het niet logisch is om als het getal al gelijk is aan het maximum er dan nog een aan toe te voegen en die vervolgens ook aan de lijst toe te voegen, dan krijg je te hoge getallen, aan het begin van de while loop moet soms het startgetal ook aan de lijst toegevoegd worden maar dat gebeurd nu nog niet, daar ga ik nu naar kijken": "< now because it doesn't make sense, when the number is already equal to the maximum, to add one more to it and then also add that to the list, then you get numbers that are too high, at the start of the while loop the start number sometimes has to be added to the list too but that doesn't happen yet, I'm going to look at that now",
+      "vragen over lusvoorwaarde bij Elf": "questions about the loop condition at Elf",
+      "TestGeefEvenGetallenTien, TestGeefEvenGetallenTwee, TestGeefEvenGetallenElf": "TestGeefEvenGetallenTien, TestGeefEvenGetallenTwee, TestGeefEvenGetallenElf",
+      "herstel van eigen regressie, geen nieuwe taak": "repair of own regression, not a new task",
+      "TestEvenGetallenReeks, TestEvenGetallenReeksNegatief": "TestEvenGetallenReeks, TestEvenGetallenReeksNegatief",
+      "omdat eerst altijd het min getal eerst ofwel number opgeplust werd voordat het weggegeschreven werd naaar de lijst": "because the min number, or rather number, always got incremented first before it was written to the list",
+      "off-by-one-concept en tabel voor Reeks": "off-by-one concept and table for Reeks",
+      "TestAantalEvenGetallen": "TestAantalEvenGetallen",
+      "omdat Getallenterug.Count() exact terug geeft wat we willen weten, mamelijk of we al genoeg getallen hebben verzameld volgens de gebruikers input": "because Getallenterug.Count() returns exactly what we want to know, namely whether we have already collected enough numbers according to the user's input",
+      "vragen over type en betekenis van aantal": "questions about the type and meaning of aantal",
+      "constructor + properties Merk/Model/Bouwjaar, eigenschappentest groen": "constructor + properties Merk/Model/Bouwjaar, properties test green",
+      "omdat er nog geen fields waren voor merk bouwjaar en model, dit verwachte de test wel en daarom ging het compilen fout": "because there were no fields yet for merk bouwjaar and model, the test did expect them and that's why the compiling went wrong",
+      "Socratische vraag over CS1729/CS1061": "Socratic question about CS1729/CS1061",
+      "AutoInfoTest, AutoConstructorTest": "AutoInfoTest, AutoConstructorTest",
+      "omdat de properties overschreven worden door de test (regels 29 tot 31) en dat in autoinfor de retrun de waarden van de properties als string terug geeft": "because the properties are overwritten by the test (lines 29 to 31) and in AutoInfo the return gives back the values of the properties as a string",
+      "TestHeeftBSA50, TestHeeftProp75, TestHeeftProp60, TestHeeftBSA40": "TestHeeftBSA50, TestHeeftProp75, TestHeeftProp60, TestHeeftBSA40",
+      "omdat als je hogere studiepunten hebt je natuurlijk nog steeds gewoon je bsa hebt gehaald dus == was fout en de grens bleek 40 en niet 20, had ik verkeerd gekeken. vond het al vreemd dat het afweek van hoe het op school werkt": "because if you have more credits you have of course still just passed your BSA so == was wrong and the threshold turned out to be 40 and not 20, I had misread it. already thought it was strange that it was different from how it works at school",
+      "TestHeeftBSA20": "TestHeeftBSA20",
+      "vraag over kleinste waarde die true geeft": "question about the smallest value that gives true",
+      "afgeleide toestand: property vervangen door lokale variabele": "derived state: property replaced by a local variable",
+      "de oude propertie bestond zolang het object geinstanseerd was opdat deze wert aangemaakt bij instacieren en de lokale varaible bestaat sins dat de functie word aageroepen omdat deze in de functie geinstanseerd wordt": "the old property existed as long as the object was instantiated because it was created when instantiating, and the local variable exists from when the function is called because it is instantiated in the function",
+      "securitycheck site (tooling)": "security check site (tooling)",
+      "cs.basis (L2), cs.basis.lus-grenzen (L2, nieuw), test.unit-tests (L1)": "cs.basis (L2), cs.basis.lus-grenzen (L2, new), test.unit-tests (L1)",
+      "opdracht 04-even-getallen afmaken (niet expliciet benoemd)": "finish exercise 04-even-getallen (not stated explicitly)",
+      "onbekend": "unknown",
+      "Compileerfouten lezen en oplossen met hooguit één Socratische vraag. · `cs.basis.lus-grenzen`: zelf de boven- en ondergrens van de lus doorzien en de oorzaak van de ontbrekende `min` gevonden zonder nieuwe hint. · `GeefAantalEvenGetallen`: het return-type en de betekenis van `aantal` uit de test afgeleid, en de lus laten stoppen op `Count()`.": "Reading and fixing compiler errors with at most one Socratic question. · `cs.basis.lus-grenzen`: worked out the upper and lower bound of the loop without help, and found the cause of the missing `min` without a new hint. · `GeefAantalEvenGetallen`: worked out the return type and the meaning of `aantal` from the test, and made the loop stop at `Count()`.",
+      "geen. cs.basis heeft 4 goedgekeurde taken van de minstens 5 die nodig zijn voor het advies L2 → L3.": "none. cs.basis has 4 approved tasks of the at least 5 needed for the advice L2 → L3.",
+      "vooraf onbekend → alles groen, met trede ≤2 en zonder uitwerking → gevoel \"niet heel zeker\" is mogelijk een onderschatting.": "before unknown → everything green, with rung ≤2 and without a worked solution → the feeling \"not very sure\" may be an underestimate.",
+      "while loops, nadeken over list en filers": "while loops, thinking about list and filters",
+      "twee schermen gebruiken, werkt slecht als je maar een schermpje hebt": "using two screens, doesn't work well if you only have one little screen",
+      "niet heel zeker": "not very sure",
+      "ik wil in de volgende sessie door naar het volgende onderwerp": "I want to move on to the next topic in the next session",
+      "±15:08–19:40 (kloktijd, zie harnas-observaties)": "±15:08–19:40 (clock time, see harness observations)",
+      "ood.klassen-properties (L2), ood.klassen.veld-vs-lokaal (L2), cs.basis.strings (L3)": "ood.klassen-properties (L2), ood.klassen.veld-vs-lokaal (L2), cs.basis.strings (L3)",
+      "zoveel mogelijk snek-opdrachten afmaken (05–24), OOD-vaardigheden": "finish as many snek exercises as possible (05–24), OOD skills",
+      "niet gegeven. De vraag was te open; de student wil hem voortaan gekoppeld aan één concrete opdracht.": "not given. The question was too open; from now on the learner wants it tied to one concrete exercise.",
+      "`cs.basis.strings`: de string-interpolatie in `AutoInfo` zonder hint. · `ood.klassen-properties`: constructors en properties met passende types (05 en 06). Ook zelf een parameterloze constructor toegevoegd voor de test, zelf `>=` gekozen en CS0161 zelf opgelost. · `ood.klassen.veld-vs-lokaal` (prioriteit 1 uit de D-toets): de bug met opgeslagen toestand zelf voorspeld (\"het wordt nu nog niet op false gezet\") en zelf omgebouwd. De levensduur van een property tegenover een lokale variabele correct uitgelegd. · Een realiteitscheck: hij zag zelf dat een BSA-grens van 20 niet klopte met hoe het op school werkt.": "`cs.basis.strings`: the string interpolation in `AutoInfo` without a hint. · `ood.klassen-properties`: constructors and properties with fitting types (05 and 06). Also added a parameterless constructor for the test without help, chose `>=` without help and fixed CS0161 without help. · `ood.klassen.veld-vs-lokaal` (priority 1 from the D test): predicted the bug with stored state without help (\"it is not being set to false yet\") and rebuilt it without help. Explained the lifetime of a property versus a local variable correctly. · A reality check: noticed without help that a BSA threshold of 20 did not match how it works at school.",
+      "geen. `ood.klassen-properties` staat op 2/2 geregistreerde taken. Voor het advies L2 → L3 zijn er minstens 5 nodig; met de 3 verloren uitleggen zouden het er 5 zijn.": "none. `ood.klassen-properties` is at 2/2 registered tasks. The advice L2 → L3 needs at least 5; with the 3 lost explanations it would be 5.",
+      "vooraf niet gegeven → 05 en 06 af met trede ≤2, zonder uitwerking, en het D-toets-zwaktepunt zelf opgelost → een 4 nu lijkt te kloppen.": "before not given → 05 and 06 done with rung ≤2, without a worked solution, and the weak point from the D test solved without help → a 4 now seems right.",
+      "wat het verschil is tussen een fuctie variabele en een propertie in een klas en waneer deze geinstaseerd worden.": "what the difference is between a function variable and a property in a class and when they get instantiated.",
+      "ik had even pauze toen ik ging eten en toen was ik de context van een vraag kwijt.": "I had a short break when I went to eat and then I had lost the context of a question.",
+      "straks door naar de volgende snack chalge": "on to the next snek challenge in a bit"
+    }
+  }
 }

@@ -45,6 +45,8 @@ node harness/export.mjs ../mijn-oefenmap --dry-run   # rapport, schrijft niets
 node harness/export.mjs ../mijn-oefenmap             # schrijft site-src/dashboard/data/progress.json
 ```
 
+Heeft een vrije tekst nog geen vertaling in de andere taal? Dan vraagt de export eerst om de vertalingen (zie [Vertalingen](progress-dashboard.md#vertalingen)).
+
 - **Alleen een whitelist.** Niveaus, taken (trede, bron, uitleg, afwijzingen, correcties, overgeslagen), herhalingen, signalen, en uit het dagboek alleen het plan, wat goed ging, de reflectie en de kalibratie. Nooit ruwe events, sessie-id's, testnamen of paden.
 - **Vaste filters** op alle vrije tekst: e-mailadressen, absolute paden, je gebruikersnaam, sessie- en transcript-id's, en HTML-commentaar. De naam in `skills.json` (`learner`) wordt ook gefilterd.
 - **Je eigen filter** in `.learning/private.json`:

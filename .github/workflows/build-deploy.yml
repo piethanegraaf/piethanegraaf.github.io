@@ -78,6 +78,14 @@ jobs:
         with:
           node-version: "24"
 
+      - name: Check that the dashboard data is in every language
+        run: |
+          # export.mjs adds a translation of every free text (docs: Updating the dashboard).
+          # A missing translation stops the build, so the dashboard never mixes languages.
+          if [ -f site-src/dashboard/data/progress.json ]; then
+            node harness/export.mjs --check site-src/dashboard/data/progress.json
+          fi
+
       - name: Add a Content-Security-Policy to every page
         run: node harness/site-csp.mjs site
 
