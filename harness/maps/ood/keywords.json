@@ -29,5 +29,15 @@
   "ood.polymorfie": ["polymorf", "polymorphism", "late binding", "dynamic dispatch", "basistype", "base type"],
   "ood.solid": ["solid", "single responsibility", "open/closed", "open-closed", "liskov", "dependency inversion", "modulair", "modular"],
   "arch.lagen": ["controller", "dependency injection", "lagenarchitectuur", "layered architecture", "backend", "repository", "servicelaag", "service layer"],
-  "uml.sequentiediagram": ["sequentiediagram", "sequence diagram", "sequencediagram", "componentdiagram", "component diagram"]
+  "uml.sequentiediagram": ["sequentiediagram", "sequence diagram", "sequencediagram", "componentdiagram", "component diagram"],
+  "ood.logging": ["logging", "loggen", "logger", "logniveau", "log level", "loglevel", "serilog"],
+  "test.integratie": ["integratietest", "integration test", "systeemtest", "system test", "ui-test", "ui test", "end-to-end", "acceptatiecriteri", "acceptance criteri", "webapplicationfactory"],
+  "ood.casting": ["upcast", "downcast", "casting", "invalidcastexception", "is-patroon", "is pattern", "pattern matching", "typecast"],
+  "cs.static": ["static", "statisch", "cs0176", "cs0120"],
+  "cs.records-structs": ["record", "structs", "public struct", "readonly struct", "een struct", "a struct","waardetype", "value type", "with-expressie", "with expression"],
+  "ood.object-methodes": ["tostring", "equals", "gethashcode", "object-methode", "object method"],
+  "cs.extra": ["sealed", "indexer", "this[", "operator overload", "operator +", "operator ==", "geneste klasse", "nested class", "inner class"],
+  "pattern.creational": ["abstract factory", "builder pattern", "builder-patroon", "prototype", "singleton", "creational"],
+  "pattern.structural": ["adapter", "bridge", "composite", "decorator", "facade", "flyweight", "proxy", "structural pattern"],
+  "pattern.behavioral": ["chain of responsibility", "command pattern", "command-patroon", "iterator", "mediator", "memento", "state pattern", "state-patroon", "template method", "visitor", "behavioral"]
 }

@@ -1282,7 +1282,7 @@ As built, an L4 skill is reviewed when it first comes up in real work after its 
 
 ### 5.8 OOD skill map
 
-The OOD map in the harness (`harness/maps/ood/skills.json`) is a list of skills, each with its own exercise folders and keywords. It was built from the gaps the diagnostic test showed. Since 11 November 2026 it also has the OO design that the course's final assessment grades: polymorphism, SOLID and modularity, layers with controllers and dependency injection, and the UML sequence and component diagrams.
+The OOD map in the harness (`harness/maps/ood/skills.json`) is a list of skills, each with its own exercise folders and keywords. It was built from the gaps the diagnostic test showed. Since 11 November 2026 it also has the OO design that the course's final assessment grades: polymorphism, SOLID and modularity, layers with controllers and dependency injection, and the UML sequence and component diagrams. Later that evening the map was laid next to the test assignment, the grading form and the pilot student's cheat sheet. Ten skills came out of that: logging (indicator 3.1.1), integration, system and UI tests (indicator 3.1.4 and the test plan), and from the cheat sheet upcasting and downcasting, static members, records and structs, object methods, other C# (sealed, indexers, operator overloading, nested classes) and the three families of design patterns. A family is one skill; if you practise one pattern on its own, it becomes a microskill.
 
 The map has **no prerequisites**. The order comes from the numbered exercises, and a new skill starts with a placement: your first task sets the level (§5.2). If something is missing, you add a skill yourself with `skill.mjs add`.
 
@@ -1303,6 +1303,11 @@ flowchart LR
     subgraph Language
         C1[Exceptions]
         C2[Generics & Dictionary]
+        C3[Upcasting & downcasting]
+        C4[Static members]
+        C5[Records & structs]
+        C6[Object methods: ToString, Equals]
+        C7[sealed, indexers, operators, nested classes]
     end
     subgraph Design
         D1[Strategy]
@@ -1310,6 +1315,10 @@ flowchart LR
         D3[Observer]
         D4[SOLID & modularity]
         D5[Layers: UI, backend, database]
+        D6[Logging]
+        D7[Creational patterns]
+        D8[Structural patterns]
+        D9[Behavioral patterns]
     end
     subgraph Modelling
         E1[UML class diagram]
@@ -1318,6 +1327,7 @@ flowchart LR
     subgraph Practice
         F1[Unit tests & TDD]
         F2[Debugging without an error message]
+        F3[Integration, system & UI tests]
     end
 ```
 
@@ -2217,6 +2227,11 @@ Help about a concept of another family stays with the task and is also logged fo
 <a id="11-change-log"></a>
 
 ## 11. Change log {#changelog}
+
+### 11 November 2026 (night, later): the map next to the assessment and the cheat sheet
+
+- **§5.8:** ten more skills, from the grading form (logging; integration, system and UI tests) and from the pilot student's cheat sheet (casting, static, records and structs, object methods, other C#, and the three families of design patterns). The map now has 29 skills.
+- **Not changed:** the conclusions of §2, and what the map deliberately leaves out (security, cloud and CI/CD, the database, the report).
 
 ### 11 November 2026 (night): help per concept, a proposal for a microskill, and honest words (decisions of 11 November, afternoon)
 
