@@ -50,7 +50,7 @@ Pre-register the trial, for example on OSF.
 - **Logging per skill:** the level and its history; tasks with the hint rung, the source, the explanation, rejections and corrections; reviews; overrides; and the reflections from the diary. Everything stays on the participant's own computer, in `.learning/`.
 - **An export with privacy filters.** `export.mjs` takes only a whitelist of fields. It filters e-mail addresses, paths, user names, session ids and the participant's own terms ([Configuration and privacy](configuration.md#privacy)). Raw events and transcripts are never exported.
 - **Two languages.** All messages, rules and skills exist in Dutch and English.
-- **A skill map** for Object-Oriented Design in C#. Another course, or the stack of a team, needs its own map ([Your own course](configuration.md#your-own-course)).
+- **Two skill maps:** Object-Oriented Design in C# for students, and an example map for junior developers at work in C#/.NET (`junior-dotnet`), where code outside the mapped skills is L4. Another course, or the stack of a team, needs its own map or an adapted one ([Your own course](configuration.md#your-own-course)).
 
 ## What is still missing
 

@@ -616,7 +616,7 @@ Aviation made the same trade-off. Airline pilots supervise the autopilot most of
 
 - **Connection.** Contact with experts, Beane's third condition, is not something a tool supplies. The harness does not replace a mentor or a review by a senior.
 - **The organization.** Whether a junior gets time to practise by hand depends on the team (Feng, Yun & Wang, 2026; Yu & Moon, 2026). The harness is a commitment device the junior chooses (P10). Imposed by an employer, that argument no longer holds, and the learning data would need other privacy rules.
-- **The map.** The included map is for OOD in C#. A junior at work needs a map for their own stack, and automatic logging of tasks from tests only works with `dotnet test`.
+- **The map.** There is an example map for juniors at work in C#/.NET (`junior-dotnet`). In it, code outside the mapped skills is L4, so the AI may write it and only the skills being learned are protected. A junior has to adapt its paths to their own codebase, the guard only protects skills that have paths, and automatic logging of tasks from tests only works with `dotnet test`.
 
 **How strong is this?** Every part of the trade-off follows a principle with empirical support (§2.11). The combination, and its use at work, have not been tested. A narrative review cannot show that this is the best trade-off; only a trial can. §6.1 proposes one. The sources, with a link for every claim, are in the [notes on the eternal-junior problem](notes/eternal_junior.md).
 
@@ -1975,6 +1975,7 @@ stateDiagram-v2
 - **A second target group.** The review now also covers junior developers at work, who risk staying junior when an agent does the work before they can do it themselves (§1, §2.0, §2.10).
 - **§2.12, new:** the eternal-junior problem. The evidence for the mechanism, the practitioner sources (grade D), the counter-evidence, what is missing, the trade-off of the harness (build, delegate, maintain), aviation as an analogy for maintenance at L4, and what the harness does not solve.
 - **§2.11:** one sentence that groups the principles into build, delegate and maintain.
+- **An example map for juniors at work** (`junior-dotnet`, C#/.NET), in which code outside the mapped skills is L4 (§2.12, "What the harness does not solve").
 - **§6.1, new:** an invitation to run a randomized trial, with the full proposal on the page [For researchers](researchers.md).
 - **§7:** two new limitations: not tried at work, and practitioner sources show concern, not proof.
 - **§8:** new references, with the source links in the [notes on the eternal-junior problem](notes/eternal_junior.md).

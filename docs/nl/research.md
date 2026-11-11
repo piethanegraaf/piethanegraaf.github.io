@@ -618,7 +618,7 @@ De luchtvaart maakte dezelfde afweging. Verkeersvliegers houden het grootste dee
 
 - **Contact.** Contact met experts, de derde voorwaarde van Beane, levert een tool niet. De harnas vervangt geen mentor en geen review door een senior.
 - **De organisatie.** Of een junior tijd krijgt om met de hand te oefenen, hangt af van het team (Feng, Yun & Wang, 2026; Yu & Moon, 2026). De harnas is een zelfbindingsmechanisme dat de junior zelf kiest (P10). Legt een werkgever hem op, dan geldt dat argument niet meer, en dan vragen de leerdata om andere privacyregels.
-- **De kaart.** De meegeleverde kaart is voor OOD in C#. Een junior op het werk heeft een kaart nodig voor de eigen stack, en taken automatisch vastleggen vanuit tests werkt alleen met `dotnet test`.
+- **De kaart.** Er is een voorbeeldkaart voor juniors op het werk in C#/.NET (`junior-dotnet`). Daarin staat code buiten de vaardigheden van de kaart op L4: die mag de AI schrijven, en alleen de vaardigheden die je leert, zijn beschermd. Een junior moet de paden aanpassen aan de eigen codebase, de guard beschermt alleen vaardigheden met paden, en taken automatisch vastleggen vanuit tests werkt alleen met `dotnet test`.
 
 **Hoe sterk is dit?** Elk onderdeel van de afweging volgt een principe met empirische steun (§2.11). De combinatie, en het gebruik op het werk, zijn niet getest. Een narratief literatuuroverzicht kan niet laten zien dat dit de beste afweging is; alleen een experiment kan dat. §6.1 stelt er een voor. De bronnen, met een link bij elke bewering, staan in de [notities over het eeuwige-juniorprobleem](/en/notes/eternal_junior/){ hreflang="en" } (Engels).
 
@@ -1977,6 +1977,7 @@ stateDiagram-v2
 - **Een tweede doelgroep.** Het onderzoek gaat nu ook over junior developers op hun werk, die junior dreigen te blijven als een agent het werk doet voordat ze het zelf kunnen (§1, §2.0, §2.10).
 - **§2.12, nieuw:** het eeuwige-juniorprobleem. Het bewijs voor het mechanisme, de praktijkbronnen (bewijsgraad D), het tegenbewijs, wat ontbreekt, de afweging van de harnas (opbouwen, uitbesteden, onderhouden), de luchtvaart als vergelijking voor onderhoud op L4, en wat de harnas niet oplost.
 - **§2.11:** één zin die de principes groepeert in opbouwen, uitbesteden en onderhouden.
+- **Een voorbeeldkaart voor juniors op het werk** (`junior-dotnet`, C#/.NET), waarin code buiten de vaardigheden van de kaart op L4 staat (§2.12, "Wat de harnas niet oplost").
 - **§6.1, nieuw:** een uitnodiging voor een gerandomiseerd experiment, met het volledige voorstel op de pagina [Voor onderzoekers](researchers.md).
 - **§7:** twee nieuwe beperkingen: niet uitgeprobeerd op het werk, en praktijkbronnen tonen zorg, geen bewijs.
 - **§8:** nieuwe literatuur, met de bronlinks in de [notities over het eeuwige-juniorprobleem](/en/notes/eternal_junior/){ hreflang="en" } (Engels).

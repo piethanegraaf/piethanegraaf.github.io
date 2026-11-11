@@ -15,6 +15,7 @@ A learning harness for [Claude Code](https://docs.claude.com/en/docs/claude-code
 - **Tasks count only after your own explanation**, checked by Claude and by a deterministic check.
 - **Explanations right away**: a task you do not explain before the next exercise lapses (skipped).
 - **Reviews only at L4**, at Fibonacci intervals: the next time such a skill comes by in your work, you do it yourself.
+- **Two skill maps**: Object-Oriented Design in C# for students (`--map ood`), and an example map for a junior developer at work in C#/.NET (`--map junior-dotnet`), where code outside the skills you are learning is L4.
 - **Up is your choice, down follows the evidence** (optional): a read-only agent decides whether one sub-pattern or the whole skill goes down.
 - **A diary** at the end of each session, with the reflection in your own words.
 - **Dutch and English**: messages, rules and the skills (diary, mastery-check).

@@ -56,7 +56,7 @@ Each part follows a principle with empirical support from learning science and f
 ## Who it is for
 
 - **Students** who want to practise with Claude Code without the AI taking over the learning. The included map is for **Object-Oriented Design in C#** (HBO-ICT, the Netherlands).
-- **Junior developers at work** who want to keep growing while they work with an AI agent. You make a skill map for your own stack (see [Your own course](configuration.md#your-own-course)). For now, tasks are logged automatically from tests only with `dotnet test`; otherwise you log them yourself.
+- **Junior developers at work** who want to keep growing while they work with an AI agent. There is an example map for C#/.NET (`junior-dotnet`): code that belongs to no skill may be written by the AI, and only what you are learning is protected. You adapt it to your own codebase (see [Your own course](configuration.md#your-own-course) and [In a team repository](install.md#in-a-team-repository)). For now, tasks are logged automatically from tests only with `dotnet test`; otherwise you log them yourself.
 - **Researchers** who want to test the harness: see [For researchers](researchers.md).
 
 !!! info "AI statement"

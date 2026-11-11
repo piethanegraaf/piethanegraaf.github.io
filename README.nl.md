@@ -15,6 +15,7 @@ Een leerharnas voor [Claude Code](https://docs.claude.com/en/docs/claude-code/ov
 - **Een taak telt pas na jouw eigen uitleg**, gecontroleerd door Claude en door een vaste check.
 - **Uitleg direct**: een taak die je niet uitlegt voor de volgende opdracht, vervalt (overgeslagen).
 - **Herhalingen alleen op L4**, met Fibonacci-intervallen: de eerstvolgende keer dat zo'n vaardigheid in je werk langskomt, doe je het zelf.
+- **Twee kaarten met vaardigheden**: Object-Oriented Design in C# voor studenten (`--map ood`), en een voorbeeldkaart voor een junior developer op het werk in C#/.NET (`--map junior-dotnet`), waarin code buiten de vaardigheden die je leert op L4 staat.
 - **Omhoog kies jij, omlaag volgt het bewijs** (optioneel): een agent die alleen leest, beslist of één deelpatroon of de hele vaardigheid zakt.
 - **Een dagboek** aan het eind van elke sessie, met de reflectie in je eigen woorden.
 - **Nederlands en Engels**: meldingen, regels en de skills (diary, mastery-check).

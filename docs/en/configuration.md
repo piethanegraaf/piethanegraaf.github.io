@@ -34,6 +34,13 @@ A map lives in `harness/maps/<id>/`:
 
 For a language other than C#, set `codeExtensions` and `buildCommands`. For now `check.mjs` only works with `dotnet test`.
 
+There are two maps:
+
+- **`ood`:** Object-Oriented Design in C#, with numbered exercise folders. Code that belongs to no skill is L2.
+- **`junior-dotnet`:** an example map for a junior developer at work, in C#/.NET. Ten skills: debugging, reading unfamiliar code, unit tests, safe refactoring, ASP.NET Core APIs, EF Core, async/await, security basics, reviewing code written by AI, and specifying a task for an agent. Code that belongs to no skill is **L4**: the AI may write it. Only what you are learning is protected. Change the paths to the folders of your own codebase (see also [In a team repository](install.md#in-a-team-repository)).
+
+The guard only protects files that fall under the paths of a skill. A skill without paths, such as debugging, gets the hint ladder, but the guard blocks nothing.
+
 ## Privacy
 
 Your learning data stays local in `.learning/`. The installer adds that folder to `.gitignore`.
