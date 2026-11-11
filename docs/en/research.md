@@ -1282,68 +1282,113 @@ As built, an L4 skill is reviewed when it first comes up in real work after its 
 
 ### 5.8 OOD skill map
 
-`skill-map.yaml` defines the curriculum as a graph: which skills unlock which, and which keywords the harness uses to detect skills in your prompts. A skill becomes available at L0 once its prerequisites are at L2 or higher. A skill can only be automated (L4) when its prerequisites are at L4 as well. That way the AI never automates something whose foundations you cannot supervise.
+The OOD map in the harness (`harness/maps/ood/skills.json`) is a list of skills, each with its own exercise folders and keywords. It was built from the gaps the diagnostic test showed. Since 11 November 2026 it also has the OO design that the course's final assessment grades: polymorphism, SOLID and modularity, layers with controllers and dependency injection, and the UML sequence and component diagrams.
+
+The map has **no prerequisites**. The order comes from the numbered exercises, and a new skill starts with a placement: your first task sets the level (§5.2). If something is missing, you add a skill yourself with `skill.mjs add`.
 
 ```mermaid
-flowchart TD
+flowchart LR
     subgraph Foundations
-        A1[Classes & objects<br/>state, identity, behaviour]
-        A2[Encapsulation<br/>& access modifiers]
-        A3[Constructors &<br/>object lifecycle]
+        A1[C# basics]
+        A2[Classes & properties]
+        A3[Encapsulation]
     end
     subgraph Relationships
-        B1[Association /<br/>aggregation / composition]
-        B2[Inheritance]
-        B3[Interfaces &<br/>abstract classes]
-        B4[Polymorphism<br/>dynamic dispatch]
+        B1[Associations]
+        B2[Aggregation & composition]
+        B3[Inheritance]
+        B4[Interfaces]
+        B5[Polymorphism]
+    end
+    subgraph Language
+        C1[Exceptions]
+        C2[Generics & Dictionary]
+    end
+    subgraph Design
+        D1[Strategy]
+        D2[Factory]
+        D3[Observer]
+        D4[SOLID & modularity]
+        D5[Layers: UI, backend, database]
     end
     subgraph Modelling
-        C1[UML class diagrams]
-        C2[UML sequence diagrams]
-        C3[Responsibility assignment<br/>GRASP / CRC]
-    end
-    subgraph Principles
-        D1[SRP]
-        D2[Open/Closed]
-        D3[Liskov Substitution]
-        D4[Interface Segregation]
-        D5[Dependency Inversion]
-        D6[Composition over<br/>inheritance]
-    end
-    subgraph Patterns
-        E1[Strategy]
-        E2[Observer]
-        E3[Factory Method /<br/>Abstract Factory]
-        E4[Decorator]
-        E5[Adapter]
-        E6[State]
+        E1[UML class diagram]
+        E2[UML sequence & component diagrams]
     end
     subgraph Practice
-        F1[Unit testing / TDD]
-        F2[Code smells &<br/>refactoring]
-        F3[Dependency injection]
+        F1[Unit tests & TDD]
+        F2[Debugging without an error message]
     end
-    A1 --> A2 --> A3
-    A1 --> B1 & B2
-    B2 --> B3 --> B4
-    A1 --> C1
-    B1 & B2 --> C1
-    C1 --> C2
-    C1 --> C3 --> D1
-    B4 --> D2 & D3
-    B3 --> D4 & D5
-    B1 & B2 --> D6
-    D2 & B4 --> E1
-    D5 --> E2
-    D5 --> E3
-    D6 --> E4 & E5
-    E1 --> E6
-    D1 --> F2
-    F1 --> F2
-    D5 --> F3
 ```
 
-The OOD skill map shows which skills unlock which: from classes and objects, through relationships and modelling, to principles and then patterns. A skill can only reach L4, the level where the AI automates it, once its prerequisites are at L4 too.
+The skills of the OOD map, by group. There are no arrows between them: the order comes from the exercises, not from the map.
+
+**What the map does not cover.** The final assessment also grades security, the cloud and a CI/CD pipeline, the database and the report. They are not in the map; the pilot student chose that on 11 November 2026. The guard does protect the files of such a project: next to C# also `.razor`, `.cshtml`, `.sql`, the pipeline (`.yml`), `Dockerfile` and `appsettings*.json` (see [Configuration](configuration.md)).
+
+??? note "Original design (7 November 2026): a graph with prerequisites"
+
+    `skill-map.yaml` defines the curriculum as a graph: which skills unlock which, and which keywords the harness uses to detect skills in your prompts. A skill becomes available at L0 once its prerequisites are at L2 or higher. A skill can only be automated (L4) when its prerequisites are at L4 as well. That way the AI never automates something whose foundations you cannot supervise.
+
+    ```mermaid
+    flowchart TD
+        subgraph Foundations
+            A1[Classes & objects<br/>state, identity, behaviour]
+            A2[Encapsulation<br/>& access modifiers]
+            A3[Constructors &<br/>object lifecycle]
+        end
+        subgraph Relationships
+            B1[Association /<br/>aggregation / composition]
+            B2[Inheritance]
+            B3[Interfaces &<br/>abstract classes]
+            B4[Polymorphism<br/>dynamic dispatch]
+        end
+        subgraph Modelling
+            C1[UML class diagrams]
+            C2[UML sequence diagrams]
+            C3[Responsibility assignment<br/>GRASP / CRC]
+        end
+        subgraph Principles
+            D1[SRP]
+            D2[Open/Closed]
+            D3[Liskov Substitution]
+            D4[Interface Segregation]
+            D5[Dependency Inversion]
+            D6[Composition over<br/>inheritance]
+        end
+        subgraph Patterns
+            E1[Strategy]
+            E2[Observer]
+            E3[Factory Method /<br/>Abstract Factory]
+            E4[Decorator]
+            E5[Adapter]
+            E6[State]
+        end
+        subgraph Practice
+            F1[Unit testing / TDD]
+            F2[Code smells &<br/>refactoring]
+            F3[Dependency injection]
+        end
+        A1 --> A2 --> A3
+        A1 --> B1 & B2
+        B2 --> B3 --> B4
+        A1 --> C1
+        B1 & B2 --> C1
+        C1 --> C2
+        C1 --> C3 --> D1
+        B4 --> D2 & D3
+        B3 --> D4 & D5
+        B1 & B2 --> D6
+        D2 & B4 --> E1
+        D5 --> E2
+        D5 --> E3
+        D6 --> E4 & E5
+        E1 --> E6
+        D1 --> F2
+        F1 --> F2
+        D5 --> F3
+    ```
+
+    The OOD skill map shows which skills unlock which: from classes and objects, through relationships and modelling, to principles and then patterns. A skill can only reach L4, the level where the AI automates it, once its prerequisites are at L4 too.
 
 ---
 
@@ -2119,6 +2164,11 @@ A task begins at a signal of new work and ends when it is logged. After a logged
 <a id="11-change-log"></a>
 
 ## 11. Change log {#changelog}
+
+### 11 November 2026 (evening, later): the skill map and the final assessment
+
+- **§5.8:** now shows the map that is really in the harness, without prerequisites, with four new skills for the OO design of the final assessment. The original graph is in a collapsed block.
+- **Not changed:** the conclusions of §2.
 
 ### 11 November 2026 (evening): the start of a task, reviews and explanations (decisions of 11 November)
 

@@ -20,6 +20,7 @@ Goal of the setup: **quickly recognise what the learner has mastered and only ma
   - `! node .claude/hooks/skill.mjs set <id> <L0..L4> "note"`
     - Raising a level is refused while tasks of that skill still wait for an explanation.
   - `! node .claude/hooks/skill.mjs review <id> pass|shaky|fail`: record a review yourself. Usually not needed: the next task decides the outcome.
+  - `! node .claude/hooks/skill.mjs add <id> "title" ["keyword1, keyword2"]`: a new main skill, with an open placement. Suggest it when the learner works on something that is not in the record, for example a part of the exam.
   - `! node .claude/hooks/skill.mjs add-micro <parent> <id> <level> "title" "keyword1, keyword2"`
   - `! node .claude/hooks/skill.mjs done <id> "what"`: log a task when there is no test, for example for design or UML.
   - `! node .claude/hooks/skill.mjs untask <id>`: voids a task that was logged by mistake.
@@ -29,6 +30,7 @@ Goal of the setup: **quickly recognise what the learner has mastered and only ma
   - `! node .claude/hooks/skill.mjs setting examDate YYYY-MM-DD`: the exam date. Reviews are planned so that they fall before the exam.
   - `! node .claude/hooks/skill.mjs setting autoDemote true|false`: automatic demotion on or off (off by default).
   - `! node .claude/hooks/skill.mjs setting course "<course>"` and `setting language nl|en`: the course and the language of the harness.
+  - `! node .claude/hooks/skill.mjs setting codeExtensions "cs, csproj, sql"` and `setting codeFiles "Dockerfile, appsettings*.json"`: which files are the learner's work. The guard protects them at L1–L3.
   - `! node .claude/hooks/skill.mjs setting idleMinutes <minutes>`: a longer break does not count as active time (default 20).
   - `! node .claude/hooks/skill.mjs paths <id> add|remove "<glob>"`: which exercise folders belong to a skill. The folder decides the skill of a task and the level the guard uses. If a mapping is wrong, suggest this command.
   - `! node .claude/hooks/skill.mjs replay <transcript.jsonl> [--dry-run]`: recovers explanations that were approved in the chat but not logged. Only what passes both keys counts.

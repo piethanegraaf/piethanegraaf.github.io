@@ -29,7 +29,7 @@ function writesFiles(argv, raw) {
   return /WriteAll(Text|Lines|Bytes)|\bAppendAll(Text|Lines)\b/i.test(raw);
 }
 // Everything except list/status changes the learner's record.
-const RECORD_CMD = /skill\.mjs["']?\s+(set|review|override|untask|correct|add-micro|done|setting|paths|replay)\b/i;
+const RECORD_CMD = /skill\.mjs["']?\s+(set|review|override|untask|correct|add-micro|add|done|setting|paths|replay)\b/i;
 const TODO = "TODO(human)";
 const CD = new Set(["cd", "pushd", "set-location", "sl", "chdir", "push-location"]);
 const NOWHERE = /^(\/dev\/null|\$null|nul)$/i;

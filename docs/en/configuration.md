@@ -18,7 +18,8 @@ The settings live in `.learning/skills.json`, under `settings`. Change them with
 | `idleMinutes` | `20` | A longer break does not count as active time: not for the stuck timer, not for the minutes per task and not for the message after an hour. |
 | `targetSuccess` | `0.85` | The target for moving from L2 to L3. |
 | `autoDemote` | `false` | Automatic demotion on evidence, with the demotion analyst for a main skill. Only turn it on once the logging has been reliable for a few sessions: `setting autoDemote true`. |
-| `codeExtensions` | `cs, csproj, sln, slnx` | Which files are the learner's code. |
+| `codeExtensions` | `cs, csproj, sln, slnx` | Which files are the learner's code. The OOD map adds `razor, cshtml, sql, yml, yaml`, for a project with a UI, a database and a pipeline. |
+| `codeFiles` | (empty) | Files without a telling extension that are also the learner's work, by name. `*` stands for anything but `/`. The OOD map sets `Dockerfile, appsettings*.json`. |
 | `buildCommands` | `dotnet build/test/run …`, `msbuild` | Regular expressions for commands that build or test. `check.mjs` always counts. |
 | `toolingTerms` | `rider, sdk, nuget …` | Tooling words: "it works" about these is not a solved task. |
 

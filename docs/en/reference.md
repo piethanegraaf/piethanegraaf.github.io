@@ -21,13 +21,14 @@ description: "The four Claude Code hooks of the learning harness, every skill.mj
 | `since-export` | What is new since the last export to the dashboard, in one line: tasks, diary sessions and level changes. Nothing when there was no export yet. Only reads, so Claude may run it as well: `/diary` ends with it. See [Since the last export](progress-dashboard.md#since-the-last-export). |
 | `set <id> <L0..L4> "note"` | Set a level. Raising it only works when no tasks wait for an explanation. A proposal of the harness is easier to confirm in the chat: type "yes, promote" (optionally with the id). |
 | `review <id> pass\|shaky\|fail` | Record the outcome of a review yourself. Usually not needed: the next task of an L4 skill decides it. |
+| `add <id> "title" ["keywords"]` | Add a new main skill, for example for a part of the exam that is not in the map. It starts with an open placement: your first task sets the level. Link folders with `paths`. Logged as the event `skill-add`. |
 | `add-micro <parent> <id> <level> "title" "keywords"` | Add a microskill. With `autoDemote` the demotion analyst also creates one itself, at the parent's level minus 1. |
 | `done <id> "what"` | Log a task without a test (design, UML). |
 | `untask <id>` | Void the last logged task of a skill. |
 | `correct <task-id> rung <1-5> "reason"` | More help than logged: only raises the rung. |
 | `correct <task-id> void "reason"` | Void one task. |
 | `override <id\|*> <minutes> "reason"` | Temporarily allow Claude to write code (at most 240 minutes, logged). |
-| `setting <key> <value>` | `examDate`, `stuckTimerMinutes`, `idleMinutes`, `defaultLevel`, `course`, `language`. |
+| `setting <key> <value>` | `examDate`, `stuckTimerMinutes`, `idleMinutes`, `defaultLevel`, `course`, `language`, `autoDemote`, and `codeExtensions` and `codeFiles` as a comma-separated list. |
 | `paths <id> add|remove "<glob>"` | Which exercise folders belong to a skill, for example `paths ood.associaties add "ood-opdrachten-01/09-*/**"`. The folder decides the skill of a task and the level the guard uses. Not for a microskill: it uses the level of its parent. If another skill has the same path, it warns you. Logged as the event `paths`. |
 | `replay <transcript.jsonl> [--dry-run]` | Recovers explanations that were approved in the chat but not logged. It finds the markers `[explain-ok <tid>]` and checks your message with the same check as the Stop hook. Only what passes both keys counts, with source `replay`. |
 

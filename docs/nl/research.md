@@ -1282,68 +1282,113 @@ Zoals gebouwd wordt een L4-vaardigheid herhaald zodra ze na haar datum in je ech
 
 ### 5.8 OOD-vaardighedenkaart
 
-`skill-map.yaml` legt het curriculum vast als graaf: welke vaardigheden welke andere vrijspelen, en met welke trefwoorden de harnas vaardigheden in je prompts herkent. Een vaardigheid komt beschikbaar op L0 zodra de vereiste vaardigheden op L2 of hoger staan. Een vaardigheid kan alleen geautomatiseerd worden (L4) als de vereiste vaardigheden ook op L4 staan. Zo automatiseert de AI nooit iets waarvan je de basis niet kunt controleren.
+De OOD-kaart in de harnas (`harness/maps/ood/skills.json`) is een lijst vaardigheden, elk met eigen opdrachtmappen en trefwoorden. Hij is opgebouwd uit de gaten die de diagnostische toets liet zien. Sinds 11 november 2026 hoort daar ook het OO-ontwerp bij dat het eindassessment van het vak beoordeelt: polymorfie, SOLID en modulariteit, lagen met controllers en dependency injection, en het UML-sequentie- en componentdiagram.
+
+De kaart heeft **geen voorkennis-relaties**. De volgorde komt uit de genummerde opdrachten, en een nieuwe vaardigheid begint met een plaatsing: je eerste taak bepaalt het niveau (§5.2). Mist er iets, dan voeg je zelf een vaardigheid toe met `skill.mjs add`.
 
 ```mermaid
-flowchart TD
+flowchart LR
     subgraph Foundations
-        A1[Classes & objects<br/>state, identity, behaviour]
-        A2[Encapsulation<br/>& access modifiers]
-        A3[Constructors &<br/>object lifecycle]
+        A1[C# basics]
+        A2[Classes & properties]
+        A3[Encapsulation]
     end
     subgraph Relationships
-        B1[Association /<br/>aggregation / composition]
-        B2[Inheritance]
-        B3[Interfaces &<br/>abstract classes]
-        B4[Polymorphism<br/>dynamic dispatch]
+        B1[Associations]
+        B2[Aggregation & composition]
+        B3[Inheritance]
+        B4[Interfaces]
+        B5[Polymorphism]
+    end
+    subgraph Language
+        C1[Exceptions]
+        C2[Generics & Dictionary]
+    end
+    subgraph Design
+        D1[Strategy]
+        D2[Factory]
+        D3[Observer]
+        D4[SOLID & modularity]
+        D5[Layers: UI, backend, database]
     end
     subgraph Modelling
-        C1[UML class diagrams]
-        C2[UML sequence diagrams]
-        C3[Responsibility assignment<br/>GRASP / CRC]
-    end
-    subgraph Principles
-        D1[SRP]
-        D2[Open/Closed]
-        D3[Liskov Substitution]
-        D4[Interface Segregation]
-        D5[Dependency Inversion]
-        D6[Composition over<br/>inheritance]
-    end
-    subgraph Patterns
-        E1[Strategy]
-        E2[Observer]
-        E3[Factory Method /<br/>Abstract Factory]
-        E4[Decorator]
-        E5[Adapter]
-        E6[State]
+        E1[UML class diagram]
+        E2[UML sequence & component diagrams]
     end
     subgraph Practice
-        F1[Unit testing / TDD]
-        F2[Code smells &<br/>refactoring]
-        F3[Dependency injection]
+        F1[Unit tests & TDD]
+        F2[Debugging without an error message]
     end
-    A1 --> A2 --> A3
-    A1 --> B1 & B2
-    B2 --> B3 --> B4
-    A1 --> C1
-    B1 & B2 --> C1
-    C1 --> C2
-    C1 --> C3 --> D1
-    B4 --> D2 & D3
-    B3 --> D4 & D5
-    B1 & B2 --> D6
-    D2 & B4 --> E1
-    D5 --> E2
-    D5 --> E3
-    D6 --> E4 & E5
-    E1 --> E6
-    D1 --> F2
-    F1 --> F2
-    D5 --> F3
 ```
 
-De OOD-vaardighedenkaart laat zien welke vaardigheden welke andere vrijspelen: van klassen en objecten, via relaties en modelleren, naar principes en daarna patronen. Een vaardigheid kan pas naar L4, het niveau waarop de AI haar automatiseert, als de vereiste vaardigheden ook op L4 staan.
+De vaardigheden van de OOD-kaart, per groep. Er lopen geen pijlen tussen: de volgorde komt uit de opdrachten, niet uit de kaart.
+
+**Wat de kaart niet dekt.** Het eindassessment beoordeelt ook security, de cloud en een CI/CD-pipeline, de database en het verslag. Die zitten niet in de kaart; zo koos de pilotstudent op 11 november 2026. De guard beschermt wel de bestanden van zo'n project: naast C# ook `.razor`, `.cshtml`, `.sql`, de pipeline (`.yml`), `Dockerfile` en `appsettings*.json` (zie [Configuratie](configuration.md)).
+
+??? note "Oorspronkelijk ontwerp (7 november 2026): een graaf met voorkennis"
+
+    `skill-map.yaml` legt het curriculum vast als graaf: welke vaardigheden welke andere vrijspelen, en met welke trefwoorden de harnas vaardigheden in je prompts herkent. Een vaardigheid komt beschikbaar op L0 zodra de vereiste vaardigheden op L2 of hoger staan. Een vaardigheid kan alleen geautomatiseerd worden (L4) als de vereiste vaardigheden ook op L4 staan. Zo automatiseert de AI nooit iets waarvan je de basis niet kunt controleren.
+
+    ```mermaid
+    flowchart TD
+        subgraph Foundations
+            A1[Classes & objects<br/>state, identity, behaviour]
+            A2[Encapsulation<br/>& access modifiers]
+            A3[Constructors &<br/>object lifecycle]
+        end
+        subgraph Relationships
+            B1[Association /<br/>aggregation / composition]
+            B2[Inheritance]
+            B3[Interfaces &<br/>abstract classes]
+            B4[Polymorphism<br/>dynamic dispatch]
+        end
+        subgraph Modelling
+            C1[UML class diagrams]
+            C2[UML sequence diagrams]
+            C3[Responsibility assignment<br/>GRASP / CRC]
+        end
+        subgraph Principles
+            D1[SRP]
+            D2[Open/Closed]
+            D3[Liskov Substitution]
+            D4[Interface Segregation]
+            D5[Dependency Inversion]
+            D6[Composition over<br/>inheritance]
+        end
+        subgraph Patterns
+            E1[Strategy]
+            E2[Observer]
+            E3[Factory Method /<br/>Abstract Factory]
+            E4[Decorator]
+            E5[Adapter]
+            E6[State]
+        end
+        subgraph Practice
+            F1[Unit testing / TDD]
+            F2[Code smells &<br/>refactoring]
+            F3[Dependency injection]
+        end
+        A1 --> A2 --> A3
+        A1 --> B1 & B2
+        B2 --> B3 --> B4
+        A1 --> C1
+        B1 & B2 --> C1
+        C1 --> C2
+        C1 --> C3 --> D1
+        B4 --> D2 & D3
+        B3 --> D4 & D5
+        B1 & B2 --> D6
+        D2 & B4 --> E1
+        D5 --> E2
+        D5 --> E3
+        D6 --> E4 & E5
+        E1 --> E6
+        D1 --> F2
+        F1 --> F2
+        D5 --> F3
+    ```
+
+    De OOD-vaardighedenkaart laat zien welke vaardigheden welke andere vrijspelen: van klassen en objecten, via relaties en modelleren, naar principes en daarna patronen. Een vaardigheid kan pas naar L4, het niveau waarop de AI haar automatiseert, als de vereiste vaardigheden ook op L4 staan.
 
 ---
 
@@ -2119,6 +2164,11 @@ Een taak begint bij een signaal van nieuw werk en eindigt als hij gelogd wordt. 
 <a id="11-wijzigingslog"></a>
 
 ## 11. Wijzigingslog {#changelog}
+
+### 11 november 2026 (avond, later): de vaardighedenkaart en het eindassessment
+
+- **§5.8:** toont nu de kaart die echt in de harnas zit, zonder voorkennis-relaties, met vier nieuwe vaardigheden voor het OO-ontwerp van het eindassessment. De oorspronkelijke graaf staat ingeklapt.
+- **Niet veranderd:** de conclusies van §2.
 
 ### 11 november 2026 (avond): het begin van een taak, reviews en uitleg (besluiten van 11 november)
 
