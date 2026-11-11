@@ -1282,7 +1282,7 @@ Zoals gebouwd wordt een L4-vaardigheid herhaald zodra ze na haar datum in je ech
 
 ### 5.8 OOD-vaardighedenkaart
 
-De OOD-kaart in de harnas (`harness/maps/ood/skills.json`) is een lijst vaardigheden, elk met eigen opdrachtmappen en trefwoorden. Hij is opgebouwd uit de gaten die de diagnostische toets liet zien. Sinds 11 november 2026 hoort daar ook het OO-ontwerp bij dat het eindassessment van het vak beoordeelt: polymorfie, SOLID en modulariteit, lagen met controllers en dependency injection, en het UML-sequentie- en componentdiagram.
+De OOD-kaart in de harnas (`harness/maps/ood/skills.json`) is een lijst vaardigheden, elk met eigen opdrachtmappen en trefwoorden. Hij is opgebouwd uit de gaten die de diagnostische toets liet zien. Sinds 11 november 2026 hoort daar ook het OO-ontwerp bij dat het eindassessment van het vak beoordeelt: polymorfie, SOLID en modulariteit, lagen met controllers en dependency injection, en het UML-sequentie- en componentdiagram. Later die avond is de kaart naast de toetsbeschrijving, het beoordelingsformulier en de cheatsheet van de pilotstudent gelegd. Daaruit kwamen er tien bij: logging (indicator 3.1.1), integratie-, systeem- en UI-tests (indicator 3.1.4 en het testplan), en uit de cheatsheet upcasting en downcasting, static members, records en structs, object-methodes, overige C# (sealed, indexers, operator overloading, geneste klassen) en de drie families van ontwerppatronen. Een familie is één vaardigheid; oefen je één patroon apart, dan wordt het een microvaardigheid.
 
 De kaart heeft **geen voorkennis-relaties**. De volgorde komt uit de genummerde opdrachten, en een nieuwe vaardigheid begint met een plaatsing: je eerste taak bepaalt het niveau (§5.2). Mist er iets, dan voeg je zelf een vaardigheid toe met `skill.mjs add`.
 
@@ -1303,6 +1303,11 @@ flowchart LR
     subgraph Language
         C1[Exceptions]
         C2[Generics & Dictionary]
+        C3[Upcasting & downcasting]
+        C4[Static members]
+        C5[Records & structs]
+        C6[Object methods: ToString, Equals]
+        C7[sealed, indexers, operators, nested classes]
     end
     subgraph Design
         D1[Strategy]
@@ -1310,6 +1315,10 @@ flowchart LR
         D3[Observer]
         D4[SOLID & modularity]
         D5[Layers: UI, backend, database]
+        D6[Logging]
+        D7[Creational patterns]
+        D8[Structural patterns]
+        D9[Behavioral patterns]
     end
     subgraph Modelling
         E1[UML class diagram]
@@ -1318,6 +1327,7 @@ flowchart LR
     subgraph Practice
         F1[Unit tests & TDD]
         F2[Debugging without an error message]
+        F3[Integration, system & UI tests]
     end
 ```
 
@@ -2217,6 +2227,11 @@ Hulp over een concept van een andere familie blijft bij de taak en wordt ook bij
 <a id="11-wijzigingslog"></a>
 
 ## 11. Wijzigingslog {#changelog}
+
+### 11 november 2026 (nacht, later): de kaart naast de toets en de cheatsheet
+
+- **§5.8:** tien vaardigheden erbij, uit het beoordelingsformulier (logging; integratie-, systeem- en UI-tests) en uit de cheatsheet van de pilotstudent (casting, static, records en structs, object-methodes, overige C#, en de drie families van ontwerppatronen). De kaart heeft nu 29 vaardigheden.
+- **Niet veranderd:** de conclusies van §2, en wat de kaart bewust niet dekt (security, cloud en CI/CD, de database, het verslag).
 
 ### 11 november 2026 (nacht): hulp per concept, een voorstel voor een microvaardigheid, en eerlijke woorden (besluiten van 11 november, middag)
 

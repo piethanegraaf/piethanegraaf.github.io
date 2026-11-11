@@ -76,3 +76,29 @@ test("the ood map has the skills of the final assessment, and guards their files
   for (const e of ["razor", "cshtml", "sql", "yml", "yaml"]) assert.ok(map.settings.codeExtensions.includes(e), e);
   assert.deepEqual(map.settings.codeFiles, ["Dockerfile", "appsettings*.json"]);
 });
+
+// 11 November 2026 (night): logging and integration tests from the grading form (indicators 3.1.1 and 3.1.4),
+// and the topics of the learner's cheat sheet that no skill had yet.
+test("the ood map covers the grading form and the cheat sheet; its titles fit `add` and its keywords do not hide in others", () => {
+  const map = JSON.parse(fs.readFileSync(path.join(HARNESS, "maps", "ood", "skills.json"), "utf8"));
+  const keywords = JSON.parse(fs.readFileSync(path.join(HARNESS, "maps", "ood", "keywords.json"), "utf8"));
+  const added = ["ood.logging", "test.integratie", "ood.casting", "cs.static", "cs.records-structs", "ood.object-methodes",
+    "cs.extra", "pattern.creational", "pattern.structural", "pattern.behavioral"];
+  for (const id of added) {
+    const s = map.skills.find((x) => x.id === id);
+    assert.ok(s?.title?.nl && s?.title?.en, `${id} with a title in both languages`);
+    // The learner adds these to an existing register with `skill.mjs add`, which takes at most 80 characters.
+    assert.ok(s.title.nl.length <= 80 && !/[<>]/.test(s.title.nl), `${id}: the Dutch title fits skill.mjs add`);
+    assert.ok(!map.skills.some((x) => x !== s && x.kind !== "zone" && id.startsWith(x.id + ".")), `${id} is no microskill id`);
+    assert.ok(keywords[id]?.length, `${id} has keywords`);
+    // A keyword inside another skill's keyword ("struct" in "constructor") would pull that skill's prompts here.
+    for (const k of keywords[id]) {
+      // `add` trims and splits on commas, so a keyword must survive that unchanged.
+      assert.ok(k === k.trim() && k === k.toLowerCase() && !k.includes(","), `${id}: "${k}" survives skill.mjs add`);
+      for (const [other, list] of Object.entries(keywords)) {
+        if (other !== id && !other.startsWith("_")) assert.ok(!list.some((o) => o.includes(k)), `${id}: "${k}" hides in ${other}`);
+      }
+    }
+  }
+  assert.equal(map.skills.filter((s) => s.kind !== "zone").length, 29);
+});
