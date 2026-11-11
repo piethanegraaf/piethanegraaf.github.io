@@ -200,3 +200,33 @@ test("export: skipped and replayed tasks, retags, placement, last seen, no revie
     assert.equal(skill("demo.l2").lastSeen, "2026-11-10");
   } finally { p.cleanup(); }
 });
+
+// ---------- The dashboard is bilingual; a cached older app.js must keep working ----------
+test("export: generatedAt stays a date, exportedAt is the moment; both languages for map titles, signals and fixed notes", () => {
+  const s = fakeSkills();
+  s.skills.push({ id: "ood.interfaces", title: "Interfaces ontwerpen en implementeren", level: "L2", paths: ["opdrachten/06-*/**"],
+    history: [{ at: "2026-11-01", to: "L2", note: "aangemaakt" }, { at: "2026-11-02", from: "L2", to: "L2", note: "eigen notitie" }] });
+  const at = "2026-11-10T12:00:00.000Z";
+  const events = [];
+  for (const tid of ["a", "b", "c", "d", "e"]) {
+    events.push({ at, type: "task", tid, skill: "ood.interfaces", success: true, maxRung: 0, source: "check" });
+    events.push({ at, type: "task-explained", tid, skill: "ood.interfaces", text: "uitleg" });
+  }
+  const p = makeProject({ skills: s, events });
+  try {
+    const out = path.join(p.root, "out.json");
+    assert.equal(run(EXPORT, [p.root, "--out", out]).code, 0);
+    const j = JSON.parse(fs.readFileSync(out, "utf8"));
+    assert.match(j.generatedAt, /^\d{4}-\d{2}-\d{2}$/, "a date: older dashboards compute days from it");
+    assert.ok(!Number.isNaN(Date.parse(j.exportedAt)) && j.exportedAt.length > 10);
+    const sk = j.skills.find((x) => x.id === "ood.interfaces");
+    assert.deepEqual(sk.titles, { nl: "Interfaces ontwerpen en implementeren", en: "Designing and implementing interfaces" });
+    assert.equal(j.skills.find((x) => x.id === "demo.l2").titles, null, "not in the map: only the record's title");
+    assert.deepEqual(sk.history[0].notes, { nl: "aangemaakt", en: "created" });
+    assert.equal(sk.history[1].notes, null, "the learner's own note is not translated");
+    const sig = j.signals.find((x) => x.skill === "ood.interfaces");
+    assert.match(sig.texts.nl, /5\/5 gelukt/);
+    assert.match(sig.texts.en, /5\/5 solved/);
+    assert.equal(sig.text, sig.texts.nl, "the old field stays, in the record's language");
+  } finally { p.cleanup(); }
+});

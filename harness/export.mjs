@@ -17,6 +17,8 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const HARNESS = path.dirname(fileURLToPath(import.meta.url));
+// The messages of the harness in both languages, to give its fixed notes in the language of the page.
+const I18N = Object.fromEntries(["nl", "en"].map((l) => [l, JSON.parse(fs.readFileSync(path.join(HARNESS, "i18n", `${l}.json`), "utf8"))]));
 const DEFAULT_OUT = path.join(HARNESS, "..", "site-src", "dashboard", "data", "progress.json");
 export const SCHEMA = 1;
 
@@ -232,20 +234,60 @@ export async function build(project) {
   // "Last seen": the last task of the skill, neutral instead of "overdue" (setup review S2).
   const lastSeen = new Map();
   for (const tk of tasks) if (tk.skill && !tk.void) lastSeen.set(tk.skill, day(tk.at));
+  // Both languages where they exist (the dashboard is bilingual, the record is in one language):
+  // the title from the map when the learner did not rename the skill, and the fixed notes of the
+  // harness itself. The learner's own texts stay as they are.
+  const mapTitles = new Map();
+  let manifest = null;
+  try { manifest = JSON.parse(fs.readFileSync(path.join(project, ".claude", "leerharnas.json"), "utf8")); } catch { /* older install */ }
+  try {
+    // Titles are matched by id, so the default map is safe for a project without a manifest.
+    const mapId = /^[a-z0-9-]+$/.test(manifest?.map ?? "") ? manifest.map : "ood";
+    for (const m of JSON.parse(fs.readFileSync(path.join(HARNESS, "maps", mapId, "skills.json"), "utf8")).skills ?? []) {
+      if (m.title && typeof m.title === "object") mapTitles.set(m.id, m.title);
+    }
+  } catch { /* no manifest or map: titles stay as they are */ }
+  // In the language of the record: the learner's own title. In the other language: the title from the map.
+  const titlesOf = (s) => {
+    const mt = mapTitles.get(s.id);
+    if (!mt?.nl || !mt?.en) return null;
+    const out = { nl: scrub(mt.nl, "skill.title"), en: scrub(mt.en, "skill.title") };
+    out[settings.language] = scrub(s.title, "skill.title");
+    return out;
+  };
+  const notesOf = (note) => {
+    if (!note) return null;
+    const out = {};
+    for (const [key, tpl] of Object.entries(I18N[settings.language] ?? {})) {
+      if (!key.startsWith("note.")) continue;
+      const names = [...tpl.matchAll(/\{(\w+)\}/g)].map((m) => m[1]);
+      const re = new RegExp("^" + tpl.split(/\{\w+\}/).map((p) => p.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("(.+?)") + "$");
+      const m = note.match(re);
+      if (!m) continue;
+      for (const l of ["nl", "en"]) out[l] = names.reduce((txt, n, i) => txt.split(`{${n}}`).join(m[i + 1]), I18N[l][key]);
+      return { nl: scrub(out.nl, "skill.history"), en: scrub(out.en, "skill.history") };
+    }
+    return null;
+  };
   const skills = data.skills.map((s) => ({
-    id: s.id, parent: s.parent ?? null, kind: s.kind ?? null, title: scrub(s.title, "skill.title"), level: s.level,
+    id: s.id, parent: s.parent ?? null, kind: s.kind ?? null, title: scrub(s.title, "skill.title"), titles: titlesOf(s), level: s.level,
     // Reviews are only for L4; an older schedule on a lower level is not shown.
     nextReview: lib.REVIEWED.has(s.level) ? s.nextReview ?? null : null, intervalIndex: s.intervalIndex ?? 0,
     lastReview: s.lastReview ? { at: s.lastReview.at, result: s.lastReview.result } : null,
     lastSeen: lastSeen.get(s.id) ?? null,
     placement: s.kind === "zone" ? null : lib.isPlacementPending(data, s) ? "pending" : "done",
     history: (s.history ?? []).map((h) => ({ at: h.at, from: h.from ?? null, to: h.to, note: scrub(h.note ?? null, "skill.history"),
-      auto: h.auto === true, placement: h.placement === true })),
+      notes: notesOf(h.note ?? null), auto: h.auto === true, placement: h.placement === true })),
   }));
 
+  // The signals in both languages (texts), next to the text in the language of the record.
   const signals = data.skills.filter((s) => s.kind !== "zone").map((s) => {
     const a = lib.levelAdvice(data, s);
-    return a ? { skill: s.id, dir: a.dir, text: scrub(a.text, "signal") } : null;
+    if (!a) return null;
+    const texts = {};
+    for (const l of ["nl", "en"]) { lib.setLanguage(l); texts[l] = scrub(lib.levelAdvice(data, s)?.text ?? a.text, "signal"); }
+    lib.setLanguage(settings.language);
+    return { skill: s.id, dir: a.dir, text: scrub(a.text, "signal"), texts };
   }).filter(Boolean);
 
   const diary = [];
@@ -264,8 +306,11 @@ export async function build(project) {
 
   const out = {
     schema: SCHEMA,
-    // The exact moment, so two exports on one day differ and the dashboard can show the time.
-    generatedAt: new Date().toISOString(),
+    // Only ever ADD fields: browsers may run a cached, older app.js on new data (GitHub Pages caches
+    // it for 10 minutes, the data is fetched fresh). generatedAt stays a date (local), exportedAt is
+    // the exact moment, so two exports on one day differ and the dashboard can show the time.
+    generatedAt: new Date().toLocaleDateString("sv-SE"),
+    exportedAt: new Date().toISOString(),
     course: scrub(settings.course || null, "settings.course"),
     language: settings.language,
     examDate: settings.examDate ?? null,

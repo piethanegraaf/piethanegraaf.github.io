@@ -7,6 +7,7 @@
       skip: "Naar de inhoud", title: "Leerdashboard", brand: "Leerharnas", real: "Echte data", demo: "Demo", theme: "Thema wisselen",
       loading: "Laden…", loadError: "De data kon niet geladen worden ({file}). Open het dashboard via een webserver, bijvoorbeeld: python -m http.server",
       fallback: "Er is nog geen echte data (data/progress.json). Je ziet de demo met verzonnen data.",
+      ownLanguage: "De eigen teksten van de student (uitleg, dagboek en eigen notities en microvaardigheden) staan in de taal waarin ze geschreven zijn: {language}.", langNames: { nl: "Nederlands", en: "Engels" },
       demoNote: "Demo: alle data is verzonnen. Zo ziet het dashboard eruit na een paar weken oefenen.",
       subtitle: "{course} · stand van {date}", subtitleNoCourse: "Stand van {date}", atTime: "{date}, {time}",
       filter: "Vaardigheid", all: "Alle vaardigheden", asof: "Alle cijfers gelden op het moment van de export: {date}.",
@@ -44,6 +45,7 @@
       skip: "Skip to content", title: "Learning dashboard", brand: "Learning harness", real: "Real data", demo: "Demo", theme: "Toggle theme",
       loading: "Loading…", loadError: "The data could not be loaded ({file}). Open the dashboard through a web server, for example: python -m http.server",
       fallback: "There is no real data yet (data/progress.json). You see the demo with made-up data.",
+      ownLanguage: "The learner's own texts (explanations, the diary, own notes and microskills) are shown in the language they were written in: {language}.", langNames: { nl: "Dutch", en: "English" },
       demoNote: "Demo: all data is made up. This is what the dashboard looks like after a few weeks of practice.",
       subtitle: "{course} · as of {date}", subtitleNoCourse: "As of {date}", atTime: "{date}, {time}",
       filter: "Skill", all: "All skills", asof: "All figures are as of the moment of the export: {date}.",
@@ -161,20 +163,26 @@
   // ---------- Data helpers ----------
   // The day of the export in local time (an older export has only a date), and the time if known.
   const localDay = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+  // The moment of the export: exportedAt, or a generatedAt with a time (one export of 11 November 2026).
+  // generatedAt itself is a date, so an older cached app.js keeps working on newer data.
+  const exportMoment = () => {
+    const v = data.exportedAt ?? (String(data.generatedAt ?? "").length > 10 ? data.generatedAt : null);
+    const d = v ? new Date(v) : null;
+    return d && !Number.isNaN(d.getTime()) ? d : null;
+  };
   const asOf = () => {
-    const g = data.generatedAt;
-    if (!g) return localDay(new Date());
-    if (String(g).length <= 10) return g;
-    const d = new Date(g);
-    return Number.isNaN(d.getTime()) ? String(g).slice(0, 10) : localDay(d);
+    const d = exportMoment();
+    if (d) return localDay(d);
+    return data.generatedAt ? String(data.generatedAt).slice(0, 10) : localDay(new Date());
   };
   const asOfLabel = () => {
-    const g = data.generatedAt;
-    const d = g && String(g).length > 10 ? new Date(g) : null;
-    if (!d || Number.isNaN(d.getTime())) return fmtLong(asOf());
+    const d = exportMoment();
+    if (!d) return fmtLong(asOf());
     return t("atTime", { date: fmtLong(asOf()), time: d.toLocaleTimeString(lang === "nl" ? "nl-NL" : "en-GB", { hour: "2-digit", minute: "2-digit" }) });
   };
   const skillById = () => new Map(data.skills.map((s) => [s.id, s]));
+  // Texts in the language of the page where the export has both (titles from the map, fixed notes, signals).
+  const titleOf = (s) => s.titles?.[lang] ?? s.title;
   const mains = () => data.skills.filter((s) => !s.parent && s.kind !== "zone");
   const microsOf = (id) => data.skills.filter((s) => s.parent === id);
   const family = (s) => (s.parent ? [s.id] : [s.id, ...microsOf(s.id).map((m) => m.id)]);
@@ -278,7 +286,7 @@
     return el("div", { class: "detail" },
       el("div", {}, el("h3", { text: t("history") }), hist.length ? table([t("date"), t("from"), t("to"), t("note")],
         hist.map((h) => [fmtDate(h.at), h.from ?? t("none"), `${h.to} ${levelName(h.to)}`,
-          `${h.auto ? `[${t("auto")}] ` : h.placement ? `[${t("placementNote")}] ` : ""}${h.note ?? ""}`])) : el("p", { class: "muted", text: t("noHistory") })),
+          `${h.auto ? `[${t("auto")}] ` : h.placement ? `[${t("placementNote")}] ` : ""}${h.notes?.[lang] ?? h.note ?? ""}`])) : el("p", { class: "muted", text: t("noHistory") })),
       el("div", {}, el("h3", { text: t("tasks") }), tasks.length ? table([t("date"), t("task"), t("rung"), t("source"), t("explanation"), t("rejections"), t("corrections")],
         tasks.map((x) => [fmtDate(x.at), `${x.skill !== s.id ? `${x.skill}: ` : ""}${x.what ?? x.id}`, rungLabel(x), t(`src.${x.source}`) === `src.${x.source}` ? (x.source ?? t("none")) : t(`src.${x.source}`),
           explainCell(x), x.rejections.map((r) => `${t(`by.${r.by}`)}${r.reasons.length ? `: ${r.reasons.join("; ")}` : ""}`).join(" · ") || t("none"),
@@ -300,7 +308,7 @@
         const tick = el("div", { class: "target", "aria-hidden": "true" }); tick.style.left = pct(target); track.append(tick);
         meter.append(track, el("div", { class: "num", text: st.n ? `${t("solved", { ok: st.ok, n: st.n })} (${pct(st.ok / st.n)})` : t("noTasks") }));
         const row = el("div", { class: "skill-row" },
-          el("div", { class: "skill-name" }, el("div", { class: "title", text: s.title }), el("div", { class: "id", text: s.id })),
+          el("div", { class: "skill-name" }, el("div", { class: "title", text: titleOf(s) }), el("div", { class: "id", text: s.id })),
           s.placement === "pending" ? el("span", { class: "chip open", text: t("openChip") }) : el("span", { class: `chip lv${LEVELS.indexOf(s.level)}`, text: `${s.level} ${levelName(s.level)}` }),
           meter,
           el("div", { class: "skill-meta" }, st.pending ? statusBadge("warning", t("open", { n: st.pending })) : null,
@@ -370,7 +378,7 @@
   function signalsCard() {
     const items = [];
     for (const s of data.signals.filter((x) => inScope(x.skill))) {
-      items.push({ at: data.generatedAt, icon: s.dir === "up" ? "↑" : "↓", cls: s.dir === "up" ? "good" : "serious", label: s.dir === "up" ? t("signalsUp") : t("signalsDown"), text: s.text });
+      items.push({ at: data.generatedAt, icon: s.dir === "up" ? "↑" : "↓", cls: s.dir === "up" ? "good" : "serious", label: s.dir === "up" ? t("signalsUp") : t("signalsDown"), text: s.texts?.[lang] ?? s.text });
     }
     for (const r of data.regressions.filter((x) => !x.skill || inScope(x.skill))) {
       items.push({ at: r.at, icon: r.fixed ? "↺" : "!", cls: r.fixed ? "good" : "critical", label: r.skill ?? "", text: r.fixed ? t("regressionFixed", { n: r.tests }) : t("regression", { n: r.tests }) });
@@ -433,7 +441,7 @@
 
   function filters() {
     const select = el("select", { id: "filter", onchange: (e) => { filter = e.target.value; render(); } },
-      el("option", { value: "all", text: t("all") }), mains().map((s) => el("option", { value: s.id, text: `${s.id} · ${s.title}` })));
+      el("option", { value: "all", text: t("all") }), mains().map((s) => el("option", { value: s.id, text: `${s.id} · ${titleOf(s)}` })));
     select.value = filter;
     return el("div", { class: "filters" }, el("label", { for: "filter", text: t("filter") }), select, el("span", { class: "asof", text: t("asof", { date: asOfLabel() }) }));
   }
@@ -466,6 +474,7 @@
     if (!data) return;
     const notes = [];
     if (fellBack) notes.push(el("p", { class: "notice", text: t("fallback") }));
+    if (!fellBack && source !== "demo" && data.language && data.language !== lang) notes.push(el("p", { class: "notice", text: t("ownLanguage", { language: t("langNames")[data.language] ?? data.language }) }));
     else if (source === "demo") notes.push(el("p", { class: "notice", text: t("demoNote") }));
     if (filter !== "all" && !mains().some((s) => s.id === filter)) filter = "all";
     main.replaceChildren(...notes, filters(), kpis(), levelsCard(), skillsCard(), el("div", { class: "two" }, tasksCard(), signalsCard()),
