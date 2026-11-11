@@ -46,6 +46,8 @@ node harness/install.mjs ../my-practice-folder --update --yes
 
 `--update` only replaces the harness files. Your data in `.learning/` and your own `CLAUDE.md` stay as they are. If you changed a hook yourself, the installer says so ("lokaal aangepast") and keeps your version in the backup folder.
 
+**Not during a practice session.** An update replaces the rules and hooks under a running session. So if a session in the practice folder was active in the last `idleMinutes` (default 20), `--update` warns you. In a terminal it asks "Continue anyway?". With `--yes`, or without a terminal (for example when another Claude session runs it), it stops and changes nothing. Add `--force` only when you are sure, for example when that session is already over. The rules tell Claude never to add `--force` without your yes. `--dry-run` only shows the warning.
+
 An older install without a manifest (with absolute paths in `settings.json`) is recognised and converted too.
 
 ## In a team repository

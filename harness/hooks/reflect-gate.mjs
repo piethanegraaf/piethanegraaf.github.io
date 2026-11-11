@@ -1,6 +1,10 @@
 // Stop hook. Two jobs:
 // 1. Read Claude's last answer and process the markers in it (both languages):
 //    [trede N] / [rung N]                     -> honest logging of help given (also at L1/L3, where the hook does not unlock rungs)
+//    [trede N #id] / [rung N #id]             -> the same, and help about a concept of another family is also logged for
+//                                                that concept (concept-help; setup review of 11 Nov, afternoon, #26)
+//    [micro-voorstel <id> "titel" "trefwoorden"] -> the harness shows a proposal for a microskill, when this session
+//                                                has evidence of real help for that family (#22); "ja, toevoegen" adds it
 //    [review-trede N #id] / [review-rung N #id] -> help in a review after a task: only counts for a next task about
 //                                                that concept (setup review of 11 Nov, S3); otherwise an ordinary rung
 //    [uitleg-ok <tid>] / [explain-ok <tid>]   -> task counts, but ONLY if the learner's own words since the task was
@@ -21,9 +25,10 @@
 import {
   readStdin, loadSession, saveSession, sessionExists, diaryHasSession, logEvent, pendingTasks, checkExplanation,
   isLearnerEntry, learnerEntryText, entryText, readTranscript, loadSkills, findSkill, familyIds, autoDemote,
-  applyVerdict, findVerdict, lapseTasks, promotionAdvice, offerIsNew, offerText, newWorkSignal, beginNewWork, explanationText, t,
+  applyVerdict, findVerdict, lapseTasks, promotionAdvice, offerIsNew, offerText, newWorkSignal, beginNewWork, explanationText,
+  noteConceptHelp, checkMicroProposal, microOfferText, readEvents, t,
 } from "./lib.mjs";
-import { RUNG_MARK, REVIEW_RUNG_MARK, EXPLAIN_MARK, TRANSFER_MARK } from "./patterns.mjs";
+import { RUNG_MARK, REVIEW_RUNG_MARK, EXPLAIN_MARK, TRANSFER_MARK, MICRO_MARK, parseMicroMark } from "./patterns.mjs";
 
 let input;
 try { input = JSON.parse(await readStdin()); } catch { process.exit(0); }
@@ -83,7 +88,13 @@ const rungMark = (n, extra = {}) => {
     logEvent({ type: "rung-mark", skill: rungSkill, rung: n, session: sid, ...extra });
   }
 };
-for (const m of answer.matchAll(RUNG_MARK)) rungMark(Number(m[1]));
+// [trede N #id]: the task keeps the rung (honest: it was made with that help), and help about a concept
+// of another family is also logged for that concept (#26). Without a valid id it is an ordinary rung.
+for (const m of answer.matchAll(RUNG_MARK)) {
+  const n = Number(m[1]);
+  rungMark(n);
+  if (m[2] && data) noteConceptHelp(data, st, m[2], n, { taskSkill: rungSkill, session: sid });
+}
 
 // Help in a review after a task: [review-trede N #id] (setup review of 11 Nov, S3/S16). It counts as
 // review help only right after a logged task, without a signal of new work since, and with a concept
@@ -209,7 +220,34 @@ if (data) {
     }
   }
 }
+
+// ---------- 1d. Proposal for a microskill (setup review of 11 Nov, afternoon, #22) ----------
+// Claude names it; the harness checks the marker and the evidence of this session, and shows it to
+// the learner. Only the learner's own "ja, toevoegen" adds it (prompt-gate). A proposal that is still
+// open, or that the learner declined in this session, is not shown again.
+let microBlock = null;
+if (data) {
+  for (const m of answer.matchAll(MICRO_MARK)) {
+    const key = `micro:${m[1].trim()}:${promptKey}`;
+    if (st.explainChecked.includes(key)) continue;
+    st.explainChecked = [...st.explainChecked.slice(-50), key];
+    const r = checkMicroProposal(data, sid, parseMicroMark(m[1]));
+    if (!r.ok) {
+      logEvent({ type: "micro-rejected", marker: m[0].slice(0, 200), why: r.error, session: sid });
+      microBlock = microBlock ?? t("rg.microBad", { error: r.error });
+      continue;
+    }
+    const o = r.offer;
+    const open = Array.isArray(st.microOffers) ? st.microOffers : [];
+    if (open.some((x) => x.id === o.id)) continue;
+    if (readEvents().some((e) => e.type === "micro-declined" && e.skill === o.id && e.session === sid)) continue;
+    st.microOffers = [...open, { ...o, fresh: true, at: Date.now() }].slice(-3);
+    proposal(microOfferText(data, o));
+    logEvent({ type: "micro-offered", skill: o.id, parent: o.parent, level: o.level, title: o.title, keywords: o.keywords, evidence: o.why.kind, rung: o.why.rung, session: sid });
+  }
+}
 if (transferBlock && !input.stop_hook_active) block(transferBlock);
+if (microBlock && !input.stop_hook_active) block(microBlock);
 
 // ---------- 1c. Verdict of the demotion analyst (S3a) ----------
 // Only with a pending demotion, and only when the agent demonstrably ran in this turn.

@@ -240,16 +240,18 @@ if (newlyGreen.length) {
   const what = newlyGreen.map((r) => r.name).join(", ");
   const minutes = st ? activeMinutesSince(st, st.taskStartedActive) : null;
   const task = logTask({ skill: skill.id, success: maxRung < 5, maxRung, minutes, source: "check", what, session: sid, dir: relDir, level: effectiveLevel(data, skill),
-    reviewRung: reviewRung > (st?.maxRung ?? 0) ? reviewRung : 0 });
+    reviewRung: reviewRung > (st?.maxRung ?? 0) ? reviewRung : 0, tid: st?.openTid });
   logEvent({ type: "test-green", skill: skill.id, tid: task.tid, tests: newlyGreen.map((r) => `${r.className}.${r.name}`), dir: relDir, ...(writtenFirst ? { firstRun: true } : {}) });
   const after = afterTask(data, skill.id, task);
   if (st) { if (after.pending) st.demotionPending = after.pending; taskLogged(st, task); saveSession(sid, st); }
 
   console.log("\n" + t("check.newGreen", { tests: what }));
+  // Honest words (setup review of 11 Nov, afternoon, #27): independent only at rung 0.
   console.log("  " + t("check.logged", { id: skill.id, tid: task.tid, rung: maxRung }) +
-    t(maxRung === 0 ? "check.logged.solo" : maxRung <= 2 ? "check.logged.ok" : "check.logged.help"));
+    t(maxRung === 0 ? "check.logged.solo" : maxRung <= 2 ? "check.logged.ok" : "check.logged.help", { rung: maxRung }));
   for (const m of after.messages) console.log("  " + m);
-  console.log("  " + t("check.explain"));
+  // With help, the explanation is about the point where the help was needed (#28).
+  console.log("  " + t(maxRung > 0 ? "check.explainHelp" : "check.explain"));
   // What becomes possible once this task is explained (setup review §9.2): the harness then makes
   // the proposal itself, right after the explanation, and the learner confirms with "ja, doorzetten".
   const adv = levelAdvice(data, skill, { assume: [task.tid] });

@@ -113,8 +113,32 @@ export function promotionAnswer(text) {
   return null;
 }
 
+// The learner's answer to a proposal for a microskill (setup review of 11 Nov, afternoon, #22): "ja,
+// toevoegen" (optionally with the id) adds it; a bare "nee" right after the proposal declines it.
+const MICRO_YES = any(
+  String.raw`^\s*ja,?\s+(toevoegen|voeg\s+(hem\s+|het\s+|maar\s+)?toe)\b`,
+  String.raw`^\s*yes,?\s+add\b`,
+);
+export function microAnswer(text) {
+  const s = String(text ?? "");
+  if (MICRO_YES.test(s)) return { answer: "yes", id: s.match(SKILL_ID)?.[1]?.toLowerCase() ?? null };
+  if (PROMOTE_NO.test(s)) return { answer: "no", id: null };
+  return null;
+}
+
 // Markers Claude puts in an answer. Both languages are accepted.
-export const RUNG_MARK = /\[(?:trede|rung) ([1-5])\]/gi;
+// [trede N] for help given. With a concept id, [trede N #id], the help was about that concept (setup
+// review of 11 Nov, afternoon, #26): the task keeps the rung, and help about a concept of another
+// family is also logged for that concept. The same shape as the review marker below.
+export const RUNG_MARK = /\[(?:trede|rung) ([1-5])(?:\s+#([\w.-]+))?\]/gi;
+// A proposal for a microskill that Claude asks the harness to show (#22):
+// [micro-voorstel <id> "titel" "trefwoord1, trefwoord2"]. The hook checks the body (parseMicroMark).
+export const MICRO_MARK = /\[(?:micro-voorstel|micro-proposal)\b([^\]]*)\]/gi;
+export function parseMicroMark(body) {
+  const m = String(body ?? "").match(/^\s+#?([a-z][a-z0-9-]*(?:\.[a-z0-9-]+)+)\s+"([^"]*)"\s+"([^"]*)"\s*$/i);
+  if (!m) return null;
+  return { id: m[1].toLowerCase(), title: m[2].trim(), keywords: m[3].split(",").map((k) => k.trim().toLowerCase()).filter(Boolean) };
+}
 // Help during an optional review after a task (setup review of 11 Nov, S3): [review-trede N #id].
 // The concept id is required. The pattern also matches a marker without an id, so the Stop hook can
 // count that one as an ordinary [trede N] (the cautious side) instead of dropping it.

@@ -9,20 +9,20 @@ description: "The four Claude Code hooks of the learning harness, every skill.mj
 | Event | Script | What it does |
 |---|---|---|
 | `SessionStart` | `session-start.mjs` | Puts the record, open explanations and promotion proposals in the context, and asks for your goal. You also see an open proposal yourself, in the message at the start. Open explanations of earlier sessions lapse here. It does not mention reviews. After a first export to the dashboard, its message also says what is new since then (see `since-export`), unless `dashboardRepo` is `off`. |
-| `UserPromptSubmit` | `prompt-gate.mjs` | Recognises the skill, decides whether a new rung may unlock, logs solved tasks and asks for explanations. Sets the level when you confirm a proposal with "yes, promote". During a transfer task no rung unlocks. Agent messages, notifications and system reminders do not count as your words. |
+| `UserPromptSubmit` | `prompt-gate.mjs` | Recognises the skill, decides whether a new rung may unlock, logs solved tasks and asks for explanations. Sets the level when you confirm a proposal with "yes, promote", and adds a microskill when you confirm a proposal with "yes, add". During a transfer task no rung unlocks. Agent messages, notifications and system reminders do not count as your words. |
 | `PreToolUse` | `guard.mjs` | Blocks writing, building and testing code at L1–L3, and every change to the record, the state and the harness itself. It judges a shell command per simple command, by the program that runs. It always refuses `eval`, `iex` and `Invoke-Expression`. One program is allowed on purpose: the dashboard export `node <repo>/harness/export.mjs <practice folder>`, which in the practice folder only writes `last-export.json` (not with `--out` into the practice folder). |
-| `Stop` | `reflect-gate.mjs` | Processes the markers in Claude's answer, checks your explanation, the transfer task and the verdict of the demotion analyst, and asks for the diary when you want to stop. When an explanation meets a promotion criterion, it shows you the proposal right away. After the diary, what is still open lapses. |
+| `Stop` | `reflect-gate.mjs` | Processes the markers in Claude's answer, checks your explanation, the transfer task and the verdict of the demotion analyst, and asks for the diary when you want to stop. When an explanation meets a promotion criterion, it shows you the proposal right away. It also shows a proposal for a microskill when Claude asks for one and this session has the evidence. After the diary, what is still open lapses. |
 
 ## `skill.mjs` (you run it yourself, with `!`)
 
 | Command | What |
 |---|---|
-| `list` / `status` | Overview; L4 reviews that are ready, open and skipped explanations, and signals. Claude may run these two as well. |
+| `list` / `status` | Overview; L4 reviews that are ready, open and skipped explanations, and signals. `status` also shows help about a skill during tasks of another skill (`concept-help`), for information only. Claude may run these two as well. |
 | `since-export` | What is new since the last export to the dashboard, in one line: tasks, diary sessions and level changes. Without an export: that no export is known yet. Then, when something is new or nothing is known, the question "Update the dashboard now? (yes / later)" that `/diary` asks. Nothing when `dashboardRepo` is `off`. Only reads, so Claude may run it as well: `/diary` ends with it. See [Since the last export](progress-dashboard.md#since-the-last-export). |
 | `set <id> <L0..L4> "note"` | Set a level. Raising it only works when no tasks wait for an explanation. A proposal of the harness is easier to confirm in the chat: type "yes, promote" (optionally with the id). |
 | `review <id> pass\|shaky\|fail` | Record the outcome of a review yourself. Usually not needed: the next task of an L4 skill decides it. |
 | `add <id> "title" ["keywords"]` | Add a new main skill, for example for a part of the exam that is not in the map. It starts with an open placement: your first task sets the level. Link folders with `paths`. Logged as the event `skill-add`. |
-| `add-micro <parent> <id> <level> "title" "keywords"` | Add a microskill. With `autoDemote` the demotion analyst also creates one itself, at the parent's level minus 1. |
+| `add-micro <parent> <id> <level> "title" "keywords"` | Add a microskill. With `autoDemote` the demotion analyst also creates one itself, at the parent's level minus 1. After real help in a session, the harness can also propose one; you add it with "yes, add" in the chat. |
 | `done <id> "what"` | Log a task without a test (design, UML). |
 | `untask <id>` | Void the last logged task of a skill. |
 | `correct <task-id> rung <1-5> "reason"` | More help than logged: only raises the rung. |
@@ -54,6 +54,8 @@ Runs `dotnet test` with a trx logger and shows a short summary. A test that goes
 | Marker | Meaning |
 |---|---|
 | `[rung N]` / `[trede N]` | Substantive help was given at rung N. |
+| `[rung N #id]` / `[trede N #id]` | The same, and the help was about the concept `id` from `skills.json`. The task keeps the rung. A concept of another family also gets a `concept-help` event; one of the same family, or an id that does not exist, makes it an ordinary `[rung N]`. |
+| `[micro-proposal <id> "title" "keywords"]` / `[micro-voorstel …]` | Claude asks the harness to propose a microskill. The harness shows it only with a valid id below a main skill, 1–6 keywords, and evidence from this session: help at rung 2 or higher in a review or about another concept, or a task of that family at rung 2 or higher. Otherwise the Stop hook says why it refuses. |
 | `[review-rung N #id]` / `[review-trede N #id]` | Help at rung N in a review after a task, about the concept `id` from `skills.json`. It does not raise the rung of the next task, unless that task is about the same concept (the same family). Without a valid id, without a logged task before it, or after a signal of new work, it counts as an ordinary `[rung N]`. |
 | `[explain-ok <tid>]` / `[uitleg-ok <tid>]` | The explanation is right; the Stop hook still checks it. |
 | `[explain-no <tid>]` / `[uitleg-nee <tid>]` | The explanation is incomplete; the task stays open. |
@@ -107,6 +109,17 @@ And of the setup review of 11 November 2026 (the start of a task, reviews and pa
 | `rung-mark` with `review: true` | A review marker that counted as an ordinary rung. |
 | `test-green` with `firstRun: true` | The first run in a folder was all green, with code written in this session. |
 | `paths` | You linked an exercise folder to a skill, or removed it (`action`, `glob`). |
+
+And of the setup review of 11 November 2026, afternoon (help per concept, microskill proposals):
+
+| Event | Meaning |
+|---|---|
+| `concept-help` | Help about a concept of another family during a task (`skill`, `rung`, `taskSkill`). `taskTid` is the id the task gets when it is logged. Not a task of that concept. |
+| `help-dropped` with `taskTid` | New work began after concept help: that task id is never logged. |
+| `micro-offered` | The harness showed a proposal for a microskill (`skill`, `parent`, `level`, `evidence`: `review`, `concept` or `task`). |
+| `micro-rejected` | A proposal the Stop hook refused (`why`). |
+| `micro-declined` | You said "no" to the proposal. It does not come back in that session. |
+| `micro-add` with `by: learner`, `via: voorstel` | The microskill, added after your "yes, add". |
 
 ## Files
 
