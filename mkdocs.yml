@@ -161,7 +161,6 @@ markdown_extensions:
 # (it is about 1 MB). Because window.mermaid then exists, Material does not load it from its
 # CDN (unpkg).
 extra_css:
-  - assets/stylesheets/risk-matrix.css
   - assets/stylesheets/a11y.css
 
 extra_javascript:

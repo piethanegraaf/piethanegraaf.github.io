@@ -69,6 +69,10 @@
 {% endblock %}
 
 {% block extrahead %}
+  {#- The styles of the risk matrix (§3 of the research) only on pages that have it, after the other styles as before. #}
+  {% if page and page.content and 'risk-matrix' in page.content %}
+    <link rel="stylesheet" href="{{ 'assets/stylesheets/risk-matrix.css' | url }}">
+  {% endif %}
   {#- Google Scholar: only on pages with citation_title in the front matter (the English literature review). #}
   {% if page.meta and page.meta.citation_title %}
     <meta name="citation_title" content="{{ page.meta.citation_title }}">

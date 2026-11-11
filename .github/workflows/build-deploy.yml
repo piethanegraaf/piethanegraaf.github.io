@@ -59,6 +59,12 @@ jobs:
       - name: Build docs
         run: mkdocs build --strict
 
+      # Material's language selector fetches sitemap.xml from the root of each language. MkDocs only
+      # writes the one at the site root (it lists both languages), so /en/sitemap.xml was a 404: an error
+      # in the browser console. Search engines get the root sitemap through robots.txt.
+      - name: Add the sitemap for the English root
+        run: cp site/sitemap.xml site/en/sitemap.xml
+
       - name: Add mermaid (self-hosted)
         run: |
           tgz="$RUNNER_TEMP/mermaid.tgz"
