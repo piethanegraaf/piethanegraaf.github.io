@@ -23,6 +23,8 @@ flowchart LR
   J -.->|ja, doorzetten| G1
 ```
 
+In de harnas gaat elke prompt door de prompt-gate, en bij L1–L3 blokkeert de guard dat Claude code schrijft of test. Een niveau gaat nooit vanzelf omhoog: je bevestigt het voorstel van de reflect-gate met "ja, doorzetten", of je zet het zelf.
+
 ## Niveaus per vaardigheid
 
 | Niveau | Claude | Jij |
