@@ -1,3 +1,7 @@
+---
+title: "Configuratie en privacy: instellingen, kaarten, data"
+description: "Pas de instellingen van de harnas aan, maak een kaart met vaardigheden voor je eigen vak en zie welke leerdata lokaal blijft en wat de export publiceert."
+---
 # Configuratie en privacy
 
 ## Instellingen

@@ -1,6 +1,6 @@
 ---
 title: "Install the learning harness in Claude Code"
-description: "Clone the repo and run the Node.js installer in your project folder: it adds the hooks, a diary skill and the C# OOP skill map. Updates keep your data."
+description: "Clone the repo and run the Node.js installer in your project folder: it adds the hooks, the skills and the C# OOP skill map. Updates keep your data."
 ---
 # Install
 

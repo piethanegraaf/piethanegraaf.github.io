@@ -1,3 +1,7 @@
+---
+title: "Leerharnas voor Claude Code: leer zelf programmeren met AI"
+description: "Gratis Claude Code-opzet voor studenten: hooks voorkomen dat de AI je oefencode schrijft, hints komen in stappen en een dashboard volgt je vaardigheden."
+---
 # Leerharnas
 
 Een leerharnas voor [Claude Code](https://docs.claude.com/en/docs/claude-code/overview) die zorgt dat je **zelf** leert programmeren, ook als er een AI meekijkt.

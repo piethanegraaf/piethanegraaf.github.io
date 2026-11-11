@@ -1,3 +1,7 @@
+---
+title: "De leerharnas installeren in Claude Code"
+description: "Clone de repo en draai de Node.js-installer in je projectmap: die zet de hooks, de skills en de C# OOP-kaart klaar. Updates laten je eigen data staan."
+---
 # Installeren
 
 ## Wat je nodig hebt

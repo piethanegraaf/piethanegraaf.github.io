@@ -1,3 +1,7 @@
+---
+title: "AI-verklaring: hoe Claude hielp dit project te bouwen"
+description: "Wat Claude (Anthropic) voor dit project schreef, wat de student controleerde, en waarom de leerdata en reflecties op het dashboard van de student zelf zijn."
+---
 # AI-verklaring
 
 De leerharnas, het dashboard, deze documentatie en het onderzoek zijn gemaakt met hulp van **Claude** (Anthropic), in Claude Code.

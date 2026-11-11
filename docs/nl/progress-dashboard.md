@@ -1,3 +1,7 @@
+---
+title: "Voortgangsdashboard: niveaus, taken en reflecties"
+description: "Wat het voortgangsdashboard per vaardigheid laat zien, van niveaus en taken tot herhalingen en reflecties, en hoe je je data publiceert met de export."
+---
 # Dashboard bijwerken
 
 ## Wat het dashboard laat zien

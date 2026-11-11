@@ -1,3 +1,7 @@
+---
+title: "Hoe het werkt: niveaus L0–L4 en hints in stappen"
+description: "Vijf niveaus per vaardigheid, van L0 (voordoen) tot L4 (geautomatiseerd). Op L1–L3 blokkeert een hook AI-code; op L2 komt hulp als vraag, wijzer en schets."
+---
 # Hoe het werkt
 
 De harnas bestaat uit vier hooks van Claude Code, een vaardighedenregister en een paar commando's die alleen jij draait.

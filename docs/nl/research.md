@@ -1,3 +1,7 @@
+---
+title: "Leren programmeren met AI: literatuuronderzoek (2026)"
+description: "AI die tijdens het oefenen voor je denkt, verlaagt wat je daarna zonder AI kunt; AI als tutor doet dat niet. Een review uit 2026 met een opzet voor Claude Code."
+---
 # Leren programmeren (en OOD) met AI: literatuuronderzoek, risicoanalyse en een Claude Code-opzet die het leren beschermt
 
 !!! warning "Machinevertaling"
