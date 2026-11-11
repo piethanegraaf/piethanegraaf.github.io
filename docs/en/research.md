@@ -182,7 +182,12 @@ This document was written with Claude, Anthropic's model, and Claude agents did 
 - **Cognitive apprenticeship** (Collins, Brown & Newman, 1989) runs through *modelling → coaching → scaffolding → fading → articulation → reflection → exploration*. This sequence is practically the blueprint for the Autonomy Ladder in §5.
 - **Faded worked examples.** Renkl & Atkinson (2003) and Atkinson, Renkl & Merrill (2003) showed that gradually removing solution steps from worked examples (*backward fading*) works better than jumping from examples to problems all at once.
 - **Expertise-reversal effect.** Kalyuga et al. (2003) showed that guidance which helps novices becomes *redundant and harmful* for more advanced students. **Help level must therefore follow your expertise in each skill.** A fixed "tutor mode" is too much for some skills and too little for others.
-- **Contingent tutoring.** Wood & Wood (1999) found the most effective tutors follow a rule: *give more help after failure, less after success*. That rule can be implemented directly (§5.3).
+- **Contingent tutoring.** The rule *give more help after failure, less after success* goes back to observations of mothers helping their young children (Wood & Middleton 1975) and an experiment with four ways of teaching (Wood, Wood & Middleton 1978). Wood & Wood (1999) built it into a computer tutor. The rule can be implemented directly (§5.3), but the evidence that the contingency itself helps is weak:
+    - a preregistered direct replication of the 1978 experiment, with 285 three-year-olds, did not find its effect on independent performance (Smit et al. 2025);
+    - in a meta-analysis of computer-based scaffolding in STEM, scaffolding helped (ḡ = 0.46 over 144 studies), but the effect did not depend on whether or how the scaffolding changed over time (Belland et al. 2017);
+    - in a classroom experiment, contingent support only helped when students had first worked on their own for longer (van de Pol et al. 2015).
+
+    So help in steps is well supported; that it must follow every success and failure is not.
 
 ### 2.4 Mastery, skill acquisition stages and when to automate
 
@@ -580,7 +585,7 @@ So the shift argues for **adding** deliberate practice of AI-era skills, not for
 |---|---|---|---|
 | P1 | **Attempt first, then help.** You generate before the AI reveals. Attempting first is not enough on its own: the learning comes from what follows. | Generation effect; productive failure (Sinha & Kapur 2021); Bastani 2025; Gajos & Mamykina 2022 (attempting first, then seeing the answer, gave no learning) | Moderate |
 | P2 | **Help follows expertise in each skill and fades.** | Expertise reversal; faded worked examples; cognitive apprenticeship | Strong |
-| P3 | **Graduated, contingent hints** (more after failure, less after success). | Wood & Wood 1999; Aleven et al. 2003; Kestin 2025 (short-term) | Moderate |
+| P3 | **Graduated hints, after an own attempt** (more after failure, less after success). That the help follows every success and failure is the weaker part. | Help in steps: Belland et al. 2017 (meta-analysis, ḡ = 0.46); Aleven et al. 2003; Kestin 2025 (short-term). The contingency: Wood & Wood 1999 (a tutor that applies it); no added effect in Belland et al. 2017; only after longer independent work in van de Pol et al. 2015; the classic experiment did not replicate (Smit et al. 2025) | Low to moderate: moderate (graduated hints), weak (contingency) |
 | P4 | **Keep practice hard enough that you sometimes fail** (about 70–90% success as a rule of thumb), and time-box stuckness. | Desirable difficulties; Kapur 2016; D'Mello 2014. Wilson et al. 2019 only as computational inspiration | Heuristic |
 | P5 | **Explanations without the answer, over solutions.** Self-explain AI output. | Gajos & Mamykina 2022; Bastani 2025 (tutor arm); Kazemitabaar 2025; Chi 1989 | Moderate |
 | P6 | **Mastery gate with transfer and explanation**, not just "it works". | Mastery learning (gains on aligned tests; Kulik 1990, Slavin 1990); Corbett & Anderson; illusion of competence (Đức Minh 2026; Eleftheriou 2026) | Moderate |
@@ -939,7 +944,7 @@ In the autonomy ladder as built, a new skill's level is set by the highest hint 
 
 ### 5.3 Friction calibration & the hint ladder
 
-The hint ladder puts two ideas into practice: contingent tutoring (more help after failure, less after success; §2.3) and productive struggle (§2.2). You get the next rung only after **(a)** a visible attempt, such as code you changed or a hypothesis you stated, **or (b)** when the stuck timer runs out. This rule keeps the struggle productive, so that it does not turn into floundering.
+The hint ladder puts two ideas into practice: contingent tutoring (more help after failure, less after success; §2.3) and productive struggle (§2.2). The evidence for help in steps is good; for the contingency itself it is weak (§2.3). Help only after an own attempt fits the one classroom finding where contingency did help: after a longer period of working alone (van de Pol et al. 2015). You get the next rung only after **(a)** a visible attempt, such as code you changed or a hypothesis you stated, **or (b)** when the stuck timer runs out. This rule keeps the struggle productive, so that it does not turn into floundering.
 
 ```mermaid
 flowchart TD
@@ -1776,6 +1781,11 @@ Written by Piet Hanegraaf with Claude (Anthropic); see the [AI statement](ai-sta
 - Wood, D., & Middleton, D. (1975). A study of assisted problem-solving. *British Journal of Psychology, 66*(2), 181–191. https://doi.org/10.1111/j.2044-8295.1975.tb01454.x
 - Wood, D., Wood, H., & Middleton, D. (1978). An experimental evaluation of four face-to-face teaching strategies. *International Journal of Behavioral Development, 1*(2), 131–147. https://doi.org/10.1177/016502547800100203
 
+**Added on 11 November 2026 (night): scaffolding and contingency**
+
+- Belland, B. R., Walker, A. E., Kim, N. J., & Lefler, M. (2017). Synthesizing results from empirical research on computer-based scaffolding in STEM education: A meta-analysis. *Review of Educational Research, 87*(2), 309–344. https://doi.org/10.3102/0034654316670999
+- van de Pol, J., Volman, M., Oort, F., & Beishuizen, J. (2015). The effects of scaffolding in the classroom: Support contingency and student independent working time in relation to student achievement, task effort and appreciation of support. *Instructional Science, 43*(5), 615–641. https://doi.org/10.1007/s11251-015-9351-z
+
 ---
 
 <a id="appendix-implementation-sketches"></a>
@@ -2227,6 +2237,16 @@ Help about a concept of another family stays with the task and is also logged fo
 <a id="11-change-log"></a>
 
 ## 11. Change log {#changelog}
+
+### 11 November 2026 (night, last): the evidence for contingent hints (P3)
+
+The pilot student chose this change after the check of the sources of the afternoon review (§10.6, decision 24).
+
+- **§2.3:** the rule "more help after failure, less after success" is now attributed to where it comes from (Wood & Middleton 1975; Wood, Wood & Middleton 1978), not to Wood & Wood (1999), who built it into a tutor. Added: the failed replication of the 1978 experiment (Smit et al. 2025), a meta-analysis in which changing the scaffolding over time made no difference (Belland et al. 2017), and a classroom experiment in which contingency only helped after longer independent work (van de Pol et al. 2015).
+- **§2.11, P3:** the evidence goes from moderate to low to moderate: moderate for graduated hints, weak for the contingency itself.
+- **§5.3:** one sentence on what this means for the hint ladder.
+- **§8:** new references. Each was first checked against its abstract; the notes are in [the citation check](https://github.com/piethanegraaf/piethanegraaf.github.io/blob/main/research/citation-checks/citation_check_learning_science.md), section E.
+- **Not changed:** the harness, and the conclusions of §2.
 
 ### 11 November 2026 (night, later): the map next to the assessment and the cheat sheet
 

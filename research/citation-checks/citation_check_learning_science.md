@@ -956,3 +956,43 @@ Method note: bibliographic data came from Crossref and OpenAlex for every DOI. F
 
 #### Gaps
 - No primary text of the 1975 paper (Wiley 403). The coding of help and the rule wording attributed to 1975 come from a secondary source. The 1978 full text was not read.
+
+## E. Sources checked on 11 November 2026, night (scaffolding and contingency)
+
+Scope: after the failed replication in D5, two sources that test whether help should *follow* the learner's successes and failures (contingency), as the hint ladder does (P3). The claim to check: scaffolding helps, but is the contingency itself what helps?
+
+Method note: bibliographic data and abstracts came from OpenAlex and from the research portals of the universities (Penn State for Belland et al.). The full texts were not read: Springer asked for a login, and PMC for a captcha.
+
+### E1. Belland, Walker, Kim & Lefler (2017), "Synthesizing results from empirical research on computer-based scaffolding in STEM education: A meta-analysis"
+
+#### Takeaway
+**Verdict: correct, from the abstract.** Computer-based scaffolding had a consistently positive effect on cognitive outcomes (ḡ = 0.46) over 144 experimental studies (333 outcomes). The effect did not vary with whether the scaffolding changed over time (fading or adding), or with the logic of that change.
+
+#### Cited Findings
+- Bibliographic: Review of Educational Research 87(2), 309–344, DOI 10.3102/0034654316670999 (online 2016, print 2017). — [OpenAlex](https://api.openalex.org/works/https://doi.org/10.3102/0034654316670999)
+- Abstract: "synthesizing the results of 144 experimental studies (333 outcomes)"; a "consistently positive (ḡ = 0.46) effect on cognitive outcomes". — [OpenAlex](https://api.openalex.org/works/https://doi.org/10.3102/0034654316670999)
+- Abstract: the influence did not vary on the basis of context-specificity, "presence or absence of scaffolding change, and logic by which scaffolding change is implemented". — [Penn State](https://pure.psu.edu/en/publications/synthesizing-results-from-empirical-research-on-computer-based-sc/)
+
+#### Inferences
+- Support in steps is well supported. That the support has to change with the learner's performance is not: in this meta-analysis it made no difference.
+- A preliminary version (a 2014 poster) did find an advantage for performance-adapted fading/adding. The final analysis did not keep it.
+
+#### Gaps
+- Full text not read: the effect sizes per kind of customization were not checked.
+
+### E2. van de Pol, Volman, Oort & Beishuizen (2015), "The effects of scaffolding in the classroom: support contingency and student independent working time in relation to student achievement, task effort and appreciation of support"
+
+#### Takeaway
+**Verdict: correct, from the abstract.** A classroom experiment with teachers trained in contingent support. Whether contingent support helped depended on how long the students worked on their own. With little independent working time (frequent help), low-contingent support was better for achievement and task effort. With much independent working time (less frequent help), high-contingent support was better for achievement.
+
+#### Cited Findings
+- Bibliographic: Instructional Science 43(5), 615–641, DOI 10.1007/s11251-015-9351-z. — [OpenAlex](https://api.openalex.org/works/https://doi.org/10.1007/s11251-015-9351-z)
+- Abstract: "Low contingent support was more effective in promoting students' achievement and task effort than high contingent support" where independent working time was low; where it was high, high contingent support was more effective for achievement. The effectiveness of scaffolding "depends, among other things, on the independent working time of the groups". — [OpenAlex](https://api.openalex.org/works/https://doi.org/10.1007/s11251-015-9351-z)
+- Design, only from a search summary, not read in the record itself: 30 social studies teachers and 768 students aged 12–15 in pre-vocational education. The open-access record is on the [VU research portal](https://research.vu.nl/en/publications/the-effects-of-scaffolding-in-the-classroom-support-contingency-a/).
+
+#### Inferences
+- Contingent help only paid off after a longer period of working alone. That fits "attempt first" and the stuck timer better than help at every step.
+- Group work in social studies is far from one learner with a programming exercise. Read it as a direction, not as a parameter.
+
+#### Gaps
+- Full text not read: the size of the effects and how contingency was measured were not checked.
