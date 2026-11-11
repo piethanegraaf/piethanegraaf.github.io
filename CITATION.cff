@@ -1,0 +1,21 @@
+cff-version: 1.2.0
+message: "If you use the learning harness, please cite it as below."
+title: "Learning harness for Claude Code"
+type: software
+authors:
+  - family-names: Hanegraaf
+    given-names: Piet
+    affiliation: Christelijke Hogeschool Ede
+abstract: >-
+  A free, open-source Claude Code setup for students learning to program. Hooks stop the AI
+  from writing practice code, help comes in steps, and a dashboard tracks skill levels. Made
+  with help from Claude (Anthropic); see the AI statement on the site.
+repository-code: "https://github.com/piethanegraaf/piethanegraaf.github.io"
+url: "https://piethanegraaf.github.io/en/"
+license: AGPL-3.0-only
+keywords:
+  - claude-code
+  - ai-in-education
+  - computing-education
+  - programming-education
+  - learning-analytics

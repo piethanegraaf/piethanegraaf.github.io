@@ -1,8 +1,12 @@
 ---
 title: "Learning to code with AI: literature review (2026)"
+citation_title: "Learning to Code (and OOD) with AI: Literature Review, Risk Assessment & a Learning-Preserving Claude Code Setup"
+citation_date: "2026/11/07"
 description: "AI that does your thinking while you practise lowers what you can do without it; AI used as a tutor does not. A 2026 review with a Claude Code setup."
 ---
 # Learning to Code (and OOD) with AI: Literature Review, Risk Assessment & a Learning-Preserving Claude Code Setup
+
+**Piet Hanegraaf, with Claude (Anthropic)** · [About the author](about.md) · [How to cite](#how-to-cite-this-review)
 
 *Prepared 7 November 2026 · revised 8 November 2026, rewritten for students and teachers on 10 November 2026 and updated with new literature the same day, extended for junior developers at work on 11 November 2026 (see §11) · For students who learn programming and Object-Oriented Design (OOD) with AI, for their teachers, and for junior developers at work*
 
@@ -1360,6 +1364,29 @@ The checks above are for one learner. Whether the harness works in general needs
 - **Practitioner sources show concern, not proof.** The talks, interviews, news articles and blog posts in §2.12 show that the concern is widespread. They do not show that it is true.
 - **Mastery thresholds are heuristics.** The numbers (85%, 3 successes over 2 days, the intervals) come from the literature, but they have not been validated for this setup. Adjust them using your own evaluation data (§6).
 - **Detecting skills from prompts is approximate.** Matching on keywords will sometimes pick the wrong skill. Let the AI propose a skill and confirm it, or name the skill yourself (`/learn ood.strategy`).
+
+---
+
+## How to cite this review
+
+Written by Piet Hanegraaf with Claude (Anthropic); see the [AI statement](ai-statement.md). Cite the version and the date you read, because the review is updated.
+
+**APA**
+
+> Hanegraaf, P. (2026). *Learning to code (and OOD) with AI: Literature review, risk assessment and a learning-preserving Claude Code setup* (version of 11 November 2026; written with Claude, Anthropic). https://piethanegraaf.github.io/en/research/
+
+**BibTeX**
+
+```bibtex
+@misc{hanegraaf2026learning,
+  author       = {Hanegraaf, Piet},
+  title        = {Learning to Code (and {OOD}) with {AI}: Literature Review, Risk Assessment and a Learning-Preserving {Claude Code} Setup},
+  year         = {2026},
+  month        = nov,
+  howpublished = {\url{https://piethanegraaf.github.io/en/research/}},
+  note         = {Version of 11 November 2026. Written with Claude (Anthropic).}
+}
+```
 
 ---
 

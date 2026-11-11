@@ -33,4 +33,4 @@ Juniors die een agent al het werk laten doen, kunnen junior blijven: het [onderz
 
 ## Volgende stap
 
-[Installeer de harnas](install.md) met `--map junior-dotnet`. Vragen? [Open een issue op GitHub](https://github.com/piethanegraaf/piethanegraaf.github.io/issues/new).
+[Installeer de harnas](install.md) met `--map junior-dotnet`. Vragen? Mail naar [hanegraafpiet@gmail.com](mailto:hanegraafpiet@gmail.com). Bugs horen in een [issue op GitHub](https://github.com/piethanegraaf/piethanegraaf.github.io/issues/new).

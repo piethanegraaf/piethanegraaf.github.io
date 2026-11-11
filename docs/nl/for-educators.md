@@ -42,5 +42,5 @@ Pas hem aan op je vak:
 ## Volgende stappen
 
 - **Maak een kaart met vaardigheden** voor je vak, met de [OOD-kaart](https://github.com/piethanegraaf/piethanegraaf.github.io/tree/main/harness/maps/ood) als startpunt, en [installeer](install.md) de harnas ermee.
-- **Vragen, of wil je het in een vak proberen?** [Open een issue op GitHub](https://github.com/piethanegraaf/piethanegraaf.github.io/issues/new).
+- **Vragen, of wil je het in een vak proberen?** Mail naar [hanegraafpiet@gmail.com](mailto:hanegraafpiet@gmail.com).
 - **Waarom hij zo gebouwd is:** het [literatuuronderzoek](research.md) legt het bewijs achter elke keuze uit.

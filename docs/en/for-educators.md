@@ -42,5 +42,5 @@ Adapt it to your course:
 ## Next steps
 
 - **Write a skill map** for your course, starting from the [OOD map](https://github.com/piethanegraaf/piethanegraaf.github.io/tree/main/harness/maps/ood), and [install](install.md) the harness with it.
-- **Questions, or want to try it in a course?** [Open an issue on GitHub](https://github.com/piethanegraaf/piethanegraaf.github.io/issues/new).
+- **Questions, or want to try it in a course?** E-mail [hanegraafpiet@gmail.com](mailto:hanegraafpiet@gmail.com).
 - **Why it is built this way:** the [literature review](research.md) explains the evidence behind each choice.

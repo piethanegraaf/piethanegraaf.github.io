@@ -33,4 +33,4 @@ Juniors who let an agent do all the work can stay junior: the [research on the e
 
 ## Next step
 
-[Install the harness](install.md) with `--map junior-dotnet`. Questions? [Open an issue on GitHub](https://github.com/piethanegraaf/piethanegraaf.github.io/issues/new).
+[Install the harness](install.md) with `--map junior-dotnet`. Questions? E-mail [hanegraafpiet@gmail.com](mailto:hanegraafpiet@gmail.com). Bugs go in an [issue on GitHub](https://github.com/piethanegraaf/piethanegraaf.github.io/issues/new).

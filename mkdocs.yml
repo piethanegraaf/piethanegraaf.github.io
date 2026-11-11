@@ -3,6 +3,7 @@
 
 site_name: Leerharnas
 site_url: https://piethanegraaf.github.io/
+site_author: Piet Hanegraaf
 # The fallback description for pages without their own `description:` in the front matter.
 site_description: >-
   Een gratis, open-source leerharnas voor Claude Code, voor studenten en junior developers: hooks
@@ -12,7 +13,7 @@ site_dir: site
 strict: true
 
 copyright: >-
-  Code: AGPL-3.0 · Teksten, docs en data: CC BY-NC 4.0 ·
+  © 2026 Piet Hanegraaf · Code: AGPL-3.0 · Teksten, docs en data: CC BY-NC 4.0 ·
   Gemaakt met hulp van Claude (Anthropic), zie de AI-verklaring
 
 theme:
@@ -69,7 +70,7 @@ plugins:
             A free, open-source Claude Code setup for students and junior developers. Hooks stop
             the AI from writing practice code, help comes in steps, and a dashboard tracks skill levels.
           copyright: >-
-            Code: AGPL-3.0 · Texts, docs and data: CC BY-NC 4.0 ·
+            © 2026 Piet Hanegraaf · Code: AGPL-3.0 · Texts, docs and data: CC BY-NC 4.0 ·
             Made with help from Claude (Anthropic), see the AI statement
           # Own nav: the dashboard and the cheat sheet have an English URL of their own.
           nav:
@@ -89,6 +90,7 @@ plugins:
                 - Literature review: research.md
                 - For researchers: researchers.md
             - About this project:
+                - About me: about.md
                 - AI statement: ai-statement.md
 
   # The date of the last change per page, from git (CI checks out the full history).
@@ -115,7 +117,18 @@ nav:
       - Literatuuronderzoek: research.md
       - Voor onderzoekers: researchers.md
   - Over dit project:
+      - Over mij: about.md
       - AI-verklaring: ai-statement.md
+
+# The footer icons (Material draws them as inline SVG: nothing is loaded from elsewhere).
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/piethanegraaf
+      name: GitHub
+    - icon: fontawesome/brands/linkedin
+      link: https://www.linkedin.com/in/piet-hanegraaf/
+      name: LinkedIn
 
 markdown_extensions:
   - admonition
