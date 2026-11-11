@@ -1,3 +1,7 @@
+---
+title: "Reference: hooks, commands and files"
+description: "The four Claude Code hooks of the learning harness, every skill.mjs command, the test runner, markers, events and files: what each one does and when."
+---
 # Reference: hooks and commands
 
 ## Hooks

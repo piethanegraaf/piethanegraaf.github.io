@@ -47,6 +47,8 @@ const globRe = (g) => new RegExp("^" + g.split("**").map((p) => p.split("*").map
 const ALLOWED_EXT = new Set(["md", "mjs", "js", "cjs", "json", "yml", "yaml", "html", "css", "txt", "svg"]);
 const IMAGE_EXT = new Set(["png", "jpg", "jpeg", "gif", "webp", "ico", "avif"]);
 const ALLOWED_NAMES = /^(LICENSE(-docs)?|\.gitignore|\.gitkeep|\.gitattributes|CNAME|\.nojekyll)$/;
+// XML only as a sitemap (overrides/sitemap.xml, site-src/sitemap-tools.xml), by name, like requirements*.txt.
+const SITEMAP = /^sitemap[\w-]*\.xml$/;
 
 function nameRules(file) {
   const out = [];
@@ -60,7 +62,7 @@ function nameRules(file) {
   if (/toets|beoordelingsformulier|minicasus|lesopdracht|diagnostische|exam-prep/i.test(base)) add(B, "file.course", "lijkt materiaal van een docent of toets");
   if (/\.(pdf|docx?|xlsx?|pptx?|zip|7z|rar|drawio|jsonl|trx|sqlite|db)$/i.test(base)) add(B, "file.type", `verboden bestandstype .${ext}`);
   else if (IMAGE_EXT.has(ext)) add(T, "file.image", "afbeelding: controleer op schermafdrukken met persoonlijke gegevens");
-  else if (!ALLOWED_EXT.has(ext) && !ALLOWED_NAMES.test(base) && !/^requirements.*\.txt$/.test(base)) add(B, "file.unknown", `bestandstype niet op de allowlist (${ext || base})`);
+  else if (!ALLOWED_EXT.has(ext) && !ALLOWED_NAMES.test(base) && !SITEMAP.test(base) && !/^requirements.*\.txt$/.test(base)) add(B, "file.unknown", `bestandstype niet op de allowlist (${ext || base})`);
   return out;
 }
 

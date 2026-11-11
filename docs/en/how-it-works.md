@@ -1,3 +1,7 @@
+---
+title: "How it works: skill levels L0–L4 and step-by-step hints"
+description: "Five skill levels from L0 (demonstrate) to L4 (automated). At L1–L3 a hook blocks AI-written code; at L2 help comes as a question, a pointer, then a sketch."
+---
 # How it works
 
 The harness consists of four Claude Code hooks, a skill record, and a few commands that only you run.

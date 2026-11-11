@@ -1,3 +1,7 @@
+---
+title: "AI and developer jobs: US, EU and Netherlands, to Nov 2026"
+description: "Since late 2022, US employment of 22–25-year-olds in AI-exposed jobs such as software development has lagged, through less hiring. Evidence to 7 Nov 2026."
+---
 # Generative AI and the labour market for software developers and programmers (US, EU, Netherlands), as of 7 November 2026
 
 > **Labels used on every finding.** Timing: **[NEW yyyy-mm-dd]** = first published between 1 May and 7 Nov 2026 (date checked on the source unless flagged); **[BG yyyy-mm]** = dated background from 2025 to April 2026. Design: **CAUSAL-DESIGN** (difference-in-differences, event study or a similar identification strategy; still observational, not an experiment), **CORRELATIONAL**, **DESCRIPTIVE**, **FORECAST**. Source type: **WP** = working paper (not peer-reviewed), **GOV** = government statistic, agency or central-bank publication, **IND** = industry report, **PRACT** = Dutch practitioner journal ESB (edited, not academic peer review), **PRESS**. **COI** = conflict of interest. "(unverified)" = only seen in search snippets or secondary coverage; I could not open the primary source. None of the core studies below was verified as peer-reviewed by 7 Nov 2026.

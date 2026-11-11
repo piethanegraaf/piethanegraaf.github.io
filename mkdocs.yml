@@ -3,6 +3,10 @@
 
 site_name: Leerharnas
 site_url: https://piethanegraaf.github.io/
+# The fallback description for pages without their own `description:` in the front matter.
+site_description: >-
+  Een gratis, open-source leerharnas voor Claude Code: hooks voorkomen dat de AI je
+  oefencode schrijft, hulp komt in stappen en een dashboard volgt je vaardigheden.
 docs_dir: docs
 site_dir: site
 strict: true
@@ -13,6 +17,8 @@ copyright: >-
 
 theme:
   name: material
+  # overrides/main.html: hreflang, page titles and JSON-LD. overrides/sitemap.xml: the sitemap.
+  custom_dir: overrides
   language: nl
   font:
     text: IBM Plex Sans
@@ -40,6 +46,10 @@ theme:
 
 plugins:
   - search
+  # Social cards: a preview image per page, plus og: and twitter: tags. They need Cairo,
+  # so they are only made in CI (CI=true); a local build skips them.
+  - social:
+      enabled: !ENV [CI, false]
   - i18n:
       docs_structure: folder
       fallback_to_default: true
@@ -55,6 +65,9 @@ plugins:
           name: English
           build: true
           site_name: Learning harness
+          site_description: >-
+            A free, open-source Claude Code setup for students learning to program. Hooks stop
+            the AI from writing practice code, help comes in steps, and a dashboard tracks skill levels.
           copyright: >-
             Code: AGPL-3.0 · Texts, docs and data: CC BY-NC 4.0 ·
             Made with help from Claude (Anthropic), see the AI statement
@@ -75,6 +88,11 @@ plugins:
                 - For researchers: researchers.md
             - About this project:
                 - AI statement: ai-statement.md
+
+  # The date of the last change per page, from git (CI checks out the full history).
+  # It has to come after i18n, which gives every page its locale.
+  - git-revision-date-localized:
+      type: date
 
 # Every item sits under a heading. The research notes are not in the menu:
 # they are linked from the literature review (and the notes overview).

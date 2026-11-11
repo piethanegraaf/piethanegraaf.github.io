@@ -2,11 +2,13 @@
 
 *Nederlands: [README.nl.md](README.nl.md)*
 
+**Learning harness for Claude Code: hooks stop the AI from writing your practice code, with skill levels, a progress dashboard and a literature review.** Documentation: https://piethanegraaf.github.io/en/
+
 A learning harness for [Claude Code](https://docs.claude.com/en/docs/claude-code/overview) that makes sure you learn to program **yourself**, even with an AI looking over your shoulder. It is for students, and for junior developers at work who do not want to stay junior because the AI does all the work.
 
 **The idea:** build a skill yourself first (L0–L3, hints instead of solutions), then delegate it to the AI (L4), and maintain it with short spaced reviews in your own work. Each part follows a principle with empirical support; whether the combination works has not been tested yet. Researchers are invited to test it in a randomized trial: see [For researchers](https://piethanegraaf.github.io/en/researchers/).
 
-**Site:** https://piethanegraaf.github.io/ · **Dashboard:** https://piethanegraaf.github.io/dashboard/ · **C# OOP cheat sheet:** https://piethanegraaf.github.io/cheatsheet/
+**Site:** https://piethanegraaf.github.io/en/ · **Dashboard:** https://piethanegraaf.github.io/dashboard/?lang=en · **C# OOP cheat sheet:** https://piethanegraaf.github.io/en/cheatsheet/
 
 ## What it does
 

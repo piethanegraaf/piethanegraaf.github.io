@@ -1,3 +1,7 @@
+---
+title: "GenAI and learning to program: evidence, May–Nov 2026"
+description: "Studies from 1 May to 7 Nov 2026 on AI and learning to program. The two largest university trials, both not peer-reviewed, point in opposite directions."
+---
 # New empirical evidence (1 May – 7 Nov 2026): generative AI and agentic coding assistants vs. learning to program, OOD, debugging/testing, and learning in higher education
 
 Compiled 7 Nov 2026. **Labels:** [PEER-REVIEWED] · [PREPRINT] (arXiv/SSRN) · [WORKING PAPER] (IZA/CEPR/EdWorkingPapers/NBER, not peer-reviewed) · [VENDOR] (conflict of interest) · [PRESS]. **IN WINDOW** means first public appearance between 1 May and 7 Nov 2026. **PRE-WINDOW** means context only, with its date given. arXiv IDs encode the submission year and month (2607.xxxxx = July 2026). "(snippet-level)" means the figure comes only from a search-engine summary, not a fetched primary page. Earlier studies (Bastani 2025, Shen & Tamkin 2026, Lehmann 2025, Kestin 2025, Fan 2025, Kosmyna 2025, Prather 2024, Kazemitabaar 2023–25, METR 2025) are deliberately not re-described. **Coverage limit:** ACM DL full texts (ICER/ITiCSE/L@S 2026) and journals such as Computers & Education, BJET, JCAL, CSE and Learning and Instruction were not browsed issue by issue. Everything below comes from targeted searches plus fetches of primary pages and PDFs.
