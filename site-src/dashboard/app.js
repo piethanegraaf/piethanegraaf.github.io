@@ -17,7 +17,7 @@
       kReviews: "Herhalingen (L4)", kReviewsSub: "klaar; je doet ze zelf als ze in je werk langskomen", kExam: "Tot de toets", kExamSub: "{date}", kNoExam: "geen datum",
       days: "{n} dagen", day: "1 dag", none: "–",
       levels: "Niveaus", levelsHint: "Hoeveel vaardigheden (en microvaardigheden) op elk niveau staan. Bij een open plaatsing probeer je eerst zelf, met de hintladder van L2; de eerste taak bepaalt het niveau. Wijs een niveau aan voor uitleg.", skillsN: "{n} vaardigheden",
-      placementGroup: "Plaatsing open", openChip: "Plaatsing open · L2-ladder",
+      placementGroup: "Start · plaatsing open", openChip: "Plaatsing open · L2-ladder",
       // What each level means, why, the evidence (strength as in the literature review, §2.11) and the step to the next level.
       levelInfo: {
         L0: { what: "Claude doet het voor met een uitgewerkt voorbeeld in stappen; jij legt het uit en voorspelt de uitvoer.",
@@ -37,11 +37,16 @@
           src: [["Fitts & Posner 1967; Bainbridge 1983", "moderate"], ["herhalen met tussenpozen: Cepeda e.a. 2008", "strong"]], next: "Terug naar L3: twee herhalingen op rij mislukt." },
         open: { what: "Nieuwe vaardigheid: je probeert het eerst zelf, met de hintladder van L2.",
           why: "eerst proberen, dan hulp. Zo krijg je niet meer hulp dan je nodig hebt.",
-          src: [["Sinha & Kapur 2021; Kalyuga e.a. 2003", "moderate"]], next: "Je eerste taak bepaalt het niveau: trede 0 → L3, 1–2 → L2, 3–4 → L1, 5 → L0." },
+          src: [["Sinha & Kapur 2021; Kalyuga e.a. 2003", "moderate"]], next: "Je eerste taak bepaalt het niveau: trede 5 → L0, 3–4 → L1, 1–2 → L2, 0 → L3." },
       },
       why: "Waarom", evidence: "Bewijs", strength: { strong: "sterk", moderate: "matig" },
       levelsInfo: "Wat betekenen de niveaus?",
-      levelsInfoIntro: "De niveaus volgen cognitive apprenticeship (Collins, Brown & Newman 1989): eerst voordoen, dan hulp die stap voor stap afneemt, tot je het zelf kunt. Bovenaan staat automatiseren, pas als een vaardigheid vastzit (Fitts & Posner 1967). Omhoog beslis jij, omlaag volgt het bewijs.",
+      levelsInfoIntro: "De niveaus volgen cognitive apprenticeship (Collins, Brown & Newman 1989): eerst voordoen, dan hulp die stap voor stap afneemt, tot je het zelf kunt. Bovenaan staat automatiseren, pas als een vaardigheid vastzit (Fitts & Posner 1967).",
+      // The route from the start to L4: one step per column, then how you go up and down.
+      route: "Zo kom je van L0 naar L4", perLevel: "Per niveau", start: "Start", startName: "plaatsing open",
+      upkeep: "Onderhoud: een herhaling als de vaardigheid in je werk langskomt.",
+      up: "Omhoog", upText: "de harnas stelt het voor, direct na de uitleg die het criterium haalt, en jij zegt \"ja, doorzetten\". Het bewijs zijn je laatste 10 uitgelegde taken sinds de vorige wijziging. Vanaf L2 kan een sprong, bijvoorbeeld L2 → L4 met de transfertaak.",
+      down: "Omlaag", downText: "valt het bewijs tegen (minder dan 70% gelukt over minstens 3 taken, de laatste 2 mislukt, of 2 herhalingen op rij mislukt), dan ga je één niveau terug. Automatisch als autoDemote aan staat, anders als advies.",
       levelsInfoMore: "De sterkte van het bewijs komt uit het literatuuronderzoek. Meer:",
       howLink: "Hoe het werkt", howHref: "../how-it-works/#niveaus-per-vaardigheid",
       researchLink: "de autonomieladder (§5.2)", researchHref: "../research/#52-de-autonomieladder-per-vaardigheid",
@@ -85,7 +90,7 @@
       kReviews: "Reviews (L4)", kReviewsSub: "ready; you do them yourself when they come by in your work", kExam: "Until the exam", kExamSub: "{date}", kNoExam: "no date",
       days: "{n} days", day: "1 day", none: "–",
       levels: "Levels", levelsHint: "How many skills (and microskills) are at each level. With an open placement you try first, with the L2 hint ladder; the first task sets the level. Point at a level for an explanation.", skillsN: "{n} skills",
-      placementGroup: "Placement open", openChip: "Placement open · L2 ladder",
+      placementGroup: "Start · placement open", openChip: "Placement open · L2 ladder",
       levelInfo: {
         L0: { what: "Claude demonstrates with a worked example in steps; you explain it and predict the output.",
           why: "a novice who has to search for everything has no room left to learn.",
@@ -104,11 +109,15 @@
           src: [["Fitts & Posner 1967; Bainbridge 1983", "moderate"], ["spaced reviews: Cepeda et al. 2008", "strong"]], next: "Back to L3: two reviews in a row failed." },
         open: { what: "New skill: you try it yourself first, with the L2 hint ladder.",
           why: "attempt first, then help, so you get no more help than you need.",
-          src: [["Sinha & Kapur 2021; Kalyuga et al. 2003", "moderate"]], next: "Your first task sets the level: rung 0 → L3, 1–2 → L2, 3–4 → L1, 5 → L0." },
+          src: [["Sinha & Kapur 2021; Kalyuga et al. 2003", "moderate"]], next: "Your first task sets the level: rung 5 → L0, 3–4 → L1, 1–2 → L2, 0 → L3." },
       },
       why: "Why", evidence: "Evidence", strength: { strong: "strong", moderate: "moderate" },
       levelsInfo: "What do the levels mean?",
-      levelsInfoIntro: "The levels follow cognitive apprenticeship (Collins, Brown & Newman 1989): first demonstrate, then help that fades step by step, until you can do it yourself. Automation sits at the top, only once a skill is mastered (Fitts & Posner 1967). You decide up; the evidence decides down.",
+      levelsInfoIntro: "The levels follow cognitive apprenticeship (Collins, Brown & Newman 1989): first demonstrate, then help that fades step by step, until you can do it yourself. Automation sits at the top, only once a skill is mastered (Fitts & Posner 1967).",
+      route: "How you get from L0 to L4", perLevel: "Per level", start: "Start", startName: "placement open",
+      upkeep: "Upkeep: a review when the skill comes by in your work.",
+      up: "Up", upText: "the harness proposes it right after the explanation that meets the criterion, and you say \"yes, promote\". The evidence is your last 10 explained tasks since the previous change. From L2 a jump is possible, for example L2 → L4 with the transfer task.",
+      down: "Down", downText: "if the evidence falls short (under 70% solved over at least 3 tasks, the last 2 failed, or 2 reviews in a row failed), you go back one level. Automatically when autoDemote is on, otherwise as advice.",
       levelsInfoMore: "The strength of the evidence comes from the literature review. More:",
       howLink: "How it works", howHref: "../en/how-it-works/#levels-per-skill",
       researchLink: "the Autonomy Ladder (§5.2)", researchHref: "../en/research/#52-the-autonomy-ladder-per-skill",
@@ -342,9 +351,11 @@
   function levelsCard() {
     const skills = data.skills.filter((s) => s.kind !== "zone" && inScope(s.id));
     const isOpen = (s) => s.placement === "pending";
+    // The placement comes first: every new skill starts there, before any level (it is not below L0:
+    // the first task can place a skill straight on L3).
     const counts = [
-      ...LEVELS.map((l) => ({ l, cls: `lv${LEVELS.indexOf(l)}`, label: `${l} ${levelName(l)}`, ids: skills.filter((s) => !isOpen(s) && s.level === l).map((s) => s.id) })),
       { l: "open", cls: "open", label: t("placementGroup"), ids: skills.filter(isOpen).map((s) => s.id) },
+      ...LEVELS.map((l) => ({ l, cls: `lv${LEVELS.indexOf(l)}`, label: `${l} ${levelName(l)}`, ids: skills.filter((s) => !isOpen(s) && s.level === l).map((s) => s.id) })),
     ];
     const total = skills.length || 1;
     const bar = el("div", { class: "segbar", role: "group", "aria-label": counts.map((c) => `${c.label}: ${c.ids.length}`).join(", ") });
@@ -358,20 +369,27 @@
       bar.append(block);
     }
     const legend = el("ul", { class: "legend" }, counts.filter((c) => c.l !== "open" || c.ids.length).map((c) =>
-      withLevelTip(el("li", { tabindex: "0" }, el("span", { class: `sw ${c.cls}`, "aria-hidden": "true" }), c.label), c.l)));
+      withLevelTip(el("li", { tabindex: "0", class: c.l === "open" ? "start" : null }, el("span", { class: `sw ${c.cls}`, "aria-hidden": "true" }), c.label), c.l)));
     const body = el("div", {}, el("div", { class: "muted", text: t("skillsN", { n: skills.length }) }), bar, legend);
     return card(t("levels"), t("levelsHint"), body, () => table([t("level"), t("name"), t("count"), t("skillsCol")],
       counts.map((c) => [c.l === "open" ? "–" : c.l, c.l === "open" ? c.label : levelName(c.l), String(c.ids.length), c.ids.join(", ") || t("none")]), [2]), "levels", levelsInfo());
   }
 
-  // "What do the levels mean?": every level with its meaning, the reason, the evidence and the next step.
-  // A <details>, so it is out of the way; its open state survives a re-render.
+  // "What do the levels mean?": the route from the start to L4, then every level with its meaning, the
+  // reason, the evidence and the next step. A <details>, so it is out of the way; its open state survives a re-render.
   let levelsInfoOpen = false;
   function levelsInfo() {
+    const steps = ["open", ...LEVELS];
+    const chipOf = (l, text) => el("span", { class: `chip ${l === "open" ? "open" : `lv${LEVELS.indexOf(l)}`}`, text });
+    // The route: one step per column (one per row on a narrow screen), each with how you get to the next one.
+    const routeStep = (l, i) => el("li", {},
+      el("div", { class: "head" }, chipOf(l, l === "open" ? t("start") : l), i < steps.length - 1 ? el("span", { class: "line", "aria-hidden": "true" }) : null),
+      el("strong", { text: l === "open" ? t("startName") : levelName(l) }),
+      el("p", { class: "crit", text: l === "L4" ? t("upkeep") : levelInfo(l).next }));
     const item = (l) => {
       const i = levelInfo(l);
       return el("li", {},
-        el("div", { class: "li-head" }, el("span", { class: `chip ${l === "open" ? "open" : `lv${LEVELS.indexOf(l)}`}`, text: l === "open" ? t("placementGroup") : `${l} ${levelName(l)}` })),
+        el("div", { class: "li-head" }, chipOf(l, l === "open" ? t("placementGroup") : `${l} ${levelName(l)}`)),
         el("p", { text: i.what }),
         el("p", {}, el("span", { class: "label", text: `${t("why")}: ` }), i.why),
         i.src.map((s) => el("p", { class: "src", text: evidenceText(s) })),
@@ -381,7 +399,12 @@
     return el("details", { class: "level-info", open: levelsInfoOpen, ontoggle: (e) => { levelsInfoOpen = e.currentTarget.open; } },
       el("summary", { text: t("levelsInfo") }),
       el("p", { class: "intro", text: t("levelsInfoIntro") }),
-      el("ol", {}, [...LEVELS, "open"].map(item)),
+      el("h3", { text: t("route") }),
+      el("ol", { class: "route" }, steps.map(routeStep)),
+      el("p", { class: "updown" }, el("strong", { text: `${t("up")}: ` }), t("upText")),
+      el("p", { class: "updown" }, el("strong", { text: `${t("down")}: ` }), t("downText")),
+      el("h3", { text: t("perLevel") }),
+      el("ol", { class: "levels-list" }, steps.map(item)),
       el("p", { class: "more" }, `${t("levelsInfoMore")} `, link(t("howHref"), t("howLink")), " · ", link(t("researchHref"), t("researchLink")), " · ", link(t("principlesHref"), t("principlesLink"))));
   }
 
