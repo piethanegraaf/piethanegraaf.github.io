@@ -1,3 +1,7 @@
+---
+title: "AI-written code: share, productivity and cost, to Nov 2026"
+description: "Firms claim 50–80% of new code is AI-written; the only peer-reviewed independent estimate is about 29% at the end of 2024. Evidence up to 7 Nov 2026."
+---
 # AI coding economics: share of AI-written code, productivity, quality/security, capability, cost and employer expectations (evidence up to 7 November 2026)
 
 Evidence labels used throughout: **[A]** independent measurement (RCT, field or quasi-experiment, telemetry, repository study); **[A-vendor]** measurement run or published by a party that sells the tool or a competing/related product; **[B]** large developer survey (self-report); **[C]** vendor or executive claim. Retrieval status: "primary read" = I read the primary page; "via secondary" = primary not retrievable (HTTP 403 or landing page only), figures come from press/aggregators; "search excerpt" = figure seen only in a search-result excerpt, not on a page I opened. **COI note:** these notes were compiled by Claude, an Anthropic model. Items where Anthropic or a Claude model is a party are flagged **[COI-Anthropic]**.

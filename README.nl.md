@@ -2,6 +2,8 @@
 
 *English: [README.md](README.md)*
 
+**Leerharnas voor Claude Code: hooks voorkomen dat de AI je oefencode schrijft, met niveaus per vaardigheid, een voortgangsdashboard en een literatuuronderzoek.** Documentatie: https://piethanegraaf.github.io/
+
 Een leerharnas voor [Claude Code](https://docs.claude.com/en/docs/claude-code/overview) die zorgt dat je **zelf** leert programmeren, ook als er een AI meekijkt. De harnas weet per vaardigheid hoe ver je bent en past de hulp van de AI daarop aan: hints in plaats van oplossingen zolang je leert, en korte herhalingen als je iets beheerst.
 
 **Site:** https://piethanegraaf.github.io/ · **Dashboard:** https://piethanegraaf.github.io/dashboard/ · **C# OOP-cheat sheet:** https://piethanegraaf.github.io/cheatsheet/

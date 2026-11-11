@@ -1,3 +1,7 @@
+---
+title: "Learning harness for Claude Code: practise coding yourself"
+description: "Free Claude Code setup for students: hooks stop the AI from writing your practice code, hints come in steps, and a dashboard tracks your skills."
+---
 # Learning harness
 
 A learning harness for [Claude Code](https://docs.claude.com/en/docs/claude-code/overview) that makes sure you learn to program **yourself**, even with an AI looking over your shoulder.

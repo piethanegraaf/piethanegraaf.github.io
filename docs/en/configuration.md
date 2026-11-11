@@ -1,3 +1,7 @@
+---
+title: "Configuration and privacy: settings, skill maps, data"
+description: "Change the harness settings, make a skill map for your own course, and see which learning data stays local and what the filtered export may publish."
+---
 # Configuration and privacy
 
 ## Settings

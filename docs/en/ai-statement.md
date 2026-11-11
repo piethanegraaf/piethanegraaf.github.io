@@ -1,3 +1,7 @@
+---
+title: "AI statement: how Claude helped build this project"
+description: "What Claude (Anthropic) wrote for this project, what the learner checked, and why the learning data and reflections on the dashboard are the learner's own."
+---
 # AI statement
 
 The learning harness, the dashboard, this documentation and the research were made with help from **Claude** (Anthropic), in Claude Code.

@@ -1,3 +1,7 @@
+---
+title: "AI-era developer skills, education and assessment, 2026"
+description: "Employers reward AI fluency combined with human judgement, not AI fluency alone. Notes on skills, Dutch and EU education and assessment, to 7 Nov 2026."
+---
 # AI-era developer skills, computing-education and assessment responses (NL/EU), and deskilling evidence — research notes as of 7 November 2026
 
 Labels used: **[RCT]**, **[Observational]**, **[Survey]**, **[Job-posting analysis]**, **[Payroll-data analysis]**, **[Qualitative]**, **[Policy document]**, **[Framework / expert opinion]**, **[Secondary report]** (journalism or aggregator summarizing a primary source). **COI** marks a conflict of interest. "Window" means 1 May – 7 Nov 2026. "Search-snippet level" means I saw the claim in a search result or summary but could not open the primary text. Treat those claims as weaker.

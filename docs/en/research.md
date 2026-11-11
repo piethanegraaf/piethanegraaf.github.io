@@ -1,3 +1,7 @@
+---
+title: "Learning to code with AI: literature review (2026)"
+description: "AI that does your thinking while you practise lowers what you can do without it; AI used as a tutor does not. A 2026 review with a Claude Code setup."
+---
 # Learning to Code (and OOD) with AI: Literature Review, Risk Assessment & a Learning-Preserving Claude Code Setup
 
 *Prepared 7 November 2026 · revised 8 November 2026, rewritten for students and teachers on 10 November 2026 and updated with new literature the same day (see §11) · For students who learn programming and Object-Oriented Design (OOD) with AI, and for their teachers*

@@ -14,7 +14,10 @@ test("file names: forbidden types and data are BLOKKEER, images are TWIJFEL, cod
   }
   assert.ok(has(nameRules("docs/img/screen.png"), "TWIJFEL", "file.image"));
   assert.ok(has(nameRules("tool.exe"), "BLOKKEER", "file.unknown"));
-  for (const f of ["harness/hooks/lib.mjs", "docs/nl/index.md", "mkdocs.yml", "requirements.txt", "LICENSE-docs", ".gitignore", "site-src/dashboard/app.js"]) {
+  // XML only as a sitemap, by name.
+  for (const f of ["data/export.xml", "site-src/feed.xml", "sitemap.xml.bak", "site-src/notasitemap.xml"]) assert.ok(has(nameRules(f), "BLOKKEER", "file.unknown"), f);
+  for (const f of ["harness/hooks/lib.mjs", "docs/nl/index.md", "mkdocs.yml", "requirements.txt", "LICENSE-docs", ".gitignore", "site-src/dashboard/app.js",
+    "overrides/sitemap.xml", "site-src/sitemap-tools.xml"]) {
     assert.deepEqual(nameRules(f), [], f);
   }
 });

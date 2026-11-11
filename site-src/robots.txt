@@ -1,0 +1,33 @@
+# robots.txt for https://piethanegraaf.github.io/
+#
+# Search engines, and the bots that fetch a page when someone asks an AI assistant a question,
+# may crawl everything. OAI-SearchBot, ChatGPT-User, Claude-SearchBot, Claude-User and
+# PerplexityBot are not named below, so they follow this group.
+User-agent: *
+Allow: /
+
+# AI training crawlers: blocked. A crawler follows the most specific group that names it.
+# Google-Extended also covers grounding in the Gemini app, so that app does not cite this site;
+# decided on 11 November 2026 to block it anyway. Google Search (and its AI Overviews) uses
+# Googlebot and is not affected. The licence (CC BY-NC 4.0) does not keep crawlers out; this file
+# only works for crawlers that respect it.
+User-agent: GPTBot
+Disallow: /
+
+User-agent: ClaudeBot
+Disallow: /
+
+User-agent: Google-Extended
+Disallow: /
+
+User-agent: Applebot-Extended
+Disallow: /
+
+User-agent: CCBot
+Disallow: /
+
+User-agent: meta-externalagent
+Disallow: /
+
+Sitemap: https://piethanegraaf.github.io/sitemap.xml
+Sitemap: https://piethanegraaf.github.io/sitemap-tools.xml

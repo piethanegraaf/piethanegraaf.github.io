@@ -1,3 +1,7 @@
+---
+title: "Progress dashboard: skill levels, tasks, reflections"
+description: "What the progress dashboard shows per skill, from levels and tasks to reviews and reflections, and how to publish your own data with a filtered export."
+---
 # Updating the dashboard
 
 ## What the dashboard shows

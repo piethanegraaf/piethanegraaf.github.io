@@ -1,3 +1,7 @@
+---
+title: "Research notes: evidence on AI, coding and education"
+description: "Dated working notes behind the literature review: new evidence on AI and learning to program, AI-written code, developer jobs, skills and assessment."
+---
 # Research notes
 
 These are the working notes behind the [research](../research.md): what the research agents found, with the source and the strength of the evidence for each claim.

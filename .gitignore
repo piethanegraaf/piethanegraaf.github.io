@@ -5,6 +5,8 @@ site/
 .venv/
 __pycache__/
 node_modules/
+# Cache of the social plugin (cards and the font it downloads)
+.cache/
 
 # Local only, never commit: plans, personal learning data, secrets
 *.local.md
