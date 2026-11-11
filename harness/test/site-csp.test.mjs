@@ -2,7 +2,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import crypto from "node:crypto";
-import { cspFor, addCsp, ANALYTICS_ENDPOINT } from "../site-csp.mjs";
+import { cspFor, addCsp, ANALYTICS_ENDPOINT, isSearchVerification } from "../site-csp.mjs";
 
 const sha = (s) => `'sha256-${crypto.createHash("sha256").update(s, "utf8").digest("base64")}'`;
 
@@ -35,4 +35,13 @@ test("addCsp puts the meta tag first in <head>, and leaves pages with a CSP alon
   const out = addCsp(`<!doctype html><html><head><meta charset="utf-8"><script>x()</script></head></html>`);
   assert.match(out, /<head><meta http-equiv="Content-Security-Policy" content="default-src 'self'/);
   assert.equal(addCsp(`<head><meta http-equiv="Content-Security-Policy" content="default-src 'self'"></head>`), null);
+});
+
+test("a Search Console verification file is recognised only by its exact name and content", () => {
+  const name = "google0123456789abcdef.html";
+  assert.ok(isSearchVerification(`site/${name}`, `google-site-verification: ${name}\n`));
+  assert.ok(isSearchVerification(`site\\${name}`, `google-site-verification: ${name}`), "Windows path");
+  assert.ok(!isSearchVerification(`site/${name}`, "google-site-verification: google0000000000000000.html"), "other name in the content");
+  assert.ok(!isSearchVerification(`site/${name}`, `<script>alert(1)</script>google-site-verification: ${name}`), "extra content");
+  assert.ok(!isSearchVerification("site/index.html", "google-site-verification: index.html"), "not a verification name");
 });
