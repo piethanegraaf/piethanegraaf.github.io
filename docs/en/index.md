@@ -23,7 +23,7 @@ Junior developers face the same trap: the agent gets the work done, but the skil
 
 ## What do you think? {#poll}
 
-<div class="poll" data-poll="judge-code" data-t-loading="Loading the results…" data-t-results="Results so far: {n} votes" data-t-yours="your vote" data-t-delay="The totals can be a few hours behind." data-t-unavailable="Thanks for voting. The results cannot be shown right now." data-t-thanks="Thanks!">
+<div class="poll" data-poll="judge-code" data-t-loading="Loading the results…" data-t-results="Results so far: {n} votes" data-t-results-one="Results so far: 1 vote" data-t-yours="your vote" data-t-delay="New votes can take a few hours to show up in the totals." data-t-unavailable="Thanks for voting. The results cannot be shown right now." data-t-thanks="Thanks!">
 <p class="poll__premise">AI already drafts most new code at AI-forward companies.</p>
 <p class="poll__question" id="poll-question">Is learning to judge code (reviewing, testing, debugging, design) still worth your time, or will AI take that over within a year too?</p>
 <div class="poll__answers" role="group" aria-labelledby="poll-question">

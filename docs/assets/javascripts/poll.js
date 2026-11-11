@@ -1,7 +1,8 @@
 // The poll on the home page. The question, the answers and the texts are in the page itself (docs/*/index.md),
 // so search engines and AI assistants can read them. This script only:
 // - counts a vote as an anonymous GoatCounter event (count.js, no cookies), one vote per browser;
-// - shows the totals from GoatCounter's public counter (they can be a few hours behind);
+// - shows the totals from GoatCounter's public counter, which caches them for up to four hours, so the
+//   visitor's own vote is added on screen as long as the counter does not show it yet;
 // - then asks for the visitor's role, counted the same way.
 // Text goes into the page with textContent only. Without GoatCounter or storage the poll still works.
 (function () {
@@ -29,7 +30,11 @@
 
   function fetchCount(a) {
     return fetch(COUNTER + encodeURIComponent(answerPath(a)) + ".json", { credentials: "omit" })
-      .then(function (r) { return r.ok ? r.json() : 0; })
+      .then(function (r) {
+        if (r.status === 404) return 0;  // no votes for this answer yet
+        if (!r.ok) throw new Error("counter " + r.status);
+        return r.json();
+      })
       .then(function (j) { return j ? parseInt(String(j.count).replace(/[^0-9]/g, ""), 10) || 0 : 0; });
   }
 
@@ -40,7 +45,8 @@
     return e;
   }
 
-  // justVoted: the counter is cached for hours, so the vote that was just cast is added here once.
+  // The counter is cached for hours. The vote that was just cast is added once; on a later visit the
+  // visitor's own vote is added as long as the counter still shows 0 for that answer.
   function showResults(mine, justVoted) {
     answers.forEach(function (b) { b.disabled = true; b.setAttribute("aria-pressed", b.getAttribute("data-answer") === mine ? "true" : "false"); });
     poll.classList.add("poll--voted");
@@ -49,11 +55,13 @@
     result.appendChild(el("p", "poll__status", t("loading")));
     Promise.all(answers.map(function (b) { return fetchCount(b.getAttribute("data-answer")); }))
       .then(function (counts) {
-        if (justVoted) counts = counts.map(function (n, i) { return answers[i].getAttribute("data-answer") === mine ? n + 1 : n; });
+        counts = counts.map(function (n, i) {
+          return answers[i].getAttribute("data-answer") === mine && (justVoted || n === 0) ? n + 1 : n;
+        });
         var total = counts.reduce(function (a, b) { return a + b; }, 0);
         while (result.firstChild) result.removeChild(result.firstChild);
         if (!total) { result.appendChild(el("p", "poll__status", t("unavailable"))); return; }
-        result.appendChild(el("p", "poll__status", t("results").replace("{n}", String(total))));
+        result.appendChild(el("p", "poll__status", total === 1 && t("results-one") ? t("results-one") : t("results").replace("{n}", String(total))));
         var list = el("ul", "poll__bars");
         answers.forEach(function (b, i) {
           var pct = Math.round((counts[i] / total) * 100);
