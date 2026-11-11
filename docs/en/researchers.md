@@ -1,4 +1,5 @@
 ---
+title: "For researchers: test the learning harness in a trial"
 description: An invitation to test the learning harness for Claude Code in a randomized trial, with hypotheses, arms, outcomes, and what the harness already logs.
 ---
 

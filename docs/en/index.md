@@ -1,6 +1,6 @@
 ---
 title: "Learning harness for Claude Code: practise coding yourself"
-description: "Free Claude Code setup for students: hooks stop the AI from writing your practice code, hints come in steps, and a dashboard tracks your skills."
+description: "Free Claude Code setup for students and junior developers: hooks stop the AI from writing your practice code, hints come in steps, a dashboard tracks skills."
 ---
 # Learning harness
 

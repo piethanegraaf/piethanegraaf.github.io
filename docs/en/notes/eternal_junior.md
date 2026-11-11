@@ -1,4 +1,5 @@
 ---
+title: "The eternal-junior problem: AI agents and junior developers"
 description: Research notes on the eternal-junior problem - junior developers who stay junior when an AI agent does the work - with studies, analogies from other professions, and practitioner sources.
 ---
 

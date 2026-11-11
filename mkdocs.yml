@@ -5,8 +5,8 @@ site_name: Leerharnas
 site_url: https://piethanegraaf.github.io/
 # The fallback description for pages without their own `description:` in the front matter.
 site_description: >-
-  Een gratis, open-source leerharnas voor Claude Code: hooks voorkomen dat de AI je
-  oefencode schrijft, hulp komt in stappen en een dashboard volgt je vaardigheden.
+  Een gratis, open-source leerharnas voor Claude Code, voor studenten en junior developers: hooks
+  voorkomen dat de AI je oefencode schrijft, hulp komt in stappen en een dashboard volgt je vaardigheden.
 docs_dir: docs
 site_dir: site
 strict: true
@@ -66,7 +66,7 @@ plugins:
           build: true
           site_name: Learning harness
           site_description: >-
-            A free, open-source Claude Code setup for students learning to program. Hooks stop
+            A free, open-source Claude Code setup for students and junior developers. Hooks stop
             the AI from writing practice code, help comes in steps, and a dashboard tracks skill levels.
           copyright: >-
             Code: AGPL-3.0 · Texts, docs and data: CC BY-NC 4.0 ·
