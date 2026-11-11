@@ -11,6 +11,7 @@
 //   node .claude/hooks/skill.mjs correct <task-id> schrap|void "reason"        (void one specific task)
 //   node .claude/hooks/skill.mjs override <id|*> <minutes> "<reason>"
 //   node .claude/hooks/skill.mjs setting <key> <value>     (examDate, stuckTimerMinutes, idleMinutes, defaultLevel, course, language)
+//   node .claude/hooks/skill.mjs paths <id> add|remove "<glob>"   (which exercise folders belong to a skill)
 //   node .claude/hooks/skill.mjs replay <transcript.jsonl> [--dry-run]   (recover explanations a hook missed)
 // The guard blocks Claude from running any command except list and status.
 // There is deliberately NO command to mark a task as explained: that only happens via
@@ -21,7 +22,7 @@ import path from "node:path";
 import {
   loadSkills, saveSkills, findSkill, addOverride, loadOverrides, logEvent, today, taskStats,
   LEVELS, levelName, isMicro, microsOf, familyIds, familyOf, scheduleOnLevel, scheduleOnReview, dueReviews,
-  pendingTasks, allTasks, logTask, levelAdvice, recentWins, pickSession, loadSession, saveSession, touch, startTask,
+  pendingTasks, allTasks, logTask, levelAdvice, recentWins, pickSession, loadSession, saveSession, touch, taskRung, taskLogged,
   lapseTasks, afterTask, isReviewDue, isPlacementPending, effectiveLevel, adviceCommand, openOffer,
   activeMinutesSince, readTranscript, isLearnerEntry, learnerEntryText, entryText, checkExplanation, t, language,
 } from "./lib.mjs";
@@ -144,18 +145,22 @@ switch (cmd) {
     const s = need(id);
     const sid = pickSession(familyIds(data, familyOf(s)), data);
     const st = sid ? touch(loadSession(sid), Date.now(), data) : null;
-    // All help since the last logged task counts, whatever skill the session detected (see check.mjs).
-    const maxRung = st?.maxRung ?? 0;
+    // All help since the last logged task counts, whatever skill the session detected (see check.mjs),
+    // plus help in the review of the previous task when it was about this concept (setup review of
+    // 11 Nov, S3). `done` reports finished work, so the help since the last task is not dropped here:
+    // work without code (design, UML) gives no other signal, and dropping it would hide real help (R2).
+    const { rung: maxRung, reviewRung } = st ? taskRung(data, st, s.id) : { rung: 0, reviewRung: 0 };
     const minutes = st ? activeMinutesSince(st, st.taskStartedActive) : null;
     // A task of another family: the learner started another exercise, so open tasks lapse (S1).
     const lapsed = lapseTasks("other-exercise", (x) => familyOf(findSkill(data, x.skill)) === familyOf(s), sid);
-    const task = logTask({ skill: s.id, success: maxRung < 5, maxRung, minutes, source: "done", what: what.join(" ") || undefined, session: sid, level: effectiveLevel(data, s) });
+    const task = logTask({ skill: s.id, success: maxRung < 5, maxRung, minutes, source: "done", what: what.join(" ") || undefined, session: sid, level: effectiveLevel(data, s),
+      reviewRung: reviewRung > (st?.maxRung ?? 0) ? reviewRung : 0 });
     const after = afterTask(data, s.id, task);
     if (st) {
       // The family of this task is what the learner works on now (setup review 3.3).
       st.folderSkill = familyOf(s); st.folderSkillAt = Date.now();
       if (after.pending) st.demotionPending = after.pending;
-      startTask(st);
+      taskLogged(st, task);
       saveSession(sid, st);
     }
     console.log(t("cli.done", { id: s.id, tid: task.tid, rung: maxRung }));
@@ -244,6 +249,30 @@ switch (cmd) {
     const o = addOverride(id, minutes, reason.join(" "));
     logEvent({ type: "override", skill: id, minutes, reason: o.reason });
     console.log(t("cli.override.done", { id, until: new Date(o.until).toLocaleTimeString(language() === "en" ? "en-GB" : "nl-NL") }));
+    break;
+  }
+  case "paths": {
+    // Which exercise folders belong to a skill (setup review of 11 Nov, S5). The folder decides the
+    // skill of a task and the level the guard uses, so a wrong mapping is fixed here, by the learner.
+    const [id, action, glob] = args;
+    if (!id || !["add", "remove"].includes(action) || !glob) exit("cli.paths.usage");
+    const s = need(id);
+    if (isMicro(s)) exit("cli.paths.micro", { id: s.id, parent: s.parent });
+    const g = String(glob).trim().replace(/\\/g, "/");
+    if (!g || g.startsWith("/") || /^[a-z]:/i.test(g) || g.split("/").includes("..") || /[\r\n"<>|]/.test(g)) exit("cli.paths.bad", { glob });
+    const list = s.paths ?? [];
+    if (action === "add") {
+      if (list.includes(g)) exit("cli.paths.exists", { id: s.id, glob: g });
+      s.paths = [...list, g];
+    } else {
+      if (!list.includes(g)) exit("cli.paths.missing", { id: s.id, glob: g, list: list.join(", ") || "-" });
+      s.paths = list.filter((x) => x !== g);
+    }
+    saveSkills(data);
+    logEvent({ type: "paths", skill: s.id, action, glob: g });
+    console.log(t(action === "add" ? "cli.paths.added" : "cli.paths.removed", { id: s.id, glob: g, list: s.paths.join(", ") || "-" }));
+    const others = action === "add" ? data.skills.filter((x) => x !== s && (x.paths ?? []).includes(g)).map((x) => x.id) : [];
+    if (others.length) console.log(t("cli.paths.also", { list: others.join(", "), glob: g }));
     break;
   }
   case "setting": {

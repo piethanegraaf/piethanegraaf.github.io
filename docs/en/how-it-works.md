@@ -64,14 +64,20 @@ If you still want Claude to do something, you set an override yourself: `! node 
 
 ## Tasks and explanations in your own words
 
+**A task begins** when you start new work. The harness only goes by fixed signals, never by a keyword: code changed in another exercise folder, `check.mjs` in another folder, or the full name of another exercise folder (such as `10-artsen-en-patienten`) or a `#id` of another skill family in your message. Then the hint ladder and the task time start again. Ordinary help since the previous task was for work you did not finish: it does not count for the new task, but it is logged as `help-dropped`, so you can still see it.
+
+**Run `check.mjs` first.** When you pick an exercise, Claude gives you `! node .claude/hooks/check.mjs <folder>`. Run it before you write code: that first run is the start. Did you write the code first, and is the first run all green at once? Then it still counts as a task, as long as you changed the code in this session.
+
 A task is logged when a test goes from red to green (`check.mjs`), when you log it yourself (`done`), or when you say in the chat that the tests pass. It only counts after an explanation **in your own words**, with two keys:
 
-1. Claude judges the content and writes `[explain-ok <tid>]` or `[explain-no <tid>]`.
-2. The Stop hook checks your message: at least 12 words outside code, a *why* (because, so that, otherwise …), and not copied from Claude's text.
+1. Claude judges the content and writes `[explain-ok <tid>]` or `[explain-no <tid>]`. The question depends on what happened. After a failed attempt (red, a compile error or a hint): why does it work now, and why did the first attempt not? Green at once: one question about the principle of the exercise. Claude keeps asking until the principle is right.
+2. The Stop hook checks your own words: **all your messages since the task was logged, together**. An answer in three short messages counts as one. Together they need at least 12 words outside code, a *why* (because, so that, otherwise …), and they must not be copied from Claude's text. A message from before the task was logged does not count.
 
 The explanation belongs **right after** the green. A next task in the same folder may come first, and one message may explain several tasks. If you start another exercise, or the session ends, the task **lapses**: it does not count and shows up on the dashboard as skipped. If an approved explanation got lost through a harness bug, you recover it with `replay`.
 
 A test that was green once, turned red and is green again is a **repaired regression** and does not count as a new task.
+
+**A review after a task** is optional. Claude offers it with a topic and a time estimate, and you choose. After one wrong answer, or when you say you do not get it, Claude gives the concept right away instead of another question. Help in a review is marked `[review-rung N #id]`, with the id of the concept. It does not count for your next task about something else, but it does for the next task about the same concept: the same id, its parent skill or one of its microskills. Without a valid id, or after you started new work, it counts as an ordinary rung. Whatever stays open becomes a proposed microskill.
 
 ## Promotion and reviews
 

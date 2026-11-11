@@ -1,6 +1,7 @@
 {
   "schema": 1,
   "generatedAt": "2026-11-10",
+  "exportedAt": "2026-11-10T16:00:00.000Z",
   "course": "Object-Oriented Design (C#)",
   "language": "nl",
   "examDate": "2027-01-20",
@@ -15,6 +16,10 @@
       "parent": null,
       "kind": "zone",
       "title": "Uitgewerkte voorbeelden (AI mag hier schrijven)",
+      "titles": {
+        "nl": "Uitgewerkte voorbeelden (AI mag hier schrijven)",
+        "en": "Worked examples (the AI may write here)"
+      },
       "level": "L0",
       "nextReview": null,
       "intervalIndex": 0,
@@ -28,6 +33,10 @@
       "parent": null,
       "kind": null,
       "title": "C#-basis: methoden, strings, lijsten, lussen",
+      "titles": {
+        "nl": "C#-basis: methoden, strings, lijsten, lussen",
+        "en": "C# basics: methods, strings, lists, loops"
+      },
       "level": "L3",
       "nextReview": null,
       "intervalIndex": 0,
@@ -40,6 +49,10 @@
           "from": "L2",
           "to": "L3",
           "note": "5/6 gelukt",
+          "notes": {
+            "nl": "5/6 gelukt",
+            "en": "5/6 solved"
+          },
           "auto": false,
           "placement": false
         }
@@ -50,6 +63,7 @@
       "parent": "cs.basis",
       "kind": null,
       "title": "lusgrenzen",
+      "titles": null,
       "level": "L4",
       "nextReview": "2026-11-12",
       "intervalIndex": 3,
@@ -62,6 +76,10 @@
           "from": null,
           "to": "L3",
           "note": "aangemaakt",
+          "notes": {
+            "nl": "aangemaakt",
+            "en": "created"
+          },
           "auto": false,
           "placement": false
         },
@@ -70,6 +88,10 @@
           "from": "L3",
           "to": "L4",
           "note": "5/6 gelukt",
+          "notes": {
+            "nl": "5/6 gelukt",
+            "en": "5/6 solved"
+          },
           "auto": false,
           "placement": false
         }
@@ -80,6 +102,10 @@
       "parent": null,
       "kind": null,
       "title": "Klassen, constructors; variabele vs veld vs property (private set)",
+      "titles": {
+        "nl": "Klassen, constructors; variabele vs veld vs property (private set)",
+        "en": "Classes, constructors; variable vs field vs property (private set)"
+      },
       "level": "L3",
       "nextReview": null,
       "intervalIndex": 0,
@@ -92,6 +118,10 @@
           "from": "L2",
           "to": "L3",
           "note": "5/6 gelukt",
+          "notes": {
+            "nl": "5/6 gelukt",
+            "en": "5/6 solved"
+          },
           "auto": false,
           "placement": false
         }
@@ -102,6 +132,7 @@
       "parent": "ood.klassen-properties",
       "kind": null,
       "title": "veld vs lokale variabele",
+      "titles": null,
       "level": "L2",
       "nextReview": null,
       "intervalIndex": 0,
@@ -114,6 +145,10 @@
           "from": null,
           "to": "L2",
           "note": "aangemaakt",
+          "notes": {
+            "nl": "aangemaakt",
+            "en": "created"
+          },
           "auto": false,
           "placement": false
         }
@@ -124,6 +159,10 @@
       "parent": null,
       "kind": null,
       "title": "Overerving, : base(...), abstract, override",
+      "titles": {
+        "nl": "Overerving, : base(...), abstract, override",
+        "en": "Inheritance, : base(...), abstract, override"
+      },
       "level": "L2",
       "nextReview": null,
       "intervalIndex": 0,
@@ -137,6 +176,7 @@
       "parent": "ood.overerving",
       "kind": null,
       "title": "constructor van de basisklasse",
+      "titles": null,
       "level": "L0",
       "nextReview": null,
       "intervalIndex": 0,
@@ -149,6 +189,10 @@
           "from": null,
           "to": "L1",
           "note": "aangemaakt",
+          "notes": {
+            "nl": "aangemaakt",
+            "en": "created"
+          },
           "auto": false,
           "placement": false
         },
@@ -157,6 +201,10 @@
           "from": "L1",
           "to": "L0",
           "note": "automatisch: 0 van 3 gelukt (0%), laatste 2 niet",
+          "notes": {
+            "nl": "automatisch: 0 van 3 gelukt (0%), laatste 2 niet",
+            "en": "automatic: 0 van 3 gelukt (0%), laatste 2 niet"
+          },
           "auto": true,
           "placement": false
         }
@@ -167,6 +215,10 @@
       "parent": null,
       "kind": null,
       "title": "Associaties: een-op-veel, veel-op-veel",
+      "titles": {
+        "nl": "Associaties: een-op-veel, veel-op-veel",
+        "en": "Associations: one-to-many, many-to-many"
+      },
       "level": "L2",
       "nextReview": null,
       "intervalIndex": 0,
@@ -180,6 +232,10 @@
       "parent": null,
       "kind": null,
       "title": "Aggregatie en compositie (heeft-een)",
+      "titles": {
+        "nl": "Aggregatie en compositie (heeft-een)",
+        "en": "Aggregation and composition (has-a)"
+      },
       "level": "L1",
       "nextReview": null,
       "intervalIndex": 0,
@@ -193,6 +249,10 @@
       "parent": null,
       "kind": null,
       "title": "Encapsulatie: private velden, validatie, toestand via methoden",
+      "titles": {
+        "nl": "Encapsulatie: private velden, validatie, toestand via methoden",
+        "en": "Encapsulation: private fields, validation, state through methods"
+      },
       "level": "L2",
       "nextReview": null,
       "intervalIndex": 0,
@@ -206,6 +266,10 @@
       "parent": null,
       "kind": null,
       "title": "Unit tests (NUnit): grenswaarden, TDD, testplan",
+      "titles": {
+        "nl": "Unit tests (NUnit): grenswaarden, TDD, testplan",
+        "en": "Unit tests (NUnit): boundary values, TDD, test plan"
+      },
       "level": "L2",
       "nextReview": null,
       "intervalIndex": 0,
@@ -218,6 +282,10 @@
           "from": "L1",
           "to": "L2",
           "note": "5/6 gelukt",
+          "notes": {
+            "nl": "5/6 gelukt",
+            "en": "5/6 solved"
+          },
           "auto": false,
           "placement": false
         }
@@ -228,6 +296,10 @@
       "parent": null,
       "kind": null,
       "title": "Interfaces ontwerpen en implementeren",
+      "titles": {
+        "nl": "Interfaces ontwerpen en implementeren",
+        "en": "Designing and implementing interfaces"
+      },
       "level": "L1",
       "nextReview": null,
       "intervalIndex": 0,
@@ -241,6 +313,10 @@
       "parent": null,
       "kind": null,
       "title": "Exception-hierarchie, type checks, volgorde van controles",
+      "titles": {
+        "nl": "Exception-hierarchie, type checks, volgorde van controles",
+        "en": "Exception hierarchy, type checks, order of checks"
+      },
       "level": "L2",
       "nextReview": null,
       "intervalIndex": 0,
@@ -253,6 +329,10 @@
           "from": "L0",
           "to": "L2",
           "note": "plaatsing: hoogste trede 2 bij de eerste taak",
+          "notes": {
+            "nl": "plaatsing: hoogste trede 2 bij de eerste taak",
+            "en": "placement: highest rung 2 at the first task"
+          },
           "auto": false,
           "placement": true
         }
@@ -263,6 +343,10 @@
       "parent": null,
       "kind": null,
       "title": "Generieke klasse met constraint (where T : ...) + Dictionary",
+      "titles": {
+        "nl": "Generieke klasse met constraint (where T : ...) + Dictionary",
+        "en": "Generic class with a constraint (where T : ...) + Dictionary"
+      },
       "level": "L0",
       "nextReview": null,
       "intervalIndex": 0,
@@ -276,6 +360,10 @@
       "parent": null,
       "kind": null,
       "title": "Strategy pattern",
+      "titles": {
+        "nl": "Strategy pattern",
+        "en": "Strategy pattern"
+      },
       "level": "L0",
       "nextReview": null,
       "intervalIndex": 0,
@@ -289,6 +377,10 @@
       "parent": null,
       "kind": null,
       "title": "Factory (Method) pattern",
+      "titles": {
+        "nl": "Factory (Method) pattern",
+        "en": "Factory (Method) pattern"
+      },
       "level": "L0",
       "nextReview": null,
       "intervalIndex": 0,
@@ -302,6 +394,10 @@
       "parent": null,
       "kind": null,
       "title": "Observer pattern",
+      "titles": {
+        "nl": "Observer pattern",
+        "en": "Observer pattern"
+      },
       "level": "L0",
       "nextReview": null,
       "intervalIndex": 0,
@@ -315,6 +411,10 @@
       "parent": null,
       "kind": null,
       "title": "Debuggen zonder foutmelding: van symptoom naar oorzaak",
+      "titles": {
+        "nl": "Debuggen zonder foutmelding: van symptoom naar oorzaak",
+        "en": "Debugging without an error message: from symptom to cause"
+      },
       "level": "L1",
       "nextReview": null,
       "intervalIndex": 0,
@@ -328,6 +428,10 @@
       "parent": null,
       "kind": null,
       "title": "UML/Mermaid klassendiagram, is-een vs heeft-een",
+      "titles": {
+        "nl": "UML/Mermaid klassendiagram, is-een vs heeft-een",
+        "en": "UML/Mermaid class diagram, is-a vs has-a"
+      },
       "level": "L2",
       "nextReview": null,
       "intervalIndex": 0,
@@ -346,6 +450,7 @@
       "success": true,
       "maxRung": 0,
       "minutes": 23,
+      "reviewRung": null,
       "what": "TestA",
       "explained": true,
       "explanation": "Het werkt nu omdat de property een private set heeft, zodat alleen de klasse zelf de waarde kan veranderen.",
@@ -367,6 +472,7 @@
       "success": true,
       "maxRung": 1,
       "minutes": 26,
+      "reviewRung": null,
       "what": "TestB",
       "explained": true,
       "explanation": "Ik moest base(naam) aanroepen, anders kreeg de basisklasse geen naam mee en bleef die leeg in de test.",
@@ -388,6 +494,7 @@
       "success": true,
       "maxRung": 1,
       "minutes": 24,
+      "reviewRung": null,
       "what": "TestC",
       "explained": true,
       "explanation": "De lijst stond eerst als lokale variabele in de methode, daardoor was hij na elke aanroep weer leeg.",
@@ -409,6 +516,7 @@
       "success": true,
       "maxRung": 0,
       "minutes": 19,
+      "reviewRung": null,
       "what": "TestD",
       "explained": true,
       "explanation": "Ik gooi nu een ArgumentException als de prijs negatief is, zodat een ongeldig object niet kan bestaan.",
@@ -430,6 +538,7 @@
       "success": true,
       "maxRung": 1,
       "minutes": 28,
+      "reviewRung": null,
       "what": "TestE",
       "explained": true,
       "explanation": "Ik gebruik een Dictionary omdat ik op code wil zoeken in plaats van door de hele lijst te lopen.",
@@ -458,6 +567,7 @@
       "success": true,
       "maxRung": 2,
       "minutes": 12,
+      "reviewRung": null,
       "what": "TestF",
       "explained": true,
       "explanation": "De test faalde omdat mijn lus bij 1 begon, daardoor sloeg ik het eerste element over. Nu begint hij bij 0.",
@@ -487,6 +597,7 @@
       "success": true,
       "maxRung": 1,
       "minutes": 16,
+      "reviewRung": null,
       "what": "TestG",
       "explained": true,
       "explanation": "Het werkt nu omdat de property een private set heeft, zodat alleen de klasse zelf de waarde kan veranderen.",
@@ -508,6 +619,7 @@
       "success": true,
       "maxRung": 0,
       "minutes": 15,
+      "reviewRung": null,
       "what": "TestH",
       "explained": true,
       "explanation": "Ik moest base(naam) aanroepen, anders kreeg de basisklasse geen naam mee en bleef die leeg in de test.",
@@ -529,6 +641,7 @@
       "success": true,
       "maxRung": 2,
       "minutes": 20,
+      "reviewRung": null,
       "what": "TestI",
       "explained": true,
       "explanation": "De lijst stond eerst als lokale variabele in de methode, daardoor was hij na elke aanroep weer leeg.",
@@ -558,6 +671,7 @@
       "success": true,
       "maxRung": 3,
       "minutes": 28,
+      "reviewRung": null,
       "what": "TestJ",
       "explained": true,
       "explanation": "Ik gooi nu een ArgumentException als de prijs negatief is, zodat een ongeldig object niet kan bestaan.",
@@ -579,6 +693,7 @@
       "success": true,
       "maxRung": 3,
       "minutes": 19,
+      "reviewRung": null,
       "what": "TestK",
       "explained": true,
       "explanation": "Ik gebruik een Dictionary omdat ik op code wil zoeken in plaats van door de hele lijst te lopen.",
@@ -600,6 +715,7 @@
       "success": true,
       "maxRung": 2,
       "minutes": 16,
+      "reviewRung": null,
       "what": "TestL",
       "explained": true,
       "explanation": "De test faalde omdat mijn lus bij 1 begon, daardoor sloeg ik het eerste element over. Nu begint hij bij 0.",
@@ -629,6 +745,7 @@
       "success": true,
       "maxRung": 3,
       "minutes": 30,
+      "reviewRung": null,
       "what": "TestM",
       "explained": true,
       "explanation": "Het werkt nu omdat de property een private set heeft, zodat alleen de klasse zelf de waarde kan veranderen.",
@@ -650,6 +767,7 @@
       "success": false,
       "maxRung": 5,
       "minutes": 38,
+      "reviewRung": null,
       "what": "TestN",
       "explained": true,
       "explanation": "Ik moest base(naam) aanroepen, anders kreeg de basisklasse geen naam mee en bleef die leeg in de test.",
@@ -671,6 +789,7 @@
       "success": true,
       "maxRung": 0,
       "minutes": 13,
+      "reviewRung": null,
       "what": "TestO",
       "explained": true,
       "explanation": "De lijst stond eerst als lokale variabele in de methode, daardoor was hij na elke aanroep weer leeg.",
@@ -692,6 +811,7 @@
       "success": true,
       "maxRung": 1,
       "minutes": 28,
+      "reviewRung": null,
       "what": "TestP",
       "explained": true,
       "explanation": "Ik gooi nu een ArgumentException als de prijs negatief is, zodat een ongeldig object niet kan bestaan.",
@@ -721,6 +841,7 @@
       "success": true,
       "maxRung": 2,
       "minutes": 18,
+      "reviewRung": null,
       "what": "TestQ",
       "explained": true,
       "explanation": "Ik gebruik een Dictionary omdat ik op code wil zoeken in plaats van door de hele lijst te lopen.",
@@ -757,6 +878,7 @@
       "success": true,
       "maxRung": 2,
       "minutes": 14,
+      "reviewRung": null,
       "what": "TestR",
       "explained": true,
       "explanation": "De test faalde omdat mijn lus bij 1 begon, daardoor sloeg ik het eerste element over. Nu begint hij bij 0.",
@@ -778,6 +900,7 @@
       "success": true,
       "maxRung": 0,
       "minutes": 23,
+      "reviewRung": null,
       "what": "TestS",
       "explained": true,
       "explanation": "Het werkt nu omdat de property een private set heeft, zodat alleen de klasse zelf de waarde kan veranderen.",
@@ -799,6 +922,7 @@
       "success": true,
       "maxRung": 0,
       "minutes": null,
+      "reviewRung": null,
       "what": "TestHerstel",
       "explained": false,
       "explanation": null,
@@ -820,6 +944,7 @@
       "success": true,
       "maxRung": 1,
       "minutes": 20,
+      "reviewRung": null,
       "what": "TestT",
       "explained": true,
       "explanation": "Ik moest base(naam) aanroepen, anders kreeg de basisklasse geen naam mee en bleef die leeg in de test.",
@@ -849,6 +974,7 @@
       "success": true,
       "maxRung": 0,
       "minutes": 31,
+      "reviewRung": null,
       "what": "TestU",
       "explained": true,
       "explanation": "De lijst stond eerst als lokale variabele in de methode, daardoor was hij na elke aanroep weer leeg.",
@@ -870,6 +996,7 @@
       "success": true,
       "maxRung": 2,
       "minutes": 26,
+      "reviewRung": null,
       "what": "TestV",
       "explained": true,
       "explanation": "Ik gooi nu een ArgumentException als de prijs negatief is, zodat een ongeldig object niet kan bestaan.",
@@ -899,6 +1026,7 @@
       "success": true,
       "maxRung": 1,
       "minutes": 34,
+      "reviewRung": null,
       "what": "TestW",
       "explained": true,
       "explanation": "Ik gebruik een Dictionary omdat ik op code wil zoeken in plaats van door de hele lijst te lopen.",
@@ -928,6 +1056,7 @@
       "success": true,
       "maxRung": 1,
       "minutes": 14,
+      "reviewRung": null,
       "what": "TestX",
       "explained": true,
       "explanation": "De test faalde omdat mijn lus bij 1 begon, daardoor sloeg ik het eerste element over. Nu begint hij bij 0.",
@@ -957,6 +1086,7 @@
       "success": true,
       "maxRung": 0,
       "minutes": 17,
+      "reviewRung": null,
       "what": "TestY",
       "explained": true,
       "explanation": "Het werkt nu omdat de property een private set heeft, zodat alleen de klasse zelf de waarde kan veranderen.",
@@ -986,6 +1116,7 @@
       "success": true,
       "maxRung": 1,
       "minutes": 16,
+      "reviewRung": null,
       "what": "TestZ",
       "explained": true,
       "explanation": "Ik moest base(naam) aanroepen, anders kreeg de basisklasse geen naam mee en bleef die leeg in de test.",
@@ -1007,6 +1138,7 @@
       "success": true,
       "maxRung": 0,
       "minutes": 34,
+      "reviewRung": null,
       "what": "TestA",
       "explained": true,
       "explanation": "De lijst stond eerst als lokale variabele in de methode, daardoor was hij na elke aanroep weer leeg.",
@@ -1036,6 +1168,7 @@
       "success": true,
       "maxRung": 1,
       "minutes": 10,
+      "reviewRung": null,
       "what": "TestB",
       "explained": false,
       "explanation": null,
@@ -1057,6 +1190,7 @@
       "success": true,
       "maxRung": 1,
       "minutes": 36,
+      "reviewRung": null,
       "what": "TestC",
       "explained": true,
       "explanation": "Ik gebruik een Dictionary omdat ik op code wil zoeken in plaats van door de hele lijst te lopen.",
@@ -1086,6 +1220,7 @@
       "success": true,
       "maxRung": 0,
       "minutes": 16,
+      "reviewRung": null,
       "what": "TestD",
       "explained": false,
       "explanation": null,
@@ -1119,13 +1254,13 @@
   "regressions": [
     {
       "at": "2026-11-02T15:00:00.000Z",
-      "skill": "ood.overerving",
+      "skill": "ood.associaties",
       "tests": 2,
       "fixed": false
     },
     {
       "at": "2026-11-02T15:30:00.000Z",
-      "skill": "ood.overerving",
+      "skill": "ood.associaties",
       "tests": 2,
       "fixed": true
     }
@@ -1142,7 +1277,11 @@
     {
       "skill": "ood.overerving",
       "dir": "down",
-      "text": "ood.overerving: 1/4 gelukt (< 70%)"
+      "text": "ood.overerving: 1/4 gelukt (< 70%)",
+      "texts": {
+        "nl": "ood.overerving: 1/4 gelukt (< 70%)",
+        "en": "ood.overerving: 1/4 solved (< 70%)"
+      }
     }
   ],
   "activity": [
@@ -1152,7 +1291,9 @@
       "hints": 2,
       "holds": 1,
       "denials": 0,
-      "overridesUsed": 0
+      "overridesUsed": 0,
+      "reviewHelp": 0,
+      "helpDropped": 0
     },
     {
       "date": "2026-10-29",
@@ -1160,7 +1301,9 @@
       "hints": 0,
       "holds": 0,
       "denials": 0,
-      "overridesUsed": 0
+      "overridesUsed": 0,
+      "reviewHelp": 0,
+      "helpDropped": 0
     },
     {
       "date": "2026-10-31",
@@ -1168,7 +1311,9 @@
       "hints": 3,
       "holds": 2,
       "denials": 0,
-      "overridesUsed": 0
+      "overridesUsed": 0,
+      "reviewHelp": 0,
+      "helpDropped": 0
     },
     {
       "date": "2026-11-01",
@@ -1176,7 +1321,9 @@
       "hints": 5,
       "holds": 0,
       "denials": 1,
-      "overridesUsed": 0
+      "overridesUsed": 0,
+      "reviewHelp": 0,
+      "helpDropped": 0
     },
     {
       "date": "2026-11-02",
@@ -1184,7 +1331,9 @@
       "hints": 5,
       "holds": 1,
       "denials": 1,
-      "overridesUsed": 0
+      "overridesUsed": 0,
+      "reviewHelp": 0,
+      "helpDropped": 0
     },
     {
       "date": "2026-11-03",
@@ -1192,7 +1341,9 @@
       "hints": 7,
       "holds": 1,
       "denials": 0,
-      "overridesUsed": 0
+      "overridesUsed": 0,
+      "reviewHelp": 0,
+      "helpDropped": 0
     },
     {
       "date": "2026-11-04",
@@ -1200,7 +1351,9 @@
       "hints": 1,
       "holds": 1,
       "denials": 0,
-      "overridesUsed": 0
+      "overridesUsed": 0,
+      "reviewHelp": 0,
+      "helpDropped": 0
     },
     {
       "date": "2026-11-05",
@@ -1208,7 +1361,9 @@
       "hints": 3,
       "holds": 0,
       "denials": 0,
-      "overridesUsed": 0
+      "overridesUsed": 0,
+      "reviewHelp": 0,
+      "helpDropped": 0
     },
     {
       "date": "2026-11-06",
@@ -1216,7 +1371,9 @@
       "hints": 1,
       "holds": 0,
       "denials": 0,
-      "overridesUsed": 0
+      "overridesUsed": 0,
+      "reviewHelp": 1,
+      "helpDropped": 1
     },
     {
       "date": "2026-11-07",
@@ -1224,7 +1381,9 @@
       "hints": 3,
       "holds": 0,
       "denials": 0,
-      "overridesUsed": 1
+      "overridesUsed": 1,
+      "reviewHelp": 0,
+      "helpDropped": 0
     },
     {
       "date": "2026-11-08",
@@ -1232,7 +1391,9 @@
       "hints": 2,
       "holds": 0,
       "denials": 0,
-      "overridesUsed": 0
+      "overridesUsed": 0,
+      "reviewHelp": 0,
+      "helpDropped": 0
     },
     {
       "date": "2026-11-09",
@@ -1240,7 +1401,9 @@
       "hints": 1,
       "holds": 0,
       "denials": 0,
-      "overridesUsed": 0
+      "overridesUsed": 0,
+      "reviewHelp": 0,
+      "helpDropped": 0
     },
     {
       "date": "2026-11-10",
@@ -1248,7 +1411,9 @@
       "hints": 1,
       "holds": 0,
       "denials": 0,
-      "overridesUsed": 0
+      "overridesUsed": 0,
+      "reviewHelp": 0,
+      "helpDropped": 0
     }
   ],
   "diary": [
@@ -1291,7 +1456,7 @@
       "n": 1,
       "time": "13:00–14:30",
       "skills": "ood.overerving",
-      "plan": "overerving (09)",
+      "plan": "overerving (eigen oefening)",
       "confidenceBefore": "4",
       "wentWell": "de foutmelding zelf gelezen en opgelost",
       "signals": null,
@@ -1353,6 +1518,21 @@
         "nextStep": "testplan maken"
       },
       "calibration": "vooraf 2 → trede 1 → onderschat"
+    }
+  ],
+  "reviewHelp": [
+    {
+      "at": "2026-11-06T14:40:00.000Z",
+      "skill": "ood.encapsulatie",
+      "rung": 2,
+      "reviewOf": "demo021"
+    }
+  ],
+  "helpDropped": [
+    {
+      "at": "2026-11-06T15:10:00.000Z",
+      "skill": "ood.associaties",
+      "rung": 1
     }
   ]
 }

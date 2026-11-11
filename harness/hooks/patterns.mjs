@@ -115,6 +115,10 @@ export function promotionAnswer(text) {
 
 // Markers Claude puts in an answer. Both languages are accepted.
 export const RUNG_MARK = /\[(?:trede|rung) ([1-5])\]/gi;
+// Help during an optional review after a task (setup review of 11 Nov, S3): [review-trede N #id].
+// The concept id is required. The pattern also matches a marker without an id, so the Stop hook can
+// count that one as an ordinary [trede N] (the cautious side) instead of dropping it.
+export const REVIEW_RUNG_MARK = /\[(?:review-trede|review-rung) ([1-5])(?:\s+#([\w.-]+))?\]/gi;
 export const EXPLAIN_MARK = /\[(?:uitleg|explain)-(ok|nee|no) ([a-z0-9]+)\]/gi;
 // The transfer task of /mastery-check (§9.4): start, passed or not passed, with the skill id.
 export const TRANSFER_MARK = /\[transfer-(start|ok|nee|no) ([a-z][a-z0-9-]*(?:\.[a-z0-9-]+)*)\]/gi;

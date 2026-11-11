@@ -16,6 +16,9 @@ Goal: self-regulation (plan → execution → reflection). The learner writes th
    - Run `node .claude/hooks/skill.mjs status` (allowed): reviews, open explanations, independent successes and promotion signals.
    - Events of this session in `.learning/state/events.jsonl`. Read the file with Read, not through the shell.
      - `hint-unlock`: rung and reason. `hint-hold`: rung refused because there was no attempt. `rung-mark`: help you marked with `[rung N]`.
+     - `review-help`: help in a review after a task, with `[review-rung N #id]`, and `reviewOf` (the task the review belonged to). It only counts for the next task about the same concept; a task with `reviewRung` got its rung from it. Name it apart from the ordinary help.
+     - `task-start`: new work began (the reason: `code-elsewhere`, `check-elsewhere`, `prompt-exercise` or `prompt-id`). `help-dropped`: ordinary help from before that start, which does not count for the new task. Name it separately, with the rung.
+     - `paths`: the learner linked an exercise folder to a skill, or removed one.
      - `task` (with `tid`, `source`: chat, check or done): a finished task, with success and the highest rung. `test-green`: which tests turned green.
      - `task-explained`: explanation approved (counts); with `source: replay` recovered afterwards. `explain-rejected`: explanation rejected, by you (`claude`) or by the check (`hook`).
      - `task-lapsed`: the explanation did not come right away, so the task lapsed (`other-exercise` or `session-end`). List those tasks as **skipped**, apart from failed.
@@ -52,6 +55,7 @@ Goal: self-regulation (plan → execution → reflection). The learner writes th
 
 **Facts (logged):**
 - Hint rungs: <e.g. 1, 2> · marked help: <[rung N] ...> · refused without an attempt: <n> · worked solution given: <yes/no>
+- Review help: <[review-rung N #id] at task [tid], or "none"> · dropped help (help-dropped): <rung, or "none">
 - Tasks: <id [tid]: solved/not, highest rung, source (check/done/chat), explanation approved/rejected/skipped>
 - Written by the learner: <...> · written by the AI: <...>
 - Tests (by the learner, check.mjs): <green/red, new green>

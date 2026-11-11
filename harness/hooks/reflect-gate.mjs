@@ -1,7 +1,10 @@
 // Stop hook. Two jobs:
 // 1. Read Claude's last answer and process the markers in it (both languages):
 //    [trede N] / [rung N]                     -> honest logging of help given (also at L1/L3, where the hook does not unlock rungs)
-//    [uitleg-ok <tid>] / [explain-ok <tid>]   -> task counts, but ONLY if the learner's own message also passes checkExplanation()
+//    [review-trede N #id] / [review-rung N #id] -> help in a review after a task: only counts for a next task about
+//                                                that concept (setup review of 11 Nov, S3); otherwise an ordinary rung
+//    [uitleg-ok <tid>] / [explain-ok <tid>]   -> task counts, but ONLY if the learner's own words since the task was
+//                                                logged, together, also pass checkExplanation() (S1)
 //    [uitleg-nee <tid>] / [explain-no <tid>]  -> logged; task stays open
 //    [transfer-start|ok|nee <id>]             -> the transfer task of /mastery-check (setup review §9.4);
 //                                                ok only without help since the start AND when the learner's message passes checkExplanation()
@@ -18,9 +21,9 @@
 import {
   readStdin, loadSession, saveSession, sessionExists, diaryHasSession, logEvent, pendingTasks, checkExplanation,
   isLearnerEntry, learnerEntryText, entryText, readTranscript, loadSkills, findSkill, familyIds, autoDemote,
-  applyVerdict, findVerdict, lapseTasks, promotionAdvice, offerIsNew, offerText, t,
+  applyVerdict, findVerdict, lapseTasks, promotionAdvice, offerIsNew, offerText, newWorkSignal, beginNewWork, explanationText, t,
 } from "./lib.mjs";
-import { RUNG_MARK, EXPLAIN_MARK, TRANSFER_MARK } from "./patterns.mjs";
+import { RUNG_MARK, REVIEW_RUNG_MARK, EXPLAIN_MARK, TRANSFER_MARK } from "./patterns.mjs";
 
 let input;
 try { input = JSON.parse(await readStdin()); } catch { process.exit(0); }
@@ -72,13 +75,35 @@ const promptKey = learner?.uuid ?? st.lastPromptAt ?? 0;
 // A rung belongs to the skill of the folder; within that family the (more specific) active skill.
 const folder = data && st.folderSkill ? findSkill(data, st.folderSkill) : null;
 const rungSkill = folder && !(st.activeSkill && familyIds(data, folder.id).includes(st.activeSkill)) ? folder.id : st.activeSkill ?? null;
-for (const m of answer.matchAll(RUNG_MARK)) {
-  const n = Number(m[1]);
+const rungMark = (n, extra = {}) => {
   // During a transfer task every hint counts: the transfer only passes without any help (§9.4).
   if (st.transfer) st.transfer.maxRung = Math.max(st.transfer.maxRung ?? 0, n);
   if (n > (st.maxRung ?? 0)) {
     st.maxRung = n;
-    logEvent({ type: "rung-mark", skill: rungSkill, rung: n, session: sid });
+    logEvent({ type: "rung-mark", skill: rungSkill, rung: n, session: sid, ...extra });
+  }
+};
+for (const m of answer.matchAll(RUNG_MARK)) rungMark(Number(m[1]));
+
+// Help in a review after a task: [review-trede N #id] (setup review of 11 Nov, S3/S16). It counts as
+// review help only right after a logged task, without a signal of new work since, and with a concept
+// id from skills.json. Then it does not raise st.maxRung: it only counts for the next task when that
+// task is about the same concept. Otherwise it is an ordinary [trede N] (the cautious side).
+const reviewMarks = [...answer.matchAll(REVIEW_RUNG_MARK)];
+if (reviewMarks.length && st.lastTask && data) {
+  const why = newWorkSignal(data, st, { scanCode: true });
+  if (why) beginNewWork(st, why, { session: sid });
+}
+for (const m of reviewMarks) {
+  const n = Number(m[1]);
+  const concept = m[2] && data ? findSkill(data, m[2]) : null;
+  if (!concept || concept.kind === "zone" || !st.lastTask) { rungMark(n, { review: true }); continue; }
+  if (st.transfer) st.transfer.maxRung = Math.max(st.transfer.maxRung ?? 0, n);
+  st.reviewHelp = st.reviewHelp ?? [];
+  const before = st.reviewHelp.filter((r) => r.skill === concept.id).reduce((a, r) => Math.max(a, r.rung), 0);
+  if (n > before) {
+    st.reviewHelp.push({ skill: concept.id, rung: n, at: Date.now() });
+    logEvent({ type: "review-help", skill: concept.id, rung: n, reviewOf: st.lastTask.tid, session: sid });
   }
 }
 
@@ -93,10 +118,14 @@ for (const m of answer.matchAll(EXPLAIN_MARK)) {
   if (!pending.has(tid) || st.explainChecked.includes(key)) continue;
   st.explainChecked = [...st.explainChecked.slice(-50), key];
   if (verdict === "nee") { logEvent({ type: "explain-rejected", tid, by: "claude", session: sid }); continue; }
-  const chk = checkExplanation(learnerMsg, earlierClaude);
+  // All of the learner's own messages since the task was logged, judged together (setup review of
+  // 11 Nov, S1): the same requirements, on the whole answer instead of the last message only.
+  const text = explanationText(st, tid, learnerMsg);
+  const chk = checkExplanation(text, earlierClaude);
   if (chk.ok) {
     const skillId = pending.get(tid).skill;
-    logEvent({ type: "task-explained", tid, skill: skillId, text: String(learnerMsg).slice(0, 600), session: sid });
+    logEvent({ type: "task-explained", tid, skill: skillId, text: text.slice(0, 1000), session: sid });
+    if (st.explainWords) delete st.explainWords[tid];
     pending.delete(tid);
     explainedSkills.add(skillId);
     // Explained tasks are the evidence for automatic demotion (S3): a microskill goes down now,

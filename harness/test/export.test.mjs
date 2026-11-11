@@ -139,7 +139,7 @@ test("export: whitelist, filters and task details", () => {
     assert.equal(t1.corrections[0].reason, "hulp van [privé]");
     assert.equal(json.tasks.find((x) => x.id === "t2").void, true);
     assert.deepEqual(json.regressions, [{ at: "2026-11-10T10:30:00.000Z", skill: "demo.l2", tests: 1, fixed: false }]);
-    assert.deepEqual(json.activity, [{ date: "2026-11-10", sessions: 1, hints: 1, holds: 0, denials: 1, overridesUsed: 0 }]);
+    assert.deepEqual(json.activity, [{ date: "2026-11-10", sessions: 1, hints: 1, holds: 0, denials: 1, overridesUsed: 0, reviewHelp: 0, helpDropped: 0 }]);
     assert.equal(json.skills.find((s) => s.id === "demo.l2").history[0].note, "vast, zie [pad]");
     assert.equal(json.diary.length, 1);
     assert.match(r.stdout, /private: Jan/);

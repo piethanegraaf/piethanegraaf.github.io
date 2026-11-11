@@ -74,6 +74,8 @@
       diary: "Dagboek", diaryHint: "De feiten logt de harnas; de reflectie staat er in de eigen woorden van de student.",
       plan: "Plan", wentWell: "Ging goed", learned: "Geleerd", confusing: "Verwarrend", confidence: "Zelfvertrouwen", nextStep: "Volgende stap", calib: "Kalibratie",
       noDiary: "Nog geen dagboekentries.", activity: "Activiteit", sessions: "Sessies", hints: "Hints", holds: "Geen nieuwe trede", denials: "Guard-weigeringen", overridesUsed: "Overrides gebruikt",
+      reviewHelp: "Review-hulp", helpDropped: "Hulp vervallen", viaReview: "via review", reviewOf: "na taak {id}", concept: "Concept", noReviewHelp: "Geen review-hulp.",
+      reviewHelpHint: "Hulp in een review na een taak telt alleen mee voor de volgende taak over hetzelfde concept.",
       footAi: "De leerharnas, dit dashboard en de docs zijn gemaakt met hulp van Claude (Anthropic). De leerdata en de reflecties zijn van de student zelf; de vertalingen ervan zijn van Claude.", footAiLink: "AI-verklaring", footAiHref: "../ai-statement/",
       footCode: "Code", footOr: "of een", footCommercial: "commerciële licentie", footTexts: "teksten en data",
       footSource: "Broncode op GitHub", footDocs: "Uitleg bij het dashboard", footDocsHref: "../progress-dashboard/", focus: "Ga naar {id}", tableRegion: "Tabel, scrollbaar",
@@ -147,6 +149,8 @@
       diary: "Diary", diaryHint: "The harness logs the facts; the reflection is in the learner's own words.",
       plan: "Plan", wentWell: "Went well", learned: "Learned", confusing: "Confusing", confidence: "Confidence", nextStep: "Next step", calib: "Calibration",
       noDiary: "No diary entries yet.", activity: "Activity", sessions: "Sessions", hints: "Hints", holds: "No new rung", denials: "Guard denials", overridesUsed: "Overrides used",
+      reviewHelp: "Review help", helpDropped: "Help dropped", viaReview: "via review", reviewOf: "after task {id}", concept: "Concept", noReviewHelp: "No review help.",
+      reviewHelpHint: "Help in a review after a task only counts for the next task about the same concept.",
       footAi: "The learning harness, this dashboard and the docs were made with help from Claude (Anthropic). The learning data and the reflections are the learner's own; their translations are by Claude.", footAiLink: "AI statement", footAiHref: "../en/ai-statement/",
       footCode: "Code", footOr: "or a", footCommercial: "commercial licence", footTexts: "texts and data",
       footSource: "Source code on GitHub", footDocs: "About the dashboard", footDocsHref: "../en/progress-dashboard/", focus: "Go to {id}", tableRegion: "Table, scrollable",
@@ -426,7 +430,8 @@
     const tasks = data.tasks.filter((x) => ids.has(x.skill));
     const reviews = data.reviews.filter((r) => r.skill === s.id);
     const hist = s.history ?? [];
-    const rungLabel = (x) => String(x.maxRung) + (x.corrections.length ? " *" : "");
+    const rungLabel = (x) => String(x.maxRung) + (x.reviewRung ? ` (${t("viaReview")})` : "") + (x.corrections.length ? " *" : "");
+    const review = (data.reviewHelp ?? []).filter((r) => ids.has(r.skill));
     const explainCell = (x) => {
       if (x.void) return el("span", { class: "muted" }, t("voided"), x.voidReason ? [": ", tx(x.voidReason)] : null);
       if (x.lapsed) return el("span", { class: "muted", text: `${t("skipped")}${x.lapseReason && t("lapse")?.[x.lapseReason] ? `: ${t("lapse")[x.lapseReason]}` : ""}` });
@@ -443,7 +448,9 @@
           x.rejections.length ? el("span", {}, joinNodes(x.rejections.map((r) => el("span", {}, t(`by.${r.by}`), r.reasons.length ? [": ", joinNodes(r.reasons.map(tx), "; ")] : null)), " · ")) : t("none"),
           x.corrections.length ? el("span", {}, joinNodes(x.corrections.map((c) => el("span", {}, `${c.from} → ${c.to}`, c.reason ? [" (", tx(c.reason), ")"] : null)), " · ")) : t("none")]), [2]) : el("p", { class: "muted", text: t("noTaskRows") })),
       el("div", {}, el("h3", { text: t("reviews") }), reviews.length ? table([t("date"), t("result"), t("nextReview")],
-        reviews.map((r) => [fmtDate(r.at), t(`res.${r.result}`), fmtDate(r.nextReview)])) : el("p", { class: "muted", text: t("noReviewRows") })));
+        reviews.map((r) => [fmtDate(r.at), t(`res.${r.result}`), fmtDate(r.nextReview)])) : el("p", { class: "muted", text: t("noReviewRows") })),
+      review.length ? el("div", {}, el("h3", { text: t("reviewHelp") }), el("p", { class: "muted", text: t("reviewHelpHint") }), table([t("date"), t("concept"), t("rung"), t("task")],
+        review.map((r) => [fmtDate(r.at), r.skill, String(r.rung), r.reviewOf ? t("reviewOf", { id: r.reviewOf }) : t("none")]), [2])) : null);
   }
 
   function skillsCard() {
@@ -587,8 +594,9 @@
   }
 
   function activityCard() {
-    return card(t("activity"), null, table([t("date"), t("sessions"), t("hints"), t("holds"), t("denials"), t("overridesUsed")],
-      data.activity.slice().reverse().map((a) => [fmtDate(a.date), String(a.sessions), String(a.hints), String(a.holds), String(a.denials), String(a.overridesUsed)]), [1, 2, 3, 4, 5]), null, "activity");
+    return card(t("activity"), null, table([t("date"), t("sessions"), t("hints"), t("holds"), t("denials"), t("overridesUsed"), t("reviewHelp"), t("helpDropped")],
+      data.activity.slice().reverse().map((a) => [fmtDate(a.date), String(a.sessions), String(a.hints), String(a.holds), String(a.denials), String(a.overridesUsed),
+        String(a.reviewHelp ?? 0), String(a.helpDropped ?? 0)]), [1, 2, 3, 4, 5, 6, 7]), null, "activity");
   }
 
   function filters() {
@@ -653,7 +661,7 @@
       if (!res.ok) throw new Error(String(res.status));
       const json = await res.json();
       if (json.schema !== 1) throw new Error("schema");
-      for (const k of ["skills", "tasks", "reviews", "regressions", "overrides", "signals", "activity", "diary"]) json[k] = Array.isArray(json[k]) ? json[k] : [];
+      for (const k of ["skills", "tasks", "reviews", "regressions", "overrides", "signals", "activity", "diary", "reviewHelp", "helpDropped"]) json[k] = Array.isArray(json[k]) ? json[k] : [];
       for (const x of json.tasks) { x.rejections = x.rejections ?? []; x.corrections = x.corrections ?? []; }
       data = json;
       render();

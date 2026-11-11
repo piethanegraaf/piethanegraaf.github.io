@@ -27,6 +27,7 @@ description: "The four Claude Code hooks of the learning harness, every skill.mj
 | `correct <task-id> void "reason"` | Void one task. |
 | `override <id\|*> <minutes> "reason"` | Temporarily allow Claude to write code (at most 240 minutes, logged). |
 | `setting <key> <value>` | `examDate`, `stuckTimerMinutes`, `idleMinutes`, `defaultLevel`, `course`, `language`. |
+| `paths <id> add|remove "<glob>"` | Which exercise folders belong to a skill, for example `paths ood.associaties add "ood-opdrachten-01/09-*/**"`. The folder decides the skill of a task and the level the guard uses. Not for a microskill: it uses the level of its parent. If another skill has the same path, it warns you. Logged as the event `paths`. |
 | `replay <transcript.jsonl> [--dry-run]` | Recovers explanations that were approved in the chat but not logged. It finds the markers `[explain-ok <tid>]` and checks your message with the same check as the Stop hook. Only what passes both keys counts, with source `replay`. |
 
 The Dutch forms `correct <task-id> trede …` and `correct <task-id> schrap …` work too.
@@ -39,6 +40,8 @@ The Dutch forms `correct <task-id> trede …` and `correct <task-id> schrap …`
 
 Runs `dotnet test` with a trx logger and shows a short summary. A test that goes from red to green becomes a task, with the rung of that moment. The first run per folder is a baseline. A repair after a regression does not count as a task.
 
+- **Code written before the first run.** If the first run in a folder is all green, and code in that folder was changed in this session, that green counts as a task too (`test-green` with `firstRun: true`). Code from an earlier session stays a baseline. So run `check.mjs` first, before you write code.
+- **Another folder starts a new task.** A run in another folder than the last task is a signal of new work: the ladder starts again (`task-start`), and help since the last task does not count for the new one (`help-dropped`).
 - **A compile error is a starting point.** If the folder does not build (`error CSxxxx`), `check.mjs` remembers that. A test that is green at the first build that works then counts as new green. A tooling error (`NETSDK`, `MSB`) does not count.
 - **The folder decides the skill.** After a run in a folder, a keyword in your prompt can only choose a microskill within that family. You switch to another family with `#id` or the name of the exercise.
 - **`global.json`:** if it asks for an older SDK than the project targets, without `rollForward` to a newer major version, `check.mjs` warns you.
@@ -49,6 +52,7 @@ Runs `dotnet test` with a trx logger and shows a short summary. A test that goes
 | Marker | Meaning |
 |---|---|
 | `[rung N]` / `[trede N]` | Substantive help was given at rung N. |
+| `[review-rung N #id]` / `[review-trede N #id]` | Help at rung N in a review after a task, about the concept `id` from `skills.json`. It does not raise the rung of the next task, unless that task is about the same concept (the same family). Without a valid id, without a logged task before it, or after a signal of new work, it counts as an ordinary `[rung N]`. |
 | `[explain-ok <tid>]` / `[uitleg-ok <tid>]` | The explanation is right; the Stop hook still checks it. |
 | `[explain-no <tid>]` / `[uitleg-nee <tid>]` | The explanation is incomplete; the task stays open. |
 | `[demotie {...}]` / `[demotion {...}]` | The verdict of the demotion analyst (JSON). The Stop hook only applies it when the agent really ran in that turn. |
@@ -88,6 +92,18 @@ And of the addition of 11 November 2026 (promotion):
 | `level` with `by: learner`, `via: voorstel` | The level, set after your confirmation. |
 | `promotion-declined` | You said "no" or "later" to a proposal. It comes back after a new task that meets the criterion. |
 | `transfer-start`, `transfer-passed`, `transfer-failed`, `transfer-rejected` | The transfer task: started, passed, not passed (`why: help` or `claude`), or a marker the Stop hook refused. |
+
+And of the setup review of 11 November 2026 (the start of a task, reviews and paths):
+
+| Event | Meaning |
+|---|---|
+| `task-start` | New work began, with the reason: `code-elsewhere`, `check-elsewhere`, `prompt-exercise` or `prompt-id`. `after`: the task before it. |
+| `help-dropped` | Ordinary help from before that start (`rung`). It does not count for the new task. |
+| `review-help` | Help in a review after a task: `skill` is the concept, `reviewOf` the task of the review. |
+| `task` with `reviewRung` | The task got its rung from the review of the previous task, about the same concept. |
+| `rung-mark` with `review: true` | A review marker that counted as an ordinary rung. |
+| `test-green` with `firstRun: true` | The first run in a folder was all green, with code written in this session. |
+| `paths` | You linked an exercise folder to a skill, or removed it (`action`, `glob`). |
 
 ## Files
 

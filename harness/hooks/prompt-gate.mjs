@@ -8,7 +8,8 @@ import {
   readStdin, loadSkills, findSkill, globToRegex, logEvent, loadSession, saveSession, skillForPath, familyOf,
   taskStats, ROOT, levelName, isMicro, microsOf, keywordMap, logTask, pendingTasks, levelAdvice, learnerText,
   settingsOf, codeExtRe, toolingRe, touch, activeMinutesSince, startTask, effectiveLevel, isPlacementPending, isReviewDue,
-  afterTask, allTasks, readEvents, openOffer, promote, t,
+  afterTask, allTasks, readEvents, openOffer, promote, exerciseDirs, newWorkSignal, beginNewWork, noteExplanationWords,
+  taskRung, taskLogged, t,
 } from "./lib.mjs";
 import {
   HINT, SOLUTION, SOLVED_STRONG, SOLVED_WEAK, CODE_CONTEXT, NOT_SOLVED, END, RESUME, ATTEMPT, CHECKING,
@@ -44,6 +45,22 @@ const ctx = [];
 // The learner's last message, so reflect-gate can check an explanation against it.
 st.lastPrompt = prompt.slice(0, 4000);
 st.lastPromptAt = now;
+// And every own message since a task was logged, per open task: the explanation check judges them
+// together (setup review of 11 Nov, S1). A task logged by this prompt is not open yet, so its own
+// "tests groen" message does not count towards its explanation.
+noteExplanationWords(st, prompt, pendingTasks().map((x) => x.tid));
+
+// New work since the last logged task (setup review of 11 Nov, S3): code changed in another exercise
+// folder, or the full name of another exercise folder or a #id of another family in this prompt.
+// Then a new task begins, before any hint for it is given.
+{
+  const why = newWorkSignal(data, st, { prompt, scanCode: true });
+  if (why) {
+    beginNewWork(st, why, { session: sid, now });
+    const reason = { "code-elsewhere": "pg.taskStart.code", "prompt-exercise": "pg.taskStart.exercise", "prompt-id": "pg.taskStart.id" }[why];
+    ctx.push(t("pg.taskStart", { why: reason ? t(reason) : why }));
+  }
+}
 
 // ---------- 0. Answer to a promotion proposal (setup review §9.6) ----------
 // The learner decides: only the learner's OWN prompt promotes, never Claude's text. "ja, doorzetten"
@@ -111,23 +128,6 @@ function folderFamily() {
   return f ? familyOf(f) : null;
 }
 const folderFam = folderFamily();
-function exerciseDirs(skill) {
-  const dirs = [];
-  for (const pat of skill.paths ?? []) {
-    if (pat.startsWith("**")) continue;
-    const literal = pat.split(/[*?]/)[0];
-    const parent = literal.includes("/") ? literal.slice(0, literal.lastIndexOf("/")) : "";
-    let entries = [];
-    try { entries = fs.readdirSync(path.join(ROOT, parent), { withFileTypes: true }); } catch { continue; }
-    const re = globToRegex(pat);
-    for (const e of entries) {
-      if (!e.isDirectory()) continue;
-      const r = (parent ? parent + "/" : "") + e.name;
-      if (re.test(r + "/x.cs")) dirs.push(r);
-    }
-  }
-  return dirs;
-}
 
 // A deliberate switch (#id or the name of an exercise) also moves the folder lock.
 let explicit = false;
@@ -266,10 +266,11 @@ if (attempt) st.attempted = true;
 
 // ---------- 3. Outcomes ----------
 if (solved && skill) {
-  const success = (st.maxRung ?? 0) < 5;
+  // All help since the last task, plus review help about this task's concept (S3).
+  const { rung: m, reviewRung } = taskRung(data, st, skill.id);
+  const success = m < 5;
   const mins = activeMinutesSince(st, st.taskStartedActive);
-  const m = st.maxRung ?? 0;
-  const tk = logTask({ skill: skill.id, success, maxRung: m, minutes: mins, source: "chat", session: sid, level });
+  const tk = logTask({ skill: skill.id, success, maxRung: m, minutes: mins, source: "chat", session: sid, level, reviewRung: reviewRung > (st.maxRung ?? 0) ? reviewRung : 0 });
   const verdict = t(!success ? "pg.verdict.fail" : m <= 2 ? "pg.verdict.ok" : "pg.verdict.help");
   ctx.push(t("pg.taskLogged", { id: skill.id, tid: tk.tid, rung: m, verdict }));
   const after = afterTask(data, skill.id, tk);
@@ -285,7 +286,7 @@ if (solved && skill) {
   if (!isMicro(skill) && microsOf(data, skill.id).length === 0) ctx.push(t("pg.noMicros", { id: skill.id }));
   if (after.messages.length) ctx.push(t("pg.notices", { list: after.messages.join("\n") }));
   if (after.pending) st.demotionPending = after.pending;
-  startTask(st, now);
+  taskLogged(st, tk, now);
 }
 
 // ---------- 3b. Explanation check (consolidation) ----------

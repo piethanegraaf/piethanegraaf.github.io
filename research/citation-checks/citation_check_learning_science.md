@@ -693,3 +693,173 @@ Guardrailed tutors that withhold code (CodeHelp, CodeAid, GPT Tutor) mitigate th
 - No peer-reviewed study was found on automatically *detecting* gaming or jailbreaking in LLM tutors.
 - Evidence on long-term (months) learning outcomes is lacking.
 - Several key 2025–2026 items (Kapoor; Lehmann; Shen & Tamkin; Nie) are preprints.
+
+## C. Sources checked on 11 November 2026 (explanations and reviews)
+
+Scope: six sources the harness wants to cite for the own-words explanation check, the hint ladder and the fading of prompts. Each subsection tests the one claim the harness wants to make with that source.
+
+Method note: bibliographic data came from Crossref for every DOI. Abstracts came from Crossref, OpenAlex and ERIC records. Full texts were read for:
+
+- Rozenblit & Keil (2002), via the PMC author manuscript;
+- Graesser et al. (2004), via the free Springer PDF;
+- Nückles et al. (2010) and Koedinger et al. (2015), via copies on university course sites;
+- Nye, Graesser & Hu (2014) and Graesser (2016), both open on Springer.
+
+For Koedinger & Aleven (2007) I read the authors' manuscript of February 2007 on a CMU server. Its abstract matches the published abstract (ERIC), but the body text of the final version may differ. For Renkl (1997) only the abstract was available: the Wiley PDF returned 403. Springer article pages redirected to login.
+
+### C1. Rozenblit & Keil (2002), "The misunderstood limits of folk science: An illusion of explanatory depth"
+
+#### Takeaway
+**Verdict: correct, with two limits.** People rated their understanding of devices and natural phenomena much lower after they tried to write a step-by-step explanation. Independent raters confirmed that the lower ratings were the accurate ones. Limit 1: the paper has 12 studies, but not all 12 show the effect. Studies 1–6 and 10 show it. Studies 7–9 are comparisons: facts showed a small drop, procedures and narratives none. Studies 11–12 look at causes. Write "in a series of 12 studies", not "in 12 studies". Limit 2: the paper measures self-rated understanding, not learning. It supports "explaining exposes the gap". It does not test whether more follow-up questions lead to more learning.
+
+#### Cited Findings
+- Bibliographic data match Crossref: Cognitive Science 26(5), 521–562, September 2002. — [Rozenblit & Keil 2002 (DOI)](https://doi.org/10.1207/s15516709cog2605_1); full text via [PMC author manuscript](https://pmc.ncbi.nlm.nih.gov/articles/PMC3062901/)
+- Abstract: people "feel they understand complex phenomena with far greater precision, coherence, and depth than they really do". The illusion "is far stronger for explanatory knowledge than many other kinds of knowledge, such as that for facts, procedures or narratives." — [Rozenblit & Keil 2002](https://doi.org/10.1207/s15516709cog2605_1)
+- Procedure in Studies 1–4:
+    - rate 48 items for understanding (T1);
+    - write "a detailed, step-by-step causal explanation" of four of them, then re-rate (T2);
+    - answer a "diagnostic" question, such as how to pick a cylinder lock, then re-rate (T3);
+    - read an expert explanation, then re-rate the earlier knowledge (T4).
+
+    — [PMC full text](https://pmc.ncbi.nlm.nih.gov/articles/PMC3062901/)
+
+- Results: "Attempts to explain the various phenomena led to a decrease in self-rated understanding. Attempts to answer the diagnostic questions led to a further (non-significant) decrease." Ratings did not rise again after the expert explanation, so participants did not see the diagnostic questions as unfair. — [PMC full text](https://pmc.ncbi.nlm.nih.gov/articles/PMC3062901/)
+- Study 5: independent raters scored the written explanations. Their scores matched the later self-ratings (T3, T4), not the first one. The authors read the drop as "accurate recalibration of one's knowledge as a result of an effort to explain". — [PMC full text](https://pmc.ncbi.nlm.nih.gov/articles/PMC3062901/)
+- Study 6: a warning in advance made the drop smaller, but it stayed significant. In this study the drop after the explanation (T1 to T2) was not significant; the drop after the diagnostic question (T1 to T3) was. — [PMC full text](https://pmc.ncbi.nlm.nih.gov/articles/PMC3062901/)
+- Study 8 (procedures, such as baking cookies): "there was no drop in the self-ratings across time". Study 9 (movie plots) showed no drop either. — [PMC full text](https://pmc.ncbi.nlm.nih.gov/articles/PMC3062901/)
+- One proposed cause: "people may confuse knowing labels for parts of a system with a full understanding of how the parts interact." — [PMC full text](https://pmc.ncbi.nlm.nih.gov/articles/PMC3062901/)
+
+#### Inferences
+- Supports the explanation check itself. A student's feeling of "I get it" is not reliable for how something works, and a step-by-step explanation shows the gap.
+- Follow-up questions get partial support. A targeted diagnostic question exposed gaps that the first explanation did not (Study 6). But the paper does not test "keep asking until the explanation reaches the principle", and it measures no learning. Cite it for why the check exists, not for how many follow-ups to ask.
+- The label-versus-mechanism confusion fits programming well. Naming "polymorphism" is not explaining which method runs and why. The check should ask for the mechanism, not the term.
+- Procedures showed no illusion. Rote steps, such as IDE shortcuts, may not need an explanation check. How the code works does.
+
+#### Gaps
+- Participants were university students. Items were everyday devices and natural phenomena, not programming.
+- Studies 11–12 were not checked in detail.
+
+### C2. Renkl (1997), "Learning from worked-out examples: A study on individual differences"
+
+#### Takeaway
+**Verdict: supported by the abstract, with care on two points. The DOI is 10.1207/s15516709cog2101_1.** The abstract says that "even when controlling for time-on-task", the quality of self-explanations predicted learning gains. That backs "quality matters, not just time". Point 1: principle-based explanations were one of three helpful features. "Principle-based explainers" were one of two types of successful learners; the other type, "anticipative reasoners", predicted the next step. Point 2: it is a correlational study of 36 students, not an experiment. Safe wording: "the quality of self-explanations, such as naming the underlying principle, predicted learning beyond time on task". Whether time was fixed by design or controlled in the analysis, I could not check.
+
+#### Cited Findings
+- Bibliographic: Cognitive Science 21(1), 1–29, January 1997. — [Renkl 1997 (DOI)](https://doi.org/10.1207/s15516709cog2101_1). Crossref also lists an older Elsevier DOI for the same article, 10.1016/S0364-0213(99)80017-2. Use the Wiley DOI above.
+- Design (abstract): "36 university freshmen students of education working in individual sessions"; the domain was "probability calculation"; self-explanations were taken from thinking-aloud protocols; a post-test measured learning gains. The study avoided restrictions of former studies, "(e.g., lacking control of time-on-task)". — [Renkl 1997](https://doi.org/10.1207/s15516709cog2101_1)
+- Results (abstract): "even when controlling for time-on-task (quantitative aspect), learning gains could be substantially predicted by qualitative differences of self-explanation characteristics." Successful learners "tended to employ more principle-based explanations, more explication of operator-goal combinations, and more anticipative reasoning." There were "two types of effective learners, labeled anticipative reasoners and principle-based explainers." — [Renkl 1997](https://doi.org/10.1207/s15516709cog2101_1)
+- Search-result summaries of Renkl's later review say the learning time was fixed for each learner. That review is Renkl (1999), European Journal of Psychology of Education 14(4), 477–488 ([DOI](https://doi.org/10.1007/BF03172974)). I could not open it, so this detail is unverified.
+
+#### Inferences
+- Supports judging an explanation on its content (does it name the principle?), not on its length or the time spent.
+- There were two routes to success. Predicting the next step before looking is a second, equally supported form of good self-explanation. A check that accepts only principle statements would miss it.
+- Correlational, small sample, one domain: treat it as moderate evidence.
+
+#### Gaps
+- Full text not read: the coding scheme, the effect sizes and how time was controlled are unverified.
+
+### C3. Nückles, Hübner, Dümer & Renkl (2010), "Expertise reversal effects in writing-to-learn"
+
+#### Takeaway
+**Verdict: correct, and the caveat holds.** In Experiment 1, students with prompts wrote better journals and scored higher at mid-term, but lost that lead by the end of the term. In Experiment 2, fading the prompts per student kept cognitive strategies and test scores up. With permanent prompts, scores fell back to the level of a baseline group. The caveat is right: the authors assumed the prompted strategies were already in the students' repertoire. The prompts were meant to trigger strategies students knew but did not use on their own. Two further limits: fading only partly worked, and the samples were small.
+
+#### Cited Findings
+- Bibliographic: Instructional Science 38(3), 237–258. Published online 27 August 2009; issue May 2010. — [Nückles et al. 2010 (DOI)](https://doi.org/10.1007/s11251-009-9106-9); full text via a [copy on a university course site](https://www.jsums.edu/english/files/2014/03/nuckles.pdf); abstract also in [ERIC EJ880291](https://eric.ed.gov/?id=EJ880291)
+- Experiment 1: 50 first-semester psychology students in two parallel courses wrote 12 weekly journal entries over a 4-month term. One group got six prompts (three cognitive, three metacognitive); the other got none.
+    - At mid-term, "the students in the prompting condition achieved clearly higher test scores than the students in the control condition."
+    - At the end of the term, "the prompting condition group did not perform any better than the control group without prompts."
+    - The control group's use of cognitive strategies rose over the term.
+
+    — [full text](https://www.jsums.edu/english/files/2014/03/nuckles.pdf)
+
+- Experiment 2: 62 students in three courses: faded prompts (n = 20), permanent prompts (n = 25) and a baseline group (n = 17) taught by a different lecturer who did not ask for journals.
+    - Fading started at entry 5. A prompt was removed once a student's mean rating for that strategy over the previous two entries reached 4.5 on a 6-point scale. The threshold was set "on practical grounds".
+    - Only 13, 20 and 17 students took the final test.
+    - The permanent group lost its lead over the baseline group; the faded group kept its level.
+
+    — [full text](https://www.jsums.edu/english/files/2014/03/nuckles.pdf)
+
+- Fading only partly worked. Metacognitive strategies fell "regardless of whether the prompts were adaptively faded-out or presented permanently", and motivation for journal writing fell in both groups. — [full text](https://www.jsums.edu/english/files/2014/03/nuckles.pdf)
+- The caveat, in the authors' words: "we assumed that strategies, such as organization and elaboration strategies, would already be part of the students' strategic repertoire." Their explanation of the reversal: "the more the students became skilled in journal writing and knew themselves how to apply the prompted strategies, the more the external guidance by prompts turned into a redundant stimulus". — [full text](https://www.jsums.edu/english/files/2014/03/nuckles.pdf)
+
+#### Inferences
+- The diary uses prompted learning protocols (Nückles et al., 2009). This paper says not to show the same prompts all term. Remove a prompt per student once two entries in a row show the strategy, as the paper did.
+- The caveat matters for the harness. The paper is about prompts for strategies students already know. For a skill the student does not have yet, such as a new programming concept, the point where help starts to hurt may come later. The paper does not test that.
+- Do not claim that fading keeps reflection or motivation up. In this study it did not.
+
+#### Gaps
+- Small samples, and whole courses were assigned to conditions. The baseline group had another lecturer.
+- The mid-term and end-of-term tests covered different topics, so changes over time within a group cannot be read directly.
+
+### C4. Koedinger, Kim, Jia, McLaughlin & Bier (2015), "Learning is not a spectator sport"
+
+#### Takeaway
+**Verdict: correct as stated: correlational, with a causal-model estimate.** In a psychology MOOC, students who did more interactive activities scored higher. A causal search with Tetrad estimated that 1 SD more doing raised quiz scores by 0.44 SD, more than six times the effect of watching or reading (about 0.065 each). Limits: the data are observational and students chose how much to do. "Doing" means activities with feedback and hints, not unsupported practice. Use was counted as activities started, not time. The main outcome was quizzes from the same item banks as the activities; the effect on the final exam runs through the quizzes.
+
+#### Cited Findings
+- Bibliographic: Proceedings of the Second (2015) ACM Conference on Learning @ Scale, 111–120. The author order matches Crossref. Crossref lists only the main title; the subtitle "Doing is Better than Watching for Learning from a MOOC" is on the paper itself. — [Koedinger et al. 2015 (DOI)](https://doi.org/10.1145/2724660.2724681); full text via a [copy on a course site](https://davis68.github.io/2016-12-12-ttt-uiuc/files/papers/koedinger-doing-watching-2015.pdf)
+- Abstract: "We estimate the learning benefit from extra doing (1 SD increase) to be more than six times that of extra watching or reading. Our data, from a psychology MOOC, is correlational in character, however we employ causal inference mechanisms to lend support for the claim that the associations we find are causal." — [Koedinger et al. 2015](https://doi.org/10.1145/2724660.2724681)
+- Sample: 27,720 registered; 9,075 registered for the OLI materials; 939 of those took the final exam. — [full text](https://davis68.github.io/2016-12-12-ttt-uiuc/files/papers/koedinger-doing-watching-2015.pdf)
+- Causal model: "a 1 standard deviation increase in doing activities produces 0.44 sd increase in quiz score". Watching and reading had coefficients "of about .065". The model adjusts for pretest score (0.25 to quiz). Quiz score predicts the final exam strongly (0.65). — [full text](https://davis68.github.io/2016-12-12-ttt-uiuc/files/papers/koedinger-doing-watching-2015.pdf)
+- Time: students did more activities than they read pages (387 vs. 297) but spent less time on them in total (21.6 vs. 25.0 hours). — [full text](https://davis68.github.io/2016-12-12-ttt-uiuc/files/papers/koedinger-doing-watching-2015.pdf)
+- The authors' own caution: data from natural use "adds uncertainty in making inferences about causal relationships as compared to using data from experimental designs." — [full text](https://davis68.github.io/2016-12-12-ttt-uiuc/files/papers/koedinger-doing-watching-2015.pdf)
+
+#### Inferences
+- Supports the harness's rule that the student does the work and the AI does not show it. The "doing" in this study was practice with feedback and hints, which is close to the hint ladder.
+- Cite it as a large observational study with a causal-model estimate, not as an experiment.
+
+#### Gaps
+- Psychology content, not programming. Unmeasured motivation could drive both doing and scores.
+
+### C5. Graesser, Lu, Jackson, Mitchell, Ventura, Olney & Louwerse (2004), "AutoTutor: A tutor with dialogue in natural language"
+
+#### Takeaway
+**Verdict: mostly correct. The 2004 paper has the parts; later papers name the full cycle.** The 2004 paper lists all four moves: pump, hint, prompt and assertion. It describes "two cycles of hint→prompt→assertion" that stop as soon as the student states the expected answer. It also describes a pump on the student's first turn when that answer matches poorly. But it presents the fixed cycle as "an alternative algorithm", next to earlier rules that chose a hint or a prompt from the student's ability. The single named "pump → hint → prompt → assertion cycle" appears in Nye, Graesser & Hu (2014) and in Graesser (2016). Cite the 2004 paper for the system and its moves, and Nye et al. (2014) for the cycle.
+
+#### Cited Findings
+- Bibliographic: Behavior Research Methods, Instruments, & Computers 36(2), 180–192, May 2004. — [Graesser et al. 2004 (DOI)](https://doi.org/10.3758/BF03195563); full text via the [Springer PDF](https://link.springer.com/content/pdf/10.3758/BF03195563.pdf)
+- Moves (abstract): AutoTutor "pumps the student for more information, prompts the student to fill in missing words, gives hints, fills in missing information with assertions". — [Graesser et al. 2004](https://doi.org/10.3758/BF03195563)
+- Pump: "a pump arc is traversed when it is the student's first turn and the student's assertion has a low LSA match value." — [full text](https://link.springer.com/content/pdf/10.3758/BF03195563.pdf)
+- Cycle: "An alternative algorithm to fleshing out E uses two cycles of hint→prompt→assertion. ... first hint, then prompt, then assert, then hint, then prompt, then assert. AutoTutor exits the two cycles as soon as the student articulates E to satisfaction". The earlier algorithm used fuzzy rules: a prompt when the student lacked one key word, a hint when a high-ability student had missed most of the answer. — [full text](https://link.springer.com/content/pdf/10.3758/BF03195563.pdf)
+- Learning gains: about .70 SD on deep comprehension against reading nothing, the pretest or the textbook. Against texts written to match the tutor's content, the effect was only .22. Against human tutors in typed conversation it was .08. — [full text](https://link.springer.com/content/pdf/10.3758/BF03195563.pdf)
+- Nye, Graesser & Hu (2014), International Journal of Artificial Intelligence in Education 24(4), 427–469:
+    - "AutoTutor attempted to get the student to articulate each expectation by expressing pumps (e.g., 'what else?'), then a hint, then a prompt, and then simply asserting the answer (a bottom out response); this pump → hint → prompt → assertion cycle stopped as soon as the expectation was covered."
+    - Good students needed only a pump or hint; lower-ability students needed prompts or the assertion.
+    - AutoTutor 2.0 made students restate even a bottom-out assertion before moving on. It "performed comparably" to version 1.1, which simply moved on.
+
+    — [Nye et al. 2014 (DOI)](https://doi.org/10.1007/s40593-014-0029-5), open access
+
+- Graesser (2016), International Journal of Artificial Intelligence in Education 26(1), 124–132: "The pump-hint-prompt-assertion cycles are implemented in AutoTutor (and are frequent in human tutoring...)". — [Graesser 2016 (DOI)](https://doi.org/10.1007/s40593-015-0086-4), open access
+
+#### Inferences
+- The harness ladder (question → concept → pseudocode → partial snippet) follows the same logic: start with the move that tells the least, and stop as soon as the student produces the answer.
+- "When the student cannot produce it, the tutor states it" is accurate for AutoTutor. But making students restate the answer after that step did not change learning gains in the comparison Nye et al. report. That comparison neither supports nor rules out a "restate after the last rung" rule.
+- The 2004 effect sizes are for the whole system. They do not show that the order of the moves is what helps.
+
+#### Gaps
+- No study was found that isolates the cycle order as the active part.
+- The AutoTutor 1.1 vs. 2.0 comparison comes from Person et al. (2003), which I did not read.
+
+### C6. Koedinger & Aleven (2007), "Exploring the assistance dilemma in experiments with Cognitive Tutors"
+
+#### Takeaway
+**Verdict: correct.** The paper names the assistance dilemma: how to balance giving and withholding information or help. It calls this a fundamental open problem and asks for research on when to switch. The studies it reviews give partial answers. Hints that explain the principle seem to help, in one study by making learning faster rather than better. Students are poor at asking for help at the right moment.
+
+#### Cited Findings
+- Bibliographic: Educational Psychology Review 19(3), 239–264; online 21 July 2007, issue September 2007. — [Koedinger & Aleven 2007 (DOI)](https://doi.org/10.1007/s10648-007-9049-0)
+- Abstract: "How best to achieve this balance remains a fundamental open problem in instructional science. We call this problem the 'assistance dilemma'". The authors stress the need for "specific conditions and parameters that indicate when and to what extent to use information giving versus information withholding". — [ERIC EJ785065](https://eric.ed.gov/?id=EJ785065)
+- From the February 2007 manuscript:
+    - "The crux of the assistance dilemma is prescribing decision criteria (e.g., conditions and cut-off parameters) for when it is best to switch between information giving (more assistance) and information withholding (less assistance)." Also: "there is not going to be one solution".
+    - Anderson, Conrad & Corbett (1989) found that explanatory hint and feedback messages "help students learn faster, but not better".
+    - Students "frequently use bottom-out hints to obtain answers, without reading prior hints that explain why", and "even after multiple errors on a step, students often do not request help."
+    - Some gaming may be sensible: some students may use bottom-out hints "to create worked-examples for themselves".
+
+    — [manuscript on a CMU server](https://pslcdatashop.web.cmu.edu/KDDCup/FAQ/Koedinger-Aleven-EPR-07.pdf)
+
+#### Inferences
+- Supports presenting the ladder's settings (stuck timer, attempt requirement, number of rungs) as choices in an open trade-off, not as proven values. Log them and tune them.
+- Students often do not ask for help when they need it. That supports a stuck timer that offers the next rung, instead of waiting for a request.
+- Bottom-out use can be productive. That fits logging an override rather than blocking it.
+
+#### Gaps
+- I read the manuscript, not the published text. Quotes from the body may differ slightly in the final version. The abstract matches the published one (ERIC).
