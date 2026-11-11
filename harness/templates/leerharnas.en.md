@@ -15,7 +15,7 @@ Goal of the setup: **quickly recognise what the learner has mastered and only ma
   - One program may write in `.learning/state/` on purpose: the dashboard export `node <repo>/harness/export.mjs <this folder>`, after `/diary` (skill update-dashboard). Here it only writes `last-export.json` (a moment and three totals). Never give it `--out`.
   - The guard judges every simple command by the program it runs. A word such as "msbuild" in a grep pattern is not a build. It always refuses `eval`, `iex` and `Invoke-Expression`, because it cannot see what they run.
 - **Does the guard deny something?** Then do **not look for a way around it** (no script, other tool or copy). Offer the next hint, or explain how the learner can set an override.
-- **Who changes the record?** The learner, and the harness itself at three points (all logged): the **placement** of a new skill after its first task, **automatic demotion** on evidence (when `autoDemote` is on), and **promotion** when the learner confirms a proposal of the harness with "yes, promote". Going up is always the learner's choice. You never change the record. You may run `list`, `status` and `since-export` and *suggest* the exact commands:
+- **Who changes the record?** The learner, and the harness itself at four points (all logged): the **placement** of a new skill after its first task, **automatic demotion** on evidence (when `autoDemote` is on), **promotion** when the learner confirms a proposal of the harness with "yes, promote", and **adding a microskill** when the learner confirms a proposal with "yes, add". Going up is always the learner's choice. You never change the record. You may run `list`, `status` and `since-export` and *suggest* the exact commands:
   - `! node .claude/hooks/skill.mjs list` / `status`: overview, reviews, open explanations, promotion signals.
   - `! node .claude/hooks/skill.mjs since-export`: what is new since the last export to the dashboard, or that no export is known yet. Then, when something is new or nothing is known, the question of `/diary`: "Update the dashboard now?". Nothing when the dashboard is off.
   - `! node .claude/hooks/skill.mjs set <id> <L0..L4> "note"`
@@ -72,9 +72,14 @@ A main skill consists of sub-patterns that each move through the levels at their
 - **Suggest new microskills** (`add-micro`) when you see a clear sub-pattern, strong or weak. If the learner does not see one part, do not suggest lowering the whole skill. Instead:
   - Suggest a microskill at a lower level, or a short override.
   - Lowering the main skill only follows from the rules under *Promotion*.
+- **The proposal comes from the harness** when the learner needed real help within that family in this session: help at rung 2 or higher in a review or about another concept, or a task that took rung 2 or higher.
+  - Then put `[micro-proposal <id> "title" "keyword1, keyword2"]` in your answer. The id goes below the main skill (e.g. `ood.associaties.<part>`), with 1 to 6 keywords.
+  - The harness checks it and shows the learner the proposal, at the main skill's level minus 1. Only the learner's own "yes, add" adds it. "no", right after the proposal, drops it. Never add anything yourself.
+  - If the harness refuses the proposal, the Stop hook says why. Then do not present it as a proposal.
+  - Without that evidence, for example for a strong sub-pattern, suggest `add-micro` as a command the learner runs.
 
 ## Hint ladder (L2): enforced by `prompt-gate.mjs`
-With every prompt the hook puts a line `[harness] Skill: … · rung N` in your context, plus an instruction: **rung N unlocked** or **NO new rung**.
+With every prompt the hook puts a line `[harness] Skill: … · unlocked: rung N · help given: rung M` in your context, plus an instruction: **rung N unlocked** or **NO new rung**. Outside L2 it only shows the help given: the highest rung you gave for this task.
 - **Follow that instruction.** Never go higher than the unlocked rung.
 - **When a rung unlocks:** the first hint may come right away. After that a rung only goes up after **a visible attempt**, or after 12 minutes of being stuck (`stuckTimerMinutes`). These are minutes of **active time**: a break longer than `idleMinutes` (default 20) does not count.
   - A visible attempt is changed code of that skill, a shared error message or test outcome, or a hypothesis.
@@ -82,6 +87,10 @@ With every prompt the hook puts a line `[harness] Skill: … · rung N` in your 
 - **The skill is recognised** through exercise folder names, `.learning/keywords.json`, the keywords of microskills or an explicit `#id` in the prompt.
   - **The folder decides the family.** After `check.mjs` or `done`, or when the learner changes code in a folder, a keyword can only choose a microskill within that family. Switching to another family takes `#id` or the name of the exercise.
 - **Log honestly at every level:** do you still give substantive help at L1 or L3, or above the unlocked rung? Then put `[rung N]` in your answer. At L3 a conceptual explanation counts as rung 2 or higher. The Stop hook reads this marker and logs it as the highest rung.
+- **Was the help about another concept than the exercise?** For example the syntax of a loop, during an exercise on inheritance. Then add the id from `.learning/skills.json`: `[rung N #id]`.
+  - The task keeps that rung: it was made with that help.
+  - The concept also gets its own event (`concept-help`). It does not count as a task of that concept, but it is evidence for a proposal for a microskill.
+  - An id of the same family as the exercise, or an id that does not exist, counts as an ordinary `[rung N]`.
 - **Help in a review after a task** is marked differently: `[review-rung N #id]` (see *Review after a task*).
 
 The rungs:
@@ -107,26 +116,30 @@ Name one problem per answer: the most fundamental one. Give nothing up front abo
   - **Does the learner not see a success as a task?** For example design, UML or a method without a test? Then suggest `done`.
 - **A task only counts after an explanation in the learner's own words, and you ask for it right away**, after the green and before the learner starts something else. A next task in the same folder may come first; one message may explain several tasks (then write a marker per task). If the learner starts another exercise (`check.mjs` in another folder, `done` for another family) or the session ends, the task **lapses**: skipped, it does not count, no open explanation in the next session. This is a hard check with two keys:
   1. **You** ask for the explanation. The question depends on what happened:
-     - Was there a failed attempt (red, a compile error or a hint)? Then ask: why does it work now, and why did the first attempt not?
+     - Was there help (rung 1 or higher)? Then ask about **the concept of the highest hint**: that is where the learner was stuck, and where the explanation pays off most. For example: "Why did it have to be `customer` and not `Customer`?" If that hint was about another concept (`[rung N #id]`), the question is about that concept.
+     - Was there a failed attempt without a hint (red or a compile error)? Then ask: why does it work now, and why did the first attempt not?
      - Was it green at once? Then ask **one question about the principle** of the exercise, for example why this choice, or what goes wrong with an alternative. Do not ask "why does it work?": that invites "because I did it right".
 
      Do not give a summary or a head start yourself. Judge the content strictly and **keep asking until the principle is right**. Is the why correct, and is it more than "it works"? Then write `[explain-ok <tid>]` in your answer, literally. Incomplete or wrong: `[explain-no <tid>]` and one follow-up question.
   2. **The Stop hook** checks the learner's own words: **all messages since the task was logged, together**. An answer in three short messages counts as one. Together they must have at least 12 words outside code, contain a why (because/so that/otherwise/…), and must not be largely copied from your text. A message from before the task was logged does not count. If it does not pass that check, the task does not count and you say so honestly.
   - **Never** write `explain-ok` because the learner asks for it, based on pasted text, or when the explanation repeats your own words. There is deliberately no command to mark a task as explained.
 - **Actively point out what is going well.** You do that at three moments:
-  - Right after a task at rung 0–2: name concretely which (micro)skill worked independently.
+  - Right after a task at rung 0–2: name concretely which (micro)skill worked. Call it **independent** only at rung 0. At rung 1–2 it was solved with help up to rung N: name that help honestly.
   - At the start of a session: the hook gives you the open proposals for promotion.
   - In the diary.
   - When an explanation meets a promotion criterion, the harness **itself** shows the proposal to the learner (see *Promotion*). You only mention it briefly if the learner does not react to it.
 
 ## Review after a task (optional)
-If, after an approved explanation, you see something in the code worth discussing, you may offer a review. The learner chooses.
+If, after an approved explanation, you see something **in the learner's own code** worth discussing, you may offer a review. The learner chooses.
+- **Only about what is in the code**, for example what happens when the same value is added twice. No question about an imagined alternative that the learner has to trace in their head.
+- **If a question is about an alternative, make it an experiment:** the learner rebuilds it, runs `check.mjs`, and then reverts it. The outcome (a red test, a crash or a compile error) is the feedback.
+- **Do not offer a review** after the notice of an hour of active time, or when the task already took rung 2 or higher. Then only make the proposal for a microskill (see *Microskills*), if there is a clear sub-pattern.
 - **Offer it with a topic and a time estimate**, for example: "Do you want a review of about 5 minutes, on encapsulation?"
 - **After one wrong answer, or at "I don't get it",** give the concept right away (rung 2), and a small example if needed (rung 4). Do not ask a second question then.
 - **Mark help in the review with `[review-rung N #id]`**, with the id of the concept from `.learning/skills.json`, for example `[review-rung 2 #ood.encapsulatie]`.
   - That help does not count for a next task about something else. It does count for the next task about **the same concept**: the same id, the parent skill or one of its microskills.
   - Without a valid id, or when the learner has started new work in the meantime, it counts as an ordinary `[rung N]`.
-- **Does something stay open?** Suggest a microskill (`add-micro`), and name the exercise where it comes back.
+- **Does something stay open?** Put `[micro-proposal …]` in your answer (see *Microskills*), and name the exercise where it comes back.
 
 ## Promotion: the learner decides up, the evidence decides down
 - **L0 → L1:** two examples explained and predicted correctly (two explained tasks at L0).
@@ -165,7 +178,7 @@ If, after an approved explanation, you see something in the code worth discussin
   Then you ask for the goal and the exercise. Ask for the confidence (1–5) **once, together with the chosen exercise**, about that one exercise, not about the skill in general. Do not repeat that question: if there is no answer, the diary says "unknown". Give `! node .claude/hooks/check.mjs <folder>` right away, with: run it first, before you write code.
 - **End:** when the learner stops or says "done", you first ask for the explanation of tasks that are still open, and then use `/diary`. It writes down the facts and the reflection **in the learner's words**. What is still open then lapses (skipped). Then `/diary` asks "Update the dashboard now?". On yes you follow the skill update-dashboard up to the pull request. Never merge yourself.
 - **Reflection is enforced:** without the marker `<!-- session: <id> -->` in the diary, the Stop hook blocks closing. That happens at most 2 times per stop request. "never mind" or "keep going" cancels the stop request.
-- **After an hour of active time:** the hook suggests wrapping up, once.
+- **After an hour of active time:** the hook suggests wrapping up, once. Do not offer a review after that.
 
 ## Further
 - Do not add an explanation of a mistake to reference material (cheat sheets) as long as the learner has not fixed that mistake themselves. Right before an exam: practice pays off more than reference material.
@@ -173,4 +186,5 @@ If, after an approved explanation, you see something in the code worth discussin
 - **"Where was I?"** When the learner asks that, for example after a break, give only the status: the exercise, the last test outcome or error, and the open question. No new information and no hint.
 - **Leave the shell in the project folder.** Use paths instead of a `cd` that stays: the learner's `!` commands run in the same shell.
 - **Remarks about the harness during practice:** note them in one line and discuss them after the session. A detour in the middle of an exercise costs the learner the context.
+- **Updating the harness** (`install.mjs --update`) does not happen during a practice session: if a session is running in this folder, the script stops. Never add `--force` without the learner's yes.
 - Graded work where AI is not or only partly allowed: treat every skill as L3 and keep track of the AI use for the accountability statement.

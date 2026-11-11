@@ -428,7 +428,7 @@ const sessionFile = (sid) => path.join(STATE_DIR, `session-${String(sid).replace
 const newSession = () => ({
   startedAt: null, lastActiveAt: null, activeMs: 0, activeSkill: null, folderSkill: null, folderSkillAt: null,
   rung: 0, maxRung: 0, lastRungAt: null, lastRungActive: null, taskStartedAt: null, taskStartedActive: null,
-  endRequested: false, nudged: false, lastTask: null, reviewHelp: [], explainWords: {},
+  endRequested: false, nudged: false, lastTask: null, reviewHelp: [], explainWords: {}, conceptHelp: [], openTid: null, microOffers: [],
 });
 
 export const sessionExists = (sid) => fs.existsSync(sessionFile(sid));
@@ -460,11 +460,12 @@ export function touch(st, now = Date.now(), data = null) {
 // Active minutes since a mark (a value of st.activeMs taken earlier).
 export const activeMinutesSince = (st, mark) => Math.max(0, Math.round(((st.activeMs ?? 0) - (mark ?? st.activeMs ?? 0)) / 60000));
 
-// The ladder and the task clock start again.
+// The ladder and the task clock start again. Help about another concept belongs to one task too
+// (conceptHelp, with the task id it reserved: openTid).
 function resetLadder(st, now) {
   Object.assign(st, {
     rung: 0, maxRung: 0, lastRungAt: null, lastRungActive: null, taskStartedAt: now, taskStartedActive: st.activeMs ?? 0,
-    attempted: false, lastErrorSig: null,
+    attempted: false, lastErrorSig: null, conceptHelp: [], openTid: null,
   });
   return st;
 }
@@ -501,6 +502,39 @@ export function taskRung(data, st, skillId) {
   const fromReview = (st?.reviewHelp ?? []).filter((r) => family.has(r.skill)).map((r) => Number(r.rung) || 0);
   const reviewRung = fromReview.length ? Math.max(...fromReview) : 0;
   return { rung: Math.max(base, reviewRung), reviewRung };
+}
+
+// ---- Help per concept (setup review of 11 Nov 2026, afternoon, #26) ----
+// [trede N #id]: help during a task about the concept `id`. The task keeps its rung (the caller logs the
+// ordinary rung-mark); this only adds what the concept gets. The family logic of the review marker
+// (S3): a concept of the task's own family (the same id, the parent or a microskill of it) is the
+// task's own concept, and its rung already says it. A concept of another family gets an event
+// concept-help, once per rung and task, with the id this task will be logged under (openTid). It is
+// not a task of that concept. Without a valid id: nothing (the caller logged the ordinary rung).
+// Returns the event, or null.
+export function noteConceptHelp(data, st, conceptId, rung, { taskSkill = null, session = null } = {}) {
+  const concept = data && conceptId ? findSkill(data, conceptId) : null;
+  if (!concept || concept.kind === "zone") return null;
+  const task = taskSkill ? findSkill(data, taskSkill) : null;
+  if (task && familyOf(task) === familyOf(concept)) return null;
+  st.conceptHelp = Array.isArray(st.conceptHelp) ? st.conceptHelp : [];
+  const before = st.conceptHelp.filter((c) => c.skill === concept.id).reduce((a, c) => Math.max(a, Number(c.rung) || 0), 0);
+  if (rung <= before) return null;
+  st.openTid = st.openTid || newTaskId();
+  st.conceptHelp.push({ skill: concept.id, rung, at: Date.now() });
+  const e = { type: "concept-help", skill: concept.id, rung, taskSkill: task?.id ?? taskSkill ?? null, taskTid: st.openTid, session };
+  logEvent(e);
+  return e;
+}
+
+// For `status`: help about a skill given during tasks of another family, since its last level change.
+// Shown only; it does not count in the success rate (that is still open, #26).
+export function conceptHelpOf(data, s, events = readEvents()) {
+  const since = lastLevelChange(s, events);
+  const ids = new Set(familyIds(data, s.id));
+  const list = events.filter((e) => e.type === "concept-help" && ids.has(e.skill) && (!since || String(e.at) > since));
+  // A task that needed rung 1 and then rung 2 about the same concept counts once.
+  return list.length ? { n: new Set(list.map((e) => e.taskTid ?? e.at)).size, max: Math.max(...list.map((e) => Number(e.rung) || 0)) } : null;
 }
 
 const sameFolder = (a, b) => a === b || a.startsWith(b + "/") || b.startsWith(a + "/");
@@ -587,7 +621,9 @@ export function newWorkSignal(data, st, { dir = null, prompt = null, scanCode = 
 // st.reviewHelp: it still counts when the new task is about the same concept.
 export function beginNewWork(st, reason, { session = null, now = Date.now() } = {}) {
   const dropped = Number(st.maxRung) || 0;
-  if (dropped > 0) logEvent({ type: "help-dropped", skill: st.activeSkill ?? st.folderSkill ?? null, rung: dropped, after: st.lastTask?.tid ?? null, session });
+  // taskTid: the id a concept-help event reserved for this task, which now never gets logged (#26).
+  if (dropped > 0) logEvent({ type: "help-dropped", skill: st.activeSkill ?? st.folderSkill ?? null, rung: dropped, after: st.lastTask?.tid ?? null,
+    ...(st.openTid ? { taskTid: st.openTid } : {}), session });
   logEvent({ type: "task-start", reason, after: st.lastTask?.tid ?? null, session });
   st.lastTask = null;
   return resetLadder(st, now);
@@ -716,8 +752,9 @@ export function newTaskId() {
 // Log a task (pending until explained) and return it. `level` is the level of the skill at that
 // moment (setup review §9.3): evidence for a promotion only counts on the level it was gathered at.
 // `reviewRung`: the part of maxRung that came from the review of the previous task (S3), if any.
-export function logTask({ skill, success = true, maxRung = 0, minutes = null, source, what, session, dir, level, reviewRung = 0 }) {
-  const t = { type: "task", tid: newTaskId(), skill, success, maxRung, minutes, source, what, session, ...(dir ? { dir } : {}), ...(level ? { level } : {}),
+// `tid`: the id this task reserved when help about another concept was logged for it (#26).
+export function logTask({ skill, success = true, maxRung = 0, minutes = null, source, what, session, dir, level, reviewRung = 0, tid = null }) {
+  const t = { type: "task", tid: tid || newTaskId(), skill, success, maxRung, minutes, source, what, session, ...(dir ? { dir } : {}), ...(level ? { level } : {}),
     ...(reviewRung > 0 ? { reviewRung } : {}) };
   logEvent(t);
   return t;
@@ -820,7 +857,7 @@ export function demotionCriterion(data, s) {
   return null;
 }
 
-const lowerLevel = (l) => LEVELS[Math.max(0, LEVELS.indexOf(l) - 1)];
+export const lowerLevel = (l) => LEVELS[Math.max(0, LEVELS.indexOf(l) - 1)];
 
 // Lowers one skill one step, logs it and returns the message for the learner.
 export function demote(data, s, reason, by = "harnas") {
@@ -1118,6 +1155,68 @@ export function promote(data, s, a, via = "voorstel") {
   saveSkills(data);
   logEvent({ type: "level", skill: s.id, from, to, note: a.note, by: "learner", via });
   return { ok: true, message: t("offer.promoted", { id: s.id, from, to, name: levelName(to), review: s.nextReview ? t("cli.set.firstReview", { date: s.nextReview }) : "" }) };
+}
+
+// ---- A proposal for a microskill (setup review of 11 Nov 2026, afternoon, #22) ----
+// Like a promotion, the harness shows the proposal itself, and only the learner's own "ja, toevoegen"
+// adds the microskill. Claude names it with [micro-voorstel <id> "titel" "trefwoorden"]; the harness
+// checks the marker and that there is evidence in this session that the learner needed real help with
+// that family. No automatic demotion: one hard moment is weak evidence, so the learner decides.
+
+// Adds a microskill below `parent` (also used by `skill.mjs add-micro`). Returns the new entry.
+export function addMicro(data, parent, { id, title, level, keywords = [], note = null, by = null, via = null }) {
+  const m = { id, parent: parent.id, title, level, keywords,
+    history: [{ at: today(), atIso: new Date().toISOString(), to: level, note: note ?? t("note.created"), ...(by ? { by } : {}), ...(via ? { via } : {}) }] };
+  scheduleOnLevel(data, m);
+  data.skills.splice(data.skills.indexOf(parent) + 1 + microsOf(data, parent.id).length, 0, m);
+  saveSkills(data);
+  logEvent({ type: "micro-add", skill: id, parent: parent.id, level, ...(by ? { by } : {}), ...(via ? { via } : {}) });
+  return m;
+}
+
+// The evidence for a proposal below `parentId`, from this session: help at rung >= 2 in a review
+// (review-help), about a concept during another task (concept-help), or a logged task of that family
+// that cost rung >= 2 (the learner's choice of 11 Nov: then no review, only this proposal, #29).
+// Returns the latest piece of evidence { kind, rung, skill, tid, taskSkill }, or null.
+export function microEvidence(data, session, parentId, events = readEvents()) {
+  const fam = (id) => familyOf(findSkill(data, id) ?? null);
+  const found = [];
+  for (const e of events) {
+    if (e.session !== session || (Number(e.rung) || 0) < 2 || fam(e.skill) !== parentId) continue;
+    if (e.type === "review-help") found.push({ kind: "review", rung: e.rung, skill: e.skill, tid: e.reviewOf ?? null, at: e.at });
+    else if (e.type === "concept-help") found.push({ kind: "concept", rung: e.rung, skill: e.skill, taskSkill: e.taskSkill ?? null, at: e.at });
+  }
+  for (const x of allTasks()) {
+    if (x.session === session && (Number(x.maxRung) || 0) >= 2 && fam(x.skill) === parentId) found.push({ kind: "task", rung: x.maxRung, skill: x.skill, tid: x.tid, at: x.at });
+  }
+  return found.sort((a, b) => String(a.at).localeCompare(String(b.at))).pop() ?? null;
+}
+
+// Checks a proposal from the marker. Returns { ok: true, offer } or { ok: false, error } (an i18n text).
+export function checkMicroProposal(data, session, p) {
+  if (!p) return { ok: false, error: t("micro.err.format") };
+  if (findSkill(data, p.id)) return { ok: false, error: t("micro.err.exists", { id: p.id }) };
+  const micro = data.skills.find((s) => isMicro(s) && p.id.startsWith(s.id + "."));
+  if (micro) return { ok: false, error: t("micro.err.nested", { id: p.id, micro: micro.id }) };
+  // The main skill: the longest id that is a prefix ("ood.associaties" for "ood.associaties.stop").
+  const parent = data.skills.filter((s) => !isMicro(s) && s.kind !== "zone" && p.id.startsWith(s.id + ".")).sort((a, b) => b.id.length - a.id.length)[0];
+  if (!parent) return { ok: false, error: t("micro.err.parent", { id: p.id }) };
+  if (!p.title || p.title.length > 80 || /[<>\r\n]/.test(p.title)) return { ok: false, error: t("micro.err.title") };
+  if (p.keywords.length < 1 || p.keywords.length > 6) return { ok: false, error: t("micro.err.keywords") };
+  const why = microEvidence(data, session, parent.id);
+  if (!why) return { ok: false, error: t("micro.err.evidence", { parent: parent.id }) };
+  return { ok: true, offer: { id: p.id, parent: parent.id, level: lowerLevel(parent.level), title: p.title, keywords: p.keywords, why } };
+}
+
+// The text of the proposal: what, why (the evidence), what changes, and how to answer.
+export function microOfferText(data, o) {
+  const parent = findSkill(data, o.parent);
+  const w = o.why ?? {};
+  const why = w.kind === "review" ? t("micro.why.review", { rung: w.rung, skill: w.skill, tid: w.tid ?? "-" })
+    : w.kind === "concept" ? t("micro.why.concept", { rung: w.rung, skill: w.skill, task: w.taskSkill ?? "-" })
+      : t("micro.why.task", { rung: w.rung, skill: w.skill, tid: w.tid ?? "-" });
+  return t("micro.offer", { id: o.id, title: o.title, parent: o.parent, level: o.level, name: levelName(o.level), why,
+    keywords: o.keywords.join(", "), plevel: parent?.level ?? "?" });
 }
 
 // Skills with recent independent successes (rung 0, explained), for positive signals.

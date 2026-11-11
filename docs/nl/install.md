@@ -46,6 +46,8 @@ node harness/install.mjs ../mijn-oefenmap --update --yes
 
 `--update` vervangt alleen de bestanden van de harnas. Je data in `.learning/` en je eigen `CLAUDE.md` blijven staan. Heb je een hook zelf aangepast, dan zegt de installer dat ("lokaal aangepast") en bewaart hij je versie in de backupmap.
 
+**Niet tijdens een oefensessie.** Een update vervangt de regels en hooks onder een lopende sessie. Was er in de laatste `idleMinutes` (standaard 20) een sessie actief in de oefenmap, dan waarschuwt `--update` je daarom. In een terminal vraagt hij "Toch doorgaan?". Met `--yes`, of zonder terminal (bijvoorbeeld als een andere Claude-sessie hem draait), stopt hij en verandert hij niets. Zet `--force` erbij als je het zeker weet, bijvoorbeeld als die sessie al klaar is. De regels zeggen dat Claude `--force` nooit zonder jouw ja gebruikt. `--dry-run` toont alleen de waarschuwing.
+
 Een oudere installatie zonder manifest (met absolute paden in `settings.json`) wordt ook herkend en omgezet.
 
 ## In de repository van een team

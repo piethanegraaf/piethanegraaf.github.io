@@ -669,7 +669,7 @@ Kans (K) en Impact (I) krijgen een score van 1–5. Risico = K × I. De scores g
 | R10 | **Minder eigenaarschap over en geheugen voor je eigen werk** | Je kunt je project niet uitleggen of verdedigen bij een toets. Uitbestede inhoud wordt minder goed onthouden als de opslag betrouwbaar is. | Schooler & Storm 2021; Grinschgl 2021 [A, lab]; Kosmyna 2025 [C, preprint, bekritiseerd]; Bergh 2026 [B]: studenten rekenden met ChatGPT 45% van hun code aan zichzelf toe, tegen 81% zonder | 4 | 4 | **16** | Toets |
 | R11 | **Problemen met toetsing en integriteit** | Beoordeeld werk is niet van jezelf, of AI-gebruik is niet gemeld. Ongeoorloofd AI-gebruik kan als fraude gelden, en werk op AI-niveau 1 kan promptlinks, APA-bronvermelding en een controle van de uitvoer vereisen. De regels van CHE zijn een voorbeeld (OER art. 1.41 en art. 7.11). Detectie is onbetrouwbaar, dus je eigen vastleggingen zijn je bescherming. | CHE OER 2026–27 [beleid]; Npuls 2025 [beleid]; Scarfe 2024 (94% van de AI-antwoorden onopgemerkt) [B]; Lau & Guo 2023 | 3 | 5 | **15** | Toets |
 | R12 | **De harnas wordt het doel** *(nieuwe score, was 3 × 2)* | Tijd gaat naar het bijstellen van de opzet, of naar onderzoek erover (zoals het herzien van dit overzicht), in plaats van naar oefenen. Of het systeem wordt opgegeven. | Een diagnostische toets in de pilot (tijd ging naar een spiekbriefje in plaats van naar oefenen); in de pilot ging ook tijd naar het herzien van dit overzicht en het repareren van een hook; SDT | 4 | 3 | **12** | Toets |
-| R13 | **Privacy van het dagboek en de vaardigheidsgegevens** | Reflecties, onderzoeksnotities en transcripten worden gesynchroniseerd naar cloudopslag (zoals OneDrive) of gedeeld. | — | 2 | 2 | **4** | Beide |
+| R13 | **Privacy van het dagboek en de vaardigheidsgegevens** | Reflecties, onderzoeksnotities en transcripten worden gesynchroniseerd naar cloudopslag (zoals OneDrive) of gedeeld, of er komt met een openbaar dashboard meer online dan de lerende bedoelde. | — | 2 | 2 | **4** | Beide |
 | R14 | **Oefenen past niet bij de toets** *(nieuw)* | Je oefent met AI, zonder tijdsdruk, in de IDE die je gewend bent. De toets is zonder AI, op tijd, en misschien in een andere IDE. Een vaardigheid die je in de ene vorm oefent, geeft weinig transfer naar een andere vorm. | Een diagnostische toets in de pilot; transfer-appropriate processing (Morris 1977); Pan & Rickard 2018 [A, meta]; Hinze & Rapp 2014 [A]; geen IDE-specifieke studie | 5 | 5 | **25** | Toets |
 | R15 | **Te veel investeren in productiecode met de hand schrijven** *(nieuw)* | Oefentijd gaat naar routinecode met de hand schrijven, meer dan nodig is om te leren (boilerplate, syntaxisdrills, beheerste code opnieuw schrijven). Ondertussen betaalt de markt voor specificeren, reviewen en verifiëren. | Routinecode is goedkoop te genereren: tool ongeveer 1–2% van de arbeidskosten [C]; claims van Google en Anthropic over het aandeel code [D]; Octoverse 2026 [C]; BLS: programmeurs −7% [C]. Lage kans met de harnas, omdat die beheerste vaardigheden al automatiseert (L4), en een toets zonder AI met de hand schrijven vereist | 2 | 3 | **6** | Loopbaan |
 | R16 | **Toezichtvaardigheden blijven ongetraind** *(nieuw)* | De harnas blokkeert AI-code op L1–L3 en automatiseert op L4, maar niets traint het specificeren, testen, reviewen en debuggen van AI-uitvoer. Werkgevers testen deze vaardigheden nu, en delegeren holt ze uit ("paradox van het toezicht"). | Anthropic 2025b [C, leverancier]; pilot van Google met sollicitatiegesprekken 2026 [D]; Stack Overflow 2026 [C]; Veracode 2026 [C]; CS1-LLM [C]; Pădurean 2026 [C] | 4 | 4 | **16** | Loopbaan (testen kan ook meetellen in je eindassessment) |
@@ -722,7 +722,7 @@ Deze sectie maakt van de risico's een plan dat je op je eigen toetsdatum legt. D
 | R10 | Het dagboek legt vast wat *jij* schreef. Voor het inleveren oefen je "verdedig je ontwerp" met `/mastery-check --defend`. | Dagboek + skill | Laag |
 | R11 | Beoordeeld werk: behandel elke vaardigheid als L3 (CLAUDE.md), en houd een log van je AI-gebruik bij voor de AI-verantwoording: promptlinks, wat de AI deed en hoe je het controleerde (zoals OER art. 7.11 van CHE bijvoorbeeld vraagt). Vraag je docent welke delen van je eindassessment op AI-niveau 0 zijn en welke op AI-niveau 1 (§4.2). Volg altijd de regels van de cursus en de instelling. | CLAUDE.md + dagboek | Laag |
 | R12 | Houd de harnas klein (~5 hooks, 1 skill) en bekijk de opzet elke maand. Begrens de tijd voor werk aan de harnas: hooguit één fix per sessie, en alleen onderzoek als dat zou veranderen wat je oefent. Onderzoek naar de harnas telt ook als werk aan de harnas: stop ermee tot na je toets, tenzij een hook niet goed werkt. | Dagboek (noteer de minuten aan de harnas vs. aan oefenen) | Gemiddeld |
-| R13 | Houd `.learning/`, `research_notes/` en transcripten buiten gedeelde repo's en openbare pagina's (`.gitignore`). Sla alleen op wat nodig is. | `.gitignore` | Laag |
+| R13 | Houd `.learning/`, `research_notes/` en transcripten buiten gedeelde repo's (`.gitignore`), en sla alleen op wat nodig is. Publiceren is een keuze van de lerende, en dan gaat alleen een gefilterde selectie online: de export voor het dashboard neemt alleen vaste velden mee en filtert de privétermen van de lerende (`.learning/private.json`), vóór elke push draait een securitycheck, en de lerende leest eerst de diff. Het dagboek zegt dat reflecties op het openbare dashboard komen. De pilotstudent koos ervoor zo'n selectie te publiceren. | `.gitignore`, `export.mjs`, `security-check.mjs` | Laag |
 | R14 | **Oefen onder toetsomstandigheden.** Doe vanaf ongeveer twee weken voor elke toets sessies op tijd, zonder AI, in de IDE van je toets. Begin kort en doe daarna volledige proeftoetsen (de oefentoetsen van je cursus). Leer eerst zonder druk. Kijk achteraf terug, en gebruik `claude-study` alleen voor wat je zelf hebt gevonden. | Stappenplan hieronder; dagboek | Gemiddeld |
 | R15 | Drill niet wat al op L3/L4 staat. De Fibonacci-herhalingen houden het vers, en boilerplate gaat naar de AI (L4). Oefenen met de hand is voor vaardigheden onder L3. | Vaardighedenregister; L4-beleid | Laag |
 | R16 | **Voeg een leerlijn voor toezicht toe (§4.1):** vind geplante bugs in code die je niet zelf schreef, schrijf tests die fouten vangen, review AI-code aan de hand van OOD-principes, voorspel en vergelijk daarna. Doe dit alleen bij onderwerpen op L3 of hoger, zodat je de uitvoer kunt beoordelen. Beperk het vóór je toets tot het deel dat overlapt met de toets (debuggen, testen). Breid het na je toets uit: acceptatiecriteria die tests worden, domeinmodellen in UML, en werk dat AI bouwde daaraan toetsen. | Nieuwe microvaardigheden (jij voegt ze toe); oefencode van Claude in `voorbeelden/` of de chat | Gemiddeld |
@@ -1757,6 +1757,15 @@ Geschreven door Piet Hanegraaf met Claude (Anthropic); zie de [AI-verklaring](ai
 - Renkl, A. (1997). Learning from worked-out examples: A study on individual differences. *Cognitive Science, 21*(1), 1–29. https://doi.org/10.1207/s15516709cog2101_1
 - Rozenblit, L., & Keil, F. (2002). The misunderstood limits of folk science: An illusion of explanatory depth. *Cognitive Science, 26*(5), 521–562. https://doi.org/10.1207/s15516709cog2605_1
 
+**Toegevoegd op 11 november 2026 (review van de middag): hulp per concept en het open leerlingmodel**
+
+- Beck, J. E., & Gong, Y. (2013). Wheel-spinning: Students who fail to master a skill. In *Artificial Intelligence in Education (AIED 2013)*, LNCS 7926, 431–440. https://doi.org/10.1007/978-3-642-39112-5_44
+- Bull, S., & Kay, J. (2016). SMILI☺: A framework for interfaces to learning data in open learner models, learning analytics and related fields. *International Journal of Artificial Intelligence in Education, 26*(1), 293–331. https://doi.org/10.1007/s40593-015-0090-8
+- Smit, N., de Kleijn, R. A. M., Wicherts, J. M., & van de Pol, J. (2025). What it takes to tutor: A preregistered direct replication of the scaffolding experimental study by D. Wood et al. (1978). *Journal of Educational Psychology, 117*(8), 1313–1329. https://doi.org/10.1037/edu0000965
+- VanLehn, K., Siler, S., Murray, C., Yamauchi, T., & Baggett, W. B. (2003). Why do only some events cause learning during human tutoring? *Cognition and Instruction, 21*(3), 209–249. https://doi.org/10.1207/S1532690XCI2103_01
+- Wood, D., & Middleton, D. (1975). A study of assisted problem-solving. *British Journal of Psychology, 66*(2), 181–191. https://doi.org/10.1111/j.2044-8295.1975.tb01454.x
+- Wood, D., Wood, H., & Middleton, D. (1978). An experimental evaluation of four face-to-face teaching strategies. *International Journal of Behavioral Development, 1*(2), 131–147. https://doi.org/10.1177/016502547800100203
+
 ---
 
 <a id="bijlage-implementatieschetsen"></a>
@@ -2159,11 +2168,64 @@ Een taak begint bij een signaal van nieuw werk en eindigt als hij gelogd wordt. 
 - **Een reviewmarker zonder id wordt toch herkend,** zodat hij als gewone trede telt in plaats van gemist te worden.
 - **Signalen gaan uit van de vorige taak.** Na een signaal is er geen vorige taak, tot er weer een gelogd wordt. Hulp bij werk dat in de tussentijd opnieuw wordt opgegeven, vervalt dan niet: dat is de voorzichtige kant.
 
+### 10.6 Herziening van 11 november 2026 (middag): hulp per concept, een voorstel voor een microvaardigheid, en eerlijke woorden
+
+Na de tweede sessie van 11 november is de opzet nog een keer kritisch bekeken. Ook die review wordt niet gepubliceerd, omdat er leerdata in staan. De nummering loopt door (22–30); 22 en 24 stonden nog open uit de vorige ronde. Elk punt is eerst aan de literatuur getoetst, daarna besliste de student. De gekozen punten zitten nu in de harnas; 24 is niet gekozen. Waar de bouw van het plan afwijkt, staat in §10.6.3.
+
+#### 10.6.1 Besluiten
+
+| # | Besluit | Getoetst aan | Oordeel |
+|---|---|---|---|
+| 26 | **Hulp wordt per concept gelogd.** Hulp tijdens een taak ging naar de vaardigheid van de opdrachtmap, ook als die over een concept van een andere vaardigheid ging. Die vaardigheid leek dan zwakker dan ze was, en het echte gat bleef uit beeld. Nu zet Claude `[trede N #id]`. De taak houdt zijn hoogste trede, want hij is met die hulp gemaakt. Het concept krijgt een eigen event, `concept-help`. Dat is geen taak van dat concept: `status` laat het zien, en het is bewijs voor 22. | Knowledge tracing houdt per regel een schatting bij en werkt die bij elke kans om die regel toe te passen bij (Corbett & Anderson 1994; Anderson et al. 1995). | **Gesteund (een meetfout).** Dat hulp zelf bewijs is, is een ontwerpkeuze: de gelezen teksten werken bij op goed of fout. Of concepthulp op trede 2 of hoger moet meetellen in het percentage gelukt van die vaardigheid, staat nog open: eerst loggen en tonen, en na een paar sessies beslissen. |
+| 22 | **De harnas stelt zelf een microvaardigheid voor,** net als een promotie. Claude noemt het deel met `[micro-voorstel <id> "titel" "trefwoorden"]`. De harnas controleert het en toont het voorstel, op het niveau van de hoofdvaardigheid min 1. Alleen het eigen "ja, toevoegen" van de student voegt hem toe. Er gaat niets automatisch omlaag. | Open leerlingmodellen: de lerende ziet het model en kan erover onderhandelen, met reflectie en zelfsturing als genoemde doelen (Bull & Kay 2016; een raamwerk, geen toets). Een tekst van Claude is geen deel van het model. Ertegen: één fout antwoord is zwak bewijs, dus beslist de student. | **Gesteund.** |
+| 27 | **Eerlijke woorden.** `check.mjs` zei "telt als zelfstandig gelukt" bij trede 2, terwijl het register alleen trede 0 zelfstandig noemt. Nu is trede 0 "zelfstandig gelukt", trede 1–2 "gelukt, met hulp tot trede N", en meer hulp zoals het was. Ook in het signaal aan Claude en in de regels. | Illusie van competentie (Koriat & Bjork 2005; R2): een succesmelding moet de hulp eerlijk noemen. | **Gesteund, alleen voor de woorden.** Een strengere grens voor "gelukt" op L3 (hooguit trede 1) wacht op 26: een deel van de hulp hoorde bij een ander concept, en met `autoDemote` zou een strengere grens een vaardigheid om de verkeerde reden kunnen laten zakken. |
+| 28 | **De uitleg gaat over het concept van de hoogste hint** als de taak hulp had (trede 1 of hoger). Zonder hulp zoals het was (13). | Leren ging samen met impasses: buiten een impasse ging uitleg zelden samen met leren, op een impasse soms wel (VanLehn et al. 2003, correlationeel). Zelfuitleg levert het meest op bij het principe dat nog niet vastzit (Chi et al. 1989; Bisra et al. 2018). | **Gesteund.** Dat de hoogste hint de impasse aanwijst, is een afleiding. |
+| 29 | **Een review gaat alleen over de eigen code van de student.** Een vraag over een alternatief wordt een experiment: ombouwen, `check.mjs` draaien, terugzetten. Geen review na de melding van een uur actieve tijd, of na een taak die trede 2 of hoger kostte; dan alleen het voorstel voor een microvaardigheid (22). | Zonder eigen poging en feedback is er geen impasse (VanLehn et al. 2003). Dat een moeilijke vraag aan het eind het zelfvertrouwen over de hele sessie kleurt: hier is geen bron voor nagekeken, dus een signaal, geen bewijs. | **Gesteund.** |
+| 23 | **Bug: de statusregel zei op L3 "trede 0: nog geen hint",** terwijl de taak op trede 2 stond. De regel kwam van de ontgrendelde trede van de L2-ladder, en die blijft op L3 op 0. Hij toont nu de gegeven hulp; op L2 ook de ontgrendelde trede. | (bug) | **Opgelost.** |
+| 30 | **`install.mjs --update` let op een lopende sessie.** In de pilot werden de regels midden in een oefensessie vervangen, door een update uit een andere sessie. Er ging niets mis, maar de regels veranderden onder een lopende sessie. | R12 | **Gebouwd** (zie §10.6.3). R12 zelf, de tijd voor harnaswerk begrenzen, blijft de keuze van de student: de pilot gaat er bewust tegenin. |
+| 24 | **Vastzitten zonder het te zeggen.** `check.mjs` zou melden "niets veranderd sinds de vorige run", en op L3 zou Claude na een reviewvraag zonder antwoord of met een fout antwoord één trede meer geven. | Studenten zoeken vaak geen hulp als ze die nodig hebben (Aleven & Koedinger 2000; Aleven et al. 2003). Wheel-spinning (Beck & Gong 2013). Contingent tutoren geeft meer hulp na een mislukking (Wood & Wood 1999); Wood & Middleton (1975) zagen het eerst bij moeders en hun kinderen. | **Gesteund, maar niet gekozen:** de student hield het zoals het is. Een vooraf geregistreerde replicatie van het experiment uit 1978 over contingent tutoren (Wood, Wood & Middleton 1978) vond het effect op het zelfstandig presteren van de kinderen niet terug (Smit et al. 2025). Dat raakt de hintladder (P3), en is voor de volgende reviewronde. |
+| 25 | **Afwijkingen van Claude.** De zekerheidsvraag kwam twee keer, tegen 19 in. De melding na een uur actieve tijd kwam niet te laat. | — | Ter kennisname. |
+
+#### 10.6.2 Hulp per concept en het voorstel voor een microvaardigheid
+
+```mermaid
+flowchart TD
+    M["[trede N #id] in het antwoord van Claude"] --> F{"een geldig id van<br/>een andere familie?"}
+    F -->|nee| R["een gewone trede:<br/>de taak houdt N"]
+    F -->|ja| C["de taak houdt N, en<br/>concept-help voor dat id"]
+    C --> E{"bewijs in deze sessie:<br/>hulp of een taak op trede 2+"}
+    RV["review-hulp"] --> E
+    T["een taak van de familie"] --> E
+    E -->|"[micro-voorstel …]"| P["de harnas toont<br/>het voorstel"]
+    P -->|"ja, toevoegen"| A["microvaardigheid op het<br/>niveau van de ouder min 1"]
+    P -->|nee| X["niet meer in deze sessie"]
+```
+
+Hulp over een concept van een andere familie blijft bij de taak en wordt ook bij dat concept gelogd. Met bewijs van echte hulp stelt de harnas een microvaardigheid voor, en alleen het eigen "ja" van de student voegt hem toe.
+
+#### 10.6.3 Waar de bouw van het plan afwijkt
+
+- **22: een taak op trede 2 of hoger is ook bewijs.** Het plan noemde alleen review-hulp en concepthulp op trede 2 of hoger. Maar 29 zegt dat er na zo'n taak geen review komt, alleen het voorstel; zonder dit kon dat voorstel niet komen. De student koos dit tijdens de bouw.
+- **22: het bewijs moet uit dezelfde sessie en dezelfde familie komen** als de voorgestelde microvaardigheid. Een voorstel dat de student afwees, komt in die sessie niet terug.
+- **26: de concepthulp kent zijn taak vooraf.** De hulp wordt gelogd als Claude hem geeft, voordat de taak een id heeft. Daarom reserveert de eerste concepthulp het id dat de taak zal krijgen (`taskTid`). Begint er eerst nieuw werk, dan wordt dat id nooit gebruikt, en `help-dropped` noemt het.
+- **26: een concept van dezelfde familie** (de ouder of een microvaardigheid ervan) is het eigen concept van de taak. De trede zegt het al, dus er komt geen extra event. Dit is de familielogica van de reviewmarker (15c-1).
+- **28: ook in `check.mjs`.** Na hulp vraagt de regel over de uitleg nu naar het punt waar de hulp nodig was. De Stop-hook is niet veranderd.
+- **30: met `--yes` of zonder terminal stopt hij,** tenzij er ook `--force` bij staat. Een vraag alleen had in de pilot niet geholpen: de update kwam uit een andere Claude-sessie, en die kan geen vraag beantwoorden. "Lopend" betekent een sessie die in de laatste `idleMinutes` (standaard 20) actief was. De hooks kunnen oefenen en praten over de harnas niet uit elkaar houden, dus elke sessie in de map telt.
+
 ---
 
 <a id="11-wijzigingslog"></a>
 
 ## 11. Wijzigingslog {#changelog}
+
+### 11 november 2026 (nacht): hulp per concept, een voorstel voor een microvaardigheid, en eerlijke woorden (besluiten van 11 november, middag)
+
+De pilotstudent besliste deze wijzigingen na de tweede sessie van 11 november, en elke wijziging is eerst aan de literatuur getoetst. Ze zitten nu in de harnas. Details en oordelen staan in §10.6.
+
+- **§10.6, nieuw:** besluiten 22–30, hulp per concept en het voorstel voor een microvaardigheid, en waar de bouw van het plan afwijkt.
+- **§3, R13:** publiceren is een keuze van de lerende, en dan gaat alleen een gefilterde selectie online. De tekst zegt niet meer dat er niets online komt.
+- **§8:** nieuwe bronnen. Elke bron is eerst aan de primaire bron of de samenvatting getoetst; de notities staan in [de citatiecheck](https://github.com/piethanegraaf/piethanegraaf.github.io/blob/main/research/citation-checks/citation_check_learning_science.md), sectie D. Twee bevindingen zijn voor de volgende ronde: het artikel over knowledge tracing werkt bij op goed of fout, niet op hulp; en het experiment uit 1978 over contingent tutoren is niet gerepliceerd (Smit et al. 2025).
+- **Niet veranderd:** de conclusies van §2.
 
 ### 11 november 2026 (avond, later): de vaardighedenkaart en het eindassessment
 

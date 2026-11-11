@@ -9,20 +9,20 @@ description: "De vier Claude Code-hooks van de leerharnas, elk commando van skil
 | Event | Script | Wat het doet |
 |---|---|---|
 | `SessionStart` | `session-start.mjs` | Zet het register, open uitleg en doorstroomvoorstellen in de context, en vraagt naar je doel. Een open voorstel zie je ook zelf, in de melding bij de start. Open uitleg van eerdere sessies vervalt hier. Herhalingen noemt hij niet. Na een eerste export naar het dashboard meldt hij ook wat er sindsdien nieuw is (zie `since-export`), behalve als `dashboardRepo` op `off` staat. |
-| `UserPromptSubmit` | `prompt-gate.mjs` | Herkent de vaardigheid, bepaalt of er een nieuwe trede bij mag, logt opgeloste taken en vraagt om uitleg. Zet het niveau als jij een voorstel bevestigt met "ja, doorzetten". Tijdens een transfertaak ontgrendelt geen trede. Berichten van agents, notificaties en systeemherinneringen tellen niet als jouw woorden. |
+| `UserPromptSubmit` | `prompt-gate.mjs` | Herkent de vaardigheid, bepaalt of er een nieuwe trede bij mag, logt opgeloste taken en vraagt om uitleg. Zet het niveau als jij een voorstel bevestigt met "ja, doorzetten", en voegt een microvaardigheid toe als jij een voorstel bevestigt met "ja, toevoegen". Tijdens een transfertaak ontgrendelt geen trede. Berichten van agents, notificaties en systeemherinneringen tellen niet als jouw woorden. |
 | `PreToolUse` | `guard.mjs` | Blokkeert schrijven, bouwen en testen van code op L1–L3, en elke wijziging aan het register, de state en de harnas zelf. Een shell-commando beoordeelt hij per los commando, op het programma dat draait. `eval`, `iex` en `Invoke-Expression` weigert hij altijd. Eén programma laat hij bewust toe: de dashboardexport `node <repo>/harness/export.mjs <oefenmap>`, die in de oefenmap alleen `last-export.json` schrijft (niet met `--out` in de oefenmap). |
-| `Stop` | `reflect-gate.mjs` | Verwerkt de markers in Claude's antwoord, controleert je uitleg, de transfertaak en het oordeel van de demotie-analist, en vraagt om het dagboek als je wilt stoppen. Haalt een uitleg een doorstroomcriterium, dan laat hij je meteen het voorstel zien. Na het dagboek vervalt wat nog open staat. |
+| `Stop` | `reflect-gate.mjs` | Verwerkt de markers in Claude's antwoord, controleert je uitleg, de transfertaak en het oordeel van de demotie-analist, en vraagt om het dagboek als je wilt stoppen. Haalt een uitleg een doorstroomcriterium, dan laat hij je meteen het voorstel zien. Hij toont ook een voorstel voor een microvaardigheid, als Claude erom vraagt en deze sessie het bewijs heeft. Na het dagboek vervalt wat nog open staat. |
 
 ## `skill.mjs` (je draait het zelf, met `!`)
 
 | Commando | Wat |
 |---|---|
-| `list` / `status` | Overzicht; herhalingen (L4) die klaarstaan, open en overgeslagen uitleg, en signalen. Deze twee mag Claude ook draaien. |
+| `list` / `status` | Overzicht; herhalingen (L4) die klaarstaan, open en overgeslagen uitleg, en signalen. `status` toont ook hulp over een vaardigheid tijdens taken van een andere vaardigheid (`concept-help`), alleen ter info. Deze twee mag Claude ook draaien. |
 | `since-export` | Wat er nieuw is sinds de laatste export naar het dashboard, in één regel: taken, dagboeksessies en niveauwijzigingen. Zonder export: dat er nog geen export bekend is. Daarna, als er iets nieuw is of niets bekend, de vraag "Dashboard nu bijwerken? (ja / later)" die `/diary` stelt. Niets als `dashboardRepo` op `off` staat. Het leest alleen, dus Claude mag het ook draaien: `/diary` sluit ermee af. Zie [Sinds de laatste export](progress-dashboard.md#sinds-de-laatste-export). |
 | `set <id> <L0..L4> "notitie"` | Niveau zetten. Omhoog kan pas als er geen taken meer op uitleg wachten. Een voorstel van de harnas bevestig je makkelijker in de chat: typ "ja, doorzetten" (eventueel met de id). |
 | `review <id> pass\|shaky\|fail` | De uitkomst van een herhaling zelf opgeven. Meestal niet nodig: de eerstvolgende taak van een L4-vaardigheid bepaalt hem. |
 | `add <id> "titel" ["trefwoorden"]` | Een nieuwe hoofdvaardigheid toevoegen, bijvoorbeeld voor een onderdeel van de toets dat niet in de kaart staat. Hij begint met een open plaatsing: je eerste taak bepaalt het niveau. Mappen koppel je met `paths`. Gelogd als event `skill-add`. |
-| `add-micro <parent> <id> <niveau> "titel" "trefwoorden"` | Een microvaardigheid toevoegen. Met `autoDemote` maakt de demotie-analist er ook zelf een aan, op het niveau van de ouder min 1. |
+| `add-micro <parent> <id> <niveau> "titel" "trefwoorden"` | Een microvaardigheid toevoegen. Met `autoDemote` maakt de demotie-analist er ook zelf een aan, op het niveau van de ouder min 1. Na echte hulp in een sessie kan de harnas er ook een voorstellen; die voeg je toe met "ja, toevoegen" in de chat. |
 | `done <id> "wat"` | Een taak zonder test afmelden (ontwerp, UML). |
 | `untask <id>` | De laatst gelogde taak van een vaardigheid schrappen. |
 | `correct <taak-id> trede <1-5> "reden"` | Meer hulp dan gelogd: de trede alleen **omhoog** zetten. |
@@ -54,6 +54,8 @@ Draait `dotnet test` met een trx-logger en toont een korte samenvatting. Een tes
 | Marker | Betekenis |
 |---|---|
 | `[trede N]` / `[rung N]` | Er is inhoudelijke hulp gegeven op trede N. |
+| `[trede N #id]` / `[rung N #id]` | Hetzelfde, en de hulp ging over het concept `id` uit `skills.json`. De taak houdt de trede. Een concept van een andere familie krijgt daarnaast een event `concept-help`; een concept van dezelfde familie, of een id dat niet bestaat, maakt er een gewone `[trede N]` van. |
+| `[micro-voorstel <id> "titel" "trefwoorden"]` / `[micro-proposal …]` | Claude vraagt de harnas een microvaardigheid voor te stellen. De harnas toont dat alleen met een geldig id onder een hoofdvaardigheid, 1–6 trefwoorden, en bewijs uit deze sessie: hulp op trede 2 of hoger in een review of over een ander concept, of een taak van die familie op trede 2 of hoger. Anders zegt de Stop-hook waarom hij het weigert. |
 | `[review-trede N #id]` / `[review-rung N #id]` | Hulp op trede N in een review na een taak, over het concept `id` uit `skills.json`. Die verhoogt de trede van de volgende taak niet, behalve als die taak over hetzelfde concept gaat (dezelfde familie). Zonder geldig id, zonder gelogde taak ervoor, of na een signaal van nieuw werk telt hij als een gewone `[trede N]`. |
 | `[uitleg-ok <tid>]` / `[explain-ok <tid>]` | De uitleg klopt; de Stop-hook controleert hem nog. |
 | `[uitleg-nee <tid>]` / `[explain-no <tid>]` | De uitleg is onvolledig; de taak blijft open. |
@@ -107,6 +109,17 @@ En van de setup review van 11 november 2026 (het begin van een taak, reviews en 
 | `rung-mark` met `review: true` | Een reviewmarker die als gewone trede telde. |
 | `test-green` met `firstRun: true` | De eerste run in een map was helemaal groen, met code die in deze sessie is geschreven. |
 | `paths` | Je koppelde een opdrachtmap aan een vaardigheid, of haalde hem weg (`action`, `glob`). |
+
+En van de setupreview van 11 november 2026, middag (hulp per concept, voorstellen voor microvaardigheden):
+
+| Event | Betekenis |
+|---|---|
+| `concept-help` | Hulp over een concept van een andere familie tijdens een taak (`skill`, `rung`, `taskSkill`). `taskTid` is het id dat de taak krijgt als hij gelogd wordt. Geen taak van dat concept. |
+| `help-dropped` met `taskTid` | Na concepthulp begon nieuw werk: dat taak-id wordt nooit gelogd. |
+| `micro-offered` | De harnas toonde een voorstel voor een microvaardigheid (`skill`, `parent`, `level`, `evidence`: `review`, `concept` of `task`). |
+| `micro-rejected` | Een voorstel dat de Stop-hook weigerde (`why`). |
+| `micro-declined` | Je zei "nee" tegen het voorstel. Het komt in die sessie niet terug. |
+| `micro-add` met `by: learner`, `via: voorstel` | De microvaardigheid, toegevoegd na jouw "ja, toevoegen". |
 
 ## Bestanden
 

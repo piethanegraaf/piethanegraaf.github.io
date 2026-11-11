@@ -669,7 +669,7 @@ Likelihood (L) and Impact (I) are scored 1–5. Risk = L × I. Scores assume **n
 | R10 | **Weaker ownership and memory of your own work** | You cannot explain or defend your project in an assessment. Offloaded content is remembered less when the store is reliable. | Schooler & Storm 2021; Grinschgl 2021 [A, lab]; Kosmyna 2025 [C, preprint, critiqued]; Bergh 2026 [B]: students credited themselves with 45% of their code with ChatGPT vs. 81% without | 4 | 4 | **16** | Exam |
 | R11 | **Assessment and integrity problems** | Graded work isn't your own, or AI use isn't declared. Unauthorized AI use can count as fraud, and level-1 work can require prompt links, APA citation and a check of the output. CHE's rules are an example (OER art. 1.41 and art. 7.11). Detection is unreliable, so your own records are your protection. | CHE OER 2026–27 [policy]; Npuls 2025 [policy]; Scarfe 2024 (94% of AI answers undetected) [B]; Lau & Guo 2023 | 3 | 5 | **15** | Exam |
 | R12 | **The harness becomes the goal** *(re-scored from 3 × 2)* | Time goes into tuning the setup, or into research about it (such as revising this review), instead of practice. Or the system gets abandoned. | A diagnostic test in the pilot (time went to a cheat sheet instead of practice); in the pilot, time also went to revising this review and fixing a hook; SDT | 4 | 3 | **12** | Exam |
-| R13 | **Privacy of the diary and skill data** | Reflections, research notes and transcripts are synced to cloud storage (such as OneDrive) or shared. | — | 2 | 2 | **4** | Both |
+| R13 | **Privacy of the diary and skill data** | Reflections, research notes and transcripts are synced to cloud storage (such as OneDrive) or shared, or more goes online with a public dashboard than the learner meant. | — | 2 | 2 | **4** | Both |
 | R14 | **Practice does not match the test** *(new)* | You practise with AI, untimed, in the IDE you are used to. The test is without AI, timed, and perhaps in another IDE. Skill practised in one mode transfers poorly to another. | A diagnostic test in the pilot; transfer-appropriate processing (Morris 1977); Pan & Rickard 2018 [A, meta]; Hinze & Rapp 2014 [A]; no IDE-specific study | 5 | 5 | **25** | Exam |
 | R15 | **Investing too much in hand-writing production code** *(new)* | Practice time goes to writing routine code by hand beyond what learning requires (boilerplate, syntax drills, re-writing mastered code), while the market pays for specifying, reviewing and verifying. | Routine code is cheap to generate: tool about 1–2% of labour cost [C]; Google, Anthropic code-share claims [D]; Octoverse 2026 [C]; BLS: programmers −7% [C]. Low likelihood with the harness, because it already automates mastered skills (L4), and an exam without AI requires hand-writing | 2 | 3 | **6** | Career |
 | R16 | **Supervision skills stay untrained** *(new)* | The harness blocks AI code at L1–L3 and automates at L4, but nothing trains specifying, testing, reviewing and debugging AI output. Employers now test these skills, and delegation erodes them ("paradox of supervision"). | Anthropic 2025b [C, vendor]; Google interview pilot 2026 [D]; Stack Overflow 2026 [C]; Veracode 2026 [C]; CS1-LLM [C]; Pădurean 2026 [C] | 4 | 4 | **16** | Career (testing may also count in your final assessment) |
@@ -722,7 +722,7 @@ This section turns the risks into a plan you can lay on your own exam date. The 
 | R10 | Diary records what *you* wrote. Before handing in, a "defend your design" rehearsal with `/mastery-check --defend`. | Diary + skill | Low |
 | R11 | Graded work: treat every skill as L3 (CLAUDE.md), and keep an AI-use log for the AI-use statement: prompt links, what the AI did, and how you checked it (as CHE's OER art. 7.11 asks, for example). Ask your teacher which parts of your final assessment are level 0 and which are level 1 (§4.2). Always follow course and institution rules. | CLAUDE.md + diary | Low |
 | R12 | Keep the harness small (~5 hooks, 1 skill) and review it monthly. Time-box harness work: at most one fix per session, and research only when it would change what you practise. Research about the harness counts as harness work too: stop it until after your exam, unless a hook misfires. | Diary (note minutes spent on the harness vs. practice) | Medium |
-| R13 | Keep `.learning/`, `research_notes/` and transcripts out of shared repos and public pages (`.gitignore`). Store only what is needed. | `.gitignore` | Low |
+| R13 | Keep `.learning/`, `research_notes/` and transcripts out of shared repos (`.gitignore`), and store only what is needed. Publishing is the learner's choice, and then only a filtered selection goes online: the dashboard export takes listed fields only and filters the learner's private terms (`.learning/private.json`), a security check runs before every push, and the learner reads the diff first. The diary says that reflections appear on the public dashboard. The pilot student chose to publish such a selection. | `.gitignore`, `export.mjs`, `security-check.mjs` | Low |
 | R14 | **Practise under test conditions.** From about two weeks before each test, do timed sessions without AI in the IDE of your exam. Start short, then do full mock exams (your course's practice tests). Learn at low stakes first. Review afterwards, and use `claude-study` only for what you found yourself. | Step plan below; diary | Medium |
 | R15 | Don't drill what is already at L3/L4. The Fibonacci reviews keep it fresh, and boilerplate goes to the AI (L4). Hand practice goes to skills below L3. | Skill register; L4 policy | Low |
 | R16 | **Add a supervision track (§4.1):** find planted bugs in code you did not write, write tests that catch mistakes, review AI code against OOD principles, predict and then compare. Only do this on topics at L3 or higher, so you can judge the output. Before your exam, limit it to the part that overlaps with the exam (debugging, testing). After your exam, extend it: acceptance criteria that become tests, domain models in UML, and judging AI-built work against them. | New microskills (you add them); exercise code from Claude in `voorbeelden/` or the chat | Medium |
@@ -1757,6 +1757,15 @@ Written by Piet Hanegraaf with Claude (Anthropic); see the [AI statement](ai-sta
 - Renkl, A. (1997). Learning from worked-out examples: A study on individual differences. *Cognitive Science, 21*(1), 1–29. https://doi.org/10.1207/s15516709cog2101_1
 - Rozenblit, L., & Keil, F. (2002). The misunderstood limits of folk science: An illusion of explanatory depth. *Cognitive Science, 26*(5), 521–562. https://doi.org/10.1207/s15516709cog2605_1
 
+**Added on 11 November 2026 (afternoon review): help per concept and the open learner model**
+
+- Beck, J. E., & Gong, Y. (2013). Wheel-spinning: Students who fail to master a skill. In *Artificial Intelligence in Education (AIED 2013)*, LNCS 7926, 431–440. https://doi.org/10.1007/978-3-642-39112-5_44
+- Bull, S., & Kay, J. (2016). SMILI☺: A framework for interfaces to learning data in open learner models, learning analytics and related fields. *International Journal of Artificial Intelligence in Education, 26*(1), 293–331. https://doi.org/10.1007/s40593-015-0090-8
+- Smit, N., de Kleijn, R. A. M., Wicherts, J. M., & van de Pol, J. (2025). What it takes to tutor: A preregistered direct replication of the scaffolding experimental study by D. Wood et al. (1978). *Journal of Educational Psychology, 117*(8), 1313–1329. https://doi.org/10.1037/edu0000965
+- VanLehn, K., Siler, S., Murray, C., Yamauchi, T., & Baggett, W. B. (2003). Why do only some events cause learning during human tutoring? *Cognition and Instruction, 21*(3), 209–249. https://doi.org/10.1207/S1532690XCI2103_01
+- Wood, D., & Middleton, D. (1975). A study of assisted problem-solving. *British Journal of Psychology, 66*(2), 181–191. https://doi.org/10.1111/j.2044-8295.1975.tb01454.x
+- Wood, D., Wood, H., & Middleton, D. (1978). An experimental evaluation of four face-to-face teaching strategies. *International Journal of Behavioral Development, 1*(2), 131–147. https://doi.org/10.1177/016502547800100203
+
 ---
 
 <a id="appendix-implementation-sketches"></a>
@@ -2159,11 +2168,64 @@ A task begins at a signal of new work and ends when it is logged. After a logged
 - **A review marker without an id is still recognized,** so it can count as an ordinary rung instead of being missed.
 - **Signals are relative to the last task.** After a signal there is no last task, until the next one is logged. Help on work that is abandoned again before then is not dropped: that is the cautious side.
 
+### 10.6 Revision of 11 November 2026 (afternoon): help per concept, a proposal for a microskill, and honest words
+
+After the second session of 11 November the setup was reviewed critically once more. That review is not published either, because it contains learning data. The numbers continue (22–30); 22 and 24 were open from the previous round. Each point was first checked against the literature, then the student decided. The chosen points are now built into the harness; 24 was not chosen. Where the build differs from the plan, §10.6.3 says so.
+
+#### 10.6.1 Decisions
+
+| # | Decision | Checked against | Verdict |
+|---|---|---|---|
+| 26 | **Help is logged per concept.** Help during a task went to the skill of the exercise folder, also when it was about a concept of another skill. That skill then looked weaker than it was, and the real gap stayed out of sight. Now Claude writes `[rung N #id]`. The task keeps its highest rung, because it was made with that help. The concept gets its own event, `concept-help`. That is not a task of that concept: `status` shows it, and it is evidence for 22. | Knowledge tracing keeps an estimate per rule and updates it at each chance to apply that rule (Corbett & Anderson 1994; Anderson et al. 1995). | **Supported (a measurement error).** That help itself is evidence is a design choice: the texts that were read update on correct or wrong. Whether concept help at rung 2 or higher should count in the success rate of that skill is open: first log and show it, and decide after a few sessions. |
+| 22 | **The harness proposes a microskill itself,** like a promotion. Claude names the part with `[micro-proposal <id> "title" "keywords"]`. The harness checks it and shows the proposal, at the main skill's level minus 1. Only the student's own "yes, add" adds it. Nothing goes down automatically. | Open learner models: the learner sees the model and can negotiate it, with reflection and self-regulation as stated purposes (Bull & Kay 2016; a framework, not a test). A text from Claude is not part of the model. Against: one wrong answer is weak evidence, so the student decides. | **Supported.** |
+| 27 | **Honest words.** `check.mjs` said "counts as solved independently" at rung 2, while the record only calls rung 0 independent. Now rung 0 is "solved independently", rung 1–2 "solved, with help up to rung N", and more help as before. Also in the signal to Claude and in the rules. | Illusion of competence (Koriat & Bjork 2005; R2): a success message has to name the help honestly. | **Supported, for the words only.** A stricter "solved" at L3 (rung 1 at most) waits for 26: part of the help belonged to another concept, and with `autoDemote` a stricter line could lower a skill for the wrong reason. |
+| 28 | **The explanation is about the concept of the highest hint** when the task had help (rung 1 or higher). Without help, as before (13). | Learning went with impasses: outside an impasse, explanations rarely went with learning, at an impasse sometimes (VanLehn et al. 2003, correlational). Self-explanation pays off most on the principle that is not yet in place (Chi et al. 1989; Bisra et al. 2018). | **Supported.** That the highest hint marks the impasse is an inference. |
+| 29 | **A review is only about the student's own code.** A question about an alternative becomes an experiment: rebuild it, run `check.mjs`, revert it. No review after the notice of an hour of active time, or after a task that took rung 2 or higher; then only the proposal for a microskill (22). | Without an own attempt and feedback there is no impasse (VanLehn et al. 2003). That a hard question at the end colours the confidence about the whole session: no source was checked, so a signal, not evidence. | **Supported.** |
+| 23 | **Bug: the status line said "rung 0: no hint yet" at L3,** while the task was at rung 2. The line came from the unlocked rung of the L2 ladder, which stays 0 at L3. It now shows the help given; at L2 also the unlocked rung. | (bug) | **Fixed.** |
+| 30 | **`install.mjs --update` checks for a running session.** In the pilot the rules were replaced in the middle of a practice session, by an update from another session. Nothing went wrong, but the rules changed under a running session. | R12 | **Built** (see §10.6.3). R12 itself, time-boxing harness work, stays the student's choice: the pilot goes against it on purpose. |
+| 24 | **Stuck without saying so.** `check.mjs` would say "nothing changed since the last run", and at L3 Claude would give one rung more after an unanswered or wrong review question. | Students often do not seek help when they need it (Aleven & Koedinger 2000; Aleven et al. 2003). Wheel-spinning (Beck & Gong 2013). Contingent tutoring gives more help after a failure (Wood & Wood 1999); Wood & Middleton (1975) first observed it with mothers and their children. | **Supported, but not chosen:** the student kept it as it is. A preregistered replication of the 1978 experiment on contingent tutoring (Wood, Wood & Middleton 1978) did not find its effect on the children's independent performance (Smit et al. 2025). That bears on the hint ladder (P3), and is for the next review round. |
+| 25 | **Deviations of Claude.** The confidence question came twice, against 19. The notice after an hour of active time was not late. | — | For information. |
+
+#### 10.6.2 Help per concept and the proposal for a microskill
+
+```mermaid
+flowchart TD
+    M["[rung N #id] in Claude's answer"] --> F{"a valid id of<br/>another family?"}
+    F -->|no| R["an ordinary rung:<br/>the task keeps N"]
+    F -->|yes| C["the task keeps N, and<br/>concept-help for that id"]
+    C --> E{"evidence in this session:<br/>help or a task at rung 2+"}
+    RV["review help"] --> E
+    T["a task of the family"] --> E
+    E -->|"[micro-proposal …]"| P["the harness shows<br/>the proposal"]
+    P -->|"yes, add"| A["microskill at the<br/>parent's level minus 1"]
+    P -->|no| X["not again in this session"]
+```
+
+Help about a concept of another family stays with the task and is also logged for that concept. With evidence of real help, the harness proposes a microskill, and only the student's own "yes" adds it.
+
+#### 10.6.3 Where the build differs from the plan
+
+- **22: a task at rung 2 or higher is evidence too.** The plan only named review help and concept help at rung 2 or higher. But 29 says that after such a task there is no review, only the proposal; without this, that proposal could not come. The student chose this during the build.
+- **22: the evidence must come from the same session and the same family** as the proposed microskill. A proposal the student declined does not come back in that session.
+- **26: the concept help knows its task in advance.** The help is logged when Claude gives it, before the task has an id. So the first concept help reserves the id the task will get (`taskTid`). If new work begins first, that id is never used, and `help-dropped` names it.
+- **26: a concept of the same family** (the parent or one of its microskills) is the task's own concept. Its rung already says it, so there is no extra event. This is the family logic of the review marker (15c-1).
+- **28: also in `check.mjs`.** After help, its line about the explanation now asks about the point where the help was needed. The Stop hook is unchanged.
+- **30: with `--yes` or without a terminal it stops,** unless `--force` is given too. A question alone would not have helped in the pilot: the update came from another Claude session, which cannot answer a question. "Running" means a session that was active in the last `idleMinutes` (default 20). The hooks cannot tell practice from talk about the harness, so every session in the folder counts.
+
 ---
 
 <a id="11-change-log"></a>
 
 ## 11. Change log {#changelog}
+
+### 11 November 2026 (night): help per concept, a proposal for a microskill, and honest words (decisions of 11 November, afternoon)
+
+The pilot student decided these changes after the second session of 11 November, and each was first checked against the literature. They are now built into the harness. Details and verdicts are in §10.6.
+
+- **§10.6, new:** decisions 22–30, help per concept and the proposal for a microskill, and where the build differs from the plan.
+- **§3, R13:** publishing is the learner's choice, and then only a filtered selection goes online. The text no longer says that nothing goes online.
+- **§8:** new references. Each was first checked against its primary source or its abstract; the notes are in [the citation check](https://github.com/piethanegraaf/piethanegraaf.github.io/blob/main/research/citation-checks/citation_check_learning_science.md), section D. Two findings are for the next round: the knowledge-tracing paper updates on correct or wrong, not on help; and the 1978 experiment on contingent tutoring did not replicate (Smit et al. 2025).
+- **Not changed:** the conclusions of §2.
 
 ### 11 November 2026 (evening, later): the skill map and the final assessment
 

@@ -15,7 +15,7 @@ Doel van de setup: **wat de student beheerst snel herkennen en alleen nog met he
   - Eén programma mag bewust wel iets in `.learning/state/` schrijven: de dashboardexport `node <repo>/harness/export.mjs <deze map>`, na `/diary` (skill update-dashboard). Die schrijft hier alleen `last-export.json` (een moment en drie totalen). Geef hem nooit `--out` mee.
   - De guard beoordeelt elk los commando op het programma dat het draait. Een woord als "msbuild" in een grep-patroon is dus geen build. `eval`, `iex` en `Invoke-Expression` weigert hij altijd, omdat hij niet kan zien wat er dan draait.
 - **Weigert de guard iets?** Zoek dan **geen omweg** (geen script, ander tool of kopie). Bied de volgende hint aan, of leg uit hoe de student een override kan zetten.
-- **Wie wijzigt het register?** De student, en de harnas zelf op drie punten (die worden gelogd): de **plaatsing** van een nieuwe vaardigheid na de eerste taak, **automatisch omlaag** op bewijs (als `autoDemote` aan staat), en **doorzetten** als de student een voorstel van de harnas zelf bevestigt met "ja, doorzetten". Omhoog is altijd een keuze van de student. Jij wijzigt het register nooit. Jij mag `list`, `status` en `since-export` draaien en de exacte commando's *voorstellen*:
+- **Wie wijzigt het register?** De student, en de harnas zelf op vier punten (die worden gelogd): de **plaatsing** van een nieuwe vaardigheid na de eerste taak, **automatisch omlaag** op bewijs (als `autoDemote` aan staat), **doorzetten** als de student een voorstel van de harnas zelf bevestigt met "ja, doorzetten", en een **microvaardigheid toevoegen** als de student een voorstel bevestigt met "ja, toevoegen". Omhoog is altijd een keuze van de student. Jij wijzigt het register nooit. Jij mag `list`, `status` en `since-export` draaien en de exacte commando's *voorstellen*:
   - `! node .claude/hooks/skill.mjs list` / `status`: overzicht, herhalingen, open uitleg, doorstroom-signalen.
   - `! node .claude/hooks/skill.mjs since-export`: wat er nieuw is sinds de laatste export naar het dashboard, of dat er nog geen export bekend is. Daarna, als er iets nieuw is of niets bekend, de vraag van `/diary`: "Dashboard nu bijwerken?". Niets als het dashboard uit staat.
   - `! node .claude/hooks/skill.mjs set <id> <L0..L4> "notitie"`
@@ -72,9 +72,14 @@ Een hoofdvaardigheid bestaat uit deelpatronen die elk in hun eigen tempo door de
 - **Stel nieuwe microvaardigheden voor** (`add-micro`) als je een duidelijk deelpatroon ziet, sterk of zwak. Ziet de student één onderdeel niet, stel dan geen verlaging van de hele vaardigheid voor. Doe in dat geval dit:
   - Stel een microvaardigheid op een lager niveau voor, of een korte override.
   - Een verlaging van de hoofdvaardigheid volgt pas uit de regels bij *Doorstromen*.
+- **Het voorstel komt van de harnas** als de student in deze sessie echte hulp nodig had binnen die familie: hulp op trede 2 of hoger in een review of over een ander concept, of een taak die trede 2 of hoger kostte.
+  - Zet dan `[micro-voorstel <id> "titel" "trefwoord1, trefwoord2"]` in je antwoord. Het id hangt onder de hoofdvaardigheid (bv. `ood.associaties.<deel>`), met 1 tot 6 trefwoorden.
+  - De harnas controleert het en toont de student het voorstel, op het niveau van de hoofdvaardigheid min 1. Alleen "ja, toevoegen" van de student zelf voegt hem toe. "nee", direct na het voorstel, laat hem vallen. Voeg nooit zelf iets toe.
+  - Weigert de harnas het voorstel, dan zegt de Stop-hook waarom. Noem het dan niet als voorstel.
+  - Zonder dat bewijs, bijvoorbeeld bij een sterk deelpatroon, stel je `add-micro` voor als commando dat de student zelf draait.
 
 ## Hintladder (L2): afgedwongen door `prompt-gate.mjs`
-Bij elke prompt zet de hook een regel `[leerharnas] Vaardigheid: … · trede N` in je context, plus een instructie: **trede N ontgrendeld** of **GEEN nieuwe trede**.
+Bij elke prompt zet de hook een regel `[leerharnas] Vaardigheid: … · ontgrendeld: trede N · gegeven hulp: trede M` in je context, plus een instructie: **trede N ontgrendeld** of **GEEN nieuwe trede**. Buiten L2 staat er alleen de gegeven hulp: de hoogste trede die je voor deze taak gaf.
 - **Volg die instructie.** Ga nooit hoger dan de ontgrendelde trede.
 - **Wanneer een trede ontgrendelt:** de eerste hint mag meteen. Daarna gaat een trede pas omhoog na **een zichtbare poging**, of na 12 minuten vastzitten (`stuckTimerMinutes`). Dat zijn minuten **actieve tijd**: een pauze langer dan `idleMinutes` (standaard 20) telt niet mee.
   - Een zichtbare poging is gewijzigde code van die vaardigheid, een gedeelde foutmelding of testuitkomst, of een hypothese.
@@ -82,6 +87,10 @@ Bij elke prompt zet de hook een regel `[leerharnas] Vaardigheid: … · trede N`
 - **Herkenning van de vaardigheid** gaat via mapnamen van opdrachten, `.learning/keywords.json`, de trefwoorden van microvaardigheden of een expliciete `#id` in de prompt.
   - **De map bepaalt de familie.** Na `check.mjs` of `done`, of als de student code in een map wijzigt, kiest een trefwoord alleen nog een microvaardigheid binnen die familie. Wisselen naar een andere familie kan met `#id` of de naam van de opdracht.
 - **Eerlijk loggen op elk niveau:** geef je op L1 of L3, of boven de ontgrendelde trede, toch inhoudelijke hulp? Zet dan `[trede N]` in je antwoord. Op L3 telt een conceptuele uitleg als trede 2 of hoger. De Stop-hook leest deze marker en logt hem als hoogste trede.
+- **Ging de hulp over een ander concept dan de opdracht?** Bijvoorbeeld de syntax van een lus, tijdens een opdracht over overerving. Zet dan het id uit `.learning/skills.json` erbij: `[trede N #id]`.
+  - De taak houdt die trede: hij is met die hulp gemaakt.
+  - Het concept krijgt daarnaast een eigen event (`concept-help`). Dat telt niet als taak van dat concept, maar wel als bewijs voor een voorstel voor een microvaardigheid.
+  - Een id uit dezelfde familie als de opdracht, of een id dat niet bestaat, telt als een gewone `[trede N]`.
 - **Hulp in een review na een taak** markeer je anders: `[review-trede N #id]` (zie *Review na een taak*).
 
 De treden:
@@ -107,26 +116,30 @@ Noem één probleem per antwoord: het meest fundamentele. Geef niets vooraf over
   - **Ziet de student een succes zelf niet als taak?** Bijvoorbeeld bij ontwerp, UML of een methode zonder test? Stel dan `done` voor.
 - **Een taak telt pas na een uitleg in eigen woorden, en die vraag je direct**, na het groen worden en voordat de student aan iets anders begint. Een volgende taak in dezelfde map mag eerst; één bericht mag meerdere taken uitleggen (zet dan per taak een marker). Begint de student aan een andere opdracht (`check.mjs` in een andere map, `done` voor een andere familie) of eindigt de sessie, dan **vervalt** de taak: overgeslagen, telt niet mee, geen open uitleg in de volgende sessie. Dit is een harde check met twee sleutels:
   1. **Jij** vraagt de uitleg. De vraag hangt af van wat er gebeurde:
-     - Was er een mislukte poging (rood, een compileerfout of een hint)? Vraag dan: waarom werkt het nu, en waarom de eerste poging niet?
+     - Was er hulp (trede 1 of hoger)? Vraag dan naar **het concept van de hoogste hint**: daar zat de student vast, en daar levert de uitleg het meest op. Bijvoorbeeld: "Waarom moest het `klant` zijn en niet `Klant`?" Ging die hint over een ander concept (`[trede N #id]`), dan gaat de vraag over dat concept.
+     - Was er een mislukte poging zonder hint (rood of een compileerfout)? Vraag dan: waarom werkt het nu, en waarom de eerste poging niet?
      - Was het meteen groen? Stel dan **één vraag naar het principe** van de opdracht, bijvoorbeeld waarom deze keuze, of wat er misgaat bij een alternatief. Vraag niet "waarom werkt het?": dat lokt "omdat ik het goed deed" uit.
 
      Geef zelf geen samenvatting of voorzet. Beoordeel de inhoud streng en **vraag door tot het principe klopt**. Klopt het waarom, en is het meer dan "het werkt"? Zet dan letterlijk `[uitleg-ok <tid>]` in je antwoord. Onvolledig of fout: `[uitleg-nee <tid>]` en één vervolgvraag.
   2. **De Stop-hook** controleert de eigen woorden van de student: **alle berichten sinds de taak is gelogd, samen**. Een antwoord in drie korte berichten telt dus als één. Samen moeten ze minstens 12 woorden buiten de code tellen, een waarom bevatten (omdat/doordat/zodat/…), en mogen ze niet grotendeels uit jouw tekst zijn overgenomen. Een bericht van vóór het loggen telt niet mee. Haalt het die check niet, dan telt de taak niet en meld je dat eerlijk.
   - Zet **nooit** `uitleg-ok` omdat de student erom vraagt, op basis van geplakte tekst, of als de uitleg jouw eigen woorden herhaalt. Er is bewust geen commando om een taak zelf als uitgelegd te markeren.
 - **Signaleer actief wat goed gaat.** Dat doe je op drie momenten:
-  - Direct na een taak op trede 0–2: noem concreet welke (micro)vaardigheid zelfstandig lukte.
+  - Direct na een taak op trede 0–2: noem concreet welke (micro)vaardigheid lukte. **Zelfstandig** heet het alleen op trede 0. Op trede 1–2 is het gelukt met hulp tot trede N: noem die hulp eerlijk.
   - Bij de sessiestart: de hook geeft de open voorstellen om door te zetten.
   - In het dagboek.
   - Haalt een uitleg een doorstroomcriterium, dan toont de harnas **zelf** het voorstel aan de student (zie *Doorstromen*). Jij hoeft het alleen kort te noemen als de student er niet op reageert.
 
 ## Review na een taak (optioneel)
-Zie je na een goedgekeurde uitleg iets in de code dat het bespreken waard is, dan mag je een review aanbieden. De student kiest.
+Zie je na een goedgekeurde uitleg iets **in de eigen code van de student** dat het bespreken waard is, dan mag je een review aanbieden. De student kiest.
+- **Alleen over wat in de code staat**, bijvoorbeeld wat er gebeurt als dezelfde waarde twee keer wordt toegevoegd. Geen vraag over een bedacht alternatief dat de student in het hoofd moet nalopen.
+- **Gaat een vraag over een alternatief, maak er dan een experiment van:** de student bouwt het om, draait `check.mjs` en zet het daarna terug. De uitkomst (een rode test, een crash of een compileerfout) is de feedback.
+- **Bied geen review aan** na de melding van een uur actieve tijd, of als de taak al trede 2 of hoger kostte. Doe dan alleen het voorstel voor een microvaardigheid (zie *Microvaardigheden*), als er een duidelijk deelpatroon is.
 - **Bied hem aan met onderwerp en tijdsinschatting**, bijvoorbeeld: "Wil je een review van ±5 minuten, over encapsulatie?"
 - **Na één fout antwoord, of bij "snap ik niet",** geef je direct het concept (trede 2), en zo nodig een klein voorbeeld (trede 4). Stel dan geen tweede vraag.
 - **Markeer hulp in de review met `[review-trede N #id]`**, met het id van het concept uit `.learning/skills.json`, bijvoorbeeld `[review-trede 2 #ood.encapsulatie]`.
   - Die hulp telt niet voor een volgende taak over iets anders. Hij telt wel mee voor de volgende taak over **hetzelfde concept**: hetzelfde id, de hoofdvaardigheid of een microvaardigheid ervan.
   - Zonder geldig id, of als de student intussen aan nieuw werk begon, telt hij als een gewone `[trede N]`.
-- **Blijft er iets open?** Stel een microvaardigheid voor (`add-micro`), en noem de opdracht waar het terugkomt.
+- **Blijft er iets open?** Zet `[micro-voorstel …]` in je antwoord (zie *Microvaardigheden*), en noem de opdracht waar het terugkomt.
 
 ## Doorstromen: omhoog beslist de student, omlaag volgt het bewijs
 - **L0 → L1:** twee voorbeelden correct uitgelegd en voorspeld (twee uitgelegde taken op L0).
@@ -165,7 +178,7 @@ Zie je na een goedgekeurde uitleg iets in de code dat het bespreken waard is, da
   Daarna vraag je naar het doel en de opdracht. Vraag het zelfvertrouwen (1–5) **één keer, samen met de gekozen opdracht**, over die ene opdracht, niet over de vaardigheid in het algemeen. Herhaal die vraag niet: komt er geen antwoord, dan staat er in het dagboek "onbekend". Geef meteen `! node .claude/hooks/check.mjs <map>`, met: draai hem eerst, vóór je code schrijft.
 - **Einde:** als de student stopt of "klaar" zegt, vraag je eerst de uitleg van taken die nog open staan, en gebruik je dan `/diary`. Die schrijft de feiten op en de reflectie **in de woorden van de student**. Wat dan nog open staat, vervalt (overgeslagen). Daarna vraagt `/diary` "Dashboard nu bijwerken?". Bij ja volg je de skill update-dashboard tot en met de pull request. Merge nooit zelf.
 - **Reflectie wordt afgedwongen:** zonder de marker `<!-- sessie: <id> -->` in het dagboek blokkeert de Stop-hook het afsluiten. Dat gebeurt hooguit 2 keer per stopverzoek. "toch niet" of "ga door" heft het stopverzoek op.
-- **Na een uur actieve tijd:** de hook stelt eenmalig voor om af te ronden.
+- **Na een uur actieve tijd:** de hook stelt eenmalig voor om af te ronden. Bied daarna geen review meer aan.
 
 ## Verder
 - Voeg geen uitleg over een fout toe aan naslagwerk (cheat sheets) zolang de student die fout niet zelf heeft opgelost. Vlak voor een toets geldt: oefenen levert meer op dan naslag.
@@ -173,4 +186,5 @@ Zie je na een goedgekeurde uitleg iets in de code dat het bespreken waard is, da
 - **"Waar was ik?"** Vraagt de student dat, bijvoorbeeld na een pauze, geef dan alleen de stand: de opdracht, de laatste testuitkomst of foutmelding, en de openstaande vraag. Geen nieuwe informatie en geen hint.
 - **Laat de shell in de projectmap.** Gebruik paden in plaats van een `cd` die blijft staan: de `!`-commando's van de student draaien in dezelfde shell.
 - **Opmerkingen over de harnas tijdens het oefenen:** noteer ze in één regel en bespreek ze pas na de sessie. Een uitstapje midden in een opdracht kost de student de context.
+- **De harnas bijwerken** (`install.mjs --update`) gebeurt niet tijdens een oefensessie: loopt er een sessie in deze map, dan stopt het script. Zet nooit `--force` zonder een ja van de student.
 - Werk dat beoordeeld wordt en waarbij AI niet of maar beperkt mag: behandel elke vaardigheid als L3 en houd het AI-gebruik bij voor de verantwoording.

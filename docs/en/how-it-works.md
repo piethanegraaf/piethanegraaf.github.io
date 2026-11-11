@@ -72,14 +72,30 @@ If you still want Claude to do something, you set an override yourself: `! node 
 
 A task is logged when a test goes from red to green (`check.mjs`), when you log it yourself (`done`), or when you say in the chat that the tests pass. It only counts after an explanation **in your own words**, with two keys:
 
-1. Claude judges the content and writes `[explain-ok <tid>]` or `[explain-no <tid>]`. The question depends on what happened. After a failed attempt (red, a compile error or a hint): why does it work now, and why did the first attempt not? Green at once: one question about the principle of the exercise. Claude keeps asking until the principle is right.
+1. Claude judges the content and writes `[explain-ok <tid>]` or `[explain-no <tid>]`. The question depends on what happened. After help (rung 1 or higher): about the concept of the highest hint, because that is where you were stuck. After a failed attempt without a hint (red or a compile error): why does it work now, and why did the first attempt not? Green at once: one question about the principle of the exercise. Claude keeps asking until the principle is right.
 2. The Stop hook checks your own words: **all your messages since the task was logged, together**. An answer in three short messages counts as one. Together they need at least 12 words outside code, a *why* (because, so that, otherwise …), and they must not be copied from Claude's text. A message from before the task was logged does not count.
 
 The explanation belongs **right after** the green. A next task in the same folder may come first, and one message may explain several tasks. If you start another exercise, or the session ends, the task **lapses**: it does not count and shows up on the dashboard as skipped. If an approved explanation got lost through a harness bug, you recover it with `replay`.
 
 A test that was green once, turned red and is green again is a **repaired regression** and does not count as a new task.
 
-**A review after a task** is optional. Claude offers it with a topic and a time estimate, and you choose. After one wrong answer, or when you say you do not get it, Claude gives the concept right away instead of another question. Help in a review is marked `[review-rung N #id]`, with the id of the concept. It does not count for your next task about something else, but it does for the next task about the same concept: the same id, its parent skill or one of its microskills. Without a valid id, or after you started new work, it counts as an ordinary rung. Whatever stays open becomes a proposed microskill.
+**Honest words.** "Solved independently" only means rung 0. At rung 1–2 the task counts as solved, and the harness says "solved, with help up to rung N". With more help it does not count as solved.
+
+**Help about another concept** is logged for that concept too. Suppose Claude helps you with the syntax of a loop during an exercise on inheritance. Then Claude writes `[rung N #id]`, with the id of the loop skill. The task keeps that rung, because you made it with that help. The concept gets its own event, `concept-help`. That is not a task of that concept: `status` shows it, and it counts as evidence for a proposal for a microskill. The status line Claude sees with every prompt shows the help given for this task, also at L3 (`help given: rung N`); at L2 also the unlocked rung.
+
+**A review after a task** is optional, and only about your own code. Claude offers it with a topic and a time estimate, and you choose. A question about an alternative becomes an experiment: you rebuild it, run `check.mjs` and revert it, so the outcome is real feedback. There is no review after the notice of an hour of active time, or when the task already took rung 2 or higher. After one wrong answer, or when you say you do not get it, Claude gives the concept right away instead of another question. Help in a review is marked `[review-rung N #id]`, with the id of the concept. It does not count for your next task about something else, but it does for the next task about the same concept: the same id, its parent skill or one of its microskills. Without a valid id, or after you started new work, it counts as an ordinary rung.
+
+**A proposal for a microskill** comes from the harness itself, like a proposal to promote. It needs evidence from this session that you needed real help with that part: help at rung 2 or higher in a review or about another concept, or a task that took rung 2 or higher. Claude names the part and its keywords; the harness checks them and shows you:
+
+```
+[harness] Add a microskill? ood.associaties.<part> (title) under ood.associaties, at L2 Guided
+  why: task <tid> of ood.associaties took rung 2
+  keywords: …
+  what changes: this part gets its own level and its own hint ladder; ood.associaties stays at L3
+  yes: type "yes, add" · no: type "no"
+```
+
+Only your own "yes, add" (or "ja, toevoegen") adds it, at the main skill's level minus 1. Nothing goes down automatically: one hard moment is weak evidence, so you decide.
 
 ## Promotion and reviews
 

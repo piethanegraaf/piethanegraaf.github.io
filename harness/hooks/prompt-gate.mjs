@@ -9,11 +9,11 @@ import {
   taskStats, ROOT, levelName, isMicro, microsOf, keywordMap, logTask, pendingTasks, levelAdvice, learnerText,
   settingsOf, codeExtRe, toolingRe, touch, activeMinutesSince, startTask, effectiveLevel, isPlacementPending, isReviewDue,
   afterTask, allTasks, readEvents, openOffer, promote, exerciseDirs, newWorkSignal, beginNewWork, noteExplanationWords,
-  taskRung, taskLogged, t,
+  taskRung, taskLogged, addMicro, t,
 } from "./lib.mjs";
 import {
   HINT, SOLUTION, SOLVED_STRONG, SOLVED_WEAK, CODE_CONTEXT, NOT_SOLVED, END, RESUME, ATTEMPT, CHECKING,
-  STUCK, DONT_KNOW, MORE_EXPLANATION, errorSignature, promotionAnswer,
+  STUCK, DONT_KNOW, MORE_EXPLANATION, errorSignature, promotionAnswer, microAnswer,
 } from "./patterns.mjs";
 
 const rungName = (n) => t(`rung.${n}`);
@@ -91,6 +91,33 @@ let promotedMsg = null;
     logEvent({ type: "promotion-declined", skill: fresh.skill, level: fresh.from, to: fresh.to, lastTid: fresh.lastTid, session: sid });
     st.lastOffer = null; st.proposals = [];
     ctx.push(t("pg.promote.declined", { id: fresh.skill }));
+  }
+}
+
+// ---------- 0b. Answer to a proposal for a microskill (setup review of 11 Nov, afternoon, #22) ----------
+// Only the learner's own "ja, toevoegen" (optionally with the id) adds it: the latest open proposal, or
+// the one with that id. A bare "nee" right after a proposal declines it; it is not shown again in this session.
+let microMsg = null;
+{
+  const ans = microAnswer(prompt);
+  const offers = Array.isArray(st.microOffers) ? st.microOffers : [];
+  const fresh = new Set(offers.filter((o) => o.fresh).map((o) => o.id));
+  for (const o of offers) o.fresh = false;
+  if (ans?.answer === "yes") {
+    const pick = ans.id ? offers.find((o) => o.id === ans.id) : offers[offers.length - 1];
+    const parent = pick ? findSkill(data, pick.parent) : null;
+    if (!pick) ctx.push(t("pg.micro.none", { id: ans.id ?? "-" }));
+    else if (!parent || findSkill(data, pick.id)) ctx.push(t("pg.micro.gone", { id: pick.id }));
+    else {
+      addMicro(data, parent, { id: pick.id, title: pick.title, level: pick.level, keywords: pick.keywords, note: t("note.byProposal"), by: "learner", via: "voorstel" });
+      microMsg = t("micro.added", { id: pick.id, level: pick.level, name: levelName(pick.level), parent: parent.id, plevel: parent.level });
+      ctx.push(t("pg.micro.done", { msg: microMsg }));
+    }
+    if (pick) st.microOffers = offers.filter((o) => o !== pick);
+  } else if (ans?.answer === "no" && fresh.size) {
+    for (const o of offers.filter((x) => fresh.has(x.id))) logEvent({ type: "micro-declined", skill: o.id, parent: o.parent, session: sid });
+    st.microOffers = offers.filter((o) => !fresh.has(o.id));
+    ctx.push(t("pg.micro.declined", { ids: [...fresh].join(", ") }));
   }
 }
 
@@ -270,8 +297,10 @@ if (solved && skill) {
   const { rung: m, reviewRung } = taskRung(data, st, skill.id);
   const success = m < 5;
   const mins = activeMinutesSince(st, st.taskStartedActive);
-  const tk = logTask({ skill: skill.id, success, maxRung: m, minutes: mins, source: "chat", session: sid, level, reviewRung: reviewRung > (st.maxRung ?? 0) ? reviewRung : 0 });
-  const verdict = t(!success ? "pg.verdict.fail" : m <= 2 ? "pg.verdict.ok" : "pg.verdict.help");
+  const tk = logTask({ skill: skill.id, success, maxRung: m, minutes: mins, source: "chat", session: sid, level, reviewRung: reviewRung > (st.maxRung ?? 0) ? reviewRung : 0,
+    tid: st.openTid });
+  // Honest words (#27): independent only at rung 0; at rung 1-2 solved with help up to that rung.
+  const verdict = t(!success ? "pg.verdict.fail" : m === 0 ? "pg.verdict.solo" : m <= 2 ? "pg.verdict.ok" : "pg.verdict.help", { rung: m });
   ctx.push(t("pg.taskLogged", { id: skill.id, tid: tk.tid, rung: m, verdict }));
   const after = afterTask(data, skill.id, tk);
   if (success && m <= 2) {
@@ -389,15 +418,21 @@ if (ending) {
 if (skill || wantsHint || ctx.length) {
   const stats = skill ? taskStats(skill.id, 10, isMicro(skill) ? null : data) : null;
   const name = skill ? (isMicro(skill) ? t("pg.head.micro", { id: skill.id, parent: skill.parent }) : skill.id) : null;
+  // The help given for this task so far (#23): the highest rung, with review help about this concept.
+  // st.rung is only the unlocked rung of the L2 ladder; at L3 it stays 0 while [trede N] is logged.
+  const given = skill ? taskRung(data, st, skill.id).rung : 0;
+  const givenText = given ? t("pg.head.given", { rung: given }) : t("pg.head.givenNone");
   const head = skill
     ? t("pg.head", {
-      name, level, levelName: levelName(level), rung: st.rung, rungName: rungName(st.rung),
+      name, level, levelName: levelName(level),
+      help: level === "L2" ? `${t("pg.head.unlocked", { rung: st.rung, rungName: rungName(st.rung) })} · ${givenText}` : givenText,
       stats: stats.n ? t("pg.head.stats", { ok: stats.ok, n: stats.n, pct: Math.round(settings.targetSuccess * 100) }) : t("pg.head.noTasks"),
       pending: stats.pending ? t("pg.head.pending", { n: stats.pending }) : "",
     })
     : t("pg.head.unknown", { level });
+  const systemMessage = [promotedMsg, microMsg].filter(Boolean).join("\n\n");
   process.stdout.write(JSON.stringify({
-    ...(promotedMsg ? { systemMessage: promotedMsg } : {}),
+    ...(systemMessage ? { systemMessage } : {}),
     hookSpecificOutput: { hookEventName: "UserPromptSubmit", additionalContext: [head, ...ctx].join("\n") },
   }));
 }

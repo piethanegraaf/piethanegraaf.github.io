@@ -67,7 +67,7 @@ test("en: the prompt gate answers in English, and still recognises Dutch", () =>
   try {
     let r = p.hook("prompt-gate.mjs", { session_id: "s1", prompt: "I'm stuck on 02-lijst, how do I start?" });
     let ctx = r.json.hookSpecificOutput.additionalContext;
-    assert.match(ctx, /^\[harness\] Skill: demo\.l2 \(L2 Guided\) · rung 1: Socratic question/);
+    assert.match(ctx, /^\[harness\] Skill: demo\.l2 \(L2 Guided\) · unlocked: rung 1 \(Socratic question\) · help given: rung 1/);
     assert.match(ctx, /Rung 1 unlocked \(Socratic question\)\. Reason: first hint\./);
     r = p.hook("prompt-gate.mjs", { session_id: "s1", prompt: "alle tests zijn groen" });
     ctx = r.json.hookSpecificOutput.additionalContext;
@@ -81,7 +81,7 @@ test("nl: the prompt gate answers in Dutch, and recognises English", () => {
   try {
     const r = p.hook("prompt-gate.mjs", { session_id: "s1", prompt: "I'm stuck on 02-lijst, how do I start?" });
     const ctx = r.json.hookSpecificOutput.additionalContext;
-    assert.match(ctx, /^\[leerharnas\] Vaardigheid: demo\.l2 \(L2 Begeleid\) · trede 1: Socratische vraag/);
+    assert.match(ctx, /^\[leerharnas\] Vaardigheid: demo\.l2 \(L2 Begeleid\) · ontgrendeld: trede 1 \(Socratische vraag\) · gegeven hulp: trede 1/);
     assert.match(ctx, /Trede 1 ontgrendeld/);
   } finally { p.cleanup(); }
 });

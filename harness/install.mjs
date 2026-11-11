@@ -2,12 +2,15 @@
 // Leerharnas installer. No dependencies, no network, no shell: it only copies files into the target folder.
 //
 //   node harness/install.mjs <doelmap> [--map ood|junior-dotnet] [--lang nl|en] [--course "<vak>"] [--exam JJJJ-MM-DD] [--dry-run] [--yes]
-//   node harness/install.mjs <doelmap> --update [--dry-run] [--yes]
+//   node harness/install.mjs <doelmap> --update [--dry-run] [--yes] [--force]
 //
 // - It first shows what will happen. It only changes files with --yes, or after "j" in an interactive terminal.
 // - Every existing file that changes is first copied to .claude/leerharnas-backup/<tijd>/.
 // - --update replaces the harness code (hooks, the diary, mastery-check and update-dashboard skills, .claude/leerharnas.md) and merges the hooks into
 //   .claude/settings.json. It never replaces data (.learning/) and never your own CLAUDE.md.
+// - --update while a practice session runs in the target (a session state active in the last idleMinutes,
+//   default 20) would change the rules under that session. In a terminal it asks first; with --yes or
+//   without a terminal it stops, unless --force is given too (setup review of 11 Nov, afternoon, #30).
 import fs from "node:fs";
 import path from "node:path";
 import crypto from "node:crypto";
@@ -37,13 +40,14 @@ const readText = (p) => { try { return fs.readFileSync(p, "utf8"); } catch { ret
 
 // ---------- 1. Arguments ----------
 function parseArgs(argv) {
-  const o = { target: null, update: false, dryRun: false, yes: false, map: null, lang: null, course: null, exam: null };
+  const o = { target: null, update: false, dryRun: false, yes: false, force: false, map: null, lang: null, course: null, exam: null };
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
     const val = () => { if (i + 1 >= argv.length) fail("install.needsValue", { opt: a }); return argv[++i]; };
     if (a === "--update") o.update = true;
     else if (a === "--dry-run") o.dryRun = true;
     else if (a === "--yes" || a === "-y") o.yes = true;
+    else if (a === "--force") o.force = true;
     else if (a === "--map") o.map = val();
     else if (a === "--lang") o.lang = val();
     else if (a === "--course") o.course = val();
@@ -231,6 +235,32 @@ if (!fs.existsSync(inTarget(".learning/diary"))) add(".learning/diary/", "mkdir"
   else add(rel, cur === null ? "new" : "append", next, cur === null ? "gitignore" : "gitignoreBackup");
 }
 
+// The most recently active session in the target, when it was active within idleMinutes (default 20):
+// { minutes, idle }, or null. Active = the last prompt or "!" run (lastActiveAt, lastPromptAt) or the
+// last write of the session file by a hook. The hooks cannot tell practice from talk about the harness,
+// so any session in the folder counts.
+function activeSession(now = Date.now()) {
+  const idleSetting = Number(existingSettings?.idleMinutes);
+  const idle = idleSetting > 0 ? idleSetting : 20;
+  let dir;
+  try { dir = inTarget(".learning/state"); } catch { return null; }
+  let files = [];
+  try { files = fs.readdirSync(dir).filter((f) => /^session-.*\.json$/.test(f)); } catch { return null; }
+  let last = 0;
+  for (const f of files) {
+    const p = path.join(dir, f);
+    let seen = 0;
+    try { seen = fs.statSync(p).mtimeMs; } catch { continue; }
+    try {
+      const st = JSON.parse(fs.readFileSync(p, "utf8"));
+      for (const k of ["lastActiveAt", "lastPromptAt"]) if (Number(st?.[k]) > seen) seen = Number(st[k]);
+    } catch { /* an unreadable session file still counts by its time */ }
+    if (seen > last) last = seen;
+  }
+  const ago = now - last;
+  return last && ago >= 0 && ago < idle * 60000 ? { minutes: Math.floor(ago / 60000), idle } : null;
+}
+
 // ---------- 5. Show, confirm, apply ----------
 const changes = plan.filter((p) => !["same", "keep"].includes(p.action));
 console.log(t("install.head", { version: VERSION, mode: t(opts.update ? "install.mode.update" : "install.mode.install"), dir: TARGET }));
@@ -241,6 +271,19 @@ for (const p of plan) console.log(`  ${label(p.action).padEnd(width)}  ${p.rel}$
 for (const n of [...new Set(notes)]) console.log("\n" + t("install.notice", { text: n }));
 
 if (!changes.length) { console.log("\n" + t("install.upToDate")); process.exit(0); }
+
+// A practice session that is running now: its rules and hooks would change under it (#30).
+const session = opts.update ? activeSession() : null;
+if (session) {
+  console.log("\n" + t("install.sessionActive", { min: session.minutes, idle: session.idle }));
+  if (!opts.dryRun && !opts.force) {
+    if (opts.yes || !process.stdin.isTTY) { console.log(t("install.sessionStop", { idle: session.idle })); process.exit(1); }
+    const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
+    const answer = (await rl.question(t("install.sessionConfirm") + " ")).trim().toLowerCase();
+    rl.close();
+    if (!["j", "ja", "y", "yes"].includes(answer)) { console.log(t("install.aborted")); process.exit(0); }
+  } else if (opts.force && !opts.dryRun) console.log(t("install.sessionForced"));
+}
 if (opts.dryRun) { console.log("\n" + t("install.dryRun")); process.exit(0); }
 if (!opts.yes) {
   if (!process.stdin.isTTY) { console.log("\n" + t("install.needYes")); process.exit(0); }

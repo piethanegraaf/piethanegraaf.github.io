@@ -72,14 +72,30 @@ Wil je toch dat Claude iets doet, dan zet je zelf een override: `! node .claude/
 
 Een taak wordt gelogd als een test van rood naar groen gaat (`check.mjs`), als je hem zelf afmeldt (`done`), of als je in de chat zegt dat de tests groen zijn. Hij telt pas mee na een uitleg **in je eigen woorden**, met twee sleutels:
 
-1. Claude beoordeelt de inhoud en zet `[uitleg-ok <tid>]` of `[uitleg-nee <tid>]`. De vraag hangt af van wat er gebeurde. Na een mislukte poging (rood, een compileerfout of een hint): waarom werkt het nu, en waarom de eerste poging niet? Meteen groen: één vraag naar het principe van de opdracht. Claude vraagt door tot het principe klopt.
+1. Claude beoordeelt de inhoud en zet `[uitleg-ok <tid>]` of `[uitleg-nee <tid>]`. De vraag hangt af van wat er gebeurde. Na hulp (trede 1 of hoger): over het concept van de hoogste hint, want daar zat je vast. Na een mislukte poging zonder hint (rood of een compileerfout): waarom werkt het nu, en waarom de eerste poging niet? Meteen groen: één vraag naar het principe van de opdracht. Claude vraagt door tot het principe klopt.
 2. De Stop-hook controleert je eigen woorden: **al je berichten sinds de taak is gelogd, samen**. Een antwoord in drie korte berichten telt als één. Samen moeten ze minstens 12 woorden buiten code hebben, een *waarom* (omdat, doordat, zodat …), en ze mogen niet uit Claude's tekst zijn overgenomen. Een bericht van vóór het loggen telt niet mee.
 
 De uitleg hoort **direct** na het groen worden. Een volgende taak in dezelfde map mag eerst, en één bericht mag meer taken uitleggen. Begin je aan een andere opdracht, of eindigt de sessie, dan **vervalt** de taak: hij telt niet mee en staat op het dashboard als overgeslagen. Ging een goedgekeurde uitleg verloren door een fout van de harnas, dan herstel je hem met `replay`.
 
 Een test die al eens groen was, rood werd en weer groen is, is **herstel van een regressie** en telt niet als nieuwe taak.
 
-**Een review na een taak** is een keuze. Claude biedt hem aan met een onderwerp en een tijdsinschatting, en jij kiest. Na één fout antwoord, of als je zegt dat je het niet snapt, geeft Claude direct het concept in plaats van nog een vraag. Hulp in een review wordt gemarkeerd met `[review-trede N #id]`, met het id van het concept. Die telt niet voor je volgende taak over iets anders, maar wel voor de volgende taak over hetzelfde concept: hetzelfde id, de hoofdvaardigheid of een microvaardigheid ervan. Zonder geldig id, of als je intussen aan nieuw werk begon, telt hij als een gewone trede. Wat open blijft, wordt een voorgestelde microvaardigheid.
+**Eerlijke woorden.** "Zelfstandig gelukt" betekent alleen trede 0. Op trede 1–2 telt de taak als gelukt, en de harnas zegt "gelukt, met hulp tot trede N". Met meer hulp telt hij niet als gelukt.
+
+**Hulp over een ander concept** wordt ook bij dat concept gelogd. Stel dat Claude je helpt met de syntax van een lus, tijdens een opdracht over overerving. Dan zet Claude `[trede N #id]`, met het id van de vaardigheid van de lus. De taak houdt die trede, want je maakte hem met die hulp. Het concept krijgt een eigen event, `concept-help`. Dat is geen taak van dat concept: `status` laat het zien, en het telt als bewijs voor een voorstel voor een microvaardigheid. De statusregel die Claude bij elke prompt ziet, toont de gegeven hulp voor deze taak, ook op L3 (`gegeven hulp: trede N`); op L2 ook de ontgrendelde trede.
+
+**Een review na een taak** is een keuze, en gaat alleen over je eigen code. Claude biedt hem aan met een onderwerp en een tijdsinschatting, en jij kiest. Een vraag over een alternatief wordt een experiment: je bouwt het om, draait `check.mjs` en zet het terug, zodat de uitkomst echte feedback is. Er komt geen review na de melding van een uur actieve tijd, of als de taak al trede 2 of hoger kostte. Na één fout antwoord, of als je zegt dat je het niet snapt, geeft Claude direct het concept in plaats van nog een vraag. Hulp in een review wordt gemarkeerd met `[review-trede N #id]`, met het id van het concept. Die telt niet voor je volgende taak over iets anders, maar wel voor de volgende taak over hetzelfde concept: hetzelfde id, de hoofdvaardigheid of een microvaardigheid ervan. Zonder geldig id, of als je intussen aan nieuw werk begon, telt hij als een gewone trede.
+
+**Een voorstel voor een microvaardigheid** komt van de harnas zelf, net als een voorstel om door te zetten. Daarvoor is bewijs uit deze sessie nodig dat je bij dat deel echte hulp nodig had: hulp op trede 2 of hoger in een review of over een ander concept, of een taak die trede 2 of hoger kostte. Claude noemt het deel en de trefwoorden; de harnas controleert ze en laat je zien:
+
+```
+[leerharnas] Microvaardigheid toevoegen? ood.associaties.<deel> (titel) onder ood.associaties, op L2 Begeleid
+  waarom: taak <tid> van ood.associaties kostte trede 2
+  trefwoorden: …
+  wat verandert: dit deel krijgt een eigen niveau en een eigen hintladder; ood.associaties blijft op L3
+  ja: typ "ja, toevoegen" · nee: typ "nee"
+```
+
+Alleen jouw eigen "ja, toevoegen" (of "yes, add") voegt hem toe, op het niveau van de hoofdvaardigheid min 1. Er gaat niets automatisch omlaag: één moeilijk moment is zwak bewijs, dus jij beslist.
 
 ## Doorstromen en herhalingen
 

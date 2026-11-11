@@ -863,3 +863,96 @@ For Koedinger & Aleven (2007) I read the authors' manuscript of February 2007 on
 
 #### Gaps
 - I read the manuscript, not the published text. Quotes from the body may differ slightly in the final version. The abstract matches the published one (ERIC).
+
+## D. Sources checked on 11 November 2026, afternoon (help per concept, the open learner model, impasses)
+
+Scope: the sources of the third setup review of 11 November 2026. The harness wants to cite them for logging help per concept, for a proposal for a microskill that the learner confirms, and for asking the explanation about the concept of the highest hint. Two of them (D4, D5) support a point the student did not choose, "stuck without saying so". They are checked anyway, so they are ready if that point comes back.
+
+Method note: bibliographic data came from Crossref and OpenAlex for every DOI. Full texts were read for Bull & Kay (2016, open on Springer), Corbett & Anderson (1992, the companion paper on eScholarship) and Wood & Wood (1999). For the other sources only the abstract was available: Springer, Wiley and Taylor & Francis pages were behind a login. The abstract of Wood & Middleton (1975) and the record of Smit et al. (2025) were checked a second time, separately.
+
+### D1. Corbett & Anderson (1994), "Knowledge tracing: Modeling the acquisition of procedural knowledge"
+
+#### Takeaway
+**Verdict: partly correct.** The tutor keeps an estimate per production rule and updates it at each chance to apply that rule. That supports logging evidence per concept. That a *help request* counts as evidence is our own design choice: the texts I read update on the accuracy of the action.
+
+#### Cited Findings
+- Bibliographic: User Modeling and User-Adapted Interaction 4(4), 253–278, DOI 10.1007/BF01099821. The publisher dates the issue December 1994. Crossref, OpenAlex and DBLP give 1995, and the paper was revised in March 1995. This review keeps 1994, the publisher's year. — [Crossref](https://api.crossref.org/works/10.1007/BF01099821)
+- Abstract: "As the student works, the tutor also maintains an estimate of the probability that the student has learned each of the rules in the ideal model, in a process called knowledge tracing." — [Springer](https://link.springer.com/article/10.1007/BF01099821)
+- Companion paper on the same tutor (Corbett & Anderson, 1992): "At each opportunity to apply a rule, the probability that the student knows the rule is updated contingent on the accuracy of the student's action." — [eScholarship](https://escholarship.org/uc/item/0873k1nz)
+
+#### Inferences
+- Help about one concept belongs to that concept's rule, not to the skill of the exercise folder. That supports `[rung N #id]` and the event `concept-help`.
+- Counting `concept-help` in a success rate would go beyond the paper. The decision to only log and show it for now fits that.
+
+#### Gaps
+- I could not read the full 1994 text, so I could not check how help requests enter the update.
+
+### D2. Bull & Kay (2016), "SMILI☺: A framework for interfaces to learning data in open learner models, learning analytics and related fields"
+
+#### Takeaway
+**Verdict: partly correct.** The volume is 26, not 29. Open learner models let the learner see the model and sometimes negotiate it, and the paper names reflection and self-regulation as purposes. It is a framework and review: it names these purposes and cites other work, it does not test them.
+
+#### Cited Findings
+- Bibliographic: International Journal of Artificial Intelligence in Education 26(1), 293–331, published online 12 January 2016, DOI 10.1007/s40593-015-0090-8. — [Springer PDF](https://link.springer.com/content/pdf/10.1007/s40593-015-0090-8.pdf)
+- p. 294: open learner models "allow the user … to view the content of the learner model … in a human-understandable form."
+- p. 303, on negotiation: it "has two primary aims: to increase the accuracy of the learner model content through discussion with the user; to promote reflection during the negotiation process."
+- p. 308: the open learner model became "an important source of information to prompt self-regulated learning and metacognitive skills".
+
+#### Inferences
+- A proposal that the learner accepts or declines ("ja, toevoegen" / "nee") is a negotiated open learner model in the terms of this framework. A text from Claude is not part of the model.
+- For an *effect* on self-regulation, cite the empirical work the framework cites, not the framework.
+
+#### Gaps
+- None for the record. The paper shows no effect itself.
+
+### D3. VanLehn, Siler, Murray, Yamauchi & Baggett (2003), "Why do only some events cause learning during human tutoring?"
+
+#### Takeaway
+**Verdict: correct.** About 125 hours of physics tutoring were analysed. Learning was associated with impasses: outside an impasse, explanations rarely went with learning; at an impasse they sometimes did. It is an association, not an experiment.
+
+#### Cited Findings
+- Bibliographic: Cognition and Instruction 21(3), 209–249, DOI 10.1207/S1532690XCI2103_01. — [Crossref](https://api.crossref.org/works/10.1207/S1532690XCI2103_01)
+- Abstract: "Successful learning appears to require that the student reach an impasse." "When students were not at an impasse, learning was uncommon regardless of the tutorial explanations employed." "On the other hand, once students were at an impasse, tutorial explanations were sometimes associated with learning." — [OpenAlex](https://api.openalex.org/works/https://doi.org/10.1207/S1532690XCI2103_01)
+
+#### Inferences
+- Asking the explanation about the concept of the highest hint aims it at the point of the impasse.
+- A review question about an imagined alternative, without an own attempt or feedback, is not an impasse. Running the alternative (an experiment with `check.mjs`) can make one.
+- That the highest hint marks the impasse is our own inference.
+
+#### Gaps
+- Full text not reachable, so the coding of impasses and the effect sizes were not checked.
+
+### D4. Beck & Gong (2013), "Wheel-spinning: Students who fail to master a skill"
+
+#### Takeaway
+**Verdict: partly correct.** A student who does not master a skill quickly in ASSISTments or the Cognitive Tutor will probably struggle and never master it. That this calls for a different intervention fits the abstract, which discusses changes to tutor design, but I did not read it stated as such.
+
+#### Cited Findings
+- Bibliographic: AIED 2013, LNCS 7926, 431–440, DOI 10.1007/978-3-642-39112-5_44. — [Crossref](https://api.crossref.org/works/10.1007/978-3-642-39112-5_44)
+- Abstract: "We show that if a student does not master a skill in ASSISTments or the Cognitive Tutor quickly, the student is likely to struggle and will probably never master the skill." — [Springer](https://link.springer.com/chapter/10.1007/978-3-642-39112-5_44)
+
+#### Inferences
+- Supports a signal for repeated runs without progress. The student did not choose that point (#24); this is kept for when it comes back.
+
+#### Gaps
+- Full text not reachable: the definition of mastery and the prevalence were not checked.
+
+### D5. Wood & Middleton (1975), "A study of assisted problem-solving"; Wood, Wood & Middleton (1978); Smit et al. (2025)
+
+#### Takeaway
+**Verdict: partly correct.** The 1975 study observed 12 mothers helping their child assemble a construction toy. Mothers who changed their instructions according to the child's response to earlier help were most likely to see their child do it alone afterwards. That is an observation, not a test of the rule. The rule "more help at once after a failure, less after a success" was used in 1975 to score the mothers (secondary source), and tested in an experiment in 1978. A preregistered direct replication of that experiment did **not** find the effect on the children's independent performance (Smit et al., 2025). The explicit one-level-up, one-level-down rule is in Wood & Wood (1999), which this review already cites.
+
+#### Cited Findings
+- Bibliographic: British Journal of Psychology 66(2), 181–191, May 1975, DOI 10.1111/j.2044-8295.1975.tb01454.x. — [Crossref](https://api.crossref.org/works/10.1111/j.2044-8295.1975.tb01454.x)
+- Abstract: "Those mothers who systematically changed their instructions on the basis of the child's response to earlier interventions … were most likely to see their child perform effectively after instruction." — [Crossref](https://api.crossref.org/works/10.1111/j.2044-8295.1975.tb01454.x)
+- The rule as used in 1975, quoted in a 1991 McGill thesis: "any failure by a child to bring off an action after a given level of help should be met by an immediate increase in help or control, and … after success, the tutor (mother) should offer less help than that which preceded success". — [McGill thesis](https://mcgill.scholaris.ca/server/api/core/bitstreams/a5077c85-730b-47e4-8a2f-3767eb392c6b/content)
+- Wood, Wood & Middleton (1978), International Journal of Behavioral Development 1(2), 131–147, DOI 10.1177/016502547800100203: the "contingent approach" was one of four strategies; "The present study largely confirms these predictions." — [Crossref](https://api.crossref.org/works/10.1177/016502547800100203)
+- Smit, de Kleijn, Wicherts & van de Pol (2025), Journal of Educational Psychology 117(8), 1313–1329, DOI 10.1037/edu0000965: 285 three-year-olds in four conditions. The authors replicated the tutor accuracy "(68.9% vs. 70% in D. Wood et al., 1978) but failed to replicate the effect of contingent instruction on children's independent performance". — [OpenAlex](https://api.openalex.org/works/https://doi.org/10.1037/edu0000965)
+- Wood & Wood (1999): "if the system had provided a level 3 hint which the learner followed with a successful move, it would next offer a level 2 hint. If, instead, the learner had requested further help, the system would offer level 4". — [PDF](https://www.tlu.ee/~kpata/haridustehnoloogiaTLU/tutoring.pdf)
+
+#### Inferences
+- Do not cite Wood & Middleton (1975) as showing that the rule works. Cite it as the observational origin.
+- The failed replication matters beyond #24: the hint ladder (P3) leans on contingent tutoring. That is a question for the next review round, not for this build.
+
+#### Gaps
+- No primary text of the 1975 paper (Wiley 403). The coding of help and the rule wording attributed to 1975 come from a secondary source. The 1978 full text was not read.

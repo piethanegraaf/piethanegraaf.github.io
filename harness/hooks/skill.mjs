@@ -29,7 +29,7 @@ import {
   pendingTasks, allTasks, logTask, levelAdvice, recentWins, pickSession, loadSession, saveSession, touch, taskRung, taskLogged,
   lapseTasks, afterTask, isReviewDue, isPlacementPending, effectiveLevel, adviceCommand, openOffer,
   activeMinutesSince, readTranscript, isLearnerEntry, learnerEntryText, entryText, checkExplanation, t, language,
-  sinceExportLine, dashboardAfterDiary, parseDashboardRepo,
+  sinceExportLine, dashboardAfterDiary, parseDashboardRepo, addMicro, conceptHelpOf, readEvents,
 } from "./lib.mjs";
 import { EXPLAIN_MARK } from "./patterns.mjs";
 
@@ -65,6 +65,11 @@ function status() {
   console.log(t("cli.status.pending", { list: pend.length ? pend.map((x) => `${x.skill} [${x.tid}] ${x.what ?? ""}`.trim()).join("; ") : t("cli.none") }));
   const wins = recentWins(data);
   console.log(t("cli.status.wins", { list: wins.length ? wins.map((w) => `${w.id} ${w.n}x`).join(", ") : "-" }));
+  // Help about a skill during tasks of another family (setup review of 11 Nov, afternoon, #26): shown
+  // only. It is no task of that skill and does not count in its success rate (still open).
+  const events = readEvents();
+  const help = data.skills.filter((s) => s.kind !== "zone" && !isMicro(s)).map((s) => ({ s, h: conceptHelpOf(data, s, events) })).filter((x) => x.h);
+  if (help.length) console.log(t("cli.status.conceptHelp", { list: help.map((x) => t("cli.status.conceptHelp.item", { id: x.s.id, n: x.h.n, rung: x.h.max })).join(", ") }));
   const adv = data.skills.filter((s) => s.kind !== "zone").map((s) => levelAdvice(data, s)).filter(Boolean);
   console.log(t("cli.status.signals", { list: adv.length ? "" : t("cli.none") }));
   for (const a of adv) {
@@ -163,12 +168,7 @@ switch (cmd) {
     if (findSkill(data, id)) exit("cli.micro.exists", { id });
     const lvl = parseLevel(lvlRaw);
     if (!title) exit("cli.micro.noTitle");
-    const m = { id, parent: parent.id, title, level: lvl, keywords: String(kws ?? "").split(",").map((k) => k.trim()).filter(Boolean), history: [{ at: today(), atIso: new Date().toISOString(), to: lvl, note: t("note.created") }] };
-    scheduleOnLevel(data, m);
-    const at = data.skills.indexOf(parent) + 1 + microsOf(data, parent.id).length;
-    data.skills.splice(at, 0, m);
-    saveSkills(data);
-    logEvent({ type: "micro-add", skill: id, parent: parent.id, level: lvl });
+    const m = addMicro(data, parent, { id, title, level: lvl, keywords: String(kws ?? "").split(",").map((k) => k.trim()).filter(Boolean) });
     console.log(t("cli.micro.done", { id, level: lvl, name: levelName(lvl), parent: parent.id, keywords: m.keywords.join(", ") || "-" }));
     break;
   }
@@ -186,7 +186,7 @@ switch (cmd) {
     // A task of another family: the learner started another exercise, so open tasks lapse (S1).
     const lapsed = lapseTasks("other-exercise", (x) => familyOf(findSkill(data, x.skill)) === familyOf(s), sid);
     const task = logTask({ skill: s.id, success: maxRung < 5, maxRung, minutes, source: "done", what: what.join(" ") || undefined, session: sid, level: effectiveLevel(data, s),
-      reviewRung: reviewRung > (st?.maxRung ?? 0) ? reviewRung : 0 });
+      reviewRung: reviewRung > (st?.maxRung ?? 0) ? reviewRung : 0, tid: st?.openTid });
     const after = afterTask(data, s.id, task);
     if (st) {
       // The family of this task is what the learner works on now (setup review 3.3).
