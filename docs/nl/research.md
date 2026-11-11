@@ -799,9 +799,10 @@ stateDiagram-v2
 
     L0_Demonstrate --> L1_Complete : 2 correct self-explanations + predicted output right
     L1_Complete --> L2_Guided : 3 gaps filled, tests pass, max 1 hint per gap
-    L2_Guided --> L3_Independent : about 85% solved over 5+ tasks (learner decides)
+    L2_Guided --> L3_Independent : about 85% solved over 5+ tasks, at least half at rung 0-1 (learner confirms the proposal)
+    L2_Guided --> L4_Automated : jump - the same tasks also meet the L4 criterion, plus the transfer task (learner confirms)
     L3_Independent --> MasteryCheck : 3x rung 0 on 2+ different days
-    MasteryCheck --> L4_Automated : novel transfer task + explanation (learner decides)
+    MasteryCheck --> L4_Automated : transfer task via /mastery-check, no hint + explanation (learner confirms)
     MasteryCheck --> L3_Independent : failed - targeted practice
 
     L1_Complete --> L0_Demonstrate : auto-demote

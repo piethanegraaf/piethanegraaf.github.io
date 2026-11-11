@@ -112,7 +112,7 @@ test("invalid settings fall back to the defaults instead of crashing the guard",
 });
 
 test("isHarnessPath: hooks, settings, diary skill and harness files", () => {
-  for (const r of [".claude/hooks/guard.mjs", ".claude/settings.json", ".claude/settings.local.json", ".claude/skills/diary/SKILL.md", ".claude/leerharnas.md"]) {
+  for (const r of [".claude/hooks/guard.mjs", ".claude/settings.json", ".claude/settings.local.json", ".claude/skills/diary/SKILL.md", ".claude/skills/mastery-check/SKILL.md", ".claude/leerharnas.md"]) {
     assert.equal(isHarnessPath(r), true, r);
   }
   for (const r of [".claude/agents/x.md", ".claude/skills/other/SKILL.md", "src/hooks/x.mjs", null]) assert.equal(isHarnessPath(r), false, String(r));

@@ -8,14 +8,44 @@
       loading: "Laden…", loadError: "De data kon niet geladen worden ({file}). Open het dashboard via een webserver, bijvoorbeeld: python -m http.server",
       fallback: "Er is nog geen echte data (data/progress.json). Je ziet de demo met verzonnen data.",
       ownLanguage: "De eigen teksten van de student (uitleg, dagboek en eigen notities en microvaardigheden) staan in de taal waarin ze geschreven zijn: {language}.", langNames: { nl: "Nederlands", en: "Engels" },
+      translated: "De eigen teksten van de student (uitleg, dagboek, reflecties, eigen notities en microvaardigheden) zijn door Claude vertaald uit het {language}. Een vertaling is onderstreept met puntjes: wijs hem aan of ga er met Tab naartoe voor het origineel.",
+      original: "Origineel ({language}), vertaald door Claude",
       demoNote: "Demo: alle data is verzonnen. Zo ziet het dashboard eruit na een paar weken oefenen.",
       subtitle: "{course} · stand van {date}", subtitleNoCourse: "Stand van {date}", atTime: "{date}, {time}",
       filter: "Vaardigheid", all: "Alle vaardigheden", asof: "Alle cijfers gelden op het moment van de export: {date}.",
       kSolo: "Zelfstandig gelukt", kSoloSub: "{ok} van {n} uitgelegde taken, trede ≤ 2", kPending: "Wacht op uitleg", kPendingSub: "{skipped} overgeslagen · uitleg hoort direct na het groen worden",
       kReviews: "Herhalingen (L4)", kReviewsSub: "klaar; je doet ze zelf als ze in je werk langskomen", kExam: "Tot de toets", kExamSub: "{date}", kNoExam: "geen datum",
       days: "{n} dagen", day: "1 dag", none: "–",
-      levels: "Niveaus", levelsHint: "Hoeveel vaardigheden (en microvaardigheden) op elk niveau staan. Bij een open plaatsing probeer je eerst zelf, met de hintladder van L2; de eerste taak bepaalt het niveau.", skillsN: "{n} vaardigheden",
+      levels: "Niveaus", levelsHint: "Hoeveel vaardigheden (en microvaardigheden) op elk niveau staan. Bij een open plaatsing probeer je eerst zelf, met de hintladder van L2; de eerste taak bepaalt het niveau. Wijs een niveau aan voor uitleg.", skillsN: "{n} vaardigheden",
       placementGroup: "Plaatsing open", openChip: "Plaatsing open · L2-ladder",
+      // What each level means, why, the evidence (strength as in the literature review, §2.11) and the step to the next level.
+      levelInfo: {
+        L0: { what: "Claude doet het voor met een uitgewerkt voorbeeld in stappen; jij legt het uit en voorspelt de uitvoer.",
+          why: "een beginner die alles zelf moet zoeken, houdt geen denkruimte over om te leren.",
+          src: [["Sweller & Cooper 1985; Renkl & Atkinson 2003", "strong"]], next: "Naar L1: twee voorbeelden goed uitgelegd en voorspeld." },
+        L1: { what: "Claude schrijft het skelet, jij de kern: je vult de TODO-gaten en test zelf.",
+          why: "hulp die je stap voor stap afbouwt, werkt beter dan in één keer van voorbeeld naar opgave.",
+          src: [["Renkl & Atkinson 2003; Ericson e.a. 2017", "strong"]], next: "Naar L2: drie gaten gevuld, tests groen, hooguit één hint per gat." },
+        L2: { what: "Jij schrijft alles; Claude geeft alleen hints, van een vraag tot een klein voorbeeld.",
+          why: "zo weinig hulp als nodig, en pas meer als je vastzit. Het denkwerk blijft bij jou.",
+          src: [["Wood & Wood 1999; Aleven e.a. 2003", "moderate"]], next: "Naar L3: ±85% gelukt over minstens 5 taken, de helft met hint 0–1." },
+        L3: { what: "Jij maakt het alleen; Claude reviewt pas na je poging.",
+          why: "hulp die een beginner helpt, remt wie het al kan (het expertise-omkeereffect).",
+          src: [["Kalyuga e.a. 2003", "strong"]], next: "Naar L4: drie keer zelfstandig op twee dagen, plus een transfertaak met uitleg." },
+        L4: { what: "Claude schrijft de code, jij controleert. Komt een herhaling langs, dan doe je het één keer zelf.",
+          why: "wat vastzit, vraagt geen aandacht meer, maar zonder oefening verleer je het.",
+          src: [["Fitts & Posner 1967; Bainbridge 1983", "moderate"], ["herhalen met tussenpozen: Cepeda e.a. 2008", "strong"]], next: "Terug naar L3: twee herhalingen op rij mislukt." },
+        open: { what: "Nieuwe vaardigheid: je probeert het eerst zelf, met de hintladder van L2.",
+          why: "eerst proberen, dan hulp. Zo krijg je niet meer hulp dan je nodig hebt.",
+          src: [["Sinha & Kapur 2021; Kalyuga e.a. 2003", "moderate"]], next: "Je eerste taak bepaalt het niveau: trede 0 → L3, 1–2 → L2, 3–4 → L1, 5 → L0." },
+      },
+      why: "Waarom", evidence: "Bewijs", strength: { strong: "sterk", moderate: "matig" },
+      levelsInfo: "Wat betekenen de niveaus?",
+      levelsInfoIntro: "De niveaus volgen cognitive apprenticeship (Collins, Brown & Newman 1989): eerst voordoen, dan hulp die stap voor stap afneemt, tot je het zelf kunt. Bovenaan staat automatiseren, pas als een vaardigheid vastzit (Fitts & Posner 1967). Omhoog beslis jij, omlaag volgt het bewijs.",
+      levelsInfoMore: "De sterkte van het bewijs komt uit het literatuuronderzoek. Meer:",
+      howLink: "Hoe het werkt", howHref: "../how-it-works/#niveaus-per-vaardigheid",
+      researchLink: "de autonomieladder (§5.2)", researchHref: "../research/#52-de-autonomieladder-per-vaardigheid",
+      principlesLink: "ontwerpprincipes (§2.11)", principlesHref: "../research/#211-synthese-ontwerpprincipes",
       showTable: "Tabel", showChart: "Grafiek", level: "Niveau", name: "Naam", count: "Aantal", skillsCol: "Vaardigheden",
       skills: "Per vaardigheid", skillsHint: "Gelukt = opgelost met hooguit trede 2, over de laatste 10 uitgelegde taken. Het streepje is het doel ({pct}%).",
       solved: "{ok}/{n} gelukt", noTasks: "nog geen uitgelegde taken", open: "{n} uitleg open", next: "herhaling {date}",
@@ -37,7 +67,7 @@
       diary: "Dagboek", diaryHint: "De feiten logt de harnas; de reflectie staat er in de eigen woorden van de student.",
       plan: "Plan", wentWell: "Ging goed", learned: "Geleerd", confusing: "Verwarrend", confidence: "Zelfvertrouwen", nextStep: "Volgende stap", calib: "Kalibratie",
       noDiary: "Nog geen dagboekentries.", activity: "Activiteit", sessions: "Sessies", hints: "Hints", holds: "Geen nieuwe trede", denials: "Guard-weigeringen", overridesUsed: "Overrides gebruikt",
-      footAi: "De leerharnas, dit dashboard en de docs zijn gemaakt met hulp van Claude (Anthropic). De leerdata en de reflecties zijn van de student zelf.", footAiLink: "AI-verklaring", footAiHref: "../ai-statement/",
+      footAi: "De leerharnas, dit dashboard en de docs zijn gemaakt met hulp van Claude (Anthropic). De leerdata en de reflecties zijn van de student zelf; de vertalingen ervan zijn van Claude.", footAiLink: "AI-verklaring", footAiHref: "../ai-statement/",
       footCode: "Code", footOr: "of een", footCommercial: "commerciële licentie", footTexts: "teksten en data",
       footSource: "Broncode op GitHub", footDocs: "Uitleg bij het dashboard", footDocsHref: "../progress-dashboard/", focus: "Ga naar {id}", tableRegion: "Tabel, scrollbaar",
     },
@@ -46,14 +76,43 @@
       loading: "Loading…", loadError: "The data could not be loaded ({file}). Open the dashboard through a web server, for example: python -m http.server",
       fallback: "There is no real data yet (data/progress.json). You see the demo with made-up data.",
       ownLanguage: "The learner's own texts (explanations, the diary, own notes and microskills) are shown in the language they were written in: {language}.", langNames: { nl: "Dutch", en: "English" },
+      translated: "The learner's own texts (explanations, the diary, reflections, own notes and microskills) were translated from {language} by Claude. A translation has a dotted underline: point at it, or Tab to it, to see the original.",
+      original: "Original ({language}), translated by Claude",
       demoNote: "Demo: all data is made up. This is what the dashboard looks like after a few weeks of practice.",
       subtitle: "{course} · as of {date}", subtitleNoCourse: "As of {date}", atTime: "{date}, {time}",
       filter: "Skill", all: "All skills", asof: "All figures are as of the moment of the export: {date}.",
       kSolo: "Solved independently", kSoloSub: "{ok} of {n} explained tasks, rung ≤ 2", kPending: "Waiting for an explanation", kPendingSub: "{skipped} skipped · the explanation belongs right after the green",
       kReviews: "Reviews (L4)", kReviewsSub: "ready; you do them yourself when they come by in your work", kExam: "Until the exam", kExamSub: "{date}", kNoExam: "no date",
       days: "{n} days", day: "1 day", none: "–",
-      levels: "Levels", levelsHint: "How many skills (and microskills) are at each level. With an open placement you try first, with the L2 hint ladder; the first task sets the level.", skillsN: "{n} skills",
+      levels: "Levels", levelsHint: "How many skills (and microskills) are at each level. With an open placement you try first, with the L2 hint ladder; the first task sets the level. Point at a level for an explanation.", skillsN: "{n} skills",
       placementGroup: "Placement open", openChip: "Placement open · L2 ladder",
+      levelInfo: {
+        L0: { what: "Claude demonstrates with a worked example in steps; you explain it and predict the output.",
+          why: "a novice who has to search for everything has no room left to learn.",
+          src: [["Sweller & Cooper 1985; Renkl & Atkinson 2003", "strong"]], next: "To L1: two examples explained and predicted correctly." },
+        L1: { what: "Claude writes the skeleton, you write the core: you fill in the TODO gaps and test it yourself.",
+          why: "help that fades step by step works better than jumping from example to problem at once.",
+          src: [["Renkl & Atkinson 2003; Ericson et al. 2017", "strong"]], next: "To L2: three gaps filled, tests green, at most one hint per gap." },
+        L2: { what: "You write everything; Claude only gives hints, from a question up to a small example.",
+          why: "as little help as needed, and more only when you are stuck. The thinking stays with you.",
+          src: [["Wood & Wood 1999; Aleven et al. 2003", "moderate"]], next: "To L3: about 85% solved over at least 5 tasks, half of them with hint 0–1." },
+        L3: { what: "You do it alone; Claude reviews only after your attempt.",
+          why: "help that supports a novice holds back someone who can already do it (the expertise-reversal effect).",
+          src: [["Kalyuga et al. 2003", "strong"]], next: "To L4: solved independently three times on two days, plus a transfer task with an explanation." },
+        L4: { what: "Claude writes the code, you check it. When a review comes by, you do it yourself once.",
+          why: "what you have mastered needs no attention any more, but without practice you lose it.",
+          src: [["Fitts & Posner 1967; Bainbridge 1983", "moderate"], ["spaced reviews: Cepeda et al. 2008", "strong"]], next: "Back to L3: two reviews in a row failed." },
+        open: { what: "New skill: you try it yourself first, with the L2 hint ladder.",
+          why: "attempt first, then help, so you get no more help than you need.",
+          src: [["Sinha & Kapur 2021; Kalyuga et al. 2003", "moderate"]], next: "Your first task sets the level: rung 0 → L3, 1–2 → L2, 3–4 → L1, 5 → L0." },
+      },
+      why: "Why", evidence: "Evidence", strength: { strong: "strong", moderate: "moderate" },
+      levelsInfo: "What do the levels mean?",
+      levelsInfoIntro: "The levels follow cognitive apprenticeship (Collins, Brown & Newman 1989): first demonstrate, then help that fades step by step, until you can do it yourself. Automation sits at the top, only once a skill is mastered (Fitts & Posner 1967). You decide up; the evidence decides down.",
+      levelsInfoMore: "The strength of the evidence comes from the literature review. More:",
+      howLink: "How it works", howHref: "../en/how-it-works/#levels-per-skill",
+      researchLink: "the Autonomy Ladder (§5.2)", researchHref: "../en/research/#52-the-autonomy-ladder-per-skill",
+      principlesLink: "design principles (§2.11)", principlesHref: "../en/research/#211-synthesis-design-principles",
       showTable: "Table", showChart: "Chart", level: "Level", name: "Name", count: "Count", skillsCol: "Skills",
       skills: "Per skill", skillsHint: "Solved = with at most rung 2, over the last 10 explained tasks. The tick is the target ({pct}%).",
       solved: "{ok}/{n} solved", noTasks: "no explained tasks yet", open: "{n} explanation(s) open", next: "review {date}",
@@ -75,7 +134,7 @@
       diary: "Diary", diaryHint: "The harness logs the facts; the reflection is in the learner's own words.",
       plan: "Plan", wentWell: "Went well", learned: "Learned", confusing: "Confusing", confidence: "Confidence", nextStep: "Next step", calib: "Calibration",
       noDiary: "No diary entries yet.", activity: "Activity", sessions: "Sessions", hints: "Hints", holds: "No new rung", denials: "Guard denials", overridesUsed: "Overrides used",
-      footAi: "The learning harness, this dashboard and the docs were made with help from Claude (Anthropic). The learning data and the reflections are the learner's own.", footAiLink: "AI statement", footAiHref: "../en/ai-statement/",
+      footAi: "The learning harness, this dashboard and the docs were made with help from Claude (Anthropic). The learning data and the reflections are the learner's own; their translations are by Claude.", footAiLink: "AI statement", footAiHref: "../en/ai-statement/",
       footCode: "Code", footOr: "or a", footCommercial: "commercial licence", footTexts: "texts and data",
       footSource: "Source code on GitHub", footDocs: "About the dashboard", footDocsHref: "../en/progress-dashboard/", focus: "Go to {id}", tableRegion: "Table, scrollable",
     },
@@ -107,7 +166,7 @@
       else if (k.startsWith("on") && typeof v === "function") e.addEventListener(k.slice(2), v);
       else e.setAttribute(k, v === true ? "" : String(v));
     }
-    for (const kid of kids.flat()) if (kid !== null && kid !== undefined && kid !== false) e.append(kid instanceof Node ? kid : document.createTextNode(String(kid)));
+    for (const kid of kids.flat(Infinity)) if (kid !== null && kid !== undefined && kid !== false) e.append(kid instanceof Node ? kid : document.createTextNode(String(kid)));
     return e;
   }
   const NS = "http://www.w3.org/2000/svg";
@@ -140,8 +199,12 @@
   // ---------- Tooltip (hover and keyboard focus) ----------
   const tip = $("tooltip");
   function showTip(evt, title, rows) {
-    tip.replaceChildren(el("div", { class: "tt-title", text: title }), ...rows.map(([cls, value, label]) =>
-      el("div", { class: "tt-row" }, cls ? el("span", { class: `ln ${cls}` }) : null, el("strong", { text: value }), el("span", { text: label }))));
+    // rows: [class, value, label] for a figure, or { text, class } for a line of text; or one plain
+    // text (the original of a translation).
+    const row = (r) => (Array.isArray(r)
+      ? el("div", { class: "tt-row" }, r[0] ? el("span", { class: `ln ${r[0]}` }) : null, el("strong", { text: r[1] }), el("span", { text: r[2] }))
+      : el("div", { class: `tt-text${r.class ? ` ${r.class}` : ""}`, lang: r.lang, text: r.text }));
+    tip.replaceChildren(el("div", { class: "tt-title", text: title }), ...(typeof rows === "string" ? [row({ text: rows, lang: data?.language })] : rows.map(row)));
     tip.hidden = false;
     let x, y;
     if (evt && "clientX" in evt && evt.type.startsWith("pointer")) { x = evt.clientX; y = evt.clientY; }
@@ -182,7 +245,35 @@
   };
   const skillById = () => new Map(data.skills.map((s) => [s.id, s]));
   // Texts in the language of the page where the export has both (titles from the map, fixed notes, signals).
-  const titleOf = (s) => s.titles?.[lang] ?? s.title;
+  // The learner's own texts are in the language of the record; the export adds Claude's translations
+  // (data.translations[lang][text]). tx() marks a translation and shows the original on hover and focus;
+  // txs() gives it as a plain string (option labels). An older export without translations shows the original.
+  const langName = (l) => t("langNames")?.[l] ?? l;
+  const trOf = (text) => {
+    if (typeof text !== "string" || !data?.language || lang === data.language) return null;
+    const tr = data.translations?.[lang]?.[text];
+    return typeof tr === "string" && tr && tr !== text ? tr : null;
+  };
+  const txs = (text) => trOf(text) ?? text;
+  const tx = (text) => {
+    const tr = trOf(text);
+    if (!tr) return text ?? null;
+    return withTip(el("span", { class: "tr", tabindex: "0" }, tr), t("original", { language: langName(data.language) }), text);
+  };
+  const joinNodes = (parts, sep) => parts.flatMap((p, i) => (i ? [sep, p] : [p]));
+  // What a level means ("open" = placement open): tooltip lines, and a label people can point at or Tab to.
+  const levelInfo = (l) => UI[lang].levelInfo[l] ?? null;
+  const evidenceText = ([sources, strength]) => `${t("evidence")}: ${sources} · ${t(`strength.${strength}`)}`;
+  const levelRows = (l) => {
+    const i = levelInfo(l);
+    return i ? [{ text: i.what }, { text: `${t("why")}: ${i.why}` }, ...i.src.map((s) => ({ text: evidenceText(s), class: "tt-src" })), { text: i.next, class: "tt-next" }] : [];
+  };
+  const levelTitle = (l) => (l === "open" ? t("placementGroup") : `${l} ${levelName(l)}`);
+  const withLevelTip = (node, l, figures = []) => {
+    node.classList.add("explained");
+    return withTip(node, levelTitle(l), [...figures, ...levelRows(l)]);
+  };
+  const titleOf = (s) => s.titles?.[lang] ?? txs(s.title);
   const mains = () => data.skills.filter((s) => !s.parent && s.kind !== "zone");
   const microsOf = (id) => data.skills.filter((s) => s.parent === id);
   const family = (s) => (s.parent ? [s.id] : [s.id, ...microsOf(s.id).map((m) => m.id)]);
@@ -205,7 +296,8 @@
   const conf = (v) => { const m = String(v ?? "").match(/(?:^|\D)([1-5])(?:\s*\/\s*5)?(?!\d)/); return m ? Number(m[1]) : null; };
 
   // ---------- Building blocks ----------
-  function card(title, hint, body, tableBuilder, id) {
+  // footer: shown under the chart and under the table view alike.
+  function card(title, hint, body, tableBuilder, id, footer = null) {
     const head = el("div", { class: "card-head" }, el("h2", { text: title, id: id ? `${id}-h` : null }));
     const holder = el("div");
     if (tableBuilder) {
@@ -215,11 +307,11 @@
       head.append(btn);
       holder.append(open ? tableBuilder() : body);
     } else holder.append(body);
-    return el("section", { class: "card", "aria-labelledby": id ? `${id}-h` : null }, head, hint ? el("p", { class: "hint", text: hint }) : null, holder);
+    return el("section", { class: "card", "aria-labelledby": id ? `${id}-h` : null }, head, hint ? el("p", { class: "hint", text: hint }) : null, holder, footer);
   }
   function table(headers, rows, numCols = []) {
     const cell = (c, i) => {
-      if (c instanceof Node) return el("td", {}, c);
+      if (c instanceof Node) return el("td", { class: c.textContent.length > 60 ? "text" : null }, c);
       const cls = numCols.includes(i) ? "num" : String(c ?? "").length > 60 ? "text" : null;
       return el("td", { class: cls, text: c ?? t("none") });
     };
@@ -262,13 +354,35 @@
       block.style.flexGrow = String(c.ids.length);
       block.style.flexBasis = "0";
       if (c.ids.length / total > 0.07) block.textContent = String(c.ids.length);
-      withTip(block, c.label, [[null, String(c.ids.length), `(${pct(c.ids.length / total)})`]]);
+      withLevelTip(block, c.l, [[null, String(c.ids.length), `(${pct(c.ids.length / total)})`]]);
       bar.append(block);
     }
-    const legend = el("ul", { class: "legend" }, counts.filter((c) => c.l !== "open" || c.ids.length).map((c) => el("li", {}, el("span", { class: `sw ${c.cls}`, "aria-hidden": "true" }), c.label)));
+    const legend = el("ul", { class: "legend" }, counts.filter((c) => c.l !== "open" || c.ids.length).map((c) =>
+      withLevelTip(el("li", { tabindex: "0" }, el("span", { class: `sw ${c.cls}`, "aria-hidden": "true" }), c.label), c.l)));
     const body = el("div", {}, el("div", { class: "muted", text: t("skillsN", { n: skills.length }) }), bar, legend);
     return card(t("levels"), t("levelsHint"), body, () => table([t("level"), t("name"), t("count"), t("skillsCol")],
-      counts.map((c) => [c.l === "open" ? "–" : c.l, c.l === "open" ? c.label : levelName(c.l), String(c.ids.length), c.ids.join(", ") || t("none")]), [2]), "levels");
+      counts.map((c) => [c.l === "open" ? "–" : c.l, c.l === "open" ? c.label : levelName(c.l), String(c.ids.length), c.ids.join(", ") || t("none")]), [2]), "levels", levelsInfo());
+  }
+
+  // "What do the levels mean?": every level with its meaning, the reason, the evidence and the next step.
+  // A <details>, so it is out of the way; its open state survives a re-render.
+  let levelsInfoOpen = false;
+  function levelsInfo() {
+    const item = (l) => {
+      const i = levelInfo(l);
+      return el("li", {},
+        el("div", { class: "li-head" }, el("span", { class: `chip ${l === "open" ? "open" : `lv${LEVELS.indexOf(l)}`}`, text: l === "open" ? t("placementGroup") : `${l} ${levelName(l)}` })),
+        el("p", { text: i.what }),
+        el("p", {}, el("span", { class: "label", text: `${t("why")}: ` }), i.why),
+        i.src.map((s) => el("p", { class: "src", text: evidenceText(s) })),
+        el("p", { class: "next", text: i.next }));
+    };
+    const link = (href, text) => el("a", { href, text });
+    return el("details", { class: "level-info", open: levelsInfoOpen, ontoggle: (e) => { levelsInfoOpen = e.currentTarget.open; } },
+      el("summary", { text: t("levelsInfo") }),
+      el("p", { class: "intro", text: t("levelsInfoIntro") }),
+      el("ol", {}, [...LEVELS, "open"].map(item)),
+      el("p", { class: "more" }, `${t("levelsInfoMore")} `, link(t("howHref"), t("howLink")), " · ", link(t("researchHref"), t("researchLink")), " · ", link(t("principlesHref"), t("principlesLink"))));
   }
 
   function skillDetail(s) {
@@ -278,19 +392,20 @@
     const hist = s.history ?? [];
     const rungLabel = (x) => String(x.maxRung) + (x.corrections.length ? " *" : "");
     const explainCell = (x) => {
-      if (x.void) return el("span", { class: "muted", text: `${t("voided")}${x.voidReason ? `: ${x.voidReason}` : ""}` });
+      if (x.void) return el("span", { class: "muted" }, t("voided"), x.voidReason ? [": ", tx(x.voidReason)] : null);
       if (x.lapsed) return el("span", { class: "muted", text: `${t("skipped")}${x.lapseReason && t("lapse")?.[x.lapseReason] ? `: ${t("lapse")[x.lapseReason]}` : ""}` });
       if (!x.explained) return statusBadge("warning", t("pendingExpl"));
-      return el("span", {}, statusBadge("good", t(x.explainedBy === "replay" ? "replayed" : "explained")), x.explanation ? el("div", { text: `“${x.explanation}”` }) : null);
+      return el("span", {}, statusBadge("good", t(x.explainedBy === "replay" ? "replayed" : "explained")), x.explanation ? el("div", {}, "“", tx(x.explanation), "”") : null);
     };
     return el("div", { class: "detail" },
       el("div", {}, el("h3", { text: t("history") }), hist.length ? table([t("date"), t("from"), t("to"), t("note")],
         hist.map((h) => [fmtDate(h.at), h.from ?? t("none"), `${h.to} ${levelName(h.to)}`,
-          `${h.auto ? `[${t("auto")}] ` : h.placement ? `[${t("placementNote")}] ` : ""}${h.notes?.[lang] ?? h.note ?? ""}`])) : el("p", { class: "muted", text: t("noHistory") })),
+          el("span", {}, h.auto ? `[${t("auto")}] ` : h.placement ? `[${t("placementNote")}] ` : null, h.notes?.[lang] ?? tx(h.note))])) : el("p", { class: "muted", text: t("noHistory") })),
       el("div", {}, el("h3", { text: t("tasks") }), tasks.length ? table([t("date"), t("task"), t("rung"), t("source"), t("explanation"), t("rejections"), t("corrections")],
-        tasks.map((x) => [fmtDate(x.at), `${x.skill !== s.id ? `${x.skill}: ` : ""}${x.what ?? x.id}`, rungLabel(x), t(`src.${x.source}`) === `src.${x.source}` ? (x.source ?? t("none")) : t(`src.${x.source}`),
-          explainCell(x), x.rejections.map((r) => `${t(`by.${r.by}`)}${r.reasons.length ? `: ${r.reasons.join("; ")}` : ""}`).join(" · ") || t("none"),
-          x.corrections.map((c) => `${c.from} → ${c.to}${c.reason ? ` (${c.reason})` : ""}`).join(" · ") || t("none")]), [2]) : el("p", { class: "muted", text: t("noTaskRows") })),
+        tasks.map((x) => [fmtDate(x.at), el("span", {}, x.skill !== s.id ? `${x.skill}: ` : null, x.what ? tx(x.what) : x.id), rungLabel(x), t(`src.${x.source}`) === `src.${x.source}` ? (x.source ?? t("none")) : t(`src.${x.source}`),
+          explainCell(x),
+          x.rejections.length ? el("span", {}, joinNodes(x.rejections.map((r) => el("span", {}, t(`by.${r.by}`), r.reasons.length ? [": ", joinNodes(r.reasons.map(tx), "; ")] : null)), " · ")) : t("none"),
+          x.corrections.length ? el("span", {}, joinNodes(x.corrections.map((c) => el("span", {}, `${c.from} → ${c.to}`, c.reason ? [" (", tx(c.reason), ")"] : null)), " · ")) : t("none")]), [2]) : el("p", { class: "muted", text: t("noTaskRows") })),
       el("div", {}, el("h3", { text: t("reviews") }), reviews.length ? table([t("date"), t("result"), t("nextReview")],
         reviews.map((r) => [fmtDate(r.at), t(`res.${r.result}`), fmtDate(r.nextReview)])) : el("p", { class: "muted", text: t("noReviewRows") })));
   }
@@ -308,8 +423,9 @@
         const tick = el("div", { class: "target", "aria-hidden": "true" }); tick.style.left = pct(target); track.append(tick);
         meter.append(track, el("div", { class: "num", text: st.n ? `${t("solved", { ok: st.ok, n: st.n })} (${pct(st.ok / st.n)})` : t("noTasks") }));
         const row = el("div", { class: "skill-row" },
-          el("div", { class: "skill-name" }, el("div", { class: "title", text: titleOf(s) }), el("div", { class: "id", text: s.id })),
-          s.placement === "pending" ? el("span", { class: "chip open", text: t("openChip") }) : el("span", { class: `chip lv${LEVELS.indexOf(s.level)}`, text: `${s.level} ${levelName(s.level)}` }),
+          el("div", { class: "skill-name" }, el("div", { class: "title" }, s.titles?.[lang] ?? tx(s.title)), el("div", { class: "id", text: s.id })),
+          s.placement === "pending" ? withLevelTip(el("span", { class: "chip open", tabindex: "0", text: t("openChip") }), "open")
+            : withLevelTip(el("span", { class: `chip lv${LEVELS.indexOf(s.level)}`, tabindex: "0", text: `${s.level} ${levelName(s.level)}` }), s.level),
           meter,
           el("div", { class: "skill-meta" }, st.pending ? statusBadge("warning", t("open", { n: st.pending })) : null,
             st.skipped ? el("span", { class: "muted", text: t("skippedN", { n: st.skipped }) }) : null,
@@ -378,13 +494,13 @@
   function signalsCard() {
     const items = [];
     for (const s of data.signals.filter((x) => inScope(x.skill))) {
-      items.push({ at: data.generatedAt, icon: s.dir === "up" ? "↑" : "↓", cls: s.dir === "up" ? "good" : "serious", label: s.dir === "up" ? t("signalsUp") : t("signalsDown"), text: s.texts?.[lang] ?? s.text });
+      items.push({ at: data.generatedAt, icon: s.dir === "up" ? "↑" : "↓", cls: s.dir === "up" ? "good" : "serious", label: s.dir === "up" ? t("signalsUp") : t("signalsDown"), text: s.texts?.[lang] ?? tx(s.text) });
     }
     for (const r of data.regressions.filter((x) => !x.skill || inScope(x.skill))) {
       items.push({ at: r.at, icon: r.fixed ? "↺" : "!", cls: r.fixed ? "good" : "critical", label: r.skill ?? "", text: r.fixed ? t("regressionFixed", { n: r.tests }) : t("regression", { n: r.tests }) });
     }
     for (const o of data.overrides.filter((x) => x.skill === "*" || inScope(x.skill))) {
-      items.push({ at: o.at, icon: "⚑", cls: "warning", label: o.skill, text: `${t("override", { min: o.minutes })}${o.reason ? `: ${o.reason}` : ""}` });
+      items.push({ at: o.at, icon: "⚑", cls: "warning", label: o.skill, text: el("span", {}, t("override", { min: o.minutes }), o.reason ? [": ", tx(o.reason)] : null) });
     }
     items.sort((a, b) => String(b.at).localeCompare(String(a.at)));
     const list = items.length ? el("ul", { class: "signals" }, items.map((it) => el("li", {},
@@ -420,17 +536,17 @@
       body = el("div", {}, chart, legend);
     }
     return card(t("calibration"), t("calibrationHint"), body, () => table([t("date"), t("session"), t("before"), t("after"), t("calib")],
-      rows.map((d) => [fmtDate(d.date), String(d.n), d.confidenceBefore ?? t("none"), d.reflection?.confidenceAfter ?? t("none"), d.calibration ?? t("none")])), "calibration");
+      rows.map((d) => [fmtDate(d.date), String(d.n), tx(d.confidenceBefore) ?? t("none"), tx(d.reflection?.confidenceAfter) ?? t("none"), tx(d.calibration) ?? t("none")])), "calibration");
   }
 
   function diaryCard() {
     const rows = data.diary.filter((d) => filter === "all" || String(d.skills ?? "").includes(filter)).slice().reverse();
-    const field = (label, value) => (value ? [el("dt", { text: label }), el("dd", { text: value })] : []);
+    const field = (label, value) => (value ? [el("dt", { text: label }), el("dd", {}, value)] : []);
     const list = rows.length ? el("ol", { class: "diary" }, rows.map((d) => el("li", { class: "entry" },
-      el("div", { class: "when", text: [fmtLong(d.date), `${t("session")} ${d.n}`, d.time, d.skills].filter(Boolean).join(" · ") }),
-      el("dl", {}, field(t("plan"), d.plan), field(t("wentWell"), d.wentWell), field(t("learned"), d.reflection?.learned), field(t("confusing"), d.reflection?.confusing),
-        field(t("confidence"), [d.confidenceBefore, d.reflection?.confidenceAfter].every(Boolean) ? `${d.confidenceBefore} → ${d.reflection.confidenceAfter}` : d.reflection?.confidenceAfter),
-        field(t("nextStep"), d.reflection?.nextStep), field(t("calib"), d.calibration))))) : el("p", { class: "muted", text: t("noDiary") });
+      el("div", { class: "when" }, joinNodes([fmtLong(d.date), `${t("session")} ${d.n}`, tx(d.time), tx(d.skills)].filter(Boolean), " · ")),
+      el("dl", {}, field(t("plan"), tx(d.plan)), field(t("wentWell"), tx(d.wentWell)), field(t("learned"), tx(d.reflection?.learned)), field(t("confusing"), tx(d.reflection?.confusing)),
+        field(t("confidence"), [d.confidenceBefore, d.reflection?.confidenceAfter].every(Boolean) ? el("span", {}, tx(d.confidenceBefore), " → ", tx(d.reflection.confidenceAfter)) : tx(d.reflection?.confidenceAfter)),
+        field(t("nextStep"), tx(d.reflection?.nextStep)), field(t("calib"), tx(d.calibration)))))) : el("p", { class: "muted", text: t("noDiary") });
     return card(t("diary"), t("diaryHint"), list, null, "diary");
   }
 
@@ -458,7 +574,7 @@
     $("theme").setAttribute("aria-label", t("theme"));
     for (const b of document.querySelectorAll("[data-lang]")) b.setAttribute("aria-pressed", String(b.dataset.lang === lang));
     for (const b of document.querySelectorAll("[data-source]")) b.setAttribute("aria-pressed", String(b.dataset.source === (fellBack ? "demo" : source)));
-    $("subtitle").textContent = data ? (data.course ? t("subtitle", { course: data.course, date: asOfLabel() }) : t("subtitleNoCourse", { date: asOfLabel() })) : "";
+    $("subtitle").textContent = data ? (data.course ? t("subtitle", { course: txs(data.course), date: asOfLabel() }) : t("subtitleNoCourse", { date: asOfLabel() })) : "";
     // The licence of the setup: AGPL-3.0 or a commercial licence for the code, CC BY-NC 4.0 for texts and data.
     const link = (href, text) => el("a", { href, text });
     $("footer").replaceChildren(el("div", { class: "foot-inner" },
@@ -474,7 +590,11 @@
     if (!data) return;
     const notes = [];
     if (fellBack) notes.push(el("p", { class: "notice", text: t("fallback") }));
-    if (!fellBack && source !== "demo" && data.language && data.language !== lang) notes.push(el("p", { class: "notice", text: t("ownLanguage", { language: t("langNames")[data.language] ?? data.language }) }));
+    if (!fellBack && source !== "demo" && data.language && data.language !== lang) {
+      // An export with translations (export.mjs adds them) says so; an older one is in one language.
+      const translated = Object.keys(data.translations?.[lang] ?? {}).length > 0;
+      notes.push(el("p", { class: "notice", text: t(translated ? "translated" : "ownLanguage", { language: langName(data.language) }) }));
+    }
     else if (source === "demo") notes.push(el("p", { class: "notice", text: t("demoNote") }));
     if (filter !== "all" && !mains().some((s) => s.id === filter)) filter = "all";
     main.replaceChildren(...notes, filters(), kpis(), levelsCard(), skillsCard(), el("div", { class: "two" }, tasksCard(), signalsCard()),

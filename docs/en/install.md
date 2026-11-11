@@ -18,7 +18,7 @@ node harness/install.mjs ../my-practice-folder --lang en --course "OOD" --exam 2
 ```
 
 - Without `--yes` the script only shows what it would do. Run it again with `--yes`.
-- `--lang nl|en` picks the language of the messages, the rules and the diary skill.
+- `--lang nl|en` picks the language of the messages, the rules and the skills.
 - `--map ood` is the skill map (only `ood` for now).
 - `--course` and `--exam` are optional. You can set them later with `skill.mjs setting`.
 
@@ -28,6 +28,7 @@ What the installer creates:
 |---|---|---|
 | `.claude/hooks/` | the hooks, the CLI and the messages (`i18n/`) | harness |
 | `.claude/skills/diary/SKILL.md` | the diary skill for the end of a session | harness |
+| `.claude/skills/mastery-check/SKILL.md` | the transfer task for the step to L4 (`/mastery-check`) | harness |
 | `.claude/leerharnas.md` | the rules for Claude, plus the map's notes | harness |
 | `.claude/settings.json` | the four hooks, with `$CLAUDE_PROJECT_DIR` (no absolute paths) | merged with your settings |
 | `.learning/skills.json`, `keywords.json` | your skill record and keywords, from the map | **you** (data) |
@@ -66,4 +67,4 @@ Turn off AI help outside Claude Code. Otherwise your IDE completes the code you 
 
 ## Uninstall
 
-Remove `.claude/hooks/`, `.claude/skills/diary/`, `.claude/leerharnas.md`, `.claude/leerharnas.json` and the four hooks from `.claude/settings.json`. Your data in `.learning/` stays yours.
+Remove `.claude/hooks/`, `.claude/skills/diary/`, `.claude/skills/mastery-check/`, `.claude/leerharnas.md`, `.claude/leerharnas.json` and the four hooks from `.claude/settings.json`. Your data in `.learning/` stays yours.

@@ -49,6 +49,8 @@ node harness/export.mjs ../my-practice-folder --dry-run   # report, writes nothi
 node harness/export.mjs ../my-practice-folder             # writes site-src/dashboard/data/progress.json
 ```
 
+Does a free text have no translation into the other language yet? Then the export first asks for the translations (see [Translations](progress-dashboard.md#translations)).
+
 - **A whitelist only.** Levels, tasks (rung, source, explanation, rejections, corrections, skipped), reviews, signals, and from the diary only the plan, what went well, the reflection and the calibration. Never raw events, session ids, test names or paths.
 - **Fixed filters** on all free text: e-mail addresses, absolute paths, your user name, session and transcript ids, and HTML comments. The name in `skills.json` (`learner`) is filtered too.
 - **Your own filter** in `.learning/private.json`:

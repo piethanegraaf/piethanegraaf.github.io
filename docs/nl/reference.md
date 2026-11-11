@@ -4,17 +4,17 @@
 
 | Event | Script | Wat het doet |
 |---|---|---|
-| `SessionStart` | `session-start.mjs` | Zet het register, open uitleg en doorstroom-signalen in de context, en vraagt naar je doel. Open uitleg van eerdere sessies vervalt hier. Herhalingen noemt hij niet. |
-| `UserPromptSubmit` | `prompt-gate.mjs` | Herkent de vaardigheid, bepaalt of er een nieuwe trede bij mag, logt opgeloste taken en vraagt om uitleg. Berichten van agents, notificaties en systeemherinneringen tellen niet als jouw woorden. |
+| `SessionStart` | `session-start.mjs` | Zet het register, open uitleg en doorstroomvoorstellen in de context, en vraagt naar je doel. Een open voorstel zie je ook zelf, in de melding bij de start. Open uitleg van eerdere sessies vervalt hier. Herhalingen noemt hij niet. |
+| `UserPromptSubmit` | `prompt-gate.mjs` | Herkent de vaardigheid, bepaalt of er een nieuwe trede bij mag, logt opgeloste taken en vraagt om uitleg. Zet het niveau als jij een voorstel bevestigt met "ja, doorzetten". Tijdens een transfertaak ontgrendelt geen trede. Berichten van agents, notificaties en systeemherinneringen tellen niet als jouw woorden. |
 | `PreToolUse` | `guard.mjs` | Blokkeert schrijven, bouwen en testen van code op L1–L3, en elke wijziging aan het register, de state en de harnas zelf. Een shell-commando beoordeelt hij per los commando, op het programma dat draait. `eval`, `iex` en `Invoke-Expression` weigert hij altijd. |
-| `Stop` | `reflect-gate.mjs` | Verwerkt de markers in Claude's antwoord, controleert je uitleg en het oordeel van de demotie-analist, en vraagt om het dagboek als je wilt stoppen. Na het dagboek vervalt wat nog open staat. |
+| `Stop` | `reflect-gate.mjs` | Verwerkt de markers in Claude's antwoord, controleert je uitleg, de transfertaak en het oordeel van de demotie-analist, en vraagt om het dagboek als je wilt stoppen. Haalt een uitleg een doorstroomcriterium, dan laat hij je meteen het voorstel zien. Na het dagboek vervalt wat nog open staat. |
 
 ## `skill.mjs` (je draait het zelf, met `!`)
 
 | Commando | Wat |
 |---|---|
 | `list` / `status` | Overzicht; herhalingen (L4) die klaarstaan, open en overgeslagen uitleg, en signalen. Deze twee mag Claude ook draaien. |
-| `set <id> <L0..L4> "notitie"` | Niveau zetten. Omhoog kan pas als er geen taken meer op uitleg wachten. |
+| `set <id> <L0..L4> "notitie"` | Niveau zetten. Omhoog kan pas als er geen taken meer op uitleg wachten. Een voorstel van de harnas bevestig je makkelijker in de chat: typ "ja, doorzetten" (eventueel met de id). |
 | `review <id> pass\|shaky\|fail` | De uitkomst van een herhaling zelf opgeven. Meestal niet nodig: de eerstvolgende taak van een L4-vaardigheid bepaalt hem. |
 | `add-micro <parent> <id> <niveau> "titel" "trefwoorden"` | Een microvaardigheid toevoegen. Met `autoDemote` maakt de demotie-analist er ook zelf een aan, op het niveau van de ouder min 1. |
 | `done <id> "wat"` | Een taak zonder test afmelden (ontwerp, UML). |
@@ -48,7 +48,16 @@ Draait `dotnet test` met een trx-logger en toont een korte samenvatting. Een tes
 | `[uitleg-ok <tid>]` / `[explain-ok <tid>]` | De uitleg klopt; de Stop-hook controleert hem nog. |
 | `[uitleg-nee <tid>]` / `[explain-no <tid>]` | De uitleg is onvolledig; de taak blijft open. |
 | `[demotie {...}]` / `[demotion {...}]` | Het oordeel van de demotie-analist (JSON). De Stop-hook voert het alleen uit als de agent in die beurt echt gedraaid heeft. |
+| `[transfer-start <id>]` | Begin van de transfertaak (`/mastery-check`), alleen op L2 of L3. Vanaf dan telt elke `[trede N]` tegen de transfertaak. |
+| `[transfer-ok <id>]` / `[transfer-nee <id>]` (`[transfer-no <id>]`) | De transfertaak is gehaald of niet. `ok` telt alleen zonder hulp sinds de start, en als jouw laatste bericht dezelfde check haalt als een uitleg. |
 | `<!-- sessie: <id> -->` / `<!-- session: <id> -->` | In het dagboek: de entry van deze sessie. |
+
+## Skills
+
+| Skill | Wat |
+|---|---|
+| `/diary` | Sluit de sessie af: de feiten van Claude, de reflectie van jou. |
+| `/mastery-check <id>` | De transfertaak voor de stap naar L4: een nieuwe opdracht in een ander domein, zonder hulp, en daarna drie waarom-vragen. |
 
 ## Events
 
@@ -64,6 +73,17 @@ Alles wat de harnas doet, staat in `.learning/state/events.jsonl`. De events van
 | `demotion-pending`, `demotion-verdict`, `demotion-rejected` | De analist is nodig, zijn oordeel, of een oordeel dat de Stop-hook weigerde. |
 | `micro-add` met `auto: true`, `task-retag` | De analist maakte een microvaardigheid en koppelde taken eraan. |
 | `build-failed` | Een compileerfout, onthouden als startpunt van de map. |
+
+En van de aanvulling van 11 november 2026 (doorstromen):
+
+| Event | Betekenis |
+|---|---|
+| `task` met `level` | Het niveau van de vaardigheid toen de taak gelogd werd. Een taak op L0 of L1 draagt geen sprong. |
+| `promotion-offered` | De harnas toonde een voorstel om door te zetten (`from`, `to`), of de hint dat alleen de transfertaak nog ontbreekt (`to: transfer`). |
+| `promotion-confirmed`, `promotion-refused` | Je typte "ja, doorzetten"; doorgezet, of geweigerd omdat er nog een taak op uitleg wacht. |
+| `level` met `by: learner`, `via: voorstel` | Het niveau, gezet na jouw bevestiging. |
+| `promotion-declined` | Je zei "nee" of "later" op een voorstel. Het komt terug na een nieuwe taak die het criterium haalt. |
+| `transfer-start`, `transfer-passed`, `transfer-failed`, `transfer-rejected` | De transfertaak: begonnen, gehaald, niet gehaald (`why: help` of `claude`), of een marker die de Stop-hook weigerde. |
 
 ## Bestanden
 

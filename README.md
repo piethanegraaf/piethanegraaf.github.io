@@ -17,7 +17,7 @@ A learning harness for [Claude Code](https://docs.claude.com/en/docs/claude-code
 - **Reviews only at L4**, at Fibonacci intervals: the next time such a skill comes by in your work, you do it yourself.
 - **Up is your choice, down follows the evidence** (optional): a read-only agent decides whether one sub-pattern or the whole skill goes down.
 - **A diary** at the end of each session, with the reflection in your own words.
-- **Dutch and English**: messages, rules and the diary skill.
+- **Dutch and English**: messages, rules and the skills (diary, mastery-check).
 
 ## Quick start
 
@@ -34,7 +34,7 @@ Requirements: Claude Code, Node.js 18+ (22 or 24 recommended), and the .NET SDK 
 
 | Folder | What |
 |---|---|
-| `harness/` | the installable harness: hooks, diary skill, messages (`i18n/`), skill maps, templates, `install.mjs`, `export.mjs`, `security-check.mjs`, tests |
+| `harness/` | the installable harness: hooks, skills (diary, mastery-check), messages (`i18n/`), skill maps, templates, `install.mjs`, `export.mjs`, `security-check.mjs`, tests |
 | `docs/` | the documentation site (MkDocs Material, Dutch and English), including the research and the research notes |
 | `site-src/` | static pages: the dashboard and the cheat sheet |
 | `.github/workflows/` | tests, security check, build and deploy |

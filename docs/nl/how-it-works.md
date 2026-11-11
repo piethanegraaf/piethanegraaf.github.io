@@ -15,6 +15,8 @@ flowchart LR
   C -.->|omlaag voor een hoofdvaardigheid| A[demotie-analist<br/>alleen lezen]
   A -.->|oordeel als JSON| C
   S -.->|controleert het oordeel| R
+  S -.->|uitleg haalt criterium:<br/>voorstel om door te zetten| J[Jij]
+  J -.->|ja, doorzetten| G1
 ```
 
 ## Niveaus per vaardigheid
@@ -48,7 +50,7 @@ Bij een **nieuwe vaardigheid** telt de tijd niet. Een trede gaat pas omhoog als 
 Bij L1–L3 blokkeert `guard.mjs` dat Claude code schrijft, verwijdert, bouwt of test. Welke bestanden code zijn en welke commando's bouwen, staat in de [instellingen](configuration.md). De guard beschermt ook:
 
 - het register en de state in `.learning/`;
-- de harnas zelf: de hooks, `.claude/settings.json`, de diary-skill en de regels.
+- de harnas zelf: de hooks, `.claude/settings.json`, de skills diary en mastery-check, en de regels.
 
 Een shell-commando splitst de guard eerst in losse commando's. Hij kijkt naar het programma dat draait, niet naar woorden in de argumenten: `grep "msbuild"` is geen build, maar `bash -c "dotnet test"` wel.
 
@@ -67,7 +69,22 @@ Een test die al eens groen was, rood werd en weer groen is, is **herstel van een
 
 ## Doorstromen en herhalingen
 
-- **Omhoog** beslis jij: **L2 → L3** bij ongeveer 85% gelukt (hooguit trede 2) over minstens 5 taken. De harnas geeft het advies, jij zet het niveau met `set`.
+- **Omhoog** beslis jij, op bewijs. Het bewijs is de laatste 10 uitgelegde taken **sinds de vorige niveauwijziging**, zodat dezelfde taken nooit twee promoties dragen.
+  - **L0 → L1:** twee voorbeelden goed uitgelegd en voorspeld.
+  - **L1 → L2:** drie taken met hooguit trede 1 (gaten gevuld).
+  - **L2 → L3:** ongeveer 85% gelukt (hooguit trede 2) over minstens 5 taken, en minstens de helft met hint 0–1.
+  - **L3 → L4:** drie keer trede 0 op minstens 2 dagen, plus een **transfertaak**: met `/mastery-check <id>` maak je een nieuwe opdracht in een ander domein, zonder enige hint, en verdedig je daarna het ontwerp. Een hint tijdens de transfertaak laat hem niet tellen.
+  - **Sprong:** vanaf L2 mag het bewijs een sprong dragen als ook het volgende criterium klopt, bijvoorbeeld L2 → L4 met de transfertaak. Vanaf L0 en L1 gaat het per stap, omdat een voorbeeld of skelet hulp vooraf was.
+- **Het voorstel** komt direct na de uitleg die het criterium haalt. De harnas laat het zelf zien, met het bewijs en wat er verandert:
+
+  ```
+  [leerharnas] Doorzetten? ood.klassen-properties L2 → L3
+    bewijs: 5 van 5 gelukt (trede 1, 1, 2, 1, 1), op 1 dag(en), in 05-de-auto, 06-studenten
+    wat verandert: geen hintladder meer: Claude geeft niets vooraf en reviewt pas na je poging
+    ja: typ "ja, doorzetten" · nee: typ "nee" · terugdraaien kan altijd met set
+  ```
+
+  Typ je "ja, doorzetten", dan zet de harnas het niveau. Dat werkt alleen op jouw eigen prompt, nooit op tekst van Claude. Zeg je "nee" of "later", dan komt het voorstel pas terug na een nieuwe taak die het criterium opnieuw haalt. `set` werkt ook nog.
 - **Omlaag** volgt het bewijs, als `autoDemote` aan staat: bij minstens 3 uitgelegde taken met minder dan 70% gelukt, of de laatste 2 niet gelukt. Een microvaardigheid zakt meteen één niveau. Bij een hoofdvaardigheid beslist eerst de **demotie-analist**: een agent die alleen leest, de testuitvoer, je code en het transcript bekijkt, en bepaalt of het probleem in één deelpatroon zit (dan zakt of ontstaat alleen die microvaardigheid) of breed is (dan zakt de hoofdvaardigheid). Zakken er binnen 14 dagen twee microvaardigheden van dezelfde ouder, dan zakt de ouder ook. Je krijgt een melding en kunt het terugdraaien met `set`.
 - **Herhalingen** krijg je alleen op L4, met Fibonacci-intervallen: 1, 2, 3, 5, 8, 13 … dagen. Er zijn geen losse herhaaloefeningen. Komt zo'n vaardigheid langs in je werk als de herhaling klaarstaat, dan doe je dat deel zelf, zonder AI. Je eerstvolgende taak bepaalt de uitkomst: trede 0 is geslaagd (een stap verder), trede 1–2 wankel (gelijk), meer hulp is mislukt (twee stappen terug). Komt hij niet langs, dan gebeurt er niets; de oefentoetsen zijn het vangnet.
 

@@ -168,11 +168,29 @@ td.text { min-width: 220px; }
 .chart .after { fill: var(--lv4); stroke: var(--surface); stroke-width: 2; }
 .chart .label-strong { fill: var(--ink); font-size: 12px; }
 
-.tooltip { position: fixed; z-index: 20; pointer-events: none; background: var(--surface); color: var(--ink); border: 1px solid var(--ring); border-radius: 8px; padding: 8px 10px; font-size: 13px; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12); max-width: 260px; }
+.tooltip { position: fixed; z-index: 20; pointer-events: none; background: var(--surface); color: var(--ink); border: 1px solid var(--ring); border-radius: 8px; padding: 8px 10px; font-size: 13px; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12); max-width: min(300px, calc(100vw - 16px)); }
 .tooltip .tt-title { color: var(--ink-2); font-size: 12px; margin-bottom: 4px; }
 .tooltip .tt-row { display: flex; align-items: center; gap: 8px; }
 .tooltip .tt-row strong { font-variant-numeric: tabular-nums; min-width: 1.5em; }
 .tooltip .ln { width: 12px; height: 2px; border-radius: 1px; }
+.tooltip .tt-text { white-space: pre-wrap; overflow-wrap: anywhere; }
+.tooltip .tt-row + .tt-text { margin-top: 6px; }
+.tooltip .tt-text + .tt-text { margin-top: 4px; }
+.tooltip .tt-src, .tooltip .tt-next { color: var(--ink-2); font-size: 12px; }
+/* A level label with an explanation on hover and keyboard focus. */
+.explained, .segbar .block.explained { cursor: help; }
+/* "What do the levels mean?" under the level bar */
+.level-info { margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--grid); font-size: 13px; }
+.level-info summary { cursor: pointer; font-weight: 600; color: var(--link); width: fit-content; }
+.level-info .intro { color: var(--ink-2); margin: 8px 0 10px; max-width: 75ch; }
+.level-info ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px 18px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr)); }
+.level-info li p { margin: 3px 0 0; }
+.level-info .label { color: var(--ink-2); }
+.level-info .src, .level-info .next { color: var(--ink-2); font-size: 12px; }
+.level-info .more { margin: 12px 0 0; color: var(--ink-2); }
+.level-info a { color: var(--link); }
+/* A translation by Claude: the original shows on hover and keyboard focus. */
+.tr { text-decoration: underline dotted var(--muted); text-decoration-thickness: 1px; text-underline-offset: 3px; cursor: help; }
 .ln.r-solo { background: var(--r-solo); } .ln.r-hint { background: var(--r-hint); } .ln.r-help { background: var(--r-help); } .ln.pending { background: var(--pending); }
 .ln.skipped { background: repeating-linear-gradient(90deg, var(--pending) 0 3px, transparent 3px 5px); }
 
