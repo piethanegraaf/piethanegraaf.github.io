@@ -13,4 +13,4 @@ De leerharnas, het dashboard, deze documentatie en het onderzoek zijn gemaakt me
 
 De harnas is gemaakt door een AI die zichzelf beperkingen oplegt. Dat is een bewuste keuze, maar wees je ervan bewust: het onderzoek leunt deels op bronnen van Anthropic (zie §2.0 van het [onderzoek](research.md)).
 
-Bezoeken aan deze site worden geteld met [GoatCounter](https://www.goatcounter.com/), zonder cookies en zonder persoonsgegevens te verzamelen.
+Bezoeken aan deze site, en de stemmen in de poll op de homepage, worden geteld met [GoatCounter](https://www.goatcounter.com/), zonder cookies en zonder persoonsgegevens te verzamelen. De totalen van de poll zijn openbaar.

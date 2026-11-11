@@ -21,6 +21,31 @@ So I built a harness that keeps the learning with me. I practise with it now; th
 
 Junior developers face the same trap: the agent gets the work done, but the skills that make you a medior do not grow ([§2.12 of the research](research.md#212-the-eternal-junior-problem)).
 
+## What do you think? {#poll}
+
+<div class="poll" data-poll="judge-code" data-t-loading="Loading the results…" data-t-results="Results so far: {n} votes" data-t-yours="your vote" data-t-delay="The totals can be a few hours behind." data-t-unavailable="Thanks for voting. The results cannot be shown right now." data-t-thanks="Thanks!">
+<p class="poll__premise">AI already drafts most new code at AI-forward companies.</p>
+<p class="poll__question" id="poll-question">Is learning to judge code (reviewing, testing, debugging, design) still worth your time, or will AI take that over within a year too?</p>
+<div class="poll__answers" role="group" aria-labelledby="poll-question">
+<button type="button" class="md-button" data-answer="more-than-ever">Yes, more than ever: someone has to check AI's work</button>
+<button type="button" class="md-button" data-answer="for-now">Yes, for now, but not for long</button>
+<button type="button" class="md-button" data-answer="not-sure">Not sure</button>
+<button type="button" class="md-button" data-answer="ai-takes-over">No, AI will judge code itself within a year</button>
+</div>
+<div class="poll__result" aria-live="polite" hidden></div>
+<div class="poll__role" hidden>
+<p id="poll-role">And you are…?</p>
+<div class="poll__roles" role="group" aria-labelledby="poll-role">
+<button type="button" class="md-button" data-role="student">A student</button>
+<button type="button" class="md-button" data-role="junior">A junior developer</button>
+<button type="button" class="md-button" data-role="experienced">An experienced developer</button>
+<button type="button" class="md-button" data-role="teacher-researcher">A teacher or researcher</button>
+<button type="button" class="md-button" data-role="other">Something else</button>
+</div>
+</div>
+<p class="poll__note">Anonymous: counted with GoatCounter, without cookies. One vote per browser; the totals are public.</p>
+</div>
+
 <div class="grid cards" markdown>
 
 - **Install**

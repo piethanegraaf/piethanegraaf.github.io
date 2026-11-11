@@ -13,4 +13,4 @@ The learning harness, the dashboard, this documentation and the research were ma
 
 The harness was made by an AI that limits itself. That is a deliberate choice, but keep it in mind: the research partly relies on Anthropic sources (see §2.0 of the [research](research.md)).
 
-Visits to this site are counted with [GoatCounter](https://www.goatcounter.com/), without cookies and without collecting personal data.
+Visits to this site, and the votes in the poll on the home page, are counted with [GoatCounter](https://www.goatcounter.com/), without cookies and without collecting personal data. The totals of the poll are public.

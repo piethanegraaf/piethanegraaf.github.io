@@ -7,6 +7,7 @@
 //   privacy plugin and the build self-host the Google Fonts.
 // Pages with their own CSP (the dashboard) are left alone.
 // connect-src also allows the GoatCounter endpoint: count.js (self-hosted) sends page views there with sendBeacon.
+// And GoatCounter's public counter, from which the poll on the home page reads the totals (poll.js).
 import fs from "node:fs";
 import path from "node:path";
 import crypto from "node:crypto";
@@ -14,6 +15,7 @@ import { fileURLToPath } from "node:url";
 
 // Visit counts (GoatCounter, no cookies, no personal data): the only place a page may send data to.
 export const ANALYTICS_ENDPOINT = "https://piethanegraaf.goatcounter.com/count";
+export const COUNTER_ENDPOINT = "https://piethanegraaf.goatcounter.com/counter/";
 
 // A Search Console verification file is not a page: Google checks its exact content, so it gets no CSP.
 // Only the exact form counts: the name google<hex>.html and one line that repeats that name.
@@ -47,7 +49,7 @@ export function cspFor(html) {
     "style-src 'self' 'unsafe-inline'",
     "font-src 'self' data:",
     "img-src 'self' data:",
-    `connect-src 'self' ${ANALYTICS_ENDPOINT}`,
+    `connect-src 'self' ${ANALYTICS_ENDPOINT} ${COUNTER_ENDPOINT}`,
     "worker-src 'self' blob:",
     "base-uri 'self'",
     "form-action 'none'",
