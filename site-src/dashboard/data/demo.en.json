@@ -516,6 +516,176 @@
       "lastSeen": null,
       "placement": "pending",
       "history": []
+    },
+    {
+      "id": "ood.logging",
+      "parent": null,
+      "kind": null,
+      "title": "Logging: ILogger through dependency injection, log levels, logging errors",
+      "titles": {
+        "nl": "Logging: ILogger via dependency injection, logniveaus, fouten loggen",
+        "en": "Logging: ILogger through dependency injection, log levels, logging errors"
+      },
+      "level": "L2",
+      "nextReview": null,
+      "intervalIndex": 0,
+      "lastReview": null,
+      "lastSeen": null,
+      "placement": "pending",
+      "history": []
+    },
+    {
+      "id": "test.integratie",
+      "parent": null,
+      "kind": null,
+      "title": "Integration, system and UI tests: testing components together, acceptance criteria",
+      "titles": {
+        "nl": "Integratie-, systeem- en UI-tests: componenten samen testen, acceptatiecriteria",
+        "en": "Integration, system and UI tests: testing components together, acceptance criteria"
+      },
+      "level": "L2",
+      "nextReview": null,
+      "intervalIndex": 0,
+      "lastReview": null,
+      "lastSeen": null,
+      "placement": "pending",
+      "history": []
+    },
+    {
+      "id": "ood.casting",
+      "parent": null,
+      "kind": null,
+      "title": "Upcasting and downcasting: the is pattern, as, explicit cast",
+      "titles": {
+        "nl": "Upcasting en downcasting: is-patroon, as, expliciete cast",
+        "en": "Upcasting and downcasting: the is pattern, as, explicit cast"
+      },
+      "level": "L2",
+      "nextReview": null,
+      "intervalIndex": 0,
+      "lastReview": null,
+      "lastSeen": null,
+      "placement": "pending",
+      "history": []
+    },
+    {
+      "id": "cs.static",
+      "parent": null,
+      "kind": null,
+      "title": "Static members: static fields and methods, when to use static (CS0176, CS0120)",
+      "titles": {
+        "nl": "Static members: static velden en methoden, wanneer static (CS0176, CS0120)",
+        "en": "Static members: static fields and methods, when to use static (CS0176, CS0120)"
+      },
+      "level": "L2",
+      "nextReview": null,
+      "intervalIndex": 0,
+      "lastReview": null,
+      "lastSeen": null,
+      "placement": "pending",
+      "history": []
+    },
+    {
+      "id": "cs.records-structs",
+      "parent": null,
+      "kind": null,
+      "title": "Records and structs: value types versus classes, with expressions",
+      "titles": {
+        "nl": "Records en structs: waardetypen tegenover klassen, with-expressies",
+        "en": "Records and structs: value types versus classes, with expressions"
+      },
+      "level": "L2",
+      "nextReview": null,
+      "intervalIndex": 0,
+      "lastReview": null,
+      "lastSeen": null,
+      "placement": "pending",
+      "history": []
+    },
+    {
+      "id": "ood.object-methodes",
+      "parent": null,
+      "kind": null,
+      "title": "Overriding object methods: ToString, Equals and GetHashCode",
+      "titles": {
+        "nl": "Object-methodes overschrijven: ToString, Equals en GetHashCode",
+        "en": "Overriding object methods: ToString, Equals and GetHashCode"
+      },
+      "level": "L2",
+      "nextReview": null,
+      "intervalIndex": 0,
+      "lastReview": null,
+      "lastSeen": null,
+      "placement": "pending",
+      "history": []
+    },
+    {
+      "id": "cs.extra",
+      "parent": null,
+      "kind": null,
+      "title": "Other C#: sealed, indexers, operator overloading, nested classes",
+      "titles": {
+        "nl": "Overige C#: sealed, indexers, operator overloading, geneste klassen",
+        "en": "Other C#: sealed, indexers, operator overloading, nested classes"
+      },
+      "level": "L2",
+      "nextReview": null,
+      "intervalIndex": 0,
+      "lastReview": null,
+      "lastSeen": null,
+      "placement": "pending",
+      "history": []
+    },
+    {
+      "id": "pattern.creational",
+      "parent": null,
+      "kind": null,
+      "title": "Creational: Abstract Factory/Builder/Prototype/Singleton",
+      "titles": {
+        "nl": "Creational: Abstract Factory/Builder/Prototype/Singleton",
+        "en": "Creational: Abstract Factory/Builder/Prototype/Singleton"
+      },
+      "level": "L2",
+      "nextReview": null,
+      "intervalIndex": 0,
+      "lastReview": null,
+      "lastSeen": null,
+      "placement": "pending",
+      "history": []
+    },
+    {
+      "id": "pattern.structural",
+      "parent": null,
+      "kind": null,
+      "title": "Structural: Adapter/Bridge/Composite/Decorator/Facade/Flyweight/Proxy",
+      "titles": {
+        "nl": "Structural: Adapter/Bridge/Composite/Decorator/Facade/Flyweight/Proxy",
+        "en": "Structural: Adapter/Bridge/Composite/Decorator/Facade/Flyweight/Proxy"
+      },
+      "level": "L2",
+      "nextReview": null,
+      "intervalIndex": 0,
+      "lastReview": null,
+      "lastSeen": null,
+      "placement": "pending",
+      "history": []
+    },
+    {
+      "id": "pattern.behavioral",
+      "parent": null,
+      "kind": null,
+      "title": "Behavioral: Chain/Command/Iterator/Mediator/Memento/State/Template/Visitor",
+      "titles": {
+        "nl": "Behavioral: Chain/Command/Iterator/Mediator/Memento/State/Template/Visitor",
+        "en": "Behavioral: Chain/Command/Iterator/Mediator/Memento/State/Template/Visitor"
+      },
+      "level": "L2",
+      "nextReview": null,
+      "intervalIndex": 0,
+      "lastReview": null,
+      "lastSeen": null,
+      "placement": "pending",
+      "history": []
     }
   ],
   "tasks": [
