@@ -4,7 +4,7 @@ description: "AI die tijdens het oefenen voor je denkt, verlaagt wat je daarna z
 ---
 # Leren programmeren (en OOD) met AI: literatuuronderzoek, risicoanalyse en een Claude Code-opzet die het leren beschermt
 
-**Piet Hanegraaf, met Claude (Anthropic)** · [Over de maker](about.md) · [Zo citeer je dit](#zo-citeer-je-dit-onderzoek)
+**Piet Hanegraaf, met Claude (Anthropic)** · [Over de maker](about.md) · [Zo citeer je dit](#cite)
 
 !!! warning "Machinevertaling"
     Dit is een machinevertaling door Claude (Anthropic) van het [Engelse origineel](../en/research/). Een mens heeft de vertaling niet nagekeken. Bij twijfel geldt de Engelse tekst.
@@ -15,6 +15,17 @@ description: "AI die tijdens het oefenen voor je denkt, verlaagt wat je daarna z
 
 ---
 
+## Belangrijkste bevindingen {#key-findings}
+
+1. **AI die tijdens het oefenen voor je denkt, verlaagt wat je daarna zonder AI kunt.** Onbeperkt GPT-4 verhoogde de oefenscores met 48%, maar verlaagde de examenscores met 17% toen de toegang wegviel (Bastani et al., 2025). Een AI-tutor die vooral directe antwoorden gaf, verlaagde de eindcijfers met 0,37 SD in een studie met 2.379 studenten (Liu et al., 2026, working paper). Zie [§1](#summary).
+2. **Bij programmeren onthielden studenten minder na oefenen met AI.** Copilot verhoogde de scores tijdens de sessie, maar een week later onthielden studenten minder (Gardella et al., 2026). De groep die zonder AI programmeerde en debugde, onthield na zeven weken meer (Albadarin, 2026, proefschrift).
+3. **AI als tutor kan helpen.** In een gesurveilleerde studie verhoogde toegang tot ChatGPT de toetsscores zonder AI met 0,28 SD, vooral bij studenten die het als tutor gebruikten (Contractor & Reyes, 2026, working paper).
+4. **Ontwikkelaars die met AI een nieuwe library leerden, leerden minder en waren niet sneller.** Ze scoorden 50% tegen 67% op een quiz achteraf, met het grootste verschil bij debuggen (Shen & Tamkin, 2026, preprint).
+5. **Grenzen werken als ze worden afgedwongen, niet als erom wordt gevraagd.** Een tutor via zijn systeemprompt vragen om te scaffolden veranderde niets in een studie met 1.059 studenten (Barth et al., 2026). Grenzen die in de werkwijze zijn ingebouwd, deden het beter.
+6. **Gepoolde positieve effecten zijn vooral publicatiebias.** De strengste meta-analyse uit 2026 laat g = 0,84 na correctie krimpen tot 0,08 (Boolzen et al., 2026), en een audit van 14 positieve meta-analyses vond onmogelijke statistiek en verzonnen bronnen (O'Neill, 2026, preprint).
+7. **De verschuiving in vaardigheden is echt, maar blijf zelf code schrijven zolang je leert.** Het knelpunt is verschoven naar reviewen en testen (Chen & Stratton, 2026), en oefenen met de hand bouwt juist die toezichtsvaardigheden op. Zie §2.9 en §2.10.
+8. **Juniors op het werk lopen hetzelfde risico: het eeuwige-juniorprobleem.** Korte experimenten laten het mechanisme zien en interviews beschrijven het patroon, maar geen studie heeft juniors op het werk nog over langere tijd gevolgd. Zie [§2.12](#212-het-eeuwige-juniorprobleem).
+
 ## Inhoud
 
 De inhoudsopgave staat in de zijbalk.
@@ -23,7 +34,9 @@ De inhoudsopgave staat in de zijbalk.
 
 ---
 
-## 1. Samenvatting
+<a id="1-samenvatting"></a>
+
+## 1. Samenvatting {#summary}
 
 **De literatuur laat niet zien dat AI op zichzelf het leren schaadt. Als je AI het denkwerk laat doen tijdens het oefenen, kun je daarna minder zonder AI. AI die uitlegt of als tutor begeleidt, schaadt niet of helpt een beetje.** Het sterkste bewijs:
 
@@ -91,7 +104,9 @@ De hooks zijn een **zelfbindingsmechanisme** (commitment device) dat je zelf kie
 
 ---
 
-## 2. Literatuuronderzoek
+<a id="2-literatuuronderzoek"></a>
+
+## 2. Literatuuronderzoek {#literature-review}
 
 ### 2.0 Afbakening, methode en bewijsgraden
 
@@ -630,7 +645,9 @@ De luchtvaart maakte dezelfde afweging. Verkeersvliegers houden het grootste dee
 
 ---
 
-## 3. Risicoanalyse
+<a id="3-risicoanalyse"></a>
+
+## 3. Risicoanalyse {#risks}
 
 Kans (K) en Impact (I) krijgen een score van 1–5. Risico = K × I. De scores gaan uit van **geen maatregelen** voor een student die vóór een toets zonder AI oefent met een agentische codeerassistent, zoals Claude Code.
 
@@ -685,7 +702,9 @@ Kans (K) en Impact (I) krijgen een score van 1–5. Risico = K × I. De scores g
 
 ---
 
-## 4. Zo pas je het toe: plan van maatregelen
+<a id="4-zo-pas-je-het-toe-plan-van-maatregelen"></a>
+
+## 4. Zo pas je het toe: plan van maatregelen {#mitigation}
 
 Deze sectie maakt van de risico's een plan dat je op je eigen toetsdatum legt. De tabel geeft voor elk risico één maatregel. Het stappenplan daarna zegt wanneer je wat doet, gerekend vanaf je toets.
 
@@ -776,7 +795,9 @@ Dit deel is voor docenten, curriculumontwerpers en examencommissies. Elk punt ge
 
 ---
 
-## 5. Voorgestelde inrichting van Claude Code
+<a id="5-voorgestelde-inrichting-van-claude-code"></a>
+
+## 5. Voorgestelde inrichting van Claude Code {#setup}
 
 Deze sectie beschrijft wat de harnas tijdens een sessie doet, en waarom. Installeer je de harnas, dan is dit waarmee je werkt. Geef je les, dan zie je hier welke regels de harnas afdwingt en welke alleen advies aan de AI zijn.
 
@@ -1326,7 +1347,9 @@ De OOD-vaardighedenkaart laat zien welke vaardigheden welke andere vrijspelen: v
 
 ---
 
-## 6. Evaluatie
+<a id="6-evaluatie"></a>
+
+## 6. Evaluatie {#evaluation}
 
 Hoe weet je of de harnas je leren beschermt en niet alleen frictie toevoegt? Controleer deze punten:
 
@@ -1351,7 +1374,9 @@ De controles hierboven zijn voor één lerende. Of de harnas in het algemeen wer
 
 ---
 
-## 7. Beperkingen
+<a id="7-beperkingen"></a>
+
+## 7. Beperkingen {#limitations}
 
 - **De bewijsbasis is jong.** De meeste studies over generatieve AI komen uit 2023–2026. Vaak hebben ze kleine steekproeven of een korte looptijd, of zijn het preprints en working papers (bijv. Kosmyna et al., 2025; Shen & Tamkin, 2026; Lehmann et al., 2025; de meeste experimenten uit 2026 in §2.8). In het hoger onderwijs heeft maar één studie gemeten wat er na meer dan ongeveer een week is blijven hangen: een quasi-experiment met een toets na zeven weken (Albadarin, 2026). Ook het overzicht van Stanford SCALE (november 2026) vindt blijvende leerwinst nog niet aangetoond. Effecten kunnen veranderen als de tools veranderen.
 - **Een verhalend literatuuroverzicht, één keer gecorrigeerd.** Er was geen zoekprotocol, en de eerste versie overdreef meerdere bevindingen (§11). Bij de herziening kwamen er bewijsgraden en gerichte zoekacties bij. Toch is het overzicht nog steeds niet systematisch, dus selectiebias is mogelijk.
@@ -1367,7 +1392,9 @@ De controles hierboven zijn voor één lerende. Of de harnas in het algemeen wer
 
 ---
 
-## Zo citeer je dit onderzoek
+<a id="zo-citeer-je-dit-onderzoek"></a>
+
+## Zo citeer je dit onderzoek {#cite}
 
 Geschreven door Piet Hanegraaf met Claude (Anthropic); zie de [AI-verklaring](ai-statement.md). Citeer het Engelse origineel: deze Nederlandse versie is een machinevertaling. Noem de versie en de datum waarop je het las, want het onderzoek wordt bijgewerkt.
 
@@ -1390,7 +1417,9 @@ Geschreven door Piet Hanegraaf met Claude (Anthropic); zie de [AI-verklaring](ai
 
 ---
 
-## 8. Literatuur
+<a id="8-literatuur"></a>
+
+## 8. Literatuur {#references}
 
 *Klassieke bronnen zijn aangehaald uit gevestigde literatuur. Recente studies over generatieve AI zijn bij het schrijven gecontroleerd aan de hand van de gegevens van de uitgever of van arXiv. Preprints (niet door vakgenoten beoordeeld) zijn gemarkeerd.*
 
@@ -1675,7 +1704,9 @@ Geschreven door Piet Hanegraaf met Claude (Anthropic); zie de [AI-verklaring](ai
 
 ---
 
-## Bijlage: implementatieschetsen
+<a id="bijlage-implementatieschetsen"></a>
+
+## Bijlage: implementatieschetsen {#appendix}
 
 > Dit zijn **schetsen** die laten zien dat het ontwerp te bouwen is. Ze horen pas bij je Claude Code-configuratie als je ze zelf toevoegt. De paden gaan uit van een `.claude/`-map op projectniveau en een `.learning/`-datamap. We gebruiken Node.js, omdat Claude Code dat al nodig heeft. Zo werkt het op Windows, macOS en Linux op dezelfde manier.
 
@@ -1877,7 +1908,9 @@ if (state.activeSkill && !diaryHasEntry(input.session_id)) {
 
 ---
 
-## 10. Wat we leerden van de eerste sessies
+<a id="10-wat-we-leerden-van-de-eerste-sessies"></a>
+
+## 10. Wat we leerden van de eerste sessies {#first-sessions}
 
 In de eerste sessies van de pilot gebruikte één student de harnas in drie leersessies: de snek-oefeningen opzetten, `02-namen` en `03-lijsten`. Daarna zijn de transcripten en `events.jsonl` geanalyseerd. Deze sectie beschrijft wat er misging en wat er daardoor is veranderd. De leidende eis van de student was: **herken zo snel mogelijk wat beheerst wordt, en versterk dat daarna alleen af en toe, zodat de meeste tijd vóór de toets naar nieuwe stof gaat.**
 
@@ -2029,7 +2062,9 @@ Een taak staat open tot de uitleg in eigen woorden is goedgekeurd, en vervalt al
 
 ---
 
-## 11. Wijzigingslog
+<a id="11-wijzigingslog"></a>
+
+## 11. Wijzigingslog {#changelog}
 
 ### 11 november 2026 (later): junior developers op hun werk, en een uitnodiging aan onderzoekers
 

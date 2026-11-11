@@ -6,13 +6,24 @@ description: "AI that does your thinking while you practise lowers what you can 
 ---
 # Learning to Code (and OOD) with AI: Literature Review, Risk Assessment & a Learning-Preserving Claude Code Setup
 
-**Piet Hanegraaf, with Claude (Anthropic)** · [About the author](about.md) · [How to cite](#how-to-cite-this-review)
+**Piet Hanegraaf, with Claude (Anthropic)** · [About the author](about.md) · [How to cite](#cite)
 
 *Prepared 7 November 2026 · revised 8 November 2026, rewritten for students and teachers on 10 November 2026 and updated with new literature the same day, extended for junior developers at work on 11 November 2026 (see §11) · For students who learn programming and Object-Oriented Design (OOD) with AI, for their teachers, and for junior developers at work*
 
 > **Published version.** This review was first written for one student. This version is written for students and teachers in general; that student's situation remains as examples in boxes. Since 11 November 2026 it also covers junior developers at work (§2.12), and it invites researchers to test the harness (§6.1). Files it refers to, such as the session logs, are not published.
 
 ---
+
+## Key findings {#key-findings}
+
+1. **AI that does the thinking during practice lowers what you can do without it.** Unrestricted GPT-4 raised practice scores by 48% but lowered exam scores by 17% once access was removed (Bastani et al., 2025). An AI tutor used mostly for direct answers lowered final grades by 0.37 SD in a trial with 2,379 students (Liu et al., 2026, working paper). See [§1](#summary).
+2. **In programming, students retained less after practising with AI.** Copilot raised scores during the session, but students retained less a week later (Gardella et al., 2026). The group that programmed and debugged without AI retained more after seven weeks (Albadarin, 2026, dissertation).
+3. **AI used as a tutor can help.** In a proctored trial, ChatGPT access raised test scores without AI by 0.28 SD, mainly for students who used it like a tutor (Contractor & Reyes, 2026, working paper).
+4. **Developers who learned a new library with AI learned less and were not faster.** They scored 50% against 67% on a follow-up quiz, with the largest gap on debugging (Shen & Tamkin, 2026, preprint).
+5. **Guardrails work when they are enforced, not when they are requested.** Telling a tutor in its system prompt to scaffold changed nothing in a trial with 1,059 students (Barth et al., 2026). Gates built into the workflow did better.
+6. **Pooled positive effects are mostly publication bias.** The most rigorous 2026 meta-analysis shrinks g = 0.84 to 0.08 after correction (Boolzen et al., 2026), and an audit of 14 positive meta-analyses found impossible statistics and fabricated references (O'Neill, 2026, preprint).
+7. **The skill shift is real, but keep writing code by hand while you learn.** The bottleneck has moved to reviewing and testing (Chen & Stratton, 2026), and hand practice builds those supervision skills. See §2.9 and §2.10.
+8. **Juniors at work face the same risk: the eternal-junior problem.** Short-term experiments show the mechanism and interviews describe the pattern, but no study has followed juniors at work over time yet. See [§2.12](#212-the-eternal-junior-problem).
 
 ## Contents
 
@@ -22,7 +33,9 @@ The table of contents is in the sidebar.
 
 ---
 
-## 1. Executive summary
+<a id="1-executive-summary"></a>
+
+## 1. Executive summary {#summary}
 
 **The literature does not show that AI harms learning by itself. Letting AI do the thinking during practice lowers what you can do without it afterwards. AI that explains or tutors does no harm or helps a little.** The strongest evidence:
 
@@ -90,7 +103,9 @@ The hooks are a **commitment device** you choose for yourself (Ariely & Wertenbr
 
 ---
 
-## 2. Literature review
+<a id="2-literature-review"></a>
+
+## 2. Literature review {#literature-review}
 
 ### 2.0 Scope, method and evidence grades
 
@@ -630,7 +645,9 @@ Aviation made the same trade-off. Airline pilots supervise the autopilot most of
 
 ---
 
-## 3. Risk assessment
+<a id="3-risk-assessment"></a>
+
+## 3. Risk assessment {#risks}
 
 Likelihood (L) and Impact (I) are scored 1–5. Risk = L × I. Scores assume **no mitigation** for a student who practises with an agentic coding assistant such as Claude Code before an exam without AI.
 
@@ -685,7 +702,9 @@ Likelihood (L) and Impact (I) are scored 1–5. Risk = L × I. Scores assume **n
 
 ---
 
-## 4. How to apply it: mitigation plan
+<a id="4-how-to-apply-it-mitigation-plan"></a>
+
+## 4. How to apply it: mitigation plan {#mitigation}
 
 This section turns the risks into a plan you can lay on your own exam date. The table gives one mitigation for each risk. The step plan after it says when to do what, counted from your exam.
 
@@ -776,7 +795,9 @@ This part is for teachers, curriculum designers and exam committees. Each point 
 
 ---
 
-## 5. Proposed Claude Code setup
+<a id="5-proposed-claude-code-setup"></a>
+
+## 5. Proposed Claude Code setup {#setup}
 
 This section describes what the harness does during a session, and why. If you install it, this is what you will work with. If you teach, it shows which rules the harness enforces and which are only advice to the AI.
 
@@ -1326,7 +1347,9 @@ The OOD skill map shows which skills unlock which: from classes and objects, thr
 
 ---
 
-## 6. Evaluation
+<a id="6-evaluation"></a>
+
+## 6. Evaluation {#evaluation}
 
 How do you know whether the harness protects your learning and does not just add friction? Check these points:
 
@@ -1351,7 +1374,9 @@ The checks above are for one learner. Whether the harness works in general needs
 
 ---
 
-## 7. Limitations
+<a id="7-limitations"></a>
+
+## 7. Limitations {#limitations}
 
 - **The evidence base is young.** Most studies on generative AI date from 2023–2026. They often have small samples or short durations, or they are preprints and working papers (e.g. Kosmyna et al., 2025; Shen & Tamkin, 2026; Lehmann et al., 2025; most of the 2026 trials in §2.8). In higher education, only one study has measured retention beyond about a week: a quasi-experiment with a seven-week test (Albadarin, 2026). The Stanford SCALE review (November 2026) also finds long-term gains still unshown. Effects may change as the tools change.
 - **A narrative review, corrected once.** There was no search protocol, and the first version overstated several findings (§11). The revision added evidence grades and targeted searches. It is still not systematic, so selection bias is possible.
@@ -1367,7 +1392,9 @@ The checks above are for one learner. Whether the harness works in general needs
 
 ---
 
-## How to cite this review
+<a id="how-to-cite-this-review"></a>
+
+## How to cite this review {#cite}
 
 Written by Piet Hanegraaf with Claude (Anthropic); see the [AI statement](ai-statement.md). Cite the version and the date you read, because the review is updated.
 
@@ -1390,7 +1417,9 @@ Written by Piet Hanegraaf with Claude (Anthropic); see the [AI statement](ai-sta
 
 ---
 
-## 8. References
+<a id="8-references"></a>
+
+## 8. References {#references}
 
 *Classic references are cited from established literature. Recent generative AI studies were checked against the publisher or arXiv records at the time of writing. Preprints (not peer reviewed) are marked.*
 
@@ -1675,7 +1704,9 @@ Written by Piet Hanegraaf with Claude (Anthropic); see the [AI statement](ai-sta
 
 ---
 
-## Appendix: implementation sketches
+<a id="appendix-implementation-sketches"></a>
+
+## Appendix: implementation sketches {#appendix}
 
 > These are **sketches** that show the design can be built. They are not part of your Claude Code configuration unless you add them yourself. Paths assume a project-level `.claude/` folder and a `.learning/` data folder. Node.js is used because Claude Code already requires it, so it works the same on Windows, macOS and Linux.
 
@@ -1877,7 +1908,9 @@ if (state.activeSkill && !diaryHasEntry(input.session_id)) {
 
 ---
 
-## 10. What we learned from the first sessions
+<a id="10-what-we-learned-from-the-first-sessions"></a>
+
+## 10. What we learned from the first sessions {#first-sessions}
 
 In the first sessions of the pilot, one student used the harness for three learning sessions: setting up the snek exercises, `02-namen` and `03-lijsten`. Afterwards, the transcripts and `events.jsonl` were analysed. This section reports what went wrong and what was changed as a result. The student's guiding requirement was: **recognize what is mastered as quickly as possible, then only reinforce it occasionally, so that most time goes to new material before the assessment.**
 
@@ -2029,7 +2062,9 @@ A task stays open until its own-words explanation is approved, and lapses when t
 
 ---
 
-## 11. Change log
+<a id="11-change-log"></a>
+
+## 11. Change log {#changelog}
 
 ### 11 November 2026 (later): junior developers at work, and an invitation to researchers
 
