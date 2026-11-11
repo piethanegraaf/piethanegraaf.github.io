@@ -54,6 +54,9 @@ The design choices are grounded in the [research](research.md), with the sources
 
 For students who want to practise with Claude Code without the AI taking over the learning. The included map is for **Object-Oriented Design in C#** (HBO-ICT, the Netherlands), but the harness works for any course you make a skill map for.
 
+- **Teachers and course coordinators:** see [For educators](for-educators.md): what it enforces, how to fit it to your course, and what happens to student data.
+- **Education researchers:** see [For researchers](for-researchers.md): the question it makes testable and what a trial would need.
+
 ## Frequently asked questions
 
 ### Is using Claude Code for practice cheating?

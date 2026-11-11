@@ -85,6 +85,9 @@ plugins:
                 - C# OOP cheat sheet: /en/cheatsheet/
             - Research:
                 - Literature review: research.md
+            - Who it is for:
+                - For educators: for-educators.md
+                - For researchers: for-researchers.md
             - About this project:
                 - AI statement: ai-statement.md
 
@@ -108,6 +111,9 @@ nav:
       - C# OOP-cheat sheet: /cheatsheet/
   - Onderzoek:
       - Literatuuronderzoek: research.md
+  - Voor wie:
+      - Voor docenten: for-educators.md
+      - Voor onderzoekers: for-researchers.md
   - Over dit project:
       - AI-verklaring: ai-statement.md
 

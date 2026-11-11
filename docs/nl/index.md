@@ -54,6 +54,9 @@ De ontwerpkeuzes zijn onderbouwd in het [onderzoek](research.md), met de bronnen
 
 Voor studenten die met Claude Code willen oefenen zonder dat de AI het leren overneemt. De meegeleverde kaart is voor **Object-Oriented Design in C#** (HBO-ICT), maar de harnas werkt voor elk vak waarvoor je een kaart met vaardigheden maakt.
 
+- **Docenten en vakcoördinatoren:** zie [Voor docenten](for-educators.md): wat hij afdwingt, hoe je hem op je vak afstemt en wat er met studentdata gebeurt.
+- **Onderwijsonderzoekers:** zie [Voor onderzoekers](for-researchers.md): de vraag die hij toetsbaar maakt en wat een studie nodig zou hebben.
+
 ## Veelgestelde vragen
 
 ### Is oefenen met Claude Code spieken?
