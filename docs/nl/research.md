@@ -1277,6 +1277,8 @@ Hoe weet je of de harnas je leren beschermt en niet alleen frictie toevoegt? Con
 
 *Klassieke bronnen zijn aangehaald uit gevestigde literatuur. Recente studies over generatieve AI zijn bij het schrijven gecontroleerd aan de hand van de gegevens van de uitgever of van arXiv. Preprints (niet door vakgenoten beoordeeld) zijn gemarkeerd.*
 
+**Hoe de bronnen zijn gecontroleerd.** Twee citatiecontroles vergeleken de claims in dit onderzoek met hun primaire bronnen: één voor de [studies over generatieve AI](https://github.com/piethanegraaf/piethanegraaf.github.io/blob/main/research/citation-checks/citation_check_genai.md) en één voor de [leerwetenschap](https://github.com/piethanegraaf/piethanegraaf.github.io/blob/main/research/citation-checks/citation_check_learning_science.md). De correcties die daaruit kwamen, staan in het [wijzigingslog](#11-wijzigingslog). De controles zelf zijn in het Engels.
+
 **Leren programmeren en OOD**
 
 - Becker, B. A., Denny, P., Finnie-Ansley, J., Luxton-Reilly, A., Prather, J., & Santos, E. A. (2023). Programming is hard – or at least it used to be: Educational opportunities and challenges of AI code generation. *Proc. SIGCSE 2023*, 500–506.

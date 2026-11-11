@@ -1275,6 +1275,8 @@ How do you know whether the harness protects your learning and does not just add
 
 *Classic references are cited from established literature. Recent generative AI studies were checked against the publisher or arXiv records at the time of writing. Preprints (not peer reviewed) are marked.*
 
+**How the sources were verified.** Two citation checks compared the claims in this review with their primary sources: one for the [generative AI studies](https://github.com/piethanegraaf/piethanegraaf.github.io/blob/main/research/citation-checks/citation_check_genai.md) and one for the [learning science](https://github.com/piethanegraaf/piethanegraaf.github.io/blob/main/research/citation-checks/citation_check_learning_science.md). The corrections that came out of them are in the [change log](#11-change-log).
+
 **Learning to program & OOD**
 
 - Becker, B. A., Denny, P., Finnie-Ansley, J., Luxton-Reilly, A., Prather, J., & Santos, E. A. (2023). Programming is hard – or at least it used to be: Educational opportunities and challenges of AI code generation. *Proc. SIGCSE 2023*, 500–506.
