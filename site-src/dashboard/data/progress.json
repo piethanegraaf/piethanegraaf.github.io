@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "generatedAt": "2026-11-11",
-  "exportedAt": "2026-11-11T06:32:39.089Z",
+  "exportedAt": "2026-11-11T12:50:56.906Z",
   "course": null,
   "language": "nl",
   "examDate": "2027-01-20",
@@ -199,13 +199,26 @@
         "nl": "Klassen, constructors; variabele vs veld vs property (private set)",
         "en": "Classes, constructors; variable vs field vs property (private set)"
       },
-      "level": "L2",
+      "level": "L3",
       "nextReview": null,
       "intervalIndex": 0,
       "lastReview": null,
-      "lastSeen": "2026-11-10",
+      "lastSeen": "2026-11-11",
       "placement": "done",
-      "history": []
+      "history": [
+        {
+          "at": "2026-11-11",
+          "from": "L2",
+          "to": "L3",
+          "note": "5/5 gelukt",
+          "notes": {
+            "nl": "5/5 gelukt",
+            "en": "5/5 solved"
+          },
+          "auto": false,
+          "placement": false
+        }
+      ]
     },
     {
       "id": "ood.klassen.veld-vs-lokaal",
@@ -270,13 +283,26 @@
         "nl": "Associaties: een-op-veel, veel-op-veel",
         "en": "Associations: one-to-many, many-to-many"
       },
-      "level": "L2",
+      "level": "L3",
       "nextReview": null,
       "intervalIndex": 0,
       "lastReview": null,
-      "lastSeen": null,
-      "placement": "pending",
-      "history": []
+      "lastSeen": "2026-11-11",
+      "placement": "done",
+      "history": [
+        {
+          "at": "2026-11-11",
+          "from": "L2",
+          "to": "L3",
+          "note": "plaatsing: hoogste trede 0 bij de eerste taak",
+          "notes": {
+            "nl": "plaatsing: hoogste trede 0 bij de eerste taak",
+            "en": "placement: highest rung 0 at the first task"
+          },
+          "auto": false,
+          "placement": true
+        }
+      ]
     },
     {
       "id": "ood.aggregatie-compositie",
@@ -860,6 +886,97 @@
       "corrections": [],
       "void": false,
       "voidReason": null
+    },
+    {
+      "id": "mwbyvk78ij59",
+      "at": "2026-11-11T10:19:12.260Z",
+      "skill": "ood.klassen-properties",
+      "source": "check",
+      "success": true,
+      "maxRung": 0,
+      "minutes": 7,
+      "what": "BoekConstructorOverloaded",
+      "explained": true,
+      "explanation": "omdat hij nog niet geset was en dan is hij eerst null hij krijgt niet zomaar de waarde van een lege string",
+      "explainedAt": "2026-11-11T10:22:55.708Z",
+      "explainedBy": null,
+      "lapsed": false,
+      "lapseReason": null,
+      "retaggedFrom": null,
+      "rejections": [
+        {
+          "at": "2026-11-11T10:21:09.006Z",
+          "by": "claude",
+          "reasons": []
+        }
+      ],
+      "corrections": [],
+      "void": false,
+      "voidReason": null
+    },
+    {
+      "id": "mwbzo0wihxai",
+      "at": "2026-11-11T10:41:20.274Z",
+      "skill": "ood.klassen-properties",
+      "source": "done",
+      "success": true,
+      "maxRung": 0,
+      "minutes": 22,
+      "what": "08-rechthoek: eigenschappen, omtrek en oppervlak in één keer groen",
+      "explained": true,
+      "explanation": "nu kunnen de lengte en breete van de instatie worden aangepast zonder dat dit voor problemen zorgt omdat oppervalte en omtrek altijd naar de huidige waarde van lengte en breete kijken. als je opllervalkte en omtrek als properties zouden worden opgeslagen zouden out of sync kunnen raken met de lengte en breete van de instatie als deze worden geupdate",
+      "explainedAt": "2026-11-11T10:46:50.573Z",
+      "explainedBy": null,
+      "lapsed": false,
+      "lapseReason": null,
+      "retaggedFrom": null,
+      "rejections": [
+        {
+          "at": "2026-11-11T10:43:10.832Z",
+          "by": "claude",
+          "reasons": []
+        },
+        {
+          "at": "2026-11-11T10:44:04.914Z",
+          "by": "claude",
+          "reasons": []
+        },
+        {
+          "at": "2026-11-11T10:44:41.306Z",
+          "by": "claude",
+          "reasons": []
+        }
+      ],
+      "corrections": [],
+      "void": false,
+      "voidReason": null
+    },
+    {
+      "id": "mwc0ilc5upcg",
+      "at": "2026-11-11T11:05:06.437Z",
+      "skill": "ood.associaties",
+      "source": "done",
+      "success": true,
+      "maxRung": 0,
+      "minutes": 3,
+      "what": "09-studenten-docenten: docent met lijst studenten, VoegStudentToe, in één keer groen",
+      "explained": true,
+      "explanation": "nee, omdat dit niet word opgeslagen in een propertie in de student class",
+      "explainedAt": "2026-11-11T11:07:28.099Z",
+      "explainedBy": null,
+      "lapsed": false,
+      "lapseReason": null,
+      "retaggedFrom": null,
+      "rejections": [
+        {
+          "at": "2026-11-11T11:06:22.796Z",
+          "by": "claude",
+          "reasons": []
+        }
+      ],
+      "corrections": [],
+      "void": false,
+      "voidReason": null
     }
   ],
   "reviews": [],
@@ -875,6 +992,12 @@
       "skill": "ood.klassen-properties",
       "tests": 1,
       "fixed": true
+    },
+    {
+      "at": "2026-11-11T11:20:56.885Z",
+      "skill": "ood.overerving",
+      "tests": 1,
+      "fixed": false
     }
   ],
   "overrides": [
@@ -885,17 +1008,7 @@
       "reason": "securitycheck site (tooling)"
     }
   ],
-  "signals": [
-    {
-      "skill": "ood.klassen-properties",
-      "dir": "up",
-      "text": "ood.klassen-properties: 5/5 gelukt (≥ 85%)",
-      "texts": {
-        "nl": "ood.klassen-properties: 5/5 gelukt (≥ 85%)",
-        "en": "ood.klassen-properties: 5/5 solved (≥ 85%)"
-      }
-    }
-  ],
+  "signals": [],
   "activity": [
     {
       "date": "2026-11-07",
@@ -931,7 +1044,7 @@
     },
     {
       "date": "2026-11-11",
-      "sessions": 1,
+      "sessions": 3,
       "hints": 1,
       "holds": 0,
       "denials": 1,
@@ -972,6 +1085,23 @@
         "nextStep": "straks door naar de volgende snack chalge"
       },
       "calibration": "vooraf niet gegeven → 05 en 06 af met trede ≤2, zonder uitwerking, en het D-toets-zwaktepunt zelf opgelost → een 4 nu lijkt te kloppen."
+    },
+    {
+      "date": "2026-11-11",
+      "n": 1,
+      "time": "10:39–12:36",
+      "skills": "ood.klassen-properties (L3), ood.associaties (L2 → L3, plaatsing), ood.overerving (L3, alleen via mapkoppeling)",
+      "plan": "verder met de snek-challenges, te beginnen bij 07-boeken",
+      "confidenceBefore": "onbekend (niet beantwoord)",
+      "wentWell": "`ood.klassen-properties`: een overload-constructor die een ontbrekend gegeven zelf invult (07), en een berekende waarde via een methode in plaats van opgeslagen toestand, verdedigd met \"loopt anders uit sync\" (08). `ood.associaties`: een een-op-veel-associatie, met de richting van de relatie goed uitgelegd (09). Alle drie op trede 0.",
+      "signals": "geen",
+      "reflection": {
+        "learned": "\"hoe de getters en de setters op een class propertie werken, wat ze wel en niet doen.\"",
+        "confusing": "\"er waren veel follow-up vragen, dit was goed om de gaten in mijn kennis en vaardigheden aan het ligt te brengen maar bijna to mutch.\"",
+        "confidenceAfter": "4",
+        "nextStep": "niet genoemd"
+      },
+      "calibration": "vooraf onbekend → de drie taken lukten op trede 0; de verdieping over `get` zonder `set` vroeg trede 4 → niet te bepalen (geen score vooraf)"
     }
   ],
   "translations": {
@@ -1011,6 +1141,12 @@
       "vraag over kleinste waarde die true geeft": "question about the smallest value that gives true",
       "afgeleide toestand: property vervangen door lokale variabele": "derived state: property replaced by a local variable",
       "de oude propertie bestond zolang het object geinstanseerd was opdat deze wert aangemaakt bij instacieren en de lokale varaible bestaat sins dat de functie word aageroepen omdat deze in de functie geinstanseerd wordt": "the old property existed as long as the object was instantiated because it was created when instantiating, and the local variable exists from when the function is called because it is instantiated in the function",
+      "BoekConstructorOverloaded": "BoekConstructorOverloaded",
+      "omdat hij nog niet geset was en dan is hij eerst null hij krijgt niet zomaar de waarde van een lege string": "because it wasn't set yet and then it's null at first it doesn't just get the value of an empty string",
+      "08-rechthoek: eigenschappen, omtrek en oppervlak in één keer groen": "08-rechthoek: properties, perimeter and area green in one go",
+      "nu kunnen de lengte en breete van de instatie worden aangepast zonder dat dit voor problemen zorgt omdat oppervalte en omtrek altijd naar de huidige waarde van lengte en breete kijken. als je opllervalkte en omtrek als properties zouden worden opgeslagen zouden out of sync kunnen raken met de lengte en breete van de instatie als deze worden geupdate": "now the length and width of the instance can be changed without that causing problems because area and perimeter always look at the current value of length and width. if area and perimeter were stored as properties they could get out of sync with the length and width of the instance when these get updated",
+      "09-studenten-docenten: docent met lijst studenten, VoegStudentToe, in één keer groen": "09-studenten-docenten: teacher with a list of students, VoegStudentToe, green in one go",
+      "nee, omdat dit niet word opgeslagen in een propertie in de student class": "no, because this isn't stored in a property in the student class",
       "securitycheck site (tooling)": "security check site (tooling)",
       "cs.basis (L2), cs.basis.lus-grenzen (L2, nieuw), test.unit-tests (L1)": "cs.basis (L2), cs.basis.lus-grenzen (L2, new), test.unit-tests (L1)",
       "opdracht 04-even-getallen afmaken (niet expliciet benoemd)": "finish exercise 04-even-getallen (not stated explicitly)",
@@ -1031,7 +1167,16 @@
       "vooraf niet gegeven → 05 en 06 af met trede ≤2, zonder uitwerking, en het D-toets-zwaktepunt zelf opgelost → een 4 nu lijkt te kloppen.": "before not given → 05 and 06 done with rung ≤2, without a worked solution, and the weak point from the D test solved without help → a 4 now seems right.",
       "wat het verschil is tussen een fuctie variabele en een propertie in een klas en waneer deze geinstaseerd worden.": "what the difference is between a function variable and a property in a class and when they get instantiated.",
       "ik had even pauze toen ik ging eten en toen was ik de context van een vraag kwijt.": "I had a short break when I went to eat and then I had lost the context of a question.",
-      "straks door naar de volgende snack chalge": "on to the next snek challenge in a bit"
+      "straks door naar de volgende snack chalge": "on to the next snek challenge in a bit",
+      "ood.klassen-properties (L3), ood.associaties (L2 → L3, plaatsing), ood.overerving (L3, alleen via mapkoppeling)": "ood.klassen-properties (L3), ood.associaties (L2 → L3, placement), ood.overerving (L3, only via folder mapping)",
+      "verder met de snek-challenges, te beginnen bij 07-boeken": "continue with the snek challenges, starting at 07-boeken",
+      "onbekend (niet beantwoord)": "unknown (not answered)",
+      "`ood.klassen-properties`: een overload-constructor die een ontbrekend gegeven zelf invult (07), en een berekende waarde via een methode in plaats van opgeslagen toestand, verdedigd met \"loopt anders uit sync\" (08). `ood.associaties`: een een-op-veel-associatie, met de richting van de relatie goed uitgelegd (09). Alle drie op trede 0.": "`ood.klassen-properties`: an overload constructor that fills in a missing value itself (07), and a computed value via a method instead of stored state, defended with \"otherwise it gets out of sync\" (08). `ood.associaties`: a one-to-many association, with the direction of the relationship explained well (09). All three at rung 0.",
+      "geen": "none",
+      "vooraf onbekend → de drie taken lukten op trede 0; de verdieping over `get` zonder `set` vroeg trede 4 → niet te bepalen (geen score vooraf)": "before unknown → the three tasks succeeded at rung 0; the follow-up question on `get` without `set` needed rung 4 → cannot be determined (no score beforehand)",
+      "\"hoe de getters en de setters op een class propertie werken, wat ze wel en niet doen.\"": "\"how the getters and the setters on a class property work, what they do and don't do.\"",
+      "\"er waren veel follow-up vragen, dit was goed om de gaten in mijn kennis en vaardigheden aan het ligt te brengen maar bijna to mutch.\"": "\"there were a lot of follow-up questions, this was good for bringing the gaps in my knowledge and skills to light but almost too much.\"",
+      "niet genoemd": "not mentioned"
     }
   }
 }
