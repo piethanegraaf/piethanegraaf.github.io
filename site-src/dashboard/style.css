@@ -125,6 +125,9 @@ main:focus { outline: none; }
 .chip.open { background: var(--surface); color: var(--ink); box-shadow: inset 0 0 0 1px var(--pending); }
 .segbar .block.open { background: repeating-linear-gradient(45deg, var(--pending) 0 3px, var(--surface) 3px 6px); color: var(--ink); box-shadow: inset 0 0 0 1px var(--pending); }
 .legend .sw.open { background: repeating-linear-gradient(45deg, var(--pending) 0 2px, var(--surface) 2px 4px); box-shadow: inset 0 0 0 1px var(--pending); }
+/* The placement comes first ("Start"), set apart from the levels: where a skill begins, not a level below L0. */
+.segbar .block.open { margin-right: 4px; }
+.legend li.start { padding-right: 14px; border-right: 1px solid var(--grid); }
 .meter { display: grid; gap: 3px; }
 .meter .track { position: relative; height: 8px; border-radius: 4px; background: var(--track); }
 .meter .fill { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 4px; background: var(--accent); }
@@ -189,6 +192,23 @@ td.text { min-width: 220px; }
 .level-info .src, .level-info .next { color: var(--ink-2); font-size: 12px; }
 .level-info .more { margin: 12px 0 0; color: var(--ink-2); }
 .level-info a { color: var(--link); }
+.level-info h3 { margin: 16px 0 8px; font-size: 13px; font-weight: 650; }
+.level-info .updown { margin: 10px 0 0; max-width: 90ch; }
+/* The route from the start to L4: a row of steps with arrows; a column with arrows down on a narrow screen. */
+.level-info ol.route { grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 0 8px; }
+.route li { display: grid; align-content: start; gap: 2px; }
+.route .head { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; }
+.route .line { flex: 1; min-width: 12px; border-top: 1px solid var(--axis); position: relative; }
+.route .line::after { content: ""; position: absolute; right: -1px; top: -4px; border-left: 6px solid var(--axis); border-top: 3.5px solid transparent; border-bottom: 3.5px solid transparent; }
+.route strong { font-size: 13px; }
+.route .crit { margin: 0; font-size: 12px; color: var(--ink-2); }
+@media (max-width: 900px) {
+  .level-info ol.route { grid-template-columns: 1fr; gap: 0; }
+  .route li { grid-template-columns: 52px minmax(0, 1fr); column-gap: 10px; padding-bottom: 12px; }
+  .route .head { grid-row: 1 / span 2; margin: 0; flex-direction: column; align-items: center; align-self: stretch; }
+  .route .line { min-width: 0; min-height: 12px; border-top: 0; border-left: 1px solid var(--axis); }
+  .route .line::after { right: auto; top: auto; bottom: -1px; left: -4px; border-left: 3.5px solid transparent; border-right: 3.5px solid transparent; border-top: 6px solid var(--axis); border-bottom: 0; }
+}
 /* A translation by Claude: the original shows on hover and keyboard focus. */
 .tr { text-decoration: underline dotted var(--muted); text-decoration-thickness: 1px; text-underline-offset: 3px; cursor: help; }
 .ln.r-solo { background: var(--r-solo); } .ln.r-hint { background: var(--r-hint); } .ln.r-help { background: var(--r-help); } .ln.pending { background: var(--pending); }
