@@ -8,7 +8,7 @@ description: "The four Claude Code hooks of the learning harness, every skill.mj
 
 | Event | Script | What it does |
 |---|---|---|
-| `SessionStart` | `session-start.mjs` | Puts the record, open explanations and promotion proposals in the context, and asks for your goal. You also see an open proposal yourself, in the message at the start. Open explanations of earlier sessions lapse here. It does not mention reviews. |
+| `SessionStart` | `session-start.mjs` | Puts the record, open explanations and promotion proposals in the context, and asks for your goal. You also see an open proposal yourself, in the message at the start. Open explanations of earlier sessions lapse here. It does not mention reviews. After a first export to the dashboard, its message also says what is new since then (see `since-export`). |
 | `UserPromptSubmit` | `prompt-gate.mjs` | Recognises the skill, decides whether a new rung may unlock, logs solved tasks and asks for explanations. Sets the level when you confirm a proposal with "yes, promote". During a transfer task no rung unlocks. Agent messages, notifications and system reminders do not count as your words. |
 | `PreToolUse` | `guard.mjs` | Blocks writing, building and testing code at L1–L3, and every change to the record, the state and the harness itself. It judges a shell command per simple command, by the program that runs. It always refuses `eval`, `iex` and `Invoke-Expression`. |
 | `Stop` | `reflect-gate.mjs` | Processes the markers in Claude's answer, checks your explanation, the transfer task and the verdict of the demotion analyst, and asks for the diary when you want to stop. When an explanation meets a promotion criterion, it shows you the proposal right away. After the diary, what is still open lapses. |
@@ -18,6 +18,7 @@ description: "The four Claude Code hooks of the learning harness, every skill.mj
 | Command | What |
 |---|---|
 | `list` / `status` | Overview; L4 reviews that are ready, open and skipped explanations, and signals. Claude may run these two as well. |
+| `since-export` | What is new since the last export to the dashboard, in one line: tasks, diary sessions and level changes. Nothing when there was no export yet. Only reads, so Claude may run it as well: `/diary` ends with it. See [Since the last export](progress-dashboard.md#since-the-last-export). |
 | `set <id> <L0..L4> "note"` | Set a level. Raising it only works when no tasks wait for an explanation. A proposal of the harness is easier to confirm in the chat: type "yes, promote" (optionally with the id). |
 | `review <id> pass\|shaky\|fail` | Record the outcome of a review yourself. Usually not needed: the next task of an L4 skill decides it. |
 | `add-micro <parent> <id> <level> "title" "keywords"` | Add a microskill. With `autoDemote` the demotion analyst also creates one itself, at the parent's level minus 1. |
@@ -113,7 +114,8 @@ And of the setup review of 11 November 2026 (the start of a task, reviews and pa
   keywords.json      keywords per skill
   private.json       terms that must never appear in an export (create it yourself)
   diary/YYYY-MM-DD.md
-  state/             events.jsonl, tests.json, session-*.json, overrides.json
+  state/             events.jsonl, tests.json, session-*.json, overrides.json,
+                     last-export.json (moment and totals of the last dashboard export)
 ```
 
 ## Scripts in this repository
@@ -121,7 +123,7 @@ And of the setup review of 11 November 2026 (the start of a task, reviews and pa
 | Script | What |
 |---|---|
 | `harness/install.mjs` | Install and update. See [Install](install.md). |
-| `harness/export.mjs` | Export progress for the dashboard, with privacy filters. See [Configuration and privacy](configuration.md). |
+| `harness/export.mjs` | Export progress for the dashboard, with privacy filters. Also writes `.learning/state/last-export.json` in the practice folder. See [Configuration and privacy](configuration.md). |
 | `harness/security-check.mjs` | The check before anything goes online. |
 | `harness/demo.mjs` | Rebuild the dashboard's demo data. |
 | `node --test "test/*.test.mjs"` (in `harness/`) | The tests. |

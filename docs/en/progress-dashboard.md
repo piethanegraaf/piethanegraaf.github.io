@@ -33,7 +33,25 @@ Every chart has a table view. You can switch between Dutch and English, and betw
 5. Let Claude fill in the translations ("fill in translations.todo.json") and export again. The export takes the translations over, removes the todo file and writes `progress.json`.
 6. Check the diff of `site-src/dashboard/data/progress.json`, the translations too, then commit and push it yourself. The dashboard shows the date and time of the export, so you can see how current it is.
 
-In Claude Code, in this repo, `/update-dashboard ../my-practice-folder` does steps 3 to 5 for you. It stops before the commit.
+In Claude Code, in this repo, `/update-dashboard ../my-practice-folder` does steps 3 to 6 for you, up to a pull request:
+
+- **In its own worktree.** It never works in your main checkout. Is a dashboard pull request still open? Then it continues on that branch: the two do not conflict, and the translations in it are kept. Otherwise it starts a new branch `dashboard-YYYY-MM-DD` from `origin/main`.
+- **Checked.** After the export and the translations it runs `--check` and the security check, with the private terms of your practice folder. A fresh worktree has no `.learning/private.json` of its own, because that file is never committed.
+- **Only after your approval.** It shows you the diff and the translations it was unsure of, and asks whether it may go on. Only then does it commit `progress.json`, push the branch and open the pull request (or add a commit to the open one). Merging is up to you.
+
+## Since the last export
+
+When the export writes the data, it also writes `.learning/state/last-export.json` in your practice folder: the moment and three totals (tasks, diary sessions and level changes). No texts and no paths.
+
+From then on the harness says in one line what is new since that export, for example:
+
+> Since the last export (11 Nov 13:50): 3 tasks, 1 diary session, 2 level changes. Update the dashboard with /update-dashboard in the repo.
+
+- **At the start of a session**, only when something is new.
+- **At the end of `/diary`**, always. You can also run `! node .claude/hooks/skill.mjs since-export` yourself.
+- **Without an export, nothing.** Without `last-export.json`, for example when you do not use the dashboard, the harness says nothing about it.
+
+A level change is every new line in the level history, so a placement and an automatic demotion count too. The counter starts again at every export that writes the data, also when you do not approve the pull request after all. `--dry-run` and an export that stops for translations (exit code 2) do not touch it.
 
 ## Translations
 

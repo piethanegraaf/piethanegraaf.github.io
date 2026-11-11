@@ -33,7 +33,25 @@ Elke grafiek heeft een tabelweergave. Je kunt wisselen tussen Nederlands en Enge
 5. Laat Claude de vertalingen invullen ("vul translations.todo.json in") en exporteer opnieuw. De export neemt de vertalingen over, verwijdert het todo-bestand en schrijft `progress.json`.
 6. Controleer de diff van `site-src/dashboard/data/progress.json`, ook de vertalingen, en commit en push hem zelf. Het dashboard toont de datum en de tijd van de export, zodat je ziet hoe actueel het is.
 
-In Claude Code, in deze repo, doet `/update-dashboard ../mijn-oefenmap` stap 3 tot en met 5 voor je. Het stopt vóór de commit.
+In Claude Code, in deze repo, doet `/update-dashboard ../mijn-oefenmap` stap 3 tot en met 6 voor je, tot en met een pull request:
+
+- **In een eigen worktree.** Het werkt nooit in je hoofdcheckout. Staat er nog een dashboard-pull-request open? Dan gaat het verder op die branch: de twee botsen niet, en de vertalingen daarin blijven bewaard. Anders begint het een nieuwe branch `dashboard-JJJJ-MM-DD` vanaf `origin/main`.
+- **Gecontroleerd.** Na de export en de vertalingen draait het `--check` en de securitycheck, met de privétermen van je oefenmap. Een nieuwe worktree heeft zelf geen `.learning/private.json`, want dat bestand wordt nooit gecommit.
+- **Pas na je akkoord.** Het laat je de diff zien en de vertalingen waarover het twijfelde, en vraagt of het verder mag. Pas dan commit het `progress.json`, pusht het de branch en opent het de pull request (of zet het een commit op de open pull request). Mergen doe je zelf.
+
+## Sinds de laatste export
+
+Schrijft de export de data, dan schrijft hij ook `.learning/state/last-export.json` in je oefenmap: het moment en drie totalen (taken, dagboeksessies en niveauwijzigingen). Geen teksten en geen paden.
+
+Vanaf dan meldt de harnas in één regel wat er sinds die export nieuw is, bijvoorbeeld:
+
+> Sinds de laatste export (11-11 13:50): 3 taken, 1 dagboeksessie, 2 niveauwijzigingen. Werk het dashboard bij met /update-dashboard in de repo.
+
+- **Bij de start van een sessie**, alleen als er iets nieuw is.
+- **Aan het eind van `/diary`**, altijd. Je kunt ook zelf `! node .claude/hooks/skill.mjs since-export` draaien.
+- **Zonder export niets.** Zonder `last-export.json`, bijvoorbeeld als je het dashboard niet gebruikt, zegt de harnas er niets over.
+
+Een niveauwijziging is elke nieuwe regel in de niveaugeschiedenis, dus ook een plaatsing en automatisch omlaag. De teller begint opnieuw bij elke export die de data schrijft, ook als je de pull request daarna toch niet goedkeurt. `--dry-run` en een export die stopt voor vertalingen (exitcode 2) laten hem staan.
 
 ## Vertalingen
 

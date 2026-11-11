@@ -16,6 +16,9 @@
 //   takes the translations over. Without all translations it writes no output (exit code 2),
 //   unless --allow-untranslated. --check fails on an output with a missing translation (for CI).
 // - --dry-run writes nothing and shows a report of what would be filtered.
+// - Each time the output is written, <projectmap>/.learning/state/last-export.json gets the moment and
+//   three totals (tasks, diary sessions, level changes). The session start and /diary use it to say
+//   what is new since the export. Not with --dry-run, and not when the output is not written (exit code 2).
 // - Check the diff of the output yourself before you commit or push it.
 import fs from "node:fs";
 import os from "node:os";
@@ -450,7 +453,9 @@ export async function build(project, { previous = null, todo = null } = {}) {
   };
   const { memory, fromTodo } = translationMemory(settings.language, { previous, todo });
   const { texts, missing } = applyTranslations(out, { memory }, scrub);
-  return { out, report, filters, missing, todo: todoContent(settings.language, texts, { missing, memory, fromTodo }) };
+  // The totals for last-export.json, counted by the harness itself, on the same events as this export.
+  const totals = lib.exportTotals(data, events);
+  return { out, report, filters, missing, totals, todo: todoContent(settings.language, texts, { missing, memory, fromTodo }) };
 }
 
 // ---------- CLI ----------
@@ -491,7 +496,7 @@ async function main() {
   }
   let result;
   try { result = await build(project, { previous, todo }); } catch (e) { fail(e.message); }
-  const { out: json, report, missing, todo: work } = result;
+  const { out: json, report, missing, totals, todo: work } = result;
 
   console.log(`Export van ${project}`);
   console.log(`  ${json.skills.length} vaardigheden · ${json.tasks.length} taken · ${json.reviews.length} herhalingen · ${json.diary.length} dagboeksessies`);
@@ -519,6 +524,14 @@ async function main() {
   }
   fs.writeFileSync(out, JSON.stringify(json, null, 2) + "\n");
   console.log(`\nGeschreven: ${out}\nControleer de diff zelf, ook de vertalingen, voordat je commit of pusht.`);
+  // The mark in the practice folder: from now on the session start counts from this export.
+  try {
+    const lib = await import("./hooks/lib.mjs");
+    lib.writeLastExport(totals, json.exportedAt);
+    console.log(`Bijgewerkt: ${lib.LAST_EXPORT_FILE} (${totals.tasks} taken, ${totals.diarySessions} dagboeksessies, ${totals.levelChanges} niveauwijzigingen). De melding "sinds de laatste export" telt vanaf nu.`);
+  } catch (e) {
+    console.error(`Let op: ${path.join(project, ".learning", "state", "last-export.json")} is niet geschreven (${e.message}). De export zelf is wel gelukt.`);
+  }
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) await main();

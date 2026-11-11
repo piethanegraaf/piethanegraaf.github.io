@@ -273,6 +273,62 @@ export function isOverrideActive(skillId) {
   return loadOverrides().some((o) => o.skill === skillId || o.skill === "*");
 }
 
+// ---- Since the last dashboard export ----
+// export.mjs writes .learning/state/last-export.json each time it writes the dashboard data: the moment
+// and three totals. The session start and /diary (`skill.mjs since-export`) compare them with now, so
+// the learner sees when an update of the dashboard is worth it. Only totals: no texts, no paths.
+// Without the file (no export yet, or no dashboard at all) nothing is said.
+export const LAST_EXPORT_FILE = path.join(STATE_DIR, "last-export.json");
+const EXPORT_KEYS = ["tasks", "diarySessions", "levelChanges"];
+
+// Counted the same way as the dashboard: every task event, every "## " session in a diary file,
+// and every entry in the level history (placements and automatic changes included).
+export function exportTotals(data, events = readEvents()) {
+  let diarySessions = 0;
+  try {
+    for (const f of fs.readdirSync(DIARY_DIR).filter((f) => /^\d{4}-\d{2}-\d{2}\.md$/.test(f))) {
+      diarySessions += (fs.readFileSync(path.join(DIARY_DIR, f), "utf8").match(/^## /gm) ?? []).length;
+    }
+  } catch { /* no diary yet */ }
+  return {
+    tasks: events.filter((e) => e.type === "task").length,
+    diarySessions,
+    levelChanges: (data?.skills ?? []).reduce((n, s) => n + (Array.isArray(s.history) ? s.history.length : 0), 0),
+  };
+}
+
+export function writeLastExport(totals, exportedAt = new Date().toISOString()) {
+  const mark = { exportedAt, ...Object.fromEntries(EXPORT_KEYS.map((k) => [k, totals[k]])) };
+  fs.mkdirSync(STATE_DIR, { recursive: true });
+  fs.writeFileSync(LAST_EXPORT_FILE, JSON.stringify(mark, null, 2) + "\n");
+  return mark;
+}
+
+// null without a (valid) file; otherwise what is new since then, never below zero.
+export function sinceExport(data, events = readEvents()) {
+  let mark;
+  try { mark = JSON.parse(fs.readFileSync(LAST_EXPORT_FILE, "utf8")); } catch { return null; }
+  if (!mark || typeof mark !== "object" || !EXPORT_KEYS.every((k) => Number.isFinite(mark[k]))) return null;
+  const now = exportTotals(data, events);
+  return { exportedAt: mark.exportedAt ?? null, ...Object.fromEntries(EXPORT_KEYS.map((k) => [k, Math.max(0, now[k] - mark[k])])) };
+}
+
+export const hasNewSinceExport = (s) => Boolean(s && EXPORT_KEYS.some((k) => s[k] > 0));
+
+// One line, in the learner's language: "Sinds de laatste export (11-11 13:50): 3 taken, ...".
+export function sinceExportLine(s) {
+  const d = new Date(s.exportedAt ?? NaN);
+  const pad = (n) => String(n).padStart(2, "0");
+  const at = Number.isNaN(d.getTime()) ? "?"
+    : `${language() === "en" ? d.toLocaleDateString("en-GB", { day: "numeric", month: "short" }) : `${d.getDate()}-${d.getMonth() + 1}`} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  return t("ss.since", {
+    at,
+    tasks: s.tasks === 1 ? t("ss.since.task") : t("ss.since.tasks", { n: s.tasks }),
+    diary: s.diarySessions === 1 ? t("ss.since.diarySession") : t("ss.since.diarySessions", { n: s.diarySessions }),
+    levels: s.levelChanges === 1 ? t("ss.since.levelChange") : t("ss.since.levelChanges", { n: s.levelChanges }),
+  });
+}
+
 // ---- Whose words are these? ----
 // Reports from subagents, task notifications and system reminders reach the UserPromptSubmit
 // hook as if they were prompts, and sit in the transcript as user entries. They are not the

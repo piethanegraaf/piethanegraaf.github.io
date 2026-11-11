@@ -5,6 +5,7 @@ import fs from "node:fs";
 import {
   readStdin, loadSkills, loadOverrides, today, taskStats, levelName, DIARY_DIR, lapseTasks, readEvents,
   isMicro, pendingTasks, recentWins, levelAdvice, settingsOf, isPlacementPending, effectiveLevel, adviceCommand, openOffer, t,
+  sinceExport, hasNewSinceExport, sinceExportLine,
 } from "./lib.mjs";
 
 let input = {};
@@ -87,10 +88,13 @@ const ctx = [
   t("ss.closeWithDiary"),
 ].join("\n");
 
+const since = sinceExport(data);
 const msg = t("ss.msg", { n: skills.length }) +
   (pending.length ? t("ss.msg.pending", { n: pending.length }) : "") +
   (offers.length ? t("ss.msg.offers", { list: offers.map((o) => `${o.id} ${o.from} → ${o.to}`).join(", ") }) : "") +
-  (overrides.length ? t("ss.msg.overrides", { n: overrides.length }) : "");
+  (overrides.length ? t("ss.msg.overrides", { n: overrides.length }) : "") +
+  // Only after a first export (no dashboard, no line) and only when something is new since then.
+  (hasNewSinceExport(since) ? "\n" + sinceExportLine(since) : "");
 
 process.stdout.write(JSON.stringify({
   systemMessage: msg,
