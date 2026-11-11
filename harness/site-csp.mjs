@@ -14,6 +14,14 @@ import { fileURLToPath } from "node:url";
 // Visit counts (GoatCounter, no cookies, no personal data): the only place a page may send data to.
 export const ANALYTICS_ENDPOINT = "https://piethanegraaf.goatcounter.com/count";
 
+// A Search Console verification file is not a page: Google checks its exact content, so it gets no CSP.
+// Only the exact form counts: the name google<hex>.html and one line that repeats that name.
+export function isSearchVerification(file, text) {
+  const name = String(file).split(/[\\/]/).pop();
+  if (!/^google[0-9a-f]{12,40}\.html$/.test(name)) return false;
+  return String(text).trim() === `google-site-verification: ${name}`;
+}
+
 export function cspFor(html) {
   const hashes = new Set();
   const origins = new Set();
@@ -55,17 +63,18 @@ export function addCsp(html) {
 
 function main() {
   const dir = path.resolve(process.argv[2] ?? "site");
-  let changed = 0, kept = 0;
+  let changed = 0, kept = 0, skipped = 0;
   for (const f of fs.readdirSync(dir, { recursive: true }).map(String).filter((f) => /\.html?$/i.test(f))) {
     const p = path.join(dir, f);
     const html = fs.readFileSync(p, "utf8");
+    if (isSearchVerification(f, html)) { skipped++; continue; }
     let next;
     try { next = addCsp(html); } catch (e) { console.error(`${f}: ${e.message}`); process.exit(1); }
     if (next === null) { kept++; continue; }
     fs.writeFileSync(p, next);
     changed++;
   }
-  console.log(`CSP toegevoegd aan ${changed} pagina's (${kept} hadden er al een).`);
+  console.log(`CSP toegevoegd aan ${changed} pagina's (${kept} hadden er al een${skipped ? `; ${skipped} verificatiebestand overgeslagen` : ""}).`);
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) main();

@@ -17,6 +17,7 @@ import os from "node:os";
 import path from "node:path";
 import { execFileSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
+import { isSearchVerification } from "./site-csp.mjs";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const git = (args, opts = {}) => execFileSync("git", args, { cwd: ROOT, encoding: opts.buffer ? undefined : "utf8", maxBuffer: 256 * 1024 * 1024, stdio: ["pipe", "pipe", "pipe"], ...opts });
@@ -139,6 +140,8 @@ function copyrightRules(file, text) {
 
 // ---------- Web safety (site-src and the built site) ----------
 function webRules(file, text, { built = false } = {}) {
+  // A Search Console verification file (exact name and content) is not a page and needs no CSP.
+  if (isSearchVerification(file, text)) return [];
   const out = [];
   const add = (level, rule, line, detail) => out.push({ level, rule, file, line, detail });
   const lineOf = (idx) => text.slice(0, idx).split("\n").length;

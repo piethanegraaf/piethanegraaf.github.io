@@ -60,6 +60,10 @@ test("web: external scripts need SRI, the dashboard needs CSP and no HTML sinks"
   assert.deepEqual(webRules("site-src/dashboard/app.js", "el.textContent = text; re.exec(s);"), []);
   assert.ok(has(webRules("site-src/dashboard/index.html", `${csp}<script>alert(1)</script>`), "BLOKKEER", "web.inline-script"));
   assert.deepEqual(levels(webRules("site-src/dashboard/index.html", `${csp}<link href="https://fonts.googleapis.com/css2?family=X" rel="stylesheet">`)), []);
+  // A Search Console verification file needs no CSP, but only in its exact form.
+  const gv = "google0123456789abcdef.html";
+  assert.deepEqual(webRules(`site/${gv}`, `google-site-verification: ${gv}\n`, { built: true }), []);
+  assert.ok(has(webRules(`site/${gv}`, `<script>x()</script>google-site-verification: ${gv}`, { built: true }), "BLOKKEER", "web.csp"));
 });
 
 test("CI: pinned actions, minimal permissions, no pull_request_target", () => {
