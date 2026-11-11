@@ -287,6 +287,8 @@ export async function build(project, { previous = null, todo = null } = {}) {
       const tk = {
         id: e.tid ?? `legacy-${tasks.length + 1}`, at: e.at, skill: knownSkill(e.skill), source: ["check", "done", "chat"].includes(e.source) ? e.source : null,
         success: Boolean(e.success), maxRung: Number(e.maxRung ?? 0), minutes: Number.isFinite(e.minutes) ? e.minutes : null,
+        // The part of the rung that came from the review of the previous task (setup review of 11 Nov, S3).
+        reviewRung: Number(e.reviewRung) > 0 ? Number(e.reviewRung) : null,
         what: scrub(e.what ?? null, "task.what"), explained: !e.tid, explanation: null, explainedAt: null, explainedBy: null,
         lapsed: false, lapseReason: null, retaggedFrom: null,
         rejections: [], corrections: [], void: false, voidReason: null,
@@ -331,7 +333,7 @@ export async function build(project, { previous = null, todo = null } = {}) {
 
   // Activity per day: counts only.
   const activity = new Map();
-  const act = (d) => { if (!activity.has(d)) activity.set(d, { date: d, sessions: new Set(), hints: 0, holds: 0, denials: 0, overridesUsed: 0 }); return activity.get(d); };
+  const act = (d) => { if (!activity.has(d)) activity.set(d, { date: d, sessions: new Set(), hints: 0, holds: 0, denials: 0, overridesUsed: 0, reviewHelp: 0, helpDropped: 0 }); return activity.get(d); };
   for (const e of events) {
     const d = day(e.at);
     if (!d) continue;
@@ -340,7 +342,15 @@ export async function build(project, { previous = null, todo = null } = {}) {
     else if (e.type === "hint-hold") act(d).holds++;
     else if (e.type === "deny") act(d).denials++;
     else if (e.type === "override-used") act(d).overridesUsed++;
+    else if (e.type === "review-help") act(d).reviewHelp++;
+    else if (e.type === "help-dropped") act(d).helpDropped++;
   }
+  // Help in a review after a task, and help that did not count because new work began (S3): shown
+  // apart from the tasks. Ids and numbers only.
+  const reviewHelp = events.filter((e) => e.type === "review-help").map((e) => ({
+    at: e.at, skill: knownSkill(e.skill), rung: Number(e.rung) || 0, reviewOf: typeof e.reviewOf === "string" && /^[a-z0-9]+$/.test(e.reviewOf) ? e.reviewOf : null,
+  }));
+  const helpDropped = events.filter((e) => e.type === "help-dropped").map((e) => ({ at: e.at, skill: knownSkill(e.skill), rung: Number(e.rung) || 0 }));
 
   const overrides = events.filter((e) => e.type === "override").map((e) => ({
     at: e.at, skill: e.skill === "*" ? "*" : knownSkill(e.skill), minutes: Number(e.minutes ?? 0), reason: scrub(e.reason ?? null, "override.reason"),
@@ -436,7 +446,7 @@ export async function build(project, { previous = null, todo = null } = {}) {
     settings: { defaultLevel: settings.defaultLevel, targetSuccess: settings.targetSuccess, stuckTimerMinutes: settings.stuckTimerMinutes },
     skills, tasks, reviews, regressions, overrides, signals,
     activity: [...activity.values()].sort((a, b) => a.date.localeCompare(b.date)).map((a) => ({ ...a, sessions: a.sessions.size })),
-    diary,
+    diary, reviewHelp, helpDropped,
   };
   const { memory, fromTodo } = translationMemory(settings.language, { previous, todo });
   const { texts, missing } = applyTranslations(out, { memory }, scrub);

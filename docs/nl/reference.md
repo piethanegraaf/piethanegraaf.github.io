@@ -27,6 +27,7 @@ description: "De vier Claude Code-hooks van de leerharnas, elk commando van skil
 | `correct <taak-id> schrap "reden"` | Eén taak schrappen. |
 | `override <id\|*> <minuten> "reden"` | Tijdelijk toestaan dat Claude code schrijft (hooguit 240 minuten, gelogd). |
 | `setting <sleutel> <waarde>` | `examDate`, `stuckTimerMinutes`, `idleMinutes`, `defaultLevel`, `course`, `language`. |
+| `paths <id> add|remove "<glob>"` | Welke opdrachtmappen bij een vaardigheid horen, bijvoorbeeld `paths ood.associaties add "ood-opdrachten-01/09-*/**"`. De map bepaalt de vaardigheid van een taak en het niveau dat de guard gebruikt. Niet voor een microvaardigheid: die gebruikt het niveau van de hoofdvaardigheid. Heeft een andere vaardigheid hetzelfde pad, dan waarschuwt hij. Gelogd als event `paths`. |
 | `replay <transcript.jsonl> [--dry-run]` | Herstelt uitleggen die in de chat zijn goedgekeurd maar niet gelogd. Hij zoekt de markers `[uitleg-ok <tid>]` en controleert jouw bericht met dezelfde check als de Stop-hook. Alleen wat beide sleutels haalt, telt, met bron `replay`. |
 
 In het Engels kan ook `correct <taak-id> rung …` en `correct <taak-id> void …`.
@@ -39,6 +40,8 @@ In het Engels kan ook `correct <taak-id> rung …` en `correct <taak-id> void �
 
 Draait `dotnet test` met een trx-logger en toont een korte samenvatting. Een test die van rood naar groen gaat, wordt een taak met de trede van dat moment. De eerste run per map is een basislijn. Herstel na een regressie telt niet als taak.
 
+- **Code geschreven vóór de eerste run.** Is de eerste run in een map helemaal groen, en is er in deze sessie code in die map gewijzigd, dan telt dat groen ook als taak (`test-green` met `firstRun: true`). Code van een eerdere sessie blijft een basislijn. Draai `check.mjs` dus eerst, vóór je code schrijft.
+- **Een andere map begint een nieuwe taak.** Een run in een andere map dan die van de vorige taak is een signaal van nieuw werk: de ladder begint opnieuw (`task-start`), en hulp sinds de vorige taak telt niet voor de nieuwe (`help-dropped`).
 - **Een compileerfout is een startpunt.** Bouwt de map niet (`error CSxxxx`), dan onthoudt `check.mjs` dat. Een test die bij de eerste build die wel lukt groen is, telt dan als nieuw groen. Een fout van de tooling (`NETSDK`, `MSB`) telt niet.
 - **De map bepaalt de vaardigheid.** Na een run in een map kiest een trefwoord in je prompt alleen nog een microvaardigheid binnen die familie. Naar een andere familie wissel je met `#id` of de naam van de opdracht.
 - **`global.json`:** vraagt die een oudere SDK dan het project gebruikt, zonder `rollForward` naar een nieuwere hoofdversie, dan waarschuwt `check.mjs`.
@@ -49,6 +52,7 @@ Draait `dotnet test` met een trx-logger en toont een korte samenvatting. Een tes
 | Marker | Betekenis |
 |---|---|
 | `[trede N]` / `[rung N]` | Er is inhoudelijke hulp gegeven op trede N. |
+| `[review-trede N #id]` / `[review-rung N #id]` | Hulp op trede N in een review na een taak, over het concept `id` uit `skills.json`. Die verhoogt de trede van de volgende taak niet, behalve als die taak over hetzelfde concept gaat (dezelfde familie). Zonder geldig id, zonder gelogde taak ervoor, of na een signaal van nieuw werk telt hij als een gewone `[trede N]`. |
 | `[uitleg-ok <tid>]` / `[explain-ok <tid>]` | De uitleg klopt; de Stop-hook controleert hem nog. |
 | `[uitleg-nee <tid>]` / `[explain-no <tid>]` | De uitleg is onvolledig; de taak blijft open. |
 | `[demotie {...}]` / `[demotion {...}]` | Het oordeel van de demotie-analist (JSON). De Stop-hook voert het alleen uit als de agent in die beurt echt gedraaid heeft. |
@@ -88,6 +92,18 @@ En van de aanvulling van 11 november 2026 (doorstromen):
 | `level` met `by: learner`, `via: voorstel` | Het niveau, gezet na jouw bevestiging. |
 | `promotion-declined` | Je zei "nee" of "later" op een voorstel. Het komt terug na een nieuwe taak die het criterium haalt. |
 | `transfer-start`, `transfer-passed`, `transfer-failed`, `transfer-rejected` | De transfertaak: begonnen, gehaald, niet gehaald (`why: help` of `claude`), of een marker die de Stop-hook weigerde. |
+
+En van de setup review van 11 november 2026 (het begin van een taak, reviews en paden):
+
+| Event | Betekenis |
+|---|---|
+| `task-start` | Er begon nieuw werk, met de reden: `code-elsewhere`, `check-elsewhere`, `prompt-exercise` of `prompt-id`. `after`: de taak ervoor. |
+| `help-dropped` | Gewone hulp van vóór dat begin (`rung`). Die telt niet voor de nieuwe taak. |
+| `review-help` | Hulp in een review na een taak: `skill` is het concept, `reviewOf` de taak van de review. |
+| `task` met `reviewRung` | De taak kreeg zijn trede uit de review van de vorige taak, over hetzelfde concept. |
+| `rung-mark` met `review: true` | Een reviewmarker die als gewone trede telde. |
+| `test-green` met `firstRun: true` | De eerste run in een map was helemaal groen, met code die in deze sessie is geschreven. |
+| `paths` | Je koppelde een opdrachtmap aan een vaardigheid, of haalde hem weg (`action`, `glob`). |
 
 ## Bestanden
 

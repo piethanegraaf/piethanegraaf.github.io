@@ -334,7 +334,7 @@ const sessionFile = (sid) => path.join(STATE_DIR, `session-${String(sid).replace
 const newSession = () => ({
   startedAt: null, lastActiveAt: null, activeMs: 0, activeSkill: null, folderSkill: null, folderSkillAt: null,
   rung: 0, maxRung: 0, lastRungAt: null, lastRungActive: null, taskStartedAt: null, taskStartedActive: null,
-  endRequested: false, nudged: false,
+  endRequested: false, nudged: false, lastTask: null, reviewHelp: [], explainWords: {},
 });
 
 export const sessionExists = (sid) => fs.existsSync(sessionFile(sid));
@@ -366,13 +366,156 @@ export function touch(st, now = Date.now(), data = null) {
 // Active minutes since a mark (a value of st.activeMs taken earlier).
 export const activeMinutesSince = (st, mark) => Math.max(0, Math.round(((st.activeMs ?? 0) - (mark ?? st.activeMs ?? 0)) / 60000));
 
-// A new task starts: the ladder and the task clock start again.
-export function startTask(st, now = Date.now()) {
+// The ladder and the task clock start again.
+function resetLadder(st, now) {
   Object.assign(st, {
-    rung: 0, maxRung: 0, lastRungAt: null, lastRungActive: null, taskStartedAt: now, taskStartedActive: st.activeMs ?? 0, lastTaskAt: now,
+    rung: 0, maxRung: 0, lastRungAt: null, lastRungActive: null, taskStartedAt: now, taskStartedActive: st.activeMs ?? 0,
     attempted: false, lastErrorSig: null,
   });
   return st;
+}
+
+// A task was just logged: the ladder and the task clock start again (lastTaskAt: a "solved" in the
+// chat right after a logged task is not a second task).
+export function startTask(st, now = Date.now()) {
+  resetLadder(st, now);
+  st.lastTaskAt = now;
+  return st;
+}
+
+// ---- The start of a task, and help in a review (setup review of 11 Nov 2026, S3) ----
+// The harness knows when a task ends (check.mjs, done, chat). A task BEGINS at a deterministic signal
+// of new work. Help in an optional review after a task ([review-trede N #id]) does not raise
+// st.maxRung: it is kept in st.reviewHelp and only counts for the next task when that task is about
+// the same concept.
+
+// After a logged task (check, done or chat): it is the last task, review help is used up, and the
+// next task starts with a fresh ladder.
+export function taskLogged(st, task, now = Date.now()) {
+  st.lastTask = { tid: task.tid, skill: task.skill, dir: task.dir ?? null, at: now };
+  st.reviewHelp = [];
+  return startTask(st, now);
+}
+
+// The rung of a task that is being logged: all help since the last task (st.maxRung), and the help
+// from the review of the previous task when it was about this task's family: the same id, the parent,
+// or a microskill of that parent (15c-1). Returns { rung, reviewRung }.
+export function taskRung(data, st, skillId) {
+  const base = Number(st?.maxRung) || 0;
+  const s = findSkill(data, skillId);
+  const family = new Set(s ? familyIds(data, familyOf(s)) : [skillId]);
+  const fromReview = (st?.reviewHelp ?? []).filter((r) => family.has(r.skill)).map((r) => Number(r.rung) || 0);
+  const reviewRung = fromReview.length ? Math.max(...fromReview) : 0;
+  return { rung: Math.max(base, reviewRung), reviewRung };
+}
+
+const sameFolder = (a, b) => a === b || a.startsWith(b + "/") || b.startsWith(a + "/");
+const SKIP_DIR = /^(bin|obj|\.vs|\.idea|\.git|\.claude|\.learning|node_modules)$/i;
+
+// Code files (settings.codeExtensions) changed after `since` (ms), without bin/obj. Relative paths.
+export function changedCodeFiles(data, since, { under = "", limit = 50 } = {}) {
+  const codeFile = codeExtRe(data);
+  const out = [];
+  let budget = 4000;
+  const walk = (dir) => {
+    let entries = [];
+    try { entries = fs.readdirSync(path.join(ROOT, dir), { withFileTypes: true }); } catch { return; }
+    for (const e of entries) {
+      if (budget-- <= 0 || out.length >= limit) return;
+      const f = (dir ? dir + "/" : "") + e.name;
+      if (e.isDirectory()) { if (!SKIP_DIR.test(e.name)) walk(f); continue; }
+      if (!codeFile.test(e.name)) continue;
+      try { if (fs.statSync(path.join(ROOT, f)).mtimeMs > since) out.push(f); } catch { /* skip */ }
+    }
+  };
+  walk(under);
+  return out;
+}
+
+// The exercise folders of a skill: the folders in the project that match its paths.
+export function exerciseDirs(skill) {
+  const dirs = [];
+  for (const pat of skill?.paths ?? []) {
+    if (pat.startsWith("**")) continue;
+    const literal = pat.split(/[*?]/)[0];
+    const parent = literal.includes("/") ? literal.slice(0, literal.lastIndexOf("/")) : "";
+    let entries = [];
+    try { entries = fs.readdirSync(path.join(ROOT, parent), { withFileTypes: true }); } catch { continue; }
+    const re = globToRegex(pat);
+    for (const e of entries) {
+      if (!e.isDirectory()) continue;
+      const r = (parent ? parent + "/" : "") + e.name;
+      if (re.test(r + "/x.cs")) dirs.push(r);
+    }
+  }
+  return dirs;
+}
+
+// A deterministic signal that the learner started new work since the last logged task (15c-2), or
+// null. Never a keyword: only another exercise folder with changed code (scanCode), check.mjs in
+// another folder (dir), or the learner's own prompt with the FULL name of another exercise folder or
+// a #id of another family (prompt). Without a last task there is nothing to compare with.
+export function newWorkSignal(data, st, { dir = null, prompt = null, scanCode = false } = {}) {
+  const last = st?.lastTask;
+  if (!data || !last) return null;
+  const lastFamily = familyOf(findSkill(data, last.skill)) ?? last.skill;
+  const mappedFamily = (p) => { const s = skillForPath(data, p); return s && s.kind !== "zone" ? familyOf(s) : null; };
+  // Another place than the last task: another folder when the task had one, else another family.
+  const elsewhere = (folder) => (last.dir ? !sameFolder(folder, last.dir) : mappedFamily(path.join(ROOT, folder, "__probe__", "x.cs")) !== lastFamily);
+  if (dir !== null && elsewhere(dir)) return "check-elsewhere";
+  if (prompt) {
+    const p = String(prompt).toLowerCase();
+    for (const m of p.matchAll(/#([a-z][a-z0-9-]*(?:\.[a-z0-9-]+)+)/g)) {
+      const s = findSkill(data, m[1]);
+      if (s && s.kind !== "zone" && familyOf(s) !== lastFamily) return "prompt-id";
+    }
+    for (const s of data.skills) {
+      if (s.kind === "zone") continue;
+      for (const d of exerciseDirs(s)) {
+        const name = d.split("/").pop().toLowerCase();
+        const re = new RegExp(`(^|[^a-z0-9-])${escapeRe(name)}($|[^a-z0-9-])`);
+        if (re.test(p) && elsewhere(d)) return "prompt-exercise";
+      }
+    }
+  }
+  if (scanCode) {
+    for (const f of changedCodeFiles(data, last.at)) {
+      if (mappedFamily(path.join(ROOT, f)) === null) continue; // not an exercise folder (a zone, or unmapped)
+      if (last.dir ? !sameFolder(f, last.dir) : mappedFamily(path.join(ROOT, f)) !== lastFamily) return "code-elsewhere";
+    }
+  }
+  return null;
+}
+
+// New work begins (15c-3): the last task is closed for review help, and the ladder and the clock start
+// again. Ordinary help given since the last task was for work that was not finished: it does not count
+// for the new task, and is logged as help-dropped so it stays visible. Review help stays in
+// st.reviewHelp: it still counts when the new task is about the same concept.
+export function beginNewWork(st, reason, { session = null, now = Date.now() } = {}) {
+  const dropped = Number(st.maxRung) || 0;
+  if (dropped > 0) logEvent({ type: "help-dropped", skill: st.activeSkill ?? st.folderSkill ?? null, rung: dropped, after: st.lastTask?.tid ?? null, session });
+  logEvent({ type: "task-start", reason, after: st.lastTask?.tid ?? null, session });
+  st.lastTask = null;
+  return resetLadder(st, now);
+}
+
+// ---- The learner's own words per open task (setup review of 11 Nov 2026, S1) ----
+// prompt-gate keeps every own message since a task was logged; the explanation check judges them
+// together, so an answer in three short messages counts as one. A message from before the task was
+// logged never counts.
+const norm = (s) => String(s ?? "").replace(/\s+/g, " ").trim();
+export function noteExplanationWords(st, text, openTids) {
+  const out = {};
+  const msg = String(text ?? "").slice(0, 2000);
+  for (const tid of openTids) out[tid] = [...(st.explainWords?.[tid] ?? []), msg].slice(-8);
+  st.explainWords = out;
+  return st;
+}
+// The text to judge for one task: the kept messages plus the learner's current message (once).
+export function explanationText(st, tid, current = "") {
+  const list = [...(st?.explainWords?.[tid] ?? [])];
+  if (norm(current) && !list.some((m) => norm(m) === norm(current))) list.push(String(current));
+  return list.join("\n");
 }
 
 function sessionsOnDisk() {
@@ -478,8 +621,10 @@ export function newTaskId() {
 
 // Log a task (pending until explained) and return it. `level` is the level of the skill at that
 // moment (setup review §9.3): evidence for a promotion only counts on the level it was gathered at.
-export function logTask({ skill, success = true, maxRung = 0, minutes = null, source, what, session, dir, level }) {
-  const t = { type: "task", tid: newTaskId(), skill, success, maxRung, minutes, source, what, session, ...(dir ? { dir } : {}), ...(level ? { level } : {}) };
+// `reviewRung`: the part of maxRung that came from the review of the previous task (S3), if any.
+export function logTask({ skill, success = true, maxRung = 0, minutes = null, source, what, session, dir, level, reviewRung = 0 }) {
+  const t = { type: "task", tid: newTaskId(), skill, success, maxRung, minutes, source, what, session, ...(dir ? { dir } : {}), ...(level ? { level } : {}),
+    ...(reviewRung > 0 ? { reviewRung } : {}) };
   logEvent(t);
   return t;
 }

@@ -19,8 +19,8 @@ import path from "node:path";
 import { spawnSync } from "node:child_process";
 import {
   ROOT, TESTS_FILE, STATE_DIR, loadSkills, skillForPath, rel, keywordMap, findSkill, isMicro, familyIds, familyOf,
-  pickSession, loadSession, saveSession, touch, startTask, activeMinutesSince, logTask, logEvent, levelAdvice, taskStats,
-  lapseTasks, afterTask, effectiveLevel, t,
+  pickSession, loadSession, saveSession, touch, activeMinutesSince, logTask, logEvent, levelAdvice, taskStats,
+  lapseTasks, afterTask, effectiveLevel, newWorkSignal, beginNewWork, taskRung, taskLogged, changedCodeFiles, t,
 } from "./lib.mjs";
 
 let data0 = null;
@@ -42,10 +42,16 @@ const BUILD_KEY = `${relDir}::#build`;
 const folderSkill = data0 ? skillForPath(data0, path.join(dir, "__probe__", "x.cs")) : null;
 const mapped = folderSkill && folderSkill.kind !== "zone" ? folderSkill : null;
 const sid = pickSession(mapped ? familyIds(data0, mapped.id) : null, data0);
+let sessionStart = null;
 {
   const st0 = sid ? loadSession(sid) : null;
   if (st0) {
     touch(st0, Date.now(), data0);
+    sessionStart = st0.startedAt ?? null;
+    // check.mjs in another folder than the last task: new work begins (setup review of 11 Nov, S3).
+    // Before the folder changes the session skill, so dropped help is logged under the old skill.
+    const why = newWorkSignal(data0, st0, { dir: relDir });
+    if (why) beginNewWork(st0, why, { session: sid });
     if (mapped) {
       st0.folderSkill = familyOf(mapped);
       st0.folderSkillAt = Date.now();
@@ -156,11 +162,18 @@ const newlyGreen = [], restored = [], newlyRed = [], baseline = [];
 // After a compile error, a test without an earlier outcome counts as red: green now is new green.
 const afterBuildError = Boolean(store[BUILD_KEY]);
 delete store[BUILD_KEY];
+// The first run in this folder is all green, and code in this folder was changed in this session:
+// the learner wrote the code before the first run. That green is new work, not a baseline
+// (setup review of 11 Nov, S4). Code from an earlier session stays a baseline.
+const firstRun = results.length > 0 && !afterBuildError && results.every((r) => !store[`${relDir}::${r.className}.${r.name}`]);
+const allGreen = results.length > 0 && results.every((r) => r.outcome === "Passed");
+const writtenFirst = firstRun && allGreen && sessionStart !== null && relDir !== dir &&
+  changedCodeFiles(data0, sessionStart, { under: relDir, limit: 1 }).length > 0;
 for (const r of results) {
   const key = `${relDir}::${r.className}.${r.name}`;
   const prev = store[key];
   const passed = r.outcome === "Passed";
-  if (!prev && afterBuildError) { if (passed) newlyGreen.push(r); }
+  if (!prev && (afterBuildError || writtenFirst)) { if (passed) newlyGreen.push(r); }
   else if (!prev) baseline.push(r);
   // Green before (firstPassAt), then red, now green again: a repaired regression, not a new task.
   else if (passed && prev.outcome !== "Passed") (prev.firstPassAt ? restored : newlyGreen).push(r);
@@ -191,6 +204,7 @@ if (restored.length) {
   logEvent({ type: "regression-fixed", tests: fullNames(restored), dir: relDir, session: sid });
 }
 if (baseline.length && baseline.length === results.length) console.log("\n" + t("check.baseline"));
+if (writtenFirst) console.log("\n" + t("check.writtenFirst"));
 
 // ---------- 5. Log tasks for tests that turned green ----------
 if (newlyGreen.length) {
@@ -220,14 +234,16 @@ if (newlyGreen.length) {
   const sameFamily = active && familyIds(data, parentId).includes(active.id);
   if (sameFamily && isMicro(active)) skill = active;
   // All help given since the last logged task counts for this task, also when the session skill
-  // belonged to another family. Erring towards "more help" keeps "independent" honest (R2).
-  const maxRung = st?.maxRung ?? 0;
+  // belonged to another family. Erring towards "more help" keeps "independent" honest (R2). Help in
+  // the review of the previous task counts too when it was about this task's concept (S3).
+  const { rung: maxRung, reviewRung } = st ? taskRung(data, st, skill.id) : { rung: 0, reviewRung: 0 };
   const what = newlyGreen.map((r) => r.name).join(", ");
   const minutes = st ? activeMinutesSince(st, st.taskStartedActive) : null;
-  const task = logTask({ skill: skill.id, success: maxRung < 5, maxRung, minutes, source: "check", what, session: sid, dir: relDir, level: effectiveLevel(data, skill) });
-  logEvent({ type: "test-green", skill: skill.id, tid: task.tid, tests: newlyGreen.map((r) => `${r.className}.${r.name}`), dir: relDir });
+  const task = logTask({ skill: skill.id, success: maxRung < 5, maxRung, minutes, source: "check", what, session: sid, dir: relDir, level: effectiveLevel(data, skill),
+    reviewRung: reviewRung > (st?.maxRung ?? 0) ? reviewRung : 0 });
+  logEvent({ type: "test-green", skill: skill.id, tid: task.tid, tests: newlyGreen.map((r) => `${r.className}.${r.name}`), dir: relDir, ...(writtenFirst ? { firstRun: true } : {}) });
   const after = afterTask(data, skill.id, task);
-  if (st) { if (after.pending) st.demotionPending = after.pending; startTask(st); saveSession(sid, st); }
+  if (st) { if (after.pending) st.demotionPending = after.pending; taskLogged(st, task); saveSession(sid, st); }
 
   console.log("\n" + t("check.newGreen", { tests: what }));
   console.log("  " + t("check.logged", { id: skill.id, tid: task.tid, rung: maxRung }) +

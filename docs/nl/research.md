@@ -1702,6 +1702,16 @@ Geschreven door Piet Hanegraaf met Claude (Anthropic); zie de [AI-verklaring](ai
 - Federal Aviation Administration. (2017). *Manual flight operations proficiency* (SAFO 17007, 4 May 2017). https://www.faa.gov/sites/faa.gov/files/2022-11/SAFO17007.pdf
 - Feng, D., Yun, B., & Wang, A. Y. (2026). From junior to senior: Allocating agency and navigating professional growth in agentic AI-mediated software engineering. *Proc. CHI 2026*. https://doi.org/10.1145/3772318.3791642 (arXiv:2602.00496)
 
+**Toegevoegd op 11 november 2026: uitleg en reviews**
+
+- Bisra, K., Liu, Q., Nesbit, J. C., Salimi, F., & Winne, P. H. (2018). Inducing self-explanation: A meta-analysis. *Educational Psychology Review, 30*(3), 703–725. https://doi.org/10.1007/s10648-018-9434-x
+- Graesser, A. C., Lu, S., Jackson, G. T., Mitchell, H. H., Ventura, M., Olney, A., & Louwerse, M. M. (2004). AutoTutor: A tutor with dialogue in natural language. *Behavior Research Methods, Instruments, & Computers, 36*(2), 180–192. https://doi.org/10.3758/BF03195563
+- Koedinger, K. R., & Aleven, V. (2007). Exploring the assistance dilemma in experiments with Cognitive Tutors. *Educational Psychology Review, 19*(3), 239–264. https://doi.org/10.1007/s10648-007-9049-0
+- Nückles, M., Hübner, S., Dümer, S., & Renkl, A. (2010). Expertise reversal effects in writing-to-learn. *Instructional Science, 38*(3), 237–258. https://doi.org/10.1007/s11251-009-9106-9
+- Nye, B. D., Graesser, A. C., & Hu, X. (2014). AutoTutor and family: A review of 17 years of natural language tutoring. *International Journal of Artificial Intelligence in Education, 24*(4), 427–469. https://doi.org/10.1007/s40593-014-0029-5
+- Renkl, A. (1997). Learning from worked-out examples: A study on individual differences. *Cognitive Science, 21*(1), 1–29. https://doi.org/10.1207/s15516709cog2101_1
+- Rozenblit, L., & Keil, F. (2002). The misunderstood limits of folk science: An illusion of explanatory depth. *Cognitive Science, 26*(5), 521–562. https://doi.org/10.1207/s15516709cog2605_1
+
 ---
 
 <a id="bijlage-implementatieschetsen"></a>
@@ -2060,11 +2070,63 @@ stateDiagram-v2
 
 Een taak staat open tot de uitleg in eigen woorden is goedgekeurd, en vervalt als de sessie eindigt of een andere opdracht begint. Alleen een uitgelegde taak telt mee voor het succespercentage; een vervallen taak wordt als overgeslagen getoond, tenzij `replay` de uitleg herstelt.
 
+### 10.5 Herziening van 11 november 2026: het begin van een taak, reviews en uitleg
+
+Na de sessie van 11 november is de setup opnieuw bekeken. Die review is niet gepubliceerd, omdat er leerdata in staan. De student nam zeven besluiten (13–19; de nummering loopt door vanaf de review van 10 november). Elk besluit is eerst aan de literatuur getoetst, en voor 13 en 14 vroeg de student om een kritische toets. Ze zitten nu allemaal in de harnas. Waar de bouw van het plan afwijkt, staat dat in §10.5.3.
+
+#### 10.5.1 Besluiten
+
+| # | Besluit | Getoetst aan | Oordeel |
+|---|---|---|---|
+| 13 | **De uitleg blijft streng, zonder twee bijzaken van de bouw.** Claude vraagt door tot het principe klopt (D4). De vraag hangt nu af van wat er gebeurde. Na een mislukte poging (rood, een compileerfout of een hint): "waarom werkt het nu, en waarom de eerste poging niet?" Meteen groen: één vraag naar het principe van de opdracht, want "waarom werkt het?" lokt "omdat ik het goed deed" uit. De Stop-hook beoordeelt **alle eigen berichten van de student sinds de taak is gelogd, samen**, met dezelfde eisen als eerst. | Mensen overschatten hoe goed ze een mechanisme begrijpen, tot ze het proberen uit te leggen (Rozenblit & Keil 2002). De kwaliteit van zelfuitleg, zoals het principe noemen, voorspelde het leren, los van de leertijd (Renkl 1997, correlationeel). Zelfuitleg (Chi et al. 1989; Bisra et al. 2018). | **Streng blijft gesteund.** Rozenblit & Keil laten zien dat uitleggen het gat blootlegt; of meer vervolgvragen meer leren opleveren, toetsen ze niet. De twee bijzaken hadden geen onderbouwing: ze kostten rondes zonder meer te meten. Het afbouwen van de uitlegvraag is een open punt: bij Nückles et al. (2010) hielp afbouwen, maar bij strategieën die de studenten al zelf gebruikten. |
+| 14 | **De optionele review na een taak blijft, met drie bijsturingen.** Claude biedt hem aan met een onderwerp en een tijdsinschatting. Na één fout antwoord, of bij "snap ik niet", geeft Claude het concept (trede 2), en zo nodig een voorbeeld (trede 4), in plaats van nog een vraag. Wat open blijft, wordt een voorgestelde microvaardigheid, met de opdracht waar het terugkomt. | Verwarring helpt als hij wordt opgelost (D'Mello et al. 2014). AutoTutor gaat van de zet die het minst verklapt naar een bewering, en stopt zodra de student het antwoord geeft (Graesser et al. 2004; de cyclus pump → hint → prompt → assertion bij naam in Nye et al. 2014). Wanneer je hulp geeft of achterhoudt, is een open probleem: het assistentie-dilemma (Koedinger & Aleven 2007). P10 (een keuze met bekende kosten). | **Gesteund.** Een review kan een echte misvatting blootleggen. De oplossing zit in hoe hij oploopt: lukt het de student niet, dan zegt de tutor het. |
+| 15 | **Bug: hulp uit een review lekte naar de volgende taak.** Elke `[trede N]` verhoogde de hoogste trede van de sessie, en de volgende gelogde taak nam die over, ook als die taak over iets anders ging. Oplossing: (a) review-hulp wordt apart gelogd (`review-help`), (b) met een eigen marker `[review-trede N #id]`, (c-1) hij telt alleen voor een volgende taak over hetzelfde concept, (c-2) nieuw werk wordt herkend aan vaste signalen, (c-3) een taak begint bij zo'n signaal. | R2 ("zelfstandig" moet eerlijk zijn); P11 (vangrails in de workflow, niet in prompts) | **Opgelost.** Een trefwoord is nooit een signaal: een verkeerd herkende vaardigheid mag geen echte hulp wissen (de bug van 10 november, §10.4.3). Of een agent nieuw werk moet herkennen, is een open punt. |
+| 16 | **Een concept-id is verplicht** in een reviewmarker. Zonder geldig id telt hij als gewone trede: de voorzichtige kant. | R2 | Gebouwd. |
+| 17 | **Eén map van de OOD-voorbeeldkaart hing aan de verkeerde vaardigheid:** een associatie-opdracht stond onder overerving. Opgelost in de kaart, en met het nieuwe commando `skill.mjs paths` past de student de koppelingen in het eigen register aan. | (data) | Gebouwd. |
+| 18 | **Code die vóór de eerste run geschreven was, telde niet.** De eerste run van `check.mjs` was meteen groen, werd de basislijn en logde niets. Nu geeft Claude het `check.mjs`-commando eerst, als de student een opdracht kiest. En een eerste run die helemaal groen is, telt als taak als er in deze sessie code in die map is gewijzigd. | (meetfout) | Gebouwd. De eerste run in een andere map is ook een signaal van nieuw werk (15c-3). |
+| 19 | **De zekerheidsvraag één keer,** samen met de gekozen opdracht, en niet herhalen. Zonder antwoord staat er in het dagboek "onbekend". Het mappad van `check.mjs` opschonen is niet gekozen. | P10 | Gebouwd, alleen in de regels voor Claude. |
+
+#### 10.5.2 Hoe een taak begint en eindigt
+
+De harnas wist wanneer een taak **eindigt**: een test gaat van rood naar groen, de student meldt hem af met `done`, of zegt in de chat dat de tests groen zijn. Hij wist niet wanneer een taak **begint**, dus alle hulp sinds de vorige taak telde voor de volgende. Nu begint een taak bij een vast signaal van nieuw werk:
+
+- code gewijzigd in een andere opdrachtmap dan die van de vorige taak;
+- `check.mjs` in een andere map;
+- de volledige naam van een andere opdrachtmap, of een `#id` van een andere vaardigheidsfamilie, in het eigen bericht van de student.
+
+Bij zo'n signaal beginnen de ladder en de tijd van de taak opnieuw. Gewone hulp sinds de vorige taak hoorde bij werk dat niet werd afgemaakt: die telt niet voor de nieuwe taak, en wordt gelogd als `help-dropped`, zodat hij zichtbaar blijft in het dagboek en op het dashboard. Review-hulp blijft staan: die telt nog als de nieuwe taak over hetzelfde concept gaat.
+
+```mermaid
+stateDiagram-v2
+    [*] --> Working : signal of new work (task-start)
+    Working --> Logged : test red to green, done, or solved in chat
+    Logged --> Review : optional review, help as [review-rung N #id]
+    Review --> Working : signal of new work
+    Logged --> Working : signal of new work
+    Logged --> Logged : next task in the same folder
+```
+
+Een taak begint bij een signaal van nieuw werk en eindigt als hij gelogd wordt. Na een gelogde taak kan een optionele review volgen; hulp in die review telt alleen voor een volgende taak over hetzelfde concept.
+
+#### 10.5.3 Waar de bouw van het plan afwijkt
+
+- **`done` voor een andere familie is geen signaal.** Het plan noemde het wel. Maar `done` meldt afgerond werk, en werk zonder code (ontwerp, UML) geeft geen ander signaal. De hulp daar laten vervallen, zou echte hulp verbergen (R2). Daarom houdt `done` alle hulp sinds de vorige taak, zoals eerst.
+- **Een reviewmarker zonder id wordt toch herkend,** zodat hij als gewone trede telt in plaats van gemist te worden.
+- **Signalen gaan uit van de vorige taak.** Na een signaal is er geen vorige taak, tot er weer een gelogd wordt. Hulp bij werk dat in de tussentijd opnieuw wordt opgegeven, vervalt dan niet: dat is de voorzichtige kant.
+
 ---
 
 <a id="11-wijzigingslog"></a>
 
 ## 11. Wijzigingslog {#changelog}
+
+### 11 november 2026 (avond): het begin van een taak, reviews en uitleg (besluiten van 11 november)
+
+De pilotstudent besloot deze wijzigingen na een volgende sessie, en elk besluit is eerst aan de literatuur getoetst. Ze zitten nu in de harnas. De details en de oordelen staan in §10.5.
+
+- **§10.5, nieuw:** besluiten 13–19, hoe een taak begint en eindigt, en waar de bouw van het plan afwijkt.
+- **§8:** nieuwe bronnen. Elke bron is eerst aan de primaire bron of de samenvatting getoetst; de notities staan in [de citatiecheck](https://github.com/piethanegraaf/piethanegraaf.github.io/blob/main/research/citation-checks/citation_check_learning_science.md), sectie C.
+- **Niet veranderd:** de conclusies van §2.
 
 ### 11 november 2026 (later): junior developers op hun werk, en een uitnodiging aan onderzoekers
 

@@ -91,9 +91,7 @@
         "en": "Inheritance, : base(...), abstract, override"
       },
       "level": "L2",
-      "paths": [
-        "ood-opdrachten-01/09-*/**"
-      ]
+      "paths": []
     },
     {
       "id": "ood.associaties",
@@ -103,6 +101,7 @@
       },
       "level": "L2",
       "paths": [
+        "ood-opdrachten-01/09-*/**",
         "ood-opdrachten-01/10-*/**",
         "ood-opdrachten-01/11-*/**",
         "ood-opdrachten-01/12-*/**"

@@ -32,7 +32,7 @@ const TEXT = {
     sessions: [
       ["opdracht 01 en 02 afmaken", "2", "lussen werken nu, ook met een while", "het verschil tussen return en Console.WriteLine", "3", "strings oefenen", "vooraf 2 → lukte met trede ≤1 → onderschat"],
       ["klassen met properties (05, 06)", "3", "private set gebruiken voor velden die niet van buiten mogen veranderen", "waarom mijn veld steeds leeg was", "3", "constructors", "vooraf 3 → twee keer trede 2 → klopt"],
-      ["overerving (09)", "4", "base() aanroepen in de constructor", "abstract tegenover virtual", "3", "nog een overervingsopdracht", "vooraf 4 → trede 3 nodig → overschat"],
+      ["overerving (eigen oefening)", "4", "base() aanroepen in de constructor", "abstract tegenover virtual", "3", "nog een overervingsopdracht", "vooraf 4 → trede 3 nodig → overschat"],
       ["associaties (10, 11)", "3", "een lijst van objecten in een klasse bijhouden", "wie de lijst moet aanmaken", "4", "aggregatie", "vooraf 3 → zelfstandig gelukt → onderschat"],
       ["herhaling C#-basis en encapsulatie", "3", "validatie in de setter met een exception", "welke exception je kiest", "4", "unit tests schrijven", "vooraf 3 → herhaling geslaagd → klopt"],
       ["unit tests met grenswaarden", "2", "grenswaarden testen: net onder, op en net boven de grens", "TestCase met meerdere waarden", "3", "testplan maken", "vooraf 2 → trede 1 → onderschat"],
@@ -58,7 +58,7 @@ const TEXT = {
     sessions: [
       ["finish exercises 01 and 02", "2", "loops work now, also with a while", "the difference between return and Console.WriteLine", "3", "practise strings", "before 2 → solved with rung ≤1 → underestimated"],
       ["classes with properties (05, 06)", "3", "using a private set for fields that must not change from outside", "why my field was always empty", "3", "constructors", "before 3 → rung 2 twice → right"],
-      ["inheritance (09)", "4", "calling base() in the constructor", "abstract versus virtual", "3", "another inheritance exercise", "before 4 → needed rung 3 → overestimated"],
+      ["inheritance (own exercise)", "4", "calling base() in the constructor", "abstract versus virtual", "3", "another inheritance exercise", "before 4 → needed rung 3 → overestimated"],
       ["associations (10, 11)", "3", "keeping a list of objects in a class", "who should create the list", "4", "aggregation", "before 3 → solved independently → underestimated"],
       ["review C# basics and encapsulation", "3", "validation in the setter with an exception", "which exception to choose", "4", "writing unit tests", "before 3 → review passed → right"],
       ["unit tests with boundary values", "2", "testing boundaries: just below, on and just above", "TestCase with several values", "3", "make a test plan", "before 2 → rung 1 → underestimated"],
@@ -138,6 +138,10 @@ function makeProject(lang) {
   events.push({ at: at(-8, 15, 30), type: "regression-fixed", tests: ["A", "B"], dir: "ood-opdrachten-01/09-studenten-docenten", session: sid(-8) });
   events.push({ at: at(-5, 15, 50), type: "task", tid: "demo900", skill: "ood.associaties", success: true, maxRung: 0, source: "check", what: "TestHerstel", session: sid(-5) });
   events.push({ at: at(-5, 15, 55), type: "task-void", tid: "demo900", skill: "ood.associaties", reason: X.voidReason });
+  // Help in a review after a task, and help that did not count because new work began (S3, 11 Nov).
+  events.push({ at: at(-4, 14, 40), type: "review-help", skill: "ood.encapsulatie", rung: 2, reviewOf: "demo021", session: sid(-4) });
+  events.push({ at: at(-4, 15, 10), type: "task-start", reason: "check-elsewhere", after: "demo021", session: sid(-4) });
+  events.push({ at: at(-4, 15, 10), type: "help-dropped", skill: "ood.associaties", rung: 1, after: "demo021", session: sid(-4) });
   events.push({ at: at(-3, 12), type: "override", skill: "test.unit-tests", minutes: 20, reason: X.override });
   events.push({ at: at(-3, 12, 5), type: "override-used", skill: "test.unit-tests", session: sid(-3) });
   // L4 reviews as the outcome of the next task in real work (S2), and one automatic demotion (S3).
@@ -173,6 +177,9 @@ if (target) {
     const { build } = await import("./export.mjs");
     const { out } = await build(root);
     out.generatedAt = ANCHOR;
+    // Deterministic: a fixed export moment, and no translation table (each language has its own file).
+    out.exportedAt = `${ANCHOR}T16:00:00.000Z`;
+    delete out.translations;
     fs.mkdirSync(OUT_DIR, { recursive: true });
     fs.writeFileSync(path.join(OUT_DIR, `demo.${lang}.json`), JSON.stringify(out, null, 2) + "\n");
     console.log(`demo.${lang}.json: ${out.skills.length} vaardigheden, ${out.tasks.length} taken, ${out.diary.length} dagboeksessies`);

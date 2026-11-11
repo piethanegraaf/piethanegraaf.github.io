@@ -16,6 +16,9 @@ Doel: zelfregulatie (plan → uitvoering → reflectie). De student schrijft de 
    - Draai `node .claude/hooks/skill.mjs status` (mag): herhalingen, open uitleg, zelfstandige successen en doorstroom-signalen.
    - Events van deze sessie in `.learning/state/events.jsonl`. Lees het bestand met Read, niet via de shell.
      - `hint-unlock`: trede en reden. `hint-hold`: geweigerde trede omdat er geen poging was. `rung-mark`: hulp die jij met `[trede N]` markeerde.
+     - `review-help`: hulp in een review na een taak, met `[review-trede N #id]`, en `reviewOf` (de taak waar de review bij hoorde). Die telt alleen voor de volgende taak over hetzelfde concept; een taak met `reviewRung` kreeg zijn trede daardoor. Noem hem apart van de gewone hulp.
+     - `task-start`: er begon nieuw werk (de reden: `code-elsewhere`, `check-elsewhere`, `prompt-exercise` of `prompt-id`). `help-dropped`: gewone hulp van vóór dat begin, die niet voor de nieuwe taak telt. Noem die apart, met de trede.
+     - `paths`: de student koppelde een opdrachtmap aan een vaardigheid, of haalde hem weg.
      - `task` (met `tid`, `source`: chat, check of done): afgeronde taak, met succes en de hoogste trede. `test-green`: welke tests groen werden.
      - `task-explained`: uitleg goedgekeurd (telt); met `source: replay` achteraf hersteld. `explain-rejected`: uitleg afgewezen, door jou (`claude`) of door de check (`hook`).
      - `task-lapsed`: de uitleg kwam niet direct, dus de taak is vervallen (`other-exercise` of `session-end`). Noem die taken als **overgeslagen**, los van mislukt.
@@ -52,6 +55,7 @@ Doel: zelfregulatie (plan → uitvoering → reflectie). De student schrijft de 
 
 **Feiten (gelogd):**
 - Hinttredes: <bv. 1, 2> · gemarkeerde hulp: <[trede N] ...> · geweigerd zonder poging: <n> · uitwerking gegeven: <ja/nee>
+- Review-hulp: <[review-trede N #id] bij taak [tid], of "geen"> · vervallen hulp (help-dropped): <trede, of "geen">
 - Taken: <id [tid]: gelukt/niet, hoogste trede, bron (check/done/chat), uitleg goedgekeurd/afgewezen/overgeslagen>
 - Zelf geschreven: <...> · AI schreef: <...>
 - Tests (door student, check.mjs): <groen/rood, nieuw groen>

@@ -1702,6 +1702,16 @@ Written by Piet Hanegraaf with Claude (Anthropic); see the [AI statement](ai-sta
 - Federal Aviation Administration. (2017). *Manual flight operations proficiency* (SAFO 17007, 4 May 2017). https://www.faa.gov/sites/faa.gov/files/2022-11/SAFO17007.pdf
 - Feng, D., Yun, B., & Wang, A. Y. (2026). From junior to senior: Allocating agency and navigating professional growth in agentic AI-mediated software engineering. *Proc. CHI 2026*. https://doi.org/10.1145/3772318.3791642 (arXiv:2602.00496)
 
+**Added on 11 November 2026: explanations and reviews**
+
+- Bisra, K., Liu, Q., Nesbit, J. C., Salimi, F., & Winne, P. H. (2018). Inducing self-explanation: A meta-analysis. *Educational Psychology Review, 30*(3), 703–725. https://doi.org/10.1007/s10648-018-9434-x
+- Graesser, A. C., Lu, S., Jackson, G. T., Mitchell, H. H., Ventura, M., Olney, A., & Louwerse, M. M. (2004). AutoTutor: A tutor with dialogue in natural language. *Behavior Research Methods, Instruments, & Computers, 36*(2), 180–192. https://doi.org/10.3758/BF03195563
+- Koedinger, K. R., & Aleven, V. (2007). Exploring the assistance dilemma in experiments with Cognitive Tutors. *Educational Psychology Review, 19*(3), 239–264. https://doi.org/10.1007/s10648-007-9049-0
+- Nückles, M., Hübner, S., Dümer, S., & Renkl, A. (2010). Expertise reversal effects in writing-to-learn. *Instructional Science, 38*(3), 237–258. https://doi.org/10.1007/s11251-009-9106-9
+- Nye, B. D., Graesser, A. C., & Hu, X. (2014). AutoTutor and family: A review of 17 years of natural language tutoring. *International Journal of Artificial Intelligence in Education, 24*(4), 427–469. https://doi.org/10.1007/s40593-014-0029-5
+- Renkl, A. (1997). Learning from worked-out examples: A study on individual differences. *Cognitive Science, 21*(1), 1–29. https://doi.org/10.1207/s15516709cog2101_1
+- Rozenblit, L., & Keil, F. (2002). The misunderstood limits of folk science: An illusion of explanatory depth. *Cognitive Science, 26*(5), 521–562. https://doi.org/10.1207/s15516709cog2605_1
+
 ---
 
 <a id="appendix-implementation-sketches"></a>
@@ -2060,11 +2070,63 @@ stateDiagram-v2
 
 A task stays open until its own-words explanation is approved, and lapses when the session ends or another exercise starts. Only an explained task counts towards the success rate; a lapsed task shows as skipped unless `replay` recovers its explanation.
 
+### 10.5 Revision of 11 November 2026: the start of a task, reviews and explanations
+
+After the session of 11 November the setup was reviewed again. That review is not published, because it contains learning data. The student made seven decisions (13–19; the numbers continue from the review of 10 November). Each was first checked against the literature, and for 13 and 14 the student asked for a critical check. All of them are now built into the harness. Where the build differs from the plan, §10.5.3 says so.
+
+#### 10.5.1 Decisions
+
+| # | Decision | Checked against | Verdict |
+|---|---|---|---|
+| 13 | **The explanation stays strict, without two side effects of the build.** Claude keeps asking until the principle is right (D4). The question now depends on what happened. After a failed attempt (red, a compile error or a hint): "why does it work now, and why did the first attempt not?" Green at once: one question about the principle of the exercise, because "why does it work?" invites "because I did it right". The Stop hook judges **all the student's own messages since the task was logged, together**, with the same requirements as before. | People overestimate how well they understand a mechanism until they try to explain it (Rozenblit & Keil 2002). The quality of self-explanations, such as naming the principle, predicted learning beyond time on task (Renkl 1997, correlational). Self-explanation (Chi et al. 1989; Bisra et al. 2018). | **Strict stays supported.** Rozenblit & Keil show that explaining exposes the gap; they do not test whether more follow-up questions give more learning. The two side effects had no grounds: they cost rounds without measuring more. Fading the explanation prompts is an open point: in Nückles et al. (2010) fading helped, but for strategies the students already used. |
+| 14 | **The optional review after a task stays, with three adjustments.** Claude offers it with a topic and a time estimate. After one wrong answer, or "I don't get it", Claude states the concept (rung 2), and if needed gives an example (rung 4), instead of asking another question. What stays open becomes a proposed microskill, with the exercise where it comes back. | Confusion helps when it is resolved (D'Mello et al. 2014). AutoTutor escalates from the move that tells the least to an assertion, and stops as soon as the student gives the answer (Graesser et al. 2004; the named cycle pump → hint → prompt → assertion in Nye et al. 2014). When to give or withhold help is an open problem: the assistance dilemma (Koedinger & Aleven 2007). P10 (a choice with a known cost). | **Supported.** A review can expose a real misconception. The fix is in how it escalates: when the student cannot produce the answer, the tutor states it. |
+| 15 | **Bug: help in a review leaked into the next task.** Every `[rung N]` raised the session's highest rung, and the next logged task took it over, also when that task was about something else. Fix: (a) review help is logged separately (`review-help`), (b) with its own marker `[review-rung N #id]`, (c-1) it counts for a next task about the same concept only, (c-2) new work is recognized by fixed signals, (c-3) a task begins at such a signal. | R2 ("independent" must be honest); P11 (guardrails in the workflow, not in prompts) | **Fixed.** A keyword is never a signal: a misrecognized skill must not erase real help (the bug of 10 November, §10.4.3). Whether an agent should recognize new work instead is an open point. |
+| 16 | **A concept id is required** in a review marker. Without a valid id it counts as an ordinary rung, which is the cautious side. | R2 | Built. |
+| 17 | **One folder of the OOD example map was linked to the wrong skill:** an association exercise was under inheritance. Fixed in the map, and a new command `skill.mjs paths` lets the student fix the links in their own record. | (data) | Built. |
+| 18 | **Code written before the first run did not count.** The first run of `check.mjs` was all green, became the baseline and logged nothing. Now Claude gives the `check.mjs` command first, when the student picks an exercise. And a first run that is all green counts as a task when code in that folder was changed in this session. | (measurement error) | Built. The first run in another folder is also a signal of new work (15c-3). |
+| 19 | **The confidence question once,** together with the chosen exercise, and not repeated. Without an answer the diary says "unknown". Cleaning up the folder argument of `check.mjs` was not chosen. | P10 | Built, in the rules for Claude only. |
+
+#### 10.5.2 How a task begins and ends
+
+The harness knew when a task **ends**: a test goes from red to green, the student logs it with `done`, or says in the chat that the tests pass. It did not know when a task **begins**, so all help since the last task counted for the next one. Now a task begins at a fixed signal of new work:
+
+- code changed in another exercise folder than the one of the last task;
+- `check.mjs` in another folder;
+- the full name of another exercise folder, or a `#id` of another skill family, in the student's own message.
+
+At such a signal the ladder and the task time start again. Ordinary help since the last task was for work that was not finished: it does not count for the new task, and it is logged as `help-dropped`, so it stays visible in the diary and on the dashboard. Review help stays: it still counts when the new task is about the same concept.
+
+```mermaid
+stateDiagram-v2
+    [*] --> Working : signal of new work (task-start)
+    Working --> Logged : test red to green, done, or solved in chat
+    Logged --> Review : optional review, help as [review-rung N #id]
+    Review --> Working : signal of new work
+    Logged --> Working : signal of new work
+    Logged --> Logged : next task in the same folder
+```
+
+A task begins at a signal of new work and ends when it is logged. After a logged task, an optional review may follow; help in that review only counts for a next task about the same concept.
+
+#### 10.5.3 Where the build differs from the plan
+
+- **`done` for another family is not a signal.** The plan listed it. But `done` reports finished work, and work without code (design, UML) gives no other signal. Dropping the help there would hide real help (R2). So `done` keeps all help since the last task, as before.
+- **A review marker without an id is still recognized,** so it can count as an ordinary rung instead of being missed.
+- **Signals are relative to the last task.** After a signal there is no last task, until the next one is logged. Help on work that is abandoned again before then is not dropped: that is the cautious side.
+
 ---
 
 <a id="11-change-log"></a>
 
 ## 11. Change log {#changelog}
+
+### 11 November 2026 (evening): the start of a task, reviews and explanations (decisions of 11 November)
+
+The pilot student decided these changes after a later session, and each was first checked against the literature. They are now built into the harness. Details and verdicts are in §10.5.
+
+- **§10.5, new:** decisions 13–19, how a task begins and ends, and where the build differs from the plan.
+- **§8:** new references. Each was first checked against its primary source or its abstract; the notes are in [the citation check](https://github.com/piethanegraaf/piethanegraaf.github.io/blob/main/research/citation-checks/citation_check_learning_science.md), section C.
+- **Not changed:** the conclusions of §2.
 
 ### 11 November 2026 (later): junior developers at work, and an invitation to researchers
 

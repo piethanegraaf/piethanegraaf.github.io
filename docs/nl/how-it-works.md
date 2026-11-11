@@ -64,14 +64,20 @@ Wil je toch dat Claude iets doet, dan zet je zelf een override: `! node .claude/
 
 ## Taken en uitleg in eigen woorden
 
+**Een taak begint** als je aan nieuw werk begint. De harnas gaat alleen af op vaste signalen, nooit op een trefwoord: code gewijzigd in een andere opdrachtmap, `check.mjs` in een andere map, of de volledige naam van een andere opdrachtmap (zoals `10-artsen-en-patienten`) of een `#id` van een andere vaardigheidsfamilie in je bericht. Dan beginnen de hintladder en de tijd van de taak opnieuw. Gewone hulp sinds de vorige taak hoorde bij werk dat je niet afmaakte: die telt niet voor de nieuwe taak, maar wordt gelogd als `help-dropped`, zodat je hem nog ziet.
+
+**Draai eerst `check.mjs`.** Kies je een opdracht, dan geeft Claude je `! node .claude/hooks/check.mjs <map>`. Draai hem vóór je code schrijft: die eerste run is het begin. Schreef je de code toch eerst, en is de eerste run meteen helemaal groen? Dan telt het toch als taak, zolang je de code in deze sessie hebt gewijzigd.
+
 Een taak wordt gelogd als een test van rood naar groen gaat (`check.mjs`), als je hem zelf afmeldt (`done`), of als je in de chat zegt dat de tests groen zijn. Hij telt pas mee na een uitleg **in je eigen woorden**, met twee sleutels:
 
-1. Claude beoordeelt de inhoud en zet `[uitleg-ok <tid>]` of `[uitleg-nee <tid>]`.
-2. De Stop-hook controleert jouw bericht: minstens 12 woorden buiten code, een *waarom* (omdat, doordat, zodat …) en niet overgenomen uit Claude's tekst.
+1. Claude beoordeelt de inhoud en zet `[uitleg-ok <tid>]` of `[uitleg-nee <tid>]`. De vraag hangt af van wat er gebeurde. Na een mislukte poging (rood, een compileerfout of een hint): waarom werkt het nu, en waarom de eerste poging niet? Meteen groen: één vraag naar het principe van de opdracht. Claude vraagt door tot het principe klopt.
+2. De Stop-hook controleert je eigen woorden: **al je berichten sinds de taak is gelogd, samen**. Een antwoord in drie korte berichten telt als één. Samen moeten ze minstens 12 woorden buiten code hebben, een *waarom* (omdat, doordat, zodat …), en ze mogen niet uit Claude's tekst zijn overgenomen. Een bericht van vóór het loggen telt niet mee.
 
 De uitleg hoort **direct** na het groen worden. Een volgende taak in dezelfde map mag eerst, en één bericht mag meer taken uitleggen. Begin je aan een andere opdracht, of eindigt de sessie, dan **vervalt** de taak: hij telt niet mee en staat op het dashboard als overgeslagen. Ging een goedgekeurde uitleg verloren door een fout van de harnas, dan herstel je hem met `replay`.
 
 Een test die al eens groen was, rood werd en weer groen is, is **herstel van een regressie** en telt niet als nieuwe taak.
+
+**Een review na een taak** is een keuze. Claude biedt hem aan met een onderwerp en een tijdsinschatting, en jij kiest. Na één fout antwoord, of als je zegt dat je het niet snapt, geeft Claude direct het concept in plaats van nog een vraag. Hulp in een review wordt gemarkeerd met `[review-trede N #id]`, met het id van het concept. Die telt niet voor je volgende taak over iets anders, maar wel voor de volgende taak over hetzelfde concept: hetzelfde id, de hoofdvaardigheid of een microvaardigheid ervan. Zonder geldig id, of als je intussen aan nieuw werk begon, telt hij als een gewone trede. Wat open blijft, wordt een voorgestelde microvaardigheid.
 
 ## Doorstromen en herhalingen
 
