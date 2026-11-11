@@ -56,9 +56,11 @@ Bij een **nieuwe vaardigheid** telt de tijd niet. Een trede gaat pas omhoog als 
 Bij L1–L3 blokkeert `guard.mjs` dat Claude code schrijft, verwijdert, bouwt of test. Welke bestanden code zijn en welke commando's bouwen, staat in de [instellingen](configuration.md). De guard beschermt ook:
 
 - het register en de state in `.learning/`;
-- de harnas zelf: de hooks, `.claude/settings.json`, de skills diary en mastery-check, en de regels.
+- de harnas zelf: de hooks, `.claude/settings.json`, de skills diary, mastery-check en update-dashboard, en de regels.
 
 Een shell-commando splitst de guard eerst in losse commando's. Hij kijkt naar het programma dat draait, niet naar woorden in de argumenten: `grep "msbuild"` is geen build, maar `bash -c "dotnet test"` wel.
+
+Eén programma laat de guard bewust toe, ook al schrijft het in `.learning/state/`: de dashboardexport `node <repo>/harness/export.mjs <oefenmap>`, om het dashboard na `/diary` bij te werken. Die schrijft in je oefenmap alleen `last-export.json` (een moment en drie totalen), en nooit met `--out` in je oefenmap.
 
 Wil je toch dat Claude iets doet, dan zet je zelf een override: `! node .claude/hooks/skill.mjs override ood.overerving 30 "reden"`. Die wordt gelogd en staat in het dagboek.
 
@@ -103,5 +105,9 @@ Een test die al eens groen was, rood werd en weer groen is, is **herstel van een
 ## Het dagboek
 
 Als je stopt, schrijft `/diary` de feiten van de sessie op, en jij de reflectie: wat je leerde, wat verwarrend was, en hoe zeker je bent. Zonder dagboekentry laat de Stop-hook de sessie niet sluiten (hooguit twee keer per stopverzoek).
+
+Boven de drie reflectievragen staat een waarschuwing: *"Let op: je antwoorden komen letterlijk, met een vertaling, op het openbare dashboard."* Een privé-optie is er niet. Wat niet online mag, zet je in `.learning/private.json`.
+
+Daarna vraagt Claude: **Dashboard nu bijwerken?** Bij ja werkt Claude het dashboard in dezelfde sessie bij, tot en met een pull request, en die merge je zelf. Bij later gebeurt er niets. Zie [Na het dagboek](progress-dashboard.md#na-het-dagboek), ook als je geen dashboard gebruikt.
 
 Waarom het zo werkt, staat in het [onderzoek](research.md), vooral §2 en §5.

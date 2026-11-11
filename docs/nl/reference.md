@@ -8,9 +8,9 @@ description: "De vier Claude Code-hooks van de leerharnas, elk commando van skil
 
 | Event | Script | Wat het doet |
 |---|---|---|
-| `SessionStart` | `session-start.mjs` | Zet het register, open uitleg en doorstroomvoorstellen in de context, en vraagt naar je doel. Een open voorstel zie je ook zelf, in de melding bij de start. Open uitleg van eerdere sessies vervalt hier. Herhalingen noemt hij niet. Na een eerste export naar het dashboard meldt hij ook wat er sindsdien nieuw is (zie `since-export`). |
+| `SessionStart` | `session-start.mjs` | Zet het register, open uitleg en doorstroomvoorstellen in de context, en vraagt naar je doel. Een open voorstel zie je ook zelf, in de melding bij de start. Open uitleg van eerdere sessies vervalt hier. Herhalingen noemt hij niet. Na een eerste export naar het dashboard meldt hij ook wat er sindsdien nieuw is (zie `since-export`), behalve als `dashboardRepo` op `off` staat. |
 | `UserPromptSubmit` | `prompt-gate.mjs` | Herkent de vaardigheid, bepaalt of er een nieuwe trede bij mag, logt opgeloste taken en vraagt om uitleg. Zet het niveau als jij een voorstel bevestigt met "ja, doorzetten". Tijdens een transfertaak ontgrendelt geen trede. Berichten van agents, notificaties en systeemherinneringen tellen niet als jouw woorden. |
-| `PreToolUse` | `guard.mjs` | Blokkeert schrijven, bouwen en testen van code op L1–L3, en elke wijziging aan het register, de state en de harnas zelf. Een shell-commando beoordeelt hij per los commando, op het programma dat draait. `eval`, `iex` en `Invoke-Expression` weigert hij altijd. |
+| `PreToolUse` | `guard.mjs` | Blokkeert schrijven, bouwen en testen van code op L1–L3, en elke wijziging aan het register, de state en de harnas zelf. Een shell-commando beoordeelt hij per los commando, op het programma dat draait. `eval`, `iex` en `Invoke-Expression` weigert hij altijd. Eén programma laat hij bewust toe: de dashboardexport `node <repo>/harness/export.mjs <oefenmap>`, die in de oefenmap alleen `last-export.json` schrijft (niet met `--out` in de oefenmap). |
 | `Stop` | `reflect-gate.mjs` | Verwerkt de markers in Claude's antwoord, controleert je uitleg, de transfertaak en het oordeel van de demotie-analist, en vraagt om het dagboek als je wilt stoppen. Haalt een uitleg een doorstroomcriterium, dan laat hij je meteen het voorstel zien. Na het dagboek vervalt wat nog open staat. |
 
 ## `skill.mjs` (je draait het zelf, met `!`)
@@ -18,7 +18,7 @@ description: "De vier Claude Code-hooks van de leerharnas, elk commando van skil
 | Commando | Wat |
 |---|---|
 | `list` / `status` | Overzicht; herhalingen (L4) die klaarstaan, open en overgeslagen uitleg, en signalen. Deze twee mag Claude ook draaien. |
-| `since-export` | Wat er nieuw is sinds de laatste export naar het dashboard, in één regel: taken, dagboeksessies en niveauwijzigingen. Niets als er nog geen export was. Het leest alleen, dus Claude mag het ook draaien: `/diary` sluit ermee af. Zie [Sinds de laatste export](progress-dashboard.md#sinds-de-laatste-export). |
+| `since-export` | Wat er nieuw is sinds de laatste export naar het dashboard, in één regel: taken, dagboeksessies en niveauwijzigingen. Zonder export: dat er nog geen export bekend is. Daarna, als er iets nieuw is of niets bekend, de vraag "Dashboard nu bijwerken? (ja / later)" die `/diary` stelt. Niets als `dashboardRepo` op `off` staat. Het leest alleen, dus Claude mag het ook draaien: `/diary` sluit ermee af. Zie [Sinds de laatste export](progress-dashboard.md#sinds-de-laatste-export). |
 | `set <id> <L0..L4> "notitie"` | Niveau zetten. Omhoog kan pas als er geen taken meer op uitleg wachten. Een voorstel van de harnas bevestig je makkelijker in de chat: typ "ja, doorzetten" (eventueel met de id). |
 | `review <id> pass\|shaky\|fail` | De uitkomst van een herhaling zelf opgeven. Meestal niet nodig: de eerstvolgende taak van een L4-vaardigheid bepaalt hem. |
 | `add <id> "titel" ["trefwoorden"]` | Een nieuwe hoofdvaardigheid toevoegen, bijvoorbeeld voor een onderdeel van de toets dat niet in de kaart staat. Hij begint met een open plaatsing: je eerste taak bepaalt het niveau. Mappen koppel je met `paths`. Gelogd als event `skill-add`. |
@@ -28,7 +28,7 @@ description: "De vier Claude Code-hooks van de leerharnas, elk commando van skil
 | `correct <taak-id> trede <1-5> "reden"` | Meer hulp dan gelogd: de trede alleen **omhoog** zetten. |
 | `correct <taak-id> schrap "reden"` | Eén taak schrappen. |
 | `override <id\|*> <minuten> "reden"` | Tijdelijk toestaan dat Claude code schrijft (hooguit 240 minuten, gelogd). |
-| `setting <sleutel> <waarde>` | `examDate`, `stuckTimerMinutes`, `idleMinutes`, `defaultLevel`, `course`, `language`, `autoDemote`, en `codeExtensions` en `codeFiles` als lijst met komma's. |
+| `setting <sleutel> <waarde>` | `examDate`, `stuckTimerMinutes`, `idleMinutes`, `defaultLevel`, `course`, `language`, `autoDemote`, `dashboardRepo` (het absolute pad van je clone van de repo met het dashboard, of `off`), en `codeExtensions` en `codeFiles` als lijst met komma's. Zie [Configuratie](configuration.md). |
 | `paths <id> add|remove "<glob>"` | Welke opdrachtmappen bij een vaardigheid horen, bijvoorbeeld `paths ood.associaties add "ood-opdrachten-01/09-*/**"`. De map bepaalt de vaardigheid van een taak en het niveau dat de guard gebruikt. Niet voor een microvaardigheid: die gebruikt het niveau van de hoofdvaardigheid. Heeft een andere vaardigheid hetzelfde pad, dan waarschuwt hij. Gelogd als event `paths`. |
 | `replay <transcript.jsonl> [--dry-run]` | Herstelt uitleggen die in de chat zijn goedgekeurd maar niet gelogd. Hij zoekt de markers `[uitleg-ok <tid>]` en controleert jouw bericht met dezelfde check als de Stop-hook. Alleen wat beide sleutels haalt, telt, met bron `replay`. |
 
@@ -68,6 +68,7 @@ Draait `dotnet test` met een trx-logger en toont een korte samenvatting. Een tes
 |---|---|
 | `/diary` | Sluit de sessie af: de feiten van Claude, de reflectie van jou. |
 | `/mastery-check <id>` | De transfertaak voor de stap naar L4: een nieuwe opdracht in een ander domein, zonder hulp, en daarna drie waarom-vragen. |
+| `/update-dashboard` | Werkt het dashboard bij, tot en met een pull request: in een eigen worktree van de repo, met de export, de vertalingen en de securitycheck. `/diary` vraagt erom; je kunt hem ook zelf starten. Mergen doe je zelf. Zie [Dashboard bijwerken](progress-dashboard.md). |
 
 ## Events
 
@@ -124,7 +125,7 @@ En van de setup review van 11 november 2026 (het begin van een taak, reviews en 
 | Script | Wat |
 |---|---|
 | `harness/install.mjs` | Installeren en bijwerken. Zie [Installeren](install.md). |
-| `harness/export.mjs` | Voortgang exporteren voor het dashboard, met privacyfilters. Schrijft ook `.learning/state/last-export.json` in de oefenmap. Zie [Configuratie en privacy](configuration.md). |
+| `harness/export.mjs` | Voortgang exporteren voor het dashboard, met privacyfilters. Schrijft ook `.learning/state/last-export.json` in de oefenmap. Vanuit een oefensessie laat de guard hem bewust toe. Zie [Configuratie en privacy](configuration.md). |
 | `harness/security-check.mjs` | De controle vóór alles wat online gaat. |
 | `harness/demo.mjs` | De demo-data voor het dashboard opnieuw maken. |
 | `node --test "test/*.test.mjs"` (in `harness/`) | De tests. |

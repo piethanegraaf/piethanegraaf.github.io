@@ -1,5 +1,6 @@
 // Since the last dashboard export: export.mjs writes .learning/state/last-export.json, and the session
-// start and `skill.mjs since-export` say in one line what is new since then.
+// start and `skill.mjs since-export` say in one line what is new since then. The question that /diary
+// asks after that line (second setup review of 11 Nov, S8) is tested in diary-dashboard.test.mjs.
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import fs from "node:fs";
@@ -57,12 +58,12 @@ test("no mark with --dry-run or when translations are missing (exit code 2)", ()
   } finally { p.cleanup(); }
 });
 
-test("skill.mjs since-export: nothing without a mark, the differences with one, never below zero", () => {
+test("skill.mjs since-export: no export known without a mark, the differences with one, never below zero", () => {
   const none = project();
   try {
     const r = none.cli("skill.mjs", ["since-export"]);
     assert.equal(r.code, 0, r.stderr);
-    assert.equal(r.stdout, "", "no export yet: no line");
+    assert.match(r.stdout, /^Nog geen dashboardexport bekend in deze map\./, "no export yet: unknown, so a line (S8)");
   } finally { none.cleanup(); }
 
   // At the export: 1 task, 1 diary session, 1 level change. Now: 2, 3 and 3.
@@ -70,8 +71,8 @@ test("skill.mjs since-export: nothing without a mark, the differences with one, 
   try {
     const r = p.cli("skill.mjs", ["since-export"]);
     assert.equal(r.code, 0, r.stderr);
-    assert.equal(r.stdout.trim().split("\n").length, 1, "one line");
-    assert.match(r.stdout, /^Sinds de laatste export \(\d{1,2}-11 \d\d:\d\d\): 1 taak, 2 dagboeksessies, 2 niveauwijzigingen\. Werk het dashboard bij met \/update-dashboard in de repo\.$/m);
+    assert.equal(r.stdout.trim().split("\n").length, 2, "the line and the question of /diary");
+    assert.match(r.stdout, /^Sinds de laatste export \(\d{1,2}-11 \d\d:\d\d\): 1 taak, 2 dagboeksessies, 2 niveauwijzigingen\. Werk het dashboard bij met \/update-dashboard\.$/m);
   } finally { p.cleanup(); }
 
   // More in the mark than now (a cleared log, for example): zero, not negative. The line still comes.
@@ -84,9 +85,9 @@ test("skill.mjs since-export: nothing without a mark, the differences with one, 
   const b = project();
   try {
     fs.writeFileSync(lastExport(b), "{ kapot");
-    assert.equal(b.cli("skill.mjs", ["since-export"]).stdout, "");
+    assert.match(b.cli("skill.mjs", ["since-export"]).stdout, /^Nog geen dashboardexport bekend/);
     fs.writeFileSync(lastExport(b), JSON.stringify({ exportedAt: "x", tasks: "2" }));
-    assert.equal(b.cli("skill.mjs", ["since-export"]).stdout, "");
+    assert.match(b.cli("skill.mjs", ["since-export"]).stdout, /^Nog geen dashboardexport bekend/);
   } finally { b.cleanup(); }
 });
 
@@ -94,7 +95,7 @@ test("skill.mjs since-export in English, with singular and plural", () => {
   const p = project({ language: "en", mark: { exportedAt: "2026-11-10T09:00:00.000Z", tasks: 0, diarySessions: 2, levelChanges: 2 } });
   try {
     assert.match(p.cli("skill.mjs", ["since-export"]).stdout,
-      /^Since the last export \(\d{1,2} Nov \d\d:\d\d\): 2 tasks, 1 diary session, 1 level change\. Update the dashboard with \/update-dashboard in the repo\.$/m);
+      /^Since the last export \(\d{1,2} Nov \d\d:\d\d\): 2 tasks, 1 diary session, 1 level change\. Update the dashboard with \/update-dashboard\.$/m);
   } finally { p.cleanup(); }
 });
 

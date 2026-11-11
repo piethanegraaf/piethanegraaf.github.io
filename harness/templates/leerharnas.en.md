@@ -11,12 +11,13 @@ Goal of the setup: **quickly recognise what the learner has mastered and only ma
   - So are the **settings** (`settings`): course, language, exam date, default level, which files are code and which commands build or test.
   - At the start of each session a hook puts this record into your context.
 - **Guard** (`.claude/hooks/guard.mjs`): this hook blocks writing, deleting, building or testing code at L1–L3. Which files are code and which commands build or test is set in `settings.codeExtensions` and `settings.buildCommands`. `check.mjs` always counts as testing.
-  - It also blocks changes to the record, to `.learning/state/` and to the harness itself (`.claude/hooks/`, `.claude/settings.json`, the diary and mastery-check skills, and this file).
+  - It also blocks changes to the record, to `.learning/state/` and to the harness itself (`.claude/hooks/`, `.claude/settings.json`, the diary, mastery-check and update-dashboard skills, and this file).
+  - One program may write in `.learning/state/` on purpose: the dashboard export `node <repo>/harness/export.mjs <this folder>`, after `/diary` (skill update-dashboard). Here it only writes `last-export.json` (a moment and three totals). Never give it `--out`.
   - The guard judges every simple command by the program it runs. A word such as "msbuild" in a grep pattern is not a build. It always refuses `eval`, `iex` and `Invoke-Expression`, because it cannot see what they run.
 - **Does the guard deny something?** Then do **not look for a way around it** (no script, other tool or copy). Offer the next hint, or explain how the learner can set an override.
 - **Who changes the record?** The learner, and the harness itself at three points (all logged): the **placement** of a new skill after its first task, **automatic demotion** on evidence (when `autoDemote` is on), and **promotion** when the learner confirms a proposal of the harness with "yes, promote". Going up is always the learner's choice. You never change the record. You may run `list`, `status` and `since-export` and *suggest* the exact commands:
   - `! node .claude/hooks/skill.mjs list` / `status`: overview, reviews, open explanations, promotion signals.
-  - `! node .claude/hooks/skill.mjs since-export`: what is new since the last export to the dashboard (one line; nothing when there was no export yet).
+  - `! node .claude/hooks/skill.mjs since-export`: what is new since the last export to the dashboard, or that no export is known yet. Then, when something is new or nothing is known, the question of `/diary`: "Update the dashboard now?". Nothing when the dashboard is off.
   - `! node .claude/hooks/skill.mjs set <id> <L0..L4> "note"`
     - Raising a level is refused while tasks of that skill still wait for an explanation.
   - `! node .claude/hooks/skill.mjs review <id> pass|shaky|fail`: record a review yourself. Usually not needed: the next task decides the outcome.
@@ -29,6 +30,7 @@ Goal of the setup: **quickly recognise what the learner has mastered and only ma
   - `! node .claude/hooks/skill.mjs override <id|*> <minutes> "reason"`: at most 240 minutes, logged.
   - `! node .claude/hooks/skill.mjs setting examDate YYYY-MM-DD`: the exam date. Reviews are planned so that they fall before the exam.
   - `! node .claude/hooks/skill.mjs setting autoDemote true|false`: automatic demotion on or off (off by default).
+  - `! node .claude/hooks/skill.mjs setting dashboardRepo "<path>"|off`: the clone of the repo with the dashboard, for `/update-dashboard` from this folder. `off` when there is no dashboard: then `/diary` does not ask about it.
   - `! node .claude/hooks/skill.mjs setting course "<course>"` and `setting language nl|en`: the course and the language of the harness.
   - `! node .claude/hooks/skill.mjs setting codeExtensions "cs, csproj, sql"` and `setting codeFiles "Dockerfile, appsettings*.json"`: which files are the learner's work. The guard protects them at L1–L3.
   - `! node .claude/hooks/skill.mjs setting idleMinutes <minutes>`: a longer break does not count as active time (default 20).
@@ -161,7 +163,7 @@ If, after an approved explanation, you see something in the code worth discussin
   - the tasks that still wait for an explanation;
   - what recently worked independently, and the promotion signals.
   Then you ask for the goal and the exercise. Ask for the confidence (1–5) **once, together with the chosen exercise**, about that one exercise, not about the skill in general. Do not repeat that question: if there is no answer, the diary says "unknown". Give `! node .claude/hooks/check.mjs <folder>` right away, with: run it first, before you write code.
-- **End:** when the learner stops or says "done", you first ask for the explanation of tasks that are still open, and then use `/diary`. It writes down the facts and the reflection **in the learner's words**. What is still open then lapses (skipped).
+- **End:** when the learner stops or says "done", you first ask for the explanation of tasks that are still open, and then use `/diary`. It writes down the facts and the reflection **in the learner's words**. What is still open then lapses (skipped). Then `/diary` asks "Update the dashboard now?". On yes you follow the skill update-dashboard up to the pull request. Never merge yourself.
 - **Reflection is enforced:** without the marker `<!-- session: <id> -->` in the diary, the Stop hook blocks closing. That happens at most 2 times per stop request. "never mind" or "keep going" cancels the stop request.
 - **After an hour of active time:** the hook suggests wrapping up, once.
 

@@ -56,9 +56,11 @@ For a **new skill** time does not count. A rung only goes up when you say you ar
 At L1–L3, `guard.mjs` blocks Claude from writing, deleting, building or testing code. Which files are code and which commands build is set in the [settings](configuration.md). The guard also protects:
 
 - the record and the state in `.learning/`;
-- the harness itself: the hooks, `.claude/settings.json`, the diary and mastery-check skills, and the rules.
+- the harness itself: the hooks, `.claude/settings.json`, the diary, mastery-check and update-dashboard skills, and the rules.
 
 The guard first splits a shell command into simple commands. It looks at the program that runs, not at words in the arguments: `grep "msbuild"` is not a build, but `bash -c "dotnet test"` is.
+
+One program is allowed on purpose, even though it writes in `.learning/state/`: the dashboard export `node <repo>/harness/export.mjs <practice folder>`, to update the dashboard after `/diary`. In your practice folder it only writes `last-export.json` (a moment and three totals), and never with `--out` into your practice folder.
 
 If you still want Claude to do something, you set an override yourself: `! node .claude/hooks/skill.mjs override ood.overerving 30 "reason"`. It is logged and shows up in the diary.
 
@@ -103,5 +105,9 @@ A test that was green once, turned red and is green again is a **repaired regres
 ## The diary
 
 When you stop, `/diary` writes down the facts of the session, and you write the reflection: what you learned, what was confusing, and how confident you are. Without a diary entry the Stop hook does not let the session close (at most twice per stop request).
+
+Above the three reflection questions there is a warning: *"Note: your answers appear word for word, with a translation, on the public dashboard."* There is no private option. Whatever must not go online goes into `.learning/private.json`.
+
+Then Claude asks: **Update the dashboard now?** On yes, Claude updates the dashboard in the same session, up to a pull request, which you merge yourself. On later nothing happens. See [After the diary](progress-dashboard.md#after-the-diary), also when you do not use the dashboard.
 
 Why it works this way is in the [research](research.md), especially §2 and §5.

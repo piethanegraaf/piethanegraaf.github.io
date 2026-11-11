@@ -8,9 +8,9 @@ description: "The four Claude Code hooks of the learning harness, every skill.mj
 
 | Event | Script | What it does |
 |---|---|---|
-| `SessionStart` | `session-start.mjs` | Puts the record, open explanations and promotion proposals in the context, and asks for your goal. You also see an open proposal yourself, in the message at the start. Open explanations of earlier sessions lapse here. It does not mention reviews. After a first export to the dashboard, its message also says what is new since then (see `since-export`). |
+| `SessionStart` | `session-start.mjs` | Puts the record, open explanations and promotion proposals in the context, and asks for your goal. You also see an open proposal yourself, in the message at the start. Open explanations of earlier sessions lapse here. It does not mention reviews. After a first export to the dashboard, its message also says what is new since then (see `since-export`), unless `dashboardRepo` is `off`. |
 | `UserPromptSubmit` | `prompt-gate.mjs` | Recognises the skill, decides whether a new rung may unlock, logs solved tasks and asks for explanations. Sets the level when you confirm a proposal with "yes, promote". During a transfer task no rung unlocks. Agent messages, notifications and system reminders do not count as your words. |
-| `PreToolUse` | `guard.mjs` | Blocks writing, building and testing code at L1–L3, and every change to the record, the state and the harness itself. It judges a shell command per simple command, by the program that runs. It always refuses `eval`, `iex` and `Invoke-Expression`. |
+| `PreToolUse` | `guard.mjs` | Blocks writing, building and testing code at L1–L3, and every change to the record, the state and the harness itself. It judges a shell command per simple command, by the program that runs. It always refuses `eval`, `iex` and `Invoke-Expression`. One program is allowed on purpose: the dashboard export `node <repo>/harness/export.mjs <practice folder>`, which in the practice folder only writes `last-export.json` (not with `--out` into the practice folder). |
 | `Stop` | `reflect-gate.mjs` | Processes the markers in Claude's answer, checks your explanation, the transfer task and the verdict of the demotion analyst, and asks for the diary when you want to stop. When an explanation meets a promotion criterion, it shows you the proposal right away. After the diary, what is still open lapses. |
 
 ## `skill.mjs` (you run it yourself, with `!`)
@@ -18,7 +18,7 @@ description: "The four Claude Code hooks of the learning harness, every skill.mj
 | Command | What |
 |---|---|
 | `list` / `status` | Overview; L4 reviews that are ready, open and skipped explanations, and signals. Claude may run these two as well. |
-| `since-export` | What is new since the last export to the dashboard, in one line: tasks, diary sessions and level changes. Nothing when there was no export yet. Only reads, so Claude may run it as well: `/diary` ends with it. See [Since the last export](progress-dashboard.md#since-the-last-export). |
+| `since-export` | What is new since the last export to the dashboard, in one line: tasks, diary sessions and level changes. Without an export: that no export is known yet. Then, when something is new or nothing is known, the question "Update the dashboard now? (yes / later)" that `/diary` asks. Nothing when `dashboardRepo` is `off`. Only reads, so Claude may run it as well: `/diary` ends with it. See [Since the last export](progress-dashboard.md#since-the-last-export). |
 | `set <id> <L0..L4> "note"` | Set a level. Raising it only works when no tasks wait for an explanation. A proposal of the harness is easier to confirm in the chat: type "yes, promote" (optionally with the id). |
 | `review <id> pass\|shaky\|fail` | Record the outcome of a review yourself. Usually not needed: the next task of an L4 skill decides it. |
 | `add <id> "title" ["keywords"]` | Add a new main skill, for example for a part of the exam that is not in the map. It starts with an open placement: your first task sets the level. Link folders with `paths`. Logged as the event `skill-add`. |
@@ -28,7 +28,7 @@ description: "The four Claude Code hooks of the learning harness, every skill.mj
 | `correct <task-id> rung <1-5> "reason"` | More help than logged: only raises the rung. |
 | `correct <task-id> void "reason"` | Void one task. |
 | `override <id\|*> <minutes> "reason"` | Temporarily allow Claude to write code (at most 240 minutes, logged). |
-| `setting <key> <value>` | `examDate`, `stuckTimerMinutes`, `idleMinutes`, `defaultLevel`, `course`, `language`, `autoDemote`, and `codeExtensions` and `codeFiles` as a comma-separated list. |
+| `setting <key> <value>` | `examDate`, `stuckTimerMinutes`, `idleMinutes`, `defaultLevel`, `course`, `language`, `autoDemote`, `dashboardRepo` (the absolute path of your clone of the repo with the dashboard, or `off`), and `codeExtensions` and `codeFiles` as a comma-separated list. See [Configuration](configuration.md). |
 | `paths <id> add|remove "<glob>"` | Which exercise folders belong to a skill, for example `paths ood.associaties add "ood-opdrachten-01/09-*/**"`. The folder decides the skill of a task and the level the guard uses. Not for a microskill: it uses the level of its parent. If another skill has the same path, it warns you. Logged as the event `paths`. |
 | `replay <transcript.jsonl> [--dry-run]` | Recovers explanations that were approved in the chat but not logged. It finds the markers `[explain-ok <tid>]` and checks your message with the same check as the Stop hook. Only what passes both keys counts, with source `replay`. |
 
@@ -68,6 +68,7 @@ Runs `dotnet test` with a trx logger and shows a short summary. A test that goes
 |---|---|
 | `/diary` | Closes the session: the facts from Claude, the reflection from you. |
 | `/mastery-check <id>` | The transfer task for the step to L4: a new exercise in another domain, without help, followed by three why-questions. |
+| `/update-dashboard` | Updates the dashboard, up to a pull request: in its own worktree of the repo, with the export, the translations and the security check. `/diary` asks for it; you can also start it yourself. Merging is up to you. See [Updating the dashboard](progress-dashboard.md). |
 
 ## Events
 
@@ -124,7 +125,7 @@ And of the setup review of 11 November 2026 (the start of a task, reviews and pa
 | Script | What |
 |---|---|
 | `harness/install.mjs` | Install and update. See [Install](install.md). |
-| `harness/export.mjs` | Export progress for the dashboard, with privacy filters. Also writes `.learning/state/last-export.json` in the practice folder. See [Configuration and privacy](configuration.md). |
+| `harness/export.mjs` | Export progress for the dashboard, with privacy filters. Also writes `.learning/state/last-export.json` in the practice folder. From a practice session the guard allows it on purpose. See [Configuration and privacy](configuration.md). |
 | `harness/security-check.mjs` | The check before anything goes online. |
 | `harness/demo.mjs` | Rebuild the dashboard's demo data. |
 | `node --test "test/*.test.mjs"` (in `harness/`) | The tests. |

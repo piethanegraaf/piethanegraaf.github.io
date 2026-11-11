@@ -6,7 +6,7 @@
 //
 // - It first shows what will happen. It only changes files with --yes, or after "j" in an interactive terminal.
 // - Every existing file that changes is first copied to .claude/leerharnas-backup/<tijd>/.
-// - --update replaces the harness code (hooks, the diary and mastery-check skills, .claude/leerharnas.md) and merges the hooks into
+// - --update replaces the harness code (hooks, the diary, mastery-check and update-dashboard skills, .claude/leerharnas.md) and merges the hooks into
 //   .claude/settings.json. It never replaces data (.learning/) and never your own CLAUDE.md.
 import fs from "node:fs";
 import path from "node:path";
@@ -124,13 +124,14 @@ for (const f of fs.readdirSync(path.join(HARNESS, "hooks")).filter((f) => f.ends
 for (const f of fs.readdirSync(path.join(HARNESS, "i18n")).filter((f) => /^[a-z]{2}\.json$/.test(f)).sort()) {
   code.set(`.claude/hooks/i18n/${f}`, fs.readFileSync(path.join(HARNESS, "i18n", f), "utf8"));
 }
-const skill = localized(path.join(HARNESS, "skills", "diary"), "SKILL");
-if (skill === null) fail("install.noSkill");
-code.set(".claude/skills/diary/SKILL.md", skill);
-// The transfer task for the step to L4 (setup review §9.4).
-const mastery = localized(path.join(HARNESS, "skills", "mastery-check"), "SKILL");
-if (mastery === null) fail("install.noSkill");
-code.set(".claude/skills/mastery-check/SKILL.md", mastery);
+// The skills: the diary, the transfer task for the step to L4 (setup review §9.4), and the update of the
+// dashboard after /diary (second setup review of 11 Nov, S8). harness/skills/ is their only source:
+// the repo's own .claude/skills/update-dashboard/ points here.
+for (const name of ["diary", "mastery-check", "update-dashboard"]) {
+  const skill = localized(path.join(HARNESS, "skills", name), "SKILL");
+  if (skill === null) fail("install.noSkill");
+  code.set(`.claude/skills/${name}/SKILL.md`, skill);
+}
 // The read-only agent that decides which level goes down (automatic demotion, setup review S3a).
 for (const f of fs.readdirSync(path.join(HARNESS, "agents")).filter((f) => /^[a-z-]+\.nl\.md$/.test(f)).sort()) {
   const name = f.replace(/\.nl\.md$/, "");
