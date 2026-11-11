@@ -16,8 +16,36 @@
       kSolo: "Zelfstandig gelukt", kSoloSub: "{ok} van {n} uitgelegde taken, trede ≤ 2", kPending: "Wacht op uitleg", kPendingSub: "{skipped} overgeslagen · uitleg hoort direct na het groen worden",
       kReviews: "Herhalingen (L4)", kReviewsSub: "klaar; je doet ze zelf als ze in je werk langskomen", kExam: "Tot de toets", kExamSub: "{date}", kNoExam: "geen datum",
       days: "{n} dagen", day: "1 dag", none: "–",
-      levels: "Niveaus", levelsHint: "Hoeveel vaardigheden (en microvaardigheden) op elk niveau staan. Bij een open plaatsing probeer je eerst zelf, met de hintladder van L2; de eerste taak bepaalt het niveau.", skillsN: "{n} vaardigheden",
+      levels: "Niveaus", levelsHint: "Hoeveel vaardigheden (en microvaardigheden) op elk niveau staan. Bij een open plaatsing probeer je eerst zelf, met de hintladder van L2; de eerste taak bepaalt het niveau. Wijs een niveau aan voor uitleg.", skillsN: "{n} vaardigheden",
       placementGroup: "Plaatsing open", openChip: "Plaatsing open · L2-ladder",
+      // What each level means, why, the evidence (strength as in the literature review, §2.11) and the step to the next level.
+      levelInfo: {
+        L0: { what: "Claude doet het voor met een uitgewerkt voorbeeld in stappen; jij legt het uit en voorspelt de uitvoer.",
+          why: "een beginner die alles zelf moet zoeken, houdt geen denkruimte over om te leren.",
+          src: [["Sweller & Cooper 1985; Renkl & Atkinson 2003", "strong"]], next: "Naar L1: twee voorbeelden goed uitgelegd en voorspeld." },
+        L1: { what: "Claude schrijft het skelet, jij de kern: je vult de TODO-gaten en test zelf.",
+          why: "hulp die je stap voor stap afbouwt, werkt beter dan in één keer van voorbeeld naar opgave.",
+          src: [["Renkl & Atkinson 2003; Ericson e.a. 2017", "strong"]], next: "Naar L2: drie gaten gevuld, tests groen, hooguit één hint per gat." },
+        L2: { what: "Jij schrijft alles; Claude geeft alleen hints, van een vraag tot een klein voorbeeld.",
+          why: "zo weinig hulp als nodig, en pas meer als je vastzit. Het denkwerk blijft bij jou.",
+          src: [["Wood & Wood 1999; Aleven e.a. 2003", "moderate"]], next: "Naar L3: ±85% gelukt over minstens 5 taken, de helft met hint 0–1." },
+        L3: { what: "Jij maakt het alleen; Claude reviewt pas na je poging.",
+          why: "hulp die een beginner helpt, remt wie het al kan (het expertise-omkeereffect).",
+          src: [["Kalyuga e.a. 2003", "strong"]], next: "Naar L4: drie keer zelfstandig op twee dagen, plus een transfertaak met uitleg." },
+        L4: { what: "Claude schrijft de code, jij controleert. Komt een herhaling langs, dan doe je het één keer zelf.",
+          why: "wat vastzit, vraagt geen aandacht meer, maar zonder oefening verleer je het.",
+          src: [["Fitts & Posner 1967; Bainbridge 1983", "moderate"], ["herhalen met tussenpozen: Cepeda e.a. 2008", "strong"]], next: "Terug naar L3: twee herhalingen op rij mislukt." },
+        open: { what: "Nieuwe vaardigheid: je probeert het eerst zelf, met de hintladder van L2.",
+          why: "eerst proberen, dan hulp. Zo krijg je niet meer hulp dan je nodig hebt.",
+          src: [["Sinha & Kapur 2021; Kalyuga e.a. 2003", "moderate"]], next: "Je eerste taak bepaalt het niveau: trede 0 → L3, 1–2 → L2, 3–4 → L1, 5 → L0." },
+      },
+      why: "Waarom", evidence: "Bewijs", strength: { strong: "sterk", moderate: "matig" },
+      levelsInfo: "Wat betekenen de niveaus?",
+      levelsInfoIntro: "De niveaus volgen cognitive apprenticeship (Collins, Brown & Newman 1989): eerst voordoen, dan hulp die stap voor stap afneemt, tot je het zelf kunt. Bovenaan staat automatiseren, pas als een vaardigheid vastzit (Fitts & Posner 1967). Omhoog beslis jij, omlaag volgt het bewijs.",
+      levelsInfoMore: "De sterkte van het bewijs komt uit het literatuuronderzoek. Meer:",
+      howLink: "Hoe het werkt", howHref: "../how-it-works/#niveaus-per-vaardigheid",
+      researchLink: "de autonomieladder (§5.2)", researchHref: "../research/#52-de-autonomieladder-per-vaardigheid",
+      principlesLink: "ontwerpprincipes (§2.11)", principlesHref: "../research/#211-synthese-ontwerpprincipes",
       showTable: "Tabel", showChart: "Grafiek", level: "Niveau", name: "Naam", count: "Aantal", skillsCol: "Vaardigheden",
       skills: "Per vaardigheid", skillsHint: "Gelukt = opgelost met hooguit trede 2, over de laatste 10 uitgelegde taken. Het streepje is het doel ({pct}%).",
       solved: "{ok}/{n} gelukt", noTasks: "nog geen uitgelegde taken", open: "{n} uitleg open", next: "herhaling {date}",
@@ -56,8 +84,35 @@
       kSolo: "Solved independently", kSoloSub: "{ok} of {n} explained tasks, rung ≤ 2", kPending: "Waiting for an explanation", kPendingSub: "{skipped} skipped · the explanation belongs right after the green",
       kReviews: "Reviews (L4)", kReviewsSub: "ready; you do them yourself when they come by in your work", kExam: "Until the exam", kExamSub: "{date}", kNoExam: "no date",
       days: "{n} days", day: "1 day", none: "–",
-      levels: "Levels", levelsHint: "How many skills (and microskills) are at each level. With an open placement you try first, with the L2 hint ladder; the first task sets the level.", skillsN: "{n} skills",
+      levels: "Levels", levelsHint: "How many skills (and microskills) are at each level. With an open placement you try first, with the L2 hint ladder; the first task sets the level. Point at a level for an explanation.", skillsN: "{n} skills",
       placementGroup: "Placement open", openChip: "Placement open · L2 ladder",
+      levelInfo: {
+        L0: { what: "Claude demonstrates with a worked example in steps; you explain it and predict the output.",
+          why: "a novice who has to search for everything has no room left to learn.",
+          src: [["Sweller & Cooper 1985; Renkl & Atkinson 2003", "strong"]], next: "To L1: two examples explained and predicted correctly." },
+        L1: { what: "Claude writes the skeleton, you write the core: you fill in the TODO gaps and test it yourself.",
+          why: "help that fades step by step works better than jumping from example to problem at once.",
+          src: [["Renkl & Atkinson 2003; Ericson et al. 2017", "strong"]], next: "To L2: three gaps filled, tests green, at most one hint per gap." },
+        L2: { what: "You write everything; Claude only gives hints, from a question up to a small example.",
+          why: "as little help as needed, and more only when you are stuck. The thinking stays with you.",
+          src: [["Wood & Wood 1999; Aleven et al. 2003", "moderate"]], next: "To L3: about 85% solved over at least 5 tasks, half of them with hint 0–1." },
+        L3: { what: "You do it alone; Claude reviews only after your attempt.",
+          why: "help that supports a novice holds back someone who can already do it (the expertise-reversal effect).",
+          src: [["Kalyuga et al. 2003", "strong"]], next: "To L4: solved independently three times on two days, plus a transfer task with an explanation." },
+        L4: { what: "Claude writes the code, you check it. When a review comes by, you do it yourself once.",
+          why: "what you have mastered needs no attention any more, but without practice you lose it.",
+          src: [["Fitts & Posner 1967; Bainbridge 1983", "moderate"], ["spaced reviews: Cepeda et al. 2008", "strong"]], next: "Back to L3: two reviews in a row failed." },
+        open: { what: "New skill: you try it yourself first, with the L2 hint ladder.",
+          why: "attempt first, then help, so you get no more help than you need.",
+          src: [["Sinha & Kapur 2021; Kalyuga et al. 2003", "moderate"]], next: "Your first task sets the level: rung 0 → L3, 1–2 → L2, 3–4 → L1, 5 → L0." },
+      },
+      why: "Why", evidence: "Evidence", strength: { strong: "strong", moderate: "moderate" },
+      levelsInfo: "What do the levels mean?",
+      levelsInfoIntro: "The levels follow cognitive apprenticeship (Collins, Brown & Newman 1989): first demonstrate, then help that fades step by step, until you can do it yourself. Automation sits at the top, only once a skill is mastered (Fitts & Posner 1967). You decide up; the evidence decides down.",
+      levelsInfoMore: "The strength of the evidence comes from the literature review. More:",
+      howLink: "How it works", howHref: "../en/how-it-works/#levels-per-skill",
+      researchLink: "the Autonomy Ladder (§5.2)", researchHref: "../en/research/#52-the-autonomy-ladder-per-skill",
+      principlesLink: "design principles (§2.11)", principlesHref: "../en/research/#211-synthesis-design-principles",
       showTable: "Table", showChart: "Chart", level: "Level", name: "Name", count: "Count", skillsCol: "Skills",
       skills: "Per skill", skillsHint: "Solved = with at most rung 2, over the last 10 explained tasks. The tick is the target ({pct}%).",
       solved: "{ok}/{n} solved", noTasks: "no explained tasks yet", open: "{n} explanation(s) open", next: "review {date}",
@@ -144,9 +199,12 @@
   // ---------- Tooltip (hover and keyboard focus) ----------
   const tip = $("tooltip");
   function showTip(evt, title, rows) {
-    // rows: [class, value, label] per row, or one plain text (the original of a translation).
-    tip.replaceChildren(el("div", { class: "tt-title", text: title }), ...(typeof rows === "string" ? [el("div", { class: "tt-text", lang: data?.language, text: rows })] : rows.map(([cls, value, label]) =>
-      el("div", { class: "tt-row" }, cls ? el("span", { class: `ln ${cls}` }) : null, el("strong", { text: value }), el("span", { text: label })))));
+    // rows: [class, value, label] for a figure, or { text, class } for a line of text; or one plain
+    // text (the original of a translation).
+    const row = (r) => (Array.isArray(r)
+      ? el("div", { class: "tt-row" }, r[0] ? el("span", { class: `ln ${r[0]}` }) : null, el("strong", { text: r[1] }), el("span", { text: r[2] }))
+      : el("div", { class: `tt-text${r.class ? ` ${r.class}` : ""}`, lang: r.lang, text: r.text }));
+    tip.replaceChildren(el("div", { class: "tt-title", text: title }), ...(typeof rows === "string" ? [row({ text: rows, lang: data?.language })] : rows.map(row)));
     tip.hidden = false;
     let x, y;
     if (evt && "clientX" in evt && evt.type.startsWith("pointer")) { x = evt.clientX; y = evt.clientY; }
@@ -203,6 +261,18 @@
     return withTip(el("span", { class: "tr", tabindex: "0" }, tr), t("original", { language: langName(data.language) }), text);
   };
   const joinNodes = (parts, sep) => parts.flatMap((p, i) => (i ? [sep, p] : [p]));
+  // What a level means ("open" = placement open): tooltip lines, and a label people can point at or Tab to.
+  const levelInfo = (l) => UI[lang].levelInfo[l] ?? null;
+  const evidenceText = ([sources, strength]) => `${t("evidence")}: ${sources} · ${t(`strength.${strength}`)}`;
+  const levelRows = (l) => {
+    const i = levelInfo(l);
+    return i ? [{ text: i.what }, { text: `${t("why")}: ${i.why}` }, ...i.src.map((s) => ({ text: evidenceText(s), class: "tt-src" })), { text: i.next, class: "tt-next" }] : [];
+  };
+  const levelTitle = (l) => (l === "open" ? t("placementGroup") : `${l} ${levelName(l)}`);
+  const withLevelTip = (node, l, figures = []) => {
+    node.classList.add("explained");
+    return withTip(node, levelTitle(l), [...figures, ...levelRows(l)]);
+  };
   const titleOf = (s) => s.titles?.[lang] ?? txs(s.title);
   const mains = () => data.skills.filter((s) => !s.parent && s.kind !== "zone");
   const microsOf = (id) => data.skills.filter((s) => s.parent === id);
@@ -226,7 +296,8 @@
   const conf = (v) => { const m = String(v ?? "").match(/(?:^|\D)([1-5])(?:\s*\/\s*5)?(?!\d)/); return m ? Number(m[1]) : null; };
 
   // ---------- Building blocks ----------
-  function card(title, hint, body, tableBuilder, id) {
+  // footer: shown under the chart and under the table view alike.
+  function card(title, hint, body, tableBuilder, id, footer = null) {
     const head = el("div", { class: "card-head" }, el("h2", { text: title, id: id ? `${id}-h` : null }));
     const holder = el("div");
     if (tableBuilder) {
@@ -236,7 +307,7 @@
       head.append(btn);
       holder.append(open ? tableBuilder() : body);
     } else holder.append(body);
-    return el("section", { class: "card", "aria-labelledby": id ? `${id}-h` : null }, head, hint ? el("p", { class: "hint", text: hint }) : null, holder);
+    return el("section", { class: "card", "aria-labelledby": id ? `${id}-h` : null }, head, hint ? el("p", { class: "hint", text: hint }) : null, holder, footer);
   }
   function table(headers, rows, numCols = []) {
     const cell = (c, i) => {
@@ -283,13 +354,35 @@
       block.style.flexGrow = String(c.ids.length);
       block.style.flexBasis = "0";
       if (c.ids.length / total > 0.07) block.textContent = String(c.ids.length);
-      withTip(block, c.label, [[null, String(c.ids.length), `(${pct(c.ids.length / total)})`]]);
+      withLevelTip(block, c.l, [[null, String(c.ids.length), `(${pct(c.ids.length / total)})`]]);
       bar.append(block);
     }
-    const legend = el("ul", { class: "legend" }, counts.filter((c) => c.l !== "open" || c.ids.length).map((c) => el("li", {}, el("span", { class: `sw ${c.cls}`, "aria-hidden": "true" }), c.label)));
+    const legend = el("ul", { class: "legend" }, counts.filter((c) => c.l !== "open" || c.ids.length).map((c) =>
+      withLevelTip(el("li", { tabindex: "0" }, el("span", { class: `sw ${c.cls}`, "aria-hidden": "true" }), c.label), c.l)));
     const body = el("div", {}, el("div", { class: "muted", text: t("skillsN", { n: skills.length }) }), bar, legend);
     return card(t("levels"), t("levelsHint"), body, () => table([t("level"), t("name"), t("count"), t("skillsCol")],
-      counts.map((c) => [c.l === "open" ? "–" : c.l, c.l === "open" ? c.label : levelName(c.l), String(c.ids.length), c.ids.join(", ") || t("none")]), [2]), "levels");
+      counts.map((c) => [c.l === "open" ? "–" : c.l, c.l === "open" ? c.label : levelName(c.l), String(c.ids.length), c.ids.join(", ") || t("none")]), [2]), "levels", levelsInfo());
+  }
+
+  // "What do the levels mean?": every level with its meaning, the reason, the evidence and the next step.
+  // A <details>, so it is out of the way; its open state survives a re-render.
+  let levelsInfoOpen = false;
+  function levelsInfo() {
+    const item = (l) => {
+      const i = levelInfo(l);
+      return el("li", {},
+        el("div", { class: "li-head" }, el("span", { class: `chip ${l === "open" ? "open" : `lv${LEVELS.indexOf(l)}`}`, text: l === "open" ? t("placementGroup") : `${l} ${levelName(l)}` })),
+        el("p", { text: i.what }),
+        el("p", {}, el("span", { class: "label", text: `${t("why")}: ` }), i.why),
+        i.src.map((s) => el("p", { class: "src", text: evidenceText(s) })),
+        el("p", { class: "next", text: i.next }));
+    };
+    const link = (href, text) => el("a", { href, text });
+    return el("details", { class: "level-info", open: levelsInfoOpen, ontoggle: (e) => { levelsInfoOpen = e.currentTarget.open; } },
+      el("summary", { text: t("levelsInfo") }),
+      el("p", { class: "intro", text: t("levelsInfoIntro") }),
+      el("ol", {}, [...LEVELS, "open"].map(item)),
+      el("p", { class: "more" }, `${t("levelsInfoMore")} `, link(t("howHref"), t("howLink")), " · ", link(t("researchHref"), t("researchLink")), " · ", link(t("principlesHref"), t("principlesLink"))));
   }
 
   function skillDetail(s) {
@@ -331,7 +424,8 @@
         meter.append(track, el("div", { class: "num", text: st.n ? `${t("solved", { ok: st.ok, n: st.n })} (${pct(st.ok / st.n)})` : t("noTasks") }));
         const row = el("div", { class: "skill-row" },
           el("div", { class: "skill-name" }, el("div", { class: "title" }, s.titles?.[lang] ?? tx(s.title)), el("div", { class: "id", text: s.id })),
-          s.placement === "pending" ? el("span", { class: "chip open", text: t("openChip") }) : el("span", { class: `chip lv${LEVELS.indexOf(s.level)}`, text: `${s.level} ${levelName(s.level)}` }),
+          s.placement === "pending" ? withLevelTip(el("span", { class: "chip open", tabindex: "0", text: t("openChip") }), "open")
+            : withLevelTip(el("span", { class: `chip lv${LEVELS.indexOf(s.level)}`, tabindex: "0", text: `${s.level} ${levelName(s.level)}` }), s.level),
           meter,
           el("div", { class: "skill-meta" }, st.pending ? statusBadge("warning", t("open", { n: st.pending })) : null,
             st.skipped ? el("span", { class: "muted", text: t("skippedN", { n: st.skipped }) }) : null,
