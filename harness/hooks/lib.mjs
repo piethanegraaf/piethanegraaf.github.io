@@ -742,9 +742,25 @@ export function afterTask(data, skillId, task) {
 }
 
 // ---- Automatic demotion (setup review S3, S3a) ----
+// The moment of a level change. Newer history entries have atIso. An older entry only has the day
+// (local time), so "since the last level change" also counted the tasks of that whole day; its time
+// then comes from the matching event in the log (level, placement or micro-add). Only without one,
+// the day itself. The record is not changed.
+const localDay = (iso) => { const d = new Date(iso); return Number.isNaN(d.getTime()) ? null : d.toLocaleDateString("sv-SE"); };
+export function levelChangeAt(s, h, events = null) {
+  if (!h) return null;
+  if (h.atIso) return h.atIso;
+  const match = (events ?? readEvents()).filter((e) => e.skill === s.id && ["level", "placement", "micro-add"].includes(e.type) &&
+    (e.to ?? e.level) === h.to && localDay(e.at) === h.at);
+  return match.length ? match[match.length - 1].at : h.at ?? null;
+}
+
 // Only the tasks after the last level change of this skill count, so it goes down one step at a time.
-const lastLevelChange = (s) => {
-  const h = (s.history ?? []).filter((x) => x.to).map((x) => x.atIso ?? x.at).sort();
+export const lastLevelChange = (s, events = null) => {
+  const entries = (s.history ?? []).filter((x) => x.to);
+  if (!entries.length) return null;
+  const evs = entries.some((x) => !x.atIso) ? events ?? readEvents() : events;
+  const h = entries.map((x) => levelChangeAt(s, x, evs)).filter(Boolean).sort();
   return h.length ? h[h.length - 1] : null;
 };
 

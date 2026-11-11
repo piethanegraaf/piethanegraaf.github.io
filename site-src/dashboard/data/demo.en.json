@@ -46,6 +46,7 @@
       "history": [
         {
           "at": "2026-10-29",
+          "changedAt": "2026-10-29",
           "from": "L2",
           "to": "L3",
           "note": "5/6 solved",
@@ -73,6 +74,7 @@
       "history": [
         {
           "at": "2026-10-31",
+          "changedAt": "2026-10-31",
           "from": null,
           "to": "L3",
           "note": "created",
@@ -85,6 +87,7 @@
         },
         {
           "at": "2026-11-02",
+          "changedAt": "2026-11-02",
           "from": "L3",
           "to": "L4",
           "note": "5/6 solved",
@@ -115,6 +118,7 @@
       "history": [
         {
           "at": "2026-11-04",
+          "changedAt": "2026-11-04",
           "from": "L2",
           "to": "L3",
           "note": "5/6 solved",
@@ -142,6 +146,7 @@
       "history": [
         {
           "at": "2026-10-31",
+          "changedAt": "2026-10-31",
           "from": null,
           "to": "L2",
           "note": "created",
@@ -186,6 +191,7 @@
       "history": [
         {
           "at": "2026-10-31",
+          "changedAt": "2026-10-31",
           "from": null,
           "to": "L1",
           "note": "created",
@@ -198,6 +204,7 @@
         },
         {
           "at": "2026-11-03",
+          "changedAt": "2026-11-03T16:00:00.000Z",
           "from": "L1",
           "to": "L0",
           "note": "automatic: 0 of 3 solved (0%), last 2 not",
@@ -279,6 +286,7 @@
       "history": [
         {
           "at": "2026-11-08",
+          "changedAt": "2026-11-08",
           "from": "L1",
           "to": "L2",
           "note": "5/6 solved",
@@ -326,6 +334,7 @@
       "history": [
         {
           "at": "2026-11-07",
+          "changedAt": "2026-11-07T13:00:00.000Z",
           "from": "L0",
           "to": "L2",
           "note": "placement: highest rung 2 at the first task",
@@ -1534,5 +1543,6 @@
       "skill": "ood.associaties",
       "rung": 1
     }
-  ]
+  ],
+  "transfers": []
 }

@@ -54,7 +54,16 @@
       researchLink: "de autonomieladder (§5.2)", researchHref: "../research/#52-de-autonomieladder-per-vaardigheid",
       principlesLink: "ontwerpprincipes (§2.11)", principlesHref: "../research/#211-synthese-ontwerpprincipes",
       showTable: "Tabel", showChart: "Grafiek", level: "Niveau", name: "Naam", count: "Aantal", skillsCol: "Vaardigheden",
-      skills: "Per vaardigheid", skillsHint: "Gelukt = opgelost met hooguit trede 2, over de laatste 10 uitgelegde taken. Het streepje is het doel ({pct}%).",
+      skills: "Per vaardigheid", skillsHint: "Per vaardigheid zie je wat je nog nodig hebt voor het volgende niveau. Dat telt alleen de taken sinds je laatste niveauwijziging, net als de harnas. 'Laatste 10' is hoe het de laatste tijd ging; gelukt = opgelost met hooguit trede 2.",
+      nsTo: "Naar {to}", nsSince: "telt sinds {date}", nsPlacement: "Plaatsing", nsPlacementText: "je eerste taak bepaalt het niveau", nsMaintain: "Onderhoud", nsNoReview: "geen herhaling gepland",
+      nsL0: "{have} van 2 voorbeelden uitgelegd en voorspeld", nsL1: "{have} van 3 gaten gevuld, met hooguit 1 hint", nsL3: "{have} van 3 keer zelfstandig (trede 0)",
+      nsRate: "{ok}/{n} gelukt ({pct}) · doel {target}", nsNoTasks: "nog geen uitgelegde taken", nsEnough: "minstens 5 taken ({n}/5)", nsRateCheck: "{target} gelukt",
+      nsHalf: "de helft met hint 0–1 ({low}/{n})", nsDays: "op 2 dagen ({days}/2)", nsTransfer: "transfertaak", nsMet: "Gehaald: de harnas stelt doorzetten voor",
+      nsMore1: "Nog 1 taak goed, met hooguit 1 hint", nsMore: "Nog {k} taken goed, met hooguit 1 hint",
+      nsMoreEx1: "Nog 1 voorbeeld uitleggen en voorspellen", nsMoreEx: "Nog {k} voorbeelden uitleggen en voorspellen",
+      nsMoreGap1: "Nog 1 gat vullen, met hooguit 1 hint", nsMoreGap: "Nog {k} gaten vullen, met hooguit 1 hint",
+      nsMoreSolo1: "Nog 1 keer zelfstandig", nsMoreSolo: "Nog {k} keer zelfstandig", nsOtherDay: ", op een andere dag", nsDoTransfer: "Doe de transfertaak: /mastery-check {id}",
+      nsCountLabel: "{have} van {need}", nsDone: "gehaald", nsNotYet: "nog niet", last10: "laatste 10: {ok}/{n} gelukt",
       solved: "{ok}/{n} gelukt", noTasks: "nog geen uitgelegde taken", open: "{n} uitleg open", next: "herhaling {date}",
       reviewReady: "herhaling klaar", lastSeen: "laatst gezien {date}", notSeen: "nog niet gezien", placementOpen: "plaatsing open", skippedN: "{n} overgeslagen",
       more: "Details", less: "Sluiten", history: "Niveaugeschiedenis", tasks: "Taken", reviews: "Herhalingen", noHistory: "Nog geen niveauwijzigingen.",
@@ -129,7 +138,16 @@
       researchLink: "the Autonomy Ladder (§5.2)", researchHref: "../en/research/#52-the-autonomy-ladder-per-skill",
       principlesLink: "design principles (§2.11)", principlesHref: "../en/research/#211-synthesis-design-principles",
       showTable: "Table", showChart: "Chart", level: "Level", name: "Name", count: "Count", skillsCol: "Skills",
-      skills: "Per skill", skillsHint: "Solved = with at most rung 2, over the last 10 explained tasks. The tick is the target ({pct}%).",
+      skills: "Per skill", skillsHint: "Per skill you see what you still need for the next level. That only counts the tasks since your last level change, just like the harness. 'Last 10' is how it went lately; solved = with at most rung 2.",
+      nsTo: "To {to}", nsSince: "counts since {date}", nsPlacement: "Placement", nsPlacementText: "your first task sets the level", nsMaintain: "Maintenance", nsNoReview: "no review planned",
+      nsL0: "{have} of 2 examples explained and predicted", nsL1: "{have} of 3 gaps filled, with at most 1 hint", nsL3: "{have} of 3 times independent (rung 0)",
+      nsRate: "{ok}/{n} solved ({pct}) · target {target}", nsNoTasks: "no explained tasks yet", nsEnough: "at least 5 tasks ({n}/5)", nsRateCheck: "{target} solved",
+      nsHalf: "half with hint 0–1 ({low}/{n})", nsDays: "on 2 days ({days}/2)", nsTransfer: "transfer task", nsMet: "Reached: the harness proposes to promote",
+      nsMore1: "1 more task solved, with at most 1 hint", nsMore: "{k} more tasks solved, with at most 1 hint",
+      nsMoreEx1: "1 more example to explain and predict", nsMoreEx: "{k} more examples to explain and predict",
+      nsMoreGap1: "1 more gap to fill, with at most 1 hint", nsMoreGap: "{k} more gaps to fill, with at most 1 hint",
+      nsMoreSolo1: "1 more time independent", nsMoreSolo: "{k} more times independent", nsOtherDay: ", on another day", nsDoTransfer: "Do the transfer task: /mastery-check {id}",
+      nsCountLabel: "{have} of {need}", nsDone: "reached", nsNotYet: "not yet", last10: "last 10: {ok}/{n} solved",
       solved: "{ok}/{n} solved", noTasks: "no explained tasks yet", open: "{n} explanation(s) open", next: "review {date}",
       reviewReady: "review ready", lastSeen: "last seen {date}", notSeen: "not seen yet", placementOpen: "placement open", skippedN: "{n} skipped",
       more: "Details", less: "Close", history: "Level history", tasks: "Tasks", reviews: "Reviews", noHistory: "No level changes yet.",
@@ -453,33 +471,76 @@
         review.map((r) => [fmtDate(r.at), r.skill, String(r.rung), r.reviewOf ? t("reviewOf", { id: r.reviewOf }) : t("none")]), [2])) : null);
   }
 
+  // What a skill still needs for the next level, in the shape of that level's criterion (next-step.js,
+  // the same rules and tasks as the harness): a bar with the target only at L2, pips for a count
+  // (L0, L1, L3), and for L4 the maintenance. Counts the tasks since the last level change.
+  function nextCell(s) {
+    const st = window.NextStep ? window.NextStep.nextStep(s, { tasks: liveTasks(), transfers: data.transfers ?? [], family: new Set(family(s)),
+      target: data.settings?.targetSuccess ?? 0.85 }) : null;
+    const box = el("div", { class: "next" });
+    if (!st) return box;
+    if (st.kind === "placement") {
+      box.append(el("div", { class: "next-head", text: t("nsPlacement") }), el("div", { class: "num", text: t("nsPlacementText") }));
+      return box;
+    }
+    if (st.kind === "maintain") {
+      box.append(el("div", { class: "next-head", text: t("nsMaintain") }),
+        el("div", { class: "num", text: reviewReady(s) ? t("reviewReady") : s.nextReview ? t("next", { date: fmtDate(s.nextReview) }) : t("nsNoReview") }));
+      return box;
+    }
+    box.append(el("div", { class: "next-head" }, t("nsTo", { to: st.to }), st.since ? el("span", { class: "muted", text: ` · ${t("nsSince", { date: fmtDate(st.since) })}` }) : null));
+    const check = (ok, text) => el("li", { class: ok ? "ok" : "todo" }, el("span", { class: "mark", "aria-hidden": "true", text: ok ? "✓" : "○" }),
+      el("span", { class: "sr", text: `${t(ok ? "nsDone" : "nsNotYet")}: ` }), text);
+    const checks = [];
+    if (st.kind === "rate") {
+      const tgt = pct(st.target);
+      const track = el("div", { class: "track", role: "img", "aria-label": st.n ? t("nsRate", { ok: st.ok, n: st.n, pct: pct(st.ok / st.n), target: tgt }) : t("nsNoTasks") });
+      if (st.n) { const fill = el("div", { class: "fill" }); fill.style.width = pct(st.ok / st.n); track.append(fill); }
+      const tick = el("div", { class: "target", "aria-hidden": "true" }); tick.style.left = tgt; track.append(tick);
+      box.append(track, el("div", { class: "num", text: st.n ? t("nsRate", { ok: st.ok, n: st.n, pct: pct(st.ok / st.n), target: tgt }) : t("nsNoTasks") }));
+      if (st.n) checks.push(check(st.enough, t("nsEnough", { n: Math.min(st.n, 5) })), check(st.rate, t("nsRateCheck", { target: tgt })), check(st.half, t("nsHalf", { low: st.low, n: st.n })));
+    } else {
+      const label = s.level === "L0" ? "nsL0" : s.level === "L1" ? "nsL1" : "nsL3";
+      box.append(el("div", { class: "pips", role: "img", "aria-label": t(label, { have: st.have }) },
+        ...Array.from({ length: st.need }, (_, i) => el("span", { class: i < st.have ? "pip on" : "pip" }))),
+        el("div", { class: "num", text: t(label, { have: st.have }) }));
+      if (s.level === "L3") checks.push(check(st.days >= 2, t("nsDays", { days: Math.min(st.days, 2) })), check(st.transfer, t("nsTransfer")));
+    }
+    if (checks.length) box.append(el("ul", { class: "checks" }, checks));
+    // One line: what it takes from here.
+    let todo;
+    if (st.met) todo = t("nsMet");
+    else if (st.kind === "rate") todo = st.more === 1 ? t("nsMore1") : t("nsMore", { k: st.more });
+    else if (s.level === "L0") todo = st.need - st.have === 1 ? t("nsMoreEx1") : t("nsMoreEx", { k: st.need - st.have });
+    else if (s.level === "L1") todo = st.need - st.have === 1 ? t("nsMoreGap1") : t("nsMoreGap", { k: st.need - st.have });
+    else if (st.solo < 3) todo = (st.need - st.have === 1 ? t("nsMoreSolo1") : t("nsMoreSolo", { k: st.need - st.have })) + (st.days < 2 && st.solo >= 1 ? t("nsOtherDay") : "");
+    else if (st.days < 2) todo = t("nsMoreSolo1") + t("nsOtherDay");
+    else todo = t("nsDoTransfer", { id: s.id });
+    box.append(el("div", { class: st.met ? "next-todo met" : "next-todo", text: todo }));
+    return box;
+  }
+
   function skillsCard() {
-    const target = data.settings?.targetSuccess ?? 0.85;
     const list = el("ul", { class: "skills" });
     for (const main of mains().filter((s) => filter === "all" || s.id === filter)) {
       for (const s of [main, ...microsOf(main.id)]) {
         const st = stats(s);
         const open = detailOpen.has(s.id);
-        const meter = el("div", { class: "meter" });
-        const track = el("div", { class: "track", role: "img", "aria-label": st.n ? t("solved", { ok: st.ok, n: st.n }) : t("noTasks") });
-        if (st.n) { const fill = el("div", { class: "fill" }); fill.style.width = pct(st.ok / st.n); track.append(fill); }
-        const tick = el("div", { class: "target", "aria-hidden": "true" }); tick.style.left = pct(target); track.append(tick);
-        meter.append(track, el("div", { class: "num", text: st.n ? `${t("solved", { ok: st.ok, n: st.n })} (${pct(st.ok / st.n)})` : t("noTasks") }));
         const row = el("div", { class: "skill-row" },
           el("div", { class: "skill-name" }, el("div", { class: "title" }, s.titles?.[lang] ?? tx(s.title)), el("div", { class: "id", text: s.id })),
           // No tooltip here: the same five explanations 23 times over were noise and a Tab stop each. The legend explains.
           s.placement === "pending" ? el("span", { class: "chip open", text: t("openChip") }) : el("span", { class: `chip lv${LEVELS.indexOf(s.level)}`, text: `${s.level} ${levelName(s.level)}` }),
-          meter,
+          nextCell(s),
           el("div", { class: "skill-meta" }, st.pending ? statusBadge("warning", t("open", { n: st.pending })) : null,
+            el("span", { class: "muted", text: st.n ? `${t("last10", { ok: st.ok, n: st.n })} (${pct(st.ok / st.n)})` : t("noTasks") }),
             st.skipped ? el("span", { class: "muted", text: t("skippedN", { n: st.skipped }) }) : null,
-            reviewReady(s) ? el("span", { class: "muted", text: t("reviewReady") }) : s.level === "L4" && s.nextReview ? el("span", { class: "muted", text: t("next", { date: fmtDate(s.nextReview) }) }) : null,
             el("span", { class: "muted", text: s.lastSeen ? t("lastSeen", { date: fmtDate(s.lastSeen) }) : t("notSeen") })),
           el("button", { type: "button", class: "expand", "aria-expanded": open ? "true" : "false", "aria-controls": `d-${s.id}`, text: open ? t("less") : t("more"),
             onclick: () => { if (detailOpen.has(s.id)) detailOpen.delete(s.id); else detailOpen.add(s.id); render(); } }));
         list.append(el("li", { class: `skill${s.parent ? " micro" : ""}`, id: `s-${s.id}` }, row, open ? el("div", { id: `d-${s.id}` }, skillDetail(s)) : null));
       }
     }
-    return card(t("skills"), t("skillsHint", { pct: Math.round(target * 100) }), list, null, "skills");
+    return card(t("skills"), t("skillsHint"), list, null, "skills");
   }
 
   function tasksCard() {
@@ -661,7 +722,7 @@
       if (!res.ok) throw new Error(String(res.status));
       const json = await res.json();
       if (json.schema !== 1) throw new Error("schema");
-      for (const k of ["skills", "tasks", "reviews", "regressions", "overrides", "signals", "activity", "diary", "reviewHelp", "helpDropped"]) json[k] = Array.isArray(json[k]) ? json[k] : [];
+      for (const k of ["skills", "tasks", "reviews", "regressions", "overrides", "signals", "activity", "diary", "reviewHelp", "helpDropped", "transfers"]) json[k] = Array.isArray(json[k]) ? json[k] : [];
       for (const x of json.tasks) { x.rejections = x.rejections ?? []; x.corrections = x.corrections ?? []; }
       data = json;
       render();

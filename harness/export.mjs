@@ -358,6 +358,10 @@ export async function build(project, { previous = null, todo = null } = {}) {
   const overrides = events.filter((e) => e.type === "override").map((e) => ({
     at: e.at, skill: e.skill === "*" ? "*" : knownSkill(e.skill), minutes: Number(e.minutes ?? 0), reason: scrub(e.reason ?? null, "override.reason"),
   }));
+  // The transfer task (/mastery-check): passed or not, per skill. The step L3 -> L4 needs a pass.
+  const transfers = events.filter((e) => e.type === "transfer-passed" || e.type === "transfer-failed").map((e) => ({
+    at: e.at, skill: knownSkill(e.skill), passed: e.type === "transfer-passed",
+  }));
   const reviews = events.filter((e) => e.type === "review").map((e) => ({
     at: e.at, skill: knownSkill(e.skill), result: ["pass", "shaky", "fail"].includes(e.result) ? e.result : null, nextReview: e.nextReview ?? null,
     auto: e.auto === true,
@@ -408,7 +412,9 @@ export async function build(project, { previous = null, todo = null } = {}) {
     lastReview: s.lastReview ? { at: s.lastReview.at, result: s.lastReview.result } : null,
     lastSeen: lastSeen.get(s.id) ?? null,
     placement: s.kind === "zone" ? null : lib.isPlacementPending(data, s) ? "pending" : "done",
-    history: (s.history ?? []).map((h) => ({ at: h.at, from: h.from ?? null, to: h.to, note: scrub(h.note ?? null, "skill.history"),
+    // changedAt: the exact moment of the change (see lib.levelChangeAt), so the dashboard counts the
+    // tasks since the last level change exactly like the harness.
+    history: (s.history ?? []).map((h) => ({ at: h.at, changedAt: h.to ? lib.levelChangeAt(s, h, events) : null, from: h.from ?? null, to: h.to, note: scrub(h.note ?? null, "skill.history"),
       notes: notesOf(h.note ?? null), auto: h.auto === true, placement: h.placement === true })),
   }));
 
@@ -449,7 +455,7 @@ export async function build(project, { previous = null, todo = null } = {}) {
     settings: { defaultLevel: settings.defaultLevel, targetSuccess: settings.targetSuccess, stuckTimerMinutes: settings.stuckTimerMinutes },
     skills, tasks, reviews, regressions, overrides, signals,
     activity: [...activity.values()].sort((a, b) => a.date.localeCompare(b.date)).map((a) => ({ ...a, sessions: a.sessions.size })),
-    diary, reviewHelp, helpDropped,
+    diary, reviewHelp, helpDropped, transfers,
   };
   const { memory, fromTodo } = translationMemory(settings.language, { previous, todo });
   const { texts, missing } = applyTranslations(out, { memory }, scrub);

@@ -117,7 +117,7 @@ main:focus { outline: none; }
 .skill:first-child { border-top: 0; }
 /* Fixed widths for the chip and the button, and the microskill indent on the name only: every row then has
    the same columns, so the chips and the meters line up from row to row. */
-.skill-row { display: grid; grid-template-columns: minmax(0, 2.2fr) var(--chip-col) minmax(110px, 1.2fr) minmax(0, 1fr) 84px; gap: 6px 14px; align-items: center; padding: 10px 0; --chip-col: 184px; }
+.skill-row { display: grid; grid-template-columns: minmax(0, 2fr) var(--chip-col) minmax(200px, 1.7fr) minmax(0, 1fr) 84px; gap: 6px 14px; align-items: center; padding: 10px 0; --chip-col: 184px; }
 .skill-row .chip { justify-self: start; }
 .skill-row .expand { justify-self: end; }
 .skill.micro .skill-name { padding-left: 18px; }
@@ -137,6 +137,24 @@ main:focus { outline: none; }
 .meter .fill { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 4px; background: var(--accent); }
 .meter .target { position: absolute; top: -3px; bottom: -3px; width: 1px; background: var(--ink-2); }
 .meter .num { font-size: 12px; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+/* The step to the next level: a bar with the target only at L2, pips for a count, a short checklist. */
+.next { display: grid; gap: 4px; min-width: 0; }
+.next .next-head { font-size: 12px; font-weight: 600; color: var(--ink); }
+.next .next-head .muted { font-weight: 400; }
+.next .track { position: relative; height: 8px; border-radius: 4px; background: var(--track); }
+.next .fill { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 4px; background: var(--accent); }
+.next .target { position: absolute; top: -3px; bottom: -3px; width: 2px; margin-left: -1px; background: var(--ink); border-radius: 1px; }
+.next .num { font-size: 12px; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.pips { display: flex; gap: 6px; align-items: center; height: 12px; }
+.pip { width: 12px; height: 12px; border-radius: 50%; background: var(--surface); box-shadow: inset 0 0 0 2px var(--accent); }
+.pip.on { background: var(--accent); }
+.checks { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 2px 12px; font-size: 12px; color: var(--ink-2); }
+.checks .mark { display: inline-block; width: 1.1em; font-weight: 700; }
+.checks .ok .mark { color: var(--good-text); }
+.checks .todo .mark { color: var(--muted); }
+.next-todo { font-size: 12px; color: var(--ink); }
+.next-todo.met { color: var(--good-text); font-weight: 600; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 .skill-meta { font-size: 13px; color: var(--ink-2); display: grid; gap: 2px; }
 .expand { border: 1px solid var(--axis); background: transparent; border-radius: 6px; padding: 2px 10px; min-height: 28px; font-size: 12px; cursor: pointer; color: var(--ink-2); white-space: nowrap; }
 .detail { padding: 4px 0 14px 0; display: grid; gap: 12px; }
@@ -144,7 +162,7 @@ main:focus { outline: none; }
 .detail h3 { margin: 0 0 4px; font-size: 13px; font-weight: 650; color: var(--ink-2); }
 @media (max-width: 720px) {
   .skill-row { grid-template-columns: minmax(0, 1fr) auto; }
-  .skill-row .meter, .skill-row .skill-meta { grid-column: 1 / -1; }
+  .skill-row .meter, .skill-row .next, .skill-row .skill-meta { grid-column: 1 / -1; }
   .skill-row .expand { grid-column: 2; grid-row: 1; justify-self: end; }
   .skill-row .chip { grid-column: 1; justify-self: start; }
 }
