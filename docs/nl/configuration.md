@@ -34,6 +34,13 @@ Een kaart staat in `harness/maps/<id>/`:
 
 Voor een andere taal dan C# zet je `codeExtensions` en `buildCommands`. `check.mjs` werkt voorlopig alleen met `dotnet test`.
 
+Er zijn twee kaarten:
+
+- **`ood`:** Object-Oriented Design in C#, met genummerde opdrachtmappen. Code die bij geen vaardigheid hoort, staat op L2.
+- **`junior-dotnet`:** een voorbeeldkaart voor een junior developer op het werk, in C#/.NET. Tien vaardigheden: debuggen, onbekende code lezen, unit tests, veilig refactoren, ASP.NET Core-API's, EF Core, async/await, veiligheid, code van AI reviewen en een taak specificeren voor een agent. Code die bij geen vaardigheid hoort, staat op **L4**: die mag de AI schrijven. Alleen wat je leert, is beschermd. Pas de paden aan naar de mappen van je eigen codebase (zie ook [In de repository van een team](install.md#in-de-repository-van-een-team)).
+
+De guard beschermt alleen bestanden die onder de paden van een vaardigheid vallen. Een vaardigheid zonder paden, zoals debuggen, krijgt de hintladder, maar de guard houdt niets tegen.
+
 ## Privacy
 
 Je leerdata blijft lokaal in `.learning/`. De installer zet die map in `.gitignore`.
@@ -44,6 +51,8 @@ Wil je je voortgang laten zien, zoals in het [dashboard](progress-dashboard.md),
 node harness/export.mjs ../mijn-oefenmap --dry-run   # rapport, schrijft niets
 node harness/export.mjs ../mijn-oefenmap             # schrijft site-src/dashboard/data/progress.json
 ```
+
+Heeft een vrije tekst nog geen vertaling in de andere taal? Dan vraagt de export eerst om de vertalingen (zie [Vertalingen](progress-dashboard.md#vertalingen)).
 
 - **Alleen een whitelist.** Niveaus, taken (trede, bron, uitleg, afwijzingen, correcties, overgeslagen), herhalingen, signalen, en uit het dagboek alleen het plan, wat goed ging, de reflectie en de kalibratie. Nooit ruwe events, sessie-id's, testnamen of paden.
 - **Vaste filters** op alle vrije tekst: e-mailadressen, absolute paden, je gebruikersnaam, sessie- en transcript-id's, en HTML-commentaar. De naam in `skills.json` (`learner`) wordt ook gefilterd.

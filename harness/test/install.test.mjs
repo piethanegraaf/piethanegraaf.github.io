@@ -36,6 +36,7 @@ test("a fresh install: code, data from the map, settings with $CLAUDE_PROJECT_DI
       assert.ok(exists(d, `.claude/hooks/${f}`), f);
     }
     assert.ok(exists(d, ".claude/skills/diary/SKILL.md"));
+    assert.match(read(d, ".claude/skills/mastery-check/SKILL.md"), /^---\r?\nname: mastery-check\r?\n[\s\S]*\[transfer-start <id>\]/);
     assert.match(read(d, ".claude/agents/demotie-analist.md"), /^---\r?\nname: demotie-analist\r?\n/);
     assert.match(read(d, ".claude/leerharnas.md"), /Over dit vak/);
     assert.ok(exists(d, ".learning/diary"));
@@ -100,10 +101,44 @@ test("the installed hooks work in the target folder", () => {
     assert.equal(decision(guard("ood-opdrachten-01/05-de-auto/Auto/Auto.cs")), "deny");
     assert.equal(decision(guard("voorbeelden/ood.overerving/Dier.cs")), "allow");
     assert.equal(decision(guard(".claude/settings.json")), "deny");
+    // The build patterns come from the map's settings: a build in an L2 folder is blocked too.
+    const bash = (command, rel) => run(path.join(d, ".claude/hooks/guard.mjs"), [], {
+      env: cleanEnv(), cwd: d,
+      input: JSON.stringify({ tool_name: "Bash", tool_input: { command }, cwd: path.join(d, rel) }),
+    });
+    assert.equal(decision(bash("dotnet build", "ood-opdrachten-01/05-de-auto")), "deny");
+    assert.equal(decision(bash("dotnet test", "ood-opdrachten-01/05-de-auto")), "deny");
+    assert.equal(decision(bash("dotnet --info", "ood-opdrachten-01/05-de-auto")), "allow");
     const start = run(path.join(d, ".claude/hooks/session-start.mjs"), [], { env: cleanEnv(), cwd: d, input: "{}" });
     assert.match(start.json.hookSpecificOutput.additionalContext, /LEERHARNAS ACTIEF/);
     const list = run(path.join(d, ".claude/hooks/skill.mjs"), ["list"], { env: cleanEnv(), cwd: d });
     assert.match(list.stdout, /ood\.overerving/);
+  } finally { fs.rmSync(d, { recursive: true, force: true }); }
+});
+
+test("the junior-dotnet map: unmapped code is L4, the skills being learned are protected", () => {
+  const d = tmp();
+  try {
+    const r = install(d, "--map", "junior-dotnet", "--lang", "en", "--yes");
+    assert.equal(r.code, 0, r.stderr);
+    const skills = JSON.parse(read(d, ".learning/skills.json"));
+    assert.equal(skills.settings.defaultLevel, "L4");
+    assert.equal(skills.settings.language, "en");
+    assert.match(skills._info, /^Example skill map for a junior developer at work/);
+    assert.equal(skills.skills.find((s) => s.id === "web.api").title, "ASP.NET Core APIs: controllers or minimal APIs, routing, model binding, status codes");
+    assert.equal(JSON.parse(read(d, ".claude/leerharnas.json")).map, "junior-dotnet");
+    assert.match(read(d, ".claude/leerharnas.md"), /About this map: a junior developer at work/);
+    const guard = (tool_input, cwd = d) => run(path.join(d, ".claude/hooks/guard.mjs"), [], {
+      env: cleanEnv(), cwd: d,
+      input: JSON.stringify({ tool_name: tool_input.command ? "Bash" : "Write", tool_input, cwd }),
+    });
+    const write = (rel) => guard({ file_path: path.join(d, rel), content: "" });
+    assert.equal(decision(write("src/Shop/Domain/Order.cs")), "allow", "unmapped: L4, the AI may write it");
+    assert.equal(decision(write("src/Shop.Api/Controllers/OrdersController.cs")), "deny", "web.api: L2 until placed");
+    assert.equal(decision(write("tests/Shop.Tests/OrderTests.cs")), "deny", "test.unit: L2 until placed");
+    assert.equal(decision(write("voorbeelden/cs.async/Demo.cs")), "allow", "the examples zone");
+    assert.equal(decision(guard({ command: "dotnet test" }, path.join(d, "tests/Shop.Tests"))), "deny");
+    assert.equal(decision(guard({ command: "dotnet build" }, path.join(d, "src/Shop/Domain"))), "allow");
   } finally { fs.rmSync(d, { recursive: true, force: true }); }
 });
 

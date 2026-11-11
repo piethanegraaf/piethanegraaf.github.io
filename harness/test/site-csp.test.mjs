@@ -2,7 +2,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import crypto from "node:crypto";
-import { cspFor, addCsp } from "../site-csp.mjs";
+import { cspFor, addCsp, ANALYTICS_ENDPOINT } from "../site-csp.mjs";
 
 const sha = (s) => `'sha256-${crypto.createHash("sha256").update(s, "utf8").digest("base64")}'`;
 
@@ -12,6 +12,13 @@ test("inline scripts are allowed by hash; JSON data blocks are skipped", () => {
   assert.ok(csp.includes(sha("a()")));
   assert.ok(!csp.includes(sha(`{"x":1}`)));
   assert.ok(!/unsafe-(inline|eval)'[^;]*;\s*style/.test(csp.split("style-src")[0]), "no unsafe for scripts");
+});
+
+test("connect-src allows only the site itself and the GoatCounter endpoint", () => {
+  assert.equal(ANALYTICS_ENDPOINT, "https://piethanegraaf.goatcounter.com/count");
+  const connect = cspFor("").split("; ").find((d) => d.startsWith("connect-src"));
+  assert.equal(connect, `connect-src 'self' ${ANALYTICS_ENDPOINT}`);
+  assert.match(cspFor(""), /img-src 'self' data:;/, "count.js needs no extra img-src");
 });
 
 test("CRLF is hashed as the browser sees it (LF)", () => {

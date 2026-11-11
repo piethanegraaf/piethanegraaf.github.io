@@ -18,8 +18,8 @@ node harness/install.mjs ../my-practice-folder --lang en --course "OOD" --exam 2
 ```
 
 - Without `--yes` the script only shows what it would do. Run it again with `--yes`.
-- `--lang nl|en` picks the language of the messages, the rules and the diary skill.
-- `--map ood` is the skill map (only `ood` for now).
+- `--lang nl|en` picks the language of the messages, the rules and the skills.
+- `--map` is the skill map: `ood` (Object-Oriented Design in C#, the default) or `junior-dotnet` (an example map for a junior developer at work in C#/.NET). See [Your own course](configuration.md#your-own-course).
 - `--course` and `--exam` are optional. You can set them later with `skill.mjs setting`.
 
 What the installer creates:
@@ -28,6 +28,7 @@ What the installer creates:
 |---|---|---|
 | `.claude/hooks/` | the hooks, the CLI and the messages (`i18n/`) | harness |
 | `.claude/skills/diary/SKILL.md` | the diary skill for the end of a session | harness |
+| `.claude/skills/mastery-check/SKILL.md` | the transfer task for the step to L4 (`/mastery-check`) | harness |
 | `.claude/leerharnas.md` | the rules for Claude, plus the map's notes | harness |
 | `.claude/settings.json` | the four hooks, with `$CLAUDE_PROJECT_DIR` (no absolute paths) | merged with your settings |
 | `.learning/skills.json`, `keywords.json` | your skill record and keywords, from the map | **you** (data) |
@@ -45,6 +46,29 @@ node harness/install.mjs ../my-practice-folder --update --yes
 `--update` only replaces the harness files. Your data in `.learning/` and your own `CLAUDE.md` stay as they are. If you changed a hook yourself, the installer says so ("lokaal aangepast") and keeps your version in the backup folder.
 
 An older install without a manifest (with absolute paths in `settings.json`) is recognised and converted too.
+
+## In a team repository
+
+At work you install the harness in a repository that your team shares. The harness is your own commitment device, so keep it out of the team's commits:
+
+- **New files:** add them to `.git/info/exclude`, which only applies to your own copy:
+
+    ```text
+    .claude/hooks/
+    .claude/skills/diary/
+    .claude/skills/mastery-check/
+    .claude/agents/demotie-analist.md
+    .claude/leerharnas.md
+    .claude/leerharnas.json
+    .claude/leerharnas-backup/
+    .learning/
+    voorbeelden/
+    ```
+
+- **Files the team already has:** the installer extends `.gitignore`, adds a line to `CLAUDE.md` and merges the hooks into `.claude/settings.json`. Do not commit those changes without agreeing it with your team.
+- **No company data online:** check the diff of the export before you publish a dashboard (see [Configuration and privacy](configuration.md#privacy)), and add your employer and colleagues to `.learning/private.json`.
+
+An install that only writes to local files does not exist yet.
 
 ## Before you practise
 
@@ -66,4 +90,4 @@ Turn off AI help outside Claude Code. Otherwise your IDE completes the code you 
 
 ## Uninstall
 
-Remove `.claude/hooks/`, `.claude/skills/diary/`, `.claude/leerharnas.md`, `.claude/leerharnas.json` and the four hooks from `.claude/settings.json`. Your data in `.learning/` stays yours.
+Remove `.claude/hooks/`, `.claude/skills/diary/`, `.claude/skills/mastery-check/`, `.claude/leerharnas.md`, `.claude/leerharnas.json` and the four hooks from `.claude/settings.json`. Your data in `.learning/` stays yours.

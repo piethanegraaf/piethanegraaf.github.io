@@ -22,7 +22,7 @@ import {
   loadSkills, saveSkills, findSkill, addOverride, loadOverrides, logEvent, today, taskStats,
   LEVELS, levelName, isMicro, microsOf, familyIds, familyOf, scheduleOnLevel, scheduleOnReview, dueReviews,
   pendingTasks, allTasks, logTask, levelAdvice, recentWins, pickSession, loadSession, saveSession, touch, startTask,
-  lapseTasks, afterTask, isReviewDue, isPlacementPending,
+  lapseTasks, afterTask, isReviewDue, isPlacementPending, effectiveLevel, adviceCommand, openOffer,
   activeMinutesSince, readTranscript, isLearnerEntry, learnerEntryText, entryText, checkExplanation, t, language,
 } from "./lib.mjs";
 import { EXPLAIN_MARK } from "./patterns.mjs";
@@ -61,7 +61,13 @@ function status() {
   console.log(t("cli.status.wins", { list: wins.length ? wins.map((w) => `${w.id} ${w.n}x`).join(", ") : "-" }));
   const adv = data.skills.filter((s) => s.kind !== "zone").map((s) => levelAdvice(data, s)).filter(Boolean);
   console.log(t("cli.status.signals", { list: adv.length ? "" : t("cli.none") }));
-  for (const a of adv) console.log(`  ${a.dir === "up" ? "↑" : "↓"} ${a.text}\n    ! node .claude/hooks/skill.mjs ${a.cmd}`);
+  for (const a of adv) {
+    if (a.dir === "up") {
+      // A proposal: confirm in the chat ("ja, doorzetten <id>") or with set (setup review §9.6).
+      const declined = openOffer(data, findSkill(data, a.id))?.declined ? t("cli.status.declined") : "";
+      console.log(`  ↑ ${a.text} (${a.from} → ${a.to})${declined}\n    ${t("cli.status.confirm", { id: a.id })} · ${adviceCommand(a)}`);
+    } else console.log(`  ${a.dir === "down" ? "↓" : "→"} ${a.text}\n    ${adviceCommand(a)}`);
+  }
 }
 
 const parseLevel = (raw) => {
@@ -143,7 +149,7 @@ switch (cmd) {
     const minutes = st ? activeMinutesSince(st, st.taskStartedActive) : null;
     // A task of another family: the learner started another exercise, so open tasks lapse (S1).
     const lapsed = lapseTasks("other-exercise", (x) => familyOf(findSkill(data, x.skill)) === familyOf(s), sid);
-    const task = logTask({ skill: s.id, success: maxRung < 5, maxRung, minutes, source: "done", what: what.join(" ") || undefined, session: sid });
+    const task = logTask({ skill: s.id, success: maxRung < 5, maxRung, minutes, source: "done", what: what.join(" ") || undefined, session: sid, level: effectiveLevel(data, s) });
     const after = afterTask(data, s.id, task);
     if (st) {
       // The family of this task is what the learner works on now (setup review 3.3).

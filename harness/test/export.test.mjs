@@ -1,11 +1,11 @@
-// export.mjs: whitelist only, privacy filters, private.json, --dry-run.
+// export.mjs: whitelist only, privacy filters, private.json, --dry-run, translations.
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { HARNESS, makeProject, fakeSkills, run } from "./helpers.mjs";
-import { fixedFilters, privateFilters, makeScrubber, parseDiary } from "../export.mjs";
+import { fixedFilters, privateFilters, makeScrubber, parseDiary, translatableTexts, missingTranslations } from "../export.mjs";
 
 const EXPORT = path.join(HARNESS, "export.mjs");
 const SID = "1b8a483e-bd12-4b28-b493-d351e79a6c31";
@@ -126,7 +126,7 @@ test("export: whitelist, filters and task details", () => {
   const p = exportProject();
   try {
     const out = path.join(p.root, "progress.json");
-    const r = run(EXPORT, [p.root, "--out", out]);
+    const r = run(EXPORT, [p.root, "--out", out, "--allow-untranslated"]);
     assert.equal(r.code, 0, r.stderr);
     const json = JSON.parse(fs.readFileSync(out, "utf8"));
     const text = JSON.stringify(json);
@@ -186,7 +186,7 @@ test("export: skipped and replayed tasks, retags, placement, last seen, no revie
   ] });
   try {
     const out = path.join(p.root, "out.json");
-    const r = run(EXPORT, [p.root, "--out", out]);
+    const r = run(EXPORT, [p.root, "--out", out, "--allow-untranslated"]);
     assert.equal(r.code, 0, r.stderr);
     const j = JSON.parse(fs.readFileSync(out, "utf8"));
     const task = (id) => j.tasks.find((x) => x.id === id);
@@ -215,7 +215,7 @@ test("export: generatedAt stays a date, exportedAt is the moment; both languages
   const p = makeProject({ skills: s, events });
   try {
     const out = path.join(p.root, "out.json");
-    assert.equal(run(EXPORT, [p.root, "--out", out]).code, 0);
+    assert.equal(run(EXPORT, [p.root, "--out", out, "--allow-untranslated"]).code, 0);
     const j = JSON.parse(fs.readFileSync(out, "utf8"));
     assert.match(j.generatedAt, /^\d{4}-\d{2}-\d{2}$/, "a date: older dashboards compute days from it");
     assert.ok(!Number.isNaN(Date.parse(j.exportedAt)) && j.exportedAt.length > 10);
@@ -228,5 +228,154 @@ test("export: generatedAt stays a date, exportedAt is the moment; both languages
     assert.match(sig.texts.nl, /5\/5 gelukt/);
     assert.match(sig.texts.en, /5\/5 solved/);
     assert.equal(sig.text, sig.texts.nl, "the old field stays, in the record's language");
+  } finally { p.cleanup(); }
+});
+
+// ---------- Translations: every free text in every language of the dashboard ----------
+test("translatableTexts: the free texts, not what already has both languages or has no words", () => {
+  const texts = translatableTexts({
+    course: null,
+    skills: [
+      { title: "Eigen titel", titles: null, history: [{ note: "eigen notitie", notes: null }, { note: "aangemaakt", notes: { nl: "aangemaakt", en: "created" } }] },
+      { title: "Uit de kaart", titles: { nl: "Uit de kaart", en: "From the map" }, history: [] },
+    ],
+    tasks: [{ what: "TestEen", explanation: "omdat het klopt", voidReason: null, rejections: [{ reasons: ["te kort"] }], corrections: [{ reason: "hulp" }] }],
+    overrides: [{ reason: "tooling" }],
+    signals: [{ text: "5/5 gelukt", texts: { nl: "5/5 gelukt", en: "5/5 solved" } }],
+    diary: [{ time: "±12:35–14:20", skills: "demo.l2 (L2)", plan: "opdracht 02", confidenceBefore: "3", wentWell: null, signals: null, calibration: "onderschat",
+      reflection: { learned: "lussen", confusing: "niets", confidenceAfter: "4", nextStep: "omdat het klopt" } }],
+  });
+  assert.deepEqual([...texts.keys()], ["Eigen titel", "eigen notitie", "TestEen", "omdat het klopt", "te kort", "hulp", "tooling", "demo.l2 (L2)", "opdracht 02", "onderschat", "lussen", "niets"]);
+  assert.deepEqual([...texts.get("omdat het klopt")].sort(), ["diary.reflection.nextStep", "task.explanation"]);
+});
+
+const EXPLANATION = "het werkt omdat de lus bij nul begint";
+function translationProject({ language = "nl", files = {} } = {}) {
+  const s = fakeSkills({ language });
+  s.skills[2].history = [{ at: "2026-11-07", from: "L3", to: "L2", note: "vast op lussen" }];
+  return makeProject({
+    skills: s,
+    events: [
+      { at: "2026-11-10T10:10:00.000Z", type: "task", tid: "t1", skill: "demo.l2", success: true, maxRung: 1, source: "check", what: "TestEen" },
+      { at: "2026-11-10T10:15:00.000Z", type: "task-explained", tid: "t1", skill: "demo.l2", text: EXPLANATION },
+      { at: "2026-11-10T10:40:00.000Z", type: "override", skill: "demo.l2", minutes: 30, reason: "tooling" },
+    ],
+    files: { ".learning/diary/2026-11-10.md": DIARY, ...files },
+  });
+}
+const paths = (p) => ({ out: path.join(p.root, "data", "progress.json"), todo: path.join(p.root, "data", "translations.todo.json") });
+const readJson = (f) => JSON.parse(fs.readFileSync(f, "utf8"));
+const fill = (file, fn) => { const todo = readJson(file); for (const x of todo.items) for (const l of todo.languages) x[l] = fn(x.text, l); fs.writeFileSync(file, JSON.stringify(todo)); };
+
+test("export: missing translations give a todo file and no output; filled in, the next run takes them over", () => {
+  const p = translationProject();
+  const { out, todo } = paths(p);
+  try {
+    const first = run(EXPORT, [p.root, "--out", out]);
+    assert.equal(first.code, 2, first.stdout + first.stderr);
+    assert.ok(!fs.existsSync(out), "no output while translations are missing");
+    assert.match(first.stderr, /ontbreken vertalingen/);
+    const work = readJson(todo);
+    assert.deepEqual([work.source, work.languages], ["nl", ["en"]]);
+    assert.ok(work.about.join(" ").includes("Translate faithfully"));
+    assert.deepEqual(work.items.find((x) => x.text === EXPLANATION), { text: EXPLANATION, fields: ["task.explanation"], en: "" });
+    for (const f of ["skill.title", "skill.history", "task.what", "override.reason", "diary.plan", "diary.reflection.learned", "diary.reflection.nextStep", "diary.calibration"]) {
+      assert.ok(work.items.some((x) => x.fields.includes(f)), f);
+    }
+
+    // Half filled in: still no output, and the translations already written stay in the todo file.
+    fill(todo, (text) => (text === EXPLANATION ? "" : `EN ${text}`));
+    assert.equal(run(EXPORT, [p.root, "--out", out]).code, 2);
+    const again = readJson(todo);
+    assert.equal(again.items.find((x) => x.text === "tooling").en, "EN tooling");
+    assert.equal(again.items.find((x) => x.text === EXPLANATION).en, "");
+
+    // Everything filled in: output with the translations, and the todo file is gone.
+    fill(todo, (text) => `EN ${text}`);
+    const done = run(EXPORT, [p.root, "--out", out]);
+    assert.equal(done.code, 0, done.stdout + done.stderr);
+    assert.ok(!fs.existsSync(todo), "the todo file is removed once everything is taken over");
+    const j = readJson(out);
+    assert.equal(j.translations.en[EXPLANATION], `EN ${EXPLANATION}`);
+    assert.equal(j.tasks[0].explanation, EXPLANATION, "the original stays where it was");
+    assert.deepEqual(missingTranslations(j), []);
+
+    // The next export reuses the translations of the previous one.
+    assert.equal(run(EXPORT, [p.root, "--out", out]).code, 0);
+    assert.equal(readJson(out).translations.en[EXPLANATION], `EN ${EXPLANATION}`);
+
+    // A changed text: only that one is asked for, and the old one drops out of the table.
+    fs.appendFileSync(path.join(p.state, "events.jsonl"), JSON.stringify({ at: "2026-11-10T11:00:00.000Z", type: "task-explained", tid: "t1", skill: "demo.l2", text: "nieuwe uitleg omdat de grens klopt" }) + "\n");
+    assert.equal(run(EXPORT, [p.root, "--out", out]).code, 2);
+    assert.deepEqual(readJson(todo).items.map((x) => x.text), ["nieuwe uitleg omdat de grens klopt"]);
+    fill(todo, () => "new explanation because the boundary is right");
+    assert.equal(run(EXPORT, [p.root, "--out", out]).code, 0);
+    const k = readJson(out);
+    assert.equal(k.translations.en["nieuwe uitleg omdat de grens klopt"], "new explanation because the boundary is right");
+    assert.ok(!(EXPLANATION in k.translations.en), "a text that is gone takes its translation with it");
+  } finally { p.cleanup(); }
+});
+
+test("export: translations pass the privacy filters too", () => {
+  const p = translationProject({ files: { ".learning/private.json": JSON.stringify({ terms: ["Jan"] }) } });
+  const { out, todo } = paths(p);
+  try {
+    run(EXPORT, [p.root, "--out", out]);
+    assert.ok(readJson(todo).items.some((x) => x.text === "lussen, samen met [privé]"), "the source text is filtered first");
+    fill(todo, (text) => (text === "lussen, samen met [privé]" ? "loops, together with Jan (mail@example.com)" : `EN ${text}`));
+    assert.equal(run(EXPORT, [p.root, "--out", out]).code, 0);
+    assert.equal(readJson(out).translations.en["lussen, samen met [privé]"], "loops, together with [privé] ([e-mail])");
+  } finally { p.cleanup(); }
+});
+
+test("export: an English record gets Dutch translations", () => {
+  const p = translationProject({ language: "en" });
+  const { out, todo } = paths(p);
+  try {
+    assert.equal(run(EXPORT, [p.root, "--out", out]).code, 2);
+    const work = readJson(todo);
+    assert.deepEqual([work.source, work.languages], ["en", ["nl"]]);
+    assert.ok(work.items.every((x) => x.nl === "" && !("en" in x)));
+    fill(todo, (text) => `NL ${text}`);
+    assert.equal(run(EXPORT, [p.root, "--out", out]).code, 0);
+    const j = readJson(out);
+    assert.deepEqual(Object.keys(j.translations), ["nl"]);
+    assert.equal(j.translations.nl.tooling, "NL tooling");
+  } finally { p.cleanup(); }
+});
+
+test("export --allow-untranslated writes the output and the todo file; --check refuses it", () => {
+  const p = translationProject();
+  const { out, todo } = paths(p);
+  try {
+    const r = run(EXPORT, [p.root, "--out", out, "--allow-untranslated"]);
+    assert.equal(r.code, 0, r.stderr);
+    assert.ok(fs.existsSync(out) && fs.existsSync(todo));
+    const bad = run(EXPORT, ["--check", out]);
+    assert.equal(bad.code, 1);
+    assert.match(bad.stderr, /vertaling\(en\) ontbreken \(en\)/);
+    assert.match(bad.stderr, /\[en\] task\.explanation: "het werkt omdat/);
+    fill(todo, (text) => `EN ${text}`);
+    assert.equal(run(EXPORT, [p.root, "--out", out]).code, 0);
+    const good = run(EXPORT, ["--check", out]);
+    assert.equal(good.code, 0, good.stderr);
+    assert.match(good.stdout, /Vertalingen compleet \(en\)/);
+  } finally { p.cleanup(); }
+});
+
+test("export --dry-run counts the missing translations and writes neither file; a broken todo file stops the export", () => {
+  const p = translationProject();
+  const { out, todo } = paths(p);
+  try {
+    const r = run(EXPORT, [p.root, "--out", out, "--dry-run"]);
+    assert.equal(r.code, 0, r.stderr);
+    assert.match(r.stdout, /Vertalingen \(en\): \d+ tekst\(en\) nog niet vertaald/);
+    assert.ok(!fs.existsSync(out) && !fs.existsSync(todo));
+    fs.mkdirSync(path.dirname(todo), { recursive: true });
+    fs.writeFileSync(todo, "{ kapot");
+    const broken = run(EXPORT, [p.root, "--out", out]);
+    assert.equal(broken.code, 1);
+    assert.match(broken.stderr, /geen geldige JSON/);
+    assert.equal(fs.readFileSync(todo, "utf8"), "{ kapot", "the todo file is left alone");
   } finally { p.cleanup(); }
 });
