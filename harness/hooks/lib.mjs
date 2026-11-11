@@ -56,6 +56,9 @@ export const DEFAULT_SETTINGS = {
   idleMinutes: 20,
   // Automatic demotion on evidence (setup review 2.2). Off until the logging has been reliable for a few sessions.
   autoDemote: false,
+  // The clone of the repo with the dashboard (absolute path), "off" without a dashboard, or null:
+  // not known yet. /diary asks to update the dashboard unless it is "off" (see dashboardAfterDiary).
+  dashboardRepo: null,
   targetSuccess: 0.85,
   // Files whose content belongs to the learner (the guard protects them at L1-L3).
   codeExtensions: ["cs", "csproj", "sln", "slnx"],
@@ -119,7 +122,7 @@ export function toolingRe(data) {
 // otherwise the AI could switch off its own guard. Only the real harness files of this project:
 // .claude/leerharnas-backup/ or a "leerharnas" folder elsewhere are not (setup review 3.6).
 export function isHarnessPath(r) {
-  return r !== null && /^\.claude\/(hooks\/|skills\/(diary|mastery-check)\/|agents\/demotie-analist\.md$|settings(\.local)?\.json$|leerharnas[^/]*\.(md|json)$)/i.test(r);
+  return r !== null && /^\.claude\/(hooks\/|skills\/(diary|mastery-check|update-dashboard)\/|agents\/demotie-analist\.md$|settings(\.local)?\.json$|leerharnas[^/]*\.(md|json)$)/i.test(r);
 }
 
 // Reading the record also sets the language of all messages (settings.language).
@@ -285,7 +288,7 @@ export function isOverrideActive(skillId) {
 // export.mjs writes .learning/state/last-export.json each time it writes the dashboard data: the moment
 // and three totals. The session start and /diary (`skill.mjs since-export`) compare them with now, so
 // the learner sees when an update of the dashboard is worth it. Only totals: no texts, no paths.
-// Without the file (no export yet, or no dashboard at all) nothing is said.
+// Without the file the session start says nothing; /diary asks (see dashboardAfterDiary).
 export const LAST_EXPORT_FILE = path.join(STATE_DIR, "last-export.json");
 const EXPORT_KEYS = ["tasks", "diarySessions", "levelChanges"];
 
@@ -335,6 +338,33 @@ export function sinceExportLine(s) {
     diary: s.diarySessions === 1 ? t("ss.since.diarySession") : t("ss.since.diarySessions", { n: s.diarySessions }),
     levels: s.levelChanges === 1 ? t("ss.since.levelChange") : t("ss.since.levelChanges", { n: s.levelChanges }),
   });
+}
+
+// ---- After /diary: update the dashboard now? (second setup review of 11 Nov, S8) ----
+// /diary asks "Update the dashboard now?" when something is new since the last export, and also when
+// there is no (valid) mark: then nobody knows, so it asks. Nothing new since the mark: no question.
+// settings.dashboardRepo "off" (a learner without a dashboard): no question, no line, no warning.
+export const DASHBOARD_OFF = "off";
+export const dashboardOff = (data) => settingsOf(data).dashboardRepo === DASHBOARD_OFF;
+
+export function dashboardAfterDiary(data, events = readEvents()) {
+  if (dashboardOff(data)) return { off: true, since: null, ask: false };
+  const since = sinceExport(data, events);
+  return { off: false, since, ask: since === null || hasNewSinceExport(since) };
+}
+
+// The value of `setting dashboardRepo`: "off", or an absolute path to a clone that has
+// harness/export.mjs. Returns { value } or { error, vars } (an i18n key for the CLI).
+export function parseDashboardRepo(raw) {
+  let v = String(raw ?? "").trim();
+  if (/^off$/i.test(v)) return { value: DASHBOARD_OFF };
+  if (!v || v.length > 400 || /[\r\n<>|"*?]/.test(v)) return { error: "cli.setting.usage" };
+  // Git Bash writes C:\x as /c/x.
+  if (process.platform === "win32") v = v.replace(/^\/([a-zA-Z])(?=\/|$)/, "$1:");
+  if (!path.isAbsolute(v) || (process.platform === "win32" && !/^([a-zA-Z]:|\\\\)/.test(v))) return { error: "cli.setting.repoAbsolute", vars: { dir: v } };
+  const dir = path.resolve(v);
+  if (!fs.existsSync(path.join(dir, "harness", "export.mjs"))) return { error: "cli.setting.noRepo", vars: { dir } };
+  return { value: dir };
 }
 
 // ---- Whose words are these? ----

@@ -33,6 +33,13 @@ const RECORD_CMD = /skill\.mjs["']?\s+(set|review|override|untask|correct|add-mi
 const TODO = "TODO(human)";
 const CD = new Set(["cd", "pushd", "set-location", "sl", "chdir", "push-location"]);
 const NOWHERE = /^(\/dev\/null|\$null|nul)$/i;
+// An allowed program (second setup review of 11 Nov, S8): the dashboard export of the harness repo,
+// `node <repo or its worktree>/harness/export.mjs <practice folder> [--dry-run]`, run from a practice
+// session after /diary (skill update-dashboard). It reads the record, writes the dashboard data in the
+// repo, and here only the mark .learning/state/last-export.json (a moment and three totals). It changes
+// no level, task or event. So it is no build of learner code (also not when settings.buildCommands has
+// node) and no write to the record. Only a script outside this project counts, and never --out into it.
+const EXPORT_SCRIPT = /(^|[\\/])harness[\\/]export\.mjs$/i;
 
 function deny(reason, event) {
   logEvent({ type: "deny", ...event, reason });
@@ -161,6 +168,13 @@ if (tool === "Bash" || tool === "PowerShell") {
       if (r !== null && (/^\.learning\/skills\.json$/i.test(r) || /^\.learning\/state(\/|$)/i.test(r))) deny(t("guard.recordCmd"), { tool, cmd: short });
       if (isHarnessPath(r)) deny(t("guard.harness"), { tool, cmd: short });
       if (CODE_EXT.test(p)) addPath(p, false);
+    }
+    // The dashboard export (see EXPORT_SCRIPT): allowed, unless --out points into this project.
+    const script = name === "node" ? args.find((a) => !/^-/.test(a)) : null;
+    if (script && EXPORT_SCRIPT.test(script) && rel(resolvePath(cwd, script)) === null) {
+      const k = args.indexOf("--out");
+      if (k !== -1 && args[k + 1] !== undefined && rel(resolvePath(cwd, args[k + 1])) !== null) deny(t("guard.exportOut"), { tool, cmd: short });
+      continue;
     }
     // Builds: a build pattern that matches at the START of the command (the program itself), or check.mjs run by node.
     const line = [name, ...args].join(" ");

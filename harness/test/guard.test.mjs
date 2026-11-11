@@ -64,7 +64,7 @@ test("the skill record and state can never be written by the AI", () => {
 
 test("the harness itself (hooks, settings.json, diary skill, rules) can never be written by the AI", () => {
   for (const rel of [".claude/hooks/guard.mjs", ".claude/settings.json", ".claude/settings.local.json",
-    ".claude/skills/diary/SKILL.md", ".claude/skills/mastery-check/SKILL.md", ".claude/leerharnas.md", ".claude/leerharnas.json"]) {
+    ".claude/skills/diary/SKILL.md", ".claude/skills/mastery-check/SKILL.md", ".claude/skills/update-dashboard/SKILL.md", ".claude/leerharnas.md", ".claude/leerharnas.json"]) {
     assert.equal(decision(write(rel, "x")), "deny", rel);
   }
   assert.equal(decision(bash("rm .claude/hooks/guard.mjs")), "deny");

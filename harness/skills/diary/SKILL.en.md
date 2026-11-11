@@ -32,7 +32,9 @@ Goal: self-regulation (plan → execution → reflection). The learner writes th
      - `review` with `auto: true`: the outcome of an L4 review, from normal work. `review-due`: the review came by.
    - The plan and confidence from the start, if there are any.
 
-2. **Ask for the reflection in one message** and then wait:
+2. **Ask for the reflection in one message** and then wait. Put this line above it, unless `settings.dashboardRepo` in `.learning/skills.json` is `off` (then there is no dashboard):
+   > Note: your answers appear word for word, with a translation, on the public dashboard.
+   >
    > 1. What did you learn? Explain it as if you were telling a classmate.
    > 2. What was confusing, or what would you do differently next time?
    > 3. How confident are you now (1–5), and what is your next step?
@@ -79,4 +81,9 @@ Goal: self-regulation (plan → execution → reflection). The learner writes th
    `! node .claude/hooks/skill.mjs set ood.encapsulatie L3 "5/5 solved, mostly rung 0-1"`.
    The decision is the learner's. Raising a level is only possible when no tasks of that skill wait for an explanation anymore.
 
-5. **The dashboard.** Last, after writing the entry, run `node .claude/hooks/skill.mjs since-export` (allowed). If it prints a line, give that line to the learner as it is, as the last line of your message. If it prints nothing (there was no export yet), say nothing about the dashboard.
+5. **The dashboard.** Last, after writing the entry, run `node .claude/hooks/skill.mjs since-export` (allowed).
+   - **No output:** the dashboard is off (`dashboardRepo` is `off`). Then say nothing about it.
+   - **The line about the export** (what is new, or that no export is known yet): give it to the learner as it is.
+   - **Followed by "Update the dashboard now? (yes / later)":** ask that question with AskUserQuestion, with the answers **yes** and **later**. It comes when something is new since the last export, and also when no export is known yet. When nothing is new, there is no question.
+     - **Yes:** follow the skill update-dashboard (`.claude/skills/update-dashboard/SKILL.md`) in this session, with this folder as the practice folder, up to the pull request. The approval before the commit and the push (step 8 of that skill) stays. Never merge yourself.
+     - **Later:** do nothing. The reminder at the next session start stays.

@@ -34,11 +34,32 @@ Every chart has a table view. You can switch between Dutch and English, and betw
 5. Let Claude fill in the translations ("fill in translations.todo.json") and export again. The export takes the translations over, removes the todo file and writes `progress.json`.
 6. Check the diff of `site-src/dashboard/data/progress.json`, the translations too, then commit and push it yourself. The dashboard shows the date and time of the export, so you can see how current it is.
 
-In Claude Code, in this repo, `/update-dashboard ../my-practice-folder` does steps 3 to 6 for you, up to a pull request:
+In Claude Code, `/update-dashboard` does steps 3 to 6 for you, up to a pull request. In this repo you give it the practice folder: `/update-dashboard ../my-practice-folder`. In a practice session `/diary` asks for it itself (see [After the diary](#after-the-diary)). The skill works like this:
 
 - **In its own worktree.** It never works in your main checkout. Is a dashboard pull request still open? Then it continues on that branch: the two do not conflict, and the translations in it are kept. Otherwise it starts a new branch `dashboard-YYYY-MM-DD` from `origin/main`.
 - **Checked.** After the export and the translations it runs `--check` and the security check, with the private terms of your practice folder. A fresh worktree has no `.learning/private.json` of its own, because that file is never committed.
 - **Only after your approval.** It shows you the diff and the translations it was unsure of, and asks whether it may go on. Only then does it commit `progress.json`, push the branch and open the pull request (or add a commit to the open one). Merging is up to you.
+
+## After the diary
+
+At the end of `/diary` Claude asks: **Update the dashboard now?** (yes / later).
+
+- **Yes:** Claude follows `/update-dashboard` in the same session, with your practice folder, up to the pull request. The approval before the commit and the push stays. Merging is up to you.
+- **Later:** nothing happens. After an earlier export, the next session start says what is new.
+
+The question comes when something is new since the last export, and also when no export is known yet (no `last-export.json`). When nothing is new, Claude does not ask.
+
+**Where is the repo?** The practice session finds your clone of this repo through the setting `dashboardRepo`:
+
+```text
+! node .claude/hooks/skill.mjs setting dashboardRepo "D:\repos\leerharnas"
+```
+
+Without that setting, Claude asks for the path once and suggests this command. The work always happens in its own worktree of the repo, never in your main checkout. The guard allows the export (`node <repo>/harness/export.mjs <practice folder>`) from the practice session on purpose: in your practice folder that program only writes `last-export.json`.
+
+**No dashboard?** Turn it off with `! node .claude/hooks/skill.mjs setting dashboardRepo off`. Then `/diary` does not ask about it, there is no warning above the reflection questions, and the session start says nothing about exports.
+
+**The warning.** Above the reflection questions of `/diary` it says: *"Note: your answers appear word for word, with a translation, on the public dashboard."* There is no private option. Whatever must not go online goes into `.learning/private.json`.
 
 ## Since the last export
 
@@ -46,11 +67,12 @@ When the export writes the data, it also writes `.learning/state/last-export.jso
 
 From then on the harness says in one line what is new since that export, for example:
 
-> Since the last export (11 Nov 13:50): 3 tasks, 1 diary session, 2 level changes. Update the dashboard with /update-dashboard in the repo.
+> Since the last export (11 Nov 13:50): 3 tasks, 1 diary session, 2 level changes. Update the dashboard with /update-dashboard.
 
 - **At the start of a session**, only when something is new.
-- **At the end of `/diary`**, always. You can also run `! node .claude/hooks/skill.mjs since-export` yourself.
-- **Without an export, nothing.** Without `last-export.json`, for example when you do not use the dashboard, the harness says nothing about it.
+- **At the end of `/diary`**, always, followed by the question whether to update the dashboard now. You can also run `! node .claude/hooks/skill.mjs since-export` yourself.
+- **Without an export** the session start says nothing. `/diary` then says that no export is known yet, and asks anyway.
+- **Without a dashboard** (`dashboardRepo` is `off`) the harness says nothing about it.
 
 A level change is every new line in the level history, so a placement and an automatic demotion count too. The counter starts again at every export that writes the data, also when you do not approve the pull request after all. `--dry-run` and an export that stops for translations (exit code 2) do not touch it.
 

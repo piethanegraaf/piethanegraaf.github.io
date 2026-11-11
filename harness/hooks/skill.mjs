@@ -11,10 +11,12 @@
 //   node .claude/hooks/skill.mjs correct <task-id> trede|rung <1-5> "reason"   (more help than logged; only upwards)
 //   node .claude/hooks/skill.mjs correct <task-id> schrap|void "reason"        (void one specific task)
 //   node .claude/hooks/skill.mjs override <id|*> <minutes> "<reason>"
-//   node .claude/hooks/skill.mjs setting <key> <value>     (examDate, stuckTimerMinutes, idleMinutes, defaultLevel, course, language)
+//   node .claude/hooks/skill.mjs setting <key> <value>     (examDate, stuckTimerMinutes, idleMinutes, defaultLevel, course, language,
+//                                                           autoDemote, codeExtensions, codeFiles, dashboardRepo <absolute path>|off)
 //   node .claude/hooks/skill.mjs paths <id> add|remove "<glob>"   (which exercise folders belong to a skill)
 //   node .claude/hooks/skill.mjs replay <transcript.jsonl> [--dry-run]   (recover explanations a hook missed)
-//   node .claude/hooks/skill.mjs since-export              what is new since the last dashboard export (one line)
+//   node .claude/hooks/skill.mjs since-export              what is new since the last dashboard export, and after /diary
+//                                                           the question "Update the dashboard now?" (nothing when it is off)
 // The guard blocks Claude from running any command except list, status and since-export (they only read).
 // There is deliberately NO command to mark a task as explained: that only happens via
 // an explanation in your own words in the chat (checked by reflect-gate.mjs). `replay` does not
@@ -27,7 +29,7 @@ import {
   pendingTasks, allTasks, logTask, levelAdvice, recentWins, pickSession, loadSession, saveSession, touch, taskRung, taskLogged,
   lapseTasks, afterTask, isReviewDue, isPlacementPending, effectiveLevel, adviceCommand, openOffer,
   activeMinutesSince, readTranscript, isLearnerEntry, learnerEntryText, entryText, checkExplanation, t, language,
-  sinceExport, sinceExportLine,
+  sinceExportLine, dashboardAfterDiary, parseDashboardRepo,
 } from "./lib.mjs";
 import { EXPLAIN_MARK } from "./patterns.mjs";
 
@@ -93,10 +95,15 @@ switch (cmd) {
     break;
   }
   case "status": status(); break;
-  // Read-only: the line after a first dashboard export, also when nothing is new; nothing without one.
+  // Read-only. The line after an export (also when nothing is new), or that no export is known yet;
+  // then the question of /diary when something is new or nothing is known (second review of 11 Nov, S8).
+  // Nothing at all when the learner has no dashboard (dashboardRepo off).
   case "since-export": {
-    const s = sinceExport(data);
-    if (s) console.log(sinceExportLine(s));
+    const d = dashboardAfterDiary(data);
+    if (d.off) break;
+    if (d.since) console.log(sinceExportLine(d.since));
+    else console.log(t("cli.since.none") + (settingsOf(data).dashboardRepo ? "" : " " + t("cli.since.offHint")));
+    if (d.ask) console.log(t("cli.since.ask"));
     break;
   }
 
@@ -303,6 +310,17 @@ switch (cmd) {
   case "setting": {
     const [key, ...rest] = args;
     const value = rest.join(" ");
+    if (key === "dashboardRepo") {
+      // The clone of the repo with the dashboard, for /update-dashboard from this folder (S8), or off.
+      const r = parseDashboardRepo(value);
+      if (r.error) exit(r.error, r.vars);
+      data.settings = data.settings ?? {};
+      data.settings.dashboardRepo = r.value;
+      saveSkills(data);
+      logEvent({ type: "setting", key, value: r.value });
+      console.log(`${key} = ${r.value}`);
+      break;
+    }
     const allowed = {
       examDate: /^\d{4}-\d{2}-\d{2}$/, stuckTimerMinutes: /^\d+$/, idleMinutes: /^[1-9]\d*$/, defaultLevel: /^L[0-4]$/,
       course: /^[^\r\n<>]{1,80}$/, language: /^(nl|en)$/, autoDemote: /^(true|false)$/,

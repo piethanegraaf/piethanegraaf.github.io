@@ -32,7 +32,9 @@ Doel: zelfregulatie (plan → uitvoering → reflectie). De student schrijft de 
      - `review` met `auto: true`: de uitkomst van een L4-herhaling, uit gewoon werk. `review-due`: de herhaling kwam langs.
    - Het plan en zelfvertrouwen van het begin, als die er zijn.
 
-2. **Vraag de reflectie in één bericht** en wacht dan:
+2. **Vraag de reflectie in één bericht** en wacht dan. Zet er deze regel boven, behalve als `settings.dashboardRepo` in `.learning/skills.json` op `off` staat (dan is er geen dashboard):
+   > Let op: je antwoorden komen letterlijk, met een vertaling, op het openbare dashboard.
+   >
    > 1. Wat heb je geleerd? Leg het uit alsof je het aan een klasgenoot vertelt.
    > 2. Wat was verwarrend, of wat zou je de volgende keer anders doen?
    > 3. Hoe zeker ben je nu (1–5), en wat is je volgende stap?
@@ -79,4 +81,9 @@ Doel: zelfregulatie (plan → uitvoering → reflectie). De student schrijft de 
    `! node .claude/hooks/skill.mjs set ood.encapsulatie L3 "5/5 gelukt, meestal trede 0-1"`.
    De beslissing ligt bij de student. Omhoog zetten kan pas als er geen taken van die vaardigheid meer op uitleg wachten.
 
-5. **Het dashboard.** Draai als laatste, na het schrijven van de entry, `node .claude/hooks/skill.mjs since-export` (mag). Geeft het een regel, geef die dan letterlijk door aan de student, als laatste regel van je bericht. Geeft het niets (er was nog geen export), zeg dan niets over het dashboard.
+5. **Het dashboard.** Draai als laatste, na het schrijven van de entry, `node .claude/hooks/skill.mjs since-export` (mag).
+   - **Geen uitvoer:** het dashboard staat uit (`dashboardRepo` is `off`). Zeg er dan niets over.
+   - **De regel over de export** (wat er nieuw is, of dat er nog geen export bekend is): geef die letterlijk door aan de student.
+   - **Volgt "Dashboard nu bijwerken? (ja / later)":** stel die vraag met AskUserQuestion, met de antwoorden **ja** en **later**. Hij komt als er iets nieuw is sinds de laatste export, en ook als er nog geen export bekend is. Is er niets nieuw, dan komt er geen vraag.
+     - **Ja:** volg in deze sessie de skill update-dashboard (`.claude/skills/update-dashboard/SKILL.md`), met deze map als oefenmap, tot en met de pull request. Het akkoord vóór de commit en de push (stap 8 van die skill) blijft staan. Merge nooit zelf.
+     - **Later:** doe niets. De herinnering bij de volgende sessiestart blijft.

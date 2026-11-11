@@ -11,12 +11,13 @@ Doel van de setup: **wat de student beheerst snel herkennen en alleen nog met he
   - De **instellingen** staan er ook in (`settings`): vak, taal, toetsdatum, standaardniveau, welke bestanden code zijn en welke commando's bouwen of testen.
   - Bij de start van elke sessie zet een hook dit register in je context.
 - **Guard** (`.claude/hooks/guard.mjs`): deze hook blokkeert code schrijven, verwijderen, bouwen of testen bij L1–L3. Welke bestanden code zijn en welke commando's bouwen of testen, staat in `settings.codeExtensions` en `settings.buildCommands`. `check.mjs` telt altijd als testen.
-  - Ook wijzigingen aan het register, aan `.learning/state/` en aan de harnas zelf (`.claude/hooks/`, `.claude/settings.json`, de skills diary en mastery-check, en dit bestand) blokkeert hij.
+  - Ook wijzigingen aan het register, aan `.learning/state/` en aan de harnas zelf (`.claude/hooks/`, `.claude/settings.json`, de skills diary, mastery-check en update-dashboard, en dit bestand) blokkeert hij.
+  - Eén programma mag bewust wel iets in `.learning/state/` schrijven: de dashboardexport `node <repo>/harness/export.mjs <deze map>`, na `/diary` (skill update-dashboard). Die schrijft hier alleen `last-export.json` (een moment en drie totalen). Geef hem nooit `--out` mee.
   - De guard beoordeelt elk los commando op het programma dat het draait. Een woord als "msbuild" in een grep-patroon is dus geen build. `eval`, `iex` en `Invoke-Expression` weigert hij altijd, omdat hij niet kan zien wat er dan draait.
 - **Weigert de guard iets?** Zoek dan **geen omweg** (geen script, ander tool of kopie). Bied de volgende hint aan, of leg uit hoe de student een override kan zetten.
 - **Wie wijzigt het register?** De student, en de harnas zelf op drie punten (die worden gelogd): de **plaatsing** van een nieuwe vaardigheid na de eerste taak, **automatisch omlaag** op bewijs (als `autoDemote` aan staat), en **doorzetten** als de student een voorstel van de harnas zelf bevestigt met "ja, doorzetten". Omhoog is altijd een keuze van de student. Jij wijzigt het register nooit. Jij mag `list`, `status` en `since-export` draaien en de exacte commando's *voorstellen*:
   - `! node .claude/hooks/skill.mjs list` / `status`: overzicht, herhalingen, open uitleg, doorstroom-signalen.
-  - `! node .claude/hooks/skill.mjs since-export`: wat er nieuw is sinds de laatste export naar het dashboard (één regel; niets als er nog geen export was).
+  - `! node .claude/hooks/skill.mjs since-export`: wat er nieuw is sinds de laatste export naar het dashboard, of dat er nog geen export bekend is. Daarna, als er iets nieuw is of niets bekend, de vraag van `/diary`: "Dashboard nu bijwerken?". Niets als het dashboard uit staat.
   - `! node .claude/hooks/skill.mjs set <id> <L0..L4> "notitie"`
     - Omhoog zetten wordt geweigerd zolang er taken van die vaardigheid op uitleg wachten.
   - `! node .claude/hooks/skill.mjs review <id> pass|shaky|fail`: een herhaling zelf opgeven. Meestal niet nodig: de eerstvolgende taak bepaalt de uitkomst.
@@ -29,6 +30,7 @@ Doel van de setup: **wat de student beheerst snel herkennen en alleen nog met he
   - `! node .claude/hooks/skill.mjs override <id|*> <minuten> "reden"`: maximaal 240 minuten, wordt gelogd.
   - `! node .claude/hooks/skill.mjs setting examDate JJJJ-MM-DD`: de toetsdatum. Herhalingen worden zo gepland dat ze vóór de toets vallen.
   - `! node .claude/hooks/skill.mjs setting autoDemote true|false`: automatisch omlaag aan of uit (standaard uit).
+  - `! node .claude/hooks/skill.mjs setting dashboardRepo "<pad>"|off`: de clone van de repo met het dashboard, voor `/update-dashboard` vanuit deze map. `off` als er geen dashboard is: dan vraagt `/diary` er niet naar.
   - `! node .claude/hooks/skill.mjs setting course "<vak>"` en `setting language nl|en`: het vak en de taal van de harnas.
   - `! node .claude/hooks/skill.mjs setting codeExtensions "cs, csproj, sql"` en `setting codeFiles "Dockerfile, appsettings*.json"`: welke bestanden werk van de student zijn. De guard beschermt ze bij L1–L3.
   - `! node .claude/hooks/skill.mjs setting idleMinutes <minuten>`: een pauze die langer duurt, telt niet als actieve tijd (standaard 20).
@@ -161,7 +163,7 @@ Zie je na een goedgekeurde uitleg iets in de code dat het bespreken waard is, da
   - de taken die nog op uitleg wachten;
   - wat de laatste tijd zelfstandig lukte, en de doorstroom-signalen.
   Daarna vraag je naar het doel en de opdracht. Vraag het zelfvertrouwen (1–5) **één keer, samen met de gekozen opdracht**, over die ene opdracht, niet over de vaardigheid in het algemeen. Herhaal die vraag niet: komt er geen antwoord, dan staat er in het dagboek "onbekend". Geef meteen `! node .claude/hooks/check.mjs <map>`, met: draai hem eerst, vóór je code schrijft.
-- **Einde:** als de student stopt of "klaar" zegt, vraag je eerst de uitleg van taken die nog open staan, en gebruik je dan `/diary`. Die schrijft de feiten op en de reflectie **in de woorden van de student**. Wat dan nog open staat, vervalt (overgeslagen).
+- **Einde:** als de student stopt of "klaar" zegt, vraag je eerst de uitleg van taken die nog open staan, en gebruik je dan `/diary`. Die schrijft de feiten op en de reflectie **in de woorden van de student**. Wat dan nog open staat, vervalt (overgeslagen). Daarna vraagt `/diary` "Dashboard nu bijwerken?". Bij ja volg je de skill update-dashboard tot en met de pull request. Merge nooit zelf.
 - **Reflectie wordt afgedwongen:** zonder de marker `<!-- sessie: <id> -->` in het dagboek blokkeert de Stop-hook het afsluiten. Dat gebeurt hooguit 2 keer per stopverzoek. "toch niet" of "ga door" heft het stopverzoek op.
 - **Na een uur actieve tijd:** de hook stelt eenmalig voor om af te ronden.
 
