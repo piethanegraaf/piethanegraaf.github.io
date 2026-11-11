@@ -6,6 +6,10 @@ description: "Wat het voortgangsdashboard per vaardigheid laat zien, van niveaus
 
 ## Wat het dashboard laat zien
 
+![Het leerdashboard met verzonnen demodata: 86% zelfstandig opgelost, het aantal vaardigheden per niveau, en de voortgang per vaardigheid en microvaardigheid](../assets/images/dashboard-demo-nl.png)
+
+*Het dashboard met verzonnen demodata.*
+
 Het [dashboard](/dashboard/) laat de voortgang per vaardigheid en microvaardigheid zien:
 
 - je **niveau** en de geschiedenis daarvan;

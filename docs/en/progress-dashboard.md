@@ -6,6 +6,10 @@ description: "What the progress dashboard shows per skill, from levels and tasks
 
 ## What the dashboard shows
 
+![The learning dashboard with made-up demo data: 86% solved independently, the number of skills per level, and progress per skill and microskill](../assets/images/dashboard-demo-en.png)
+
+*The dashboard with made-up demo data.*
+
 The [dashboard](/dashboard/?lang=en) shows progress per skill and microskill:
 
 - your **level** and its history;
