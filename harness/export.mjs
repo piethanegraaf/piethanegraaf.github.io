@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 // Export learning progress for the dashboard, with privacy filters. No network, no shell.
 //
-//   node harness/export.mjs <projectmap> [--out <bestand.json>] [--dry-run]
+//   node harness/export.mjs <projectmap> [--out <bestand.json>] [--dry-run] [--allow-untranslated]
+//   node harness/export.mjs --check <bestand.json>
 //
 // - Only a WHITELIST of fields is exported (see build() below). Raw events, session ids,
 //   transcripts, file paths and test runs never leave the project.
@@ -9,6 +10,11 @@
 //   e-mail addresses, absolute paths, the user name, session and transcript ids, HTML comments,
 //   and the terms in <projectmap>/.learning/private.json (local, never committed).
 // - The learner's name from skills.json ("learner") is always filtered too.
+// - The dashboard is bilingual, the record is in one language. Every free text gets a translation
+//   in the other language(s). The export never translates itself (no network): it lists what is
+//   missing in translations.todo.json next to the output, Claude fills that in, and the next run
+//   takes the translations over. Without all translations it writes no output (exit code 2),
+//   unless --allow-untranslated. --check fails on an output with a missing translation (for CI).
 // - --dry-run writes nothing and shows a report of what would be filtered.
 // - Check the diff of the output yourself before you commit or push it.
 import fs from "node:fs";
@@ -18,8 +24,10 @@ import { fileURLToPath } from "node:url";
 
 const HARNESS = path.dirname(fileURLToPath(import.meta.url));
 // The messages of the harness in both languages, to give its fixed notes in the language of the page.
-const I18N = Object.fromEntries(["nl", "en"].map((l) => [l, JSON.parse(fs.readFileSync(path.join(HARNESS, "i18n", `${l}.json`), "utf8"))]));
+export const LANGUAGES = ["nl", "en"];
+const I18N = Object.fromEntries(LANGUAGES.map((l) => [l, JSON.parse(fs.readFileSync(path.join(HARNESS, "i18n", `${l}.json`), "utf8"))]));
 const DEFAULT_OUT = path.join(HARNESS, "..", "site-src", "dashboard", "data", "progress.json");
+export const TODO_NAME = "translations.todo.json";
 export const SCHEMA = 1;
 
 const fail = (msg) => { console.error(`Fout: ${msg}`); process.exit(1); };
@@ -135,8 +143,119 @@ export function parseDiary(text, date) {
   return sessions;
 }
 
+// ---------- Translations: every free text in every language of the dashboard ----------
+// A free text is stored once, in the language of the record. out.translations holds the other
+// languages: { <language>: { <text>: <translation> } }. Texts that already have both languages
+// (map titles, the fixed notes of the harness, signals) are not in it.
+const DIARY_TEXTS = ["time", "skills", "plan", "confidenceBefore", "wentWell", "signals", "calibration"];
+const hasWords = (s) => typeof s === "string" && /\p{L}{2,}/u.test(s);
+export const targetsOf = (source) => LANGUAGES.filter((l) => l !== source);
+
+// The texts of an export that need a translation: text -> the fields it is shown in.
+export function translatableTexts(out) {
+  const found = new Map();
+  const add = (text, field) => {
+    if (!hasWords(text)) return;
+    if (!found.has(text)) found.set(text, new Set());
+    found.get(text).add(field);
+  };
+  add(out.course, "course");
+  for (const s of out.skills ?? []) {
+    if (!s.titles) add(s.title, "skill.title");
+    for (const h of s.history ?? []) if (!h.notes) add(h.note, "skill.history");
+  }
+  for (const x of out.tasks ?? []) {
+    add(x.what, "task.what"); add(x.explanation, "task.explanation"); add(x.voidReason, "task.voidReason");
+    for (const r of x.rejections ?? []) for (const reason of r.reasons ?? []) add(reason, "task.rejection");
+    for (const c of x.corrections ?? []) add(c.reason, "task.correction");
+  }
+  for (const o of out.overrides ?? []) add(o.reason, "override.reason");
+  for (const s of out.signals ?? []) if (!s.texts) add(s.text, "signal");
+  for (const d of out.diary ?? []) {
+    for (const k of DIARY_TEXTS) add(d[k], `diary.${k}`);
+    for (const [k, v] of Object.entries(d.reflection ?? {})) add(v, `diary.reflection.${k}`);
+  }
+  return found;
+}
+
+// Earlier translations: those of the previous export (same source language) and those Claude wrote
+// in the todo file. The todo file wins, so a translation can be corrected there too.
+export function translationMemory(source, { previous = null, todo = null } = {}) {
+  const memory = Object.fromEntries(targetsOf(source).map((l) => [l, new Map()]));
+  const fromTodo = Object.fromEntries(targetsOf(source).map((l) => [l, new Set()]));
+  const filled = (v) => typeof v === "string" && v.trim() !== "";
+  if (previous?.language === source) {
+    for (const [l, table] of Object.entries(previous.translations ?? {})) {
+      if (!memory[l] || !table || typeof table !== "object") continue;
+      for (const [text, v] of Object.entries(table)) if (filled(v)) memory[l].set(text, v);
+    }
+  }
+  if (todo?.source === source) {
+    for (const item of Array.isArray(todo.items) ? todo.items : []) {
+      if (typeof item?.text !== "string") continue;
+      for (const l of Object.keys(memory)) {
+        if (filled(item[l])) { memory[l].set(item.text, item[l].trim()); fromTodo[l].add(item.text); }
+      }
+    }
+  }
+  return { memory, fromTodo };
+}
+
+// Sets out.translations for the texts of THIS export only: a text that is gone, or that a filter now
+// changes, drops out together with its translation. Translations pass the privacy filters as well.
+export function applyTranslations(out, { memory }, scrub = (s) => s) {
+  const texts = translatableTexts(out);
+  const translations = {};
+  const missing = [];
+  for (const [l, mem] of Object.entries(memory)) {
+    translations[l] = {};
+    for (const text of texts.keys()) {
+      const v = mem.has(text) ? scrub(mem.get(text), `translation.${l}`) : "";
+      if (v) translations[l][text] = v;
+      else missing.push({ text, language: l, fields: [...texts.get(text)] });
+    }
+  }
+  out.translations = translations;
+  return { texts, missing };
+}
+
+// For CI: every text that needs a translation has one, in every other language.
+export function missingTranslations(json) {
+  const missing = [];
+  for (const [text, fields] of translatableTexts(json)) {
+    for (const l of targetsOf(json.language)) {
+      const v = json.translations?.[l]?.[text];
+      if (typeof v !== "string" || !v.trim()) missing.push({ text, language: l, fields: [...fields] });
+    }
+  }
+  return missing;
+}
+
+// The work list for Claude: every text with a missing translation, plus the translations from the
+// todo file that are not in an export yet (so nothing is lost when the export stops).
+const TODO_ABOUT = (source) => [
+  `Translations for the learning dashboard. Every "text" is in "${source}". Write its translation in each empty language field (${targetsOf(source).join(", ")}), then run the export again: it takes the translations over and removes this file.`,
+  "Translate faithfully: the same meaning, tone and length. Do not correct, improve, summarize or add anything; informal and short stays informal and short. Translate what was meant: a typo does not need to be copied.",
+  "Keep unchanged: code, identifiers and test names, skill ids (such as cs.basis), levels (L0-L4), compiler codes (such as CS0161), numbers, dates, times and placeholders in square brackets (such as [privé]).",
+  "Use the words of the dashboard: trede = rung, vaardigheid = skill, microvaardigheid = microskill, uitleg = explanation, herhaling = review, doorstroom = promotion, terugval = relapse, opdracht = exercise, dagboek = diary, plaatsing = placement, zelfvertrouwen = confidence, kalibratie = calibration, (leer)harnas = (learning) harness, overgeslagen = skipped.",
+  "\"fields\" says where a text is shown. Explanations (task.explanation) and reflections (diary.reflection.*) are the learner's own words: keep their voice. The dashboard marks every translation and shows the original next to it.",
+];
+export function todoContent(source, texts, { missing, memory, fromTodo }) {
+  const missingFor = new Map();
+  for (const m of missing) missingFor.set(m.text, (missingFor.get(m.text) ?? new Set()).add(m.language));
+  const items = [];
+  for (const [text, fields] of texts) {
+    if (!missingFor.has(text) && !targetsOf(source).some((l) => fromTodo[l]?.has(text))) continue;
+    const item = { text, fields: [...fields] };
+    for (const l of targetsOf(source)) item[l] = memory[l]?.get(text) ?? "";
+    items.push(item);
+  }
+  return { about: TODO_ABOUT(source), source, languages: targetsOf(source), items };
+}
+
 // ---------- Build the whitelisted export ----------
-export async function build(project) {
+// previous: the earlier output (for its translations); todo: the todo file Claude filled in.
+export async function build(project, { previous = null, todo = null } = {}) {
   const learn = path.join(project, ".learning");
   if (!fs.existsSync(path.join(learn, "skills.json"))) throw new Error(`geen .learning/skills.json in ${project}`);
   // Reuse the harness's own logic (stats, promotion signals) on this project's data.
@@ -319,23 +438,50 @@ export async function build(project) {
     activity: [...activity.values()].sort((a, b) => a.date.localeCompare(b.date)).map((a) => ({ ...a, sessions: a.sessions.size })),
     diary,
   };
-  return { out, report, filters };
+  const { memory, fromTodo } = translationMemory(settings.language, { previous, todo });
+  const { texts, missing } = applyTranslations(out, { memory }, scrub);
+  return { out, report, filters, missing, todo: todoContent(settings.language, texts, { missing, memory, fromTodo }) };
 }
 
 // ---------- CLI ----------
+// --check <file>: exit code 1 when a translation is missing (the build of the site runs this).
+function checkFile(file) {
+  let json;
+  try { json = JSON.parse(fs.readFileSync(file, "utf8")); } catch { fail(`${file} is niet te lezen als JSON`); }
+  const missing = missingTranslations(json);
+  const langs = targetsOf(json.language).join(", ");
+  if (!missing.length) { console.log(`Vertalingen compleet (${langs}): ${file}`); return; }
+  console.error(`Fout: ${missing.length} vertaling(en) ontbreken (${langs}) in ${file}:`);
+  for (const m of missing.slice(0, 20)) console.error(`  [${m.language}] ${m.fields.join(", ")}: ${JSON.stringify(m.text.length > 80 ? `${m.text.slice(0, 77)}...` : m.text)}`);
+  if (missing.length > 20) console.error(`  ... en nog ${missing.length - 20}`);
+  console.error(`Draai de export opnieuw en laat Claude ${TODO_NAME} invullen (docs: Dashboard bijwerken).`);
+  process.exit(1);
+}
+
 async function main() {
   const argv = process.argv.slice(2);
-  let project = null, out = DEFAULT_OUT, dryRun = false;
+  let project = null, out = DEFAULT_OUT, dryRun = false, allowUntranslated = false, check = null;
   for (let i = 0; i < argv.length; i++) {
     if (argv[i] === "--dry-run") dryRun = true;
+    else if (argv[i] === "--allow-untranslated") allowUntranslated = true;
+    else if (argv[i] === "--check") check = path.resolve(argv[++i] ?? fail("--check heeft een bestand nodig"));
     else if (argv[i] === "--out") out = path.resolve(argv[++i] ?? fail("--out heeft een bestand nodig"));
     else if (argv[i].startsWith("-")) fail(`onbekende optie ${argv[i]}`);
     else project = path.resolve(argv[i]);
   }
-  if (!project) { console.log("Gebruik: node harness/export.mjs <projectmap> [--out <bestand.json>] [--dry-run]"); process.exit(1); }
+  if (check) return checkFile(check);
+  if (!project) { console.log("Gebruik: node harness/export.mjs <projectmap> [--out <bestand.json>] [--dry-run] [--allow-untranslated]\n       node harness/export.mjs --check <bestand.json>"); process.exit(1); }
+
+  // The earlier translations: in the previous output, and in the todo file next to it.
+  const todoFile = path.join(path.dirname(out), TODO_NAME);
+  let previous = null, todo = null;
+  try { previous = JSON.parse(fs.readFileSync(out, "utf8")); } catch { /* no earlier export */ }
+  if (fs.existsSync(todoFile)) {
+    try { todo = JSON.parse(fs.readFileSync(todoFile, "utf8")); } catch { fail(`${todoFile} is geen geldige JSON. Herstel het bestand; de vertalingen erin gaan anders verloren.`); }
+  }
   let result;
-  try { result = await build(project); } catch (e) { fail(e.message); }
-  const { out: json, report } = result;
+  try { result = await build(project, { previous, todo }); } catch (e) { fail(e.message); }
+  const { out: json, report, missing, todo: work } = result;
 
   console.log(`Export van ${project}`);
   console.log(`  ${json.skills.length} vaardigheden · ${json.tasks.length} taken · ${json.reviews.length} herhalingen · ${json.diary.length} dagboeksessies`);
@@ -344,10 +490,25 @@ async function main() {
   if (!fs.existsSync(path.join(project, ".learning", "private.json"))) {
     console.log("\nLet op: er is geen .learning/private.json. Zet daar namen en termen in die niet online mogen (zie de docs).");
   }
+  const langs = targetsOf(json.language).join(", ");
+  console.log(missing.length ? `\nVertalingen (${langs}): ${new Set(missing.map((m) => m.text)).size} tekst(en) nog niet vertaald.` : `\nVertalingen (${langs}): compleet.`);
   if (dryRun) { console.log("\n--dry-run: er is niets geschreven."); return; }
+
   fs.mkdirSync(path.dirname(out), { recursive: true });
+  if (missing.length) {
+    fs.writeFileSync(todoFile, JSON.stringify(work, null, 2) + "\n");
+    console.log(`Geschreven: ${todoFile}\nVraag Claude de lege vertalingen in te vullen ("vul ${TODO_NAME} in") en draai de export daarna opnieuw.`);
+    if (!allowUntranslated) {
+      console.error(`\nNiet geschreven: ${out}, want er ontbreken vertalingen. Met --allow-untranslated exporteer je toch (de build van de site weigert het dan wel).`);
+      process.exitCode = 2;
+      return;
+    }
+  } else if (fs.existsSync(todoFile)) {
+    fs.rmSync(todoFile);
+    console.log(`Verwijderd: ${todoFile} (alle vertalingen zijn overgenomen).`);
+  }
   fs.writeFileSync(out, JSON.stringify(json, null, 2) + "\n");
-  console.log(`\nGeschreven: ${out}\nControleer de diff zelf voordat je commit of pusht.`);
+  console.log(`\nGeschreven: ${out}\nControleer de diff zelf, ook de vertalingen, voordat je commit of pusht.`);
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) await main();
