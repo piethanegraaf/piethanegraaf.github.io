@@ -78,3 +78,5 @@ Goal: self-regulation (plan → execution → reflection). The learner writes th
 4. **Up: suggest, do not run.** If a promotion criterion from CLAUDE.md seems to be met, name the command the learner can run themselves. The harness goes down by itself when `autoDemote` is on: then say what happened and how to revert it. When it is off, name the command for a relapse too. For example:
    `! node .claude/hooks/skill.mjs set ood.encapsulatie L3 "5/5 solved, mostly rung 0-1"`.
    The decision is the learner's. Raising a level is only possible when no tasks of that skill wait for an explanation anymore.
+
+5. **The dashboard.** Last, after writing the entry, run `node .claude/hooks/skill.mjs since-export` (allowed). If it prints a line, give that line to the learner as it is, as the last line of your message. If it prints nothing (there was no export yet), say nothing about the dashboard.

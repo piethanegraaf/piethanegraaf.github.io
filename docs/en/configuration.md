@@ -58,6 +58,8 @@ node harness/export.mjs ../my-practice-folder             # writes site-src/dash
 
 Does a free text have no translation into the other language yet? Then the export first asks for the translations (see [Translations](progress-dashboard.md#translations)).
 
+When the export writes the data, it also writes `.learning/state/last-export.json` in your practice folder: only the moment and three totals, no texts and no paths. The harness uses it to say what is new since then (see [Since the last export](progress-dashboard.md#since-the-last-export)). The file stays local.
+
 - **A whitelist only.** Levels, tasks (rung, source, explanation, rejections, corrections, skipped), reviews, signals, and from the diary only the plan, what went well, the reflection and the calibration. Never raw events, session ids, test names or paths.
 - **Fixed filters** on all free text: e-mail addresses, absolute paths, your user name, session and transcript ids, and HTML comments. The name in `skills.json` (`learner`) is filtered too.
 - **Your own filter** in `.learning/private.json`:

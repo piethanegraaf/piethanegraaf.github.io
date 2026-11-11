@@ -58,6 +58,8 @@ node harness/export.mjs ../mijn-oefenmap             # schrijft site-src/dashboa
 
 Heeft een vrije tekst nog geen vertaling in de andere taal? Dan vraagt de export eerst om de vertalingen (zie [Vertalingen](progress-dashboard.md#vertalingen)).
 
+Schrijft de export de data, dan schrijft hij ook `.learning/state/last-export.json` in je oefenmap: alleen het moment en drie totalen, geen teksten en geen paden. De harnas gebruikt dat om te melden wat er sindsdien nieuw is (zie [Sinds de laatste export](progress-dashboard.md#sinds-de-laatste-export)). Het bestand blijft lokaal.
+
 - **Alleen een whitelist.** Niveaus, taken (trede, bron, uitleg, afwijzingen, correcties, overgeslagen), herhalingen, signalen, en uit het dagboek alleen het plan, wat goed ging, de reflectie en de kalibratie. Nooit ruwe events, sessie-id's, testnamen of paden.
 - **Vaste filters** op alle vrije tekst: e-mailadressen, absolute paden, je gebruikersnaam, sessie- en transcript-id's, en HTML-commentaar. De naam in `skills.json` (`learner`) wordt ook gefilterd.
 - **Je eigen filter** in `.learning/private.json`:

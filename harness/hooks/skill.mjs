@@ -13,7 +13,8 @@
 //   node .claude/hooks/skill.mjs setting <key> <value>     (examDate, stuckTimerMinutes, idleMinutes, defaultLevel, course, language)
 //   node .claude/hooks/skill.mjs paths <id> add|remove "<glob>"   (which exercise folders belong to a skill)
 //   node .claude/hooks/skill.mjs replay <transcript.jsonl> [--dry-run]   (recover explanations a hook missed)
-// The guard blocks Claude from running any command except list and status.
+//   node .claude/hooks/skill.mjs since-export              what is new since the last dashboard export (one line)
+// The guard blocks Claude from running any command except list, status and since-export (they only read).
 // There is deliberately NO command to mark a task as explained: that only happens via
 // an explanation in your own words in the chat (checked by reflect-gate.mjs). `replay` does not
 // change that: it runs the same two keys again on a saved transcript.
@@ -25,6 +26,7 @@ import {
   pendingTasks, allTasks, logTask, levelAdvice, recentWins, pickSession, loadSession, saveSession, touch, taskRung, taskLogged,
   lapseTasks, afterTask, isReviewDue, isPlacementPending, effectiveLevel, adviceCommand, openOffer,
   activeMinutesSince, readTranscript, isLearnerEntry, learnerEntryText, entryText, checkExplanation, t, language,
+  sinceExport, sinceExportLine,
 } from "./lib.mjs";
 import { EXPLAIN_MARK } from "./patterns.mjs";
 
@@ -90,6 +92,12 @@ switch (cmd) {
     break;
   }
   case "status": status(); break;
+  // Read-only: the line after a first dashboard export, also when nothing is new; nothing without one.
+  case "since-export": {
+    const s = sinceExport(data);
+    if (s) console.log(sinceExportLine(s));
+    break;
+  }
 
   case "set": {
     const [id, lvlRaw, ...note] = args;

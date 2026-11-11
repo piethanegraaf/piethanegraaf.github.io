@@ -8,7 +8,7 @@ description: "De vier Claude Code-hooks van de leerharnas, elk commando van skil
 
 | Event | Script | Wat het doet |
 |---|---|---|
-| `SessionStart` | `session-start.mjs` | Zet het register, open uitleg en doorstroomvoorstellen in de context, en vraagt naar je doel. Een open voorstel zie je ook zelf, in de melding bij de start. Open uitleg van eerdere sessies vervalt hier. Herhalingen noemt hij niet. |
+| `SessionStart` | `session-start.mjs` | Zet het register, open uitleg en doorstroomvoorstellen in de context, en vraagt naar je doel. Een open voorstel zie je ook zelf, in de melding bij de start. Open uitleg van eerdere sessies vervalt hier. Herhalingen noemt hij niet. Na een eerste export naar het dashboard meldt hij ook wat er sindsdien nieuw is (zie `since-export`). |
 | `UserPromptSubmit` | `prompt-gate.mjs` | Herkent de vaardigheid, bepaalt of er een nieuwe trede bij mag, logt opgeloste taken en vraagt om uitleg. Zet het niveau als jij een voorstel bevestigt met "ja, doorzetten". Tijdens een transfertaak ontgrendelt geen trede. Berichten van agents, notificaties en systeemherinneringen tellen niet als jouw woorden. |
 | `PreToolUse` | `guard.mjs` | Blokkeert schrijven, bouwen en testen van code op L1–L3, en elke wijziging aan het register, de state en de harnas zelf. Een shell-commando beoordeelt hij per los commando, op het programma dat draait. `eval`, `iex` en `Invoke-Expression` weigert hij altijd. |
 | `Stop` | `reflect-gate.mjs` | Verwerkt de markers in Claude's antwoord, controleert je uitleg, de transfertaak en het oordeel van de demotie-analist, en vraagt om het dagboek als je wilt stoppen. Haalt een uitleg een doorstroomcriterium, dan laat hij je meteen het voorstel zien. Na het dagboek vervalt wat nog open staat. |
@@ -18,6 +18,7 @@ description: "De vier Claude Code-hooks van de leerharnas, elk commando van skil
 | Commando | Wat |
 |---|---|
 | `list` / `status` | Overzicht; herhalingen (L4) die klaarstaan, open en overgeslagen uitleg, en signalen. Deze twee mag Claude ook draaien. |
+| `since-export` | Wat er nieuw is sinds de laatste export naar het dashboard, in één regel: taken, dagboeksessies en niveauwijzigingen. Niets als er nog geen export was. Het leest alleen, dus Claude mag het ook draaien: `/diary` sluit ermee af. Zie [Sinds de laatste export](progress-dashboard.md#sinds-de-laatste-export). |
 | `set <id> <L0..L4> "notitie"` | Niveau zetten. Omhoog kan pas als er geen taken meer op uitleg wachten. Een voorstel van de harnas bevestig je makkelijker in de chat: typ "ja, doorzetten" (eventueel met de id). |
 | `review <id> pass\|shaky\|fail` | De uitkomst van een herhaling zelf opgeven. Meestal niet nodig: de eerstvolgende taak van een L4-vaardigheid bepaalt hem. |
 | `add-micro <parent> <id> <niveau> "titel" "trefwoorden"` | Een microvaardigheid toevoegen. Met `autoDemote` maakt de demotie-analist er ook zelf een aan, op het niveau van de ouder min 1. |
@@ -113,7 +114,8 @@ En van de setup review van 11 november 2026 (het begin van een taak, reviews en 
   keywords.json      trefwoorden per vaardigheid
   private.json       termen die nooit in een export mogen (zelf aanmaken)
   diary/JJJJ-MM-DD.md
-  state/             events.jsonl, tests.json, session-*.json, overrides.json
+  state/             events.jsonl, tests.json, session-*.json, overrides.json,
+                     last-export.json (moment en totalen van de laatste dashboardexport)
 ```
 
 ## Scripts in deze repository
@@ -121,7 +123,7 @@ En van de setup review van 11 november 2026 (het begin van een taak, reviews en 
 | Script | Wat |
 |---|---|
 | `harness/install.mjs` | Installeren en bijwerken. Zie [Installeren](install.md). |
-| `harness/export.mjs` | Voortgang exporteren voor het dashboard, met privacyfilters. Zie [Configuratie en privacy](configuration.md). |
+| `harness/export.mjs` | Voortgang exporteren voor het dashboard, met privacyfilters. Schrijft ook `.learning/state/last-export.json` in de oefenmap. Zie [Configuratie en privacy](configuration.md). |
 | `harness/security-check.mjs` | De controle vóór alles wat online gaat. |
 | `harness/demo.mjs` | De demo-data voor het dashboard opnieuw maken. |
 | `node --test "test/*.test.mjs"` (in `harness/`) | De tests. |

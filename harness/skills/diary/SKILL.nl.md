@@ -78,3 +78,5 @@ Doel: zelfregulatie (plan → uitvoering → reflectie). De student schrijft de 
 4. **Omhoog: voorstel doen, niet uitvoeren.** Lijkt een doorstroomcriterium uit CLAUDE.md gehaald, noem dan het commando dat de student zelf kan draaien. Omlaag doet de harnas zelf als `autoDemote` aan staat: noem dan wat er gebeurde en hoe het terug kan. Staat het uit, noem dan ook bij een terugval het commando. Bijvoorbeeld:
    `! node .claude/hooks/skill.mjs set ood.encapsulatie L3 "5/5 gelukt, meestal trede 0-1"`.
    De beslissing ligt bij de student. Omhoog zetten kan pas als er geen taken van die vaardigheid meer op uitleg wachten.
+
+5. **Het dashboard.** Draai als laatste, na het schrijven van de entry, `node .claude/hooks/skill.mjs since-export` (mag). Geeft het een regel, geef die dan letterlijk door aan de student, als laatste regel van je bericht. Geeft het niets (er was nog geen export), zeg dan niets over het dashboard.

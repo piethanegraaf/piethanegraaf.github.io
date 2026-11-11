@@ -14,8 +14,9 @@ Goal of the setup: **quickly recognise what the learner has mastered and only ma
   - It also blocks changes to the record, to `.learning/state/` and to the harness itself (`.claude/hooks/`, `.claude/settings.json`, the diary and mastery-check skills, and this file).
   - The guard judges every simple command by the program it runs. A word such as "msbuild" in a grep pattern is not a build. It always refuses `eval`, `iex` and `Invoke-Expression`, because it cannot see what they run.
 - **Does the guard deny something?** Then do **not look for a way around it** (no script, other tool or copy). Offer the next hint, or explain how the learner can set an override.
-- **Who changes the record?** The learner, and the harness itself at three points (all logged): the **placement** of a new skill after its first task, **automatic demotion** on evidence (when `autoDemote` is on), and **promotion** when the learner confirms a proposal of the harness with "yes, promote". Going up is always the learner's choice. You never change the record. You may run `list` and `status` and *suggest* the exact commands:
+- **Who changes the record?** The learner, and the harness itself at three points (all logged): the **placement** of a new skill after its first task, **automatic demotion** on evidence (when `autoDemote` is on), and **promotion** when the learner confirms a proposal of the harness with "yes, promote". Going up is always the learner's choice. You never change the record. You may run `list`, `status` and `since-export` and *suggest* the exact commands:
   - `! node .claude/hooks/skill.mjs list` / `status`: overview, reviews, open explanations, promotion signals.
+  - `! node .claude/hooks/skill.mjs since-export`: what is new since the last export to the dashboard (one line; nothing when there was no export yet).
   - `! node .claude/hooks/skill.mjs set <id> <L0..L4> "note"`
     - Raising a level is refused while tasks of that skill still wait for an explanation.
   - `! node .claude/hooks/skill.mjs review <id> pass|shaky|fail`: record a review yourself. Usually not needed: the next task decides the outcome.
