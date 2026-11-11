@@ -66,4 +66,4 @@ Pre-register the trial, for example on OSF.
 
 ## Contact
 
-Are you planning a study, or do you want to discuss a design? [Open an issue](https://github.com/piethanegraaf/piethanegraaf.github.io/issues/new) on GitHub with "Research" in the title.
+Are you planning a study, or do you want to discuss a design? E-mail [hanegraafpiet@gmail.com](mailto:hanegraafpiet@gmail.com), or [open an issue](https://github.com/piethanegraaf/piethanegraaf.github.io/issues/new) on GitHub with "Research" in the title.

@@ -2,6 +2,8 @@
 
 > A free, open-source Claude Code setup for students and junior developers who want to keep learning to program. Hooks stop the AI from writing practice code, help comes in steps, and a dashboard tracks skill levels.
 
+Built by Piet Hanegraaf, an HBO-ICT student at Christelijke Hogeschool Ede, with help from Claude (Anthropic).
+
 The site is in English (under /en/) and Dutch (at the root). The code is AGPL-3.0-only; texts, docs, research and data are CC BY-NC 4.0.
 
 ## Docs

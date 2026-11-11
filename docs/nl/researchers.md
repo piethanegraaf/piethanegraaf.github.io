@@ -66,4 +66,4 @@ Registreer het experiment vooraf, bijvoorbeeld op OSF.
 
 ## Contact
 
-Plan je een studie, of wil je een ontwerp bespreken? [Open een issue](https://github.com/piethanegraaf/piethanegraaf.github.io/issues/new) op GitHub, met "Research" in de titel.
+Plan je een studie, of wil je een ontwerp bespreken? Mail naar [hanegraafpiet@gmail.com](mailto:hanegraafpiet@gmail.com), of [open een issue](https://github.com/piethanegraaf/piethanegraaf.github.io/issues/new) op GitHub, met "Research" in de titel.

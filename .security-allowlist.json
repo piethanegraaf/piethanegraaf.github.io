@@ -15,6 +15,11 @@
 
     { "rule": "file.image", "path": "docs/assets/images/dashboard-demo-*.png", "reason": "Besluit van Piet, 11-11-2026 (beslissing 10A in het SEO-plan): schermafdrukken van het dashboard met de demodata (verzonnen gegevens), in het Nederlands en Engels. Geen persoonlijke gegevens." },
 
+    { "rule": "privacy.email", "path": "docs/*/about.md", "match": "hanegraafpiet@gmail", "reason": "Besluit van Piet, 11-11-2026 (beslissing 6C in het SEO-plan): zijn adres uit de README's staat ook als contact op deze pagina." },
+    { "rule": "privacy.email", "path": "docs/*/for-educators.md", "match": "hanegraafpiet@gmail", "reason": "Besluit van Piet, 11-11-2026 (beslissing 6C in het SEO-plan): zijn adres uit de README's staat ook als contact op deze pagina." },
+    { "rule": "privacy.email", "path": "docs/*/for-juniors.md", "match": "hanegraafpiet@gmail", "reason": "Besluit van Piet, 11-11-2026 (beslissing 6C in het SEO-plan): zijn adres uit de README's staat ook als contact op deze pagina." },
+    { "rule": "privacy.email", "path": "docs/*/researchers.md", "match": "hanegraafpiet@gmail", "reason": "Besluit van Piet, 11-11-2026 (beslissing 6C in het SEO-plan): zijn adres uit de README's staat ook als contact op deze pagina." },
+
     { "rule": "copyright.quote", "path": "research/citation-checks/citation_check_learning_science.md", "reason": "Besluit 10-11-2026: korte letterlijke abstracts met bronvermelding, nodig om de citatiecheck na te kunnen gaan (citaatrecht)." },
     { "rule": "copyright.quote", "path": "docs/en/notes/labour_market.md", "reason": "Besluit 10-11-2026: regel 3 is de eigen labellegenda van de notitie; de andere zijn korte citaten met bronvermelding (citaatrecht)." }
   ],

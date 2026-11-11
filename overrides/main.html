@@ -61,6 +61,13 @@
 {% endblock %}
 
 {% block extrahead %}
+  {#- Google Scholar: only on pages with citation_title in the front matter (the English literature review). #}
+  {% if page.meta and page.meta.citation_title %}
+    <meta name="citation_title" content="{{ page.meta.citation_title }}">
+    <meta name="citation_author" content="{{ config.site_author }}">
+    <meta name="citation_publication_date" content="{{ page.meta.citation_date }}">
+    <meta name="citation_language" content="{{ config.theme.language }}">
+  {% endif %}
   {% if page and page.canonical_url %}
     {#- nl is the default language and lives at the root; every other language under /<code>/. #}
     {% set site_home = config.site_url if config.theme.language == "nl" else config.site_url ~ config.theme.language ~ "/" %}
@@ -85,7 +92,24 @@
     {% if page.meta and page.meta.git_revision_date_localized_raw_iso_date %}
       {% set _ = webpage.update({ "dateModified": page.meta.git_revision_date_localized_raw_iso_date }) %}
     {% endif %}
-    {% set graph = [website, webpage] %}
+    {#- The author of the site: defined in full here, on every page, with one @id (the English About page). #}
+    {% set person_id = config.site_url ~ "en/about/#person" %}
+    {% set person = {
+      "@type": "Person",
+      "@id": person_id,
+      "name": "Piet Hanegraaf",
+      "url": config.site_url ~ "en/about/",
+      "description": "HBO-ICT student at Christelijke Hogeschool Ede",
+      "sameAs": ["https://github.com/piethanegraaf", "https://www.linkedin.com/in/piet-hanegraaf/"],
+      "affiliation": { "@type": "CollegeOrUniversity", "name": "Christelijke Hogeschool Ede", "url": "https://www.che.nl/" },
+      "knowsAbout": ["Computing education", "Generative AI in education", "Object-oriented design", "Claude Code"]
+    } %}
+    {% set _ = website.update({ "publisher": { "@id": person_id } }) %}
+    {% set graph = [website, webpage, person] %}
+    {#- `jsonld: person` (the About pages): the page is about that person. #}
+    {% if page.meta and page.meta.jsonld == "person" %}
+      {% set _ = webpage.update({ "@type": "ProfilePage", "mainEntity": { "@id": person_id } }) %}
+    {% endif %}
     {#- `jsonld: software` in the front matter (home and install): the page is about the harness itself. #}
     {% if page.meta and page.meta.jsonld == "software" %}
       {% set software = {
@@ -99,7 +123,8 @@
         "runtimePlatform": "Node.js",
         "license": "https://spdx.org/licenses/AGPL-3.0-only.html",
         "isAccessibleForFree": true,
-        "inLanguage": config.theme.language
+        "inLanguage": config.theme.language,
+        "maintainer": { "@id": person_id }
       } %}
       {% set _ = graph.append(software) %}
       {% set _ = webpage.update({ "mainEntity": { "@id": site_home ~ "#software" } }) %}

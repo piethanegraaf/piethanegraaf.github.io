@@ -4,6 +4,8 @@ description: "AI die tijdens het oefenen voor je denkt, verlaagt wat je daarna z
 ---
 # Leren programmeren (en OOD) met AI: literatuuronderzoek, risicoanalyse en een Claude Code-opzet die het leren beschermt
 
+**Piet Hanegraaf, met Claude (Anthropic)** · [Over de maker](about.md) · [Zo citeer je dit](#zo-citeer-je-dit-onderzoek)
+
 !!! warning "Machinevertaling"
     Dit is een machinevertaling door Claude (Anthropic) van het [Engelse origineel](../en/research/). Een mens heeft de vertaling niet nagekeken. Bij twijfel geldt de Engelse tekst.
 
@@ -1362,6 +1364,29 @@ De controles hierboven zijn voor één lerende. Of de harnas in het algemeen wer
 - **Praktijkbronnen tonen zorg, geen bewijs.** De talks, interviews, nieuwsartikelen en blogs in §2.12 laten zien dat de zorg breed leeft. Ze laten niet zien dat die zorg terecht is.
 - **Drempels voor beheersing zijn heuristieken.** De getallen (85%, 3 successen over 2 dagen, de intervallen) komen uit de literatuur, maar zijn niet gevalideerd voor deze opzet. Pas ze aan met je eigen evaluatiegegevens (§6).
 - **Vaardigheden herkennen in prompts lukt maar bij benadering.** Koppelen op trefwoorden kiest soms de verkeerde vaardigheid. Laat de AI een vaardigheid voorstellen en bevestig die, of noem de vaardigheid zelf (`/learn ood.strategy`).
+
+---
+
+## Zo citeer je dit onderzoek
+
+Geschreven door Piet Hanegraaf met Claude (Anthropic); zie de [AI-verklaring](ai-statement.md). Citeer het Engelse origineel: deze Nederlandse versie is een machinevertaling. Noem de versie en de datum waarop je het las, want het onderzoek wordt bijgewerkt.
+
+**APA**
+
+> Hanegraaf, P. (2026). *Learning to code (and OOD) with AI: Literature review, risk assessment and a learning-preserving Claude Code setup* (version of 11 November 2026; written with Claude, Anthropic). https://piethanegraaf.github.io/en/research/
+
+**BibTeX**
+
+```bibtex
+@misc{hanegraaf2026learning,
+  author       = {Hanegraaf, Piet},
+  title        = {Learning to Code (and {OOD}) with {AI}: Literature Review, Risk Assessment and a Learning-Preserving {Claude Code} Setup},
+  year         = {2026},
+  month        = nov,
+  howpublished = {\url{https://piethanegraaf.github.io/en/research/}},
+  note         = {Version of 11 November 2026. Written with Claude (Anthropic).}
+}
+```
 
 ---
 

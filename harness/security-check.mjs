@@ -46,7 +46,7 @@ const globRe = (g) => new RegExp("^" + g.split("**").map((p) => p.split("*").map
 // ---------- Rules on file names ----------
 const ALLOWED_EXT = new Set(["md", "mjs", "js", "cjs", "json", "yml", "yaml", "html", "css", "txt", "svg"]);
 const IMAGE_EXT = new Set(["png", "jpg", "jpeg", "gif", "webp", "ico", "avif"]);
-const ALLOWED_NAMES = /^(LICENSE(-docs)?|\.gitignore|\.gitkeep|\.gitattributes|CNAME|\.nojekyll)$/;
+const ALLOWED_NAMES = /^(LICENSE(-docs)?|CITATION\.cff|\.gitignore|\.gitkeep|\.gitattributes|CNAME|\.nojekyll)$/;
 // XML only as a sitemap (overrides/sitemap.xml, site-src/sitemap-tools.xml), by name, like requirements*.txt.
 const SITEMAP = /^sitemap[\w-]*\.xml$/;
 
