@@ -8,15 +8,17 @@
       loading: "Laden…", loadError: "De data kon niet geladen worden ({file}). Open het dashboard via een webserver, bijvoorbeeld: python -m http.server",
       fallback: "Er is nog geen echte data (data/progress.json). Je ziet de demo met verzonnen data.",
       ownLanguage: "De eigen teksten van de student (uitleg, dagboek en eigen notities en microvaardigheden) staan in de taal waarin ze geschreven zijn: {language}.", langNames: { nl: "Nederlands", en: "Engels" },
-      translated: "De eigen teksten van de student (uitleg, dagboek, reflecties, eigen notities en microvaardigheden) zijn door Claude vertaald uit het {language}. Een vertaling is onderstreept met puntjes: wijs hem aan of ga er met Tab naartoe voor het origineel.",
-      original: "Origineel ({language}), vertaald door Claude",
+      translated: "De eigen teksten van de student (uitleg, dagboek, reflecties, eigen notities en microvaardigheden) zijn door Claude vertaald uit het {language}.",
+      originalShown: "Je ziet de eigen teksten van de student in het origineel: {language}.",
+      showOriginal: "Toon origineel", showTranslation: "Toon vertaling",
       demoNote: "Demo: alle data is verzonnen. Zo ziet het dashboard eruit na een paar weken oefenen.",
       subtitle: "{course} · stand van {date}", subtitleNoCourse: "Stand van {date}", atTime: "{date}, {time}",
       filter: "Vaardigheid", all: "Alle vaardigheden", asof: "Alle cijfers gelden op het moment van de export: {date}.",
       kSolo: "Zelfstandig gelukt", kSoloSub: "{ok} van {n} uitgelegde taken, trede ≤ 2", kPending: "Wacht op uitleg", kPendingSub: "{skipped} overgeslagen · uitleg hoort direct na het groen worden",
       kReviews: "Herhalingen (L4)", kReviewsSub: "klaar; je doet ze zelf als ze in je werk langskomen", kExam: "Tot de toets", kExamSub: "{date}", kNoExam: "geen datum",
       days: "{n} dagen", day: "1 dag", none: "–",
-      levels: "Niveaus", levelsHint: "Hoeveel vaardigheden (en microvaardigheden) op elk niveau staan. Bij een open plaatsing probeer je eerst zelf, met de hintladder van L2; de eerste taak bepaalt het niveau. Wijs een niveau aan voor uitleg.", skillsN: "{n} vaardigheden",
+      levels: "Niveaus", levelsHint: "Hoeveel vaardigheden (en microvaardigheden) op elk niveau staan. Bij een open plaatsing probeer je eerst zelf, met de hintladder van L2; de eerste taak bepaalt het niveau. Wijs een niveau in de legenda aan voor uitleg.", skillsN: "{n} vaardigheden",
+      levelMore: "Waarom, en het bewijs: zie 'Wat betekenen de niveaus?' hieronder.",
       placementGroup: "Start · plaatsing open", openChip: "Plaatsing open · L2-ladder",
       // What each level means, why, the evidence (strength as in the literature review, §2.11) and the step to the next level.
       levelInfo: {
@@ -81,15 +83,17 @@
       loading: "Loading…", loadError: "The data could not be loaded ({file}). Open the dashboard through a web server, for example: python -m http.server",
       fallback: "There is no real data yet (data/progress.json). You see the demo with made-up data.",
       ownLanguage: "The learner's own texts (explanations, the diary, own notes and microskills) are shown in the language they were written in: {language}.", langNames: { nl: "Dutch", en: "English" },
-      translated: "The learner's own texts (explanations, the diary, reflections, own notes and microskills) were translated from {language} by Claude. A translation has a dotted underline: point at it, or Tab to it, to see the original.",
-      original: "Original ({language}), translated by Claude",
+      translated: "The learner's own texts (explanations, the diary, reflections, own notes and microskills) were translated from {language} by Claude.",
+      originalShown: "You see the learner's own texts in the original: {language}.",
+      showOriginal: "Show original", showTranslation: "Show translation",
       demoNote: "Demo: all data is made up. This is what the dashboard looks like after a few weeks of practice.",
       subtitle: "{course} · as of {date}", subtitleNoCourse: "As of {date}", atTime: "{date}, {time}",
       filter: "Skill", all: "All skills", asof: "All figures are as of the moment of the export: {date}.",
       kSolo: "Solved independently", kSoloSub: "{ok} of {n} explained tasks, rung ≤ 2", kPending: "Waiting for an explanation", kPendingSub: "{skipped} skipped · the explanation belongs right after the green",
       kReviews: "Reviews (L4)", kReviewsSub: "ready; you do them yourself when they come by in your work", kExam: "Until the exam", kExamSub: "{date}", kNoExam: "no date",
       days: "{n} days", day: "1 day", none: "–",
-      levels: "Levels", levelsHint: "How many skills (and microskills) are at each level. With an open placement you try first, with the L2 hint ladder; the first task sets the level. Point at a level for an explanation.", skillsN: "{n} skills",
+      levels: "Levels", levelsHint: "How many skills (and microskills) are at each level. With an open placement you try first, with the L2 hint ladder; the first task sets the level. Point at a level in the legend for an explanation.", skillsN: "{n} skills",
+      levelMore: "Why, and the evidence: see 'What do the levels mean?' below.",
       placementGroup: "Start · placement open", openChip: "Placement open · L2 ladder",
       levelInfo: {
         L0: { what: "Claude demonstrates with a worked example in steps; you explain it and predict the output.",
@@ -159,6 +163,7 @@
   let lang = ["nl", "en"].includes(params.get("lang")) ? params.get("lang") : (navigator.language || "nl").toLowerCase().startsWith("nl") ? "nl" : "en";
   let source = params.get("data") === "demo" ? "demo" : "progress";
   let filter = "all";
+  let showOriginal = false; // the switch at the top: the learner's own texts untranslated
   let data = null;
   let fellBack = false;
   const tableOpen = new Set();
@@ -255,27 +260,35 @@
   const skillById = () => new Map(data.skills.map((s) => [s.id, s]));
   // Texts in the language of the page where the export has both (titles from the map, fixed notes, signals).
   // The learner's own texts are in the language of the record; the export adds Claude's translations
-  // (data.translations[lang][text]). tx() marks a translation and shows the original on hover and focus;
-  // txs() gives it as a plain string (option labels). An older export without translations shows the original.
+  // (data.translations[lang][text]). One switch at the top shows all originals instead, so a single text
+  // needs no marker of its own. tx() gives a text for the page: the translation, or the original with its
+  // lang attribute, with `code` in backticks as <code>. txs() gives a plain string (option labels).
+  // An older export without translations shows the original.
   const langName = (l) => t("langNames")?.[l] ?? l;
+  const hasTranslations = () => !!data?.language && data.language !== lang && Object.keys(data.translations?.[lang] ?? {}).length > 0;
   const trOf = (text) => {
-    if (typeof text !== "string" || !data?.language || lang === data.language) return null;
+    if (showOriginal || typeof text !== "string" || !data?.language || lang === data.language) return null;
     const tr = data.translations?.[lang]?.[text];
     return typeof tr === "string" && tr && tr !== text ? tr : null;
   };
   const txs = (text) => trOf(text) ?? text;
+  const rich = (s) => String(s).split(/`([^`\n]+)`/).map((part, i) => (i % 2 ? el("code", { text: part }) : part)).filter((p) => p !== "");
   const tx = (text) => {
+    if (text === null || text === undefined) return null;
     const tr = trOf(text);
-    if (!tr) return text ?? null;
-    return withTip(el("span", { class: "tr", tabindex: "0" }, tr), t("original", { language: langName(data.language) }), text);
+    const shown = String(tr ?? text);
+    const original = !tr && !!data?.language && data.language !== lang;
+    if (!original && !shown.includes("`")) return shown;
+    return el("span", { lang: original ? data.language : null }, rich(shown));
   };
   const joinNodes = (parts, sep) => parts.flatMap((p, i) => (i ? [sep, p] : [p]));
-  // What a level means ("open" = placement open): tooltip lines, and a label people can point at or Tab to.
+  // What a level means ("open" = placement open). The tooltip (legend and level bar) stays short: what the
+  // level is and the step to the next one. Why and the evidence are in the card "What do the levels mean?".
   const levelInfo = (l) => UI[lang].levelInfo[l] ?? null;
   const evidenceText = ([sources, strength]) => `${t("evidence")}: ${sources} · ${t(`strength.${strength}`)}`;
   const levelRows = (l) => {
     const i = levelInfo(l);
-    return i ? [{ text: i.what }, { text: `${t("why")}: ${i.why}` }, ...i.src.map((s) => ({ text: evidenceText(s), class: "tt-src" })), { text: i.next, class: "tt-next" }] : [];
+    return i ? [{ text: i.what }, { text: i.next, class: "tt-next" }, { text: t("levelMore"), class: "tt-src" }] : [];
   };
   const levelTitle = (l) => (l === "open" ? t("placementGroup") : `${l} ${levelName(l)}`);
   const withLevelTip = (node, l, figures = []) => {
@@ -447,8 +460,8 @@
         meter.append(track, el("div", { class: "num", text: st.n ? `${t("solved", { ok: st.ok, n: st.n })} (${pct(st.ok / st.n)})` : t("noTasks") }));
         const row = el("div", { class: "skill-row" },
           el("div", { class: "skill-name" }, el("div", { class: "title" }, s.titles?.[lang] ?? tx(s.title)), el("div", { class: "id", text: s.id })),
-          s.placement === "pending" ? withLevelTip(el("span", { class: "chip open", tabindex: "0", text: t("openChip") }), "open")
-            : withLevelTip(el("span", { class: `chip lv${LEVELS.indexOf(s.level)}`, tabindex: "0", text: `${s.level} ${levelName(s.level)}` }), s.level),
+          // No tooltip here: the same five explanations 23 times over were noise and a Tab stop each. The legend explains.
+          s.placement === "pending" ? el("span", { class: "chip open", text: t("openChip") }) : el("span", { class: `chip lv${LEVELS.indexOf(s.level)}`, text: `${s.level} ${levelName(s.level)}` }),
           meter,
           el("div", { class: "skill-meta" }, st.pending ? statusBadge("warning", t("open", { n: st.pending })) : null,
             st.skipped ? el("span", { class: "muted", text: t("skippedN", { n: st.skipped }) }) : null,
@@ -614,9 +627,14 @@
     const notes = [];
     if (fellBack) notes.push(el("p", { class: "notice", text: t("fallback") }));
     if (!fellBack && source !== "demo" && data.language && data.language !== lang) {
-      // An export with translations (export.mjs adds them) says so; an older one is in one language.
-      const translated = Object.keys(data.translations?.[lang] ?? {}).length > 0;
-      notes.push(el("p", { class: "notice", text: t(translated ? "translated" : "ownLanguage", { language: langName(data.language) }) }));
+      // An export with translations (export.mjs adds them) says so, with one switch to the originals;
+      // an older one is in one language.
+      if (hasTranslations()) {
+        notes.push(el("div", { class: "notice with-action" },
+          el("span", { text: t(showOriginal ? "originalShown" : "translated", { language: langName(data.language) }) }),
+          el("button", { type: "button", class: "toggle-table", id: "orig-toggle", text: t(showOriginal ? "showTranslation" : "showOriginal"),
+            onclick: () => { showOriginal = !showOriginal; render(); $("orig-toggle")?.focus(); } })));
+      } else notes.push(el("p", { class: "notice", text: t("ownLanguage", { language: langName(data.language) }) }));
     }
     else if (source === "demo") notes.push(el("p", { class: "notice", text: t("demoNote") }));
     if (filter !== "all" && !mains().some((s) => s.id === filter)) filter = "all";
@@ -665,5 +683,7 @@
     try { localStorage.setItem("leerharnas-theme", document.documentElement.dataset.theme); } catch { /* no storage */ }
   });
   window.addEventListener("scroll", hideTip, { passive: true });
+  // Esc closes a tooltip (WCAG 1.4.13: content on hover or focus can be dismissed).
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !tip.hidden) hideTip(); });
   load();
 })();
