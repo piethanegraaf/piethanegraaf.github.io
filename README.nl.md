@@ -2,7 +2,9 @@
 
 *English: [README.md](README.md)*
 
-Een leerharnas voor [Claude Code](https://docs.claude.com/en/docs/claude-code/overview) die zorgt dat je **zelf** leert programmeren, ook als er een AI meekijkt. De harnas weet per vaardigheid hoe ver je bent en past de hulp van de AI daarop aan: hints in plaats van oplossingen zolang je leert, en korte herhalingen als je iets beheerst.
+Een leerharnas voor [Claude Code](https://docs.claude.com/en/docs/claude-code/overview) die zorgt dat je **zelf** leert programmeren, ook als er een AI meekijkt. Hij is er voor studenten, en voor junior developers op hun werk die niet junior willen blijven omdat de AI al het werk doet.
+
+**Het idee:** bouw een vaardigheid eerst zelf op (L0–L3, hints in plaats van oplossingen), besteed die daarna uit aan de AI (L4), en onderhoud die met korte herhalingen in je eigen werk. Elk onderdeel volgt een principe met empirische steun; of de combinatie werkt, is nog niet getest. Onderzoekers zijn uitgenodigd om dat te toetsen in een gerandomiseerd experiment: zie [Voor onderzoekers](https://piethanegraaf.github.io/researchers/).
 
 **Site:** https://piethanegraaf.github.io/ · **Dashboard:** https://piethanegraaf.github.io/dashboard/ · **C# OOP-cheat sheet:** https://piethanegraaf.github.io/cheatsheet/
 
