@@ -5,7 +5,7 @@
 Het [dashboard](/dashboard/) laat de voortgang per vaardigheid en microvaardigheid zien:
 
 - je **niveau** en de geschiedenis daarvan;
-- wat elk **niveau betekent**: wijs een niveau aan in de balk, de legenda of bij een vaardigheid (of ga er met Tab naartoe) voor wat het inhoudt, waarom, het bewijs en de stap naar het volgende niveau. Alles bij elkaar staat onder *Wat betekenen de niveaus?*, met de route van de start (plaatsing open) naar L4: de criteria per stap, en hoe je omhoog en omlaag gaat;
+- wat elk **niveau betekent**: wijs een niveau aan in de legenda of de balk (of ga er met Tab naartoe) voor wat het inhoudt en de stap naar het volgende niveau. Esc sluit de uitleg. Het waarom, het bewijs en de route van de start (plaatsing open) naar L4 staan onder *Wat betekenen de niveaus?*: de criteria per stap, en hoe je omhoog en omlaag gaat;
 - hoeveel taken **gelukt** zijn met hooguit trede 2, over de laatste 10 uitgelegde taken, met het doel van 85%;
 - per taak: de trede, de bron (test, zelf afgemeld, chat), je **uitleg**, en wanneer die werd **afgewezen** of **gecorrigeerd**;
 - de **herhalingen** (alleen L4, Fibonacci), neutraal: wanneer de volgende klaarstaat, en wanneer je de vaardigheid **laatst** in je werk zag. Niets is "te laat": een herhaling wacht tot de vaardigheid langskomt;
@@ -33,7 +33,7 @@ Je logboek staat in één taal (`settings.language`), en het dashboard is Nederl
 
 - **Claude vertaalt, niet de export.** De export heeft geen netwerktoegang. Claude vertaalt getrouw: dezelfde betekenis en toon, niets verbeterd of toegevoegd. Code, testnamen en vaardigheids-id's blijven zoals ze zijn.
 - **Alleen nieuwe teksten.** De export hergebruikt de vertalingen van de vorige export. Verandert een tekst, dan wordt hij opnieuw gevraagd. Verdwijnt een tekst, dan verdwijnt zijn vertaling ook.
-- **Gemarkeerd op de pagina.** Een vertaling is onderstreept met puntjes. Wijs hem aan, of ga er met Tab naartoe, en je ziet het origineel.
+- **Eén knop voor het origineel.** Bovenaan staat dat de teksten vertaald zijn. Met de knop *Toon origineel* zie je alle teksten van de student in de taal waarin ze geschreven zijn, en met *Toon vertaling* weer andersom.
 - **Dezelfde privacyfilters.** De vertalingen gaan door dezelfde filters als de originelen, ook `.learning/private.json`.
 - **Gecontroleerd in de build.** De build van de site draait `node harness/export.mjs --check site-src/dashboard/data/progress.json`. Ontbreekt er een vertaling, dan stopt de build. Zo toont het dashboard nooit de helft in de andere taal. Met `--allow-untranslated` schrijft de export de data toch, bijvoorbeeld om lokaal te kijken, maar de build weigert hem dan nog steeds.
 

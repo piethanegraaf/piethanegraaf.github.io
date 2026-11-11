@@ -115,8 +115,12 @@ main:focus { outline: none; }
 .skills { list-style: none; margin: 0; padding: 0; }
 .skill { border-top: 1px solid var(--grid); }
 .skill:first-child { border-top: 0; }
-.skill-row { display: grid; grid-template-columns: minmax(0, 2.2fr) auto minmax(110px, 1.2fr) minmax(0, 1fr) auto; gap: 6px 14px; align-items: center; padding: 10px 0; }
-.skill.micro .skill-row { padding-left: 18px; }
+/* Fixed widths for the chip and the button, and the microskill indent on the name only: every row then has
+   the same columns, so the chips and the meters line up from row to row. */
+.skill-row { display: grid; grid-template-columns: minmax(0, 2.2fr) var(--chip-col) minmax(110px, 1.2fr) minmax(0, 1fr) 84px; gap: 6px 14px; align-items: center; padding: 10px 0; --chip-col: 184px; }
+.skill-row .chip { justify-self: start; }
+.skill-row .expand { justify-self: end; }
+.skill.micro .skill-name { padding-left: 18px; }
 .skill-name { min-width: 0; }
 .skill-name .id { font-size: 12px; color: var(--muted); font-family: var(--mono); overflow-wrap: anywhere; }
 .skill-name .title { font-size: 14px; overflow-wrap: anywhere; }
@@ -209,8 +213,11 @@ td.text { min-width: 220px; }
   .route .line { min-width: 0; min-height: 12px; border-top: 0; border-left: 1px solid var(--axis); }
   .route .line::after { right: auto; top: auto; bottom: -1px; left: -4px; border-left: 3.5px solid transparent; border-right: 3.5px solid transparent; border-top: 6px solid var(--axis); border-bottom: 0; }
 }
-/* A translation by Claude: the original shows on hover and keyboard focus. */
-.tr { text-decoration: underline dotted var(--muted); text-decoration-thickness: 1px; text-underline-offset: 3px; cursor: help; }
+/* The notice about the translation, with the switch to the originals. */
+.notice.with-action { display: flex; gap: 8px 16px; align-items: center; justify-content: space-between; flex-wrap: wrap; }
+.notice.with-action button { flex: none; white-space: nowrap; }
+/* `code` in the learner's texts and the diary facts. */
+#content code { font-family: var(--mono); font-variant-ligatures: none; font-size: 0.9em; padding: 0 3px; border-radius: 3px; background: var(--grid); overflow-wrap: anywhere; }
 .ln.r-solo { background: var(--r-solo); } .ln.r-hint { background: var(--r-hint); } .ln.r-help { background: var(--r-help); } .ln.pending { background: var(--pending); }
 .ln.skipped { background: repeating-linear-gradient(90deg, var(--pending) 0 3px, transparent 3px 5px); }
 

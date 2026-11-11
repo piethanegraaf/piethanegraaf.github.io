@@ -5,7 +5,7 @@
 The [dashboard](/dashboard/?lang=en) shows progress per skill and microskill:
 
 - your **level** and its history;
-- what each **level means**: point at a level in the bar, the legend or a skill (or Tab to it) for what it is, why, the evidence and the step to the next level. All of it together is under *What do the levels mean?*, with the route from the start (placement open) to L4: the criteria per step, and how you go up and down;
+- what each **level means**: point at a level in the legend or the bar (or Tab to it) for what it is and the step to the next level. Esc closes the explanation. Why, the evidence and the route from the start (placement open) to L4 are under *What do the levels mean?*: the criteria per step, and how you go up and down;
 - how many tasks were **solved** with at most rung 2, over the last 10 explained tasks, against the 85% target;
 - per task: the rung, the source (test, logged yourself, chat), your **explanation**, and when it was **rejected** or **corrected**;
 - the **reviews** (only L4, Fibonacci), neutral: when the next one is ready, and when you **last** saw the skill in your work. Nothing is "overdue": a review waits until the skill comes by;
@@ -33,7 +33,7 @@ Your record is in one language (`settings.language`), and the dashboard is in Du
 
 - **Claude translates, not the export.** The export has no network access. Claude translates faithfully: the same meaning and tone, nothing corrected or added. Code, test names and skill ids stay as they are.
 - **Only new texts.** The export reuses the translations of the previous export. A text that changes is asked for again, and a text that is gone takes its translation with it.
-- **Marked on the page.** A translation has a dotted underline. Point at it, or go to it with Tab, to see the original.
+- **One button for the original.** A notice at the top says the texts are translated. *Show original* shows all of the learner's texts in the language they were written in, and *Show translation* switches back.
 - **The same privacy filters.** The translations pass the same filters as the originals, including `.learning/private.json`.
 - **Checked in the build.** The build of the site runs `node harness/export.mjs --check site-src/dashboard/data/progress.json`. A missing translation stops the build, so the dashboard never shows half of it in the other language. With `--allow-untranslated` the export writes the data anyway, for example to have a look locally, but the build still refuses it.
 
