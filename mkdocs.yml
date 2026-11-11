@@ -161,13 +161,17 @@ markdown_extensions:
 # (it is about 1 MB). Because window.mermaid then exists, Material does not load it from its
 # CDN (unpkg).
 extra_css:
-  - assets/stylesheets/risk-matrix.css
   - assets/stylesheets/a11y.css
 
+# defer: these scripts do not block rendering, and deferred scripts still run in this order, so
+# goatcounter.js (the endpoint) runs before count.js.
 extra_javascript:
-  - assets/javascripts/cheatsheet-redirect.js
-  - assets/javascripts/a11y.js
+  - path: assets/javascripts/cheatsheet-redirect.js
+    defer: true
+  - path: assets/javascripts/a11y.js
+    defer: true
   # GoatCounter (visits, no cookies): the endpoint first, then count.js, self-hosted like mermaid.
-  - assets/javascripts/goatcounter.js
+  - path: assets/javascripts/goatcounter.js
+    defer: true
   - path: assets/javascripts/vendor/count.js
-    async: true
+    defer: true

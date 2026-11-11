@@ -59,6 +59,15 @@ jobs:
       - name: Build docs
         run: mkdocs build --strict
 
+      # The privacy plugin rewrites the font URLs to local copies. A download that failed can leave a
+      # broken URL behind (seen locally with a stale cache), so the build stops if one is left.
+      - name: Check the self-hosted fonts
+        run: |
+          if grep -rl --include='*.css' 'https:/' site/assets/external; then
+            echo "::error::a stylesheet in assets/external still points to another site"
+            exit 1
+          fi
+
       - name: Add mermaid (self-hosted)
         run: |
           tgz="$RUNNER_TEMP/mermaid.tgz"
