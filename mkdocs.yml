@@ -80,6 +80,7 @@ plugins:
                 - Configuration and privacy: configuration.md
                 - Updating the dashboard: progress-dashboard.md
                 - Reference: reference.md
+                - For junior developers: for-juniors.md
                 - For educators: for-educators.md
             - Tools:
                 - Dashboard: /dashboard/?lang=en
@@ -105,6 +106,7 @@ nav:
       - Configuratie en privacy: configuration.md
       - Dashboard bijwerken: progress-dashboard.md
       - Naslag: reference.md
+      - Voor junior developers: for-juniors.md
       - Voor docenten: for-educators.md
   - Gebruiken:
       - Dashboard: /dashboard/

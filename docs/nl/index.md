@@ -61,7 +61,7 @@ Elk onderdeel volgt een principe met empirische steun uit de leerwetenschap en u
 ## Voor wie
 
 - **Studenten** die met Claude Code willen oefenen zonder dat de AI het leren overneemt. De meegeleverde kaart is voor **Object-Oriented Design in C#** (HBO-ICT).
-- **Junior developers op hun werk** die willen blijven groeien terwijl ze met een AI-agent werken. Er is een voorbeeldkaart voor C#/.NET (`junior-dotnet`): code die bij geen vaardigheid hoort, mag de AI schrijven, en alleen wat je leert, is beschermd. Je past die aan op je eigen codebase (zie [Een eigen vak](configuration.md#een-eigen-vak) en [In de repository van een team](install.md#in-de-repository-van-een-team)). Taken worden voorlopig alleen met `dotnet test` automatisch vastgelegd vanuit tests; anders meld je ze zelf af.
+- **Junior developers op hun werk** die willen blijven groeien terwijl ze met een AI-agent werken. Er is een voorbeeldkaart voor C#/.NET (`junior-dotnet`): code die bij geen vaardigheid hoort, mag de AI schrijven, en alleen wat je leert, is beschermd. Je past die aan op je eigen codebase (zie [Een eigen vak](configuration.md#een-eigen-vak) en [In de repository van een team](install.md#in-de-repository-van-een-team)). Taken worden voorlopig alleen met `dotnet test` automatisch vastgelegd vanuit tests; anders meld je ze zelf af. Zie [Voor junior developers](for-juniors.md).
 - **Docenten en vakcoördinatoren** die hem in een vak willen gebruiken: zie [Voor docenten](for-educators.md).
 - **Onderzoekers** die de harnas willen toetsen: zie [Voor onderzoekers](researchers.md).
 
