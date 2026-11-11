@@ -1,0 +1,13 @@
+{
+  "_uitleg": "Trefwoorden om een prompt aan een vaardigheid te koppelen (stukjes tekst, geen reguliere expressies). Mag je vrij aanpassen; expliciet kan ook: #debug.diagnose in je prompt. / Keywords that link a prompt to a skill (plain text, not regular expressions). Dutch and English both work; you may edit them freely.",
+  "debug.diagnose": ["bug", "debug", "stack trace", "stacktrace", "exception", "nullreference", "breakpoint", "reproduce", "reproduceer", "werkt niet", "doesn't work", "does not work", "crash", "foutmelding", "error message"],
+  "read.codebase": ["codebase", "waar staat", "where is", "hoe werkt", "how does", "dependency injection", "program.cs", "middleware", "call chain", "aanroepketen"],
+  "test.unit": ["unit test", "unittest", "xunit", "nunit", "mstest", "[fact]", "[theory]", "[test]", "assert", "mock", "moq", "nsubstitute", "test double", "grenswaarde", "boundary"],
+  "refactor.safe": ["refactor", "legacy", "code smell", "extract method", "duplicat", "opschonen", "clean up", "characterization", "karakterisering"],
+  "web.api": ["controller", "endpoint", "minimal api", "route", "[http", "statuscode", "status code", "model binding", "dto", "asp.net"],
+  "data.ef-core": ["ef core", "entity framework", "dbcontext", "linq", "migration", "migratie", "query", "sql", "include(", "n+1", "asnotracking"],
+  "cs.async": ["async", "await", "task<", "cancellationtoken", "deadlock", ".result", "configureawait"],
+  "security.basics": ["security", "beveilig", "injection", "injectie", "xss", "csrf", "secret", "api key", "password", "wachtwoord", "authoriz", "authentic"],
+  "review.ai-code": ["code review", "review this", "review deze", "pull request", "nakijken", "gegenereerde code", "generated code", "ai-code"],
+  "spec.task": ["specificatie", "specification", "acceptatiecriteria", "acceptance criteria", "user story", "ticket", "requirements"]
+}

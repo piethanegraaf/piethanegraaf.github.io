@@ -15,7 +15,7 @@ node harness/install.mjs ../mijn-oefenmap --lang nl --course "OOD" --exam 2027-0
 
 - Zonder `--yes` laat het script alleen zien wat het zou doen. Draai het daarna opnieuw met `--yes`.
 - `--lang nl|en` kiest de taal van de meldingen, de regels en de skills.
-- `--map ood` is de kaart met vaardigheden (nu alleen `ood`).
+- `--map` is de kaart met vaardigheden: `ood` (Object-Oriented Design in C#, de standaard) of `junior-dotnet` (een voorbeeldkaart voor een junior developer op het werk, in C#/.NET). Zie [Een eigen vak](configuration.md#een-eigen-vak).
 - `--course` en `--exam` zijn optioneel. Je kunt ze later zetten met `skill.mjs setting`.
 
 Wat de installer aanmaakt:
@@ -42,6 +42,29 @@ node harness/install.mjs ../mijn-oefenmap --update --yes
 `--update` vervangt alleen de bestanden van de harnas. Je data in `.learning/` en je eigen `CLAUDE.md` blijven staan. Heb je een hook zelf aangepast, dan zegt de installer dat ("lokaal aangepast") en bewaart hij je versie in de backupmap.
 
 Een oudere installatie zonder manifest (met absolute paden in `settings.json`) wordt ook herkend en omgezet.
+
+## In de repository van een team
+
+Op het werk installeer je de harnas in een repository die je met je team deelt. De harnas is jouw eigen zelfbindingsmechanisme, dus houd hem buiten de commits van het team:
+
+- **Nieuwe bestanden:** zet ze in `.git/info/exclude`. Dat geldt alleen voor je eigen kopie:
+
+    ```text
+    .claude/hooks/
+    .claude/skills/diary/
+    .claude/skills/mastery-check/
+    .claude/agents/demotie-analist.md
+    .claude/leerharnas.md
+    .claude/leerharnas.json
+    .claude/leerharnas-backup/
+    .learning/
+    voorbeelden/
+    ```
+
+- **Bestanden die het team al heeft:** de installer breidt `.gitignore` uit, zet een regel in `CLAUDE.md` en voegt de hooks samen in `.claude/settings.json`. Commit die wijzigingen niet zonder afspraak met je team.
+- **Geen bedrijfsgegevens online:** controleer de diff van de export voordat je een dashboard publiceert (zie [Configuratie en privacy](configuration.md#privacy)), en zet je werkgever en collega's in `.learning/private.json`.
+
+Een installatie die alleen naar lokale bestanden schrijft, bestaat nog niet.
 
 ## Voordat je gaat oefenen
 

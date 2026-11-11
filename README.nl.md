@@ -2,7 +2,9 @@
 
 *English: [README.md](README.md)*
 
-Een leerharnas voor [Claude Code](https://docs.claude.com/en/docs/claude-code/overview) die zorgt dat je **zelf** leert programmeren, ook als er een AI meekijkt. De harnas weet per vaardigheid hoe ver je bent en past de hulp van de AI daarop aan: hints in plaats van oplossingen zolang je leert, en korte herhalingen als je iets beheerst.
+Een leerharnas voor [Claude Code](https://docs.claude.com/en/docs/claude-code/overview) die zorgt dat je **zelf** leert programmeren, ook als er een AI meekijkt. Hij is er voor studenten, en voor junior developers op hun werk die niet junior willen blijven omdat de AI al het werk doet.
+
+**Het idee:** bouw een vaardigheid eerst zelf op (L0–L3, hints in plaats van oplossingen), besteed die daarna uit aan de AI (L4), en onderhoud die met korte herhalingen in je eigen werk. Elk onderdeel volgt een principe met empirische steun; of de combinatie werkt, is nog niet getest. Onderzoekers zijn uitgenodigd om dat te toetsen in een gerandomiseerd experiment: zie [Voor onderzoekers](https://piethanegraaf.github.io/researchers/).
 
 **Site:** https://piethanegraaf.github.io/ · **Dashboard:** https://piethanegraaf.github.io/dashboard/ · **C# OOP-cheat sheet:** https://piethanegraaf.github.io/cheatsheet/
 
@@ -13,6 +15,7 @@ Een leerharnas voor [Claude Code](https://docs.claude.com/en/docs/claude-code/ov
 - **Een taak telt pas na jouw eigen uitleg**, gecontroleerd door Claude en door een vaste check.
 - **Uitleg direct**: een taak die je niet uitlegt voor de volgende opdracht, vervalt (overgeslagen).
 - **Herhalingen alleen op L4**, met Fibonacci-intervallen: de eerstvolgende keer dat zo'n vaardigheid in je werk langskomt, doe je het zelf.
+- **Twee kaarten met vaardigheden**: Object-Oriented Design in C# voor studenten (`--map ood`), en een voorbeeldkaart voor een junior developer op het werk in C#/.NET (`--map junior-dotnet`), waarin code buiten de vaardigheden die je leert op L4 staat.
 - **Omhoog kies jij, omlaag volgt het bewijs** (optioneel): een agent die alleen leest, beslist of één deelpatroon of de hele vaardigheid zakt.
 - **Een dagboek** aan het eind van elke sessie, met de reflectie in je eigen woorden.
 - **Nederlands en Engels**: meldingen, regels en de skills (diary, mastery-check).

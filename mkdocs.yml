@@ -72,6 +72,7 @@ plugins:
                 - C# OOP cheat sheet: /en/cheatsheet/
             - Research:
                 - Literature review: research.md
+                - For researchers: researchers.md
             - About this project:
                 - AI statement: ai-statement.md
 
@@ -90,6 +91,7 @@ nav:
       - C# OOP-cheat sheet: /cheatsheet/
   - Onderzoek:
       - Literatuuronderzoek: research.md
+      - Voor onderzoekers: researchers.md
   - Over dit project:
       - AI-verklaring: ai-statement.md
 
