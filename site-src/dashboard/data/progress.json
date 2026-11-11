@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "generatedAt": "2026-11-11",
-  "exportedAt": "2026-11-11T12:50:56.906Z",
+  "exportedAt": "2026-11-11T14:06:02.784Z",
   "course": null,
   "language": "nl",
   "examDate": "2027-01-20",
@@ -555,6 +555,7 @@
       "success": true,
       "maxRung": 3,
       "minutes": 36,
+      "reviewRung": null,
       "what": null,
       "explained": true,
       "explanation": null,
@@ -576,6 +577,7 @@
       "success": true,
       "maxRung": 0,
       "minutes": 8,
+      "reviewRung": null,
       "what": null,
       "explained": true,
       "explanation": null,
@@ -597,6 +599,7 @@
       "success": true,
       "maxRung": 1,
       "minutes": null,
+      "reviewRung": null,
       "what": "TestGeefEvenGetallenNegatief, TestGeefEvenGetallenTwee, TestGeefEvenGetallenTien",
       "explained": true,
       "explanation": "als je in de eerste regel voor de functienaam belooft wat terug te geven moet je dat ook datwerkelijk doen dus daarom ging het fout",
@@ -625,6 +628,7 @@
       "success": true,
       "maxRung": 1,
       "minutes": null,
+      "reviewRung": null,
       "what": "TestGeefEvenGetallenElf",
       "explained": true,
       "explanation": "< nu omdat het niet logisch is om als het getal al gelijk is aan het maximum er dan nog een aan toe te voegen en die vervolgens ook aan de lijst toe te voegen, dan krijg je te hoge getallen, aan het begin van de while loop moet soms het startgetal ook aan de lijst toegevoegd worden maar dat gebeurd nu nog niet, daar ga ik nu naar kijken",
@@ -659,6 +663,7 @@
       "success": true,
       "maxRung": 0,
       "minutes": null,
+      "reviewRung": null,
       "what": "TestGeefEvenGetallenTien, TestGeefEvenGetallenTwee, TestGeefEvenGetallenElf",
       "explained": true,
       "explanation": "< nu omdat het niet logisch is om als het getal al gelijk is aan het maximum er dan nog een aan toe te voegen en die vervolgens ook aan de lijst toe te voegen, dan krijg je te hoge getallen, aan het begin van de while loop moet soms het startgetal ook aan de lijst toegevoegd worden maar dat gebeurd nu nog niet, daar ga ik nu naar kijken",
@@ -686,6 +691,7 @@
       "success": true,
       "maxRung": 2,
       "minutes": null,
+      "reviewRung": null,
       "what": "TestEvenGetallenReeks, TestEvenGetallenReeksNegatief",
       "explained": true,
       "explanation": "omdat eerst altijd het min getal eerst ofwel number opgeplust werd voordat het weggegeschreven werd naaar de lijst",
@@ -725,6 +731,7 @@
       "success": true,
       "maxRung": 1,
       "minutes": null,
+      "reviewRung": null,
       "what": "TestAantalEvenGetallen",
       "explained": true,
       "explanation": "omdat Getallenterug.Count() exact terug geeft wat we willen weten, mamelijk of we al genoeg getallen hebben verzameld volgens de gebruikers input",
@@ -759,6 +766,7 @@
       "success": true,
       "maxRung": 1,
       "minutes": null,
+      "reviewRung": null,
       "what": "constructor + properties Merk/Model/Bouwjaar, eigenschappentest groen",
       "explained": true,
       "explanation": "omdat er nog geen fields waren voor merk bouwjaar en model, dit verwachte de test wel en daarom ging het compilen fout",
@@ -787,6 +795,7 @@
       "success": true,
       "maxRung": 1,
       "minutes": null,
+      "reviewRung": null,
       "what": "AutoInfoTest, AutoConstructorTest",
       "explained": true,
       "explanation": "omdat de properties overschreven worden door de test (regels 29 tot 31) en dat in autoinfor de retrun de waarden van de properties als string terug geeft",
@@ -814,6 +823,7 @@
       "success": true,
       "maxRung": 2,
       "minutes": null,
+      "reviewRung": null,
       "what": "TestHeeftBSA50, TestHeeftProp75, TestHeeftProp60, TestHeeftBSA40",
       "explained": true,
       "explanation": "omdat als je hogere studiepunten hebt je natuurlijk nog steeds gewoon je bsa hebt gehaald dus == was fout en de grens bleek 40 en niet 20, had ik verkeerd gekeken. vond het al vreemd dat het afweek van hoe het op school werkt",
@@ -835,6 +845,7 @@
       "success": true,
       "maxRung": 1,
       "minutes": null,
+      "reviewRung": null,
       "what": "TestHeeftBSA20",
       "explained": true,
       "explanation": "omdat als je hogere studiepunten hebt je natuurlijk nog steeds gewoon je bsa hebt gehaald dus == was fout en de grens bleek 40 en niet 20, had ik verkeerd gekeken. vond het al vreemd dat het afweek van hoe het op school werkt",
@@ -863,6 +874,7 @@
       "success": true,
       "maxRung": 1,
       "minutes": null,
+      "reviewRung": null,
       "what": "afgeleide toestand: property vervangen door lokale variabele",
       "explained": true,
       "explanation": "de oude propertie bestond zolang het object geinstanseerd was opdat deze wert aangemaakt bij instacieren en de lokale varaible bestaat sins dat de functie word aageroepen omdat deze in de functie geinstanseerd wordt",
@@ -895,6 +907,7 @@
       "success": true,
       "maxRung": 0,
       "minutes": 7,
+      "reviewRung": null,
       "what": "BoekConstructorOverloaded",
       "explained": true,
       "explanation": "omdat hij nog niet geset was en dan is hij eerst null hij krijgt niet zomaar de waarde van een lege string",
@@ -922,6 +935,7 @@
       "success": true,
       "maxRung": 0,
       "minutes": 22,
+      "reviewRung": null,
       "what": "08-rechthoek: eigenschappen, omtrek en oppervlak in één keer groen",
       "explained": true,
       "explanation": "nu kunnen de lengte en breete van de instatie worden aangepast zonder dat dit voor problemen zorgt omdat oppervalte en omtrek altijd naar de huidige waarde van lengte en breete kijken. als je opllervalkte en omtrek als properties zouden worden opgeslagen zouden out of sync kunnen raken met de lengte en breete van de instatie als deze worden geupdate",
@@ -959,6 +973,7 @@
       "success": true,
       "maxRung": 0,
       "minutes": 3,
+      "reviewRung": null,
       "what": "09-studenten-docenten: docent met lijst studenten, VoegStudentToe, in één keer groen",
       "explained": true,
       "explanation": "nee, omdat dit niet word opgeslagen in een propertie in de student class",
@@ -970,6 +985,34 @@
       "rejections": [
         {
           "at": "2026-11-11T11:06:22.796Z",
+          "by": "claude",
+          "reasons": []
+        }
+      ],
+      "corrections": [],
+      "void": false,
+      "voidReason": null
+    },
+    {
+      "id": "mwc69pxgu3ib",
+      "at": "2026-11-11T13:46:10.180Z",
+      "skill": "ood.associaties",
+      "source": "check",
+      "success": true,
+      "maxRung": 2,
+      "minutes": 50,
+      "reviewRung": null,
+      "what": "WijsPatientToeAanArts, WijsArtsToeAanPatient",
+      "explained": true,
+      "explanation": "omdat je met het woord this de instatie van de klasse toevoegd aan de lijst\nomdat ik vergat om ook bij de patient de art toe te voegen en andersom",
+      "explainedAt": "2026-11-11T13:50:30.028Z",
+      "explainedBy": null,
+      "lapsed": false,
+      "lapseReason": null,
+      "retaggedFrom": null,
+      "rejections": [
+        {
+          "at": "2026-11-11T13:48:51.229Z",
           "by": "claude",
           "reasons": []
         }
@@ -1016,7 +1059,9 @@
       "hints": 8,
       "holds": 0,
       "denials": 4,
-      "overridesUsed": 0
+      "overridesUsed": 0,
+      "reviewHelp": 0,
+      "helpDropped": 0
     },
     {
       "date": "2026-11-08",
@@ -1024,7 +1069,9 @@
       "hints": 0,
       "holds": 0,
       "denials": 0,
-      "overridesUsed": 0
+      "overridesUsed": 0,
+      "reviewHelp": 0,
+      "helpDropped": 0
     },
     {
       "date": "2026-11-09",
@@ -1032,7 +1079,9 @@
       "hints": 0,
       "holds": 0,
       "denials": 0,
-      "overridesUsed": 0
+      "overridesUsed": 0,
+      "reviewHelp": 0,
+      "helpDropped": 0
     },
     {
       "date": "2026-11-10",
@@ -1040,15 +1089,19 @@
       "hints": 4,
       "holds": 1,
       "denials": 7,
-      "overridesUsed": 0
+      "overridesUsed": 0,
+      "reviewHelp": 0,
+      "helpDropped": 0
     },
     {
       "date": "2026-11-11",
-      "sessions": 3,
+      "sessions": 4,
       "hints": 1,
       "holds": 0,
       "denials": 1,
-      "overridesUsed": 0
+      "overridesUsed": 0,
+      "reviewHelp": 2,
+      "helpDropped": 0
     }
   ],
   "diary": [
@@ -1102,8 +1155,40 @@
         "nextStep": "niet genoemd"
       },
       "calibration": "vooraf onbekend → de drie taken lukten op trede 0; de verdieping over `get` zonder `set` vroeg trede 4 → niet te bepalen (geen score vooraf)"
+    },
+    {
+      "date": "2026-11-11",
+      "n": 2,
+      "time": "±13:55–15:00",
+      "skills": "ood.associaties (L3)",
+      "plan": "verder met de snek-challenges: 10-artsen-en-patienten (veel-op-veel, dubbelzijdig)",
+      "confidenceBefore": "onbekend (twee keer gevraagd, niet beantwoord)",
+      "wentWell": "`ood.associaties`: het ontwerp van de dubbelzijdige veel-op-veel-relatie (beide kanten bijwerken) zonder hint bedacht en zelf verwoord (\"als een arts een patient heeft heeft de patient ook een arts\"). De hulp ging alleen over de C#-kant (klasse vs object, `this`). De fout in regel 25 daarna zelf opgelost, zonder extra hint.",
+      "signals": "geen (`ood.associaties` 2/2 gelukt; voor L3 → L4 zijn 3× trede 0 op 2 dagen nodig, plus de transfertaak)",
+      "reflection": {
+        "learned": "\"hoe this te gebruiken als je een instatie van een object in een fuctie van die klasse wilt meegeven.\"",
+        "confusing": "\"de review vraag was verwarrend en kwam ik niet uit. ook ging ik geen nivau omhoog of kreeg ik het advies niet om een nivau omlaag te gaan nadat ik het niet snapte, dat is vreemd en een puntje voor de review.\"",
+        "confidenceAfter": "\"2, viel tegen\"",
+        "nextStep": "niet genoemd"
+      },
+      "calibration": "vooraf onbekend → de opdracht lukte met trede 2 en de uitleg na 1 vervolgvraag; de reviewvraag (recursie) lukte niet → niet te bepalen (geen score vooraf). De 2 van nu lijkt vooral over de review te gaan, niet over de opdracht zelf."
     }
   ],
+  "reviewHelp": [
+    {
+      "at": "2026-11-11T13:52:49.533Z",
+      "skill": "ood.associaties",
+      "rung": 1,
+      "reviewOf": "mwc69pxgu3ib"
+    },
+    {
+      "at": "2026-11-11T13:55:02.893Z",
+      "skill": "ood.associaties",
+      "rung": 2,
+      "reviewOf": "mwc69pxgu3ib"
+    }
+  ],
+  "helpDropped": [],
   "translations": {
     "en": {
       "vast op Reverse (void) en chainen": "stuck on Reverse (void) and chaining",
@@ -1147,6 +1232,8 @@
       "nu kunnen de lengte en breete van de instatie worden aangepast zonder dat dit voor problemen zorgt omdat oppervalte en omtrek altijd naar de huidige waarde van lengte en breete kijken. als je opllervalkte en omtrek als properties zouden worden opgeslagen zouden out of sync kunnen raken met de lengte en breete van de instatie als deze worden geupdate": "now the length and width of the instance can be changed without that causing problems because area and perimeter always look at the current value of length and width. if area and perimeter were stored as properties they could get out of sync with the length and width of the instance when these get updated",
       "09-studenten-docenten: docent met lijst studenten, VoegStudentToe, in één keer groen": "09-studenten-docenten: teacher with a list of students, VoegStudentToe, green in one go",
       "nee, omdat dit niet word opgeslagen in een propertie in de student class": "no, because this isn't stored in a property in the student class",
+      "WijsPatientToeAanArts, WijsArtsToeAanPatient": "WijsPatientToeAanArts, WijsArtsToeAanPatient",
+      "omdat je met het woord this de instatie van de klasse toevoegd aan de lijst\nomdat ik vergat om ook bij de patient de art toe te voegen en andersom": "because with the word this you add the instance of the class to the list\nbecause I forgot to also add the doctor to the patient and the other way round",
       "securitycheck site (tooling)": "security check site (tooling)",
       "cs.basis (L2), cs.basis.lus-grenzen (L2, nieuw), test.unit-tests (L1)": "cs.basis (L2), cs.basis.lus-grenzen (L2, new), test.unit-tests (L1)",
       "opdracht 04-even-getallen afmaken (niet expliciet benoemd)": "finish exercise 04-even-getallen (not stated explicitly)",
@@ -1176,7 +1263,16 @@
       "vooraf onbekend → de drie taken lukten op trede 0; de verdieping over `get` zonder `set` vroeg trede 4 → niet te bepalen (geen score vooraf)": "before unknown → the three tasks succeeded at rung 0; the follow-up question on `get` without `set` needed rung 4 → cannot be determined (no score beforehand)",
       "\"hoe de getters en de setters op een class propertie werken, wat ze wel en niet doen.\"": "\"how the getters and the setters on a class property work, what they do and don't do.\"",
       "\"er waren veel follow-up vragen, dit was goed om de gaten in mijn kennis en vaardigheden aan het ligt te brengen maar bijna to mutch.\"": "\"there were a lot of follow-up questions, this was good for bringing the gaps in my knowledge and skills to light but almost too much.\"",
-      "niet genoemd": "not mentioned"
+      "niet genoemd": "not mentioned",
+      "ood.associaties (L3)": "ood.associaties (L3)",
+      "verder met de snek-challenges: 10-artsen-en-patienten (veel-op-veel, dubbelzijdig)": "continuing with the snek challenges: 10-artsen-en-patienten (many-to-many, bidirectional)",
+      "onbekend (twee keer gevraagd, niet beantwoord)": "unknown (asked twice, not answered)",
+      "`ood.associaties`: het ontwerp van de dubbelzijdige veel-op-veel-relatie (beide kanten bijwerken) zonder hint bedacht en zelf verwoord (\"als een arts een patient heeft heeft de patient ook een arts\"). De hulp ging alleen over de C#-kant (klasse vs object, `this`). De fout in regel 25 daarna zelf opgelost, zonder extra hint.": "`ood.associaties`: came up with the design of the bidirectional many-to-many relationship (update both sides) without a hint and put it into words (\"if a doctor has a patient, the patient also has a doctor\"). The help was only about the C# side (class vs object, `this`). Then fixed the mistake on line 25 without an extra hint.",
+      "geen (`ood.associaties` 2/2 gelukt; voor L3 → L4 zijn 3× trede 0 op 2 dagen nodig, plus de transfertaak)": "none (`ood.associaties` 2/2 succeeded; L3 → L4 needs 3× rung 0 on 2 days, plus the transfer task)",
+      "vooraf onbekend → de opdracht lukte met trede 2 en de uitleg na 1 vervolgvraag; de reviewvraag (recursie) lukte niet → niet te bepalen (geen score vooraf). De 2 van nu lijkt vooral over de review te gaan, niet over de opdracht zelf.": "beforehand unknown → the exercise succeeded at rung 2 and the explanation after 1 follow-up question; the review question (recursion) did not → cannot be determined (no score beforehand). The 2 now seems to be mostly about the review, not about the exercise itself.",
+      "\"hoe this te gebruiken als je een instatie van een object in een fuctie van die klasse wilt meegeven.\"": "\"how to use this when you want to pass an instance of an object in a function of that class.\"",
+      "\"de review vraag was verwarrend en kwam ik niet uit. ook ging ik geen nivau omhoog of kreeg ik het advies niet om een nivau omlaag te gaan nadat ik het niet snapte, dat is vreemd en een puntje voor de review.\"": "\"the review question was confusing and I couldn't work it out. also I didn't go up a level or get the advice to go down a level after I didn't get it, that is strange and a point for the review.\"",
+      "\"2, viel tegen\"": "\"2, disappointing\""
     }
   }
 }
