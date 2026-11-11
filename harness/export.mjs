@@ -354,6 +354,29 @@ export async function build(project, { previous = null, todo = null } = {}) {
     at: e.at, skill: knownSkill(e.skill), rung: Number(e.rung) || 0, reviewOf: typeof e.reviewOf === "string" && /^[a-z0-9]+$/.test(e.reviewOf) ? e.reviewOf : null,
   }));
   const helpDropped = events.filter((e) => e.type === "help-dropped").map((e) => ({ at: e.at, skill: knownSkill(e.skill), rung: Number(e.rung) || 0 }));
+  // Help about a skill during a task of another family (setup review of 11 Nov, afternoon, #26), and the
+  // proposals for a microskill with their outcome (#22). Ids, numbers and fixed values only. The id of a
+  // proposed microskill comes from Claude: it goes through the filters, and only as a plain id below its parent.
+  const tidOf = (v) => (typeof v === "string" && /^[a-z0-9]+$/.test(v) ? v : null);
+  const conceptHelp = events.filter((e) => e.type === "concept-help").map((e) => ({
+    at: e.at, skill: knownSkill(e.skill), rung: Number(e.rung) || 0, taskSkill: knownSkill(e.taskSkill), task: tidOf(e.taskTid),
+  }));
+  const microProposals = [];
+  const openProposal = new Map();
+  for (const e of events) {
+    if (e.type === "micro-offered") {
+      const parent = knownSkill(e.parent);
+      const raw = typeof e.skill === "string" ? e.skill : "";
+      const id = parent && /^[a-z0-9.-]+$/.test(raw) && raw.startsWith(parent + ".") ? scrub(raw, "micro.id") : null;
+      const p = { at: e.at, parent, id: id && /^[a-z0-9.-]+$/.test(id) ? id : null, level: lib.LEVELS.includes(e.level) ? e.level : null,
+        evidence: ["review", "concept", "task"].includes(e.evidence) ? e.evidence : null, rung: Number(e.rung) || 0, outcome: "noAnswer" };
+      microProposals.push(p);
+      openProposal.set(raw, p);
+    } else if ((e.type === "micro-declined" || (e.type === "micro-add" && e.via === "voorstel")) && openProposal.has(e.skill)) {
+      openProposal.get(e.skill).outcome = e.type === "micro-declined" ? "declined" : "added";
+      openProposal.delete(e.skill);
+    }
+  }
 
   const overrides = events.filter((e) => e.type === "override").map((e) => ({
     at: e.at, skill: e.skill === "*" ? "*" : knownSkill(e.skill), minutes: Number(e.minutes ?? 0), reason: scrub(e.reason ?? null, "override.reason"),
@@ -455,7 +478,7 @@ export async function build(project, { previous = null, todo = null } = {}) {
     settings: { defaultLevel: settings.defaultLevel, targetSuccess: settings.targetSuccess, stuckTimerMinutes: settings.stuckTimerMinutes },
     skills, tasks, reviews, regressions, overrides, signals,
     activity: [...activity.values()].sort((a, b) => a.date.localeCompare(b.date)).map((a) => ({ ...a, sessions: a.sessions.size })),
-    diary, reviewHelp, helpDropped, transfers,
+    diary, reviewHelp, helpDropped, transfers, conceptHelp, microProposals,
   };
   const { memory, fromTodo } = translationMemory(settings.language, { previous, todo });
   const { texts, missing } = applyTranslations(out, { memory }, scrub);

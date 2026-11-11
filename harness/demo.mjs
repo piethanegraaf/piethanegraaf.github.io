@@ -142,6 +142,11 @@ function makeProject(lang) {
   events.push({ at: at(-4, 14, 40), type: "review-help", skill: "ood.encapsulatie", rung: 2, reviewOf: "demo021", session: sid(-4) });
   events.push({ at: at(-4, 15, 10), type: "task-start", reason: "check-elsewhere", after: "demo021", session: sid(-4) });
   events.push({ at: at(-4, 15, 10), type: "help-dropped", skill: "ood.associaties", rung: 1, after: "demo021", session: sid(-4) });
+  // Help about another concept during a task, and two proposals for a microskill (11 Nov, afternoon, #26, #22).
+  events.push({ at: at(-2, 14, 20), type: "concept-help", skill: "cs.basis", rung: 2, taskSkill: "ood.associaties", taskTid: "demo950", session: sid(-2) });
+  events.push({ at: at(-2, 14, 50), type: "micro-offered", skill: "cs.basis.foreach-index", parent: "cs.basis", level: "L2", evidence: "concept", rung: 2, session: sid(-2) });
+  events.push({ at: at(-2, 14, 51), type: "micro-declined", skill: "cs.basis.foreach-index", parent: "cs.basis", session: sid(-2) });
+  events.push({ at: at(-2, 15, 30), type: "micro-offered", skill: "ood.associaties.dubbel-toevoegen", parent: "ood.associaties", level: "L1", evidence: "task", rung: 2, session: sid(-2) });
   events.push({ at: at(-3, 12), type: "override", skill: "test.unit-tests", minutes: 20, reason: X.override });
   events.push({ at: at(-3, 12, 5), type: "override-used", skill: "test.unit-tests", session: sid(-3) });
   // L4 reviews as the outcome of the next task in real work (S2), and one automatic demotion (S3).
