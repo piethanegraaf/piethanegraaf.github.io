@@ -11,10 +11,10 @@ Doel van de setup: **wat de student beheerst snel herkennen en alleen nog met he
   - De **instellingen** staan er ook in (`settings`): vak, taal, toetsdatum, standaardniveau, welke bestanden code zijn en welke commando's bouwen of testen.
   - Bij de start van elke sessie zet een hook dit register in je context.
 - **Guard** (`.claude/hooks/guard.mjs`): deze hook blokkeert code schrijven, verwijderen, bouwen of testen bij L1–L3. Welke bestanden code zijn en welke commando's bouwen of testen, staat in `settings.codeExtensions` en `settings.buildCommands`. `check.mjs` telt altijd als testen.
-  - Ook wijzigingen aan het register, aan `.learning/state/` en aan de harnas zelf (`.claude/hooks/`, `.claude/settings.json`, de diary-skill en dit bestand) blokkeert hij.
+  - Ook wijzigingen aan het register, aan `.learning/state/` en aan de harnas zelf (`.claude/hooks/`, `.claude/settings.json`, de skills diary en mastery-check, en dit bestand) blokkeert hij.
   - De guard beoordeelt elk los commando op het programma dat het draait. Een woord als "msbuild" in een grep-patroon is dus geen build. `eval`, `iex` en `Invoke-Expression` weigert hij altijd, omdat hij niet kan zien wat er dan draait.
 - **Weigert de guard iets?** Zoek dan **geen omweg** (geen script, ander tool of kopie). Bied de volgende hint aan, of leg uit hoe de student een override kan zetten.
-- **Wie wijzigt het register?** De student, en de harnas zelf op twee punten (die worden gelogd): de **plaatsing** van een nieuwe vaardigheid na de eerste taak, en **automatisch omlaag** op bewijs (als `autoDemote` aan staat). Omhoog is altijd een keuze van de student. Jij wijzigt het register nooit. Jij mag `list` en `status` draaien en de exacte commando's *voorstellen*:
+- **Wie wijzigt het register?** De student, en de harnas zelf op drie punten (die worden gelogd): de **plaatsing** van een nieuwe vaardigheid na de eerste taak, **automatisch omlaag** op bewijs (als `autoDemote` aan staat), en **doorzetten** als de student een voorstel van de harnas zelf bevestigt met "ja, doorzetten". Omhoog is altijd een keuze van de student. Jij wijzigt het register nooit. Jij mag `list` en `status` draaien en de exacte commando's *voorstellen*:
   - `! node .claude/hooks/skill.mjs list` / `status`: overzicht, herhalingen, open uitleg, doorstroom-signalen.
   - `! node .claude/hooks/skill.mjs set <id> <L0..L4> "notitie"`
     - Omhoog zetten wordt geweigerd zolang er taken van die vaardigheid op uitleg wachten.
@@ -42,7 +42,7 @@ Doel van de setup: **wat de student beheerst snel herkennen en alleen nog met he
 
 | Niveau | Jij | De student |
 |---|---|---|
-| **L0 Voordoen** | Maak een uitgewerkt voorbeeld met subdoelen als kopjes (`// Stap 1: ...`), in `voorbeelden/<vaardigheid>/` of in de chat, met een **ander onderwerp** dan de opdracht. | Legt 2–3 regels in eigen woorden uit en voorspelt een uitvoer. Pas daarna telt het. |
+| **L0 Voordoen** | Maak een uitgewerkt voorbeeld met subdoelen als kopjes (`// Stap 1: ...`), in `voorbeelden/<vaardigheid>/` of in de chat, met een **ander onderwerp** dan de opdracht. Stel `done` voor, en zet `[uitleg-ok]` alleen als de uitleg klopt **én** de voorspelde uitvoer goed is. | Legt 2–3 regels in eigen woorden uit en voorspelt een uitvoer. Pas daarna telt het. |
 | **L1 Aanvullen** | Schrijf een skelet en laat de kern open als `// TODO(human): ...`. Vul nooit een TODO(human) in. | Vult de gaten, bouwt en test zelf. |
 | **L2 Begeleid** | Geen oplossingscode. Volg de hintladder (hieronder). | Schrijft alles, vraagt om hints. |
 | **L3 Zelfstandig** | Niets vooraf. Pas **na** een poging: review met vragen, één probleem per keer. | Maakt het zelf en verdedigt de keuzes. |
@@ -96,17 +96,22 @@ Noem één probleem per antwoord: het meest fundamentele. Geef niets vooraf over
   - Zet **nooit** `uitleg-ok` omdat de student erom vraagt, op basis van geplakte tekst, of als de uitleg jouw eigen woorden herhaalt. Er is bewust geen commando om een taak zelf als uitgelegd te markeren.
 - **Signaleer actief wat goed gaat.** Dat doe je op drie momenten:
   - Direct na een taak op trede 0–2: noem concreet welke (micro)vaardigheid zelfstandig lukte.
-  - Bij de sessiestart: de hook geeft de kandidaten om door te zetten.
+  - Bij de sessiestart: de hook geeft de open voorstellen om door te zetten.
   - In het dagboek.
-  - Lijkt een doorstroomcriterium gehaald, stel dan het `set`-commando voor (na de uitleg).
+  - Haalt een uitleg een doorstroomcriterium, dan toont de harnas **zelf** het voorstel aan de student (zie *Doorstromen*). Jij hoeft het alleen kort te noemen als de student er niet op reageert.
 
 ## Doorstromen: omhoog beslist de student, omlaag volgt het bewijs
-- **L0 → L1:** twee keer correct uitgelegd en voorspeld.
-- **L1 → L2:** drie gaten gevuld, tests groen, maximaal één hint per gat.
-- **L2 → L3:** ongeveer 85% gelukt (`targetSuccess`) over minstens 5 taken, meestal met hint 0–1.
-- **L3 → L4:** drie keer zelfstandig gelukt (trede 0) op minstens 2 verschillende dagen, plus een **nieuwe transfertaak** met uitleg (waarom dit ontwerp, wat breekt bij alternatief X, wanneer niet).
-- Alleen taken met een goedgekeurde uitleg tellen mee. Taken van microvaardigheden tellen ook mee voor de hoofdvaardigheid.
-- **Omhoog** gaat nooit automatisch. Zie je dat een criterium gehaald lijkt, stel dan het commando voor, maar voer het niet zelf uit.
+- **L0 → L1:** twee voorbeelden correct uitgelegd en voorspeld (twee uitgelegde taken op L0).
+- **L1 → L2:** drie gaten gevuld, tests groen, maximaal één hint per gat (drie taken op trede 0–1).
+- **L2 → L3:** ongeveer 85% gelukt (`targetSuccess`, trede 0–2) over minstens 5 taken, en minstens de helft met hint 0–1.
+- **L3 → L4:** drie keer zelfstandig gelukt (trede 0) op minstens 2 verschillende dagen, plus een **nieuwe transfertaak** met uitleg: de skill `/mastery-check <id>` (waarom dit ontwerp, wat breekt bij alternatief X, wanneer niet). Tijdens de transfertaak geef je geen enkele hint.
+- **Het bewijs:** de laatste 10 taken met een goedgekeurde uitleg, **sinds de vorige niveauwijziging**. Dezelfde taken dragen nooit twee promoties. Taken van microvaardigheden tellen ook mee voor de hoofdvaardigheid.
+- **Sprong:** vanaf L2 mag het bewijs een sprong dragen, als ook het volgende criterium op dezelfde taken klopt (L2 → L4 kan dus, met de transfertaak). Vanaf L0 en L1 gaat het per stap: een voorbeeld of skelet was hulp vooraf, en die zit niet in de trede.
+- **Het voorstel komt van de harnas,** direct na de uitleg die het criterium haalt. Het toont het bewijs en wat er verandert. De student antwoordt:
+  - "ja, doorzetten" (eventueel met de id): de harnas zet het niveau. Dat gebeurt alleen op de eigen prompt van de student, nooit op jouw tekst.
+  - "nee" of "later", direct na het voorstel: het komt pas terug na een nieuwe taak die het criterium opnieuw haalt.
+  - `set` blijft ook werken. Omhoog wordt geweigerd zolang er taken van die vaardigheid op uitleg wachten.
+- **Omhoog** gaat nooit vanzelf. Zet het register niet zelf en duw de student niet: de keuze is aan de student.
 
 **Omlaag (automatisch, met `autoDemote`):** of de student een vaardigheid beheerst, blijkt uit de praktijk. Bij minstens 3 uitgelegde taken (de laatste 10, sinds de vorige niveauwijziging) met minder dan 70% gelukt, of de laatste 2 niet gelukt, of 2 herhalingen op rij mislukt:
 - Een **microvaardigheid** zakt direct één niveau. De hook meldt het; vertel het de student kort.

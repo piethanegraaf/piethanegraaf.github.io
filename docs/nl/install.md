@@ -14,7 +14,7 @@ node harness/install.mjs ../mijn-oefenmap --lang nl --course "OOD" --exam 2027-0
 ```
 
 - Zonder `--yes` laat het script alleen zien wat het zou doen. Draai het daarna opnieuw met `--yes`.
-- `--lang nl|en` kiest de taal van de meldingen, de regels en de diary-skill.
+- `--lang nl|en` kiest de taal van de meldingen, de regels en de skills.
 - `--map ood` is de kaart met vaardigheden (nu alleen `ood`).
 - `--course` en `--exam` zijn optioneel. Je kunt ze later zetten met `skill.mjs setting`.
 
@@ -24,6 +24,7 @@ Wat de installer aanmaakt:
 |---|---|---|
 | `.claude/hooks/` | de hooks, de CLI en de meldingen (`i18n/`) | harnas |
 | `.claude/skills/diary/SKILL.md` | de diary-skill voor het einde van een sessie | harnas |
+| `.claude/skills/mastery-check/SKILL.md` | de transfertaak voor de stap naar L4 (`/mastery-check`) | harnas |
 | `.claude/leerharnas.md` | de regels voor Claude, plus de notities van de kaart | harnas |
 | `.claude/settings.json` | de vier hooks, met `$CLAUDE_PROJECT_DIR` (geen absolute paden) | samengevoegd met jouw instellingen |
 | `.learning/skills.json`, `keywords.json` | je vaardighedenregister en trefwoorden, uit de kaart | **jij** (data) |
@@ -62,4 +63,4 @@ Zet de AI-hulp buiten Claude Code uit. Anders vult je IDE de code aan die je zel
 
 ## Verwijderen
 
-Verwijder `.claude/hooks/`, `.claude/skills/diary/`, `.claude/leerharnas.md`, `.claude/leerharnas.json` en de vier hooks uit `.claude/settings.json`. Je data in `.learning/` blijft van jou.
+Verwijder `.claude/hooks/`, `.claude/skills/diary/`, `.claude/skills/mastery-check/`, `.claude/leerharnas.md`, `.claude/leerharnas.json` en de vier hooks uit `.claude/settings.json`. Je data in `.learning/` blijft van jou.

@@ -15,7 +15,7 @@ Een leerharnas voor [Claude Code](https://docs.claude.com/en/docs/claude-code/ov
 - **Herhalingen alleen op L4**, met Fibonacci-intervallen: de eerstvolgende keer dat zo'n vaardigheid in je werk langskomt, doe je het zelf.
 - **Omhoog kies jij, omlaag volgt het bewijs** (optioneel): een agent die alleen leest, beslist of één deelpatroon of de hele vaardigheid zakt.
 - **Een dagboek** aan het eind van elke sessie, met de reflectie in je eigen woorden.
-- **Nederlands en Engels**: meldingen, regels en de diary-skill.
+- **Nederlands en Engels**: meldingen, regels en de skills (diary, mastery-check).
 
 ## Snel aan de slag
 
@@ -32,7 +32,7 @@ Nodig: Claude Code, Node.js 18+ (22 of 24 aangeraden), en de .NET SDK voor de te
 
 | Map | Wat |
 |---|---|
-| `harness/` | de installeerbare harnas: hooks, diary-skill, meldingen (`i18n/`), kaarten, sjablonen, `install.mjs`, `export.mjs`, `security-check.mjs`, tests |
+| `harness/` | de installeerbare harnas: hooks, skills (diary, mastery-check), meldingen (`i18n/`), kaarten, sjablonen, `install.mjs`, `export.mjs`, `security-check.mjs`, tests |
 | `docs/` | de documentatiesite (MkDocs Material, Nederlands en Engels), met het onderzoek en de onderzoeksnotities |
 | `site-src/` | statische pagina's: het dashboard en de cheat sheet |
 | `.github/workflows/` | tests, security check, bouwen en publiceren |

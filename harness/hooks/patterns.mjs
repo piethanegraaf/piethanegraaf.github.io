@@ -94,8 +94,29 @@ export const CAUSAL = any(
   String.raw`\b(because|since|so that|otherwise|instead of|therefore|which means|that'?s why|due to|as a result|hence)\b`,
 );
 
+// The learner's answer to a promotion proposal (setup review §9.6). Only the learner's own prompt
+// counts, and only at its start: "ja, doorzetten" (optionally with the skill id) confirms. A bare
+// "nee" or "later" declines, but prompt-gate only listens for that right after a proposal.
+const PROMOTE_YES = any(
+  String.raw`^\s*ja,?\s+(doorzetten|zet\s+(het\s+|maar\s+)?door)\b`,
+  String.raw`^\s*yes,?\s+(promote|go up)\b`,
+);
+const PROMOTE_NO = any(
+  String.raw`^\s*(nee|later|nee,?\s+later|nee,?\s+niet\s+doorzetten|niet\s+doorzetten|nog\s+niet)[\s.!]*$`,
+  String.raw`^\s*(no|not now|no,?\s+later|not yet|don'?t promote)[\s.!]*$`,
+);
+const SKILL_ID = /#?\b([a-z][a-z0-9-]*(?:\.[a-z0-9-]+)+)\b/i;
+export function promotionAnswer(text) {
+  const s = String(text ?? "");
+  if (PROMOTE_YES.test(s)) return { answer: "yes", id: s.match(SKILL_ID)?.[1]?.toLowerCase() ?? null };
+  if (PROMOTE_NO.test(s)) return { answer: "no", id: null };
+  return null;
+}
+
 // Markers Claude puts in an answer. Both languages are accepted.
 export const RUNG_MARK = /\[(?:trede|rung) ([1-5])\]/gi;
 export const EXPLAIN_MARK = /\[(?:uitleg|explain)-(ok|nee|no) ([a-z0-9]+)\]/gi;
+// The transfer task of /mastery-check (§9.4): start, passed or not passed, with the skill id.
+export const TRANSFER_MARK = /\[transfer-(start|ok|nee|no) ([a-z][a-z0-9-]*(?:\.[a-z0-9-]+)*)\]/gi;
 // The diary marker <!-- sessie: <id> --> (or <!-- session: <id> -->).
 export const sessionMarker = (sid) => new RegExp(`(?:sessie|session):\\s*${String(sid).replace(/[^\w-]/g, "")}(?![\\w-])`, "i");

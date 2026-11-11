@@ -111,7 +111,7 @@ export function toolingRe(data) {
 // otherwise the AI could switch off its own guard. Only the real harness files of this project:
 // .claude/leerharnas-backup/ or a "leerharnas" folder elsewhere are not (setup review 3.6).
 export function isHarnessPath(r) {
-  return r !== null && /^\.claude\/(hooks\/|skills\/diary\/|agents\/demotie-analist\.md$|settings(\.local)?\.json$|leerharnas[^/]*\.(md|json)$)/i.test(r);
+  return r !== null && /^\.claude\/(hooks\/|skills\/(diary|mastery-check)\/|agents\/demotie-analist\.md$|settings(\.local)?\.json$|leerharnas[^/]*\.(md|json)$)/i.test(r);
 }
 
 // Reading the record also sets the language of all messages (settings.language).
@@ -476,9 +476,10 @@ export function newTaskId() {
   return Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
 }
 
-// Log a task (pending until explained) and return it.
-export function logTask({ skill, success = true, maxRung = 0, minutes = null, source, what, session, dir }) {
-  const t = { type: "task", tid: newTaskId(), skill, success, maxRung, minutes, source, what, session, ...(dir ? { dir } : {}) };
+// Log a task (pending until explained) and return it. `level` is the level of the skill at that
+// moment (setup review §9.3): evidence for a promotion only counts on the level it was gathered at.
+export function logTask({ skill, success = true, maxRung = 0, minutes = null, source, what, session, dir, level }) {
+  const t = { type: "task", tid: newTaskId(), skill, success, maxRung, minutes, source, what, session, ...(dir ? { dir } : {}), ...(level ? { level } : {}) };
   logEvent(t);
   return t;
 }
@@ -699,8 +700,10 @@ export function taskStats(skillId, n = 10, data = null) {
   };
 }
 
-// Advisory check of the promotion/demotion criteria from CLAUDE.md. Returns { dir, text, cmd } or null.
-export function levelAdvice(data, s) {
+// Advisory check of the demotion criteria (only without autoDemote) and the promotion criteria.
+// Returns { dir: "down" | "up" | "transfer", text, cmd, ... } or null. `assume` lists task ids that
+// count as explained already: check.mjs shows what will be possible after the explanation (§9.2).
+export function levelAdvice(data, s, { assume = [] } = {}) {
   const st = taskStats(s.id, 10, data);
   const recent = st.tasks;
   const lastTwo = recent.slice(-2);
@@ -714,23 +717,152 @@ export function levelAdvice(data, s) {
     const lower = LEVELS[Math.max(0, LEVELS.indexOf(s.level) - 1)];
     return { dir: "down", text: t("advice.below70", { id: s.id, ok: st.ok, n: st.n }), cmd: `set ${s.id} ${lower} "${t("note.below70")}"` };
   }
-  const clean = recent.filter((x) => x.success && (x.maxRung ?? 0) <= 2);
-  if (s.level === "L1") {
-    const gaps = recent.filter((x) => x.success && (x.maxRung ?? 0) <= 1).length;
-    if (gaps >= 3) return { dir: "up", text: t("advice.gapsFilled", { id: s.id, n: gaps }), cmd: `set ${s.id} L2 "${t("note.gapsFilled")}"` };
+  return promotionAdvice(data, s, { assume });
+}
+
+// ---- Promotion (setup review §9) ----
+// The evidence for a promotion: the last 10 explained tasks of the family since the last level
+// change of this skill, just like automatic demotion. The same tasks never carry two promotions (§9.3).
+export function promotionWindow(data, s, assume = []) {
+  const ids = new Set(familyIds(data, s.id));
+  const since = lastLevelChange(s);
+  const extra = new Set(assume);
+  return allTasks().filter((x) => ids.has(x.skill) && (x.explained || extra.has(x.tid)) && !x.lapsed && (!since || String(x.at) > since)).slice(-10);
+}
+
+// A transfer task of this skill passed since its last level change (/mastery-check, §9.4).
+export function transferPassed(s) {
+  const since = lastLevelChange(s);
+  return readEvents().some((e) => e.type === "transfer-passed" && e.skill === s.id && (!since || String(e.at) > since));
+}
+
+const nextLevel = (l) => LEVELS[Math.min(LEVELS.length - 1, LEVELS.indexOf(l) + 1)];
+const solvedTask = (x) => x.success && (x.maxRung ?? 0) <= 2;
+
+// The criterion for one step up from `from`, on the tasks of the window. { ok, text, note } or
+// { ok: false, needsTransfer, text } when only the transfer task is missing (L3 -> L4).
+function stepUp(data, s, from, tasks, transferOk) {
+  const id = s.id;
+  if (from === "L0") {
+    // Explained and correctly predicted: Claude gives [uitleg-ok] only when the prediction was right too.
+    const n = tasks.filter((x) => x.success).length;
+    return n >= 2 ? { ok: true, text: t("advice.examples", { id, n }), note: t("note.examples", { n }) } : { ok: false };
   }
-  const target = settingsOf(data).targetSuccess;
-  if (s.level === "L2" && st.n >= 5 && st.rate >= target) {
-    return { dir: "up", text: t("advice.target", { id: s.id, ok: st.ok, n: st.n, pct: Math.round(target * 100) }), cmd: `set ${s.id} L3 "${t("note.solved", { ok: st.ok, n: st.n })}"` };
+  if (from === "L1") {
+    const gaps = tasks.filter((x) => x.success && (x.maxRung ?? 0) <= 1).length;
+    return gaps >= 3 ? { ok: true, text: t("advice.gapsFilled", { id, n: gaps }), note: t("note.gapsFilled") } : { ok: false };
   }
-  if (s.level === "L3") {
-    const solo = clean.filter((x) => (x.maxRung ?? 0) === 0);
-    const days = new Set(solo.map((x) => x.at.slice(0, 10)));
-    if (solo.length >= 3 && days.size >= 2) {
-      return { dir: "up", text: t("advice.solo", { id: s.id, n: solo.length, days: days.size }), cmd: `set ${s.id} L4 "${t("note.solo")}"` };
-    }
+  if (from === "L2") {
+    // About 85% solved (rung <= 2) over at least 5 tasks, and mostly with hint 0-1: at least half (§9.5).
+    const n = tasks.length, ok = tasks.filter(solvedTask).length;
+    const low = tasks.filter((x) => x.success && (x.maxRung ?? 0) <= 1).length;
+    const target = settingsOf(data).targetSuccess;
+    return n >= 5 && ok / n >= target && low * 2 >= n
+      ? { ok: true, text: t("advice.target", { id, ok, n, pct: Math.round(target * 100), low }), note: t("note.solved", { ok, n }) }
+      : { ok: false };
   }
-  return null;
+  if (from === "L3") {
+    const solo = tasks.filter((x) => x.success && (x.maxRung ?? 0) === 0);
+    const days = new Set(solo.map((x) => String(x.at).slice(0, 10))).size;
+    if (solo.length < 3 || days < 2) return { ok: false };
+    return transferOk
+      ? { ok: true, text: t("advice.soloTransfer", { id, n: solo.length, days }), note: t("note.solo") }
+      : { ok: false, needsTransfer: true, text: t("advice.solo", { id, n: solo.length, days }) };
+  }
+  return { ok: false };
+}
+
+// Promotion advice for one skill. From L2 up the evidence may carry a jump: the walk goes on as long
+// as the next criterion also holds on the same tasks (§9.6). From L0 and L1 it is one step at a time:
+// a worked example or a skeleton was help given up front, and that is not in the rung.
+// Returns { dir: "up", from, to, jump, text, cmd, note, transferNext, tasks, lastTid },
+// { dir: "transfer", text, show } when only the transfer task is missing, or null.
+export function promotionAdvice(data, s, { assume = [] } = {}) {
+  if (!s || s.kind === "zone" || s.level === "L4" || !LEVELS.includes(s.level) || isPlacementPending(data, s)) return null;
+  const tasks = promotionWindow(data, s, assume);
+  if (!tasks.length) return null;
+  const transferOk = transferPassed(s);
+  // A task of a microskill on L0/L1 also had help up front, even when the parent is higher.
+  const helpUpFront = tasks.some((x) => x.level && LEVELS.indexOf(x.level) < 2);
+  const canJump = LEVELS.indexOf(s.level) >= 2 && !helpUpFront;
+  let lvl = s.level, to = null, missingTransfer = null;
+  const texts = [], notes = [];
+  while (lvl !== "L4") {
+    const r = stepUp(data, s, lvl, tasks, transferOk);
+    if (!r.ok) { if (r.needsTransfer) missingTransfer = r.text; break; }
+    to = nextLevel(lvl); texts.push(r.text); notes.push(r.note);
+    if (!canJump) break;
+    lvl = to;
+  }
+  const lastTid = tasks[tasks.length - 1].tid;
+  if (!to) return missingTransfer ? { dir: "transfer", id: s.id, text: missingTransfer, show: `/mastery-check ${s.id}`, lastTid } : null;
+  return {
+    dir: "up", id: s.id, from: s.level, to, jump: LEVELS.indexOf(to) - LEVELS.indexOf(s.level) > 1,
+    text: texts.join("; "), note: notes.join("; "), cmd: `set ${s.id} ${to} "${notes.join("; ")}"`,
+    transferNext: Boolean(missingTransfer), tasks, lastTid,
+  };
+}
+
+// How a piece of advice is shown: a skill.mjs command, or the transfer task.
+export const adviceCommand = (a) => (a.dir === "transfer" ? a.show : `! node .claude/hooks/skill.mjs ${a.cmd}`);
+
+// The promotion events of one skill since its last level change.
+function offerEvents(s) {
+  const since = lastLevelChange(s);
+  return readEvents().filter((e) => e.skill === s.id && ["promotion-offered", "promotion-declined"].includes(e.type) && (!since || String(e.at) > since));
+}
+
+// An open promotion proposal the learner can confirm with "ja, doorzetten" (§9.6), or null.
+// `declined`: true when the learner said no to this evidence; the proposal only comes back (as a
+// notice) after a new task that meets the criterion again. Confirming stays possible.
+export function openOffer(data, s) {
+  const a = promotionAdvice(data, s);
+  if (a?.dir !== "up") return null;
+  const ev = offerEvents(s);
+  const decline = ev.filter((e) => e.type === "promotion-declined").pop();
+  return { ...a, declined: Boolean(decline && decline.lastTid === a.lastTid) };
+}
+
+// Should the harness show this proposal (or the transfer hint) now? At most once per skill, level
+// and target level; after a "nee" only again when there is new evidence.
+export function offerIsNew(s, a) {
+  const ev = offerEvents(s);
+  const decline = ev.filter((e) => e.type === "promotion-declined").pop();
+  if (decline && decline.lastTid === a.lastTid) return false;
+  const shown = ev.filter((e) => e.type === "promotion-offered" && e.to === (a.to ?? "transfer")).pop();
+  return !shown || Boolean(decline && decline.at > shown.at);
+}
+
+// The text of a proposal: what, the evidence, what changes, and how to answer.
+export function offerText(a) {
+  const tasks = a.tasks ?? [];
+  const days = new Set(tasks.map((x) => String(x.at).slice(0, 10))).size;
+  const dirs = [...new Set(tasks.map((x) => x.dir).filter(Boolean).map((d) => String(d).split("/").pop()))];
+  const evidence = a.from === "L0"
+    ? t("offer.evidenceL0", { n: tasks.filter((x) => x.success).length })
+    : t("offer.evidence", {
+      ok: tasks.filter(solvedTask).length, n: tasks.length, rungs: tasks.map((x) => x.maxRung ?? 0).join(", "), days,
+      dirs: dirs.length ? t("offer.dirs", { list: dirs.join(", ") }) : "",
+    });
+  return t("offer.block", {
+    id: a.id, from: a.from, to: a.to, jump: a.jump ? t("offer.jump") : "", evidence, change: t(`offer.change.${a.to}`),
+    transfer: a.transferNext ? t("offer.transferNext", { id: a.id }) : "",
+  });
+}
+
+// Promote a skill after the learner confirmed (prompt-gate, "ja, doorzetten"). The learner decides:
+// this only runs on the learner's own prompt, never on Claude's text. Returns { ok, message }.
+export function promote(data, s, a, via = "voorstel") {
+  const open = pendingTasks().filter((x) => familyIds(data, s.id).includes(x.skill));
+  if (open.length) return { ok: false, message: t("cli.set.pending", { n: open.length, id: s.id, tids: open.map((x) => x.tid).join(", ") }) };
+  const from = s.level, to = a.to;
+  s.level = to;
+  scheduleOnLevel(data, s);
+  s.history = [...(s.history ?? []), { at: today(), atIso: new Date().toISOString(), from, to, note: a.note, by: "learner", via }];
+  if (s.placement === "pending") s.placement = "done";
+  saveSkills(data);
+  logEvent({ type: "level", skill: s.id, from, to, note: a.note, by: "learner", via });
+  return { ok: true, message: t("offer.promoted", { id: s.id, from, to, name: levelName(to), review: s.nextReview ? t("cli.set.firstReview", { date: s.nextReview }) : "" }) };
 }
 
 // Skills with recent independent successes (rung 0, explained), for positive signals.

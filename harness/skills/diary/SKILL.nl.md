@@ -23,6 +23,8 @@ Doel: zelfregulatie (plan → uitvoering → reflectie). De student schrijft de 
      - `regression`: tests die groen waren en rood werden. `regression-fixed`: weer groen na een terugval (geen nieuwe taak). Veel van beide in korte tijd kan op gokken wijzen.
      - `deny`, `override`, `override-used`: wat de guard deed.
      - `review`, `level`, `micro-add`, `setting`: herhalingen, niveauwijzigingen, nieuwe microvaardigheden, instellingen.
+     - Doorstromen: `promotion-offered` (de harnas deed een voorstel, met `from` en `to`), `promotion-confirmed` en een `level` met `by: learner` en `via: voorstel` (de student zei "ja, doorzetten"), `promotion-declined` (de student zei nee). Noem een doorgezette vaardigheid concreet, met het bewijs.
+     - De transfertaak (`/mastery-check`): `transfer-start`, `transfer-passed`, of `transfer-failed` (met `why`: `help` als er een hint was, `claude` als Claude hem niet gehaald vond).
      - Automatisch gedaan door de harnas, noem het apart: `placement` (niveau van een nieuwe vaardigheid na de eerste taak), `level` met `auto: true` (automatisch omlaag; `by` zegt door wie: harnas, demotie-analist of achtervang), `micro-add` met `auto: true` en `task-retag` (de analist koppelde taken aan een microvaardigheid), `demotion-verdict` (het oordeel van de analist, met reden). Staat daar `doubt: true`, noteer dan "twijfel van de analist".
      - `review` met `auto: true`: de uitkomst van een L4-herhaling, uit gewoon werk. `review-due`: de herhaling kwam langs.
    - Het plan en zelfvertrouwen van het begin, als die er zijn.

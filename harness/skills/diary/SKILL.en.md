@@ -23,6 +23,8 @@ Goal: self-regulation (plan → execution → reflection). The learner writes th
      - `regression`: tests that were green and turned red. `regression-fixed`: green again after a relapse (no new task). Many of both in a short time can point to guessing.
      - `deny`, `override`, `override-used`: what the guard did.
      - `review`, `level`, `micro-add`, `setting`: reviews, level changes, new microskills, settings.
+     - Promotion: `promotion-offered` (the harness made a proposal, with `from` and `to`), `promotion-confirmed` and a `level` with `by: learner` and `via: voorstel` (the learner said "yes, promote"), `promotion-declined` (the learner said no). Name a promoted skill concretely, with the evidence.
+     - The transfer task (`/mastery-check`): `transfer-start`, `transfer-passed`, or `transfer-failed` (with `why`: `help` when there was a hint, `claude` when Claude judged it not passed).
      - Done automatically by the harness, mention it separately: `placement` (level of a new skill after its first task), `level` with `auto: true` (automatic demotion; `by` says by whom: harness, demotion analyst or backstop), `micro-add` with `auto: true` and `task-retag` (the analyst linked tasks to a microskill), `demotion-verdict` (the analyst's verdict, with reason). If it says `doubt: true`, note "the analyst was in doubt".
      - `review` with `auto: true`: the outcome of an L4 review, from normal work. `review-due`: the review came by.
    - The plan and confidence from the start, if there are any.
