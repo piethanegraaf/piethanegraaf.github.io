@@ -9,7 +9,7 @@ description: "What the progress dashboard shows per skill, from levels and tasks
 The [dashboard](/dashboard/?lang=en) shows progress per skill and microskill:
 
 - your **level** and its history;
-- what each **level means**: point at a level in the bar, the legend or a skill (or Tab to it) for what it is, why, the evidence and the step to the next level. All of it together is under *What do the levels mean?*;
+- what each **level means**: point at a level in the bar, the legend or a skill (or Tab to it) for what it is, why, the evidence and the step to the next level. All of it together is under *What do the levels mean?*, with the route from the start (placement open) to L4: the criteria per step, and how you go up and down;
 - how many tasks were **solved** with at most rung 2, over the last 10 explained tasks, against the 85% target;
 - per task: the rung, the source (test, logged yourself, chat), your **explanation**, and when it was **rejected** or **corrected**;
 - the **reviews** (only L4, Fibonacci), neutral: when the next one is ready, and when you **last** saw the skill in your work. Nothing is "overdue": a review waits until the skill comes by;

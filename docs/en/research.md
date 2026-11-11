@@ -4,9 +4,9 @@ description: "AI that does your thinking while you practise lowers what you can 
 ---
 # Learning to Code (and OOD) with AI: Literature Review, Risk Assessment & a Learning-Preserving Claude Code Setup
 
-*Prepared 7 November 2026 · revised 8 November 2026, rewritten for students and teachers on 10 November 2026 and updated with new literature the same day (see §11) · For students who learn programming and Object-Oriented Design (OOD) with AI, and for their teachers*
+*Prepared 7 November 2026 · revised 8 November 2026, rewritten for students and teachers on 10 November 2026 and updated with new literature the same day, extended for junior developers at work on 11 November 2026 (see §11) · For students who learn programming and Object-Oriented Design (OOD) with AI, for their teachers, and for junior developers at work*
 
-> **Published version.** This review was first written for one student. This version is written for students and teachers in general; that student's situation remains as examples in boxes. Files it refers to, such as the session logs, are not published.
+> **Published version.** This review was first written for one student. This version is written for students and teachers in general; that student's situation remains as examples in boxes. Since 11 November 2026 it also covers junior developers at work (§2.12), and it invites researchers to test the harness (§6.1). Files it refers to, such as the session logs, are not published.
 
 ---
 
@@ -14,7 +14,7 @@ description: "AI that does your thinking while you practise lowers what you can 
 
 The table of contents is in the sidebar.
 
-> **Status note.** Sections 1–9 are the original design. §1–4, §6–8 and §5.3/§5.7 were revised on 8 November 2026 with research from May–November 2026, the shift in skill needs, and a critical review of the original literature review; what changed and why is in the change log (§11). The harness as actually built differs in places: there are microskills, a test runner (`check.mjs`) instead of a PostToolUse evidence hook, a hard own-words explanation check, placement of a new skill by a first attempt, automatic demotion on evidence, Fibonacci reviews at L4 through real work, and a tooling zone. Those differences are summarized in §10, which reports what the first sessions showed; §10.4 covers the revision of 10 November 2026. If you use the harness, its `CLAUDE.md` is authoritative for day-to-day rules. A short literature update on 10 November 2026 added seven sources (change log, §11).
+> **Status note.** Sections 1–9 are the original design. §1–4, §6–8 and §5.3/§5.7 were revised on 8 November 2026 with research from May–November 2026, the shift in skill needs, and a critical review of the original literature review; what changed and why is in the change log (§11). The harness as actually built differs in places: there are microskills, a test runner (`check.mjs`) instead of a PostToolUse evidence hook, a hard own-words explanation check, placement of a new skill by a first attempt, automatic demotion on evidence, Fibonacci reviews at L4 through real work, and a tooling zone. Those differences are summarized in §10, which reports what the first sessions showed; §10.4 covers the revision of 10 November 2026. If you use the harness, its `CLAUDE.md` is authoritative for day-to-day rules. A short literature update on 10 November 2026 added seven sources (change log, §11). On 11 November 2026, §2.12 (the eternal-junior problem) and §6.1 (an invitation to run a randomized trial) were added.
 
 ---
 
@@ -61,6 +61,8 @@ So the evidence argues for **adding** deliberate practice of AI-era skills (revi
 !!! example "Example: one student's situation"
     This review was first written for a second-year HBO-ICT student. The student's OOD exam at CHE was timed, at AI level 0/1, and about ten weeks after the review was written. For that student, the first horizon ran until that exam date. After it, the focus could widen to the supervision skills of §2.9.
 
+**A second target group: junior developers at work.** The risk does not end with the exam. A junior who lets an agent do the work before they can do it themselves gets the work done, but skips the practice through which a junior becomes a medior or senior. This review calls that the **eternal-junior problem** (§2.12). Experiments show the mechanism in the short term, and interviews in software teams describe the pattern. Practitioners warn about it in talks and blog posts (grade D). No study has followed juniors at work over time yet, and AI can also help people learn on the job.
+
 The learning-science foundations line up with this:
 
 - **Effort:** learning depends on effortful generation and retrieval (Bjork, 1994; Roediger & Karpicke, 2006).
@@ -77,6 +79,8 @@ The learning-science foundations line up with this:
 3. **Hooks** (`SessionStart`, `UserPromptSubmit`, `PreToolUse`, `PostToolUse`, `Stop`) that inject level-appropriate tutoring rules, block the AI from writing code you are still supposed to write, schedule reviews and prompt reflection.
 
 The hooks are a **commitment device** you choose for yourself (Ariely & Wertenbroch, 2002), not a prison. You can step out deliberately, and stepping out gets logged.
+
+**The trade-off in one line:** build a skill by hand first, delegate it to the AI once you have mastered it, and maintain it with practice by hand now and then. Each part follows a principle with empirical support (§2.11). Whether the combination works, for students or for juniors at work, has not been tested. A literature review cannot settle that, so §6.1 invites researchers to test it in a randomized trial.
 
 **For teachers and programmes.** This review is written mainly for students. §4.2 is a separate part for teachers and programmes: it turns this evidence into points for the AI policy of a course or programme.
 
@@ -107,10 +111,11 @@ This is a **narrative review**, not a systematic one. The first version (7 Novem
 
 This document was written with Claude, Anthropic's model, and Claude agents did the research for the revision. A vendor study that reports *harm* from the vendor's own product, such as Shen & Tamkin, is more credible than a vendor claim about how much code AI already writes; such claims are graded D. Check important claims through the linked primary source.
 
-**Two time horizons.** The review answers two different questions, and the evidence answers them differently:
+**Three questions.** The review answers three different questions, and the evidence answers them differently:
 
 - **Short term (§2.1–2.8):** what helps you pass an exam at AI level 0/1 on your exam date.
 - **Long term (§2.9):** which skills will matter in the labour market after your studies.
+- **At work (§2.12):** how a junior developer keeps growing when an agent can do the work.
 
 ### 2.1 How programming and OOD skills are learned
 
@@ -541,7 +546,7 @@ So the shift argues for **adding** deliberate practice of AI-era skills, not for
 - **Deskilling in professional practice.** The first strong real-world signal comes from medicine. After routine use of AI-assisted colonoscopy, experienced endoscopists' adenoma detection rate *without* AI fell from 28.4% to 22.4% (Budzyń et al., 2025; observational, 19 endoscopists in four Polish centres).
     - **No longitudinal software study:** for software developers there is no longitudinal study of skill decay yet.
     - **Anthropic's study of its own engineers:** 132 surveyed and 53 interviewed; a vendor source, and not anonymous. It reports self-reported Claude use rising from 28% to 59% of their work, and worries about skill atrophy. It names the **"paradox of supervision"**: checking AI output needs the very skills that delegating to it erodes (Anthropic, 2025b).
-    - **Juniors:** interviewees describe entry-level work being absorbed into seniors' AI workflows, so juniors lose the "productive struggle" through which expertise develops (Yu & Moon, 2026; 14 interviews).
+    - **Juniors:** interviewees describe entry-level work being absorbed into seniors' AI workflows, so juniors lose the "productive struggle" through which expertise develops (Yu & Moon, 2026; 14 interviews). §2.12 works this out for junior developers at work.
     - **For a student it is sharper:** an engineer has to *keep* supervision skills, a student has to *acquire* them. Medical educators call this "never-skilling" (Abdulnour, Gin & Boscardin, 2025).
 
 **Implication:** automating a mastered skill is fine, and it is the goal of the system. Three conditions apply:
@@ -567,6 +572,57 @@ So the shift argues for **adding** deliberate practice of AI-era skills, not for
 | P11 | **Enforce guardrails in the workflow, not only in prompts.** | Barth 2026 (prompts alone: no effect); Oreopoulos 2026; Sankaranarayanan 2026; Teo 2026 (tutors over-help) | Moderate |
 | P12 | **Practise under test conditions before the test**: timed, without AI, in the IDE of your exam, after low-stakes learning. | Transfer-appropriate processing (Morris 1977); Pan & Rickard 2018; Hinze & Rapp 2014; Driskell 2001 | Moderate (no IDE-specific study) |
 | P13 | **Train supervision as its own skill**: read, test, debug and specify AI output, on topics you can already write yourself. | Paradox of supervision (Anthropic 2025b); employer interview formats; CS1-LLM; Pădurean 2026; §2.9 | Inference, consistent across sources |
+
+Read together, P1–P6 and P11 build a skill, P7 and P13 delegate it, and P8 maintains it. §2.12 applies that trade-off to junior developers at work.
+
+### 2.12 The eternal-junior problem
+
+**The problem.** A junior developer who hands work to an agent before they can do it themselves gets the work done, but does not build the skills that make a medior or senior: debugging, reading code, design judgement and checking AI output. The output looks productive, so the gap stays hidden. Medical educators call the version for trainees "never-skilling" (Abdulnour, Gin & Boscardin, 2025). This review calls it the **eternal-junior problem**. It is a different question from the one in §2.9. That one asks whether juniors still get hired; this one asks whether the juniors who are hired still grow.
+
+**Evidence that the mechanism is real.**
+
+- **Experiment.** In a randomized trial with 52 mostly junior engineers learning a new library, the AI group scored 50% vs. 67% on a quiz afterwards. Those who delegated code generation scored below 40%; those who asked the AI conceptual questions scored 65% or more. The AI group was not significantly faster (Shen & Tamkin, 2026; grade B, short-term, vendor).
+- **Interviews in software teams:**
+    - Entry-level work is absorbed into seniors' AI workflows. Juniors lose the productive struggle through which expertise develops, and seniors and juniors see the situation differently (Yu & Moon, 2026; 14 interviews; grade C).
+    - Juniors swing "between over-reliance and cautious avoidance". Seniors steer the AI with skills they built before AI existed. What juniors may do with AI is set mainly by the policy of their organization (Feng, Yun & Wang, 2026; 10 juniors and 10 seniors; grade C).
+    - Anthropic's own engineers worry about skill atrophy and describe the "paradox of supervision" (Anthropic, 2025b; grade C, vendor; §2.10).
+- **Other professions:**
+    - **Robotic surgery.** Trainees got far less hands-on practice than in open surgery. Those who still became skilled did so through "shadow learning" outside the approved paths, which led to hyperspecialization and fewer experts (Beane, 2019; a two-year ethnography at five sites plus interviews at 13 teaching hospitals; grade C). Beane (2024) generalizes this to intelligent technology at work: skill grows through challenge, complexity and connection with experts, and technology that is used to make experts more productive cuts into all three.
+    - **Medicine.** Experienced endoscopists found fewer adenomas without AI after routine use with AI (Budzyń et al., 2025; §2.10).
+
+**Practitioners describe the same pattern (grade D).** Since 2024, engineers, managers and executives have described it in talks, interviews, news articles and blog posts. The quotes and links are in the [notes](notes/eternal_junior.md#3-practitioner-sources-talks-interviews-news-and-blogs-grade-d).
+
+- **Juniors who do not grow.** "The output looked senior. The understanding was still junior" (Scalzo, LeadDev 2026). AI removed the learning experiences of each rung of the career ladder: "The result is juniors who ship like mids but can't debug like them" (Allan, QCon London 2026). Juniors who skip the "hard way" "may plateau early" (Osmani, 2025). In a survey of the Pragmatic Engineer (2026), juniors get fewer tasks they could grow from.
+- **The pipeline.** It takes "seven-plus years" to forge a competent engineer, and not training juniors is "cannibalizing our own future" (Majors, 2024). The CEO of AWS called replacing juniors with AI "the dumbest thing I've ever heard" (Garman, 2025). Two Microsoft leaders describe an "AI drag" on early-career developers and propose a preceptor programme with senior mentors (Russinovich & Hanselman, CACM 2026).
+- **The Netherlands.** In a YouGov survey for the recruiter SThree (793 Dutch STEM professionals, 2026), four in ten say seniors now do work that used to go to juniors. The work through which juniors learn the trade is done more and more by AI (AG Connect, 2026).
+- **The remedies they propose look like the harness.** Try it yourself for 15–30 minutes before asking the AI, a day a week without AI, a learning journal, and explaining the AI's solution in your own words (Osmani, 2025); AI-off sessions and "Explain the Machine" (Scalzo, 2026); "manage juniors for learning, not production" (Beck, 2025). That is a match in direction, not evidence that the harness works.
+- **Counter-voices.** Beck (2025) and Willison (2025) see AI as a patient tutor that speeds up learning, on one condition: do not outsource "the bits you need to learn" (Willison). Juniors adopt AI faster than seniors (Yegge, 2025). Juniors will adapt, and seniors who never grew are the bigger risk (Danjou, 2026). A Randstad director calls the drop in junior IT hiring mainly cyclical (AG Connect, 2026). In a vendor survey, 85% of juniors say AI improved their understanding, while 16% of seniors think juniors fully understand the AI code they submit (BairesDev, 2026).
+- **Interests.** Many of these voices have a stake: AI vendors (AWS, Microsoft, GitHub, Google, Sourcegraph) and recruiters or staffing firms (SThree, Randstad). The vendors themselves also warn.
+
+**Counter-evidence.**
+
+- **AI can also teach on the job.** At a call centre with 5,172 agents, an AI assistant helped novices most. During outages of the AI, agents with three months of AI exposure still handled chats faster than before, but only those who had followed the AI's suggestions closely (Brynjolfsson, Li & Raymond, 2025; grade B; the authors call the outage estimates noisy). There, the agents still did the work themselves and saw how customers responded. An agent that writes the code takes that part away.
+- **The cost is real.** Juniors gain the most productivity from AI tools (Cui et al., 2025). Every hour of practice by hand at L1–L3 is an hour of slower output. The cost may be smallest while a skill is new: in Shen & Tamkin (2026), the AI group was not significantly faster while learning a new library.
+
+**What is missing.** No study has followed juniors at work over time. No study measures the best mix of practice by hand and delegation (§2.9). The evidence from the workplace is qualitative, small and recent.
+
+**The trade-off the harness makes.** The harness does not ban AI. It ties the moment of delegation to mastery, for each skill:
+
+| Phase | Levels | What happens | Principles |
+|---|---|---|---|
+| **Build** | L0–L3 | The junior writes the code. The AI demonstrates, gives a skeleton or gives hints. A task counts after an explanation in the junior's own words. | P1–P6, P11 |
+| **Delegate** | L4 | The AI does the work straight away, and the junior supervises. | P7, P13 |
+| **Maintain** | L4 | At Fibonacci intervals, the next time the skill comes by in real work, the junior does that part without AI. A failure moves the skill down. | P8 |
+
+Aviation made the same trade-off. Airline pilots supervise the autopilot most of the time. In a simulator study with 16 airline pilots, the skills of flying by hand were mostly retained. The cognitive skills of manual flight, such as tracking the aircraft's position, deciding the next step and recognizing failures, showed more frequent and larger problems, and these went together with mind-wandering while the automation flew (Casner et al., 2014; grade C). The FAA encourages airlines to give pilots opportunities to fly by hand, and to include manual flight in training and checks (FAA, 2013, 2017; policy, grade D). That is maintenance at L4: delegate, and still do it yourself now and then. For software, it is the cognitive side (design, debugging, reading code) that matters most.
+
+**What the harness does not solve.**
+
+- **Connection.** Contact with experts, Beane's third condition, is not something a tool supplies. The harness does not replace a mentor or a review by a senior.
+- **The organization.** Whether a junior gets time to practise by hand depends on the team (Feng, Yun & Wang, 2026; Yu & Moon, 2026). The harness is a commitment device the junior chooses (P10). Imposed by an employer, that argument no longer holds, and the learning data would need other privacy rules.
+- **The map.** There is an example map for juniors at work in C#/.NET (`junior-dotnet`). In it, code outside the mapped skills is L4, so the AI may write it and only the skills being learned are protected. A junior has to adapt its paths to their own codebase, the guard only protects skills that have paths, and automatic logging of tasks from tests only works with `dotnet test`.
+
+**How strong is this?** Every part of the trade-off follows a principle with empirical support (§2.11). The combination, and its use at work, have not been tested. A narrative review cannot show that this is the best trade-off; only a trial can. §6.1 proposes one. The sources, with a link for every claim, are in the [notes on the eternal-junior problem](notes/eternal_junior.md).
 
 ---
 
@@ -1279,6 +1335,16 @@ How do you know whether the harness protects your learning and does not just add
 7. **Mock exam vs. practice (R14).** Do a timed mock exam without AI, in the same environment (IDE) as your exam. Compare your score with your success rate in practice. A big gap means that your practice conditions are too easy, or too different from the test.
 8. **Supervision check (R16, after your exam).** Take a short class written by AI, with planted OOD and test flaws, and count how many flaws you find without help. Repeat this every month.
 
+### 6.1 Invitation to researchers: a randomized trial
+
+The checks above are for one learner. Whether the harness works in general needs a randomized controlled trial. The page [For researchers](researchers.md) proposes one. In short:
+
+- **Arms:** Claude Code without restrictions; Claude Code with a learning prompt only (the *Learning* output style); Claude Code with the harness.
+- **Participants:** students in a programming course, or junior developers with 0–2 years of experience.
+- **Primary outcome:** a timed transfer test without AI, at least eight weeks after the last practice.
+- **Secondary outcomes:** planted flaws found in code written by AI, tasks completed, time to L4, and overrides.
+- **Maintenance within one person:** randomize which L4 skills get reviews.
+
 ---
 
 ## 7. Limitations
@@ -1290,6 +1356,8 @@ How do you know whether the harness protects your learning and does not just add
 - **Conflict of interest.** This document was written by Claude, an Anthropic model, and it relies in places on Anthropic research. Check the important claims through the linked sources.
 - **Hooks are a commitment device, not security.** You can always switch them off, and the AI can sometimes find routes around the rules (e.g. shell commands that write files). So the harness cannot prove to a teacher that a student worked without AI. It works because *you* chose it. The `PreToolUse` matcher can be extended to `Bash` for common file-writing commands, but this will never be airtight. Hooks can also misfire the other way. In the first sessions of the pilot, reports from background agents were treated as the student's own prompts and unlocked hint rungs, until this was fixed (§10.2, item 10).
 - **Tried by one student so far.** The design was first tried in a pilot with one student. What §10 reports comes from those first sessions. It shows what went wrong and what was changed, not how well the harness works for students in general.
+- **Not tried at work.** The case for junior developers at work (§2.12) rests on a short-term experiment, small interview studies, analogies with other professions, and practitioner sources of grade D. No junior developer has used the harness at work yet.
+- **Practitioner sources show concern, not proof.** The talks, interviews, news articles and blog posts in §2.12 show that the concern is widespread. They do not show that it is true.
 - **Mastery thresholds are heuristics.** The numbers (85%, 3 successes over 2 days, the intervals) come from the literature, but they have not been validated for this setup. Adjust them using your own evaluation data (§6).
 - **Detecting skills from prompts is approximate.** Matching on keywords will sometimes pick the wrong skill. Let the AI propose a skill and confirm it, or name the skill yourself (`/learn ood.strategy`).
 
@@ -1565,6 +1633,18 @@ How do you know whether the harness protects your learning and does not just add
 - Lepp, M. (2026). Patterns of learner-AI interaction and academic performance in an object-oriented programming course. *Proc. IEEE FIE 2026*. arXiv:2607.24755 [preprint].
 - O'Neill, P. (2026). [Audit of AI-in-education meta-analyses; title not verified]. EdArXiv preprint, https://osf.io/preprints/edarxiv/n29zd_v3. Reported by Barshay, J. (2026, October 26), *The Hechinger Report*, https://hechingerreport.org/proof-points-ai-education-meta-analysis/
 - Walker, Fesler, Martinez Claeys, Agnew, & Loeb (2026). *The evidence base on AI in K-12: A November 2026 review*. SCALE Initiative, Stanford Graduate School of Education. https://doi.org/10.26300/80wn-ca81
+
+**Added on 11 November 2026: junior developers at work**
+
+*Per-claim source links, and the practitioner sources (talks, interviews, news and blog posts), are in the [notes on the eternal-junior problem](notes/eternal_junior.md).*
+
+- Beane, M. (2019). Shadow learning: Building robotic surgical skill when approved means fail. *Administrative Science Quarterly, 64*(1), 87–123. https://doi.org/10.1177/0001839217751692
+- Beane, M. (2024). *The skill code: How to save human ability in an age of intelligent machines*. Harper Business.
+- Brynjolfsson, E., Li, D., & Raymond, L. (2025). Generative AI at work. *Quarterly Journal of Economics, 140*(2), 889–942. https://doi.org/10.1093/qje/qjae044
+- Casner, S. M., Geven, R. W., Recker, M. P., & Schooler, J. W. (2014). The retention of manual flying skills in the automated cockpit. *Human Factors, 56*(8), 1506–1516. https://doi.org/10.1177/0018720814535628
+- Federal Aviation Administration. (2013). *Manual flight operations* (SAFO 13002, 4 January 2013). https://www.faa.gov/sites/faa.gov/files/other_visit/aviation_industry/airline_operators/airline_safety/SAFO13002.pdf
+- Federal Aviation Administration. (2017). *Manual flight operations proficiency* (SAFO 17007, 4 May 2017). https://www.faa.gov/sites/faa.gov/files/2022-11/SAFO17007.pdf
+- Feng, D., Yun, B., & Wang, A. Y. (2026). From junior to senior: Allocating agency and navigating professional growth in agentic AI-mediated software engineering. *Proc. CHI 2026*. https://doi.org/10.1145/3772318.3791642 (arXiv:2602.00496)
 
 ---
 
@@ -1923,6 +2003,19 @@ A task stays open until its own-words explanation is approved, and lapses when t
 ---
 
 ## 11. Change log
+
+### 11 November 2026 (later): junior developers at work, and an invitation to researchers
+
+- **A second target group.** The review now also covers junior developers at work, who risk staying junior when an agent does the work before they can do it themselves (§1, §2.0, §2.10).
+- **§2.12, new:** the eternal-junior problem. The evidence for the mechanism, the practitioner sources (grade D), the counter-evidence, what is missing, the trade-off of the harness (build, delegate, maintain), aviation as an analogy for maintenance at L4, and what the harness does not solve.
+- **§2.11:** one sentence that groups the principles into build, delegate and maintain.
+- **An example map for juniors at work** (`junior-dotnet`, C#/.NET), in which code outside the mapped skills is L4 (§2.12, "What the harness does not solve").
+- **§6.1, new:** an invitation to run a randomized trial, with the full proposal on the page [For researchers](researchers.md).
+- **§7:** two new limitations: not tried at work, and practitioner sources show concern, not proof.
+- **§8:** new references, with the source links in the [notes on the eternal-junior problem](notes/eternal_junior.md).
+- **How strong the claim is.** The harness is presented as built from principles with empirical support, with a combination that has not been tested. It is not presented as the best or the most validated approach: a narrative review cannot show that.
+- **Not changed:** the design (§5) and the conclusions of §2.1–2.11.
+- **How:** targeted web searches by Claude in one session. Each scientific source was checked against its primary text or publisher page. The practitioner sources were checked against their own pages; the notes say where that was not possible.
 
 ### 11 November 2026: learning order, reviews and explanations revised (decisions of 10 November)
 

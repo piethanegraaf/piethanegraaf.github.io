@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Leerharnas installer. No dependencies, no network, no shell: it only copies files into the target folder.
 //
-//   node harness/install.mjs <doelmap> [--map ood] [--lang nl|en] [--course "<vak>"] [--exam JJJJ-MM-DD] [--dry-run] [--yes]
+//   node harness/install.mjs <doelmap> [--map ood|junior-dotnet] [--lang nl|en] [--course "<vak>"] [--exam JJJJ-MM-DD] [--dry-run] [--yes]
 //   node harness/install.mjs <doelmap> --update [--dry-run] [--yes]
 //
 // - It first shows what will happen. It only changes files with --yes, or after "j" in an interactive terminal.

@@ -4,7 +4,9 @@
 
 **Learning harness for Claude Code: hooks stop the AI from writing your practice code, with skill levels, a progress dashboard and a literature review.** Documentation: https://piethanegraaf.github.io/en/
 
-A learning harness for [Claude Code](https://docs.claude.com/en/docs/claude-code/overview) that makes sure you learn to program **yourself**, even with an AI looking over your shoulder. It knows how far along you are per skill and adjusts the AI's help to that: hints instead of solutions while you learn, short spaced reviews once you have mastered something.
+A learning harness for [Claude Code](https://docs.claude.com/en/docs/claude-code/overview) that makes sure you learn to program **yourself**, even with an AI looking over your shoulder. It is for students, and for junior developers at work who do not want to stay junior because the AI does all the work.
+
+**The idea:** build a skill yourself first (L0–L3, hints instead of solutions), then delegate it to the AI (L4), and maintain it with short spaced reviews in your own work. Each part follows a principle with empirical support; whether the combination works has not been tested yet. Researchers are invited to test it in a randomized trial: see [For researchers](https://piethanegraaf.github.io/en/researchers/).
 
 **Site:** https://piethanegraaf.github.io/en/ · **Dashboard:** https://piethanegraaf.github.io/dashboard/?lang=en · **C# OOP cheat sheet:** https://piethanegraaf.github.io/en/cheatsheet/
 
@@ -15,6 +17,7 @@ A learning harness for [Claude Code](https://docs.claude.com/en/docs/claude-code
 - **Tasks count only after your own explanation**, checked by Claude and by a deterministic check.
 - **Explanations right away**: a task you do not explain before the next exercise lapses (skipped).
 - **Reviews only at L4**, at Fibonacci intervals: the next time such a skill comes by in your work, you do it yourself.
+- **Two skill maps**: Object-Oriented Design in C# for students (`--map ood`), and an example map for a junior developer at work in C#/.NET (`--map junior-dotnet`), where code outside the skills you are learning is L4.
 - **Up is your choice, down follows the evidence** (optional): a read-only agent decides whether one sub-pattern or the whole skill goes down.
 - **A diary** at the end of each session, with the reflection in your own words.
 - **Dutch and English**: messages, rules and the skills (diary, mastery-check).

@@ -7,9 +7,9 @@ description: "AI die tijdens het oefenen voor je denkt, verlaagt wat je daarna z
 !!! warning "Machinevertaling"
     Dit is een machinevertaling door Claude (Anthropic) van het [Engelse origineel](../en/research/). Een mens heeft de vertaling niet nagekeken. Bij twijfel geldt de Engelse tekst.
 
-*Opgesteld 7 november 2026 · herzien 8 november 2026, herschreven voor studenten en docenten op 10 november 2026 en dezelfde dag bijgewerkt met nieuwe literatuur (zie §11) · Voor studenten die programmeren en Object-Oriented Design (OOD) leren met AI, en voor hun docenten*
+*Opgesteld 7 november 2026 · herzien 8 november 2026, herschreven voor studenten en docenten op 10 november 2026 en dezelfde dag bijgewerkt met nieuwe literatuur, uitgebreid voor junior developers op hun werk op 11 november 2026 (zie §11) · Voor studenten die programmeren en Object-Oriented Design (OOD) leren met AI, voor hun docenten, en voor junior developers op hun werk*
 
-> **Gepubliceerde versie.** Dit literatuuronderzoek is eerst geschreven voor één student. Deze versie is geschreven voor studenten en docenten in het algemeen; de situatie van die student staat er nog in als voorbeelden in kaders. Bestanden waarnaar het document verwijst, zoals de sessielogs, zijn niet gepubliceerd.
+> **Gepubliceerde versie.** Dit literatuuronderzoek is eerst geschreven voor één student. Deze versie is geschreven voor studenten en docenten in het algemeen; de situatie van die student staat er nog in als voorbeelden in kaders. Sinds 11 november 2026 gaat het ook over junior developers op hun werk (§2.12), en nodigt het onderzoekers uit om de harnas te toetsen (§6.1). Bestanden waarnaar het document verwijst, zoals de sessielogs, zijn niet gepubliceerd.
 
 ---
 
@@ -17,7 +17,7 @@ description: "AI die tijdens het oefenen voor je denkt, verlaagt wat je daarna z
 
 De inhoudsopgave staat in de zijbalk.
 
-> **Statusnotitie.** Secties 1–9 zijn het oorspronkelijke ontwerp. §1–4, §6–8 en §5.3/§5.7 zijn op 8 november 2026 herzien met onderzoek uit mei–november 2026, de verschuiving in benodigde vaardigheden en een kritische beoordeling van het oorspronkelijke literatuuronderzoek. Wat er veranderd is en waarom, staat in het wijzigingslogboek (§11). De harnas zoals die echt is gebouwd, wijkt op punten af: er zijn microvaardigheden, een testrunner (`check.mjs`) in plaats van een PostToolUse-hook voor bewijs, een harde controle op uitleg in eigen woorden, plaatsing van een nieuwe vaardigheid door een eerste poging, automatisch omlaag op bewijs, Fibonacci-herhalingen op L4 via echt werk, en een toolingzone. Die verschillen staan samengevat in §10, waarin staat wat de eerste sessies lieten zien; §10.4 gaat over de herziening van 10 november 2026. Als je de harnas gebruikt, is de `CLAUDE.md` daarvan leidend voor de dagelijkse regels. Een korte literatuurupdate op 10 november 2026 voegde zeven bronnen toe (wijzigingslogboek, §11).
+> **Statusnotitie.** Secties 1–9 zijn het oorspronkelijke ontwerp. §1–4, §6–8 en §5.3/§5.7 zijn op 8 november 2026 herzien met onderzoek uit mei–november 2026, de verschuiving in benodigde vaardigheden en een kritische beoordeling van het oorspronkelijke literatuuronderzoek. Wat er veranderd is en waarom, staat in het wijzigingslogboek (§11). De harnas zoals die echt is gebouwd, wijkt op punten af: er zijn microvaardigheden, een testrunner (`check.mjs`) in plaats van een PostToolUse-hook voor bewijs, een harde controle op uitleg in eigen woorden, plaatsing van een nieuwe vaardigheid door een eerste poging, automatisch omlaag op bewijs, Fibonacci-herhalingen op L4 via echt werk, en een toolingzone. Die verschillen staan samengevat in §10, waarin staat wat de eerste sessies lieten zien; §10.4 gaat over de herziening van 10 november 2026. Als je de harnas gebruikt, is de `CLAUDE.md` daarvan leidend voor de dagelijkse regels. Een korte literatuurupdate op 10 november 2026 voegde zeven bronnen toe (wijzigingslogboek, §11). Op 11 november 2026 kwamen §2.12 (het eeuwige-juniorprobleem) en §6.1 (een uitnodiging voor een gerandomiseerd experiment) erbij.
 
 ---
 
@@ -64,6 +64,8 @@ Het bewijs pleit dus voor het **toevoegen** van doelbewust oefenen met vaardighe
 !!! example "Voorbeeld: de situatie van één student"
     Dit literatuuronderzoek is eerst geschreven voor een tweedejaars student HBO-ICT. De OOD-toets van die student bij CHE was getimed, op AI-niveau 0/1, en viel ongeveer tien weken na het schrijven van het onderzoek. Voor die student liep de eerste horizon tot die toetsdatum. Daarna kon de aandacht breder worden, naar de toezichtsvaardigheden uit §2.9.
 
+**Een tweede doelgroep: junior developers op hun werk.** Het risico houdt niet op bij de toets. Een junior die het werk aan een agent overlaat voordat het zelf lukt, krijgt het werk wel af, maar slaat het oefenen over waardoor een junior medior of senior wordt. Dit onderzoek noemt dat het **eeuwige-juniorprobleem** (§2.12). Experimenten laten het mechanisme op korte termijn zien, en interviews in softwareteams beschrijven het patroon. Ontwikkelaars waarschuwen ervoor in talks en blogs (bewijsgraad D). Nog geen enkele studie heeft juniors op hun werk over langere tijd gevolgd, en AI kan mensen op het werk ook helpen leren.
+
 De fundamenten uit de leerwetenschap sluiten hierop aan:
 
 - **Inspanning:** leren hangt af van inspannend zelf genereren en ophalen (Bjork, 1994; Roediger & Karpicke, 2006).
@@ -80,6 +82,8 @@ De fundamenten uit de leerwetenschap sluiten hierop aan:
 3. **Hooks** (`SessionStart`, `UserPromptSubmit`, `PreToolUse`, `PostToolUse`, `Stop`) die tutorregels voor het juiste niveau toevoegen, de AI tegenhouden als die code wil schrijven die jij nog zelf hoort te schrijven, herhalingen inplannen en tot reflectie aanzetten.
 
 De hooks zijn een **zelfbindingsmechanisme** (commitment device) dat je zelf kiest (Ariely & Wertenbroch, 2002), geen gevangenis. Je kunt er bewust uitstappen, en dat uitstappen wordt gelogd.
+
+**De afweging in één zin:** bouw een vaardigheid eerst met de hand op, besteed die uit aan de AI zodra je die beheerst, en onderhoud die af en toe door het weer met de hand te doen. Elk onderdeel volgt een principe met empirische steun (§2.11). Of de combinatie werkt, voor studenten of voor juniors op hun werk, is niet getest. Een literatuuronderzoek kan dat niet beslissen, dus §6.1 nodigt onderzoekers uit om het te toetsen in een gerandomiseerd experiment.
 
 **Voor docenten en opleidingen.** Dit literatuuronderzoek is vooral voor studenten geschreven. §4.2 is een apart deel voor docenten en opleidingen: het vertaalt dit bewijs naar punten voor het AI-beleid van een cursus of opleiding.
 
@@ -110,10 +114,11 @@ Dit is een **narratief literatuuroverzicht**, geen systematisch overzicht. De ee
 
 Dit document is geschreven met Claude, het model van Anthropic, en Claude-agents deden het onderzoek voor de herziening. Een leveranciersstudie die *schade* door het eigen product meldt, zoals Shen & Tamkin, is geloofwaardiger dan een bewering van een leverancier over hoeveel code AI al schrijft. Zulke beweringen krijgen graad D. Controleer belangrijke beweringen via de gelinkte primaire bron.
 
-**Twee tijdshorizonnen.** Het overzicht beantwoordt twee verschillende vragen, en het bewijs beantwoordt ze verschillend:
+**Drie vragen.** Het overzicht beantwoordt drie verschillende vragen, en het bewijs beantwoordt ze verschillend:
 
 - **Korte termijn (§2.1–2.8):** wat je helpt om op je toetsdatum te slagen voor een toets op AI-niveau 0/1.
 - **Lange termijn (§2.9):** welke vaardigheden na je studie tellen op de arbeidsmarkt.
+- **Op het werk (§2.12):** hoe een junior developer blijft groeien als een agent het werk kan doen.
 
 ### 2.1 Hoe je programmeer- en OOD-vaardigheden leert
 
@@ -543,7 +548,7 @@ De verschuiving pleit dus voor het **toevoegen** van bewuste oefening in vaardig
 - **Vaardigheidsverlies in de beroepspraktijk.** Het eerste sterke signaal uit de praktijk komt uit de geneeskunde. Na routinematig gebruik van AI-ondersteunde coloscopie daalde het adenoomdetectiepercentage van ervaren endoscopisten *zonder* AI van 28.4% naar 22.4% (Budzyń et al., 2025; observationeel, 19 endoscopisten in vier Poolse centra).
     - **Geen longitudinale softwarestudie:** voor softwareontwikkelaars is er nog geen longitudinale studie naar het afnemen van vaardigheden.
     - **De studie van Anthropic naar de eigen engineers:** 132 ondervraagd en 53 geïnterviewd; een bron van de leverancier, en niet anoniem. De studie meldt dat het zelfgerapporteerde gebruik van Claude steeg van 28% naar 59% van hun werk, en ze meldt zorgen over het verkommeren van vaardigheden. Ze noemt de **"paradox van het toezicht"**: het controleren van AI-uitvoer vraagt precies de vaardigheden die delegeren aan AI uitholt (Anthropic, 2025b).
-    - **Junioren:** geïnterviewden beschrijven hoe instapwerk wordt opgeslokt door de AI-workflows van senioren. Junioren verliezen zo de "productieve worsteling" waardoor expertise ontstaat (Yu & Moon, 2026; 14 interviews).
+    - **Junioren:** geïnterviewden beschrijven hoe instapwerk wordt opgeslokt door de AI-workflows van senioren. Junioren verliezen zo de "productieve worsteling" waardoor expertise ontstaat (Yu & Moon, 2026; 14 interviews). §2.12 werkt dit uit voor junior developers op hun werk.
     - **Voor een student is het scherper:** een engineer moet toezichtvaardigheden *behouden*, een student moet ze *verwerven*. Medisch opleiders noemen dit "never-skilling" (Abdulnour, Gin & Boscardin, 2025).
 
 **Gevolg:** een beheerste vaardigheid automatiseren is prima, en dat is ook het doel van het systeem. Er gelden drie voorwaarden:
@@ -569,6 +574,57 @@ De verschuiving pleit dus voor het **toevoegen** van bewuste oefening in vaardig
 | P11 | **Handhaaf vangrails in de workflow, niet alleen in prompts.** | Barth 2026 (alleen prompts: geen effect); Oreopoulos 2026; Sankaranarayanan 2026; Teo 2026 (tutors helpen te veel) | Matig |
 | P12 | **Oefen onder toetsomstandigheden vóór de toets**: op tijd, zonder AI, in de IDE van je toets, na eerst leren zonder druk. | Transfer-appropriate processing (Morris 1977); Pan & Rickard 2018; Hinze & Rapp 2014; Driskell 2001 | Matig (geen IDE-specifieke studie) |
 | P13 | **Train toezicht als aparte vaardigheid**: AI-uitvoer lezen, testen, debuggen en specificeren, bij onderwerpen die je al zelf kunt schrijven. | Paradox van het toezicht (Anthropic 2025b); sollicitatievormen van werkgevers; CS1-LLM; Pădurean 2026; §2.9 | Afleiding, consistent over bronnen heen |
+
+Samen genomen bouwen P1–P6 en P11 een vaardigheid op, besteden P7 en P13 die uit, en houdt P8 die op peil. §2.12 past die afweging toe op junior developers op hun werk.
+
+### 2.12 Het eeuwige-juniorprobleem
+
+**Het probleem.** Een junior developer die werk aan een agent overlaat voordat het zelf lukt, krijgt het werk wel af, maar bouwt de vaardigheden niet op die een medior of senior maken: debuggen, code lezen, ontwerpoordeel en het controleren van AI-uitvoer. Het werk ziet er productief uit, dus het gat blijft verborgen. Medisch opleiders noemen de variant bij artsen in opleiding "never-skilling" (Abdulnour, Gin & Boscardin, 2025). Dit onderzoek noemt het het **eeuwige-juniorprobleem**. Het is een andere vraag dan die in §2.9. Daar gaat het erom of juniors nog worden aangenomen; hier of de juniors die worden aangenomen nog groeien.
+
+**Bewijs dat het mechanisme echt is.**
+
+- **Experiment.** In een gerandomiseerd experiment met 52 vooral junior engineers die een nieuwe library leerden, scoorde de AI-groep achteraf 50% tegenover 67% op een quiz. Wie het schrijven van code aan de AI overliet, scoorde onder de 40%; wie de AI conceptuele vragen stelde, 65% of meer. De AI-groep was niet significant sneller (Shen & Tamkin, 2026; bewijsgraad B, korte termijn, leverancier).
+- **Interviews in softwareteams:**
+    - Instapwerk wordt opgeslokt door de AI-workflows van seniors. Juniors verliezen de productieve worsteling waardoor expertise ontstaat, en seniors en juniors zien de situatie verschillend (Yu & Moon, 2026; 14 interviews; bewijsgraad C).
+    - Juniors schommelen "between over-reliance and cautious avoidance". Seniors sturen de AI met vaardigheden die ze opbouwden voordat er AI was. Wat juniors met AI mogen, wordt vooral bepaald door het beleid van hun organisatie (Feng, Yun & Wang, 2026; 10 juniors en 10 seniors; bewijsgraad C).
+    - De eigen engineers van Anthropic maken zich zorgen over het verkommeren van vaardigheden en beschrijven de "paradox van het toezicht" (Anthropic, 2025b; bewijsgraad C, leverancier; §2.10).
+- **Andere beroepen:**
+    - **Robotchirurgie.** Artsen in opleiding kregen veel minder praktijk dan bij open chirurgie. Wie toch vaardig werd, deed dat via "shadow learning" buiten de goedgekeurde routes. Dat leidde tot hyperspecialisatie en minder experts (Beane, 2019; een etnografie van twee jaar op vijf locaties plus interviews in 13 academische ziekenhuizen; bewijsgraad C). Beane (2024) trekt dit breder naar slimme technologie op het werk: vaardigheid groeit door uitdaging, complexiteit en contact met experts, en technologie die wordt ingezet om experts productiever te maken, tast alle drie aan.
+    - **Geneeskunde.** Ervaren endoscopisten vonden zonder AI minder adenomen nadat ze routinematig met AI hadden gewerkt (Budzyń et al., 2025; §2.10).
+
+**Ontwikkelaars beschrijven hetzelfde patroon (bewijsgraad D).** Sinds 2024 beschrijven engineers, managers en bestuurders het in talks, interviews, nieuwsartikelen en blogs. De citaten en links staan in de [notities](/en/notes/eternal_junior/#3-practitioner-sources-talks-interviews-news-and-blogs-grade-d){ hreflang="en" } (Engels).
+
+- **Juniors die niet groeien.** "The output looked senior. The understanding was still junior" (Scalzo, LeadDev 2026). AI heeft de leerervaringen van elke trede van de loopbaanladder weggehaald: "The result is juniors who ship like mids but can't debug like them" (Allan, QCon London 2026). Juniors die de "hard way" overslaan, "may plateau early" (Osmani, 2025). In een enquête van The Pragmatic Engineer (2026) krijgen juniors minder taken waaraan ze kunnen groeien.
+- **De pijplijn.** Het kost "seven-plus years" om een bekwame engineer te vormen, en geen juniors opleiden is "cannibalizing our own future" (Majors, 2024). De CEO van AWS noemde juniors vervangen door AI "the dumbest thing I've ever heard" (Garman, 2025). Twee leidinggevenden van Microsoft beschrijven een "AI drag" voor beginnende developers en stellen een preceptorprogramma met senior mentoren voor (Russinovich & Hanselman, CACM 2026).
+- **Nederland.** In een enquête van YouGov voor recruiter SThree (793 Nederlandse bèta-technische professionals, 2026) zegt vier op de tien dat seniors nu werk doen dat vroeger bij juniors lag. Het werk waarmee juniors het vak leren, wordt steeds vaker door AI gedaan (AG Connect, 2026).
+- **De oplossingen die ze voorstellen, lijken op de harnas.** Probeer het 15–30 minuten zelf voordat je de AI vraagt, een dag per week zonder AI, een leerdagboek, en de oplossing van de AI in eigen woorden uitleggen (Osmani, 2025); sessies zonder AI en "Explain the Machine" (Scalzo, 2026); "manage juniors for learning, not production" (Beck, 2025). Dat is een overeenkomst in richting, geen bewijs dat de harnas werkt.
+- **Tegengeluiden.** Beck (2025) en Willison (2025) zien AI als een geduldige tutor die leren versnelt, op één voorwaarde: besteed niet "the bits you need to learn" uit (Willison). Juniors nemen AI sneller over dan seniors (Yegge, 2025). Juniors passen zich wel aan, en seniors die nooit zijn gegroeid zijn het grotere risico (Danjou, 2026). Een directeur van Randstad noemt de daling in het aannemen van junior IT'ers vooral conjunctureel (AG Connect, 2026). In een enquête van een leverancier zegt 85% van de juniors dat AI hun begrip verbeterde, terwijl 16% van de seniors denkt dat juniors de AI-code die ze inleveren volledig begrijpen (BairesDev, 2026).
+- **Belangen.** Veel van deze stemmen hebben een belang: AI-leveranciers (AWS, Microsoft, GitHub, Google, Sourcegraph) en recruiters of uitzendbureaus (SThree, Randstad). Ook de leveranciers zelf waarschuwen.
+
+**Tegenbewijs.**
+
+- **AI kan op het werk ook leren.** In een callcenter met 5,172 medewerkers hielp een AI-assistent beginners het meest. Viel de AI uit, dan handelden medewerkers met drie maanden AI-ervaring hun chats nog steeds sneller af dan voorheen, maar alleen als ze de suggesties van de AI nauw hadden gevolgd (Brynjolfsson, Li & Raymond, 2025; bewijsgraad B; de auteurs noemen de schattingen tijdens storingen onnauwkeurig). Daar deden de medewerkers het werk nog zelf en zagen ze hoe klanten reageerden. Een agent die de code schrijft, neemt juist dat deel over.
+- **De kosten zijn echt.** Juniors winnen de meeste productiviteit met AI-tools (Cui et al., 2025). Elk uur oefenen met de hand op L1–L3 is een uur tragere uitvoer. De kosten zijn misschien het kleinst zolang een vaardigheid nieuw is: bij Shen & Tamkin (2026) was de AI-groep niet significant sneller bij het leren van een nieuwe library.
+
+**Wat ontbreekt.** Geen enkele studie heeft juniors op hun werk over langere tijd gevolgd. Geen enkele studie meet de beste mix van oefenen met de hand en uitbesteden (§2.9). Het bewijs van de werkvloer is kwalitatief, klein en recent.
+
+**De afweging van de harnas.** De harnas verbiedt AI niet. Hij koppelt het moment van uitbesteden aan beheersing, per vaardigheid:
+
+| Fase | Niveaus | Wat er gebeurt | Principes |
+|---|---|---|---|
+| **Opbouwen** | L0–L3 | De junior schrijft de code. De AI doet voor, geeft een skelet of geeft hints. Een taak telt na een uitleg in eigen woorden. | P1–P6, P11 |
+| **Uitbesteden** | L4 | De AI doet het werk meteen, en de junior houdt toezicht. | P7, P13 |
+| **Onderhouden** | L4 | Met Fibonacci-intervallen doet de junior dat deel de eerstvolgende keer dat de vaardigheid in echt werk langskomt zelf, zonder AI. Gaat het mis, dan zakt de vaardigheid. | P8 |
+
+De luchtvaart maakte dezelfde afweging. Verkeersvliegers houden het grootste deel van de tijd toezicht op de automatische piloot. In een simulatorstudie met 16 verkeersvliegers bleef het met de hand vliegen grotendeels goed. Bij de denkvaardigheden van handmatig vliegen, zoals de positie van het vliegtuig bijhouden, de volgende stap bepalen en storingen herkennen, ontstonden vaker en grotere problemen, en die gingen samen met afdwalende gedachten terwijl de automatische piloot vloog (Casner et al., 2014; bewijsgraad C). De FAA moedigt luchtvaartmaatschappijen aan om piloten gelegenheid te geven met de hand te vliegen, en handmatig vliegen op te nemen in training en controles (FAA, 2013, 2017; beleid, bewijsgraad D). Dat is onderhoud op L4: uitbesteden, en het af en toe toch zelf doen. Bij software telt juist de denkkant het zwaarst: ontwerpen, debuggen en code lezen.
+
+**Wat de harnas niet oplost.**
+
+- **Contact.** Contact met experts, de derde voorwaarde van Beane, levert een tool niet. De harnas vervangt geen mentor en geen review door een senior.
+- **De organisatie.** Of een junior tijd krijgt om met de hand te oefenen, hangt af van het team (Feng, Yun & Wang, 2026; Yu & Moon, 2026). De harnas is een zelfbindingsmechanisme dat de junior zelf kiest (P10). Legt een werkgever hem op, dan geldt dat argument niet meer, en dan vragen de leerdata om andere privacyregels.
+- **De kaart.** Er is een voorbeeldkaart voor juniors op het werk in C#/.NET (`junior-dotnet`). Daarin staat code buiten de vaardigheden van de kaart op L4: die mag de AI schrijven, en alleen de vaardigheden die je leert, zijn beschermd. Een junior moet de paden aanpassen aan de eigen codebase, de guard beschermt alleen vaardigheden met paden, en taken automatisch vastleggen vanuit tests werkt alleen met `dotnet test`.
+
+**Hoe sterk is dit?** Elk onderdeel van de afweging volgt een principe met empirische steun (§2.11). De combinatie, en het gebruik op het werk, zijn niet getest. Een narratief literatuuroverzicht kan niet laten zien dat dit de beste afweging is; alleen een experiment kan dat. §6.1 stelt er een voor. De bronnen, met een link bij elke bewering, staan in de [notities over het eeuwige-juniorprobleem](/en/notes/eternal_junior/){ hreflang="en" } (Engels).
 
 ---
 
@@ -1281,6 +1337,16 @@ Hoe weet je of de harnas je leren beschermt en niet alleen frictie toevoegt? Con
 7. **Proeftoets vs. oefenen (R14).** Maak een proeftoets met tijdslimiet, zonder AI, in dezelfde omgeving (IDE) als je toets. Vergelijk je score met je succespercentage tijdens het oefenen. Is het verschil groot, dan zijn je omstandigheden bij het oefenen te makkelijk, of wijken ze te veel af van de toets.
 8. **Toezichtcontrole (R16, na je toets).** Neem een korte klasse die door AI is geschreven en waarin bewust fouten in OOD en tests zijn verstopt. Tel hoeveel fouten je zonder hulp vindt. Herhaal dit elke maand.
 
+### 6.1 Uitnodiging aan onderzoekers: een gerandomiseerd experiment
+
+De controles hierboven zijn voor één lerende. Of de harnas in het algemeen werkt, vraagt om een gerandomiseerd gecontroleerd experiment. De pagina [Voor onderzoekers](researchers.md) stelt er een voor. In het kort:
+
+- **Groepen:** Claude Code zonder beperkingen; Claude Code met alleen een leerprompt (de *Learning* output style); Claude Code met de harnas.
+- **Deelnemers:** studenten in een programmeervak, of junior developers met 0–2 jaar ervaring.
+- **Primaire uitkomst:** een getimede transfertoets zonder AI, minstens acht weken na het laatste oefenen.
+- **Secundaire uitkomsten:** gevonden geplante fouten in code die door AI is geschreven, afgeronde taken, tijd tot L4, en overrides.
+- **Onderhoud binnen één persoon:** loot welke L4-vaardigheden herhalingen krijgen.
+
 ---
 
 ## 7. Beperkingen
@@ -1292,6 +1358,8 @@ Hoe weet je of de harnas je leren beschermt en niet alleen frictie toevoegt? Con
 - **Belangenconflict.** Dit document is geschreven door Claude, een model van Anthropic, en het steunt op sommige plekken op onderzoek van Anthropic. Controleer de belangrijke beweringen via de gelinkte bronnen.
 - **Hooks zijn een middel om jezelf te binden (commitment device), geen beveiliging.** Je kunt ze altijd uitzetten, en de AI vindt soms routes om de regels heen (bijv. shell-commando's die bestanden schrijven). Daarom kan de harnas tegenover een docent niet bewijzen dat een student zonder AI heeft gewerkt. De harnas werkt omdat *jij* ervoor hebt gekozen. Je kunt de `PreToolUse`-matcher uitbreiden naar `Bash` voor veelgebruikte commando's die bestanden schrijven, maar dit wordt nooit waterdicht. Hooks kunnen ook de andere kant op de fout in gaan. In de eerste sessies van de pilot werden rapporten van achtergrondagents behandeld als de eigen prompts van de student, en speelden ze zo hinttreden vrij, totdat dit werd opgelost (§10.2, punt 10).
 - **Tot nu toe door één student uitgeprobeerd.** Het ontwerp is voor het eerst uitgeprobeerd in een pilot met één student. Wat §10 beschrijft, komt uit die eerste sessies. Het laat zien wat er misging en wat er is veranderd, niet hoe goed de harnas werkt voor studenten in het algemeen.
+- **Niet uitgeprobeerd op het werk.** De onderbouwing voor junior developers op hun werk (§2.12) rust op een experiment op korte termijn, kleine interviewstudies, vergelijkingen met andere beroepen en praktijkbronnen met bewijsgraad D. Nog geen junior developer heeft de harnas op het werk gebruikt.
+- **Praktijkbronnen tonen zorg, geen bewijs.** De talks, interviews, nieuwsartikelen en blogs in §2.12 laten zien dat de zorg breed leeft. Ze laten niet zien dat die zorg terecht is.
 - **Drempels voor beheersing zijn heuristieken.** De getallen (85%, 3 successen over 2 dagen, de intervallen) komen uit de literatuur, maar zijn niet gevalideerd voor deze opzet. Pas ze aan met je eigen evaluatiegegevens (§6).
 - **Vaardigheden herkennen in prompts lukt maar bij benadering.** Koppelen op trefwoorden kiest soms de verkeerde vaardigheid. Laat de AI een vaardigheid voorstellen en bevestig die, of noem de vaardigheid zelf (`/learn ood.strategy`).
 
@@ -1567,6 +1635,18 @@ Hoe weet je of de harnas je leren beschermt en niet alleen frictie toevoegt? Con
 - Lepp, M. (2026). Patterns of learner-AI interaction and academic performance in an object-oriented programming course. *Proc. IEEE FIE 2026*. arXiv:2607.24755 [preprint].
 - O'Neill, P. (2026). [Audit of AI-in-education meta-analyses; title not verified]. EdArXiv preprint, https://osf.io/preprints/edarxiv/n29zd_v3. Reported by Barshay, J. (2026, October 26), *The Hechinger Report*, https://hechingerreport.org/proof-points-ai-education-meta-analysis/
 - Walker, Fesler, Martinez Claeys, Agnew, & Loeb (2026). *The evidence base on AI in K-12: A November 2026 review*. SCALE Initiative, Stanford Graduate School of Education. https://doi.org/10.26300/80wn-ca81
+
+**Toegevoegd op 11 november 2026: junior developers op hun werk**
+
+*Bronlinks per bewering, en de praktijkbronnen (talks, interviews, nieuwsartikelen en blogs), staan in de [notities over het eeuwige-juniorprobleem](/en/notes/eternal_junior/){ hreflang="en" } (Engels).*
+
+- Beane, M. (2019). Shadow learning: Building robotic surgical skill when approved means fail. *Administrative Science Quarterly, 64*(1), 87–123. https://doi.org/10.1177/0001839217751692
+- Beane, M. (2024). *The skill code: How to save human ability in an age of intelligent machines*. Harper Business.
+- Brynjolfsson, E., Li, D., & Raymond, L. (2025). Generative AI at work. *Quarterly Journal of Economics, 140*(2), 889–942. https://doi.org/10.1093/qje/qjae044
+- Casner, S. M., Geven, R. W., Recker, M. P., & Schooler, J. W. (2014). The retention of manual flying skills in the automated cockpit. *Human Factors, 56*(8), 1506–1516. https://doi.org/10.1177/0018720814535628
+- Federal Aviation Administration. (2013). *Manual flight operations* (SAFO 13002, 4 January 2013). https://www.faa.gov/sites/faa.gov/files/other_visit/aviation_industry/airline_operators/airline_safety/SAFO13002.pdf
+- Federal Aviation Administration. (2017). *Manual flight operations proficiency* (SAFO 17007, 4 May 2017). https://www.faa.gov/sites/faa.gov/files/2022-11/SAFO17007.pdf
+- Feng, D., Yun, B., & Wang, A. Y. (2026). From junior to senior: Allocating agency and navigating professional growth in agentic AI-mediated software engineering. *Proc. CHI 2026*. https://doi.org/10.1145/3772318.3791642 (arXiv:2602.00496)
 
 ---
 
@@ -1925,6 +2005,19 @@ Een taak staat open tot de uitleg in eigen woorden is goedgekeurd, en vervalt al
 ---
 
 ## 11. Wijzigingslog
+
+### 11 november 2026 (later): junior developers op hun werk, en een uitnodiging aan onderzoekers
+
+- **Een tweede doelgroep.** Het onderzoek gaat nu ook over junior developers op hun werk, die junior dreigen te blijven als een agent het werk doet voordat ze het zelf kunnen (§1, §2.0, §2.10).
+- **§2.12, nieuw:** het eeuwige-juniorprobleem. Het bewijs voor het mechanisme, de praktijkbronnen (bewijsgraad D), het tegenbewijs, wat ontbreekt, de afweging van de harnas (opbouwen, uitbesteden, onderhouden), de luchtvaart als vergelijking voor onderhoud op L4, en wat de harnas niet oplost.
+- **§2.11:** één zin die de principes groepeert in opbouwen, uitbesteden en onderhouden.
+- **Een voorbeeldkaart voor juniors op het werk** (`junior-dotnet`, C#/.NET), waarin code buiten de vaardigheden van de kaart op L4 staat (§2.12, "Wat de harnas niet oplost").
+- **§6.1, nieuw:** een uitnodiging voor een gerandomiseerd experiment, met het volledige voorstel op de pagina [Voor onderzoekers](researchers.md).
+- **§7:** twee nieuwe beperkingen: niet uitgeprobeerd op het werk, en praktijkbronnen tonen zorg, geen bewijs.
+- **§8:** nieuwe literatuur, met de bronlinks in de [notities over het eeuwige-juniorprobleem](/en/notes/eternal_junior/){ hreflang="en" } (Engels).
+- **Hoe sterk de bewering is.** De harnas wordt gepresenteerd als opgebouwd uit principes met empirische steun, met een combinatie die niet is getest. Hij wordt niet gepresenteerd als de beste of de best gevalideerde aanpak: een narratief literatuuroverzicht kan dat niet laten zien.
+- **Niet veranderd:** het ontwerp (§5) en de conclusies van §2.1–2.11.
+- **Hoe:** gerichte zoekopdrachten op het web door Claude in één sessie. Elke wetenschappelijke bron is nagelopen in de primaire tekst of op de pagina van de uitgever. De praktijkbronnen zijn nagelopen op hun eigen pagina; de notities zeggen waar dat niet lukte.
 
 ### 11 november 2026: leervolgorde, herhalingen en uitleg herzien (besluiten van 10 november)
 

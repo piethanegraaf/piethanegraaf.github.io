@@ -1,6 +1,6 @@
 # Learning harness
 
-> A free, open-source Claude Code setup for students learning to program. Hooks stop the AI from writing practice code, help comes in steps, and a dashboard tracks skill levels.
+> A free, open-source Claude Code setup for students and junior developers who want to keep learning to program. Hooks stop the AI from writing practice code, help comes in steps, and a dashboard tracks skill levels.
 
 The site is in English (under /en/) and Dutch (at the root). The code is AGPL-3.0-only; texts, docs, research and data are CC BY-NC 4.0.
 
@@ -14,6 +14,7 @@ The site is in English (under /en/) and Dutch (at the root). The code is AGPL-3.
 ## Research
 - [Literature review](https://piethanegraaf.github.io/en/research/): generative AI and learning to program, with a risk assessment and a learning-preserving Claude Code setup
 - [Research notes](https://piethanegraaf.github.io/en/notes/): dated evidence updates behind the review
+- [For researchers](https://piethanegraaf.github.io/en/researchers/): an invitation to test the harness in a randomized trial
 
 ## Tools
 - [C# OOP cheat sheet](https://piethanegraaf.github.io/en/cheatsheet/): classes, interfaces, UML class diagrams and design patterns, with example code

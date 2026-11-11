@@ -38,6 +38,13 @@ Een kaart staat in `harness/maps/<id>/`:
 
 Voor een andere taal dan C# zet je `codeExtensions` en `buildCommands`. `check.mjs` werkt voorlopig alleen met `dotnet test`.
 
+Er zijn twee kaarten:
+
+- **`ood`:** Object-Oriented Design in C#, met genummerde opdrachtmappen. Code die bij geen vaardigheid hoort, staat op L2.
+- **`junior-dotnet`:** een voorbeeldkaart voor een junior developer op het werk, in C#/.NET. Tien vaardigheden: debuggen, onbekende code lezen, unit tests, veilig refactoren, ASP.NET Core-API's, EF Core, async/await, veiligheid, code van AI reviewen en een taak specificeren voor een agent. Code die bij geen vaardigheid hoort, staat op **L4**: die mag de AI schrijven. Alleen wat je leert, is beschermd. Pas de paden aan naar de mappen van je eigen codebase (zie ook [In de repository van een team](install.md#in-de-repository-van-een-team)).
+
+De guard beschermt alleen bestanden die onder de paden van een vaardigheid vallen. Een vaardigheid zonder paden, zoals debuggen, krijgt de hintladder, maar de guard houdt niets tegen.
+
 ## Privacy
 
 Je leerdata blijft lokaal in `.learning/`. De installer zet die map in `.gitignore`.

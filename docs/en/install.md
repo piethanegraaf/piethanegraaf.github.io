@@ -20,7 +20,7 @@ node harness/install.mjs ../my-practice-folder --lang en --course "OOD" --exam 2
 
 - Without `--yes` the script only shows what it would do. Run it again with `--yes`.
 - `--lang nl|en` picks the language of the messages, the rules and the skills.
-- `--map ood` is the skill map (only `ood` for now).
+- `--map` is the skill map: `ood` (Object-Oriented Design in C#, the default) or `junior-dotnet` (an example map for a junior developer at work in C#/.NET). See [Your own course](configuration.md#your-own-course).
 - `--course` and `--exam` are optional. You can set them later with `skill.mjs setting`.
 
 What the installer creates:
@@ -47,6 +47,29 @@ node harness/install.mjs ../my-practice-folder --update --yes
 `--update` only replaces the harness files. Your data in `.learning/` and your own `CLAUDE.md` stay as they are. If you changed a hook yourself, the installer says so ("lokaal aangepast") and keeps your version in the backup folder.
 
 An older install without a manifest (with absolute paths in `settings.json`) is recognised and converted too.
+
+## In a team repository
+
+At work you install the harness in a repository that your team shares. The harness is your own commitment device, so keep it out of the team's commits:
+
+- **New files:** add them to `.git/info/exclude`, which only applies to your own copy:
+
+    ```text
+    .claude/hooks/
+    .claude/skills/diary/
+    .claude/skills/mastery-check/
+    .claude/agents/demotie-analist.md
+    .claude/leerharnas.md
+    .claude/leerharnas.json
+    .claude/leerharnas-backup/
+    .learning/
+    voorbeelden/
+    ```
+
+- **Files the team already has:** the installer extends `.gitignore`, adds a line to `CLAUDE.md` and merges the hooks into `.claude/settings.json`. Do not commit those changes without agreeing it with your team.
+- **No company data online:** check the diff of the export before you publish a dashboard (see [Configuration and privacy](configuration.md#privacy)), and add your employer and colleagues to `.learning/private.json`.
+
+An install that only writes to local files does not exist yet.
 
 ## Before you practise
 

@@ -9,7 +9,7 @@ description: "Wat het voortgangsdashboard per vaardigheid laat zien, van niveaus
 Het [dashboard](/dashboard/) laat de voortgang per vaardigheid en microvaardigheid zien:
 
 - je **niveau** en de geschiedenis daarvan;
-- wat elk **niveau betekent**: wijs een niveau aan in de balk, de legenda of bij een vaardigheid (of ga er met Tab naartoe) voor wat het inhoudt, waarom, het bewijs en de stap naar het volgende niveau. Alles bij elkaar staat onder *Wat betekenen de niveaus?*;
+- wat elk **niveau betekent**: wijs een niveau aan in de balk, de legenda of bij een vaardigheid (of ga er met Tab naartoe) voor wat het inhoudt, waarom, het bewijs en de stap naar het volgende niveau. Alles bij elkaar staat onder *Wat betekenen de niveaus?*, met de route van de start (plaatsing open) naar L4: de criteria per stap, en hoe je omhoog en omlaag gaat;
 - hoeveel taken **gelukt** zijn met hooguit trede 2, over de laatste 10 uitgelegde taken, met het doel van 85%;
 - per taak: de trede, de bron (test, zelf afgemeld, chat), je **uitleg**, en wanneer die werd **afgewezen** of **gecorrigeerd**;
 - de **herhalingen** (alleen L4, Fibonacci), neutraal: wanneer de volgende klaarstaat, en wanneer je de vaardigheid **laatst** in je werk zag. Niets is "te laat": een herhaling wacht tot de vaardigheid langskomt;
