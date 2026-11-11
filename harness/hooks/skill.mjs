@@ -139,7 +139,7 @@ switch (cmd) {
     if (findSkill(data, id)) exit("cli.micro.exists", { id });
     const lvl = parseLevel(lvlRaw);
     if (!title) exit("cli.micro.noTitle");
-    const m = { id, parent: parent.id, title, level: lvl, keywords: String(kws ?? "").split(",").map((k) => k.trim()).filter(Boolean), history: [{ at: today(), to: lvl, note: t("note.created") }] };
+    const m = { id, parent: parent.id, title, level: lvl, keywords: String(kws ?? "").split(",").map((k) => k.trim()).filter(Boolean), history: [{ at: today(), atIso: new Date().toISOString(), to: lvl, note: t("note.created") }] };
     scheduleOnLevel(data, m);
     const at = data.skills.indexOf(parent) + 1 + microsOf(data, parent.id).length;
     data.skills.splice(at, 0, m);

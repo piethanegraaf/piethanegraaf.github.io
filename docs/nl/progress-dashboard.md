@@ -6,7 +6,7 @@ description: "Wat het voortgangsdashboard per vaardigheid laat zien, van niveaus
 
 ## Wat het dashboard laat zien
 
-![Het leerdashboard met verzonnen demodata: 86% zelfstandig opgelost, het aantal vaardigheden per niveau, en de voortgang per vaardigheid en microvaardigheid](../assets/images/dashboard-demo-nl.png)
+![Het leerdashboard met verzonnen demodata: 86% zelfstandig opgelost, het aantal vaardigheden per niveau, en per vaardigheid wat er nog nodig is voor het volgende niveau](../assets/images/dashboard-demo-nl.png)
 
 *Het dashboard met verzonnen demodata.*
 
@@ -14,7 +14,8 @@ Het [dashboard](/dashboard/) laat de voortgang per vaardigheid en microvaardighe
 
 - je **niveau** en de geschiedenis daarvan;
 - wat elk **niveau betekent**: wijs een niveau aan in de legenda of de balk (of ga er met Tab naartoe) voor wat het inhoudt en de stap naar het volgende niveau. Esc sluit de uitleg. Het waarom, het bewijs en de route van de start (plaatsing open) naar L4 staan onder *Wat betekenen de niveaus?*: de criteria per stap, en hoe je omhoog en omlaag gaat;
-- hoeveel taken **gelukt** zijn met hooguit trede 2, over de laatste 10 uitgelegde taken, met het doel van 85%;
+- wat je nog nodig hebt **voor het volgende niveau**, in de vorm van dat criterium. Op L2 is dat een balk met het doel van 85% en de drie voorwaarden. Op L0, L1 en L3 zijn het stippen, en bij L3 ook de dagen en de transfertaak. Op L4 zie je het onderhoud. Er staat één regel bij met wat er nog moet gebeuren. Dit telt alleen de taken sinds je laatste niveauwijziging, net als de harnas, dus na een stap omhoog begin je opnieuw;
+- hoe de **laatste 10** uitgelegde taken gingen: gelukt is opgelost met hooguit trede 2;
 - per taak: de trede, de bron (test, zelf afgemeld, chat), je **uitleg**, en wanneer die werd **afgewezen** of **gecorrigeerd**;
 - de **herhalingen** (alleen L4, Fibonacci), neutraal: wanneer de volgende klaarstaat, en wanneer je de vaardigheid **laatst** in je werk zag. Niets is "te laat": een herhaling wacht tot de vaardigheid langskomt;
 - **overgeslagen** taken: de uitleg kwam niet direct, dus ze tellen niet. Ze staan apart van mislukt en van wacht op uitleg, en in de grafiek gearceerd;
