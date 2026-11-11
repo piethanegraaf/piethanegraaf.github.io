@@ -123,3 +123,7 @@ extra_javascript:
   - assets/javascripts/vendor/mermaid.min.js
   - assets/javascripts/cheatsheet-redirect.js
   - assets/javascripts/a11y.js
+  # GoatCounter (visits, no cookies): the endpoint first, then count.js, self-hosted like mermaid.
+  - assets/javascripts/goatcounter.js
+  - path: assets/javascripts/vendor/count.js
+    async: true

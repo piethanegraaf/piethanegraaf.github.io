@@ -5,10 +5,14 @@
 // - External scripts are only allowed when they carry an integrity attribute (SRI); their origin is added.
 // - Styles may be inline (MkDocs Material and mermaid set them); fonts only from Google Fonts.
 // Pages with their own CSP (the dashboard) are left alone.
+// connect-src also allows the GoatCounter endpoint: count.js (self-hosted) sends page views there with sendBeacon.
 import fs from "node:fs";
 import path from "node:path";
 import crypto from "node:crypto";
 import { fileURLToPath } from "node:url";
+
+// Visit counts (GoatCounter, no cookies, no personal data): the only place a page may send data to.
+export const ANALYTICS_ENDPOINT = "https://piethanegraaf.goatcounter.com/count";
 
 export function cspFor(html) {
   const hashes = new Set();
@@ -34,7 +38,7 @@ export function cspFor(html) {
     "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
     "font-src 'self' https://fonts.gstatic.com data:",
     "img-src 'self' data:",
-    "connect-src 'self'",
+    `connect-src 'self' ${ANALYTICS_ENDPOINT}`,
     "worker-src 'self' blob:",
     "base-uri 'self'",
     "form-action 'none'",
