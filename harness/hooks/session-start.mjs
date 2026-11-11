@@ -4,7 +4,7 @@
 import fs from "node:fs";
 import {
   readStdin, loadSkills, loadOverrides, today, taskStats, levelName, DIARY_DIR, lapseTasks, readEvents,
-  isMicro, pendingTasks, recentWins, levelAdvice, settingsOf, isPlacementPending, effectiveLevel, t,
+  isMicro, pendingTasks, recentWins, levelAdvice, settingsOf, isPlacementPending, effectiveLevel, adviceCommand, openOffer, t,
 } from "./lib.mjs";
 
 let input = {};
@@ -33,7 +33,11 @@ if (source === "startup" || source === "clear") {
 }
 const pending = pendingTasks();
 const wins = recentWins(data);
-const advice = skills.map((s) => levelAdvice(data, s)).filter(Boolean);
+// Promotion proposals the learner did not decline (setup review §9.6): the learner confirms with
+// "ja, doorzetten <id>"; a declined one only comes back after new evidence.
+const offers = skills.map((s) => openOffer(data, s)).filter((a) => a && !a.declined);
+const advice = skills.map((s) => levelAdvice(data, s)).filter((a) => a && (a.dir !== "up" || offers.some((o) => o.id === a.id)));
+const adviceLine = (a) => (a.dir === "up" ? t("ss.offer", { text: a.text, id: a.id, from: a.from, to: a.to }) : `${a.text} → \`${adviceCommand(a)}\``);
 const settings = settingsOf(data);
 const exam = settings.examDate;
 const daysToExam = exam ? Math.round((Date.parse(exam) - Date.parse(day)) / 86400000) : null;
@@ -56,7 +60,7 @@ if (pending.length) steps.push(t("ss.step.pending", { n: pending.length, list: p
 if (wins.length || advice.length) {
   steps.push(t("ss.step.signal", {
     wins: wins.length ? t("ss.step.signal.wins", { list: wins.map((w) => `${w.id} ${w.n}x`).join(", ") }) : "",
-    advice: advice.length ? t("ss.step.signal.advice", { list: advice.map((a) => `${a.text} → \`! node .claude/hooks/skill.mjs ${a.cmd}\``).join("; ") }) : "",
+    advice: advice.length ? t("ss.step.signal.advice", { list: advice.map(adviceLine).join("; ") }) : "",
   }));
 }
 steps.push(t("ss.step.goal"));
@@ -85,6 +89,7 @@ const ctx = [
 
 const msg = t("ss.msg", { n: skills.length }) +
   (pending.length ? t("ss.msg.pending", { n: pending.length }) : "") +
+  (offers.length ? t("ss.msg.offers", { list: offers.map((o) => `${o.id} ${o.from} → ${o.to}`).join(", ") }) : "") +
   (overrides.length ? t("ss.msg.overrides", { n: overrides.length }) : "");
 
 process.stdout.write(JSON.stringify({

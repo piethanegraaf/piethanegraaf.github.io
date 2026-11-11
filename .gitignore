@@ -15,3 +15,6 @@ events.jsonl
 session-*.json
 .env
 .env.*
+
+# Work list of the export for missing translations (it is removed once they are taken over)
+translations.todo.json

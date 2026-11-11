@@ -3,6 +3,10 @@
 //    [trede N] / [rung N]                     -> honest logging of help given (also at L1/L3, where the hook does not unlock rungs)
 //    [uitleg-ok <tid>] / [explain-ok <tid>]   -> task counts, but ONLY if the learner's own message also passes checkExplanation()
 //    [uitleg-nee <tid>] / [explain-no <tid>]  -> logged; task stays open
+//    [transfer-start|ok|nee <id>]             -> the transfer task of /mastery-check (setup review §9.4);
+//                                                ok only without help since the start AND when the learner's message passes checkExplanation()
+//    Right after an explanation that meets a promotion criterion, the harness itself shows the
+//    proposal to the learner (§9.2, §9.6). The learner confirms with "ja, doorzetten" (prompt-gate).
 // 2. When the learner said they want to stop, Claude may only finish once the
 //    diary entry (with reflection) for this session exists. Blocks at most 2x per stop request.
 //
@@ -14,9 +18,9 @@
 import {
   readStdin, loadSession, saveSession, sessionExists, diaryHasSession, logEvent, pendingTasks, checkExplanation,
   isLearnerEntry, learnerEntryText, entryText, readTranscript, loadSkills, findSkill, familyIds, autoDemote,
-  applyVerdict, findVerdict, lapseTasks, t,
+  applyVerdict, findVerdict, lapseTasks, promotionAdvice, offerIsNew, offerText, t,
 } from "./lib.mjs";
-import { RUNG_MARK, EXPLAIN_MARK } from "./patterns.mjs";
+import { RUNG_MARK, EXPLAIN_MARK, TRANSFER_MARK } from "./patterns.mjs";
 
 let input;
 try { input = JSON.parse(await readStdin()); } catch { process.exit(0); }
@@ -32,6 +36,9 @@ try { data = loadSkills(); } catch { /* messages stay in the default language */
 // Claude with the next prompt (st.notices, read by prompt-gate).
 const notices = [];
 const notice = (m) => { if (m) { notices.push(m); st.notices = [...(st.notices ?? []), m].slice(-10); } };
+// A proposal (promotion or transfer task): shown to the learner now, and passed to Claude with the
+// next prompt as a proposal the learner answers (st.proposals), not as something already done.
+const proposal = (m) => { if (m) { notices.push(m); st.proposals = [...(st.proposals ?? []), m].slice(-5); } };
 const block = (reason) => {
   saveSession(sid, st);
   process.stdout.write(JSON.stringify({ decision: "block", reason, ...(notices.length ? { systemMessage: notices.join("\n\n") } : {}) }));
@@ -67,6 +74,8 @@ const folder = data && st.folderSkill ? findSkill(data, st.folderSkill) : null;
 const rungSkill = folder && !(st.activeSkill && familyIds(data, folder.id).includes(st.activeSkill)) ? folder.id : st.activeSkill ?? null;
 for (const m of answer.matchAll(RUNG_MARK)) {
   const n = Number(m[1]);
+  // During a transfer task every hint counts: the transfer only passes without any help (§9.4).
+  if (st.transfer) st.transfer.maxRung = Math.max(st.transfer.maxRung ?? 0, n);
   if (n > (st.maxRung ?? 0)) {
     st.maxRung = n;
     logEvent({ type: "rung-mark", skill: rungSkill, rung: n, session: sid });
@@ -75,6 +84,7 @@ for (const m of answer.matchAll(RUNG_MARK)) {
 
 const pending = new Map(pendingTasks().map((task) => [task.tid, task]));
 st.explainChecked = st.explainChecked ?? [];
+const explainedSkills = new Set();
 for (const m of answer.matchAll(EXPLAIN_MARK)) {
   const verdict = m[1].toLowerCase() === "ok" ? "ok" : "nee";
   const tid = m[2];
@@ -88,6 +98,7 @@ for (const m of answer.matchAll(EXPLAIN_MARK)) {
     const skillId = pending.get(tid).skill;
     logEvent({ type: "task-explained", tid, skill: skillId, text: String(learnerMsg).slice(0, 600), session: sid });
     pending.delete(tid);
+    explainedSkills.add(skillId);
     // Explained tasks are the evidence for automatic demotion (S3): a microskill goes down now,
     // for a parent the demotion analyst decides first.
     if (data) {
@@ -101,7 +112,77 @@ for (const m of answer.matchAll(EXPLAIN_MARK)) {
   }
 }
 
-// ---------- 1b. Verdict of the demotion analyst (S3a) ----------
+// ---------- 1a. Transfer task (/mastery-check, setup review §9.4) ----------
+// [transfer-start <id>] starts it (only on L2 or L3). From then on every [trede N] counts against
+// it. [transfer-ok <id>] passes it only without any help and when the learner's own message (the
+// answers to the why-questions) passes the same check as an explanation. [transfer-nee <id>] ends it.
+// A refused marker blocks only after the proposals (1b), so a proposal from the same turn is not lost.
+let transferBlock = null;
+for (const m of answer.matchAll(TRANSFER_MARK)) {
+  const kind = m[1].toLowerCase(), s = data ? findSkill(data, m[2]) : null;
+  const key = `transfer:${kind}:${m[2]}:${promptKey}`;
+  if (!s || s.kind === "zone" || st.explainChecked.includes(key)) continue;
+  st.explainChecked = [...st.explainChecked.slice(-50), key];
+  if (kind === "start") {
+    if (!["L2", "L3"].includes(s.level)) {
+      logEvent({ type: "transfer-rejected", skill: s.id, why: "level", level: s.level, session: sid });
+      transferBlock = transferBlock ?? t("rg.transferLevel", { id: s.id, level: s.level });
+      continue;
+    }
+    st.transfer = { skill: s.id, startedAt: Date.now(), maxRung: 0 };
+    logEvent({ type: "transfer-start", skill: s.id, session: sid });
+    continue;
+  }
+  if (st.transfer?.skill !== s.id) continue;
+  if (kind === "ok") {
+    const rung = st.transfer.maxRung ?? 0;
+    if (rung > 0) {
+      logEvent({ type: "transfer-failed", skill: s.id, why: "help", rung, session: sid });
+      st.transfer = null;
+      notice(t("rg.transferHelp", { id: s.id, rung }));
+      continue;
+    }
+    const chk = checkExplanation(learnerMsg, earlierClaude);
+    if (!chk.ok) {
+      logEvent({ type: "transfer-rejected", skill: s.id, why: "explanation", reasons: chk.reasons, session: sid });
+      transferBlock = transferBlock ?? t("rg.transferBad", { id: s.id, reasons: chk.reasons.join("; ") });
+      continue;
+    }
+    logEvent({ type: "transfer-passed", skill: s.id, text: String(learnerMsg).slice(0, 600), session: sid });
+    st.transfer = null;
+    notice(t("rg.transferPassed", { id: s.id }));
+    explainedSkills.add(s.id);
+  } else {
+    logEvent({ type: "transfer-failed", skill: s.id, why: "claude", session: sid });
+    st.transfer = null;
+    notice(t("rg.transferFailed", { id: s.id }));
+  }
+}
+
+// ---------- 1b. Promotion proposal right after the explanation (setup review §9.2, §9.6) ----------
+// The harness shows it to the learner itself, with the evidence. Promoting stays the learner's
+// decision: prompt-gate only promotes on the learner's own "ja, doorzetten".
+if (data) {
+  const seen = new Set();
+  for (const id of explainedSkills) {
+    const s = findSkill(data, id);
+    for (const x of [s, s?.parent ? findSkill(data, s.parent) : null]) {
+      if (!x || seen.has(x.id)) continue;
+      seen.add(x.id);
+      const a = promotionAdvice(data, x);
+      if (!a || !offerIsNew(x, a)) continue;
+      if (a.dir === "up") {
+        const text = offerText(a);
+        proposal(text);
+        st.lastOffer = { skill: x.id, from: a.from, to: a.to, lastTid: a.lastTid, fresh: true };
+      } else proposal(t("offer.transfer", { text: a.text, show: a.show }));
+      logEvent({ type: "promotion-offered", skill: x.id, from: x.level, to: a.to ?? "transfer", lastTid: a.lastTid, session: sid });
+    }
+  }
+}
+if (transferBlock && !input.stop_hook_active) block(transferBlock);
+
+// ---------- 1c. Verdict of the demotion analyst (S3a) ----------
 // Only with a pending demotion, and only when the agent demonstrably ran in this turn.
 if (st.demotionPending && data) {
   const found = findVerdict(answer);

@@ -8,3 +8,5 @@ De leerharnas, het dashboard, deze documentatie en het onderzoek zijn gemaakt me
 - **Leerdata en reflecties:** de data in het dashboard en de reflecties in het dagboek zijn van de student zelf. De harnas zorgt er juist voor dat de AI die niet schrijft.
 
 De harnas is gemaakt door een AI die zichzelf beperkingen oplegt. Dat is een bewuste keuze, maar wees je ervan bewust: het onderzoek leunt deels op bronnen van Anthropic (zie §2.0 van het [onderzoek](research.md)).
+
+Bezoeken aan deze site worden geteld met [GoatCounter](https://www.goatcounter.com/), zonder cookies en zonder persoonsgegevens te verzamelen.

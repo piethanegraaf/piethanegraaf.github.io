@@ -29,6 +29,10 @@ jobs:
       # Material for MkDocs 9.x expects mermaid 11.
       MERMAID_VERSION: 11.17.2
       MERMAID_INTEGRITY: sha512-V6K3C8EBdEsPFZXSKMJe6ppQOENxuHARr9GvHX4hh47lAbhMRD9qf4oEK7LoaRQxULMa80/qt5gHO73aCleBBg==
+      # GoatCounter's count.js (ISC licence, in its header), pinned and integrity-checked.
+      # Versions and hashes: https://www.goatcounter.com/help/countjs-versions (Dependabot does not see these).
+      GOATCOUNTER_VERSION: v5
+      GOATCOUNTER_INTEGRITY: sha384-atnOLvQb9t+jTSipvd75X2yginT4PjVbqDdlJAmxMm+wYElFmeR6EmLP5bYeoRVQ
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -69,6 +73,18 @@ jobs:
           cp "$RUNNER_TEMP/package/dist/mermaid.min.js" site/assets/javascripts/vendor/mermaid.min.js
           cp "$RUNNER_TEMP/package/LICENSE" site/assets/javascripts/vendor/mermaid.LICENSE.txt
 
+      - name: Add GoatCounter count.js (self-hosted)
+        run: |
+          js="$RUNNER_TEMP/count.js"
+          curl -sSfL -o "$js" "https://gc.zgo.at/count.${GOATCOUNTER_VERSION}.js"
+          got="sha384-$(openssl dgst -sha384 -binary "$js" | base64 -w0)"
+          if [ "$got" != "$GOATCOUNTER_INTEGRITY" ]; then
+            echo "::error::count.js ${GOATCOUNTER_VERSION}: integrity mismatch ($got)"
+            exit 1
+          fi
+          mkdir -p site/assets/javascripts/vendor
+          cp "$js" site/assets/javascripts/vendor/count.js
+
       - name: Add static pages from site-src/
         run: |
           # Every file lands at the same path under site/, so site-src/en/cheatsheet/ becomes /en/cheatsheet/.
@@ -86,6 +102,14 @@ jobs:
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: "24"
+
+      - name: Check that the dashboard data is in every language
+        run: |
+          # export.mjs adds a translation of every free text (docs: Updating the dashboard).
+          # A missing translation stops the build, so the dashboard never mixes languages.
+          if [ -f site-src/dashboard/data/progress.json ]; then
+            node harness/export.mjs --check site-src/dashboard/data/progress.json
+          fi
 
       - name: Add a Content-Security-Policy to every page
         run: node harness/site-csp.mjs site

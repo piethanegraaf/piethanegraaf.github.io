@@ -1,0 +1,131 @@
+{
+  "_info": {
+    "nl": "Voorbeeldkaart voor een junior developer op het werk, in C#/.NET (xUnit, NUnit of MSTest). install.mjs kopieert dit naar .learning/skills.json. Code die bij geen vaardigheid hoort, staat op L4 (defaultLevel): de AI mag die schrijven en jij houdt toezicht. Alleen de vaardigheden die je leert, zijn beschermd. Pas de paden aan naar de mappen van je eigen codebase, en verwijder wat je al beheerst of zet het op L4 met `! node .claude/hooks/skill.mjs set <id> L4`. Een nieuwe vaardigheid krijgt haar niveau bij je eerste poging. Vaardigheden zonder paden krijgen de hintladder; de guard beschermt alleen bestanden die onder de paden van een vaardigheid vallen.",
+    "en": "Example skill map for a junior developer at work, in C#/.NET (xUnit, NUnit or MSTest). install.mjs copies it to .learning/skills.json. Code that belongs to no skill is L4 (defaultLevel): the AI may write it, and you supervise. Only the skills you are learning are protected. Change the paths to the folders of your own codebase, and remove what you already master or set it to L4 with `! node .claude/hooks/skill.mjs set <id> L4`. A new skill gets its level from your first attempt. Skills without paths get the hint ladder; the guard only protects files that fall under the paths of a skill."
+  },
+  "settings": {
+    "course": "Junior developer at work (C#/.NET)",
+    "language": "nl",
+    "examDate": null,
+    "defaultLevel": "L4",
+    "stuckTimerMinutes": 12,
+    "targetSuccess": 0.85
+  },
+  "skills": [
+    {
+      "id": "zone.voorbeelden",
+      "kind": "zone",
+      "title": {
+        "nl": "Uitgewerkte voorbeelden (AI mag hier schrijven; niet committen)",
+        "en": "Worked examples (the AI may write here; do not commit)"
+      },
+      "level": "L0",
+      "paths": [
+        "voorbeelden/**"
+      ],
+      "priority": 20
+    },
+    {
+      "id": "debug.diagnose",
+      "title": {
+        "nl": "Debuggen: reproduceren, stack trace en logs lezen, de oorzaak insluiten",
+        "en": "Debugging: reproduce, read the stack trace and logs, narrow down the cause"
+      },
+      "level": "L2",
+      "paths": []
+    },
+    {
+      "id": "read.codebase",
+      "title": {
+        "nl": "Onbekende code lezen: een verzoek volgen door de lagen (DI, middleware, services)",
+        "en": "Reading unfamiliar code: follow a request through the layers (DI, middleware, services)"
+      },
+      "level": "L2",
+      "paths": []
+    },
+    {
+      "id": "test.unit",
+      "title": {
+        "nl": "Unit tests schrijven: arrange-act-assert, grenswaarden, test doubles",
+        "en": "Writing unit tests: arrange-act-assert, boundaries, test doubles"
+      },
+      "level": "L2",
+      "paths": [
+        "**/*Tests/**",
+        "**/*Test/**",
+        "**/tests/**"
+      ],
+      "priority": 10
+    },
+    {
+      "id": "refactor.safe",
+      "title": {
+        "nl": "Bestaande code veilig refactoren: eerst karakteriseringstests, dan kleine stappen",
+        "en": "Refactoring existing code safely: characterization tests first, then small steps"
+      },
+      "level": "L2",
+      "paths": []
+    },
+    {
+      "id": "web.api",
+      "title": {
+        "nl": "ASP.NET Core-API's: controllers of minimal APIs, routing, model binding, statuscodes",
+        "en": "ASP.NET Core APIs: controllers or minimal APIs, routing, model binding, status codes"
+      },
+      "level": "L2",
+      "paths": [
+        "**/Controllers/**",
+        "**/Endpoints/**"
+      ]
+    },
+    {
+      "id": "data.ef-core",
+      "title": {
+        "nl": "Data met EF Core en LINQ: queries, tracking, N+1, migraties",
+        "en": "Data with EF Core and LINQ: queries, tracking, N+1, migrations"
+      },
+      "level": "L2",
+      "paths": [
+        "**/Data/**",
+        "**/Repositories/**",
+        "**/*DbContext.cs"
+      ]
+    },
+    {
+      "id": "cs.async",
+      "title": {
+        "nl": "async/await en taken: niet blokkeren, CancellationToken, geen async void",
+        "en": "async/await and tasks: no blocking, CancellationToken, no async void"
+      },
+      "level": "L2",
+      "paths": []
+    },
+    {
+      "id": "security.basics",
+      "title": {
+        "nl": "Veiligheid: invoer valideren, geparametriseerde queries, geen secrets in code",
+        "en": "Security basics: validate input, parameterized queries, no secrets in code"
+      },
+      "level": "L2",
+      "paths": []
+    },
+    {
+      "id": "review.ai-code",
+      "title": {
+        "nl": "Code van AI reviewen: de fouten vinden voordat je hem accepteert",
+        "en": "Reviewing code written by AI: find the flaws before you accept it"
+      },
+      "level": "L2",
+      "paths": []
+    },
+    {
+      "id": "spec.task",
+      "title": {
+        "nl": "Een taak specificeren voor een agent: doel, grenzen, acceptatiecriteria, tests",
+        "en": "Specifying a task for an agent: goal, limits, acceptance criteria, tests"
+      },
+      "level": "L2",
+      "paths": []
+    }
+  ]
+}

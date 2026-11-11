@@ -17,8 +17,8 @@
       "slnx"
     ],
     "buildCommands": [
-      "\bdotnet(.exe)?s+(build|test|run|watch|publish|pack|new|add|remove|restore|msbuild|vstest|format|exec|sln)\b",
-      "\b(msbuild|csc|devenv|vstest(.console)?)\b"
+      "\\bdotnet(\\.exe)?\\s+(build|test|run|watch|publish|pack|new|add|remove|restore|msbuild|vstest|format|exec|sln)\\b",
+      "\\b(msbuild|csc|devenv|vstest(\\.console)?)\\b"
     ],
     "toolingTerms": [
       "snek",
@@ -29,7 +29,7 @@
       "vs ?code",
       "rider",
       "sdk",
-      ".net d",
+      "\\.net \\d",
       "dotnet --",
       "install",
       "ide",

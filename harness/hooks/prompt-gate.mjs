@@ -8,11 +8,11 @@ import {
   readStdin, loadSkills, findSkill, globToRegex, logEvent, loadSession, saveSession, skillForPath, familyOf,
   taskStats, ROOT, levelName, isMicro, microsOf, keywordMap, logTask, pendingTasks, levelAdvice, learnerText,
   settingsOf, codeExtRe, toolingRe, touch, activeMinutesSince, startTask, effectiveLevel, isPlacementPending, isReviewDue,
-  afterTask, allTasks, readEvents, t,
+  afterTask, allTasks, readEvents, openOffer, promote, t,
 } from "./lib.mjs";
 import {
   HINT, SOLUTION, SOLVED_STRONG, SOLVED_WEAK, CODE_CONTEXT, NOT_SOLVED, END, RESUME, ATTEMPT, CHECKING,
-  STUCK, DONT_KNOW, MORE_EXPLANATION, errorSignature,
+  STUCK, DONT_KNOW, MORE_EXPLANATION, errorSignature, promotionAnswer,
 } from "./patterns.mjs";
 
 const rungName = (n) => t(`rung.${n}`);
@@ -44,6 +44,38 @@ const ctx = [];
 // The learner's last message, so reflect-gate can check an explanation against it.
 st.lastPrompt = prompt.slice(0, 4000);
 st.lastPromptAt = now;
+
+// ---------- 0. Answer to a promotion proposal (setup review §9.6) ----------
+// The learner decides: only the learner's OWN prompt promotes, never Claude's text. "ja, doorzetten"
+// (optionally with the id) confirms an open proposal. A bare "nee" or "later" right after a proposal
+// declines it: it then only comes back after a new task that meets the criterion again.
+let promotedMsg = null;
+{
+  const ans = promotionAnswer(prompt);
+  const fresh = st.lastOffer?.fresh ? st.lastOffer : null;
+  if (st.lastOffer) st.lastOffer.fresh = false;
+  if (ans?.answer === "yes") {
+    const named = ans.id ? findSkill(data, ans.id) : null;
+    const open = (named ? [named] : data.skills).filter((s) => s.kind !== "zone")
+      .map((s) => ({ s, a: openOffer(data, s) })).filter((x) => x.a);
+    let pick = named ? open[0] ?? null : open.find((x) => fresh && x.s.id === fresh.skill) ?? null;
+    if (!pick && !named) {
+      const live = open.filter((x) => !x.a.declined);
+      if (live.length === 1) pick = live[0];
+      else if (live.length > 1) ctx.push(t("pg.promote.which", { list: live.map((x) => `${x.s.id} ${x.a.from} → ${x.a.to}`).join(", ") }));
+    }
+    if (pick) {
+      const r = promote(data, pick.s, pick.a);
+      if (r.ok) { promotedMsg = r.message; st.lastOffer = null; st.proposals = []; }
+      ctx.push(t(r.ok ? "pg.promote.done" : "pg.promote.refused", { msg: r.message, id: pick.s.id, from: pick.a.from }));
+      logEvent({ type: r.ok ? "promotion-confirmed" : "promotion-refused", skill: pick.s.id, from: pick.a.from, to: pick.a.to, session: sid });
+    } else if (!ctx.length) ctx.push(t("pg.promote.none", { id: ans.id ?? "-" }));
+  } else if (ans?.answer === "no" && fresh) {
+    logEvent({ type: "promotion-declined", skill: fresh.skill, level: fresh.from, to: fresh.to, lastTid: fresh.lastTid, session: sid });
+    st.lastOffer = null; st.proposals = [];
+    ctx.push(t("pg.promote.declined", { id: fresh.skill }));
+  }
+}
 
 // ---------- 1. Skill detection ----------
 const SKIP_DIR = /^(bin|obj|\.vs|\.idea|\.git|\.claude|\.learning|node_modules)$/i;
@@ -165,6 +197,13 @@ if (Array.isArray(st.notices) && st.notices.length) {
   ctx.push(t("pg.notices", { list: st.notices.join("\n") }));
   st.notices = [];
 }
+// A proposal the harness showed the learner after the last answer (promotion, transfer task, §9.6).
+if (Array.isArray(st.proposals) && st.proposals.length) {
+  ctx.push(t("pg.proposals", { list: st.proposals.join("\n\n") }));
+  st.proposals = [];
+}
+// A transfer task runs (/mastery-check, §9.4): no hints and no code until the learner is done.
+if (st.transfer?.skill) ctx.push(t("pg.transfer", { id: st.transfer.skill }));
 
 // A due L4 review comes by in real work (S2): this time the learner does it, once per session.
 {
@@ -230,18 +269,20 @@ if (solved && skill) {
   const success = (st.maxRung ?? 0) < 5;
   const mins = activeMinutesSince(st, st.taskStartedActive);
   const m = st.maxRung ?? 0;
-  const tk = logTask({ skill: skill.id, success, maxRung: m, minutes: mins, source: "chat", session: sid });
+  const tk = logTask({ skill: skill.id, success, maxRung: m, minutes: mins, source: "chat", session: sid, level });
   const verdict = t(!success ? "pg.verdict.fail" : m <= 2 ? "pg.verdict.ok" : "pg.verdict.help");
   ctx.push(t("pg.taskLogged", { id: skill.id, tid: tk.tid, rung: m, verdict }));
+  const after = afterTask(data, skill.id, tk);
   if (success && m <= 2) {
-    const adv = levelAdvice(data, skill);
+    // What becomes possible once this task is explained (§9.2); the harness itself makes the proposal.
+    const adv = levelAdvice(data, skill, { assume: [tk.tid] });
     ctx.push(t("pg.signal", {
       how: m === 0 ? t("pg.signal.noHint") : t("pg.signal.upTo", { rung: m }),
-      advice: adv?.dir === "up" ? t("pg.signal.advice", { text: adv.text, cmd: adv.cmd }) : "",
+      advice: adv?.dir === "up" ? t("pg.signal.advice", { text: adv.text, id: adv.id, from: adv.from, to: adv.to })
+        : adv?.dir === "transfer" ? t("pg.signal.transfer", { text: adv.text, show: adv.show }) : "",
     }));
   }
   if (!isMicro(skill) && microsOf(data, skill.id).length === 0) ctx.push(t("pg.noMicros", { id: skill.id }));
-  const after = afterTask(data, skill.id, tk);
   if (after.messages.length) ctx.push(t("pg.notices", { list: after.messages.join("\n") }));
   if (after.pending) st.demotionPending = after.pending;
   startTask(st, now);
@@ -289,7 +330,11 @@ if (placementOpen && (wantsHint || asksMore) && !solved && level === "L2" && !st
   st.placementNoticed.push(skill.id);
   ctx.push(t("pg.placement", { id: skill.id }));
 }
-if ((wantsHint || asksMore) && !solved) {
+if ((wantsHint || asksMore) && !solved && st.transfer?.skill) {
+  // During the transfer task no rung unlocks: help ends the transfer task instead (§9.4).
+  logEvent({ type: "hint-hold", skill: skill?.id ?? null, rung: st.rung, session: sid, transfer: true });
+  ctx.push(t("pg.transferHint", { id: st.transfer.skill }));
+} else if ((wantsHint || asksMore) && !solved) {
   if (level === "L2") {
     let why = null, ceilingOnly = false;
     if (wantsSolution && st.rung >= 4) { st.rung = 5; why = t("pg.why.solutionAfter4"); }
@@ -351,6 +396,7 @@ if (skill || wantsHint || ctx.length) {
     })
     : t("pg.head.unknown", { level });
   process.stdout.write(JSON.stringify({
+    ...(promotedMsg ? { systemMessage: promotedMsg } : {}),
     hookSpecificOutput: { hookEventName: "UserPromptSubmit", additionalContext: [head, ...ctx].join("\n") },
   }));
 }

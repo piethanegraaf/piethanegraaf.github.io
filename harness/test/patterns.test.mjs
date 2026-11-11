@@ -52,3 +52,17 @@ test("markers in both languages", () => {
   assert.ok(P.sessionMarker("abc-1").test("<!-- session: abc-1 -->"));
   assert.ok(!P.sessionMarker("abc-1").test("<!-- session: abc-12 -->"));
 });
+
+test("promotionAnswer: 'ja, doorzetten' (with an optional id) confirms, a bare 'nee' declines", () => {
+  assert.deepEqual(P.promotionAnswer("ja, doorzetten"), { answer: "yes", id: null });
+  assert.deepEqual(P.promotionAnswer("Ja doorzetten ood.klassen-properties"), { answer: "yes", id: "ood.klassen-properties" });
+  assert.deepEqual(P.promotionAnswer("ja, zet maar door #demo.l2"), { answer: "yes", id: "demo.l2" });
+  assert.deepEqual(P.promotionAnswer("yes, promote demo.l2"), { answer: "yes", id: "demo.l2" });
+  for (const s of ["nee", "Nee.", "later", "nee, later", "niet doorzetten", "no", "not now"]) assert.deepEqual(P.promotionAnswer(s), { answer: "no", id: null }, s);
+  for (const s of ["ja", "nee, de test faalt nog", "kun je ja, doorzetten uitleggen?", "doorzetten?", "no idea how"]) assert.equal(P.promotionAnswer(s), null, s);
+});
+
+test("TRANSFER_MARK: start, ok and nee/no with a skill id", () => {
+  const found = [..."[transfer-start ood.x] [transfer-ok ood.x] [transfer-nee ood.x] [transfer-no a.b-c]".matchAll(P.TRANSFER_MARK)].map((m) => `${m[1]}:${m[2]}`);
+  assert.deepEqual(found, ["start:ood.x", "ok:ood.x", "nee:ood.x", "no:a.b-c"]);
+});

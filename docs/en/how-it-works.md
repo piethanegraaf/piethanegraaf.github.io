@@ -19,6 +19,8 @@ flowchart LR
   C -.->|demotion of a main skill| A[demotion analyst<br/>read only]
   A -.->|verdict as JSON| C
   S -.->|checks the verdict| R
+  S -.->|explanation meets a criterion:<br/>proposal to promote| Y[You]
+  Y -.->|yes, promote| G1
 ```
 
 ## Levels per skill
@@ -52,7 +54,7 @@ For a **new skill** time does not count. A rung only goes up when you say you ar
 At L1–L3, `guard.mjs` blocks Claude from writing, deleting, building or testing code. Which files are code and which commands build is set in the [settings](configuration.md). The guard also protects:
 
 - the record and the state in `.learning/`;
-- the harness itself: the hooks, `.claude/settings.json`, the diary skill and the rules.
+- the harness itself: the hooks, `.claude/settings.json`, the diary and mastery-check skills, and the rules.
 
 The guard first splits a shell command into simple commands. It looks at the program that runs, not at words in the arguments: `grep "msbuild"` is not a build, but `bash -c "dotnet test"` is.
 
@@ -71,7 +73,22 @@ A test that was green once, turned red and is green again is a **repaired regres
 
 ## Promotion and reviews
 
-- **Up** is your decision: **L2 → L3** at about 85% solved (at most rung 2) over at least 5 tasks. The harness gives the advice, you set the level with `set`.
+- **Up** is your decision, on evidence. The evidence is the last 10 explained tasks **since the previous level change**, so the same tasks never carry two promotions.
+  - **L0 → L1:** two examples explained and predicted correctly.
+  - **L1 → L2:** three tasks at rung 1 at most (gaps filled).
+  - **L2 → L3:** about 85% solved (at most rung 2) over at least 5 tasks, and at least half with hint 0–1.
+  - **L3 → L4:** rung 0 three times on at least 2 days, plus a **transfer task**: with `/mastery-check <id>` you solve a new exercise in another domain, without any hint, and then defend the design. A hint during the transfer task makes it not count.
+  - **Jump:** from L2 up the evidence may carry a jump when the next criterion holds too, for example L2 → L4 with the transfer task. From L0 and L1 it goes one step at a time, because a worked example or a skeleton was help up front.
+- **The proposal** comes right after the explanation that meets the criterion. The harness shows it itself, with the evidence and what changes:
+
+  ```
+  [learning harness] Promote? ood.klassen-properties L2 → L3
+    evidence: 5 of 5 solved (rung 1, 1, 2, 1, 1), on 1 day(s), in 05-de-auto, 06-studenten
+    what changes: no hint ladder any more: Claude gives nothing up front and only reviews after your attempt
+    yes: type "yes, promote" · no: type "no" · you can always undo it with set
+  ```
+
+  If you type "yes, promote" (or "ja, doorzetten"), the harness sets the level. That only works on your own prompt, never on Claude's text. If you say "no" or "later", the proposal only comes back after a new task that meets the criterion again. `set` still works too.
 - **Down** follows the evidence, when `autoDemote` is on: with at least 3 explained tasks and under 70% solved, or the last 2 not solved. A microskill goes down one level right away. For a main skill the **demotion analyst** decides first: an agent that only reads, looks at the test output, your code and the transcript, and decides whether the problem is one sub-pattern (then only that microskill goes down or is created) or broad (then the main skill goes down). If two microskills of the same parent go down within 14 days, the parent goes down too. You get a message and can revert it with `set`.
 - **Reviews** only exist at L4, at Fibonacci intervals: 1, 2, 3, 5, 8, 13 … days. There are no separate review exercises. When such a skill comes by in your work while its review is due, you do that part yourself, without AI. Your next task decides the outcome: rung 0 is a pass (one step on), rung 1–2 shaky (the same), more help a fail (two steps back). If it does not come by, nothing happens; the practice exams are the safety net.
 
