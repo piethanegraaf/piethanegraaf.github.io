@@ -45,3 +45,10 @@ test("a Search Console verification file is recognised only by its exact name an
   assert.ok(!isSearchVerification(`site/${name}`, `<script>alert(1)</script>google-site-verification: ${name}`), "extra content");
   assert.ok(!isSearchVerification("site/index.html", "google-site-verification: index.html"), "not a verification name");
 });
+
+test("styles and fonts come only from this site (the fonts are self-hosted)", () => {
+  const csp = cspFor("");
+  assert.match(csp, /style-src 'self' 'unsafe-inline';/);
+  assert.match(csp, /font-src 'self' data:;/);
+  assert.ok(!/fonts\.(googleapis|gstatic)\.com/.test(csp), "no Google Fonts");
+});

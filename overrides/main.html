@@ -60,6 +60,14 @@
   {% endif %}
 {% endblock %}
 
+{% block scripts %}
+  {{ super() }}
+  {#- Mermaid (about 1 MB) only on pages that have a diagram; it runs after Material's bundle, as before. #}
+  {% if page and page.content and 'class="mermaid"' in page.content %}
+    <script src="{{ 'assets/javascripts/vendor/mermaid.min.js' | url }}"></script>
+  {% endif %}
+{% endblock %}
+
 {% block extrahead %}
   {#- Google Scholar: only on pages with citation_title in the front matter (the English literature review). #}
   {% if page.meta and page.meta.citation_title %}

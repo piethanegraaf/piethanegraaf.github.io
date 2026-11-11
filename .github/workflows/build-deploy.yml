@@ -99,6 +99,25 @@ jobs:
             cp "$f" "site/$rel"
           done < <(find site-src -type f ! -name .gitkeep -print0)
 
+      # The cheat sheets and the dashboard are not built by MkDocs, so its privacy plugin does not reach
+      # them. Download their Google Fonts here and serve them from this site (assets/fonts/static.css).
+      - name: Self-host the fonts of the static pages
+        run: |
+          css='https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700;800&display=swap'
+          dir=site/assets/fonts
+          mkdir -p "$dir"
+          # The user agent of a current browser, so that Google serves woff2.
+          curl -sSfL -A 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0 Safari/537.36' "$css" -o "$dir/static.css"
+          grep -o 'https://fonts\.gstatic\.com/[^)]*' "$dir/static.css" | sort -u | while read -r url; do
+            name="$(printf '%s' "$url" | sha256sum | cut -c1-16).woff2"
+            curl -sSfL "$url" -o "$dir/$name"
+            sed -i "s#${url}#${name}#g" "$dir/static.css"
+          done
+          if grep -q 'fonts\.gstatic\.com' "$dir/static.css"; then
+            echo "::error::assets/fonts/static.css still points to Google"
+            exit 1
+          fi
+
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: "24"

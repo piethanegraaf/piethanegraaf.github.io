@@ -47,6 +47,13 @@ theme:
 
 plugins:
   - search
+  # Privacy: downloads the Google Fonts at build time and serves them from this site, so a visitor's
+  # browser does not contact Google and no stylesheet from another domain blocks rendering.
+  - privacy:
+      # Not mermaid from unpkg: CI adds a pinned, integrity-checked copy (build-deploy.yml),
+      # and overrides/main.html loads it only where a page has a diagram.
+      assets_exclude:
+        - unpkg.com/*
   # Social cards: a preview image per page, plus og: and twitter: tags. They need Cairo,
   # so they are only made in CI (CI=true); a local build skips them.
   - social:
@@ -150,14 +157,14 @@ markdown_extensions:
           format: !!python/name:pymdownx.superfences.fence_code_format
 
 # Mermaid is self-hosted: CI downloads a pinned, integrity-checked copy into
-# site/assets/javascripts/vendor/. Because window.mermaid then exists,
-# Material does not load mermaid from its CDN (unpkg).
+# site/assets/javascripts/vendor/. overrides/main.html loads it only on pages with a diagram
+# (it is about 1 MB). Because window.mermaid then exists, Material does not load it from its
+# CDN (unpkg).
 extra_css:
   - assets/stylesheets/risk-matrix.css
   - assets/stylesheets/a11y.css
 
 extra_javascript:
-  - assets/javascripts/vendor/mermaid.min.js
   - assets/javascripts/cheatsheet-redirect.js
   - assets/javascripts/a11y.js
   # GoatCounter (visits, no cookies): the endpoint first, then count.js, self-hosted like mermaid.
