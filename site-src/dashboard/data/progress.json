@@ -1,7 +1,7 @@
 {
   "schema": 1,
-  "generatedAt": "2026-11-11",
-  "exportedAt": "2026-11-11T22:04:54.374Z",
+  "generatedAt": "2026-11-12",
+  "exportedAt": "2026-11-12T08:03:28.966Z",
   "course": null,
   "language": "nl",
   "examDate": "2027-01-20",
@@ -327,7 +327,7 @@
       "nextReview": null,
       "intervalIndex": 0,
       "lastReview": null,
-      "lastSeen": "2026-11-11",
+      "lastSeen": "2026-11-12",
       "placement": "done",
       "history": [
         {
@@ -346,6 +346,34 @@
       ]
     },
     {
+      "id": "ood.aggregatie-compositie.deel-in-property",
+      "parent": "ood.aggregatie-compositie",
+      "kind": null,
+      "title": "Het deel in de constructor aan de property van het geheel toewijzen",
+      "titles": null,
+      "level": "L2",
+      "nextReview": null,
+      "intervalIndex": 0,
+      "lastReview": null,
+      "lastSeen": "2026-11-12",
+      "placement": "done",
+      "history": [
+        {
+          "at": "2026-11-12",
+          "changedAt": "2026-11-12T07:31:09.993Z",
+          "from": null,
+          "to": "L2",
+          "note": "aangemaakt door de demotie-analist",
+          "notes": {
+            "nl": "aangemaakt door de demotie-analist",
+            "en": "created by the demotion analyst"
+          },
+          "auto": false,
+          "placement": false
+        }
+      ]
+    },
+    {
       "id": "ood.encapsulatie",
       "parent": null,
       "kind": null,
@@ -354,13 +382,27 @@
         "nl": "Encapsulatie: private velden, validatie, toestand via methoden",
         "en": "Encapsulation: private fields, validation, state through methods"
       },
-      "level": "L2",
+      "level": "L3",
       "nextReview": null,
       "intervalIndex": 0,
       "lastReview": null,
-      "lastSeen": null,
-      "placement": "pending",
-      "history": []
+      "lastSeen": "2026-11-12",
+      "placement": "done",
+      "history": [
+        {
+          "at": "2026-11-12",
+          "changedAt": "2026-11-12T07:46:16.660Z",
+          "from": "L2",
+          "to": "L3",
+          "note": "plaatsing: hoogste trede 0 bij de eerste taak",
+          "notes": {
+            "nl": "plaatsing: hoogste trede 0 bij de eerste taak",
+            "en": "placement: highest rung 0 at the first task"
+          },
+          "auto": false,
+          "placement": true
+        }
+      ]
     },
     {
       "id": "test.unit-tests",
@@ -644,7 +686,10 @@
       "parent": null,
       "kind": null,
       "title": "Logging: ILogger via dependency injection, logniveaus, fouten loggen",
-      "titles": null,
+      "titles": {
+        "nl": "Logging: ILogger via dependency injection, logniveaus, fouten loggen",
+        "en": "Logging: ILogger through dependency injection, log levels, logging errors"
+      },
       "level": "L2",
       "nextReview": null,
       "intervalIndex": 0,
@@ -658,7 +703,10 @@
       "parent": null,
       "kind": null,
       "title": "Integratie-, systeem- en UI-tests: componenten samen testen, acceptatiecriteria",
-      "titles": null,
+      "titles": {
+        "nl": "Integratie-, systeem- en UI-tests: componenten samen testen, acceptatiecriteria",
+        "en": "Integration, system and UI tests: testing components together, acceptance criteria"
+      },
       "level": "L2",
       "nextReview": null,
       "intervalIndex": 0,
@@ -672,7 +720,10 @@
       "parent": null,
       "kind": null,
       "title": "Upcasting en downcasting: is-patroon, as, expliciete cast",
-      "titles": null,
+      "titles": {
+        "nl": "Upcasting en downcasting: is-patroon, as, expliciete cast",
+        "en": "Upcasting and downcasting: the is pattern, as, explicit cast"
+      },
       "level": "L2",
       "nextReview": null,
       "intervalIndex": 0,
@@ -686,7 +737,10 @@
       "parent": null,
       "kind": null,
       "title": "Records en structs: waardetypen tegenover klassen, with-expressies",
-      "titles": null,
+      "titles": {
+        "nl": "Records en structs: waardetypen tegenover klassen, with-expressies",
+        "en": "Records and structs: value types versus classes, with expressions"
+      },
       "level": "L2",
       "nextReview": null,
       "intervalIndex": 0,
@@ -700,7 +754,10 @@
       "parent": null,
       "kind": null,
       "title": "Object-methodes overschrijven: ToString, Equals en GetHashCode",
-      "titles": null,
+      "titles": {
+        "nl": "Object-methodes overschrijven: ToString, Equals en GetHashCode",
+        "en": "Overriding object methods: ToString, Equals and GetHashCode"
+      },
       "level": "L2",
       "nextReview": null,
       "intervalIndex": 0,
@@ -714,7 +771,10 @@
       "parent": null,
       "kind": null,
       "title": "Overige C#: sealed, indexers, operator overloading, geneste klassen",
-      "titles": null,
+      "titles": {
+        "nl": "Overige C#: sealed, indexers, operator overloading, geneste klassen",
+        "en": "Other C#: sealed, indexers, operator overloading, nested classes"
+      },
       "level": "L2",
       "nextReview": null,
       "intervalIndex": 0,
@@ -728,7 +788,10 @@
       "parent": null,
       "kind": null,
       "title": "Creational: Abstract Factory/Builder/Prototype/Singleton",
-      "titles": null,
+      "titles": {
+        "nl": "Creational: Abstract Factory/Builder/Prototype/Singleton",
+        "en": "Creational: Abstract Factory/Builder/Prototype/Singleton"
+      },
       "level": "L2",
       "nextReview": null,
       "intervalIndex": 0,
@@ -742,7 +805,10 @@
       "parent": null,
       "kind": null,
       "title": "Structural: Adapter/Bridge/Composite/Decorator/Facade/Flyweight/Proxy",
-      "titles": null,
+      "titles": {
+        "nl": "Structural: Adapter/Bridge/Composite/Decorator/Facade/Flyweight/Proxy",
+        "en": "Structural: Adapter/Bridge/Composite/Decorator/Facade/Flyweight/Proxy"
+      },
       "level": "L2",
       "nextReview": null,
       "intervalIndex": 0,
@@ -756,7 +822,10 @@
       "parent": null,
       "kind": null,
       "title": "Behavioral: Chain/Command/Iterator/Mediator/Memento/State/Template/Visitor",
-      "titles": null,
+      "titles": {
+        "nl": "Behavioral: Chain/Command/Iterator/Mediator/Memento/State/Template/Visitor",
+        "en": "Behavioral: Chain/Command/Iterator/Mediator/Memento/State/Template/Visitor"
+      },
       "level": "L2",
       "nextReview": null,
       "intervalIndex": 0,
@@ -770,7 +839,10 @@
       "parent": null,
       "kind": null,
       "title": "Static members: static velden en methoden, wanneer static (CS0176, CS0120)",
-      "titles": null,
+      "titles": {
+        "nl": "Static members: static velden en methoden, wanneer static (CS0176, CS0120)",
+        "en": "Static members: static fields and methods, when to use static (CS0176, CS0120)"
+      },
       "level": "L2",
       "nextReview": null,
       "intervalIndex": 0,
@@ -1350,6 +1422,177 @@
       "corrections": [],
       "void": false,
       "voidReason": null
+    },
+    {
+      "id": "mwd784536jf1",
+      "at": "2026-11-12T07:00:41.080Z",
+      "skill": "ood.aggregatie-compositie",
+      "source": "check",
+      "success": true,
+      "maxRung": 0,
+      "minutes": 5,
+      "reviewRung": null,
+      "what": "HuisHeeftKamersNaCreatie",
+      "explained": true,
+      "explanation": "Ik maak de kamers in de constructor van huis zelf aan omdat de kamers niet opzichzelf kunnen bestaan, de kamers moeten onderdeel zijn van het huis, daarom maak ik kamer in de constructor van het huis aan\nIk maak de kamers in de constructor van huis zelf aan omdat de kamers niet opzichzelf kunnen bestaan, de kamers moeten onderdeel zijn van het huis, daarom maak ik kamer in de constructor van het huis aan. Als ik de kamers ergens anders dan in de constructor van huis zou aanmaken dan zouden de kamers op zichzelf een ding worden zonder dat ze bij het huis horen",
+      "explainedAt": "2026-11-12T07:03:29.034Z",
+      "explainedBy": null,
+      "lapsed": false,
+      "lapseReason": null,
+      "retaggedFrom": null,
+      "rejections": [
+        {
+          "at": "2026-11-12T07:02:11.940Z",
+          "by": "claude",
+          "reasons": []
+        }
+      ],
+      "corrections": [],
+      "void": false,
+      "voidReason": null
+    },
+    {
+      "id": "mwd7ijo6az2t",
+      "at": "2026-11-12T07:08:47.766Z",
+      "skill": "ood.aggregatie-compositie",
+      "source": "check",
+      "success": true,
+      "maxRung": 0,
+      "minutes": 3,
+      "reviewRung": null,
+      "what": "AutoMotorPropertyIsWritable",
+      "explained": true,
+      "explanation": "1 ik snapte niet dat ik de propertie de waarde van een nieuwe instatie motor met type v8 moest geven, toen ik dat doorhad lukte het. 2 code buiten de auto kan nu de automotor propertie aanpassen, dat past bij een motor die met een auto wordt aangemaakt omdat een orginele moter altijd in de garage vervangen kan worden door een andere motor",
+      "explainedAt": "2026-11-12T07:20:05.828Z",
+      "explainedBy": null,
+      "lapsed": false,
+      "lapseReason": null,
+      "retaggedFrom": null,
+      "rejections": [],
+      "corrections": [],
+      "void": false,
+      "voidReason": null
+    },
+    {
+      "id": "mwd7jta4bemd",
+      "at": "2026-11-12T07:17:07.267Z",
+      "skill": "ood.aggregatie-compositie.deel-in-property",
+      "source": "check",
+      "success": true,
+      "maxRung": 4,
+      "minutes": 8,
+      "reviewRung": null,
+      "what": "AutoHeeftMotorNaCreatie",
+      "explained": true,
+      "explanation": "1 ik snapte niet dat ik de propertie de waarde van een nieuwe instatie motor met type v8 moest geven, toen ik dat doorhad lukte het. 2 code buiten de auto kan nu de automotor propertie aanpassen, dat past bij een motor die met een auto wordt aangemaakt omdat een orginele moter altijd in de garage vervangen kan worden door een andere motor\ndie regel maakte wel een motor aan die bij de auto hoorde maar zetten niet het proptertie AutoMoter, wat de bedoeling was\nin de variablele motor, nee die variablele bestaat niet als de construcor klaar is",
+      "explainedAt": "2026-11-12T07:22:52.496Z",
+      "explainedBy": null,
+      "lapsed": false,
+      "lapseReason": null,
+      "retaggedFrom": "ood.aggregatie-compositie",
+      "rejections": [
+        {
+          "at": "2026-11-12T07:20:05.832Z",
+          "by": "claude",
+          "reasons": []
+        },
+        {
+          "at": "2026-11-12T07:21:42.693Z",
+          "by": "claude",
+          "reasons": []
+        }
+      ],
+      "corrections": [],
+      "void": false,
+      "voidReason": null
+    },
+    {
+      "id": "mwd852edkjji",
+      "at": "2026-11-12T07:26:18.469Z",
+      "skill": "ood.aggregatie-compositie",
+      "source": "check",
+      "success": true,
+      "maxRung": 0,
+      "minutes": 3,
+      "reviewRung": null,
+      "what": "PersoonHeeftBSNNaCreatie",
+      "explained": true,
+      "explanation": "Omdat in de readme staat dat \"Het BSN kan na aanmaak niet meer gewijzigd worden\" door geen set te geven word deze regel gehandhaaft als er wel een set zou zijn dan zou de BSN van een persoon geupdate kunnen worden",
+      "explainedAt": "2026-11-12T07:28:48.278Z",
+      "explainedBy": null,
+      "lapsed": false,
+      "lapseReason": null,
+      "retaggedFrom": null,
+      "rejections": [],
+      "corrections": [],
+      "void": false,
+      "voidReason": null
+    },
+    {
+      "id": "mwd8fkqdgnqt",
+      "at": "2026-11-12T07:34:28.789Z",
+      "skill": "ood.aggregatie-compositie",
+      "source": "check",
+      "success": true,
+      "maxRung": 0,
+      "minutes": 2,
+      "reviewRung": null,
+      "what": "ComputerHeeftCPUNaCreatie, ProcessorPropertyIsWritable",
+      "explained": true,
+      "explanation": "omdat de cpu in een computer te vervangen is, als iets te vervangen/updaten is krijgt de propertie van mij een set",
+      "explainedAt": "2026-11-12T07:35:45.757Z",
+      "explainedBy": null,
+      "lapsed": false,
+      "lapseReason": null,
+      "retaggedFrom": null,
+      "rejections": [],
+      "corrections": [],
+      "void": false,
+      "voidReason": null
+    },
+    {
+      "id": "mwd8uqxepvk9",
+      "at": "2026-11-12T07:46:16.658Z",
+      "skill": "ood.encapsulatie",
+      "source": "check",
+      "success": true,
+      "maxRung": 0,
+      "minutes": 8,
+      "reviewRung": null,
+      "what": "StortBedrag_VerhoogtSaldo, NeemOpBedrag_VerlaagtSaldo",
+      "explained": true,
+      "explanation": "ik gooi een exaption en de test wil dat het stilzwijgend faalt\nnee, pas jij de test maar aan wand mijn aanpak is beter, het is niet goed als zoiets stilzwijgend faalt\nde return false wordt nooit terug gegeven omdat de expetion eerst wordt gegooid\nik vind dat dit als zelfstandig moet tellen omdat er eigelijk ene fout zat in wat de docent in zijn testen deed. neem dit mee bij de harnas review. 1 dan zouden andere functies buiten de klasse deze waarde kunnen overschrijven en dat is gevaarlijk met zulke gevoeligen dingen als een bank saldo, dat schrijven gaat via allen deze functies is voor de veilighed. 2 ja omdat de gebruiker mogelijk niet door heeft dat het bedrag groter was dan het saldo, nu denkt de gebruiker mischien dat het saldo 0 is en dat daarom de false terug komt, dus je stilzijgend falen, want foutinformatie wordt verzwegen en het programma kan gewoon door",
+      "explainedAt": "2026-11-12T07:58:19.287Z",
+      "explainedBy": null,
+      "lapsed": false,
+      "lapseReason": null,
+      "retaggedFrom": null,
+      "rejections": [],
+      "corrections": [],
+      "void": false,
+      "voidReason": null
+    },
+    {
+      "id": "mwd8zxk2m14s",
+      "at": "2026-11-12T07:53:16.760Z",
+      "skill": "ood.encapsulatie",
+      "source": "check",
+      "success": true,
+      "maxRung": 1,
+      "minutes": 7,
+      "reviewRung": null,
+      "what": "StortNegatiefBedrag_DoetNiets, NeemOpNegatiefBedrag_DoetNiets, NeemOpBedrag_OnvoldoendeSaldo_Faalt",
+      "explained": true,
+      "explanation": "ik vind dat dit als zelfstandig moet tellen omdat er eigelijk ene fout zat in wat de docent in zijn testen deed. neem dit mee bij de harnas review. 1 dan zouden andere functies buiten de klasse deze waarde kunnen overschrijven en dat is gevaarlijk met zulke gevoeligen dingen als een bank saldo, dat schrijven gaat via allen deze functies is voor de veilighed. 2 ja omdat de gebruiker mogelijk niet door heeft dat het bedrag groter was dan het saldo, nu denkt de gebruiker mischien dat het saldo 0 is en dat daarom de false terug komt, dus je stilzijgend falen, want foutinformatie wordt verzwegen en het programma kan gewoon door",
+      "explainedAt": "2026-11-12T07:58:19.290Z",
+      "explainedBy": null,
+      "lapsed": false,
+      "lapseReason": null,
+      "retaggedFrom": null,
+      "rejections": [],
+      "corrections": [],
+      "void": false,
+      "voidReason": null
     }
   ],
   "reviews": [],
@@ -1431,6 +1674,16 @@
       "denials": 1,
       "overridesUsed": 0,
       "reviewHelp": 2,
+      "helpDropped": 0
+    },
+    {
+      "date": "2026-11-12",
+      "sessions": 1,
+      "hints": 0,
+      "holds": 0,
+      "denials": 0,
+      "overridesUsed": 0,
+      "reviewHelp": 0,
       "helpDropped": 0
     }
   ],
@@ -1519,6 +1772,23 @@
         "nextStep": "niet genoemd"
       },
       "calibration": "vooraf 3 (opdracht 11) → de code van 11 lukte zonder hint in deze sessie (gelogd op trede 2 door de review van sessie 2); de uitleg vroeg 3 rondes → onderschat voor de code, klopt voor de uitleg."
+    },
+    {
+      "date": "2026-11-12",
+      "n": 1,
+      "time": "±07:55–09:00",
+      "skills": "ood.aggregatie-compositie (L3), ood.encapsulatie (L2 → L3, plaatsing)",
+      "plan": "verder met de snek-challenges: 17-huis-en-kamers, daarna 18–21",
+      "confidenceBefore": "onbekend (gevraagd over 17, niet beantwoord)",
+      "wentWell": "`ood.aggregatie-compositie`: vier taken op trede 0. De kamers maakte je in de constructor van `Huis` (17). De setter bij de motor (18) en de CPU (20) en het BSN zonder setter (19) koos je bewust, met een regel die je zelf verwoordde: \"als iets te vervangen/updaten is krijgt de propertie van mij een set\". Na het vastlopen in 18 zette je het deel bij 19 en 20 meteen goed in de property, met de parameter. `ood.encapsulatie`: `_saldo` privé, met storten en opnemen via methoden, op trede 0. De controles in 21 lukten met hulp tot trede 1, en je verdedigde zelf de afweging tussen een exception en `false` teruggeven.",
+      "signals": "geen (`status`)",
+      "reflection": {
+        "learned": "\"het setten van properties bij instacieren\"",
+        "confusing": "\"het verschil tussen properties en class fields bij het instacieren\"",
+        "confidenceAfter": "4",
+        "nextStep": "niet genoemd"
+      },
+      "calibration": "vooraf onbekend → vijf van de zeven taken op trede 0, één op trede 1 (21) en één op trede 4 (18, de property in de constructor) → niet te bepalen (geen score vooraf). Wat je als verwarrend noemt, is precies het punt van trede 4 in 18."
     }
   ],
   "reviewHelp": [
@@ -1537,6 +1807,44 @@
   ],
   "helpDropped": [],
   "transfers": [],
+  "conceptHelp": [
+    {
+      "at": "2026-11-12T07:09:46.876Z",
+      "skill": "ood.klassen.veld-vs-lokaal",
+      "rung": 1,
+      "taskSkill": "ood.aggregatie-compositie",
+      "task": "mwd7jta4bemd"
+    },
+    {
+      "at": "2026-11-12T07:11:06.613Z",
+      "skill": "ood.klassen.veld-vs-lokaal",
+      "rung": 2,
+      "taskSkill": "ood.aggregatie-compositie",
+      "task": "mwd7jta4bemd"
+    },
+    {
+      "at": "2026-11-12T07:13:34.863Z",
+      "skill": "ood.klassen.veld-vs-lokaal",
+      "rung": 3,
+      "taskSkill": "ood.aggregatie-compositie",
+      "task": "mwd7jta4bemd"
+    },
+    {
+      "at": "2026-11-12T07:15:36.247Z",
+      "skill": "ood.klassen.veld-vs-lokaal",
+      "rung": 4,
+      "taskSkill": "ood.aggregatie-compositie",
+      "task": "mwd7jta4bemd"
+    },
+    {
+      "at": "2026-11-12T07:50:18.530Z",
+      "skill": "ood.exceptions",
+      "rung": 1,
+      "taskSkill": "ood.encapsulatie",
+      "task": "mwd8zxk2m14s"
+    }
+  ],
+  "microProposals": [],
   "translations": {
     "en": {
       "vast op Reverse (void) en chainen": "stuck on Reverse (void) and chaining",
@@ -1547,18 +1855,9 @@
       "lusgrenzen en off-by-one": "loop bounds and off-by-one",
       "veld vs lokale variabele vs property": "field vs local variable vs property",
       "herhalingen starten": "start the reviews",
+      "Het deel in de constructor aan de property van het geheel toewijzen": "Assigning the part to the property of the whole in the constructor",
       "testuitvoer lezen": "reading test output",
       "wat een test controleert: zichtbaar gedrag": "what a test checks: visible behaviour",
-      "Logging: ILogger via dependency injection, logniveaus, fouten loggen": "Logging: ILogger through dependency injection, log levels, logging errors",
-      "Integratie-, systeem- en UI-tests: componenten samen testen, acceptatiecriteria": "Integration, system and UI tests: testing components together, acceptance criteria",
-      "Upcasting en downcasting: is-patroon, as, expliciete cast": "Upcasting and downcasting: the is pattern, as, explicit cast",
-      "Records en structs: waardetypen tegenover klassen, with-expressies": "Records and structs: value types versus classes, with expressions",
-      "Object-methodes overschrijven: ToString, Equals en GetHashCode": "Overriding object methods: ToString, Equals and GetHashCode",
-      "Overige C#: sealed, indexers, operator overloading, geneste klassen": "Other C#: sealed, indexers, operator overloading, nested classes",
-      "Creational: Abstract Factory/Builder/Prototype/Singleton": "Creational: Abstract Factory/Builder/Prototype/Singleton",
-      "Structural: Adapter/Bridge/Composite/Decorator/Facade/Flyweight/Proxy": "Structural: Adapter/Bridge/Composite/Decorator/Facade/Flyweight/Proxy",
-      "Behavioral: Chain/Command/Iterator/Mediator/Memento/State/Template/Visitor": "Behavioral: Chain/Command/Iterator/Mediator/Memento/State/Template/Visitor",
-      "Static members: static velden en methoden, wanneer static (CS0176, CS0120)": "Static members: static fields and methods, when to use static (CS0176, CS0120)",
       "TestGeefEvenGetallenNegatief, TestGeefEvenGetallenTwee, TestGeefEvenGetallenTien": "TestGeefEvenGetallenNegatief, TestGeefEvenGetallenTwee, TestGeefEvenGetallenTien",
       "als je in de eerste regel voor de functienaam belooft wat terug te geven moet je dat ook datwerkelijk doen dus daarom ging het fout": "if in the first line before the function name you promise to return something you have to actually do that too so that's why it went wrong",
       "Socratische vraag bij CS0161": "Socratic question at CS0161",
@@ -1599,6 +1898,20 @@
       "Met de methode houd je het overzicht omdat je het single resposibliltiy pattern toepast. Hierdoor houd je beter overzicht\ndie controle zou je ook in de methode kunnen zetten en op het single resposiblity pattern is wel van toepassing op de methode , de methode toet een ding namelijk pagagiers toevoegen en alles wat daarbij komt kijken en niets anders daardoor houd je overizht\ndan word die controle overgeslagen": "With the method you keep track because you apply the single responsibility pattern. This way you keep better track\nyou could also put that check in the method and the single responsibility pattern does apply to the method, the method does one thing, namely adding passengers and everything that comes with it and nothing else, that way you keep track\nthen that check gets skipped",
       "TotaalPrijsWinkelwagen": "TotaalPrijsWinkelwagen",
       "omdat een winkelwagen kan bestaan zonder dat er producten in zitten en het dan nog steeds een winkelwagen is en het soort winkelwagen niet afhankelijk is van het soort producten wat er in zit\ndan blijft het gewoon een product dus omdat producten gewoon op zich zelf kunnen bestaan gaat het om argegatie en niet compositie": "because a shopping cart can exist without any products in it and then it's still a shopping cart and the kind of shopping cart doesn't depend on the kind of products that are in it\nthen it just stays a product so because products can just exist on their own it's aggregation and not composition",
+      "HuisHeeftKamersNaCreatie": "HuisHeeftKamersNaCreatie",
+      "Ik maak de kamers in de constructor van huis zelf aan omdat de kamers niet opzichzelf kunnen bestaan, de kamers moeten onderdeel zijn van het huis, daarom maak ik kamer in de constructor van het huis aan\nIk maak de kamers in de constructor van huis zelf aan omdat de kamers niet opzichzelf kunnen bestaan, de kamers moeten onderdeel zijn van het huis, daarom maak ik kamer in de constructor van het huis aan. Als ik de kamers ergens anders dan in de constructor van huis zou aanmaken dan zouden de kamers op zichzelf een ding worden zonder dat ze bij het huis horen": "I create the rooms myself in the constructor of house because the rooms can't exist on their own, the rooms have to be part of the house, that's why I create room in the constructor of the house\nI create the rooms myself in the constructor of house because the rooms can't exist on their own, the rooms have to be part of the house, that's why I create room in the constructor of the house. If I created the rooms somewhere other than in the constructor of house then the rooms would become a thing on their own without belonging to the house",
+      "AutoMotorPropertyIsWritable": "AutoMotorPropertyIsWritable",
+      "1 ik snapte niet dat ik de propertie de waarde van een nieuwe instatie motor met type v8 moest geven, toen ik dat doorhad lukte het. 2 code buiten de auto kan nu de automotor propertie aanpassen, dat past bij een motor die met een auto wordt aangemaakt omdat een orginele moter altijd in de garage vervangen kan worden door een andere motor": "1 I didn't get that I had to give the property the value of a new instance motor with type v8, once I realized that it worked. 2 code outside the car can now change the automotor property, that fits a motor that is created with a car because an original motor can always be replaced by another motor at the garage",
+      "AutoHeeftMotorNaCreatie": "AutoHeeftMotorNaCreatie",
+      "1 ik snapte niet dat ik de propertie de waarde van een nieuwe instatie motor met type v8 moest geven, toen ik dat doorhad lukte het. 2 code buiten de auto kan nu de automotor propertie aanpassen, dat past bij een motor die met een auto wordt aangemaakt omdat een orginele moter altijd in de garage vervangen kan worden door een andere motor\ndie regel maakte wel een motor aan die bij de auto hoorde maar zetten niet het proptertie AutoMoter, wat de bedoeling was\nin de variablele motor, nee die variablele bestaat niet als de construcor klaar is": "1 I didn't get that I had to give the property the value of a new instance motor with type v8, once I realized that it worked. 2 code outside the car can now change the automotor property, that fits a motor that is created with a car because an original motor can always be replaced by another motor at the garage\nthat line did create a motor that belonged to the car but didn't set the property AutoMotor, which was the intention\nin the variable motor, no that variable doesn't exist when the constructor is done",
+      "PersoonHeeftBSNNaCreatie": "PersoonHeeftBSNNaCreatie",
+      "Omdat in de readme staat dat \"Het BSN kan na aanmaak niet meer gewijzigd worden\" door geen set te geven word deze regel gehandhaaft als er wel een set zou zijn dan zou de BSN van een persoon geupdate kunnen worden": "Because the readme says \"The BSN cannot be changed after creation\" by not giving it a set this rule is enforced if there was a set then the BSN of a person could be updated",
+      "ComputerHeeftCPUNaCreatie, ProcessorPropertyIsWritable": "ComputerHeeftCPUNaCreatie, ProcessorPropertyIsWritable",
+      "omdat de cpu in een computer te vervangen is, als iets te vervangen/updaten is krijgt de propertie van mij een set": "because the cpu in a computer can be replaced, if something can be replaced/updated I give the property a set",
+      "StortBedrag_VerhoogtSaldo, NeemOpBedrag_VerlaagtSaldo": "StortBedrag_VerhoogtSaldo, NeemOpBedrag_VerlaagtSaldo",
+      "ik gooi een exaption en de test wil dat het stilzwijgend faalt\nnee, pas jij de test maar aan wand mijn aanpak is beter, het is niet goed als zoiets stilzwijgend faalt\nde return false wordt nooit terug gegeven omdat de expetion eerst wordt gegooid\nik vind dat dit als zelfstandig moet tellen omdat er eigelijk ene fout zat in wat de docent in zijn testen deed. neem dit mee bij de harnas review. 1 dan zouden andere functies buiten de klasse deze waarde kunnen overschrijven en dat is gevaarlijk met zulke gevoeligen dingen als een bank saldo, dat schrijven gaat via allen deze functies is voor de veilighed. 2 ja omdat de gebruiker mogelijk niet door heeft dat het bedrag groter was dan het saldo, nu denkt de gebruiker mischien dat het saldo 0 is en dat daarom de false terug komt, dus je stilzijgend falen, want foutinformatie wordt verzwegen en het programma kan gewoon door": "I throw an exception and the test wants it to fail silently\nno, you just change the test because my approach is better, it's not good when something like that fails silently\nthe return false is never returned because the exception is thrown first\nI think this should count as independent because there was actually a mistake in what the teacher did in his tests. take this along to the harness review. 1 then other functions outside the class could overwrite this value and that is dangerous with sensitive things like a bank balance, writing only goes through these functions for safety. 2 yes because the user might not realize that the amount was larger than the balance, now the user might think the balance is 0 and that's why false comes back, so yes silent failure, because error information is hidden and the program can just carry on",
+      "StortNegatiefBedrag_DoetNiets, NeemOpNegatiefBedrag_DoetNiets, NeemOpBedrag_OnvoldoendeSaldo_Faalt": "StortNegatiefBedrag_DoetNiets, NeemOpNegatiefBedrag_DoetNiets, NeemOpBedrag_OnvoldoendeSaldo_Faalt",
+      "ik vind dat dit als zelfstandig moet tellen omdat er eigelijk ene fout zat in wat de docent in zijn testen deed. neem dit mee bij de harnas review. 1 dan zouden andere functies buiten de klasse deze waarde kunnen overschrijven en dat is gevaarlijk met zulke gevoeligen dingen als een bank saldo, dat schrijven gaat via allen deze functies is voor de veilighed. 2 ja omdat de gebruiker mogelijk niet door heeft dat het bedrag groter was dan het saldo, nu denkt de gebruiker mischien dat het saldo 0 is en dat daarom de false terug komt, dus je stilzijgend falen, want foutinformatie wordt verzwegen en het programma kan gewoon door": "I think this should count as independent because there was actually a mistake in what the teacher did in his tests. take this along to the harness review. 1 then other functions outside the class could overwrite this value and that is dangerous with sensitive things like a bank balance, writing only goes through these functions for safety. 2 yes because the user might not realize that the amount was larger than the balance, now the user might think the balance is 0 and that's why false comes back, so yes silent failure, because error information is hidden and the program can just carry on",
       "securitycheck site (tooling)": "security check site (tooling)",
       "cs.basis (L2), cs.basis.lus-grenzen (L2, nieuw), test.unit-tests (L1)": "cs.basis (L2), cs.basis.lus-grenzen (L2, new), test.unit-tests (L1)",
       "opdracht 04-even-getallen afmaken (niet expliciet benoemd)": "finish exercise 04-even-getallen (not stated explicitly)",
@@ -1645,7 +1958,14 @@
       "geen (`status`)": "none (`status`)",
       "vooraf 3 (opdracht 11) → de code van 11 lukte zonder hint in deze sessie (gelogd op trede 2 door de review van sessie 2); de uitleg vroeg 3 rondes → onderschat voor de code, klopt voor de uitleg.": "before 3 (exercise 11) → the code of 11 succeeded without a hint in this session (logged at rung 2 because of the review in session 2); the explanation took 3 rounds → underestimated for the code, accurate for the explanation.",
       "\"het verschil tussen compositie en argagatie\"": "\"the difference between composition and aggregation\"",
-      "\"dat het niet gaat om de spreekwoordelijke mand maar dat het gaat om de items in de mand, als die op zichzelf kunnen bestaan spreek je van argagatie.\"": "\"that it's not about the proverbial basket but about the items in the basket, if they can exist on their own you call it aggregation.\""
+      "\"dat het niet gaat om de spreekwoordelijke mand maar dat het gaat om de items in de mand, als die op zichzelf kunnen bestaan spreek je van argagatie.\"": "\"that it's not about the proverbial basket but about the items in the basket, if they can exist on their own you call it aggregation.\"",
+      "ood.aggregatie-compositie (L3), ood.encapsulatie (L2 → L3, plaatsing)": "ood.aggregatie-compositie (L3), ood.encapsulatie (L2 → L3, placement)",
+      "verder met de snek-challenges: 17-huis-en-kamers, daarna 18–21": "continue with the snek challenges: 17-huis-en-kamers, then 18–21",
+      "onbekend (gevraagd over 17, niet beantwoord)": "unknown (asked about 17, not answered)",
+      "`ood.aggregatie-compositie`: vier taken op trede 0. De kamers maakte je in de constructor van `Huis` (17). De setter bij de motor (18) en de CPU (20) en het BSN zonder setter (19) koos je bewust, met een regel die je zelf verwoordde: \"als iets te vervangen/updaten is krijgt de propertie van mij een set\". Na het vastlopen in 18 zette je het deel bij 19 en 20 meteen goed in de property, met de parameter. `ood.encapsulatie`: `_saldo` privé, met storten en opnemen via methoden, op trede 0. De controles in 21 lukten met hulp tot trede 1, en je verdedigde zelf de afweging tussen een exception en `false` teruggeven.": "`ood.aggregatie-compositie`: four tasks at rung 0. You created the rooms in the constructor of `Huis` (17). You chose the setter for the motor (18) and the CPU (20) and the BSN without a setter (19) deliberately, with a rule you put into words yourself: \"if something can be replaced/updated I give the property a set\". After getting stuck in 18, you put the part straight into the property in 19 and 20, with the parameter. `ood.encapsulatie`: `_saldo` private, with deposit and withdrawal through methods, at rung 0. The checks in 21 succeeded with help up to rung 1, and you defended the trade-off between an exception and returning `false` yourself.",
+      "vooraf onbekend → vijf van de zeven taken op trede 0, één op trede 1 (21) en één op trede 4 (18, de property in de constructor) → niet te bepalen (geen score vooraf). Wat je als verwarrend noemt, is precies het punt van trede 4 in 18.": "before unknown → five of the seven tasks at rung 0, one at rung 1 (21) and one at rung 4 (18, the property in the constructor) → cannot be determined (no score beforehand). What you call confusing is exactly the point of rung 4 in 18.",
+      "\"het setten van properties bij instacieren\"": "\"setting properties when instantiating\"",
+      "\"het verschil tussen properties en class fields bij het instacieren\"": "\"the difference between properties and class fields when instantiating\""
     }
   }
 }
