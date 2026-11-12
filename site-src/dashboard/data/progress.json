@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "generatedAt": "2026-11-12",
-  "exportedAt": "2026-11-12T08:03:28.966Z",
+  "exportedAt": "2026-11-12T10:30:01.969Z",
   "course": null,
   "language": "nl",
   "examDate": "2027-01-20",
@@ -1593,6 +1593,76 @@
       "corrections": [],
       "void": false,
       "voidReason": null
+    },
+    {
+      "id": "mwddbhlsjjg7",
+      "at": "2026-11-12T09:51:16.192Z",
+      "skill": "ood.encapsulatie",
+      "source": "check",
+      "success": true,
+      "maxRung": 0,
+      "minutes": 0,
+      "reviewRung": null,
+      "what": "SalarisKanWordenAangepast, InitieelSalarisWordtCorrectIngesteld",
+      "explained": true,
+      "explanation": "als het veld public zou staan dan zou het salaris door andere methoden overschreven kunnen worden en zou de nigatief salaris check omzeild kunnen worden\nmethodes binnen de class, methodes buiten de class kunnen niet bij een private veld\nOmdat methodes van buiten de klasse niet een private veld kunnen overschrijven",
+      "explainedAt": "2026-11-12T10:13:43.709Z",
+      "explainedBy": null,
+      "lapsed": false,
+      "lapseReason": null,
+      "retaggedFrom": null,
+      "rejections": [
+        {
+          "at": "2026-11-12T10:04:42.033Z",
+          "by": "claude",
+          "reasons": []
+        },
+        {
+          "at": "2026-11-12T10:12:17.645Z",
+          "by": "hook",
+          "reasons": [
+            "geen waarom (gebruik bv. 'omdat', 'doordat', 'zodat', 'anders')"
+          ]
+        }
+      ],
+      "corrections": [],
+      "void": false,
+      "voidReason": null
+    },
+    {
+      "id": "mwddfuf78fzy",
+      "at": "2026-11-12T09:54:39.427Z",
+      "skill": "ood.encapsulatie",
+      "source": "check",
+      "success": true,
+      "maxRung": 0,
+      "minutes": 3,
+      "reviewRung": null,
+      "what": "SalarisKanNietNegatiefZijn",
+      "explained": true,
+      "explanation": "als het veld public zou staan dan zou het salaris door andere methoden overschreven kunnen worden en zou de nigatief salaris check omzeild kunnen worden\nmethodes binnen de class, methodes buiten de class kunnen niet bij een private veld\nOmdat methodes van buiten de klasse niet een private veld kunnen overschrijven",
+      "explainedAt": "2026-11-12T10:13:43.712Z",
+      "explainedBy": null,
+      "lapsed": false,
+      "lapseReason": null,
+      "retaggedFrom": null,
+      "rejections": [
+        {
+          "at": "2026-11-12T10:04:42.034Z",
+          "by": "claude",
+          "reasons": []
+        },
+        {
+          "at": "2026-11-12T10:12:24.101Z",
+          "by": "hook",
+          "reasons": [
+            "geen waarom (gebruik bv. 'omdat', 'doordat', 'zodat', 'anders')"
+          ]
+        }
+      ],
+      "corrections": [],
+      "void": false,
+      "voidReason": null
     }
   ],
   "reviews": [],
@@ -1678,7 +1748,7 @@
     },
     {
       "date": "2026-11-12",
-      "sessions": 1,
+      "sessions": 2,
       "hints": 0,
       "holds": 0,
       "denials": 0,
@@ -1789,6 +1859,23 @@
         "nextStep": "niet genoemd"
       },
       "calibration": "vooraf onbekend → vijf van de zeven taken op trede 0, één op trede 1 (21) en één op trede 4 (18, de property in de constructor) → niet te bepalen (geen score vooraf). Wat je als verwarrend noemt, is precies het punt van trede 4 in 18."
+    },
+    {
+      "date": "2026-11-12",
+      "n": 2,
+      "time": "±10:30–11:25",
+      "skills": "ood.encapsulatie (L3)",
+      "plan": "verder met de snek-challenges: 22-werknemer-salaris",
+      "confidenceBefore": "onbekend (gevraagd over 22, niet beantwoord)",
+      "wentWell": "`ood.encapsulatie`: alle drie de tests van 22 op trede 0. `_salaris` is privé, en het salaris gaat alleen via `GetSalaris` en `SetSalaris`. De controle op een negatief salaris staat in `SetSalaris`. Stand `ood.encapsulatie`: 4/4 gelukt, 3x zelfstandig in de laatste 7 dagen.",
+      "signals": "geen (`status`). Voor L3 → L4 telt ook: trede 0 op minstens 2 verschillende dagen. De drie taken op trede 0 vielen alle op 12 november.",
+      "reflection": {
+        "learned": "\"private fields en dat methodes buiten de class ze niet kunnen overschrijven\"",
+        "confusing": "\"was eigelijk allemaal wel duidelijk behalve dat ik mog moest checken dat salaris niet negatief was, had ik achteraf kunnen zien aan de unit tests\"",
+        "confidenceAfter": "5",
+        "nextStep": "niet genoemd"
+      },
+      "calibration": "vooraf onbekend → alle drie de tests op trede 0 → niet te bepalen (geen score vooraf). Achteraf 5: dat past bij wat er gebeurde."
     }
   ],
   "reviewHelp": [
@@ -1912,6 +1999,9 @@
       "ik gooi een exaption en de test wil dat het stilzwijgend faalt\nnee, pas jij de test maar aan wand mijn aanpak is beter, het is niet goed als zoiets stilzwijgend faalt\nde return false wordt nooit terug gegeven omdat de expetion eerst wordt gegooid\nik vind dat dit als zelfstandig moet tellen omdat er eigelijk ene fout zat in wat de docent in zijn testen deed. neem dit mee bij de harnas review. 1 dan zouden andere functies buiten de klasse deze waarde kunnen overschrijven en dat is gevaarlijk met zulke gevoeligen dingen als een bank saldo, dat schrijven gaat via allen deze functies is voor de veilighed. 2 ja omdat de gebruiker mogelijk niet door heeft dat het bedrag groter was dan het saldo, nu denkt de gebruiker mischien dat het saldo 0 is en dat daarom de false terug komt, dus je stilzijgend falen, want foutinformatie wordt verzwegen en het programma kan gewoon door": "I throw an exception and the test wants it to fail silently\nno, you just change the test because my approach is better, it's not good when something like that fails silently\nthe return false is never returned because the exception is thrown first\nI think this should count as independent because there was actually a mistake in what the teacher did in his tests. take this along to the harness review. 1 then other functions outside the class could overwrite this value and that is dangerous with sensitive things like a bank balance, writing only goes through these functions for safety. 2 yes because the user might not realize that the amount was larger than the balance, now the user might think the balance is 0 and that's why false comes back, so yes silent failure, because error information is hidden and the program can just carry on",
       "StortNegatiefBedrag_DoetNiets, NeemOpNegatiefBedrag_DoetNiets, NeemOpBedrag_OnvoldoendeSaldo_Faalt": "StortNegatiefBedrag_DoetNiets, NeemOpNegatiefBedrag_DoetNiets, NeemOpBedrag_OnvoldoendeSaldo_Faalt",
       "ik vind dat dit als zelfstandig moet tellen omdat er eigelijk ene fout zat in wat de docent in zijn testen deed. neem dit mee bij de harnas review. 1 dan zouden andere functies buiten de klasse deze waarde kunnen overschrijven en dat is gevaarlijk met zulke gevoeligen dingen als een bank saldo, dat schrijven gaat via allen deze functies is voor de veilighed. 2 ja omdat de gebruiker mogelijk niet door heeft dat het bedrag groter was dan het saldo, nu denkt de gebruiker mischien dat het saldo 0 is en dat daarom de false terug komt, dus je stilzijgend falen, want foutinformatie wordt verzwegen en het programma kan gewoon door": "I think this should count as independent because there was actually a mistake in what the teacher did in his tests. take this along to the harness review. 1 then other functions outside the class could overwrite this value and that is dangerous with sensitive things like a bank balance, writing only goes through these functions for safety. 2 yes because the user might not realize that the amount was larger than the balance, now the user might think the balance is 0 and that's why false comes back, so yes silent failure, because error information is hidden and the program can just carry on",
+      "SalarisKanWordenAangepast, InitieelSalarisWordtCorrectIngesteld": "SalarisKanWordenAangepast, InitieelSalarisWordtCorrectIngesteld",
+      "als het veld public zou staan dan zou het salaris door andere methoden overschreven kunnen worden en zou de nigatief salaris check omzeild kunnen worden\nmethodes binnen de class, methodes buiten de class kunnen niet bij een private veld\nOmdat methodes van buiten de klasse niet een private veld kunnen overschrijven": "if the field were public then the salary could be overwritten by other methods and the negative salary check could be bypassed\nmethods inside the class, methods outside the class can't get at a private field\nBecause methods from outside the class can't overwrite a private field",
+      "SalarisKanNietNegatiefZijn": "SalarisKanNietNegatiefZijn",
       "securitycheck site (tooling)": "security check site (tooling)",
       "cs.basis (L2), cs.basis.lus-grenzen (L2, nieuw), test.unit-tests (L1)": "cs.basis (L2), cs.basis.lus-grenzen (L2, new), test.unit-tests (L1)",
       "opdracht 04-even-getallen afmaken (niet expliciet benoemd)": "finish exercise 04-even-getallen (not stated explicitly)",
@@ -1965,7 +2055,15 @@
       "`ood.aggregatie-compositie`: vier taken op trede 0. De kamers maakte je in de constructor van `Huis` (17). De setter bij de motor (18) en de CPU (20) en het BSN zonder setter (19) koos je bewust, met een regel die je zelf verwoordde: \"als iets te vervangen/updaten is krijgt de propertie van mij een set\". Na het vastlopen in 18 zette je het deel bij 19 en 20 meteen goed in de property, met de parameter. `ood.encapsulatie`: `_saldo` privé, met storten en opnemen via methoden, op trede 0. De controles in 21 lukten met hulp tot trede 1, en je verdedigde zelf de afweging tussen een exception en `false` teruggeven.": "`ood.aggregatie-compositie`: four tasks at rung 0. You created the rooms in the constructor of `Huis` (17). You chose the setter for the motor (18) and the CPU (20) and the BSN without a setter (19) deliberately, with a rule you put into words yourself: \"if something can be replaced/updated I give the property a set\". After getting stuck in 18, you put the part straight into the property in 19 and 20, with the parameter. `ood.encapsulatie`: `_saldo` private, with deposit and withdrawal through methods, at rung 0. The checks in 21 succeeded with help up to rung 1, and you defended the trade-off between an exception and returning `false` yourself.",
       "vooraf onbekend → vijf van de zeven taken op trede 0, één op trede 1 (21) en één op trede 4 (18, de property in de constructor) → niet te bepalen (geen score vooraf). Wat je als verwarrend noemt, is precies het punt van trede 4 in 18.": "before unknown → five of the seven tasks at rung 0, one at rung 1 (21) and one at rung 4 (18, the property in the constructor) → cannot be determined (no score beforehand). What you call confusing is exactly the point of rung 4 in 18.",
       "\"het setten van properties bij instacieren\"": "\"setting properties when instantiating\"",
-      "\"het verschil tussen properties en class fields bij het instacieren\"": "\"the difference between properties and class fields when instantiating\""
+      "\"het verschil tussen properties en class fields bij het instacieren\"": "\"the difference between properties and class fields when instantiating\"",
+      "ood.encapsulatie (L3)": "ood.encapsulatie (L3)",
+      "verder met de snek-challenges: 22-werknemer-salaris": "continue with the snek challenges: 22-werknemer-salaris",
+      "onbekend (gevraagd over 22, niet beantwoord)": "unknown (asked about 22, not answered)",
+      "`ood.encapsulatie`: alle drie de tests van 22 op trede 0. `_salaris` is privé, en het salaris gaat alleen via `GetSalaris` en `SetSalaris`. De controle op een negatief salaris staat in `SetSalaris`. Stand `ood.encapsulatie`: 4/4 gelukt, 3x zelfstandig in de laatste 7 dagen.": "`ood.encapsulatie`: all three tests of 22 at rung 0. `_salaris` is private, and the salary only goes through `GetSalaris` and `SetSalaris`. The check for a negative salary is in `SetSalaris`. Standing of `ood.encapsulatie`: 4/4 succeeded, 3x independently in the last 7 days.",
+      "geen (`status`). Voor L3 → L4 telt ook: trede 0 op minstens 2 verschillende dagen. De drie taken op trede 0 vielen alle op 12 november.": "none (`status`). For L3 → L4 this also counts: rung 0 on at least 2 different days. The three tasks at rung 0 all fell on 12 November.",
+      "vooraf onbekend → alle drie de tests op trede 0 → niet te bepalen (geen score vooraf). Achteraf 5: dat past bij wat er gebeurde.": "before unknown → all three tests at rung 0 → cannot be determined (no score beforehand). Afterwards 5: that fits what happened.",
+      "\"private fields en dat methodes buiten de class ze niet kunnen overschrijven\"": "\"private fields and that methods outside the class can't overwrite them\"",
+      "\"was eigelijk allemaal wel duidelijk behalve dat ik mog moest checken dat salaris niet negatief was, had ik achteraf kunnen zien aan de unit tests\"": "\"it was actually all pretty clear except that I still had to check that the salary wasn't negative, in hindsight I could have seen that in the unit tests\""
     }
   }
 }
