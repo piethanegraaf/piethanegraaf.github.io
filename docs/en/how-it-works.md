@@ -17,8 +17,9 @@ flowchart LR
   S --> R[(.learning/)]
   G1 --> R
   C -.->|demotion of a main skill| A[demotion analyst<br/>read only]
-  A -.->|verdict as JSON| C
-  S -.->|checks the verdict| R
+  A -.->|report with the verdict| S
+  S -.->|checks it again on the evidence of now| R
+  S -.->|explanation approved:<br/>placement of a new skill| R
   S -.->|explanation meets a criterion:<br/>proposal to promote| Y[You]
   Y -.->|yes, promote| G1
 ```
@@ -37,7 +38,7 @@ In the harness, every prompt passes the prompt-gate, and the guard blocks Claude
 
 A skill can have **microskills**: sub-patterns with their own level. Filtering lists can already be at L3 while chaining void methods is still at L2.
 
-**A new skill** (without tasks and without history) has no fixed place yet. You try it yourself first, with the L2 hint ladder. The highest rung of your first task sets the level: rung 0 → L3, 1–2 → L2, 3–4 → L1, 5 → L0. If the harness places you too low, you set it higher yourself.
+**A new skill** (without tasks and without history) has no fixed place yet. You try it yourself first, with the L2 hint ladder. The highest rung of your first task sets the level: rung 0 → L3, 1–2 → L2, 3–4 → L1, 5 → L0. That happens when your explanation of that task is approved; if the explanation lapses, the placement stays open. Help about another concept does not count here. A placement up to L3 gets its own message with the evidence. If the harness places you too low, you set it higher yourself.
 
 ## The hint ladder (L2)
 
@@ -72,14 +73,14 @@ If you still want Claude to do something, you set an override yourself: `! node 
 
 A task is logged when a test goes from red to green (`check.mjs`), when you log it yourself (`done`), or when you say in the chat that the tests pass. It only counts after an explanation **in your own words**, with two keys:
 
-1. Claude judges the content and writes `[explain-ok <tid>]` or `[explain-no <tid>]`. The question depends on what happened. After help (rung 1 or higher): about the concept of the highest hint, because that is where you were stuck. After a failed attempt without a hint (red or a compile error): why does it work now, and why did the first attempt not? Green at once: one question about the principle of the exercise. Claude keeps asking until the principle is right.
-2. The Stop hook checks your own words: **all your messages since the task was logged, together**. An answer in three short messages counts as one. Together they need at least 12 words outside code, a *why* (because, so that, otherwise …), and they must not be copied from Claude's text. A message from before the task was logged does not count.
+1. Claude judges the content and writes `[explain-ok <tid>]` or `[explain-no <tid>]`. With `explain-no` Claude first names what is already right, and then asks one follow-up question that points to the gap: a follow-up question, not a rejection. The requirement stays just as strict. The question depends on what happened. After help (rung 1 or higher): about the concept of the highest hint, because that is where you were stuck. After a failed attempt without a hint (red or a compile error): why does it work now, and why did the first attempt not? Green at once: one question about the principle of the exercise. Claude keeps asking until the principle is right.
+2. The Stop hook checks your own words: **all your messages since the task was logged, together**. An answer in three short messages counts as one. Together they need at least 12 words outside code, a *why* (because, so that, otherwise …, or a reasoning "if …, then/would …" in one sentence), and they must not be copied from Claude's text. A message from before the task was logged does not count.
 
 The explanation belongs **right after** the green. A next task in the same folder may come first, and one message may explain several tasks. If you start another exercise, or the session ends, the task **lapses**: it does not count and shows up on the dashboard as skipped. If an approved explanation got lost through a harness bug, you recover it with `replay`.
 
 A test that was green once, turned red and is green again is a **repaired regression** and does not count as a new task.
 
-**Honest words.** "Solved independently" only means rung 0. At rung 1–2 the task counts as solved, and the harness says "solved, with help up to rung N". With more help it does not count as solved.
+**Praise first, in honest words.** After a green, `check.mjs` first says what worked and which skill, and then invites the explanation. "Independently" only means rung 0. At rung 1–4 the harness says "solved with help up to rung N", and where the learning was: the concept of the highest hint. Effort is the goal here, not failure; the harness says so once, at your first session start. A worked example (rung 5) counts as not solved: then you explain the worked example back.
 
 **Help about another concept** is logged for that concept too. Suppose Claude helps you with the syntax of a loop during an exercise on inheritance. Then Claude writes `[rung N #id]`, with the id of the loop skill. The task keeps that rung, because you made it with that help. The concept gets its own event, `concept-help`. That is not a task of that concept: `status` shows it, and it counts as evidence for a proposal for a microskill. The status line Claude sees with every prompt shows the help given for this task, also at L3 (`help given: rung N`); at L2 also the unlocked rung.
 
@@ -99,11 +100,13 @@ Only your own "yes, add" (or "ja, toevoegen") adds it, at the main skill's level
 
 ## Promotion and reviews
 
-- **Up** is your decision, on evidence. The evidence is the last 10 explained tasks **since the previous level change**, so the same tasks never carry two promotions.
+- **Up** is your decision, on evidence. The evidence is the last 10 explained tasks **since the previous level change**, plus the task that placed the skill, so the same tasks never carry two promotions.
   - **L0 → L1:** two examples explained and predicted correctly.
   - **L1 → L2:** three tasks at rung 1 at most (gaps filled).
   - **L2 → L3:** about 85% solved (at most rung 2) over at least 5 tasks, and at least half with hint 0–1.
-  - **L3 → L4:** rung 0 three times on at least 2 days, plus a **transfer task**: with `/mastery-check <id>` you solve a new exercise in another domain, without any hint, and then defend the design. A hint during the transfer task makes it not count.
+  - **L3 → L4:** rung 0 three times on at least 2 days, and a **transfer task** is one of them: with `/mastery-check <id>` you solve a new exercise in another domain, without any hint, and then defend the design. Its day counts as a day. So after two tasks without a hint, the transfer task can be the third; were those two on one day, then do it on another day. A hint during the transfer task makes it not count.
+  - **The design goal:** whoever practises daily and masters the skill reaches L4 in about 3 sessions on 2 days. A test guards that.
+  - **When the exercise folders of a skill at L3 run out,** Claude points to an existing next exercise: another exercise of the course, or a question from a practice test. A practice-test question counts when you do it without help, check it with the answer key, explain it and log it with `done`. Claude never makes up an exercise.
   - **Jump:** from L2 up the evidence may carry a jump when the next criterion holds too, for example L2 → L4 with the transfer task. From L0 and L1 it goes one step at a time, because a worked example or a skeleton was help up front.
 - **The proposal** comes right after the explanation that meets the criterion. The harness shows it itself, with the evidence and what changes:
 
@@ -114,8 +117,14 @@ Only your own "yes, add" (or "ja, toevoegen") adds it, at the main skill's level
     yes: type "yes, promote" · no: type "no" · you can always undo it with set
   ```
 
-  If you type "yes, promote" (or "ja, doorzetten"), the harness sets the level. That only works on your own prompt, never on Claude's text. If you say "no" or "later", the proposal only comes back after a new task that meets the criterion again. `set` still works too.
-- **Down** follows the evidence, when `autoDemote` is on: with at least 3 explained tasks and under 70% solved, or the last 2 not solved. A microskill goes down one level right away. For a main skill the **demotion analyst** decides first: an agent that only reads, looks at the test output, your code and the transcript, and decides whether the problem is one sub-pattern (then only that microskill goes down or is created) or broad (then the main skill goes down). If two microskills of the same parent go down within 14 days, the parent goes down too. You get a message and can revert it with `set`.
+  If you type "yes, promote" (or "ja, doorzetten"), the harness sets the level and says so with ↑ and the evidence. That only works on your own prompt, never on Claude's text. If you say "no" or "later", the proposal only comes back after a new task that meets the criterion again. `set` still works too.
+- **How far is the next level?** After each task, at `status` and at the session start the harness shows it in steps, never as a percentage:
+
+  ```
+  ↗ ood.encapsulatie L3 → L4: without a hint 3/3 ✓ · days 1/2 · transfer task ○
+  ```
+
+- **Down** follows the evidence, when `autoDemote` is on: with at least 4 explained tasks and under 70% solved, or the last 2 not solved. "Solved" counts the help within the skill's own family: help about another concept (`[rung N #id]`) is no failure of this skill. Down waits until no explanation of that family is open, and it is checked again on the evidence of that moment. A microskill goes down one level right away. For a main skill the **demotion analyst** decides first: an agent that only reads, looks at the test output, your code and the transcript, and decides whether the problem is one sub-pattern (then only that microskill goes down or is created) or broad (then the main skill goes down). When the help was really about an existing microskill of another family, the analyst may choose that one. The harness reads the verdict from the analyst's report itself: no JSON in the chat. If two microskills of the same parent go down within 14 days, the parent goes down too. You get one quiet line, "extra support for …", and can revert it with `set`.
 - **Reviews** only exist at L4, at Fibonacci intervals: 1, 2, 3, 5, 8, 13 … days. There are no separate review exercises. When such a skill comes by in your work while its review is due, you do that part yourself, without AI. Your next task decides the outcome: rung 0 is a pass (one step on), rung 1–2 shaky (the same), more help a fail (two steps back). If it does not come by, nothing happens; the practice exams are the safety net.
 
 ## The diary

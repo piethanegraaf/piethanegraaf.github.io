@@ -596,8 +596,9 @@ So the shift argues for **adding** deliberate practice of AI-era skills, not for
 | P11 | **Enforce guardrails in the workflow, not only in prompts.** | Barth 2026 (prompts alone: no effect); Oreopoulos 2026; Sankaranarayanan 2026; Teo 2026 (tutors over-help) | Moderate |
 | P12 | **Practise under test conditions before the test**: timed, without AI, in the IDE of your exam, after low-stakes learning. | Transfer-appropriate processing (Morris 1977); Pan & Rickard 2018; Hinze & Rapp 2014; Driskell 2001 | Moderate (no IDE-specific study) |
 | P13 | **Train supervision as its own skill**: read, test, debug and specify AI output, on topics you can already write yourself. | Paradox of supervision (Anthropic 2025b); employer interview formats; CS1-LLM; Pădurean 2026; §2.9 | Inference, consistent across sources |
+| P14 | **Levels inform; they do not reward.** No points, badges, streaks or leaderboards: a level says which help you get, not which status you have. Show progress against your own earlier work, not against others. | Gamification: small effects, only the cognitive one stable in rigorous studies (Sailer & Homner 2020); points, levels and leaderboards raised the amount of output, not its quality or intrinsic motivation (Mekler et al. 2017); a course with badges and a leaderboard went with less motivation and lower exam scores (Hanus & Fox 2015, two courses compared); performance-contingent rewards lowered free-choice motivation (Deci et al. 1999); a broken streak lowers engagement (Silverman & Barasch 2023); feedback against your own work beat social comparison (Shih & Alexander 2000) | Moderate (against adding these elements) |
 
-Read together, P1–P6 and P11 build a skill, P7 and P13 delegate it, and P8 maintains it. §2.12 applies that trade-off to junior developers at work.
+Read together, P1–P6 and P11 build a skill, P7 and P13 delegate it, and P8 maintains it. P14 keeps the levels informative, and shows progress against yourself (§10.7). §2.12 applies that trade-off to junior developers at work.
 
 ### 2.12 The eternal-junior problem
 
@@ -857,6 +858,47 @@ flowchart LR
 
 The harness puts five deterministic hooks around the Claude agent, and keeps your skill record, diary and session state in a local `.learning/` folder. CLAUDE.md, the output style and the skills shape how the agent teaches, but only the hooks enforce rules.
 
+**As built (12 November 2026):** four hooks, two commands that only you run, three skills and one agent. The design above had a fifth hook (PostToolUse), a skill map in YAML and more skills. The build replaced the fifth hook with `check.mjs`, which you run yourself, and the map with `skills.json` (§10).
+
+```mermaid
+flowchart LR
+    subgraph You["You"]
+        P[Prompt, attempt,<br/>explanation]
+        CLI["! check.mjs · ! skill.mjs<br/>only you run them"]
+    end
+    subgraph Hooks["Hooks (deterministic)"]
+        SS[session-start<br/>record, what went up,<br/>progress to the next level]
+        PG[prompt-gate<br/>skill, level, rung,<br/>open explanations]
+        GU{guard<br/>PreToolUse}
+        RG[reflect-gate<br/>Stop: markers, explanation check,<br/>placement, proposals, diary]
+    end
+    subgraph Agent["Claude"]
+        C[Claude]
+        SK["skills: /diary,<br/>/mastery-check, /update-dashboard"]
+        DA[demotion analyst<br/>read only]
+    end
+    subgraph Store[".learning/ (local, git-ignored)"]
+        SR[(skills.json)]
+        EV[(state/: events.jsonl,<br/>session-*.json, tests.json)]
+        DI[(diary/)]
+    end
+    SS --> C
+    P --> PG --> C
+    C -- writes or tests code --> GU
+    GU -- L1-L3: deny --> C
+    C --> RG
+    CLI --> EV
+    CLI --> SR
+    PG <--> EV
+    RG --> EV
+    RG --> SR
+    C -. demotion of a main skill .-> DA
+    DA -. report with the verdict .-> RG
+    SK --> DI
+```
+
+As built, the four hooks are deterministic. The guard blocks code at L1–L3. The reflect-gate checks markers and explanations, places a new skill and shows proposals. The demotion analyst only reads, and its report goes to the reflect-gate, not into the chat.
+
 **Design choices:**
 
 - **Rules that must hold go in hooks.** Hooks are deterministic. Instructions in CLAUDE.md are *advisory*: the model usually follows them, but it can drift from them in long sessions. So the rule "do not write code that you own" has to be a hook.
@@ -882,7 +924,7 @@ stateDiagram-v2
     direction LR
     [*] --> Placement : new skill - attempt first, L2 hint ladder, no unlock on time
 
-    Placement --> L3_Independent : first task at rung 0
+    Placement --> L3_Independent : first task at rung 0, placed at its approved explanation
     Placement --> L2_Guided : first task at rung 1-2
     Placement --> L1_Complete : first task at rung 3-4
     Placement --> L0_Demonstrate : first task needed a worked solution (rung 5)
@@ -891,13 +933,13 @@ stateDiagram-v2
     L1_Complete --> L2_Guided : 3 gaps filled, tests pass, max 1 hint per gap
     L2_Guided --> L3_Independent : about 85% solved over 5+ tasks, at least half at rung 0-1 (learner confirms the proposal)
     L2_Guided --> L4_Automated : jump - the same tasks also meet the L4 criterion, plus the transfer task (learner confirms)
-    L3_Independent --> MasteryCheck : 3x rung 0 on 2+ different days
-    MasteryCheck --> L4_Automated : transfer task via /mastery-check, no hint + explanation (learner confirms)
+    L3_Independent --> MasteryCheck : 2x rung 0, the placement task counts
+    MasteryCheck --> L4_Automated : transfer task via /mastery-check is the 3rd time, 2+ days in total (learner confirms)
     MasteryCheck --> L3_Independent : failed - targeted practice
 
     L1_Complete --> L0_Demonstrate : auto-demote
     L2_Guided --> L1_Complete : auto-demote
-    L3_Independent --> L2_Guided : auto-demote
+    L3_Independent --> L2_Guided : auto-demote - 4+ tasks, rung within the family, no open explanation
 
     L4_Automated --> Maintenance : Fibonacci date passed
     Maintenance --> L4_Automated : next time in real work, done by the learner - new date
@@ -908,9 +950,10 @@ stateDiagram-v2
 
 In the autonomy ladder as built, a new skill's level is set by the highest hint rung of its first task. After that, a skill can go down automatically, but going up is always your decision, and maintenance reviews happen only at L4.
 
-- **Placement.** A skill below L4 with no history and no tasks of its own has an open placement. Until its first task it counts as L2, for the hint ladder and for the guard. So a new skill no longer starts at L0: L0 and L1 are forms of help that come *after* an attempt. The highest rung of the first task sets the level (§5.3).
-- **Auto-demote** happens only when `settings.autoDemote` is on; it is off by default. The rule looks at the skill's own explained tasks since its last level change, at most the last 10. With at least 3 of them, it applies when under 70% were solved (at rung ≤ 2) or the last 2 were not solved. It also applies after 2 failed reviews in a row. A microskill then goes down one level. For a parent skill, the demotion analyst first decides whether a microskill or the parent goes down (§10.4.2).
+- **Placement.** A skill below L4 with no history and no explained tasks of its own has an open placement. Until then it counts as L2, for the hint ladder and for the guard. So a new skill no longer starts at L0: L0 and L1 are forms of help that come *after* an attempt. The highest rung of the first task sets the level (§5.3), at the approved explanation of that task; help about another concept does not count (§10.7).
+- **Auto-demote** happens only when `settings.autoDemote` is on; it is off by default. The rule looks at the skill's own explained tasks since its last level change, at most the last 10. With at least 4 of them (§10.7; 3 until 12 November), it applies when under 70% were solved (at rung ≤ 2 within the skill's own family) or the last 2 were not solved. It also applies after 2 failed reviews in a row. It waits while an explanation of that family is open, and a pending demotion is checked again on the evidence of the moment it is applied. A microskill then goes down one level. For a parent skill, the demotion analyst first decides whether a microskill or the parent goes down (§10.4.2).
 - **Up** never happens automatically. You can undo any automatic change with `set`.
+- **L3 → L4 (§10.7):** the task that placed the skill counts, and the transfer task is one of the three times without a hint; its day counts as a day.
 
 ??? note "Earlier version (7–9 November 2026)"
 
@@ -955,10 +998,10 @@ flowchart TD
     B -- yes --> E
     E --> F{Current rung}
     F -- 1 --> G["Rung 1 · Socratic question<br/>'What does the client need<br/>to know about this object?'"]
-    F -- 2 --> H["Rung 2 · Concept pointer<br/>'Look at Dependency Inversion;<br/>what depends on what?'"]
+    F -- 2 --> H["Rung 2 · Where to find it,<br/>or which concept it is"]
     F -- 3 --> I["Rung 3 · Pseudocode /<br/>UML sketch of structure"]
-    F -- 4 --> J["Rung 4 · Partial code snippet<br/>(≤5 lines, never the full solution)"]
-    F -- 5 --> K["Rung 5 · Worked solution<br/>+ mandatory self-explanation<br/>→ task counts as FAILED,<br/>similar task scheduled"]
+    F -- 4 --> J["Rung 4 · Small example, ≤5 lines,<br/>on another topic"]
+    F -- 5 --> K["Rung 5 · Worked solution,<br/>only after confirmation<br/>→ task counts as NOT solved"]
     G & H & I & J --> L[Learner continues]
     K --> M[Consolidation:<br/>explain it back in own words]
     L --> N{Solved?}
@@ -1026,13 +1069,47 @@ sequenceDiagram
 
 In an example session, the PreToolUse hook denies Claude's edit to a file of an L2 skill, so Claude gives the next hint instead. At the end, the Stop hook blocks once, so that Claude asks three reflection questions and you answer them in your own words.
 
+**As built (12 November 2026):** the same session with the hooks and the command that exist now.
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor U as You
+    participant SS as session-start
+    participant PG as prompt-gate
+    participant C as Claude
+    participant GU as guard
+    participant CK as check.mjs
+    participant RG as reflect-gate
+    participant FS as .learning/
+    SS->>FS: read the record and the events
+    SS-->>U: what went up, progress to the next level
+    U->>PG: "I'm stuck on 21-bankrekening"
+    PG->>FS: skill and level from the folder, the rung
+    PG-->>C: L2: rung 1 unlocked, no code
+    C->>U: a Socratic question [rung 1]
+    C->>GU: Write(Bankrekening.cs)
+    GU-->>C: deny: at L2 the learner writes this
+    U->>CK: ! check.mjs 21-bankrekening
+    CK->>FS: red to green: a task with its rung
+    CK-->>U: praise first, then "explain why, and it counts", progress
+    U->>C: the explanation in own words
+    C->>RG: [explain-ok tid]
+    RG->>FS: both keys pass: the task is explained
+    RG-->>U: placement, or a proposal to promote, with the evidence
+    U->>PG: "yes, promote"
+    PG->>FS: level up, logged
+```
+
+As built, you run the tests yourself with `check.mjs`. It logs the task, praises first and shows your progress. The reflect-gate approves the explanation with two keys. A placement or a proposal to promote comes from the harness itself, and only your own "yes, promote" raises the level.
+
 | Hook | Event | Job | Can it block? |
 |---|---|---|---|
-| `session-start.mjs` | `SessionStart` | Gives Claude a summary of your skill record, the reviews due today, and the instruction to ask you for a plan (*forethought*) | No (context only) |
+| `session-start.mjs` | `SessionStart` | Gives Claude a summary of your skill record, the reviews due today, and the instruction to ask you for a plan (*forethought*). *Revised (§10.4, §10.7):* no reviews at the start any more; it shows you what went up in the last 7 days, your progress towards the next level in steps, and once that effort is the goal | No (context only) |
 | `prompt-gate.mjs` | `UserPromptSubmit` | Matches your prompt to a skill using keywords from `skill-map.yaml`, adds the policy for that level and the current hint rung, starts or updates the stuck timer, and handles `/override`. *Revised (§10.2, item 10):* ignores agent reports, task notifications and system reminders, and logs `prompt-ignored` | Can add context. Can block only on abuse patterns (optional) |
 | `ownership-guard.mjs` | `PreToolUse` (matcher `Edit\|Write\|MultiEdit\|NotebookEdit`) | Blocks AI edits to files, or parts of files, that belong to a skill at L1–L3. At L1 it allows a write only if it contains `TODO(human)` gaps | **Yes** (`permissionDecision: deny`) |
 | ~~`evidence-log.mjs`~~ → `check.mjs` (built) | CLI, which you run yourself with `!` | *Revised (§10):* because you run the tests yourself, a PostToolUse hook never sees them. `check.mjs` runs `dotnet test` with a trx logger, prints a readable summary, remembers per test method whether it was green, and logs a red→green transition as a task with the current hint rung. It works for any .NET test project (practice exercises and project work) | No |
-| `reflect-gate.mjs` | `Stop` | If you worked on a skill and there is no diary entry yet, it blocks **once** and tells Claude to run the reflection. It uses `stop_hook_active` to avoid loops. *Revised (§10):* it also reads Claude's last answer from the transcript and processes the `[trede N]` and `[uitleg-ok <tid>]` markers. That second marker is accepted only if your own message passes the deterministic explanation check | Yes, once |
+| `reflect-gate.mjs` | `Stop` | If you worked on a skill and there is no diary entry yet, it blocks **once** and tells Claude to run the reflection. It uses `stop_hook_active` to avoid loops. *Revised (§10):* it also reads Claude's last answer from the transcript and processes the `[trede N]` and `[uitleg-ok <tid>]` markers. That second marker is accepted only if your own message passes the deterministic explanation check. *Revised (§10.7):* at an approved explanation it places a new skill; it checks a pending demotion again; and it reads the demotion analyst's verdict from the agent's report | Yes, once |
 
 !!! example "Example: one student's situation"
     The harness was first tried by a second-year HBO-ICT student who practised OOD in C#. The course exercises came with .NET unit tests, and the student ran them, not Claude. That is why `check.mjs` runs `dotnet test`. The diagrams and examples in this section still use Java from the original design (`mvn test`, `src/Payment.java`).
@@ -1786,6 +1863,38 @@ Written by Piet Hanegraaf with Claude (Anthropic); see the [AI statement](ai-sta
 - Belland, B. R., Walker, A. E., Kim, N. J., & Lefler, M. (2017). Synthesizing results from empirical research on computer-based scaffolding in STEM education: A meta-analysis. *Review of Educational Research, 87*(2), 309–344. https://doi.org/10.3102/0034654316670999
 - van de Pol, J., Volman, M., Oort, F., & Beishuizen, J. (2015). The effects of scaffolding in the classroom: Support contingency and student independent working time in relation to student achievement, task effort and appreciation of support. *Instructional Science, 43*(5), 615–641. https://doi.org/10.1007/s11251-015-9351-z
 
+**Added on 12 November 2026: positive feedback, demotions and the phase history**
+
+- Aguilar, S. J. (2018). Examining the relationship between comparative and self-focused academic data visualizations in at-risk college students' academic motivation. *Journal of Research on Technology in Education, 50*(1), 84–103. https://doi.org/10.1080/15391523.2017.1401498
+- Baumeister, R. F., Bratslavsky, E., Finkenauer, C., & Vohs, K. D. (2001). Bad is stronger than good. *Review of General Psychology, 5*(4), 323–370. https://doi.org/10.1037/1089-2680.5.4.323
+- de Bruin, A. B. H., Biwer, F., Hui, L., Onan, E., David, L., & Wiradhany, W. (2023). Worth the effort: The Start and Stick to Desirable Difficulties (S2D2) framework. *Educational Psychology Review, 35*(2), 41. https://doi.org/10.1007/s10648-023-09766-w
+- Deci, E. L., Koestner, R., & Ryan, R. M. (1999). A meta-analytic review of experiments examining the effects of extrinsic rewards on intrinsic motivation. *Psychological Bulletin, 125*(6), 627–668. https://doi.org/10.1037/0033-2909.125.6.627
+- Eskreis-Winkler, L., & Fishbach, A. (2019). Not learning from failure—the greatest failure of all. *Psychological Science, 30*(12), 1733–1744. https://doi.org/10.1177/0956797619881133
+- Finkelstein, S. R., & Fishbach, A. (2012). Tell me what I did wrong: Experts seek and respond to negative feedback. *Journal of Consumer Research, 39*(1), 22–38. https://doi.org/10.1086/661934
+- Gok, S., & Fyfe, E. R. (2024). Learning from failure: The roles of self-focused feedback, task expectations, and subsequent instruction. *Journal of Experimental Psychology: General, 153*(9), 2328–2344. https://doi.org/10.1037/xge0001632
+- Hanus, M. D., & Fox, J. (2015). Assessing the effects of gamification in the classroom: A longitudinal study on intrinsic motivation, social comparison, satisfaction, effort, and academic performance. *Computers & Education, 80*, 152–161. https://doi.org/10.1016/j.compedu.2014.08.019
+- Harkin, B., Webb, T. L., Chang, B. P. I., Prestwich, A., Conner, M., Kellar, I., Benn, Y., & Sheeran, P. (2016). Does monitoring goal progress promote goal attainment? A meta-analysis of the experimental evidence. *Psychological Bulletin, 142*(2), 198–229. https://doi.org/10.1037/bul0000025
+- Henderlong, J., & Lepper, M. R. (2002). The effects of praise on children's intrinsic motivation: A review and synthesis. *Psychological Bulletin, 128*(5), 774–795. https://doi.org/10.1037/0033-2909.128.5.774
+- Kaliisa, R., Misiejuk, K., López-Pernas, S., Khalil, M., & Saqr, M. (2024). Have learning analytics dashboards lived up to the hype? A systematic review of impact on students' achievement, motivation, participation and attitude. *Proc. LAK '24*, 295–304. https://doi.org/10.1145/3636555.3636884
+- Kay, J., & Kummerfeld, B. (2012). Creating personalized systems that people can scrutinize and control: Drivers, principles and experience. *ACM Transactions on Interactive Intelligent Systems, 2*(4), 1–42. https://doi.org/10.1145/2395123.2395129
+- Keith, N., Horvath, D., Klamar, A., & Frese, M. (2022). Failure to learn from failure is mitigated by loss-framing and corrective feedback: A replication and test of the boundary conditions of the tune-out effect. *Journal of Experimental Psychology: General, 151*(8), e19–e25. https://doi.org/10.1037/xge0001170
+- Kirk-Johnson, A., Galla, B. M., & Fraundorf, S. H. (2019). Perceiving effort as poor learning: The misinterpreted-effort hypothesis of how experienced effort and perceived learning relate to study strategy choice. *Cognitive Psychology, 115*, 101237. https://doi.org/10.1016/j.cogpsych.2019.101237
+- Kivetz, R., Urminsky, O., & Zheng, Y. (2006). The goal-gradient hypothesis resurrected: Purchase acceleration, illusionary goal progress, and customer retention. *Journal of Marketing Research, 43*(1), 39–58. https://doi.org/10.1509/jmkr.43.1.39
+- Koo, M., & Fishbach, A. (2012). The small-area hypothesis: Effects of progress monitoring on goal adherence. *Journal of Consumer Research, 39*(3), 493–509. https://doi.org/10.1086/663827
+- Long, Y., & Aleven, V. (2017). Enhancing learning outcomes through self-regulated learning support with an open learner model. *User Modeling and User-Adapted Interaction, 27*(1), 55–88. https://doi.org/10.1007/s11257-016-9186-6
+- Mekler, E. D., Brühlmann, F., Tuch, A. N., & Opwis, K. (2017). Towards understanding the effects of individual gamification elements on intrinsic motivation and performance. *Computers in Human Behavior, 71*, 525–534. https://doi.org/10.1016/j.chb.2015.08.048
+- Mitrovic, A., Ohlsson, S., & Barrow, D. K. (2013). The effect of positive feedback in a constraint-based intelligent tutoring system. *Computers & Education, 60*(1), 264–272. https://doi.org/10.1016/j.compedu.2012.07.002
+- Person, N. K., Kreuz, R. J., Zwaan, R. A., & Graesser, A. C. (1995). Pragmatics and pedagogy: Conversational rules and politeness strategies may inhibit effective tutoring. *Cognition and Instruction, 13*(2), 161–188. https://doi.org/10.1207/s1532690xci1302_1
+- Rawson, K. A., & Dunlosky, J. (2011). Optimizing schedules of retrieval practice for durable and efficient learning: How much is enough? *Journal of Experimental Psychology: General, 140*(3), 283–302. https://doi.org/10.1037/a0023956
+- Rewley, J., Guszcza, J., Dierst-Davies, R., Steier, D., Szwartz, G., & Patel, M. (2021). Loss aversion explains physical activity changes in a behavioral gamification trial. *Games for Health Journal, 10*(6), 430–436. https://doi.org/10.1089/g4h.2021.0130
+- Sailer, M., & Homner, L. (2020). The gamification of learning: A meta-analysis. *Educational Psychology Review, 32*(1), 77–112. https://doi.org/10.1007/s10648-019-09498-w
+- Shih, S.-S., & Alexander, J. M. (2000). Interacting effects of goal setting and self- or other-referenced feedback on children's development of self-efficacy and cognitive skill within the Taiwanese classroom. *Journal of Educational Psychology, 92*(3), 536–543. https://doi.org/10.1037/0022-0663.92.3.536
+- Silverman, J., & Barasch, A. (2023). On or off track: How (broken) streaks affect consumer decisions. *Journal of Consumer Research, 49*(6), 1095–1117. https://doi.org/10.1093/jcr/ucac029
+- Soderstrom, N. C., & Bjork, R. A. (2015). Learning versus performance: An integrative review. *Perspectives on Psychological Science, 10*(2), 176–199. https://doi.org/10.1177/1745691615569000
+- Usher, E. L., & Pajares, F. (2008). Sources of self-efficacy in school: Critical review of the literature and future directions. *Review of Educational Research, 78*(4), 751–796. https://doi.org/10.3102/0034654308321456
+- Villar, A., Callegaro, M., & Yang, Y. (2013). Where am I? A meta-analysis of experiments on the effects of progress indicators for web surveys. *Social Science Computer Review, 31*(6), 744–762. https://doi.org/10.1177/0894439313497468
+- Zepeda, C. D., Martin, R. S., & Butler, A. C. (2020). Motivational strategies to engage learners in desirable difficulties. *Journal of Applied Research in Memory and Cognition, 9*(4), 468–474. https://doi.org/10.1016/j.jarmac.2020.08.007
+
 ---
 
 <a id="appendix-implementation-sketches"></a>
@@ -2232,11 +2341,80 @@ Help about a concept of another family stays with the task and is also logged fo
 - **28: also in `check.mjs`.** After help, its line about the explanation now asks about the point where the help was needed. The Stop hook is unchanged.
 - **30: with `--yes` or without a terminal it stops,** unless `--force` is given too. A question alone would not have helped in the pilot: the update came from another Claude session, which cannot answer a question. "Running" means a session that was active in the last `idleMinutes` (default 20). The hooks cannot tell practice from talk about the harness, so every session in the folder counts.
 
+### 10.7 Revision of 12 November 2026: positive feedback, demotions and the phase history
+
+After the sessions of 11 and 12 November the student said: "why have I only had automatic demotions so far, and no promotions?" The setup was reviewed critically against that feeling, and against the literature on positive feedback, gamification and desirable difficulties. That review is not published, because it contains learning data. The numbers continue (31–46). Each point was first checked against the literature, then the student decided. The chosen points are built into the harness; where the build differs from the plan, §10.7.3 says so.
+
+**Facts against the feeling.** The log showed 4 times up (1 promotion the student confirmed, 3 placements) and 1 time down: a new microskill, while its parent stayed at L3. No existing level had ever gone down automatically. But the 4 times up were quiet (one line in the output of `check.mjs`), and the one time down was the loudest moment of the harness: a hook message, an agent run and a block of JSON in the chat. Around it, almost every approved explanation had first been rejected once (24 approved, 22 rejected). The feeling was an honest signal about how the feedback *felt*, not about how the student did.
+
+#### 10.7.1 Decisions
+
+| # | Decision | Checked against | Verdict |
+|---|---|---|---|
+| 31 | **Up is loud, down is quiet.** A placement or promotion gets its own message with ↑ and the evidence, also at the session start and in `status`. Down is one line, "extra support for …", with the way back. The harness reads the demotion analyst's verdict from the agent's own report, so no JSON goes into the chat; the check of the verdict stays. | Bad events and bad feedback weigh more than good ones (Baumeister et al. 2001). Loss aversion appeared, generally, for levels that were earned, not for levels that were given (Rewley et al. 2021). Mastery experience is typically the strongest source of self-efficacy (Usher & Pajares 2008), and only when it is seen as one. | **Supported.** |
+| 32 | **Bug: a demotion was applied on old evidence.** When the analyst's verdict was processed, the criterion no longer held (3 of 4 solved, 75%). Now the criterion is checked again, in the prompt gate and when the verdict is applied; when it no longer holds, nothing goes down (`demotion-cancelled`). Down also waits while an explanation of that family is open, just like up. | (bug) | **Fixed.** |
+| 33 | **At least 4 explained tasks before going down** (it was 3), for both rules. The analyst keeps only `micro` and `ouder`. | The harness aims at about 85% success (P4). With 3 tasks, one hard task is enough: at exactly 85% that happens in 39% of the cases; with 4 tasks it takes two (about 11%). More than a third of feedback interventions lower performance, mostly when attention goes to the self (Kluger & DeNisi 1996). | **Supported.** The plan was 5 tasks and a third verdict "do not demote"; the student chose 4, as a middle way. |
+| 34 | **Down counts the rung within the family.** Help about a concept of another family (`[rung N #id]`) is no failure of the task's skill. The task keeps its full rung (honest, #26). The analyst may choose an existing microskill of another family. | Knowledge tracing: the evidence belongs to the rule it was about (Corbett & Anderson 1994). | **Supported (a measurement error, like #26).** |
+| 35 | **Progress towards the next level, in the chat,** in steps, never as a percentage: after each task, at `status` and at the session start. | Effort rises as the goal comes closer (Kivetz et al. 2006); show what is done early on and what remains near the end (Koo & Fishbach 2012). Monitoring progress helps reach goals (Harkin et al. 2016). A progress bar that starts slowly increases drop-out (Villar et al. 2013): so steps, not a percentage. | **Supported.** |
+| 36 | **L4 within reach.** (a) The task that placed a skill counts after the placement. (b) The transfer task is one of the three times without a hint, and its day a day. When the exercise folders of an L3 skill run out, Claude points to an existing next exercise; a practice-test question counts via `done`. Design goal: whoever practises daily and masters the skill reaches L4 in about 3 sessions on 2 days; a test guards it. The day stays the UTC date. | Mastery learning works through enough chances to practise with feedback (Kulik et al. 1990). A criterion that cannot be reached is a ceiling, and that undermines the sense of competence (Ryan & Deci 2000). Relearning in later sessions mattered more than extra correct answers in the first session (Rawson & Dunlosky 2011). Their sessions were widely spaced and the material was concepts, not code: "about 3 sessions on 2 days" is an inference, and a tight one. | **Supported.** The student's words: the slow road to L4 "is not workable for a junior dev". |
+| 37 | **Praise first, then the requirement.** `check.mjs` names what worked and the (micro)skill, and gives the explanation as an invitation. With help: "this is where the learning was: `<concept>`". A worked example (rung 5) has its own honest text (a bug: it got the soft text of rung 3–4). | Verbal positive feedback raised free-choice intrinsic motivation for college students, not for children (Deci, Koestner & Ryan 1999). Praise works when it is sincere and points to causes the learner controls (Henderlong & Lepper 2002). With positive feedback on correct steps, students in SQL-Tutor learned the same in about half the time (Mitrovic et al. 2013; 41 students, no difference on the exam). | **Supported.** |
+| 38 | **First name what is right, then one follow-up question.** The requirement stays. The why check also accepts "if …, then/would …" in one sentence. | Novices seek and use positive feedback (Finkelstein & Fishbach 2012). People learned less from failure than from success with the same information (Eskreis-Winkler & Fishbach 2019); in replications that effect disappeared when corrective feedback or a brief instruction followed (Keith et al. 2022; Gok & Fyfe 2024), which is what a follow-up question does. Against softening: politeness can hide the error (Person et al. 1995), so the gap is still named. The requirement itself stays supported (self-explanation, Bisra et al. 2018). | **Supported for the form, not for less strictness.** The "if … then" rule came from a session in which a good explanation was rejected for having no reason word. |
+| 39 | **Effort is the goal, not failure.** After a task with help: "this is where the learning was". Once, at the first session start, a short explanation. | Performance during practice is a poor index of learning (Soderstrom & Bjork 2015). Learners judged the effortful strategy as less effective and chose it less (Kirk-Johnson et al. 2019). Learners need support to start and stick with desirable difficulties (de Bruin et al. 2023); one lever is to reframe effort (Zepeda et al. 2020). | **Supported**, as a framework: little empirical work on these levers yet. |
+| 40 | **Bug in the words of the dashboard:** the tile "solved independently" counted rung ≤ 2. Now two tiles: "solved (rung ≤ 2)" and "independent (rung 0)". | #27 | **Fixed.** |
+| 45 | **The phase history on the dashboard** (with #41): per skill one band over the days, with "start" apart; tasks as dots; microskills under their parent; each change marked with how it was decided; one sentence that compares only with yourself. The export now says how a change was decided (`kind`, a fixed list of words) and leaves out changes without a difference. | Feedback against your own earlier work gave more skill and self-efficacy than feedback against classmates (Shih & Alexander 2000, an experiment with 84 children). A class average disheartened some students (Aguilar 2018, interviews). Opening the learner model can help (Long & Aleven 2017), and a model should show why it believes something (Kay & Kummerfeld 2012). | **Supported, as an inference:** no study was found that tests a history view of a learner model. Dashboards in general showed no effect on achievement, a modest one on motivation and a larger one on participation (Kaliisa et al. 2024). The real test: ask after two weeks whether the feeling "only down" changed. |
+| 42 | **Rejections per task on the public dashboard.** | Reporting progress publicly helps (Harkin et al. 2016); failure can make people tune out (Eskreis-Winkler & Fishbach 2019). | **Partly supported, not chosen:** the student kept them public, with the reasons. |
+| 43 | **No points, badges, streaks or leaderboards.** A level informs: it says which help you get, not what status you have. | See P14 (§2.11). | **Supported, a design rule.** |
+| 44 | **Small points.** The placement now happens at the approved explanation. The errors in the course material are not reported. The Mermaid diagrams were checked after the build. | — | **Built.** |
+| 46 | **One task of the student "should count as independent"**, because the course's test was wrong. The rung came from a question about what the test expects, not from the error. | Honest logging (R2). | **Not supported, kept as it is.** |
+
+#### 10.7.2 Down, as built
+
+```mermaid
+flowchart TD
+    E["an explained task"] --> O{"an explanation of the<br/>family still open?"}
+    O -->|yes| W["wait"]
+    O -->|no| K{"criterion: 4+ tasks, under 70%<br/>or the last 2 failed,<br/>rung within the family"}
+    K -->|no| N["nothing"]
+    K -->|microskill| M["one level down:<br/>one quiet line"]
+    K -->|main skill| A["demotion analyst<br/>reads, decides micro or parent"]
+    A -->|report| R{"Stop hook: verdict valid,<br/>criterion still holds?"}
+    R -->|no longer holds| C["cancelled:<br/>'stays L3'"]
+    R -->|yes| D["extra support for a microskill,<br/>or the parent one level down"]
+```
+
+Down waits for open explanations, counts only the help within the family, and is checked again on the evidence of the moment it is applied. The analyst's report goes to the Stop hook, not into the chat.
+
+#### 10.7.3 Where the build differs from the plan
+
+- **38: only "then" or "would".** "If …" counts as a why only with "then"/"dan" or "would"/"zou" in the same sentence. Looser words ("can", "is") would let a bare statement through.
+- **44 and 36 (a) together.** Because the placement now happens at the explanation, after the task, the placement task has to be added to the window explicitly; otherwise (a) would never count. Older placements without a task id find it in the `placement` event.
+- **34: also the placement.** The placement uses the rung within the family too: help about another concept says nothing about the new skill.
+- **31: the analyst's report is read, not pasted.** A background agent hands its report back as a message; the Stop hook takes the verdict from there (or from the result of a synchronous agent). A verdict in that report that the harness refuses does not block Claude: the demotion stays pending. The `[demotie {...}]` marker still works as a fallback.
+- **35: which skills.** The progress lines cover the skills with at least one task since their last level change.
+- **36: the next exercise once per session.** The hook tells Claude once per skill and session that the folders have run out.
+- **45: on the dashboard, a microskill only when something happened to it** (a task, a change, or extra support). A placement counts as a phase up when it lands on L3 or L4.
+- **45: `levelChanges` without changes without a difference.** The first "since the last export" after the update may count one change less.
+- **An older session file** has no family rung yet: it counts all help, until the next task starts.
+
 ---
 
 <a id="11-change-log"></a>
 
 ## 11. Change log {#changelog}
+
+### 12 November 2026: positive feedback, demotions and the phase history
+
+The pilot student decided points 31–46 of the review of 12 November; they were built the same day.
+
+- **§10.7 (new):** the decisions, what they were checked against, a diagram of going down as built, and where the build differs from the plan.
+- **§2.11, P14 (new):** levels inform; they do not reward (decision 43).
+- **§5, the Mermaid check (decision 44):** an "as built" architecture (§5.1) and session (§5.4); the state diagram and its bullets (§5.2) and the hint ladder (§5.3) follow the build; the hook table notes what changed. The diagrams of §10.4–§10.6 stay as records of those revisions.
+- **§8:** new references. Each was first checked against its abstract; the notes are in [the citation check](https://github.com/piethanegraaf/piethanegraaf.github.io/blob/main/research/citation-checks/citation_check_learning_science.md), section F. The check changed some claims:
+  - Rawson & Dunlosky (2011) supports the design goal for L4 only partly: their relearning sessions were widely spaced.
+  - Eskreis-Winkler & Fishbach (2019) is cited with the replications that limit it (Keith et al. 2022; Gok & Fyfe 2024).
+  - Kirk-Johnson et al. (2019) is cited for the judgement of effort, not for better memory.
+  - Henderlong & Lepper (2002) is the right name.
+- **Not changed:** the conclusions of §2.
 
 ### 11 November 2026 (night, last): the evidence for contingent hints (P3)
 

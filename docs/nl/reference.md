@@ -59,7 +59,7 @@ Draait `dotnet test` met een trx-logger en toont een korte samenvatting. Een tes
 | `[review-trede N #id]` / `[review-rung N #id]` | Hulp op trede N in een review na een taak, over het concept `id` uit `skills.json`. Die verhoogt de trede van de volgende taak niet, behalve als die taak over hetzelfde concept gaat (dezelfde familie). Zonder geldig id, zonder gelogde taak ervoor, of na een signaal van nieuw werk telt hij als een gewone `[trede N]`. |
 | `[uitleg-ok <tid>]` / `[explain-ok <tid>]` | De uitleg klopt; de Stop-hook controleert hem nog. |
 | `[uitleg-nee <tid>]` / `[explain-no <tid>]` | De uitleg is onvolledig; de taak blijft open. |
-| `[demotie {...}]` / `[demotion {...}]` | Het oordeel van de demotie-analist (JSON). De Stop-hook voert het alleen uit als de agent in die beurt echt gedraaid heeft. |
+| `[demotie {...}]` / `[demotion {...}]` | Alleen een terugval: de Stop-hook leest het oordeel van de analist uit het rapport van de agent zelf, dus Claude zet de JSON niet in de chat. De marker wordt alleen uitgevoerd als de agent in die beurt echt gedraaid heeft. |
 | `[transfer-start <id>]` | Begin van de transfertaak (`/mastery-check`), alleen op L2 of L3. Vanaf dan telt elke `[trede N]` tegen de transfertaak. |
 | `[transfer-ok <id>]` / `[transfer-nee <id>]` (`[transfer-no <id>]`) | De transfertaak is gehaald of niet. `ok` telt alleen zonder hulp sinds de start, en als jouw laatste bericht dezelfde check haalt als een uitleg. |
 | `<!-- sessie: <id> -->` / `<!-- session: <id> -->` | In het dagboek: de entry van deze sessie. |
@@ -80,7 +80,7 @@ Alles wat de harnas doet, staat in `.learning/state/events.jsonl`. De events van
 |---|---|
 | `task-lapsed` | De uitleg kwam niet direct: de taak vervalt (`other-exercise` of `session-end`). Telt niet; op het dashboard *overgeslagen*. |
 | `task-explained` met `source: replay` | Een uitleg die achteraf met `replay` is hersteld. |
-| `placement` | Het niveau van een nieuwe vaardigheid, gezet na de eerste taak. |
+| `placement` | Het niveau van een nieuwe vaardigheid, gezet bij de goedgekeurde uitleg van de eerste taak (`tid`). |
 | `review` met `auto: true` | De uitkomst van een L4-herhaling, uit de eerstvolgende taak. `review-due`: de herhaling kwam langs. |
 | `level` met `auto: true` | Automatisch omlaag; `by` zegt door wie: `harnas`, `demotie-analist` of `achtervang`. |
 | `demotion-pending`, `demotion-verdict`, `demotion-rejected` | De analist is nodig, zijn oordeel, of een oordeel dat de Stop-hook weigerde. |
@@ -120,6 +120,16 @@ En van de setupreview van 11 november 2026, middag (hulp per concept, voorstelle
 | `micro-rejected` | Een voorstel dat de Stop-hook weigerde (`why`). |
 | `micro-declined` | Je zei "nee" tegen het voorstel. Het komt in die sessie niet terug. |
 | `micro-add` met `by: learner`, `via: voorstel` | De microvaardigheid, toegevoegd na jouw "ja, toevoegen". |
+
+En van de setupreview van 12 november 2026 (positieve feedback, demoties en de fasegeschiedenis):
+
+| Event | Betekenis |
+|---|---|
+| `task` met `familyRung` | De trede zonder hulp over een concept van een andere familie, als die lager is dan `maxRung`. Automatisch omlaag en de plaatsing gebruiken hem; de taak houdt zijn `maxRung`. |
+| `rung-mark` met `concept` | Een trede over een concept van een andere familie: die verhoogde de trede van de taak, niet de familietrede. |
+| `demotion-cancelled` | Een verlaging die openstond, maar waarvan het criterium op het bewijs van nu niet meer klopte (`why: criterion`). Er ging niets omlaag. |
+| `demotion-rejected` met `source: agent-report` | Een oordeel in het rapport van de analist dat de harnas weigerde. De verlaging blijft openstaan. |
+| `effort-intro` | De eenmalige melding bij de sessiestart dat moeite het doel is, geen falen. |
 
 ## Bestanden
 
