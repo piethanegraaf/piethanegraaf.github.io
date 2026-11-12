@@ -428,6 +428,26 @@ export async function build(project, { previous = null, todo = null } = {}) {
     }
     return null;
   };
+  // How a level change was decided (setup review of 12 Nov, #45): a fixed word, derived from by, via,
+  // auto and placement, so no new free text goes online.
+  const revertPrefixes = ["nl", "en"].map((l) => String(I18N[l]?.["note.revert"] ?? "").split(":")[0].trim().toLowerCase()).filter(Boolean);
+  // A new microskill in an older record has no by/via: its micro-add event says who made it.
+  const microAdd = new Map(events.filter((e) => e.type === "micro-add").map((e) => [e.skill, e]));
+  const kindOf = (h, s) => {
+    if (h.placement) return "placement";
+    if (!h.from && !h.by && !h.auto && microAdd.has(s.id)) {
+      const e = microAdd.get(s.id);
+      if (e.auto) return e.by === "achtervang" ? "backstop" : "analyst";
+      if (e.by === "learner" && e.via === "voorstel") return "proposal";
+    }
+    if (h.auto) return h.by === "demotie-analist" ? "analyst" : h.by === "achtervang" ? "backstop" : "auto";
+    if (h.by === "learner" && h.via === "voorstel") return "proposal";
+    if (revertPrefixes.some((p) => String(h.note ?? "").toLowerCase().startsWith(p))) return "revert";
+    return "manual";
+  };
+  // When the skill entered the record: its skill-add event, otherwise the start of the log.
+  const firstEvent = events.length ? events[0].at : null;
+  const addedAt = new Map(events.filter((e) => e.type === "skill-add" || e.type === "micro-add").map((e) => [e.skill, e.at]));
   const skills = data.skills.map((s) => ({
     id: s.id, parent: s.parent ?? null, kind: s.kind ?? null, title: scrub(s.title, "skill.title"), titles: titlesOf(s), level: s.level,
     // Reviews are only for L4; an older schedule on a lower level is not shown.
@@ -435,10 +455,20 @@ export async function build(project, { previous = null, todo = null } = {}) {
     lastReview: s.lastReview ? { at: s.lastReview.at, result: s.lastReview.result } : null,
     lastSeen: lastSeen.get(s.id) ?? null,
     placement: s.kind === "zone" ? null : lib.isPlacementPending(data, s) ? "pending" : "done",
-    // changedAt: the exact moment of the change (see lib.levelChangeAt), so the dashboard counts the
-    // tasks since the last level change exactly like the harness.
-    history: (s.history ?? []).map((h) => ({ at: h.at, changedAt: h.to ? lib.levelChangeAt(s, h, events) : null, from: h.from ?? null, to: h.to, note: scrub(h.note ?? null, "skill.history"),
-      notes: notesOf(h.note ?? null), auto: h.auto === true, placement: h.placement === true })),
+    // The start of the phase history (#45): when the skill entered the record, and whether it started
+    // with an open placement (then it is "start" on the dashboard, not a level, until the placement).
+    start: { at: addedAt.get(s.id) ?? firstEvent, open: (s.history ?? []).some((h) => h.placement) || (s.kind !== "zone" && lib.isPlacementPending(data, s)) },
+    // The window of the harness itself (lastLevelChange and the placement task, #36 a), so the
+    // dashboard counts exactly the tasks the harness counts, also when changes without a difference
+    // are left out of the history below.
+    windowSince: s.kind === "zone" ? null : lib.lastLevelChange(s, events),
+    placementTask: s.kind === "zone" ? null : tidOf(lib.placementTaskId(s, events)),
+    // changedAt: the exact moment of the change (see lib.levelChangeAt). Changes without a difference
+    // (L3 -> L3) are left out (#45); kind says how it was decided, task which task placed the skill.
+    history: (s.history ?? []).filter((h) => !(h.from && h.to && h.from === h.to)).map((h) => ({
+      at: h.at, changedAt: h.to ? lib.levelChangeAt(s, h, events) : null, from: h.from ?? null, to: h.to, note: scrub(h.note ?? null, "skill.history"),
+      notes: notesOf(h.note ?? null), auto: h.auto === true, placement: h.placement === true, kind: kindOf(h, s),
+      task: h.placement ? tidOf(h.tid ?? events.filter((e) => e.type === "placement" && e.skill === s.id && e.to === h.to).pop()?.tid) : null })),
   }));
 
   // The signals in both languages (texts), next to the text in the language of the record.

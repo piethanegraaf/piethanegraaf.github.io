@@ -26,7 +26,8 @@ import {
   readStdin, loadSession, saveSession, sessionExists, diaryHasSession, logEvent, pendingTasks, checkExplanation,
   isLearnerEntry, learnerEntryText, entryText, readTranscript, loadSkills, findSkill, familyIds, autoDemote,
   applyVerdict, findVerdict, lapseTasks, promotionAdvice, offerIsNew, offerText, newWorkSignal, beginNewWork, explanationText,
-  noteConceptHelp, checkMicroProposal, microOfferText, readEvents, t,
+  noteConceptHelp, checkMicroProposal, microOfferText, readEvents, isOtherFamily, familyOf, placeAfterExplanation, recheckDemotion,
+  verdictFromAgent, t,
 } from "./lib.mjs";
 import { RUNG_MARK, REVIEW_RUNG_MARK, EXPLAIN_MARK, TRANSFER_MARK, MICRO_MARK, parseMicroMark } from "./patterns.mjs";
 
@@ -80,19 +81,24 @@ const promptKey = learner?.uuid ?? st.lastPromptAt ?? 0;
 // A rung belongs to the skill of the folder; within that family the (more specific) active skill.
 const folder = data && st.folderSkill ? findSkill(data, st.folderSkill) : null;
 const rungSkill = folder && !(st.activeSkill && familyIds(data, folder.id).includes(st.activeSkill)) ? folder.id : st.activeSkill ?? null;
-const rungMark = (n, extra = {}) => {
+// `other`: help about a concept of another family (#34). It raises the rung of the task (honest), but not
+// st.famRung, the rung that counts for the task's own family in automatic demotion and placement.
+const rungMark = (n, extra = {}, other = false) => {
   // During a transfer task every hint counts: the transfer only passes without any help (§9.4).
   if (st.transfer) st.transfer.maxRung = Math.max(st.transfer.maxRung ?? 0, n);
+  if (!other) st.famRung = Math.max(typeof st.famRung === "number" ? st.famRung : st.maxRung ?? 0, n);
+  else if (typeof st.famRung !== "number") st.famRung = st.maxRung ?? 0;
   if (n > (st.maxRung ?? 0)) {
     st.maxRung = n;
-    logEvent({ type: "rung-mark", skill: rungSkill, rung: n, session: sid, ...extra });
+    logEvent({ type: "rung-mark", skill: rungSkill, rung: n, session: sid, ...extra, ...(other ? { concept: other } : {}) });
   }
 };
 // [trede N #id]: the task keeps the rung (honest: it was made with that help), and help about a concept
 // of another family is also logged for that concept (#26). Without a valid id it is an ordinary rung.
 for (const m of answer.matchAll(RUNG_MARK)) {
   const n = Number(m[1]);
-  rungMark(n);
+  const other = m[2] && data && isOtherFamily(data, m[2], rungSkill) ? findSkill(data, m[2]).id : false;
+  rungMark(n, {}, other);
   if (m[2] && data) noteConceptHelp(data, st, m[2], n, { taskSkill: rungSkill, session: sid });
 }
 
@@ -134,14 +140,26 @@ for (const m of answer.matchAll(EXPLAIN_MARK)) {
   const text = explanationText(st, tid, learnerMsg);
   const chk = checkExplanation(text, earlierClaude);
   if (chk.ok) {
-    const skillId = pending.get(tid).skill;
+    const task = pending.get(tid);
+    const skillId = task.skill;
     logEvent({ type: "task-explained", tid, skill: skillId, text: text.slice(0, 1000), session: sid });
     if (st.explainWords) delete st.explainWords[tid];
     pending.delete(tid);
     explainedSkills.add(skillId);
-    // Explained tasks are the evidence for automatic demotion (S3): a microskill goes down now,
-    // for a parent the demotion analyst decides first.
     if (data) {
+      // A new skill is placed now, at the approved explanation (setup review of 12 Nov, #44), with its
+      // own message that names the evidence (#31: up is loud).
+      notice(placeAfterExplanation(data, skillId, task));
+      // A pending demotion of this family is judged again on the evidence of now (#32).
+      const s = findSkill(data, skillId);
+      if (st.demotionPending && s && familyIds(data, familyOf(s)).includes(st.demotionPending.skill)) {
+        const parent = findSkill(data, st.demotionPending.skill);
+        st.demotionPending = recheckDemotion(data, st.demotionPending, sid);
+        if (!st.demotionPending && parent) notice(t("advice.auto.cancelled", { id: parent.id, level: parent.level }));
+      }
+      // Explained tasks are the evidence for automatic demotion (S3): a microskill goes down now,
+      // for a parent the demotion analyst decides first. Not while another explanation of the family
+      // is open (#32).
       const r = autoDemote(data, skillId);
       for (const m of r?.messages ?? []) notice(m);
       if (r?.pending && !st.demotionPending) { st.demotionPending = r.pending; logEvent({ type: "demotion-pending", skill: r.pending.skill, tids: r.pending.tids, session: sid }); }
@@ -250,7 +268,22 @@ if (transferBlock && !input.stop_hook_active) block(transferBlock);
 if (microBlock && !input.stop_hook_active) block(microBlock);
 
 // ---------- 1c. Verdict of the demotion analyst (S3a) ----------
-// Only with a pending demotion, and only when the agent demonstrably ran in this turn.
+// Only with a pending demotion. The harness reads the verdict from the agent's own report (setup review
+// of 12 Nov, #31: no JSON in the chat): the result of the Agent call, or the report a background agent
+// hands back. The report itself proves that the agent ran. The marker [demotie {...}] in Claude's answer
+// still works, but only when the agent demonstrably ran in this turn.
+if (st.demotionPending && data) {
+  const fromAgent = verdictFromAgent(entries, Number(st.demotionPending.at) || 0);
+  if (fromAgent) {
+    const r = fromAgent.json ? applyVerdict(data, st.demotionPending, fromAgent.json) : { ok: false, error: fromAgent.error };
+    if (r.ok) { r.messages.forEach(notice); st.demotionPending = null; }
+    else {
+      // Not Claude's mistake: no block. The demotion stays pending; a new report can still settle it.
+      logEvent({ type: "demotion-rejected", why: r.error, source: "agent-report", session: sid });
+      st.demotionPending = { ...st.demotionPending, at: Date.now() };
+    }
+  }
+}
 if (st.demotionPending && data) {
   const found = findVerdict(answer);
   if (found) {

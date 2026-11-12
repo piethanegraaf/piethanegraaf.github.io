@@ -30,6 +30,7 @@ import {
   lapseTasks, afterTask, isReviewDue, isPlacementPending, effectiveLevel, adviceCommand, openOffer,
   activeMinutesSince, readTranscript, isLearnerEntry, learnerEntryText, entryText, checkExplanation, t, language,
   sinceExportLine, dashboardAfterDiary, parseDashboardRepo, addMicro, conceptHelpOf, readEvents,
+  recentUps, progressAll, progressLine, needsNextExercise, placeAfterExplanation,
 } from "./lib.mjs";
 import { EXPLAIN_MARK } from "./patterns.mjs";
 
@@ -65,6 +66,15 @@ function status() {
   console.log(t("cli.status.pending", { list: pend.length ? pend.map((x) => `${x.skill} [${x.tid}] ${x.what ?? ""}`.trim()).join("; ") : t("cli.none") }));
   const wins = recentWins(data);
   console.log(t("cli.status.wins", { list: wins.length ? wins.map((w) => `${w.id} ${w.n}x`).join(", ") : "-" }));
+  // Up is loud (setup review of 12 Nov, #31), and how far the next level is, in steps (#35).
+  const ups = recentUps(data);
+  if (ups.length) console.log(t("cli.status.ups", { list: ups.map((u) => `↑ ${u.id} → ${u.to} (${u.at})`).join(", ") }));
+  const progress = progressAll(data);
+  console.log(t("cli.status.progress", { list: progress.length ? "" : t("cli.none") }));
+  for (const p of progress) {
+    console.log("  " + progressLine(p));
+    if (needsNextExercise(data, findSkill(data, p.id))) console.log(t("cli.status.nextExercise"));
+  }
   // Help about a skill during tasks of another family (setup review of 11 Nov, afternoon, #26): shown
   // only. It is no task of that skill and does not count in its success rate (still open).
   const events = readEvents();
@@ -181,12 +191,12 @@ switch (cmd) {
     // plus help in the review of the previous task when it was about this concept (setup review of
     // 11 Nov, S3). `done` reports finished work, so the help since the last task is not dropped here:
     // work without code (design, UML) gives no other signal, and dropping it would hide real help (R2).
-    const { rung: maxRung, reviewRung } = st ? taskRung(data, st, s.id) : { rung: 0, reviewRung: 0 };
+    const { rung: maxRung, reviewRung, familyRung } = st ? taskRung(data, st, s.id) : { rung: 0, reviewRung: 0, familyRung: 0 };
     const minutes = st ? activeMinutesSince(st, st.taskStartedActive) : null;
     // A task of another family: the learner started another exercise, so open tasks lapse (S1).
     const lapsed = lapseTasks("other-exercise", (x) => familyOf(findSkill(data, x.skill)) === familyOf(s), sid);
     const task = logTask({ skill: s.id, success: maxRung < 5, maxRung, minutes, source: "done", what: what.join(" ") || undefined, session: sid, level: effectiveLevel(data, s),
-      reviewRung: reviewRung > (st?.maxRung ?? 0) ? reviewRung : 0, tid: st?.openTid });
+      reviewRung: reviewRung > (st?.maxRung ?? 0) ? reviewRung : 0, tid: st?.openTid, familyRung });
     const after = afterTask(data, s.id, task);
     if (st) {
       // The family of this task is what the learner works on now (setup review 3.3).
@@ -234,6 +244,9 @@ switch (cmd) {
       if (!dry) logEvent({ type: "task-explained", tid, skill: task.skill, text: r.text.slice(0, 600), session, source: "replay" });
       logged++;
       console.log("  " + t(dry ? "cli.replay.wouldLog" : "cli.replay.logged", { tid, id: task.skill }));
+      // The placement of a new skill happens at the explanation (#44), also when replay recovers it.
+      const placed = dry ? null : placeAfterExplanation(data, task.skill, task);
+      if (placed) console.log("  " + placed);
     }
     console.log(t(dry ? "cli.replay.dryRun" : "cli.replay.done", { n: logged }));
     break;

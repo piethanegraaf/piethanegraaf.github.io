@@ -13,10 +13,13 @@ but let the parent go down when the problem really is broad.
 The input you get (JSON):
 - `ouder`: the parent skill, with `niveau` (level) and `reden` (the criterion that was met);
 - `taken`: the tasks in the window, failed and solved, each with `tid`, `wat` (what),
-  `tests`, `map` (folder), `hoogsteTrede` (highest rung), `gelukt` (solved), `sessie`,
-  `tijd` (time) and `transcript` (a path);
+  `tests`, `map` (folder), `hoogsteTrede` (highest rung), `tredeInFamilie` (rung within the family),
+  `gelukt` (solved), `sessie`, `tijd` (time) and `transcript` (a path).
+  `tredeInFamilie` is the help without help about a concept of another family (`[rung N #id]`);
+  `gelukt` counts that rung;
 - `microvaardigheden`: the existing microskills of that family
-  (`id`, `titel`, `trefwoorden`, `niveau`).
+  (`id`, `titel`, `trefwoorden`, `niveau`);
+- `andereMicrovaardigheden`: existing microskills of other families, with the same fields.
 
 For each failed task (`gelukt: false`):
 1. Read the evidence: the test output and the code in the `map`, and in the file at
@@ -26,18 +29,20 @@ For each failed task (`gelukt: false`):
    Not a sub-pattern: a one-off slip such as a typo, or a tooling problem
    (SDK, IDE, test runner). Exclude that task, with a reason.
 3. Link it to an existing microskill of this family, by meaning, not by keyword.
-   If none fits, propose a new one: id `<ouder>.<slug>` (lower case, digits and
+   When the help was really about a concept of another family that already has a
+   microskill (see `andereMicrovaardigheden`), link it to that one: the evidence belongs
+   to the part it was about. If none fits, propose a new one: id `<ouder>.<slug>` (lower case, digits and
    hyphens), a title, 2-4 keywords. The harness sets the level itself: the parent's minus 1.
 
 Verdict:
 - `"micro"`: all counted failures belong to the same sub-pattern.
-  `doel` (target) is that microskill (existing or new).
+  `doel` (target) is that microskill (existing, also of another family, or new).
 - `"ouder"`: two or more different sub-patterns, or a failure hits the core of the
   parent and cannot be split (for example: cannot write a constructor in a skill about
   classes). `doel` is the parent.
 - When in doubt: `"micro"`, and set `"twijfel": true`.
 
-Output: only this JSON, nothing else. The keys stay Dutch, the harness reads them.
+Output: only this JSON, nothing else. The harness reads it from your report itself; it does not go into the chat. The keys stay Dutch, the harness reads them.
 List only failed tasks in `taken`.
 
 ```json

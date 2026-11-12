@@ -37,8 +37,7 @@ function agree(row) {
   if (row.step.kind === "placement" || row.step.kind === "maintain") return assert.equal(row.harness, null, row.id);
   assert.equal(row.step.met, row.harness === "up", `${row.id}: dashboard ${row.step.met}, harness ${row.harness}`);
   if (row.level === "L3") {
-    const onlyTransfer = row.step.solo >= 3 && row.step.days >= 2 && !row.step.transfer;
-    assert.equal(onlyTransfer, row.harness === "transfer", `${row.id}: transfer`);
+    assert.equal(row.step.transferNext, row.harness === "transfer", `${row.id}: transfer`);
   }
 }
 
@@ -78,19 +77,37 @@ test("only the tasks since the last level change count, also for an old history 
   assert.equal(rows["b.oud"].step.since, change);
 });
 
-test("L3: three times independent on two days, then the transfer task", () => {
-  const solo = [[day(1), 0], [day(2), 0], [day(2, 11), 0]];
+test("L3: the transfer task is one of the three times without a hint, and its day a day (#36 b)", () => {
   const rows = probe(
-    [sk("c.zonder", "L3"), sk("c.met", "L3"), sk("c.eendag", "L3")],
+    [sk("c.zonder", "L3"), sk("c.met", "L3"), sk("c.eendag", "L3"), sk("c.eendagmet", "L3"), sk("c.een", "L3")],
     [
-      ...tasks("c.zonder", solo), ...tasks("c.met", solo),
-      { at: day(3), type: "transfer-passed", skill: "c.met" },
-      ...tasks("c.eendag", [[day(1), 0], [day(1, 11), 0], [day(1, 12), 0]]),
+      ...tasks("c.zonder", [[day(1), 0], [day(2), 0], [day(2, 11), 0]]),
+      ...tasks("c.met", [[day(1), 0], [day(2), 0]]), { at: day(3), type: "transfer-passed", skill: "c.met" },
+      ...tasks("c.eendag", [[day(1), 0], [day(1, 11), 0]]),
+      ...tasks("c.eendagmet", [[day(1), 0], [day(1, 11), 0]]), { at: day(1, 12), type: "transfer-passed", skill: "c.eendagmet" },
+      ...tasks("c.een", [[day(1), 0]]),
     ],
   );
   for (const r of Object.values(rows)) agree(r);
-  assert.deepEqual([rows["c.zonder"].harness, rows["c.met"].harness, rows["c.eendag"].harness], ["transfer", "up", null]);
-  assert.equal(rows["c.eendag"].step.days, 1);
+  assert.deepEqual(["c.zonder", "c.met", "c.eendag", "c.eendagmet", "c.een"].map((id) => rows[id].harness), ["transfer", "up", "transfer", null, null]);
+  assert.deepEqual([rows["c.met"].step.have, rows["c.met"].step.days], [3, 3]);
+  assert.equal(rows["c.eendagmet"].step.days, 1, "the transfer on the same day: still one day");
+});
+
+test("the task that placed a skill counts after the placement (#36 a)", () => {
+  const placedAt = "2026-11-01T10:05:00.000Z";
+  const rows = probe(
+    [sk("p.geplaatst", "L3", { history: [{ at: "2026-11-01", atIso: placedAt, from: "L2", to: "L3", note: "plaatsing", placement: true, tid: "tp" }] })],
+    [
+      { at: day(1), type: "task", tid: "tp", skill: "p.geplaatst", success: true, maxRung: 0, source: "check" },
+      { at: placedAt, type: "task-explained", tid: "tp", skill: "p.geplaatst", text: "uitleg" },
+      { at: placedAt, type: "placement", skill: "p.geplaatst", rung: 0, from: "L2", to: "L3", tid: "tp" },
+      ...tasks("p.geplaatst", [[day(2), 0]]),
+    ],
+  );
+  agree(rows["p.geplaatst"]);
+  assert.equal(rows["p.geplaatst"].step.solo, 2, "the placement task and one more");
+  assert.equal(rows["p.geplaatst"].harness, "transfer");
 });
 
 test("L0, L1, a microskill, an open placement and L4", () => {

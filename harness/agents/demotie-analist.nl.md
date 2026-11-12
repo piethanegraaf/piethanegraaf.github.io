@@ -13,9 +13,12 @@ maar de hoofdvaardigheid laten zakken als het probleem echt breed is.
 Input die je krijgt (JSON):
 - `ouder`: de hoofdvaardigheid, met `niveau` en `reden` (het criterium dat gehaald is);
 - `taken`: de taken uit het venster, mislukt en geslaagd, met per taak `tid`, `wat`,
-  `tests`, `map`, `hoogsteTrede`, `gelukt`, `sessie`, `tijd` en `transcript` (een pad);
+  `tests`, `map`, `hoogsteTrede`, `tredeInFamilie`, `gelukt`, `sessie`, `tijd` en `transcript` (een pad).
+  `tredeInFamilie` is de hulp zonder hulp over een concept van een andere familie (`[trede N #id]`);
+  `gelukt` telt die trede;
 - `microvaardigheden`: de bestaande microvaardigheden van die familie
-  (`id`, `titel`, `trefwoorden`, `niveau`).
+  (`id`, `titel`, `trefwoorden`, `niveau`);
+- `andereMicrovaardigheden`: bestaande microvaardigheden van andere families, met dezelfde velden.
 
 Werkwijze per mislukte taak (`gelukt: false`):
 1. Lees het bewijs: de testuitvoer en de code in de `map`, en in het bestand bij
@@ -25,19 +28,21 @@ Werkwijze per mislukte taak (`gelukt: false`):
    Geen deelpatroon: een eenmalige slordigheidsfout, of een probleem met tooling
    (SDK, IDE, testrunner). Sluit die taak dan uit, met reden.
 3. Koppel het aan een bestaande microvaardigheid van deze familie, op betekenis,
-   niet op trefwoord. Past er geen, stel dan een nieuwe voor:
+   niet op trefwoord. Ging de hulp eigenlijk over een concept van een andere familie
+   waarvoor al een microvaardigheid bestaat (zie `andereMicrovaardigheden`), koppel het
+   dan daaraan: het bewijs hoort bij het onderdeel waar het over ging. Past er geen, stel dan een nieuwe voor:
    id `<ouder>.<slug>` (kleine letters, cijfers en streepjes), een titel,
    2-4 trefwoorden. Het niveau zet de harnas zelf: dat van de ouder min 1.
 
 Oordeel:
 - `"micro"`: alle meegetelde mislukkingen horen bij hetzelfde deelpatroon.
-  `doel` is die microvaardigheid (bestaand of nieuw).
+  `doel` is die microvaardigheid (bestaand, ook uit een andere familie, of nieuw).
 - `"ouder"`: twee of meer verschillende deelpatronen, of een mislukking raakt
   de kern van de ouder en is niet op te splitsen (bijvoorbeeld: geen constructor
   kunnen schrijven bij een vaardigheid over klassen). `doel` is de ouder.
 - Bij twijfel: `"micro"`, en zet `"twijfel": true`.
 
-Uitvoer: alleen deze JSON, niets anders. Noem in `taken` alleen mislukte taken.
+Uitvoer: alleen deze JSON, niets anders. De harnas leest hem zelf uit je rapport; hij komt niet in de chat. Noem in `taken` alleen mislukte taken.
 
 ```json
 {"ouder": "<id>", "taken": [{"tid": "...", "deelpatroon": "...", "micro": "<id>|null",

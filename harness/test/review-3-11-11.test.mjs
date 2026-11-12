@@ -85,17 +85,18 @@ test("#27 check.mjs calls rung 2 'solved with help up to rung 2' and only rung 0
   try {
     h.check("opdrachten/02-lijst", { Een: "Failed" }, "red");
     const out = h.check("opdrachten/02-lijst", { Een: "Passed" }, "green").stdout;
-    assert.match(out, /hoogste trede 2 — gelukt, met hulp tot trede 2\./);
-    assert.doesNotMatch(out, /zelfstandig/);
+    // Praise first, with the skill and where the learning was (12 Nov, #37, #39).
+    assert.match(out, /★ Gelukt met hulp tot trede 2: Begeleid \(demo\.l2\)\. Hier zat het leren: demo\.l2\./);
+    assert.doesNotMatch(out, /[Zz]elfstandig/);
     // #28: with help, the explanation is about the point where the help was needed.
-    assert.match(out, /over het punt waar je hulp bij kreeg/);
+    assert.match(out, /op het punt van de hulp zo moest, dan telt hij mee/);
   } finally { h.p.cleanup(); }
   const h0 = project();
   try {
     h0.check("opdrachten/02-lijst", { Een: "Failed" }, "red");
     const out = h0.check("opdrachten/02-lijst", { Een: "Passed" }, "green").stdout;
-    assert.match(out, /hoogste trede 0 — zelfstandig gelukt, zonder hints!/);
-    assert.match(out, /waarom werkt het nu\?/);
+    assert.match(out, /★ Zelfstandig gelukt, zonder hint: Begeleid \(demo\.l2\)\./);
+    assert.match(out, /uit waarom het werkt, dan telt hij mee/);
   } finally { h0.p.cleanup(); }
 });
 

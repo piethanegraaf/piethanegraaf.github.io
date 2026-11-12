@@ -240,7 +240,8 @@ test("export: concept help and proposals for a microskill, with ids and numbers 
 test("export: generatedAt stays a date, exportedAt is the moment; both languages for map titles, signals and fixed notes", () => {
   const s = fakeSkills();
   s.skills.push({ id: "ood.interfaces", title: "Interfaces ontwerpen en implementeren", level: "L2", paths: ["opdrachten/06-*/**"],
-    history: [{ at: "2026-11-01", to: "L2", note: "aangemaakt" }, { at: "2026-11-02", from: "L2", to: "L2", note: "eigen notitie" }] });
+    history: [{ at: "2026-11-01", to: "L2", note: "aangemaakt" }, { at: "2026-11-02", from: "L1", to: "L2", note: "eigen notitie" },
+      { at: "2026-11-03", from: "L2", to: "L2", note: "zonder verschil" }] });
   const at = "2026-11-10T12:00:00.000Z";
   const events = [];
   for (const tid of ["a", "b", "c", "d", "e"]) {
@@ -259,6 +260,8 @@ test("export: generatedAt stays a date, exportedAt is the moment; both languages
     assert.equal(j.skills.find((x) => x.id === "demo.l2").titles, null, "not in the map: only the record's title");
     assert.deepEqual(sk.history[0].notes, { nl: "aangemaakt", en: "created" });
     assert.equal(sk.history[1].notes, null, "the learner's own note is not translated");
+    assert.equal(sk.history.length, 2, "a change without a difference (L2 -> L2) is left out (12 Nov, #45)");
+    assert.deepEqual(sk.history.map((h) => h.kind), ["manual", "manual"]);
     const sig = j.signals.find((x) => x.skill === "ood.interfaces");
     assert.match(sig.texts.nl, /5\/5 gelukt/);
     assert.match(sig.texts.en, /5\/5 solved/);
