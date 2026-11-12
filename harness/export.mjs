@@ -431,8 +431,15 @@ export async function build(project, { previous = null, todo = null } = {}) {
   // How a level change was decided (setup review of 12 Nov, #45): a fixed word, derived from by, via,
   // auto and placement, so no new free text goes online.
   const revertPrefixes = ["nl", "en"].map((l) => String(I18N[l]?.["note.revert"] ?? "").split(":")[0].trim().toLowerCase()).filter(Boolean);
-  const kindOf = (h) => {
+  // A new microskill in an older record has no by/via: its micro-add event says who made it.
+  const microAdd = new Map(events.filter((e) => e.type === "micro-add").map((e) => [e.skill, e]));
+  const kindOf = (h, s) => {
     if (h.placement) return "placement";
+    if (!h.from && !h.by && !h.auto && microAdd.has(s.id)) {
+      const e = microAdd.get(s.id);
+      if (e.auto) return e.by === "achtervang" ? "backstop" : "analyst";
+      if (e.by === "learner" && e.via === "voorstel") return "proposal";
+    }
     if (h.auto) return h.by === "demotie-analist" ? "analyst" : h.by === "achtervang" ? "backstop" : "auto";
     if (h.by === "learner" && h.via === "voorstel") return "proposal";
     if (revertPrefixes.some((p) => String(h.note ?? "").toLowerCase().startsWith(p))) return "revert";
@@ -460,7 +467,7 @@ export async function build(project, { previous = null, todo = null } = {}) {
     // (L3 -> L3) are left out (#45); kind says how it was decided, task which task placed the skill.
     history: (s.history ?? []).filter((h) => !(h.from && h.to && h.from === h.to)).map((h) => ({
       at: h.at, changedAt: h.to ? lib.levelChangeAt(s, h, events) : null, from: h.from ?? null, to: h.to, note: scrub(h.note ?? null, "skill.history"),
-      notes: notesOf(h.note ?? null), auto: h.auto === true, placement: h.placement === true, kind: kindOf(h),
+      notes: notesOf(h.note ?? null), auto: h.auto === true, placement: h.placement === true, kind: kindOf(h, s),
       task: h.placement ? tidOf(h.tid ?? events.filter((e) => e.type === "placement" && e.skill === s.id && e.to === h.to).pop()?.tid) : null })),
   }));
 

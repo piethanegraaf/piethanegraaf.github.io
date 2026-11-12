@@ -14,7 +14,18 @@
       demoNote: "Demo: alle data is verzonnen. Zo ziet het dashboard eruit na een paar weken oefenen.",
       subtitle: "{course} · stand van {date}", subtitleNoCourse: "Stand van {date}", atTime: "{date}, {time}",
       filter: "Vaardigheid", all: "Alle vaardigheden", asof: "Alle cijfers gelden op het moment van de export: {date}.",
-      kSolo: "Zelfstandig gelukt", kSoloSub: "{ok} van {n} uitgelegde taken, trede ≤ 2", kPending: "Wacht op uitleg", kPendingSub: "{skipped} overgeslagen · uitleg hoort direct na het groen worden",
+      kSolo: "Gelukt (trede ≤ 2)", kSoloSub: "{ok} van {n} uitgelegde taken, met hooguit trede 2", kPending: "Wacht op uitleg", kPendingSub: "{skipped} overgeslagen · uitleg hoort direct na het groen worden",
+      kIndep: "Zelfstandig (trede 0)", kIndepSub: "{ok} van {n} uitgelegde taken, zonder hint",
+      phases: "Leerfasen", phasesHint: "Per vaardigheid de fase over de dagen, met je taken als stippen erboven (kleur = trede). ▲ is een fase hoger, ▼ extra steun, ● een start of een nieuwe microvaardigheid. Wijs een markering of stip aan om te zien hoe het besloten is. Je vergelijkt hier alleen met jezelf.",
+      phSince: "Sinds {date}: {parts}.", phNone: "nog geen fasewijzigingen", phUp1: "1 keer een fase hoger", phUp: "{n} keer een fase hoger",
+      phVia: { proposal: "{n} via een voorstel", placement: "{n} uit de start via een plaatsing", manual: "{n} met de hand", revert: "{n} teruggedraaid" },
+      phSupport1: "1 keer extra steun", phSupport: "{n} keer extra steun", phSupportMicro: "voor een deelpatroon; de hoofdvaardigheid bleef staan",
+      phManualDown1: "1 keer met de hand lager", phManualDown: "{n} keer met de hand lager",
+      phNotStarted: "Nog niet begonnen: {n} vaardigheden.", phStart: "start (plaatsing open)", phCreated: "nieuw",
+      phMarkUp: "▲ een fase hoger", phMarkDown: "▼ extra steun", phMarkStart: "● start of nieuwe microvaardigheid",
+      kind: { placement: "plaatsing na de eerste taak", proposal: "voorstel, door jou bevestigd", manual: "met de hand (set)", revert: "verlaging teruggedraaid",
+        analyst: "extra steun, na het oordeel van de demotie-analist", auto: "extra steun, automatisch", backstop: "extra steun, achtervang" },
+      phTask: "taak {id}", phChange: "Wijziging", phHow: "Hoe besloten", phSkill: "Vaardigheid", phNoRows: "Nog geen vaardigheden met een taak of een wijziging.",
       kReviews: "Herhalingen (L4)", kReviewsSub: "klaar; je doet ze zelf als ze in je werk langskomen", kExam: "Tot de toets", kExamSub: "{date}", kNoExam: "geen datum",
       days: "{n} dagen", day: "1 dag", none: "–",
       levels: "Niveaus", levelsHint: "Hoeveel vaardigheden (en microvaardigheden) op elk niveau staan. Bij een open plaatsing probeer je eerst zelf, met de hintladder van L2; de eerste taak bepaalt het niveau. Wijs een niveau in de legenda aan voor uitleg.", skillsN: "{n} vaardigheden",
@@ -33,7 +44,7 @@
           src: [["Wood & Wood 1999; Aleven e.a. 2003", "moderate"]], next: "Naar L3: ±85% gelukt over minstens 5 taken, de helft met hint 0–1." },
         L3: { what: "Jij maakt het alleen; Claude reviewt pas na je poging.",
           why: "hulp die een beginner helpt, remt wie het al kan (het expertise-omkeereffect).",
-          src: [["Kalyuga e.a. 2003", "strong"]], next: "Naar L4: drie keer zelfstandig op twee dagen, plus een transfertaak met uitleg." },
+          src: [["Kalyuga e.a. 2003", "strong"]], next: "Naar L4: drie keer zelfstandig op twee dagen; een transfertaak met uitleg telt als één ervan, en is nodig." },
         L4: { what: "Claude schrijft de code, jij controleert. Komt een herhaling langs, dan doe je het één keer zelf.",
           why: "wat vastzit, vraagt geen aandacht meer, maar zonder oefening verleer je het.",
           src: [["Fitts & Posner 1967; Bainbridge 1983", "moderate"], ["herhalen met tussenpozen: Cepeda e.a. 2008", "strong"]], next: "Terug naar L3: twee herhalingen op rij mislukt." },
@@ -48,7 +59,7 @@
       route: "Zo kom je van L0 naar L4", perLevel: "Per niveau", start: "Start", startName: "plaatsing open",
       upkeep: "Onderhoud: een herhaling als de vaardigheid in je werk langskomt.",
       up: "Omhoog", upText: "de harnas stelt het voor, direct na de uitleg die het criterium haalt, en jij zegt \"ja, doorzetten\". Het bewijs zijn je laatste 10 uitgelegde taken sinds de vorige wijziging. Vanaf L2 kan een sprong, bijvoorbeeld L2 → L4 met de transfertaak.",
-      down: "Omlaag", downText: "valt het bewijs tegen (minder dan 70% gelukt over minstens 3 taken, de laatste 2 mislukt, of 2 herhalingen op rij mislukt), dan ga je één niveau terug. Automatisch als autoDemote aan staat, anders als advies.",
+      down: "Omlaag", downText: "valt het bewijs tegen (minder dan 70% gelukt over minstens 4 taken, de laatste 2 mislukt, of 2 herhalingen op rij mislukt), dan krijg je extra steun: één niveau terug, vaak alleen voor een deelpatroon. Hulp over een ander concept telt niet mee, en omlaag wacht op een open uitleg. Automatisch als autoDemote aan staat, anders als advies.",
       levelsInfoMore: "De sterkte van het bewijs komt uit het literatuuronderzoek. Meer:",
       howLink: "Hoe het werkt", howHref: "../how-it-works/#niveaus-per-vaardigheid",
       researchLink: "de autonomieladder (§5.2)", researchHref: "../research/#52-de-autonomieladder-per-vaardigheid",
@@ -56,7 +67,7 @@
       showTable: "Tabel", showChart: "Grafiek", level: "Niveau", name: "Naam", count: "Aantal", skillsCol: "Vaardigheden",
       skills: "Per vaardigheid", skillsHint: "Per vaardigheid zie je wat je nog nodig hebt voor het volgende niveau. Dat telt alleen de taken sinds je laatste niveauwijziging, net als de harnas. 'Laatste 10' is hoe het de laatste tijd ging; gelukt = opgelost met hooguit trede 2.",
       nsTo: "Naar {to}", nsSince: "telt sinds {date}", nsPlacement: "Plaatsing", nsPlacementText: "je eerste taak bepaalt het niveau", nsMaintain: "Onderhoud", nsNoReview: "geen herhaling gepland",
-      nsL0: "{have} van 2 voorbeelden uitgelegd en voorspeld", nsL1: "{have} van 3 gaten gevuld, met hooguit 1 hint", nsL3: "{have} van 3 keer zelfstandig (trede 0)",
+      nsL0: "{have} van 2 voorbeelden uitgelegd en voorspeld", nsL1: "{have} van 3 gaten gevuld, met hooguit 1 hint", nsL3: "{have} van 3 keer zelfstandig (trede 0; de transfertaak telt mee)",
       nsRate: "{ok}/{n} gelukt ({pct}) · doel {target}", nsNoTasks: "nog geen uitgelegde taken", nsEnough: "minstens 5 taken ({n}/5)", nsRateCheck: "{target} gelukt",
       nsHalf: "de helft met hint 0–1 ({low}/{n})", nsDays: "op 2 dagen ({days}/2)", nsTransfer: "transfertaak", nsMet: "Gehaald: de harnas stelt doorzetten voor",
       nsMore1: "Nog 1 taak goed, met hooguit 1 hint", nsMore: "Nog {k} taken goed, met hooguit 1 hint",
@@ -104,7 +115,18 @@
       demoNote: "Demo: all data is made up. This is what the dashboard looks like after a few weeks of practice.",
       subtitle: "{course} · as of {date}", subtitleNoCourse: "As of {date}", atTime: "{date}, {time}",
       filter: "Skill", all: "All skills", asof: "All figures are as of the moment of the export: {date}.",
-      kSolo: "Solved independently", kSoloSub: "{ok} of {n} explained tasks, rung ≤ 2", kPending: "Waiting for an explanation", kPendingSub: "{skipped} skipped · the explanation belongs right after the green",
+      kSolo: "Solved (rung ≤ 2)", kSoloSub: "{ok} of {n} explained tasks, with at most rung 2",
+      kIndep: "Independent (rung 0)", kIndepSub: "{ok} of {n} explained tasks, without a hint",
+      phases: "Learning phases", phasesHint: "Per skill the phase over the days, with your tasks as dots above it (colour = rung). ▲ is a phase up, ▼ extra support, ● a start or a new microskill. Point at a mark or dot to see how it was decided. Here you only compare with yourself.",
+      phSince: "Since {date}: {parts}.", phNone: "no phase changes yet", phUp1: "1 time a phase up", phUp: "{n} times a phase up",
+      phVia: { proposal: "{n} through a proposal", placement: "{n} out of the start through a placement", manual: "{n} by hand", revert: "{n} reverted" },
+      phSupport1: "1 time extra support", phSupport: "{n} times extra support", phSupportMicro: "for a sub-pattern; the main skill stayed",
+      phManualDown1: "1 time lower by hand", phManualDown: "{n} times lower by hand",
+      phNotStarted: "Not started yet: {n} skills.", phStart: "start (placement open)", phCreated: "new",
+      phMarkUp: "▲ a phase up", phMarkDown: "▼ extra support", phMarkStart: "● start or new microskill",
+      kind: { placement: "placement after the first task", proposal: "proposal, confirmed by you", manual: "by hand (set)", revert: "demotion reverted",
+        analyst: "extra support, after the verdict of the demotion analyst", auto: "extra support, automatic", backstop: "extra support, backstop" },
+      phTask: "task {id}", phChange: "Change", phHow: "How it was decided", phSkill: "Skill", phNoRows: "No skills with a task or a change yet.", kPending: "Waiting for an explanation", kPendingSub: "{skipped} skipped · the explanation belongs right after the green",
       kReviews: "Reviews (L4)", kReviewsSub: "ready; you do them yourself when they come by in your work", kExam: "Until the exam", kExamSub: "{date}", kNoExam: "no date",
       days: "{n} days", day: "1 day", none: "–",
       levels: "Levels", levelsHint: "How many skills (and microskills) are at each level. With an open placement you try first, with the L2 hint ladder; the first task sets the level. Point at a level in the legend for an explanation.", skillsN: "{n} skills",
@@ -122,7 +144,7 @@
           src: [["Wood & Wood 1999; Aleven et al. 2003", "moderate"]], next: "To L3: about 85% solved over at least 5 tasks, half of them with hint 0–1." },
         L3: { what: "You do it alone; Claude reviews only after your attempt.",
           why: "help that supports a novice holds back someone who can already do it (the expertise-reversal effect).",
-          src: [["Kalyuga et al. 2003", "strong"]], next: "To L4: solved independently three times on two days, plus a transfer task with an explanation." },
+          src: [["Kalyuga et al. 2003", "strong"]], next: "To L4: solved independently three times on two days; a transfer task with an explanation counts as one of them, and is needed." },
         L4: { what: "Claude writes the code, you check it. When a review comes by, you do it yourself once.",
           why: "what you have mastered needs no attention any more, but without practice you lose it.",
           src: [["Fitts & Posner 1967; Bainbridge 1983", "moderate"], ["spaced reviews: Cepeda et al. 2008", "strong"]], next: "Back to L3: two reviews in a row failed." },
@@ -136,7 +158,7 @@
       route: "How you get from L0 to L4", perLevel: "Per level", start: "Start", startName: "placement open",
       upkeep: "Upkeep: a review when the skill comes by in your work.",
       up: "Up", upText: "the harness proposes it right after the explanation that meets the criterion, and you say \"yes, promote\". The evidence is your last 10 explained tasks since the previous change. From L2 a jump is possible, for example L2 → L4 with the transfer task.",
-      down: "Down", downText: "if the evidence falls short (under 70% solved over at least 3 tasks, the last 2 failed, or 2 reviews in a row failed), you go back one level. Automatically when autoDemote is on, otherwise as advice.",
+      down: "Down", downText: "if the evidence falls short (under 70% solved over at least 4 tasks, the last 2 failed, or 2 reviews in a row failed), you get extra support: one level back, often only for a sub-pattern. Help about another concept does not count, and down waits for an open explanation. Automatically when autoDemote is on, otherwise as advice.",
       levelsInfoMore: "The strength of the evidence comes from the literature review. More:",
       howLink: "How it works", howHref: "../en/how-it-works/#levels-per-skill",
       researchLink: "the Autonomy Ladder (§5.2)", researchHref: "../en/research/#52-the-autonomy-ladder-per-skill",
@@ -144,7 +166,7 @@
       showTable: "Table", showChart: "Chart", level: "Level", name: "Name", count: "Count", skillsCol: "Skills",
       skills: "Per skill", skillsHint: "Per skill you see what you still need for the next level. That only counts the tasks since your last level change, just like the harness. 'Last 10' is how it went lately; solved = with at most rung 2.",
       nsTo: "To {to}", nsSince: "counts since {date}", nsPlacement: "Placement", nsPlacementText: "your first task sets the level", nsMaintain: "Maintenance", nsNoReview: "no review planned",
-      nsL0: "{have} of 2 examples explained and predicted", nsL1: "{have} of 3 gaps filled, with at most 1 hint", nsL3: "{have} of 3 times independent (rung 0)",
+      nsL0: "{have} of 2 examples explained and predicted", nsL1: "{have} of 3 gaps filled, with at most 1 hint", nsL3: "{have} of 3 times independent (rung 0; the transfer task counts)",
       nsRate: "{ok}/{n} solved ({pct}) · target {target}", nsNoTasks: "no explained tasks yet", nsEnough: "at least 5 tasks ({n}/5)", nsRateCheck: "{target} solved",
       nsHalf: "half with hint 0–1 ({low}/{n})", nsDays: "on 2 days ({days}/2)", nsTransfer: "transfer task", nsMet: "Reached: the harness proposes to promote",
       nsMore1: "1 more task solved, with at most 1 hint", nsMore: "{k} more tasks solved, with at most 1 hint",
@@ -384,11 +406,150 @@
     const ready = skills.filter(reviewReady).length;
     const tile = (label, value, sub) => el("div", { class: "tile" }, el("div", { class: "label", text: label }), el("div", { class: "value", text: value }), sub ? el("div", { class: "sub" }, sub) : null);
     const examDays = data.examDate ? dayDiff(asOf(), data.examDate) : null;
+    // Two tiles (setup review of 12 Nov, #40): solved counts rung <= 2, independent only rung 0, like the harness.
+    const indep = done.filter((x) => x.success && x.maxRung === 0).length;
     return el("section", { class: "kpis", "aria-label": t("title") },
       tile(t("kSolo"), done.length ? pct(ok / done.length) : t("none"), t("kSoloSub", { ok, n: done.length })),
+      tile(t("kIndep"), done.length ? pct(indep / done.length) : t("none"), t("kIndepSub", { ok: indep, n: done.length })),
       tile(t("kPending"), String(pend), t("kPendingSub", { skipped })),
       tile(t("kReviews"), String(ready), t("kReviewsSub")),
       tile(t("kExam"), examDays === null ? t("kNoExam") : examDays === 1 ? t("day") : t("days", { n: examDays }), data.examDate ? fmtLong(data.examDate) : null));
+  }
+
+  // ---------- Learning phases (setup review of 12 Nov, #45 with #41) ----------
+  // How a change was decided: the export's kind, or (older exports) the auto and placement flags.
+  const kindOfChange = (h) => h.kind ?? (h.placement ? "placement" : h.auto ? "auto" : "manual");
+  const SUPPORT = new Set(["analyst", "auto", "backstop"]);
+  const changeTime = (h) => Date.parse(h.changedAt || `${h.at}T12:00:00`);
+  // Up: a level higher, or a placement out of the start onto L3/L4. Support: anything the harness lowered
+  // or created automatically. The rest is neutral (a placement on L0-L2, a microskill made by hand).
+  function directionOf(h) {
+    const k = kindOfChange(h);
+    if (SUPPORT.has(k)) return "down";
+    if (k === "placement") return LEVELS.indexOf(h.to) >= 3 ? "up" : "start";
+    if (!h.from) return "start";
+    return LEVELS.indexOf(h.to) > LEVELS.indexOf(h.from) ? "up" : LEVELS.indexOf(h.to) < LEVELS.indexOf(h.from) ? "manualDown" : "same";
+  }
+  // The phase of a skill over time: [{ from, to, level }], with "start" while the placement was open.
+  function phaseSegments(s, t0, t1) {
+    const hist = (s.history ?? []).filter((h) => h.to && !(h.from && h.from === h.to)).map((h) => ({ ...h, t: changeTime(h) }))
+      .filter((h) => !Number.isNaN(h.t)).sort((a, b) => a.t - b.t);
+    let at = Math.max(t0, Date.parse(s.start?.at ?? "") || t0);
+    let cur;
+    if (hist[0] && !hist[0].from && !hist[0].placement) { at = Math.max(t0, hist[0].t); cur = hist.shift().to; } // a new microskill
+    else if (s.start?.open) cur = "start";
+    else cur = hist[0]?.from ?? s.level;
+    const segs = [];
+    for (const h of hist) {
+      if (h.t > at) segs.push({ from: at, to: Math.min(h.t, t1), level: cur });
+      cur = h.to;
+      at = Math.max(at, h.t);
+    }
+    if (t1 > at) segs.push({ from: at, to: t1, level: s.placement === "pending" ? "start" : cur });
+    return segs;
+  }
+  // One sentence that compares with yourself only (ipsative): ups by how, and extra support.
+  function phaseSentence(changes, since) {
+    const ups = changes.filter((c) => c.dir === "up"), downs = changes.filter((c) => c.dir === "down"), manualDowns = changes.filter((c) => c.dir === "manualDown");
+    const parts = [];
+    if (ups.length) {
+      const by = {};
+      for (const c of ups) by[c.kind] = (by[c.kind] ?? 0) + 1;
+      const how = ["proposal", "placement", "manual", "revert"].filter((k) => by[k]).map((k) => t(`phVia.${k}`, { n: by[k] }));
+      parts.push((ups.length === 1 ? t("phUp1") : t("phUp", { n: ups.length })) + (how.length ? ` (${how.join(", ")})` : ""));
+    }
+    if (downs.length) {
+      const micro = downs.every((c) => c.skill.parent);
+      parts.push((downs.length === 1 ? t("phSupport1") : t("phSupport", { n: downs.length })) + (micro ? ` ${t("phSupportMicro")}` : ""));
+    }
+    if (manualDowns.length) parts.push(manualDowns.length === 1 ? t("phManualDown1") : t("phManualDown", { n: manualDowns.length }));
+    return t("phSince", { date: fmtDate(since), parts: parts.length ? parts.join(", ") : t("phNone") });
+  }
+  function phasesCard() {
+    const tasks = liveTasks();
+    const fams = mains().filter((m) => inScope(m.id));
+    const active = (s) => tasks.some((x) => x.skill === s.id) || (s.history ?? []).some((h) => h.to && !(h.from && h.from === h.to));
+    // A microskill only when something happened to it: a task, a change after it was made, or extra
+    // support (the analyst made it). One made by hand and never practised is noise here.
+    const microActive = (s) => tasks.some((x) => x.skill === s.id) || (s.history ?? []).some((h) => h.to && (h.from ? h.from !== h.to : SUPPORT.has(kindOfChange(h))));
+    const rows = [];
+    for (const m of fams) {
+      const micros = microsOf(m.id).filter(microActive);
+      if (!active(m) && !micros.length) continue;
+      rows.push(m, ...micros);
+    }
+    const notStarted = fams.filter((m) => !rows.includes(m)).length;
+    const changes = rows.flatMap((s) => (s.history ?? []).filter((h) => h.to && !(h.from && h.from === h.to))
+      .map((h) => ({ s, skill: s, h, t: changeTime(h), kind: kindOfChange(h), dir: directionOf(h) })));
+    const times = [...rows.map((s) => Date.parse(s.start?.at ?? "")), ...tasks.filter((x) => rows.some((s) => s.id === x.skill)).map((x) => Date.parse(x.at)),
+      ...changes.map((c) => c.t)].filter((v) => !Number.isNaN(v));
+    if (!rows.length || !times.length) return card(t("phases"), t("phasesHint"), el("p", { class: "muted", text: t("phNoRows") }), null, "phases");
+    const first = new Date(Math.min(...times)); first.setHours(0, 0, 0, 0);
+    const t0 = first.getTime();
+    const end = new Date(Date.parse(data.exportedAt ?? "") || Date.parse(`${asOf()}T23:59:00`)); end.setHours(23, 59, 59, 0);
+    const t1 = Math.max(end.getTime(), t0 + 86400000);
+    const nDays = Math.round((t1 - t0) / 86400000);
+    const W = Math.max(640, nDays * 72 + 24), L = 8, R = 24, TOP = 22;
+    const x = (v) => L + ((v - t0) / (t1 - t0)) * (W - L - R);
+    const rowH = (s) => (s.parent ? 38 : 46);
+    const H = TOP + rows.reduce((a, s) => a + rowH(s), 0) + 6;
+    const chart = svg("svg", { class: "chart phases", width: W, height: H, viewBox: `0 0 ${W} ${H}`, role: "group", "aria-label": t("phases") });
+    // Day ticks, recessive.
+    for (let d = 0; d <= nDays; d++) {
+      const tx0 = x(t0 + d * 86400000);
+      chart.append(svg("line", { class: "gridline", x1: tx0, x2: tx0, y1: TOP - 4, y2: H }));
+      if (d < nDays && (nDays <= 21 || d % Math.ceil(nDays / 14) === 0)) chart.append(svg("text", { x: tx0 + 3, y: 12, text: fmtDate(new Date(t0 + d * 86400000 + 43200000).toISOString()) }));
+    }
+    let y = TOP;
+    for (const s of rows) {
+      const micro = Boolean(s.parent), bandH = micro ? 6 : 12, labelY = y + 11, dotY = y + (micro ? 20 : 22), bandY = y + (micro ? 27 : 30);
+      chart.append(svg("text", { class: micro ? "ph-label micro" : "ph-label", x: L + (micro ? 14 : 0), y: labelY, text: `${micro ? "↳ " : ""}${s.id}` }));
+      for (const seg of phaseSegments(s, t0, t1)) {
+        const cls = seg.level === "start" ? "ph-band start" : `ph-band lv${LEVELS.indexOf(seg.level)}`;
+        const r = svg("rect", { class: cls, x: x(seg.from) + 1, y: bandY, width: Math.max(2, x(seg.to) - x(seg.from) - 2), height: bandH, rx: Math.min(3, bandH / 2) });
+        const hit = svg("rect", { class: "hit", x: x(seg.from), y: bandY - 3, width: Math.max(4, x(seg.to) - x(seg.from)), height: bandH + 6, tabindex: "0", role: "img",
+          "aria-label": `${s.id}: ${seg.level === "start" ? t("phStart") : seg.level}` });
+        withTip(hit, s.id, [[null, seg.level === "start" ? t("phStart") : `${seg.level} ${levelName(seg.level)}`, `${fmtDate(new Date(seg.from).toISOString())} – ${fmtDate(new Date(seg.to).toISOString())}`]]);
+        chart.append(r, hit);
+      }
+      // The tasks as dots above the band (not on it: the rung colours are blues like the levels).
+      // Tasks close together (one session) sit side by side instead of on top of each other.
+      let lastX = -Infinity;
+      for (const tk of tasks.filter((x2) => x2.skill === s.id).sort((a, b) => String(a.at).localeCompare(String(b.at)))) {
+        const cx = Math.max(x(Date.parse(tk.at)), lastX + 10);
+        lastX = cx;
+        const cls = BUCKETS.find(([k]) => k === bucketOf(tk))[1];
+        const dot = svg("circle", { class: `ph-dot ${cls}`, cx, cy: dotY, r: micro ? 3.5 : 4, tabindex: "0", role: "img", "aria-label": `${fmtDate(tk.at)}: ${t("rung")} ${tk.maxRung}` });
+        withTip(dot, `${fmtDate(tk.at)} · ${s.id}`, [[cls, `${t("rung")} ${tk.maxRung}`, t(BUCKETS.find(([k]) => k === bucketOf(tk))[2])], ...(tk.what ? [{ text: txs(tk.what) }] : [])]);
+        chart.append(dot);
+      }
+      // The changes: ▲ up, ▼ extra support, ● start or a new microskill; how it was decided in the tip.
+      for (const c of changes.filter((c2) => c2.s === s)) {
+        const glyph = c.dir === "up" ? "▲" : c.dir === "down" || c.dir === "manualDown" ? "▼" : "●";
+        const mx = x(c.t);
+        const mark = svg("text", { class: `ph-mark ${c.dir}`, x: mx, y: bandY + bandH / 2 + 4, "text-anchor": "middle", text: glyph, tabindex: "0", role: "img",
+          "aria-label": `${fmtDate(c.h.changedAt ?? c.h.at)} ${s.id}: ${c.h.from ?? t("phCreated")} → ${c.h.to}, ${t(`kind.${c.kind}`)}` });
+        withTip(mark, `${fmtDate(c.h.changedAt ?? c.h.at)} · ${s.id}`, [{ text: `${c.h.from ?? (c.kind === "placement" ? t("phStart") : t("phCreated"))} → ${c.h.to} ${levelName(c.h.to)}` },
+          { text: t(`kind.${c.kind}`) }, ...(c.h.task ? [{ text: t("phTask", { id: c.h.task }) }] : [])]);
+        chart.append(mark);
+      }
+      y += rowH(s);
+    }
+    const since = new Date(t0).toISOString();
+    const legend = el("ul", { class: "legend" },
+      el("li", {}, el("span", { class: "sw open", "aria-hidden": "true" }), t("phStart")),
+      LEVELS.map((l) => el("li", {}, el("span", { class: `sw lv${LEVELS.indexOf(l)}`, "aria-hidden": "true" }), `${l} ${levelName(l)}`)),
+      BUCKETS.slice(0, 3).map(([, cls, key]) => el("li", {}, el("span", { class: `sw dot ${cls}`, "aria-hidden": "true" }), t(key))),
+      el("li", { text: t("phMarkUp") }), el("li", { text: t("phMarkDown") }), el("li", { text: t("phMarkStart") }));
+    const body = el("div", {},
+      el("p", { class: "ph-sentence", text: phaseSentence(changes, since) }),
+      el("div", { class: "phase-wrap", tabindex: "0", role: "region", "aria-label": t("phases") }, chart),
+      legend,
+      notStarted ? el("p", { class: "muted", text: t("phNotStarted", { n: notStarted }) }) : null);
+    const tableRows = () => table([t("date"), t("phSkill"), t("phChange"), t("phHow"), t("task")],
+      changes.sort((a, b) => a.t - b.t).map((c) => [fmtLong(c.h.changedAt ?? c.h.at), c.s.id, `${c.h.from ?? (c.kind === "placement" ? t("phStart") : t("phCreated"))} → ${c.h.to} ${levelName(c.h.to)}`,
+        t(`kind.${c.kind}`), c.h.task ? t("phTask", { id: c.h.task }) : t("none")]));
+    return card(t("phases"), t("phasesHint"), body, tableRows, "phases");
   }
 
   function levelsCard() {
@@ -471,8 +632,9 @@
     };
     return el("div", { class: "detail" },
       el("div", {}, el("h3", { text: t("history") }), hist.length ? table([t("date"), t("from"), t("to"), t("note")],
+        // How it was decided, for every change, up and down alike (#41): no label for down only.
         hist.map((h) => [fmtDate(h.at), h.from ?? t("none"), `${h.to} ${levelName(h.to)}`,
-          el("span", {}, h.auto ? `[${t("auto")}] ` : h.placement ? `[${t("placementNote")}] ` : null, h.notes?.[lang] ?? tx(h.note))])) : el("p", { class: "muted", text: t("noHistory") })),
+          el("span", {}, `[${t(`kind.${kindOfChange(h)}`)}] `, h.notes?.[lang] ?? tx(h.note))])) : el("p", { class: "muted", text: t("noHistory") })),
       el("div", {}, el("h3", { text: t("tasks") }), tasks.length ? table([t("date"), t("task"), t("rung"), t("source"), t("explanation"), t("rejections"), t("corrections")],
         tasks.map((x) => [fmtDate(x.at), el("span", {}, x.skill !== s.id ? `${x.skill}: ` : null, x.what ? tx(x.what) : x.id), rungLabel(x), t(`src.${x.source}`) === `src.${x.source}` ? (x.source ?? t("none")) : t(`src.${x.source}`),
           explainCell(x),
@@ -533,9 +695,11 @@
     else if (st.kind === "rate") todo = st.more === 1 ? t("nsMore1") : t("nsMore", { k: st.more });
     else if (s.level === "L0") todo = st.need - st.have === 1 ? t("nsMoreEx1") : t("nsMoreEx", { k: st.need - st.have });
     else if (s.level === "L1") todo = st.need - st.have === 1 ? t("nsMoreGap1") : t("nsMoreGap", { k: st.need - st.have });
-    else if (st.solo < 3) todo = (st.need - st.have === 1 ? t("nsMoreSolo1") : t("nsMoreSolo", { k: st.need - st.have })) + (st.days < 2 && st.solo >= 1 ? t("nsOtherDay") : "");
-    else if (st.days < 2) todo = t("nsMoreSolo1") + t("nsOtherDay");
-    else todo = t("nsDoTransfer", { id: s.id });
+    // L3: the transfer task is one of the three (#36 b). Without it: two times without a hint, then the
+    // transfer task (on another day when both were on one day). With it: what is still missing.
+    else if (!st.transfer && st.solo >= 2) todo = t("nsDoTransfer", { id: s.id }) + (st.days < 2 ? t("nsOtherDay") : "");
+    else if (!st.transfer) todo = (st.solo === 1 ? t("nsMoreSolo1") : t("nsMoreSolo", { k: 2 - st.solo })) + (st.days < 2 && st.solo >= 1 ? t("nsOtherDay") : "");
+    else todo = (st.need - st.have <= 1 ? t("nsMoreSolo1") : t("nsMoreSolo", { k: st.need - st.have })) + (st.days < 2 ? t("nsOtherDay") : "");
     box.append(el("div", { class: st.met ? "next-todo met" : "next-todo", text: todo }));
     return box;
   }
@@ -727,7 +891,7 @@
     }
     else if (source === "demo") notes.push(el("p", { class: "notice", text: t("demoNote") }));
     if (filter !== "all" && !mains().some((s) => s.id === filter)) filter = "all";
-    main.replaceChildren(...notes, filters(), kpis(), levelsCard(), skillsCard(), el("div", { class: "two" }, tasksCard(), signalsCard()),
+    main.replaceChildren(...notes, filters(), kpis(), phasesCard(), levelsCard(), skillsCard(), el("div", { class: "two" }, tasksCard(), signalsCard()),
       el("div", { class: "two" }, calibrationCard(), activityCard()), diaryCard());
   }
 

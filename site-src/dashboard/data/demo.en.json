@@ -26,6 +26,12 @@
       "lastReview": null,
       "lastSeen": null,
       "placement": null,
+      "start": {
+        "at": "2026-10-28T13:00:00.000Z",
+        "open": false
+      },
+      "windowSince": null,
+      "placementTask": null,
       "history": []
     },
     {
@@ -43,6 +49,12 @@
       "lastReview": null,
       "lastSeen": "2026-10-28",
       "placement": "done",
+      "start": {
+        "at": "2026-10-28T13:00:00.000Z",
+        "open": false
+      },
+      "windowSince": "2026-10-29",
+      "placementTask": null,
       "history": [
         {
           "at": "2026-10-29",
@@ -55,7 +67,9 @@
             "en": "5/6 solved"
           },
           "auto": false,
-          "placement": false
+          "placement": false,
+          "kind": "proposal",
+          "task": null
         }
       ]
     },
@@ -71,6 +85,12 @@
       "lastReview": null,
       "lastSeen": "2026-10-29",
       "placement": "done",
+      "start": {
+        "at": "2026-10-28T13:00:00.000Z",
+        "open": false
+      },
+      "windowSince": "2026-11-02",
+      "placementTask": null,
       "history": [
         {
           "at": "2026-10-31",
@@ -83,7 +103,9 @@
             "en": "created"
           },
           "auto": false,
-          "placement": false
+          "placement": false,
+          "kind": "manual",
+          "task": null
         },
         {
           "at": "2026-11-02",
@@ -96,7 +118,9 @@
             "en": "5/6 solved"
           },
           "auto": false,
-          "placement": false
+          "placement": false,
+          "kind": "proposal",
+          "task": null
         }
       ]
     },
@@ -115,6 +139,12 @@
       "lastReview": null,
       "lastSeen": "2026-11-04",
       "placement": "done",
+      "start": {
+        "at": "2026-10-28T13:00:00.000Z",
+        "open": false
+      },
+      "windowSince": "2026-11-04",
+      "placementTask": null,
       "history": [
         {
           "at": "2026-11-04",
@@ -127,7 +157,9 @@
             "en": "5/6 solved"
           },
           "auto": false,
-          "placement": false
+          "placement": false,
+          "kind": "proposal",
+          "task": null
         }
       ]
     },
@@ -143,6 +175,12 @@
       "lastReview": null,
       "lastSeen": "2026-11-01",
       "placement": "done",
+      "start": {
+        "at": "2026-10-28T13:00:00.000Z",
+        "open": false
+      },
+      "windowSince": "2026-10-31",
+      "placementTask": null,
       "history": [
         {
           "at": "2026-10-31",
@@ -155,7 +193,9 @@
             "en": "created"
           },
           "auto": false,
-          "placement": false
+          "placement": false,
+          "kind": "manual",
+          "task": null
         }
       ]
     },
@@ -174,6 +214,12 @@
       "lastReview": null,
       "lastSeen": "2026-11-02",
       "placement": "done",
+      "start": {
+        "at": "2026-10-28T13:00:00.000Z",
+        "open": false
+      },
+      "windowSince": null,
+      "placementTask": null,
       "history": []
     },
     {
@@ -188,6 +234,12 @@
       "lastReview": null,
       "lastSeen": "2026-11-03",
       "placement": "done",
+      "start": {
+        "at": "2026-10-28T13:00:00.000Z",
+        "open": false
+      },
+      "windowSince": "2026-11-03T16:00:00.000Z",
+      "placementTask": null,
       "history": [
         {
           "at": "2026-10-31",
@@ -200,7 +252,9 @@
             "en": "created"
           },
           "auto": false,
-          "placement": false
+          "placement": false,
+          "kind": "manual",
+          "task": null
         },
         {
           "at": "2026-11-03",
@@ -213,7 +267,9 @@
             "en": "automatic: 0 of 3 solved (0%), last 2 not"
           },
           "auto": true,
-          "placement": false
+          "placement": false,
+          "kind": "auto",
+          "task": null
         }
       ]
     },
@@ -232,6 +288,12 @@
       "lastReview": null,
       "lastSeen": "2026-11-09",
       "placement": "done",
+      "start": {
+        "at": "2026-10-28T13:00:00.000Z",
+        "open": false
+      },
+      "windowSince": null,
+      "placementTask": null,
       "history": []
     },
     {
@@ -249,6 +311,12 @@
       "lastReview": null,
       "lastSeen": null,
       "placement": "pending",
+      "start": {
+        "at": "2026-10-28T13:00:00.000Z",
+        "open": true
+      },
+      "windowSince": null,
+      "placementTask": null,
       "history": []
     },
     {
@@ -266,6 +334,12 @@
       "lastReview": null,
       "lastSeen": "2026-11-06",
       "placement": "done",
+      "start": {
+        "at": "2026-10-28T13:00:00.000Z",
+        "open": false
+      },
+      "windowSince": null,
+      "placementTask": null,
       "history": []
     },
     {
@@ -283,6 +357,12 @@
       "lastReview": null,
       "lastSeen": "2026-11-10",
       "placement": "done",
+      "start": {
+        "at": "2026-10-28T13:00:00.000Z",
+        "open": false
+      },
+      "windowSince": "2026-11-08",
+      "placementTask": null,
       "history": [
         {
           "at": "2026-11-08",
@@ -295,7 +375,9 @@
             "en": "5/6 solved"
           },
           "auto": false,
-          "placement": false
+          "placement": false,
+          "kind": "proposal",
+          "task": null
         }
       ]
     },
@@ -314,6 +396,12 @@
       "lastReview": null,
       "lastSeen": null,
       "placement": "pending",
+      "start": {
+        "at": "2026-10-28T13:00:00.000Z",
+        "open": true
+      },
+      "windowSince": null,
+      "placementTask": null,
       "history": []
     },
     {
@@ -331,6 +419,12 @@
       "lastReview": null,
       "lastSeen": null,
       "placement": "pending",
+      "start": {
+        "at": "2026-10-28T13:00:00.000Z",
+        "open": true
+      },
+      "windowSince": null,
+      "placementTask": null,
       "history": []
     },
     {
@@ -348,10 +442,16 @@
       "lastReview": null,
       "lastSeen": "2026-11-07",
       "placement": "done",
+      "start": {
+        "at": "2026-10-28T13:00:00.000Z",
+        "open": true
+      },
+      "windowSince": "2026-11-07T13:12:00.000Z",
+      "placementTask": "demo022",
       "history": [
         {
           "at": "2026-11-07",
-          "changedAt": "2026-11-07T13:00:00.000Z",
+          "changedAt": "2026-11-07T13:12:00.000Z",
           "from": "L0",
           "to": "L2",
           "note": "placement: highest rung 2 at the first task",
@@ -360,7 +460,9 @@
             "en": "placement: highest rung 2 at the first task"
           },
           "auto": false,
-          "placement": true
+          "placement": true,
+          "kind": "placement",
+          "task": "demo022"
         }
       ]
     },
@@ -379,6 +481,12 @@
       "lastReview": null,
       "lastSeen": null,
       "placement": "pending",
+      "start": {
+        "at": "2026-10-28T13:00:00.000Z",
+        "open": true
+      },
+      "windowSince": null,
+      "placementTask": null,
       "history": []
     },
     {
@@ -396,6 +504,12 @@
       "lastReview": null,
       "lastSeen": null,
       "placement": "pending",
+      "start": {
+        "at": "2026-10-28T13:00:00.000Z",
+        "open": true
+      },
+      "windowSince": null,
+      "placementTask": null,
       "history": []
     },
     {
@@ -413,6 +527,12 @@
       "lastReview": null,
       "lastSeen": null,
       "placement": "pending",
+      "start": {
+        "at": "2026-10-28T13:00:00.000Z",
+        "open": true
+      },
+      "windowSince": null,
+      "placementTask": null,
       "history": []
     },
     {
@@ -430,6 +550,12 @@
       "lastReview": null,
       "lastSeen": null,
       "placement": "pending",
+      "start": {
+        "at": "2026-10-28T13:00:00.000Z",
+        "open": true
+      },
+      "windowSince": null,
+      "placementTask": null,
       "history": []
     },
     {
@@ -447,6 +573,12 @@
       "lastReview": null,
       "lastSeen": null,
       "placement": "pending",
+      "start": {
+        "at": "2026-10-28T13:00:00.000Z",
+        "open": true
+      },
+      "windowSince": null,
+      "placementTask": null,
       "history": []
     },
     {
@@ -464,6 +596,12 @@
       "lastReview": null,
       "lastSeen": null,
       "placement": "pending",
+      "start": {
+        "at": "2026-10-28T13:00:00.000Z",
+        "open": true
+      },
+      "windowSince": null,
+      "placementTask": null,
       "history": []
     },
     {
@@ -481,6 +619,12 @@
       "lastReview": null,
       "lastSeen": null,
       "placement": "pending",
+      "start": {
+        "at": "2026-10-28T13:00:00.000Z",
+        "open": true
+      },
+      "windowSince": null,
+      "placementTask": null,
       "history": []
     },
     {
@@ -498,6 +642,12 @@
       "lastReview": null,
       "lastSeen": null,
       "placement": "pending",
+      "start": {
+        "at": "2026-10-28T13:00:00.000Z",
+        "open": true
+      },
+      "windowSince": null,
+      "placementTask": null,
       "history": []
     },
     {
@@ -515,6 +665,12 @@
       "lastReview": null,
       "lastSeen": null,
       "placement": "pending",
+      "start": {
+        "at": "2026-10-28T13:00:00.000Z",
+        "open": true
+      },
+      "windowSince": null,
+      "placementTask": null,
       "history": []
     },
     {
@@ -532,6 +688,12 @@
       "lastReview": null,
       "lastSeen": null,
       "placement": "pending",
+      "start": {
+        "at": "2026-10-28T13:00:00.000Z",
+        "open": true
+      },
+      "windowSince": null,
+      "placementTask": null,
       "history": []
     },
     {
@@ -549,6 +711,12 @@
       "lastReview": null,
       "lastSeen": null,
       "placement": "pending",
+      "start": {
+        "at": "2026-10-28T13:00:00.000Z",
+        "open": true
+      },
+      "windowSince": null,
+      "placementTask": null,
       "history": []
     },
     {
@@ -566,6 +734,12 @@
       "lastReview": null,
       "lastSeen": null,
       "placement": "pending",
+      "start": {
+        "at": "2026-10-28T13:00:00.000Z",
+        "open": true
+      },
+      "windowSince": null,
+      "placementTask": null,
       "history": []
     },
     {
@@ -583,6 +757,12 @@
       "lastReview": null,
       "lastSeen": null,
       "placement": "pending",
+      "start": {
+        "at": "2026-10-28T13:00:00.000Z",
+        "open": true
+      },
+      "windowSince": null,
+      "placementTask": null,
       "history": []
     },
     {
@@ -600,6 +780,12 @@
       "lastReview": null,
       "lastSeen": null,
       "placement": "pending",
+      "start": {
+        "at": "2026-10-28T13:00:00.000Z",
+        "open": true
+      },
+      "windowSince": null,
+      "placementTask": null,
       "history": []
     },
     {
@@ -617,6 +803,12 @@
       "lastReview": null,
       "lastSeen": null,
       "placement": "pending",
+      "start": {
+        "at": "2026-10-28T13:00:00.000Z",
+        "open": true
+      },
+      "windowSince": null,
+      "placementTask": null,
       "history": []
     },
     {
@@ -634,6 +826,12 @@
       "lastReview": null,
       "lastSeen": null,
       "placement": "pending",
+      "start": {
+        "at": "2026-10-28T13:00:00.000Z",
+        "open": true
+      },
+      "windowSince": null,
+      "placementTask": null,
       "history": []
     },
     {
@@ -651,6 +849,12 @@
       "lastReview": null,
       "lastSeen": null,
       "placement": "pending",
+      "start": {
+        "at": "2026-10-28T13:00:00.000Z",
+        "open": true
+      },
+      "windowSince": null,
+      "placementTask": null,
       "history": []
     },
     {
@@ -668,6 +872,12 @@
       "lastReview": null,
       "lastSeen": null,
       "placement": "pending",
+      "start": {
+        "at": "2026-10-28T13:00:00.000Z",
+        "open": true
+      },
+      "windowSince": null,
+      "placementTask": null,
       "history": []
     },
     {
@@ -685,6 +895,12 @@
       "lastReview": null,
       "lastSeen": null,
       "placement": "pending",
+      "start": {
+        "at": "2026-10-28T13:00:00.000Z",
+        "open": true
+      },
+      "windowSince": null,
+      "placementTask": null,
       "history": []
     }
   ],

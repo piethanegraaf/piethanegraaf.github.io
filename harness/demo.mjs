@@ -85,11 +85,13 @@ function makeProject(lang) {
   };
   const skills = map.skills.map((s) => ({ ...s, title: pick(s.title), level: s.kind === "zone" ? s.level : level[s.id] ?? "L2" }));
   const find = (id) => skills.find((s) => s.id === id);
-  find("cs.basis").history = [{ at: day(-12), from: "L2", to: "L3", note: X.notes.up }];
-  find("ood.klassen-properties").history = [{ at: day(-6), from: "L2", to: "L3", note: X.notes.up }];
-  find("test.unit-tests").history = [{ at: day(-2), from: "L1", to: "L2", note: X.notes.up }];
-  // A new skill placed by its first task (S4); uml.klassendiagram has no tasks yet: placement open.
-  find("ood.exceptions").history = [{ at: day(-3), from: "L0", to: "L2", note: X.notes.placement, placement: true }];
+  // Promotions the learner confirmed after a proposal of the harness (#45: the dashboard shows how).
+  const proposal = { by: "learner", via: "voorstel" };
+  find("cs.basis").history = [{ at: day(-12), from: "L2", to: "L3", note: X.notes.up, ...proposal }];
+  find("ood.klassen-properties").history = [{ at: day(-6), from: "L2", to: "L3", note: X.notes.up, ...proposal }];
+  find("test.unit-tests").history = [{ at: day(-2), from: "L1", to: "L2", note: X.notes.up, ...proposal }];
+  // A new skill placed by its first task, at its explanation (S4, #44); uml.klassendiagram has no tasks yet: placement open.
+  find("ood.exceptions").history = [{ at: day(-3), from: "L0", to: "L2", note: X.notes.placement, placement: true, tid: "demo022" }];
   const micros = [
     // Reviews only at L4, through real work (S2).
     { id: "cs.basis.lussen", parent: "cs.basis", level: "L4", nextReview: day(2), intervalIndex: 3 },
@@ -100,7 +102,7 @@ function makeProject(lang) {
     const i = skills.findIndex((s) => s.id === m.parent);
     const history = m.id === "ood.overerving.base-ctor"
       ? [{ at: day(-10), to: "L1", note: X.notes.micro }, { at: day(-7), from: "L1", to: "L0", note: X.notes.auto, auto: true }]
-      : m.id === "cs.basis.lussen" ? [{ at: day(-10), to: "L3", note: X.notes.micro }, { at: day(-8), from: "L3", to: "L4", note: X.notes.up }]
+      : m.id === "cs.basis.lussen" ? [{ at: day(-10), to: "L3", note: X.notes.micro }, { at: day(-8), from: "L3", to: "L4", note: X.notes.up, by: "learner", via: "voorstel" }]
         : [{ at: day(-10), to: m.level, note: X.notes.micro }];
     skills.splice(i + 1, 0, { ...m, title: X.micro[m.id], keywords: [], placement: "done", history });
   }
@@ -153,7 +155,7 @@ function makeProject(lang) {
   events.push({ at: at(-6, 10), type: "review", skill: "cs.basis.lussen", result: "pass", nextReview: day(-1), auto: true });
   events.push({ at: at(-1, 10), type: "review", skill: "cs.basis.lussen", result: "shaky", nextReview: day(2), auto: true });
   events.push({ at: at(-7, 16), type: "level", skill: "ood.overerving.base-ctor", from: "L1", to: "L0", auto: true, by: "harnas", reason: X.notes.auto });
-  events.push({ at: at(-3, 13), type: "placement", skill: "ood.exceptions", rung: 2, from: "L0", to: "L2" });
+  events.push({ at: at(-3, 13, 12), type: "placement", skill: "ood.exceptions", rung: 2, from: "L0", to: "L2", tid: "demo022" });
   events.sort((a, b) => a.at.localeCompare(b.at));
 
   const root = fs.mkdtempSync(path.join(os.tmpdir(), "leerharnas-demo-"));
