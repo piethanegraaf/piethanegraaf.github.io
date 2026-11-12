@@ -17,8 +17,9 @@ flowchart LR
   S --> R[(.learning/)]
   G1 --> R
   C -.->|omlaag voor een hoofdvaardigheid| A[demotie-analist<br/>alleen lezen]
-  A -.->|oordeel als JSON| C
-  S -.->|controleert het oordeel| R
+  A -.->|rapport met het oordeel| S
+  S -.->|controleert opnieuw op het bewijs van nu| R
+  S -.->|uitleg goedgekeurd:<br/>plaatsing van een nieuwe vaardigheid| R
   S -.->|uitleg haalt criterium:<br/>voorstel om door te zetten| J[Jij]
   J -.->|ja, doorzetten| G1
 ```
@@ -37,7 +38,7 @@ In de harnas gaat elke prompt door de prompt-gate, en bij L1–L3 blokkeert de g
 
 Een vaardigheid kan **microvaardigheden** hebben: deelpatronen met een eigen niveau. Lijsten filteren kan al op L3 staan, terwijl void-methoden chainen nog op L2 staat.
 
-**Een nieuwe vaardigheid** (zonder taken en zonder geschiedenis) heeft nog geen vaste plaats. Je probeert het eerst zelf, met de hintladder van L2. De hoogste trede van je eerste taak bepaalt het niveau: trede 0 → L3, 1–2 → L2, 3–4 → L1, 5 → L0. Plaatst de harnas je te laag, dan zet je het zelf hoger.
+**Een nieuwe vaardigheid** (zonder taken en zonder geschiedenis) heeft nog geen vaste plaats. Je probeert het eerst zelf, met de hintladder van L2. De hoogste trede van je eerste taak bepaalt het niveau: trede 0 → L3, 1–2 → L2, 3–4 → L1, 5 → L0. Dat gebeurt als je uitleg van die taak is goedgekeurd; vervalt de uitleg, dan blijft de plaatsing open. Hulp over een ander concept telt hier niet mee. Een plaatsing omhoog naar L3 krijgt een eigen melding met het bewijs. Plaatst de harnas je te laag, dan zet je het zelf hoger.
 
 ## De hintladder (L2)
 
@@ -72,14 +73,14 @@ Wil je toch dat Claude iets doet, dan zet je zelf een override: `! node .claude/
 
 Een taak wordt gelogd als een test van rood naar groen gaat (`check.mjs`), als je hem zelf afmeldt (`done`), of als je in de chat zegt dat de tests groen zijn. Hij telt pas mee na een uitleg **in je eigen woorden**, met twee sleutels:
 
-1. Claude beoordeelt de inhoud en zet `[uitleg-ok <tid>]` of `[uitleg-nee <tid>]`. De vraag hangt af van wat er gebeurde. Na hulp (trede 1 of hoger): over het concept van de hoogste hint, want daar zat je vast. Na een mislukte poging zonder hint (rood of een compileerfout): waarom werkt het nu, en waarom de eerste poging niet? Meteen groen: één vraag naar het principe van de opdracht. Claude vraagt door tot het principe klopt.
-2. De Stop-hook controleert je eigen woorden: **al je berichten sinds de taak is gelogd, samen**. Een antwoord in drie korte berichten telt als één. Samen moeten ze minstens 12 woorden buiten code hebben, een *waarom* (omdat, doordat, zodat …), en ze mogen niet uit Claude's tekst zijn overgenomen. Een bericht van vóór het loggen telt niet mee.
+1. Claude beoordeelt de inhoud en zet `[uitleg-ok <tid>]` of `[uitleg-nee <tid>]`. Bij `uitleg-nee` noemt Claude eerst wat al klopt, en stelt dan één vervolgvraag die naar het gat wijst: een vervolgvraag, geen afwijzing. De eis blijft even streng. De vraag hangt af van wat er gebeurde. Na hulp (trede 1 of hoger): over het concept van de hoogste hint, want daar zat je vast. Na een mislukte poging zonder hint (rood of een compileerfout): waarom werkt het nu, en waarom de eerste poging niet? Meteen groen: één vraag naar het principe van de opdracht. Claude vraagt door tot het principe klopt.
+2. De Stop-hook controleert je eigen woorden: **al je berichten sinds de taak is gelogd, samen**. Een antwoord in drie korte berichten telt als één. Samen moeten ze minstens 12 woorden buiten code hebben, een *waarom* (omdat, doordat, zodat …, of een redenering "als …, dan/zou …" in één zin), en ze mogen niet uit Claude's tekst zijn overgenomen. Een bericht van vóór het loggen telt niet mee.
 
 De uitleg hoort **direct** na het groen worden. Een volgende taak in dezelfde map mag eerst, en één bericht mag meer taken uitleggen. Begin je aan een andere opdracht, of eindigt de sessie, dan **vervalt** de taak: hij telt niet mee en staat op het dashboard als overgeslagen. Ging een goedgekeurde uitleg verloren door een fout van de harnas, dan herstel je hem met `replay`.
 
 Een test die al eens groen was, rood werd en weer groen is, is **herstel van een regressie** en telt niet als nieuwe taak.
 
-**Eerlijke woorden.** "Zelfstandig gelukt" betekent alleen trede 0. Op trede 1–2 telt de taak als gelukt, en de harnas zegt "gelukt, met hulp tot trede N". Met meer hulp telt hij niet als gelukt.
+**Eerst lof, in eerlijke woorden.** Na een groen zegt `check.mjs` eerst wat lukte en welke vaardigheid, en nodigt daarna uit tot de uitleg. "Zelfstandig" betekent alleen trede 0. Op trede 1–4 zegt de harnas "gelukt met hulp tot trede N", en waar het leren zat: het concept van de hoogste hint. Moeite is hier het doel, geen falen; dat zegt de harnas één keer, bij je eerste sessiestart. Een uitwerking (trede 5) telt als niet gelukt: dan leg je de uitwerking terug uit.
 
 **Hulp over een ander concept** wordt ook bij dat concept gelogd. Stel dat Claude je helpt met de syntax van een lus, tijdens een opdracht over overerving. Dan zet Claude `[trede N #id]`, met het id van de vaardigheid van de lus. De taak houdt die trede, want je maakte hem met die hulp. Het concept krijgt een eigen event, `concept-help`. Dat is geen taak van dat concept: `status` laat het zien, en het telt als bewijs voor een voorstel voor een microvaardigheid. De statusregel die Claude bij elke prompt ziet, toont de gegeven hulp voor deze taak, ook op L3 (`gegeven hulp: trede N`); op L2 ook de ontgrendelde trede.
 
@@ -99,11 +100,13 @@ Alleen jouw eigen "ja, toevoegen" (of "yes, add") voegt hem toe, op het niveau v
 
 ## Doorstromen en herhalingen
 
-- **Omhoog** beslis jij, op bewijs. Het bewijs is de laatste 10 uitgelegde taken **sinds de vorige niveauwijziging**, zodat dezelfde taken nooit twee promoties dragen.
+- **Omhoog** beslis jij, op bewijs. Het bewijs is de laatste 10 uitgelegde taken **sinds de vorige niveauwijziging**, plus de taak die de vaardigheid plaatste, zodat dezelfde taken nooit twee promoties dragen.
   - **L0 → L1:** twee voorbeelden goed uitgelegd en voorspeld.
   - **L1 → L2:** drie taken met hooguit trede 1 (gaten gevuld).
   - **L2 → L3:** ongeveer 85% gelukt (hooguit trede 2) over minstens 5 taken, en minstens de helft met hint 0–1.
-  - **L3 → L4:** drie keer trede 0 op minstens 2 dagen, plus een **transfertaak**: met `/mastery-check <id>` maak je een nieuwe opdracht in een ander domein, zonder enige hint, en verdedig je daarna het ontwerp. Een hint tijdens de transfertaak laat hem niet tellen.
+  - **L3 → L4:** drie keer trede 0 op minstens 2 dagen, en een **transfertaak** is daar één van: met `/mastery-check <id>` maak je een nieuwe opdracht in een ander domein, zonder enige hint, en verdedig je daarna het ontwerp. Haar dag telt als een dag. Na twee taken zonder hint kan de transfertaak dus de derde zijn; lagen die twee op één dag, doe hem dan op een andere dag. Een hint tijdens de transfertaak laat hem niet tellen.
+  - **Het ontwerpdoel:** wie dagelijks oefent en de stof beheerst, haalt L4 in ongeveer 3 sessies op 2 dagen. Een test bewaakt dat.
+  - **Zijn de opdrachtmappen van een vaardigheid op L3 op,** dan wijst Claude een bestaande volgende oefening aan: een andere opdracht van het vak, of een vraag uit een oefentoets. Een oefentoetsvraag telt mee als je hem zonder hulp maakt, nakijkt met het antwoordmodel, uitlegt en afmeldt met `done`. Claude verzint nooit zelf een opdracht.
   - **Sprong:** vanaf L2 mag het bewijs een sprong dragen als ook het volgende criterium klopt, bijvoorbeeld L2 → L4 met de transfertaak. Vanaf L0 en L1 gaat het per stap, omdat een voorbeeld of skelet hulp vooraf was.
 - **Het voorstel** komt direct na de uitleg die het criterium haalt. De harnas laat het zelf zien, met het bewijs en wat er verandert:
 
@@ -114,8 +117,14 @@ Alleen jouw eigen "ja, toevoegen" (of "yes, add") voegt hem toe, op het niveau v
     ja: typ "ja, doorzetten" · nee: typ "nee" · terugdraaien kan altijd met set
   ```
 
-  Typ je "ja, doorzetten", dan zet de harnas het niveau. Dat werkt alleen op jouw eigen prompt, nooit op tekst van Claude. Zeg je "nee" of "later", dan komt het voorstel pas terug na een nieuwe taak die het criterium opnieuw haalt. `set` werkt ook nog.
-- **Omlaag** volgt het bewijs, als `autoDemote` aan staat: bij minstens 3 uitgelegde taken met minder dan 70% gelukt, of de laatste 2 niet gelukt. Een microvaardigheid zakt meteen één niveau. Bij een hoofdvaardigheid beslist eerst de **demotie-analist**: een agent die alleen leest, de testuitvoer, je code en het transcript bekijkt, en bepaalt of het probleem in één deelpatroon zit (dan zakt of ontstaat alleen die microvaardigheid) of breed is (dan zakt de hoofdvaardigheid). Zakken er binnen 14 dagen twee microvaardigheden van dezelfde ouder, dan zakt de ouder ook. Je krijgt een melding en kunt het terugdraaien met `set`.
+  Typ je "ja, doorzetten", dan zet de harnas het niveau en meldt het met ↑ en het bewijs. Dat werkt alleen op jouw eigen prompt, nooit op tekst van Claude. Zeg je "nee" of "later", dan komt het voorstel pas terug na een nieuwe taak die het criterium opnieuw haalt. `set` werkt ook nog.
+- **Hoe ver is het volgende niveau?** Na elke taak, bij `status` en bij de sessiestart toont de harnas dat in stappen, nooit als percentage:
+
+  ```
+  ↗ ood.encapsulatie L3 → L4: zonder hint 3/3 ✓ · dagen 1/2 · transfertaak ○
+  ```
+
+- **Omlaag** volgt het bewijs, als `autoDemote` aan staat: bij minstens 4 uitgelegde taken met minder dan 70% gelukt, of de laatste 2 niet gelukt. "Gelukt" telt de hulp binnen de eigen familie: hulp over een ander concept (`[trede N #id]`) is geen mislukking van deze vaardigheid. Omlaag wacht tot er geen uitleg van die familie meer openstaat, en wordt opnieuw gecontroleerd op het bewijs van dat moment. Een microvaardigheid zakt meteen één niveau. Bij een hoofdvaardigheid beslist eerst de **demotie-analist**: een agent die alleen leest, de testuitvoer, je code en het transcript bekijkt, en bepaalt of het probleem in één deelpatroon zit (dan zakt of ontstaat alleen die microvaardigheid) of breed is (dan zakt de hoofdvaardigheid). Ging de hulp eigenlijk over een bestaande microvaardigheid van een andere familie, dan mag de analist die kiezen. De harnas leest het oordeel zelf uit het rapport van de analist: geen JSON in de chat. Zakken er binnen 14 dagen twee microvaardigheden van dezelfde ouder, dan zakt de ouder ook. Je krijgt één rustige regel, "extra steun voor …", en kunt het terugdraaien met `set`.
 - **Herhalingen** krijg je alleen op L4, met Fibonacci-intervallen: 1, 2, 3, 5, 8, 13 … dagen. Er zijn geen losse herhaaloefeningen. Komt zo'n vaardigheid langs in je werk als de herhaling klaarstaat, dan doe je dat deel zelf, zonder AI. Je eerstvolgende taak bepaalt de uitkomst: trede 0 is geslaagd (een stap verder), trede 1–2 wankel (gelijk), meer hulp is mislukt (twee stappen terug). Komt hij niet langs, dan gebeurt er niets; de oefentoetsen zijn het vangnet.
 
 ## Het dagboek

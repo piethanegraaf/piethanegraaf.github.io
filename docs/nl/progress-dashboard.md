@@ -6,12 +6,14 @@ description: "Wat het voortgangsdashboard per vaardigheid laat zien, van niveaus
 
 ## Wat het dashboard laat zien
 
-![Het leerdashboard met verzonnen demodata: 86% zelfstandig opgelost, het aantal vaardigheden per niveau, en per vaardigheid wat er nog nodig is voor het volgende niveau](../assets/images/dashboard-demo-nl.png)
+![Het leerdashboard met verzonnen demodata: 86% gelukt en 29% zelfstandig, de leerfasen per vaardigheid over de dagen, en het aantal vaardigheden per niveau](../assets/images/dashboard-demo-nl.png)
 
 *Het dashboard met verzonnen demodata.*
 
 Het [dashboard](/dashboard/) laat de voortgang per vaardigheid en microvaardigheid zien:
 
+- twee tegels: **gelukt** (hooguit trede 2) en **zelfstandig** (trede 0), geteld zoals de harnas ze telt;
+- de **leerfasen**: per vaardigheid één band over de dagen, in de kleur van het niveau, met "start" gestippeld zolang de plaatsing openstond. Microvaardigheden staan dunner onder hun ouder. Je taken zijn stippen boven de band, in de kleur van de trede. Elke wijziging heeft een markering (▲ een fase hoger, ▼ extra steun, ● een start of een nieuwe microvaardigheid); wijs hem aan om te zien hoe hij besloten is: een voorstel dat jij bevestigde, een plaatsing, met de hand, een teruggedraaide verlaging, of de analist. Eén zin bovenaan vergelijkt je alleen met jezelf, nooit met anderen;
 - je **niveau** en de geschiedenis daarvan;
 - wat elk **niveau betekent**: wijs een niveau aan in de legenda of de balk (of ga er met Tab naartoe) voor wat het inhoudt en de stap naar het volgende niveau. Esc sluit de uitleg. Het waarom, het bewijs en de route van de start (plaatsing open) naar L4 staan onder *Wat betekenen de niveaus?*: de criteria per stap, en hoe je omhoog en omlaag gaat;
 - wat je nog nodig hebt **voor het volgende niveau**, in de vorm van dat criterium. Op L2 is dat een balk met het doel van 85% en de drie voorwaarden. Op L0, L1 en L3 zijn het stippen, en bij L3 ook de dagen en de transfertaak. Op L4 zie je het onderhoud. Er staat één regel bij met wat er nog moet gebeuren. Dit telt alleen de taken sinds je laatste niveauwijziging, net als de harnas, dus na een stap omhoog begin je opnieuw;
@@ -19,7 +21,7 @@ Het [dashboard](/dashboard/) laat de voortgang per vaardigheid en microvaardighe
 - per taak: de trede, de bron (test, zelf afgemeld, chat), je **uitleg**, en wanneer die werd **afgewezen** of **gecorrigeerd**;
 - de **herhalingen** (alleen L4, Fibonacci), neutraal: wanneer de volgende klaarstaat, en wanneer je de vaardigheid **laatst** in je werk zag. Niets is "te laat": een herhaling wacht tot de vaardigheid langskomt;
 - **overgeslagen** taken: de uitleg kwam niet direct, dus ze tellen niet. Ze staan apart van mislukt en van wacht op uitleg, en in de grafiek gearceerd;
-- wat de harnas **automatisch** deed: de plaatsing van een nieuwe vaardigheid en automatisch omlaag, gemarkeerd in de niveaugeschiedenis;
+- **hoe elke niveauwijziging besloten is**, in de niveaugeschiedenis: een plaatsing, een voorstel, met de hand, een teruggedraaide verlaging, of extra steun (automatisch, de analist of de achtervang). Wijzigingen zonder verschil (L3 → L3) staan er niet in;
 - **hulp tijdens een andere taak**: hulp over deze vaardigheid terwijl je aan een opdracht van een andere vaardigheid werkte (`[trede N #id]`). Die taak hield de trede; hier telt het niet als taak en niet in het percentage gelukt;
 - de **voorstellen voor een microvaardigheid** die de harnas je liet zien, met de reden (review-hulp, hulp over een ander concept, of een taak op trede 2 of hoger) en je antwoord: toegevoegd, nee of geen antwoord;
 - **doorstroom- en terugvalsignalen**, **regressies** en **overrides**;

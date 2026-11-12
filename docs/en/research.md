@@ -857,6 +857,47 @@ flowchart LR
 
 The harness puts five deterministic hooks around the Claude agent, and keeps your skill record, diary and session state in a local `.learning/` folder. CLAUDE.md, the output style and the skills shape how the agent teaches, but only the hooks enforce rules.
 
+**As built (12 November 2026):** four hooks, two commands that only you run, three skills and one agent. The design above had a fifth hook (PostToolUse), a skill map in YAML and more skills. The build replaced the fifth hook with `check.mjs`, which you run yourself, and the map with `skills.json` (§10).
+
+```mermaid
+flowchart LR
+    subgraph You["You"]
+        P[Prompt, attempt,<br/>explanation]
+        CLI["! check.mjs · ! skill.mjs<br/>only you run them"]
+    end
+    subgraph Hooks["Hooks (deterministic)"]
+        SS[session-start<br/>record, what went up,<br/>progress to the next level]
+        PG[prompt-gate<br/>skill, level, rung,<br/>open explanations]
+        GU{guard<br/>PreToolUse}
+        RG[reflect-gate<br/>Stop: markers, explanation check,<br/>placement, proposals, diary]
+    end
+    subgraph Agent["Claude"]
+        C[Claude]
+        SK["skills: /diary,<br/>/mastery-check, /update-dashboard"]
+        DA[demotion analyst<br/>read only]
+    end
+    subgraph Store[".learning/ (local, git-ignored)"]
+        SR[(skills.json)]
+        EV[(state/: events.jsonl,<br/>session-*.json, tests.json)]
+        DI[(diary/)]
+    end
+    SS --> C
+    P --> PG --> C
+    C -- writes or tests code --> GU
+    GU -- L1-L3: deny --> C
+    C --> RG
+    CLI --> EV
+    CLI --> SR
+    PG <--> EV
+    RG --> EV
+    RG --> SR
+    C -. demotion of a main skill .-> DA
+    DA -. report with the verdict .-> RG
+    SK --> DI
+```
+
+As built, the four hooks are deterministic. The guard blocks code at L1–L3. The reflect-gate checks markers and explanations, places a new skill and shows proposals. The demotion analyst only reads, and its report goes to the reflect-gate, not into the chat.
+
 **Design choices:**
 
 - **Rules that must hold go in hooks.** Hooks are deterministic. Instructions in CLAUDE.md are *advisory*: the model usually follows them, but it can drift from them in long sessions. So the rule "do not write code that you own" has to be a hook.
@@ -882,7 +923,7 @@ stateDiagram-v2
     direction LR
     [*] --> Placement : new skill - attempt first, L2 hint ladder, no unlock on time
 
-    Placement --> L3_Independent : first task at rung 0
+    Placement --> L3_Independent : first task at rung 0, placed at its approved explanation
     Placement --> L2_Guided : first task at rung 1-2
     Placement --> L1_Complete : first task at rung 3-4
     Placement --> L0_Demonstrate : first task needed a worked solution (rung 5)
@@ -891,13 +932,13 @@ stateDiagram-v2
     L1_Complete --> L2_Guided : 3 gaps filled, tests pass, max 1 hint per gap
     L2_Guided --> L3_Independent : about 85% solved over 5+ tasks, at least half at rung 0-1 (learner confirms the proposal)
     L2_Guided --> L4_Automated : jump - the same tasks also meet the L4 criterion, plus the transfer task (learner confirms)
-    L3_Independent --> MasteryCheck : 3x rung 0 on 2+ different days
-    MasteryCheck --> L4_Automated : transfer task via /mastery-check, no hint + explanation (learner confirms)
+    L3_Independent --> MasteryCheck : 2x rung 0, the placement task counts
+    MasteryCheck --> L4_Automated : transfer task via /mastery-check is the 3rd time, 2+ days in total (learner confirms)
     MasteryCheck --> L3_Independent : failed - targeted practice
 
     L1_Complete --> L0_Demonstrate : auto-demote
     L2_Guided --> L1_Complete : auto-demote
-    L3_Independent --> L2_Guided : auto-demote
+    L3_Independent --> L2_Guided : auto-demote - 4+ tasks, rung within the family, no open explanation
 
     L4_Automated --> Maintenance : Fibonacci date passed
     Maintenance --> L4_Automated : next time in real work, done by the learner - new date
@@ -908,9 +949,10 @@ stateDiagram-v2
 
 In the autonomy ladder as built, a new skill's level is set by the highest hint rung of its first task. After that, a skill can go down automatically, but going up is always your decision, and maintenance reviews happen only at L4.
 
-- **Placement.** A skill below L4 with no history and no tasks of its own has an open placement. Until its first task it counts as L2, for the hint ladder and for the guard. So a new skill no longer starts at L0: L0 and L1 are forms of help that come *after* an attempt. The highest rung of the first task sets the level (§5.3).
-- **Auto-demote** happens only when `settings.autoDemote` is on; it is off by default. The rule looks at the skill's own explained tasks since its last level change, at most the last 10. With at least 3 of them, it applies when under 70% were solved (at rung ≤ 2) or the last 2 were not solved. It also applies after 2 failed reviews in a row. A microskill then goes down one level. For a parent skill, the demotion analyst first decides whether a microskill or the parent goes down (§10.4.2).
+- **Placement.** A skill below L4 with no history and no explained tasks of its own has an open placement. Until then it counts as L2, for the hint ladder and for the guard. So a new skill no longer starts at L0: L0 and L1 are forms of help that come *after* an attempt. The highest rung of the first task sets the level (§5.3), at the approved explanation of that task; help about another concept does not count (§10.7).
+- **Auto-demote** happens only when `settings.autoDemote` is on; it is off by default. The rule looks at the skill's own explained tasks since its last level change, at most the last 10. With at least 4 of them (§10.7; 3 until 12 November), it applies when under 70% were solved (at rung ≤ 2 within the skill's own family) or the last 2 were not solved. It also applies after 2 failed reviews in a row. It waits while an explanation of that family is open, and a pending demotion is checked again on the evidence of the moment it is applied. A microskill then goes down one level. For a parent skill, the demotion analyst first decides whether a microskill or the parent goes down (§10.4.2).
 - **Up** never happens automatically. You can undo any automatic change with `set`.
+- **L3 → L4 (§10.7):** the task that placed the skill counts, and the transfer task is one of the three times without a hint; its day counts as a day.
 
 ??? note "Earlier version (7–9 November 2026)"
 
@@ -955,10 +997,10 @@ flowchart TD
     B -- yes --> E
     E --> F{Current rung}
     F -- 1 --> G["Rung 1 · Socratic question<br/>'What does the client need<br/>to know about this object?'"]
-    F -- 2 --> H["Rung 2 · Concept pointer<br/>'Look at Dependency Inversion;<br/>what depends on what?'"]
+    F -- 2 --> H["Rung 2 · Where to find it,<br/>or which concept it is"]
     F -- 3 --> I["Rung 3 · Pseudocode /<br/>UML sketch of structure"]
-    F -- 4 --> J["Rung 4 · Partial code snippet<br/>(≤5 lines, never the full solution)"]
-    F -- 5 --> K["Rung 5 · Worked solution<br/>+ mandatory self-explanation<br/>→ task counts as FAILED,<br/>similar task scheduled"]
+    F -- 4 --> J["Rung 4 · Small example, ≤5 lines,<br/>on another topic"]
+    F -- 5 --> K["Rung 5 · Worked solution,<br/>only after confirmation<br/>→ task counts as NOT solved"]
     G & H & I & J --> L[Learner continues]
     K --> M[Consolidation:<br/>explain it back in own words]
     L --> N{Solved?}
@@ -1026,13 +1068,47 @@ sequenceDiagram
 
 In an example session, the PreToolUse hook denies Claude's edit to a file of an L2 skill, so Claude gives the next hint instead. At the end, the Stop hook blocks once, so that Claude asks three reflection questions and you answer them in your own words.
 
+**As built (12 November 2026):** the same session with the hooks and the command that exist now.
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor U as You
+    participant SS as session-start
+    participant PG as prompt-gate
+    participant C as Claude
+    participant GU as guard
+    participant CK as check.mjs
+    participant RG as reflect-gate
+    participant FS as .learning/
+    SS->>FS: read the record and the events
+    SS-->>U: what went up, progress to the next level
+    U->>PG: "I'm stuck on 21-bankrekening"
+    PG->>FS: skill and level from the folder, the rung
+    PG-->>C: L2: rung 1 unlocked, no code
+    C->>U: a Socratic question [rung 1]
+    C->>GU: Write(Bankrekening.cs)
+    GU-->>C: deny: at L2 the learner writes this
+    U->>CK: ! check.mjs 21-bankrekening
+    CK->>FS: red to green: a task with its rung
+    CK-->>U: praise first, then "explain why, and it counts", progress
+    U->>C: the explanation in own words
+    C->>RG: [explain-ok tid]
+    RG->>FS: both keys pass: the task is explained
+    RG-->>U: placement, or a proposal to promote, with the evidence
+    U->>PG: "yes, promote"
+    PG->>FS: level up, logged
+```
+
+As built, you run the tests yourself with `check.mjs`. It logs the task, praises first and shows your progress. The reflect-gate approves the explanation with two keys. A placement or a proposal to promote comes from the harness itself, and only your own "yes, promote" raises the level.
+
 | Hook | Event | Job | Can it block? |
 |---|---|---|---|
-| `session-start.mjs` | `SessionStart` | Gives Claude a summary of your skill record, the reviews due today, and the instruction to ask you for a plan (*forethought*) | No (context only) |
+| `session-start.mjs` | `SessionStart` | Gives Claude a summary of your skill record, the reviews due today, and the instruction to ask you for a plan (*forethought*). *Revised (§10.4, §10.7):* no reviews at the start any more; it shows you what went up in the last 7 days, your progress towards the next level in steps, and once that effort is the goal | No (context only) |
 | `prompt-gate.mjs` | `UserPromptSubmit` | Matches your prompt to a skill using keywords from `skill-map.yaml`, adds the policy for that level and the current hint rung, starts or updates the stuck timer, and handles `/override`. *Revised (§10.2, item 10):* ignores agent reports, task notifications and system reminders, and logs `prompt-ignored` | Can add context. Can block only on abuse patterns (optional) |
 | `ownership-guard.mjs` | `PreToolUse` (matcher `Edit\|Write\|MultiEdit\|NotebookEdit`) | Blocks AI edits to files, or parts of files, that belong to a skill at L1–L3. At L1 it allows a write only if it contains `TODO(human)` gaps | **Yes** (`permissionDecision: deny`) |
 | ~~`evidence-log.mjs`~~ → `check.mjs` (built) | CLI, which you run yourself with `!` | *Revised (§10):* because you run the tests yourself, a PostToolUse hook never sees them. `check.mjs` runs `dotnet test` with a trx logger, prints a readable summary, remembers per test method whether it was green, and logs a red→green transition as a task with the current hint rung. It works for any .NET test project (practice exercises and project work) | No |
-| `reflect-gate.mjs` | `Stop` | If you worked on a skill and there is no diary entry yet, it blocks **once** and tells Claude to run the reflection. It uses `stop_hook_active` to avoid loops. *Revised (§10):* it also reads Claude's last answer from the transcript and processes the `[trede N]` and `[uitleg-ok <tid>]` markers. That second marker is accepted only if your own message passes the deterministic explanation check | Yes, once |
+| `reflect-gate.mjs` | `Stop` | If you worked on a skill and there is no diary entry yet, it blocks **once** and tells Claude to run the reflection. It uses `stop_hook_active` to avoid loops. *Revised (§10):* it also reads Claude's last answer from the transcript and processes the `[trede N]` and `[uitleg-ok <tid>]` markers. That second marker is accepted only if your own message passes the deterministic explanation check. *Revised (§10.7):* at an approved explanation it places a new skill; it checks a pending demotion again; and it reads the demotion analyst's verdict from the agent's report | Yes, once |
 
 !!! example "Example: one student's situation"
     The harness was first tried by a second-year HBO-ICT student who practised OOD in C#. The course exercises came with .NET unit tests, and the student ran them, not Claude. That is why `check.mjs` runs `dotnet test`. The diagrams and examples in this section still use Java from the original design (`mvn test`, `src/Payment.java`).

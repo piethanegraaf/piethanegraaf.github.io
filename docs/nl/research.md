@@ -857,6 +857,47 @@ flowchart LR
 
 De harnas zet vijf deterministische hooks rond de Claude-agent, en bewaart je vaardighedenregister, dagboek en sessietoestand in een lokale map `.learning/`. CLAUDE.md, de output style en de skills bepalen het didactische gedrag van de agent, maar alleen de hooks dwingen regels af.
 
+**Zoals gebouwd (12 november 2026):** vier hooks, twee commando's die alleen jij draait, drie skills en één agent. Het ontwerp hierboven had een vijfde hook (PostToolUse), een vaardighedenkaart in YAML en meer skills. De bouw verving die vijfde hook door `check.mjs`, dat je zelf draait, en de kaart door `skills.json` (§10).
+
+```mermaid
+flowchart LR
+    subgraph You["You"]
+        P[Prompt, attempt,<br/>explanation]
+        CLI["! check.mjs · ! skill.mjs<br/>only you run them"]
+    end
+    subgraph Hooks["Hooks (deterministic)"]
+        SS[session-start<br/>record, what went up,<br/>progress to the next level]
+        PG[prompt-gate<br/>skill, level, rung,<br/>open explanations]
+        GU{guard<br/>PreToolUse}
+        RG[reflect-gate<br/>Stop: markers, explanation check,<br/>placement, proposals, diary]
+    end
+    subgraph Agent["Claude"]
+        C[Claude]
+        SK["skills: /diary,<br/>/mastery-check, /update-dashboard"]
+        DA[demotion analyst<br/>read only]
+    end
+    subgraph Store[".learning/ (local, git-ignored)"]
+        SR[(skills.json)]
+        EV[(state/: events.jsonl,<br/>session-*.json, tests.json)]
+        DI[(diary/)]
+    end
+    SS --> C
+    P --> PG --> C
+    C -- writes or tests code --> GU
+    GU -- L1-L3: deny --> C
+    C --> RG
+    CLI --> EV
+    CLI --> SR
+    PG <--> EV
+    RG --> EV
+    RG --> SR
+    C -. demotion of a main skill .-> DA
+    DA -. report with the verdict .-> RG
+    SK --> DI
+```
+
+Zoals gebouwd zijn de vier hooks deterministisch. De guard blokkeert code op L1–L3. De reflect-gate controleert markers en uitleg, plaatst een nieuwe vaardigheid en toont voorstellen. De demotie-analist leest alleen, en zijn rapport gaat naar de reflect-gate, niet de chat in.
+
 **Ontwerpkeuzes:**
 
 - **Regels die altijd moeten gelden, horen in hooks.** Hooks zijn deterministisch. Instructies in CLAUDE.md zijn *adviserend*: het model volgt ze meestal, maar in lange sessies kan het ervan afdrijven. Daarom moet de regel "schrijf geen code die van jou is" een hook zijn.
@@ -882,7 +923,7 @@ stateDiagram-v2
     direction LR
     [*] --> Placement : new skill - attempt first, L2 hint ladder, no unlock on time
 
-    Placement --> L3_Independent : first task at rung 0
+    Placement --> L3_Independent : first task at rung 0, placed at its approved explanation
     Placement --> L2_Guided : first task at rung 1-2
     Placement --> L1_Complete : first task at rung 3-4
     Placement --> L0_Demonstrate : first task needed a worked solution (rung 5)
@@ -891,13 +932,13 @@ stateDiagram-v2
     L1_Complete --> L2_Guided : 3 gaps filled, tests pass, max 1 hint per gap
     L2_Guided --> L3_Independent : about 85% solved over 5+ tasks, at least half at rung 0-1 (learner confirms the proposal)
     L2_Guided --> L4_Automated : jump - the same tasks also meet the L4 criterion, plus the transfer task (learner confirms)
-    L3_Independent --> MasteryCheck : 3x rung 0 on 2+ different days
-    MasteryCheck --> L4_Automated : transfer task via /mastery-check, no hint + explanation (learner confirms)
+    L3_Independent --> MasteryCheck : 2x rung 0, the placement task counts
+    MasteryCheck --> L4_Automated : transfer task via /mastery-check is the 3rd time, 2+ days in total (learner confirms)
     MasteryCheck --> L3_Independent : failed - targeted practice
 
     L1_Complete --> L0_Demonstrate : auto-demote
     L2_Guided --> L1_Complete : auto-demote
-    L3_Independent --> L2_Guided : auto-demote
+    L3_Independent --> L2_Guided : auto-demote - 4+ tasks, rung within the family, no open explanation
 
     L4_Automated --> Maintenance : Fibonacci date passed
     Maintenance --> L4_Automated : next time in real work, done by the learner - new date
@@ -908,9 +949,10 @@ stateDiagram-v2
 
 In de autonomieladder zoals gebouwd bepaalt de hoogste hinttrede van de eerste taak het niveau van een nieuwe vaardigheid. Daarna kan een vaardigheid automatisch omlaag, maar omhoog blijft altijd jouw beslissing, en herhalingen om haar bij te houden bestaan alleen op L4.
 
-- **Plaatsing.** Een vaardigheid onder L4 zonder geschiedenis en zonder eigen taken heeft een open plaatsing. Tot haar eerste taak telt ze als L2, voor de hintladder en voor de guard. Een nieuwe vaardigheid begint dus niet meer op L0: L0 en L1 zijn vormen van hulp die pas *na* een poging komen. De hoogste trede van de eerste taak bepaalt het niveau (§5.3).
-- **Automatisch omlaag** gebeurt alleen als `settings.autoDemote` aan staat; standaard staat het uit. De regel kijkt naar de eigen uitgelegde taken van de vaardigheid sinds haar laatste niveauwijziging, hooguit de laatste 10. Bij minstens 3 daarvan geldt hij als minder dan 70% gelukt is (op trede ≤ 2) of als de laatste 2 niet gelukt zijn. Hij geldt ook na 2 mislukte herhalingen op rij. Een microvaardigheid gaat dan één niveau omlaag. Bij een hoofdvaardigheid beslist eerst de demotie-analist of een microvaardigheid of de hoofdvaardigheid omlaag gaat (§10.4.2).
+- **Plaatsing.** Een vaardigheid onder L4 zonder geschiedenis en zonder eigen uitgelegde taken heeft een open plaatsing. Tot dan telt ze als L2, voor de hintladder en voor de guard. Een nieuwe vaardigheid begint dus niet meer op L0: L0 en L1 zijn vormen van hulp die pas *na* een poging komen. De hoogste trede van de eerste taak bepaalt het niveau (§5.3), bij de goedgekeurde uitleg van die taak; hulp over een ander concept telt niet mee (§10.7).
+- **Automatisch omlaag** gebeurt alleen als `settings.autoDemote` aan staat; standaard staat het uit. De regel kijkt naar de eigen uitgelegde taken van de vaardigheid sinds haar laatste niveauwijziging, hooguit de laatste 10. Bij minstens 4 daarvan (§10.7; tot 12 november 3) geldt hij als minder dan 70% gelukt is (op trede ≤ 2 binnen de eigen familie) of als de laatste 2 niet gelukt zijn. Hij geldt ook na 2 mislukte herhalingen op rij. Hij wacht zolang er een uitleg van die familie openstaat, en een verlaging die openstaat wordt opnieuw gecontroleerd op het bewijs van het moment waarop hij wordt uitgevoerd. Een microvaardigheid gaat dan één niveau omlaag. Bij een hoofdvaardigheid beslist eerst de demotie-analist of een microvaardigheid of de hoofdvaardigheid omlaag gaat (§10.4.2).
 - **Omhoog** gaat nooit automatisch. Elke automatische wijziging kun je terugdraaien met `set`.
+- **L3 → L4 (§10.7):** de taak die de vaardigheid plaatste telt mee, en de transfertaak is één van de drie keer zonder hint; haar dag telt als een dag.
 
 ??? note "Eerdere versie (7–9 november 2026)"
 
@@ -955,10 +997,10 @@ flowchart TD
     B -- yes --> E
     E --> F{Current rung}
     F -- 1 --> G["Rung 1 · Socratic question<br/>'What does the client need<br/>to know about this object?'"]
-    F -- 2 --> H["Rung 2 · Concept pointer<br/>'Look at Dependency Inversion;<br/>what depends on what?'"]
+    F -- 2 --> H["Rung 2 · Where to find it,<br/>or which concept it is"]
     F -- 3 --> I["Rung 3 · Pseudocode /<br/>UML sketch of structure"]
-    F -- 4 --> J["Rung 4 · Partial code snippet<br/>(≤5 lines, never the full solution)"]
-    F -- 5 --> K["Rung 5 · Worked solution<br/>+ mandatory self-explanation<br/>→ task counts as FAILED,<br/>similar task scheduled"]
+    F -- 4 --> J["Rung 4 · Small example, ≤5 lines,<br/>on another topic"]
+    F -- 5 --> K["Rung 5 · Worked solution,<br/>only after confirmation<br/>→ task counts as NOT solved"]
     G & H & I & J --> L[Learner continues]
     K --> M[Consolidation:<br/>explain it back in own words]
     L --> N{Solved?}
@@ -1026,13 +1068,47 @@ sequenceDiagram
 
 In een voorbeeldsessie blokkeert de PreToolUse-hook dat Claude een bestand van een L2-vaardigheid bewerkt, dus geeft Claude in plaats daarvan de volgende hint. Aan het eind blokkeert de Stop-hook één keer, zodat Claude drie reflectievragen stelt en jij die in je eigen woorden beantwoordt.
 
+**Zoals gebouwd (12 november 2026):** dezelfde sessie met de hooks en het commando die er nu zijn.
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor U as You
+    participant SS as session-start
+    participant PG as prompt-gate
+    participant C as Claude
+    participant GU as guard
+    participant CK as check.mjs
+    participant RG as reflect-gate
+    participant FS as .learning/
+    SS->>FS: read the record and the events
+    SS-->>U: what went up, progress to the next level
+    U->>PG: "I'm stuck on 21-bankrekening"
+    PG->>FS: skill and level from the folder, the rung
+    PG-->>C: L2: rung 1 unlocked, no code
+    C->>U: a Socratic question [rung 1]
+    C->>GU: Write(Bankrekening.cs)
+    GU-->>C: deny: at L2 the learner writes this
+    U->>CK: ! check.mjs 21-bankrekening
+    CK->>FS: red to green: a task with its rung
+    CK-->>U: praise first, then "explain why, and it counts", progress
+    U->>C: the explanation in own words
+    C->>RG: [explain-ok tid]
+    RG->>FS: both keys pass: the task is explained
+    RG-->>U: placement, or a proposal to promote, with the evidence
+    U->>PG: "yes, promote"
+    PG->>FS: level up, logged
+```
+
+Zoals gebouwd draai je de tests zelf met `check.mjs`. Dat logt de taak, geeft eerst lof en toont je voortgang. De reflect-gate keurt de uitleg goed met twee sleutels. Een plaatsing of een voorstel om door te zetten komt van de harnas zelf, en alleen jouw eigen "ja, doorzetten" zet het niveau hoger.
+
 | Hook | Gebeurtenis | Taak | Kan hij blokkeren? |
 |---|---|---|---|
-| `session-start.mjs` | `SessionStart` | Geeft Claude een samenvatting van je vaardighedenregister, de herhalingen die vandaag aan de beurt zijn, en de instructie om je naar een plan te vragen (*vooruitdenken*) | Nee (alleen context) |
+| `session-start.mjs` | `SessionStart` | Geeft Claude een samenvatting van je vaardighedenregister, de herhalingen die vandaag aan de beurt zijn, en de instructie om je naar een plan te vragen (*vooruitdenken*). *Herzien (§10.4, §10.7):* geen herhalingen meer bij de start; hij toont je wat de laatste 7 dagen omhoog ging, je voortgang naar het volgende niveau in stappen, en één keer dat moeite het doel is | Nee (alleen context) |
 | `prompt-gate.mjs` | `UserPromptSubmit` | Koppelt je prompt aan een vaardigheid met trefwoorden uit `skill-map.yaml`, voegt het beleid voor dat niveau en de huidige hinttrede toe, start de vastloop-timer of werkt die bij, en handelt `/override` af. *Herzien (§10.2, punt 10):* negeert agentrapporten, taakmeldingen en systeemherinneringen, en logt `prompt-ignored` | Kan context toevoegen. Kan alleen blokkeren bij patronen van misbruik (optioneel) |
 | `ownership-guard.mjs` | `PreToolUse` (matcher `Edit\|Write\|MultiEdit\|NotebookEdit`) | Blokkeert bewerkingen door de AI in bestanden, of delen van bestanden, die horen bij een vaardigheid op L1–L3. Op L1 laat hij een schrijfactie alleen toe als er `TODO(human)`-gaten in staan | **Ja** (`permissionDecision: deny`) |
 | ~~`evidence-log.mjs`~~ → `check.mjs` (gebouwd) | CLI, die je zelf start met `!` | *Herzien (§10):* omdat je de tests zelf draait, ziet een PostToolUse-hook ze nooit. `check.mjs` draait `dotnet test` met een trx-logger, toont een leesbare samenvatting, onthoudt per testmethode of die groen was, en logt een overgang van rood naar groen als taak, samen met de huidige hinttrede. Het werkt voor elk .NET-testproject (oefenopgaven en projectwerk) | Nee |
-| `reflect-gate.mjs` | `Stop` | Als je aan een vaardigheid hebt gewerkt en er nog geen dagboeknotitie is, blokkeert hij **één keer** en zegt hij tegen Claude dat de reflectie moet gebeuren. Hij gebruikt `stop_hook_active` om lussen te voorkomen. *Herzien (§10):* hij leest ook het laatste antwoord van Claude uit het transcript en verwerkt de markers `[trede N]` en `[uitleg-ok <tid>]`. Die tweede marker telt alleen als je eigen bericht door de deterministische uitlegcontrole komt | Ja, één keer |
+| `reflect-gate.mjs` | `Stop` | Als je aan een vaardigheid hebt gewerkt en er nog geen dagboeknotitie is, blokkeert hij **één keer** en zegt hij tegen Claude dat de reflectie moet gebeuren. Hij gebruikt `stop_hook_active` om lussen te voorkomen. *Herzien (§10):* hij leest ook het laatste antwoord van Claude uit het transcript en verwerkt de markers `[trede N]` en `[uitleg-ok <tid>]`. Die tweede marker telt alleen als je eigen bericht door de deterministische uitlegcontrole komt. *Herzien (§10.7):* bij een goedgekeurde uitleg plaatst hij een nieuwe vaardigheid; hij controleert een verlaging die openstaat opnieuw; en hij leest het oordeel van de demotie-analist uit het rapport van de agent | Ja, één keer |
 
 !!! example "Voorbeeld: de situatie van één student"
     De harnas werd voor het eerst uitgeprobeerd door een tweedejaarsstudent HBO-ICT die OOD oefende in C#. Bij de oefenopgaven van de cursus hoorden .NET-unittests, en die draaide de student zelf, niet Claude. Daarom draait `check.mjs` het commando `dotnet test`. De diagrammen en voorbeelden in deze sectie gebruiken nog Java uit het oorspronkelijke ontwerp (`mvn test`, `src/Payment.java`).

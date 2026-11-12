@@ -59,7 +59,7 @@ Runs `dotnet test` with a trx logger and shows a short summary. A test that goes
 | `[review-rung N #id]` / `[review-trede N #id]` | Help at rung N in a review after a task, about the concept `id` from `skills.json`. It does not raise the rung of the next task, unless that task is about the same concept (the same family). Without a valid id, without a logged task before it, or after a signal of new work, it counts as an ordinary `[rung N]`. |
 | `[explain-ok <tid>]` / `[uitleg-ok <tid>]` | The explanation is right; the Stop hook still checks it. |
 | `[explain-no <tid>]` / `[uitleg-nee <tid>]` | The explanation is incomplete; the task stays open. |
-| `[demotie {...}]` / `[demotion {...}]` | The verdict of the demotion analyst (JSON). The Stop hook only applies it when the agent really ran in that turn. |
+| `[demotie {...}]` / `[demotion {...}]` | Only a fallback: the Stop hook reads the analyst's verdict from the agent's own report, so Claude does not put the JSON in the chat. The marker is applied only when the agent really ran in that turn. |
 | `[transfer-start <id>]` | Start of the transfer task (`/mastery-check`), only at L2 or L3. From then on every `[rung N]` counts against the transfer task. |
 | `[transfer-ok <id>]` / `[transfer-no <id>]` (`[transfer-nee <id>]`) | The transfer task passed or not. `ok` only counts without help since the start, and when your last message passes the same check as an explanation. |
 | `<!-- session: <id> -->` / `<!-- sessie: <id> -->` | In the diary: the entry of this session. |
@@ -80,7 +80,7 @@ Everything the harness does is in `.learning/state/events.jsonl`. The events of 
 |---|---|
 | `task-lapsed` | The explanation did not come right away: the task lapses (`other-exercise` or `session-end`). Does not count; *skipped* on the dashboard. |
 | `task-explained` with `source: replay` | An explanation recovered afterwards with `replay`. |
-| `placement` | The level of a new skill, set after its first task. |
+| `placement` | The level of a new skill, set at the approved explanation of its first task (`tid`). |
 | `review` with `auto: true` | The outcome of an L4 review, from the next task. `review-due`: the review came by. |
 | `level` with `auto: true` | Automatic demotion; `by` says by whom: `harnas`, `demotie-analist` or `achtervang` (backstop). |
 | `demotion-pending`, `demotion-verdict`, `demotion-rejected` | The analyst is needed, its verdict, or a verdict the Stop hook refused. |
@@ -120,6 +120,16 @@ And of the setup review of 11 November 2026, afternoon (help per concept, micros
 | `micro-rejected` | A proposal the Stop hook refused (`why`). |
 | `micro-declined` | You said "no" to the proposal. It does not come back in that session. |
 | `micro-add` with `by: learner`, `via: voorstel` | The microskill, added after your "yes, add". |
+
+And of the setup review of 12 November 2026 (positive feedback, demotions and the phase history):
+
+| Event | Meaning |
+|---|---|
+| `task` with `familyRung` | The rung without help about a concept of another family, when that is lower than `maxRung`. Automatic demotion and the placement use it; the task keeps its `maxRung`. |
+| `rung-mark` with `concept` | A rung about a concept of another family: it raised the task's rung, not its family rung. |
+| `demotion-cancelled` | A pending demotion whose criterion no longer held on the evidence of now (`why: criterion`). Nothing went down. |
+| `demotion-rejected` with `source: agent-report` | A verdict in the analyst's own report that the harness refused. The demotion stays pending. |
+| `effort-intro` | The one-time message at the session start that effort is the goal, not failure. |
 
 ## Files
 

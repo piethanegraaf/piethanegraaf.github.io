@@ -6,12 +6,14 @@ description: "What the progress dashboard shows per skill, from levels and tasks
 
 ## What the dashboard shows
 
-![The learning dashboard with made-up demo data: 86% solved independently, the number of skills per level, and per skill what is still needed for the next level](../assets/images/dashboard-demo-en.png)
+![The learning dashboard with made-up demo data: 86% solved and 29% independent, the learning phases per skill over the days, and the number of skills per level](../assets/images/dashboard-demo-en.png)
 
 *The dashboard with made-up demo data.*
 
 The [dashboard](/dashboard/?lang=en) shows progress per skill and microskill:
 
+- two tiles: **solved** (at most rung 2) and **independent** (rung 0), counted as the harness counts them;
+- the **learning phases**: per skill one band over the days, in the colour of the level, with "start" dashed while the placement was open. Microskills are thinner, under their parent. Your tasks are dots above the band, in the colour of the rung. Each change has a mark (▲ a phase up, ▼ extra support, ● a start or a new microskill); point at it to see how it was decided: a proposal you confirmed, a placement, by hand, a reverted demotion, or the analyst. One sentence on top compares you only with yourself, never with others;
 - your **level** and its history;
 - what each **level means**: point at a level in the legend or the bar (or Tab to it) for what it is and the step to the next level. Esc closes the explanation. Why, the evidence and the route from the start (placement open) to L4 are under *What do the levels mean?*: the criteria per step, and how you go up and down;
 - what you still need **for the next level**, in the shape of that criterion. At L2 that is a bar with the 85% target and the three conditions. At L0, L1 and L3 it is pips, and at L3 also the days and the transfer task. At L4 you see the maintenance. One line says what still has to happen. This only counts the tasks since your last level change, just like the harness, so after a step up you start again;
@@ -19,7 +21,7 @@ The [dashboard](/dashboard/?lang=en) shows progress per skill and microskill:
 - per task: the rung, the source (test, logged yourself, chat), your **explanation**, and when it was **rejected** or **corrected**;
 - the **reviews** (only L4, Fibonacci), neutral: when the next one is ready, and when you **last** saw the skill in your work. Nothing is "overdue": a review waits until the skill comes by;
 - **skipped** tasks: the explanation did not come right away, so they do not count. They are shown apart from failed and from waiting for an explanation, and hatched in the chart;
-- what the harness did **automatically**: the placement of a new skill and automatic demotion, marked in the level history;
+- **how each level change was decided**, in the level history: a placement, a proposal, by hand, a reverted demotion, or extra support (automatic, the analyst or the backstop). Changes without a difference (L3 → L3) are left out;
 - **help during another task**: help about this skill while you worked on an exercise of another skill (`[rung N #id]`). That task kept the rung; here it does not count as a task or in the success rate;
 - the **proposals for a microskill** that the harness showed you, with the reason (review help, help about another concept, or a task at rung 2 or higher) and your answer: added, no, or no answer;
 - **promotion and relapse signals**, **regressions** and **overrides**;
