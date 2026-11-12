@@ -5,7 +5,7 @@ import fs from "node:fs";
 import {
   readStdin, loadSkills, loadOverrides, today, taskStats, levelName, DIARY_DIR, lapseTasks, readEvents,
   isMicro, pendingTasks, recentWins, levelAdvice, settingsOf, isPlacementPending, effectiveLevel, adviceCommand, openOffer, t,
-  dashboardAfterDiary, hasNewSinceExport, sinceExportLine,
+  dashboardAfterDiary, hasNewSinceExport, sinceExportLine, recentUps, progressAll, progressLine, needsNextExercise, logEvent,
 } from "./lib.mjs";
 
 let input = {};
@@ -56,6 +56,14 @@ const lvl = (s) => {
 const rows = data.skills.map((s) =>
   `| ${isMicro(s) ? "↳ " : ""}${s.id} | ${s.title} | ${lvl(s)} | ${rate(s)} | ${isMicro(s) ? `${t("ss.microOf", { parent: s.parent })} ${(s.keywords ?? []).join(", ")}` : (s.paths ?? []).join(", ") || "-"} |`).join("\n");
 
+// Up is loud (setup review of 12 Nov, #31), and how far the next level is, in steps (#35). The learner
+// sees these lines; Claude gets them too.
+const ups = recentUps(data);
+const upsLine = ups.length ? t("ss.ups", { list: ups.map((u) => `↑ ${u.id} → ${u.to} (${u.at})`).join(", ") }) : "";
+const progress = progressAll(data);
+const progressText = progress.length ? t("ss.progress", { list: progress.map((p) => "  " + progressLine(p)).join("\n") }) : "";
+const noFolders = skills.filter((s) => !isMicro(s) && needsNextExercise(data, s)).map((s) => s.id);
+
 const steps = [];
 if (pending.length) steps.push(t("ss.step.pending", { n: pending.length, list: pending.map((x) => `${x.skill} [${x.tid}]`).join(", ") }));
 if (wins.length || advice.length) {
@@ -64,7 +72,13 @@ if (wins.length || advice.length) {
     advice: advice.length ? t("ss.step.signal.advice", { list: advice.map(adviceLine).join("; ") }) : "",
   }));
 }
+if (noFolders.length) steps.push(t("ss.step.nextExercise", { list: noFolders.join(", ") }));
 steps.push(t("ss.step.goal"));
+
+// Once: effort is the goal here, not failure (#39). The harness says it itself, at the first start.
+const effortShown = readEvents().some((e) => e.type === "effort-intro");
+const effortLine = !effortShown && (source === "startup" || source === "clear") ? t("ss.effort") : "";
+if (effortLine) logEvent({ type: "effort-intro", session: input.session_id ?? null });
 
 const ritual = source === "startup" || source === "clear"
   ? t("ss.ritual.start", { steps: steps.map((s, i) => `${i + 1}. ${s}`).join("\n") })
@@ -82,6 +96,7 @@ const ctx = [
   "",
   t("ss.overrides", { list: overrides.length ? overrides.map((o) => t("ss.override", { skill: o.skill, until: o.until, reason: o.reason })).join("; ") : t("ss.none") }),
   t("ss.lastDiary", { file: lastDiary ?? t("ss.noneYet") }),
+  ...[upsLine, progressText].filter(Boolean),
   "",
   ritual,
   "",
@@ -93,6 +108,7 @@ const msg = t("ss.msg", { n: skills.length }) +
   (pending.length ? t("ss.msg.pending", { n: pending.length }) : "") +
   (offers.length ? t("ss.msg.offers", { list: offers.map((o) => `${o.id} ${o.from} → ${o.to}`).join(", ") }) : "") +
   (overrides.length ? t("ss.msg.overrides", { n: overrides.length }) : "") +
+  [upsLine, progressText, effortLine].filter(Boolean).map((l) => "\n" + l).join("") +
   // Only after a first export, only when something is new since then, and never with dashboardRepo off.
   (hasNewSinceExport(since) ? "\n" + sinceExportLine(since) : "");
 

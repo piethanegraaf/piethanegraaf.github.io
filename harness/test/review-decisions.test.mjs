@@ -153,18 +153,26 @@ test("S3: without settings.autoDemote nothing changes automatically", () => {
   } finally { p.cleanup(); }
 });
 
-test("S3: a microskill goes down one step right away, with a message; not again for the same tasks", () => {
+test("S3: a microskill goes down one step right away, with one quiet line; not again for the same tasks", () => {
   const p = makeProject({ skills: autoSkills(), events: [
     task("a", "demo.l2.micro", 4), explained("a", "demo.l2.micro"), task("b", "demo.l2.micro", 0), explained("b", "demo.l2.micro"),
-    task("c", "demo.l2.micro", 4), task("d", "demo.l2.micro", 4),
+    task("e", "demo.l2.micro", 4), explained("e", "demo.l2.micro"),
+    task("c", "demo.l2.micro", 4), task("d", "demo.l2.micro", 4, { at: ago(10) }),
   ], sessions: { [SID]: session() } });
   try {
-    const r = stop(p, [user(GOOD)], "Goed. [uitleg-ok c]");
-    assert.match(r.json?.systemMessage ?? "", /demo\.l2\.micro L2 → L1 \(automatisch\)\n  reden: 1 van 3 gelukt \(33%\)\n  hoofdvaardigheid demo\.l2 blijft L2\n  terugdraaien: ! node/);
+    // d is still open: down waits for it (12 Nov, #32).
+    let r = stop(p, [user(GOOD)], "Goed. [uitleg-ok c]");
+    assert.equal(skillOf(p, "demo.l2.micro").level, "L2", "an open explanation of the family: no demotion yet");
+    r = stop(p, [user(GOOD, "u8")], "Goed. [uitleg-ok d]");
+    // One quiet line (12 Nov, #31): extra support, the parent stays, the way back.
+    assert.match(r.json?.systemMessage ?? "", /^\[leerharnas\] Extra steun voor demo\.l2\.micro: nu L1 Aanvullen, was L2 \(1 van 5 gelukt \(20%\), laatste 2 niet\)\. De hoofdvaardigheid demo\.l2 blijft L2\. Terugdraaien: ! node/);
     assert.equal(skillOf(p, "demo.l2.micro").level, "L1");
     assert.ok(p.events().some((e) => e.type === "level" && e.auto && e.skill === "demo.l2.micro"));
-    // The next explained task alone is no new evidence: the window starts after the change.
-    stop(p, [user(GOOD, "u9")], "Goed. [uitleg-ok d]");
+    // A next explained task alone is no new evidence: the window starts after the change.
+    const more = p.events().length;
+    fs.appendFileSync(path.join(p.state, "events.jsonl"), JSON.stringify(task("f", "demo.l2.micro", 4, { at: new Date().toISOString() })) + "\n");
+    stop(p, [user(GOOD, "u9")], "Goed. [uitleg-ok f]");
+    assert.ok(p.events().length > more);
     assert.equal(skillOf(p, "demo.l2.micro").level, "L1");
     // The next prompt tells Claude to report it.
     const ctx = p.hook("prompt-gate.mjs", { session_id: SID, prompt: "oké" }).json?.hookSpecificOutput?.additionalContext ?? "";
@@ -172,7 +180,9 @@ test("S3: a microskill goes down one step right away, with a message; not again 
   } finally { p.cleanup(); }
 });
 
-const parentTasks = () => [task("a", "demo.l2", 4), explained("a", "demo.l2"), task("b", "demo.l2", 4), explained("b", "demo.l2"), task("c", "demo.l2", 1)];
+// Four tasks (12 Nov, #33: at least 4): two failed, two solved = 50%. With open = true the last one still waits.
+const parentTasks = (open = false) => [task("a", "demo.l2", 4), explained("a", "demo.l2"), task("b", "demo.l2", 4), explained("b", "demo.l2"),
+  task("g", "demo.l2", 1), explained("g", "demo.l2"), task("c", "demo.l2", 1), ...(open ? [] : [explained("c", "demo.l2")])];
 const verdict = (extra = {}) => ({
   ouder: "demo.l2", taken: [{ tid: "a", deelpatroon: "lusgrenzen", micro: "demo.l2.lussen", uitgesloten: null }, { tid: "b", deelpatroon: "lusgrenzen", micro: "demo.l2.lussen", uitgesloten: null }],
   nieuweMicro: [{ id: "demo.l2.lussen", titel: "Lusgrenzen", trefwoorden: ["lus", "for"], niveau: "L0" }],
@@ -181,7 +191,7 @@ const verdict = (extra = {}) => ({
 const agentCall = assistant([{ type: "tool_use", id: "x1", name: "Agent", input: { subagent_type: "demotie-analist", prompt: "..." } }]);
 
 test("S3a: for a parent skill the analyst is asked first; nothing goes down yet", () => {
-  const p = makeProject({ skills: autoSkills(), events: parentTasks(), sessions: { [SID]: session() } });
+  const p = makeProject({ skills: autoSkills(), events: parentTasks(true), sessions: { [SID]: session() } });
   try {
     stop(p, [user(GOOD)], "Goed. [uitleg-ok c]");
     assert.equal(skillOf(p, "demo.l2").level, "L2");
@@ -202,7 +212,8 @@ test("S3a: a valid verdict with a real agent call creates the microskill at pare
     assert.deepEqual(p.events().filter((e) => e.type === "task-retag").map((e) => [e.tid, e.to]), [["a", "demo.l2.lussen"], ["b", "demo.l2.lussen"]]);
     assert.equal(skillOf(p, "demo.l2").level, "L2", "the parent stays");
     assert.equal(p.session(SID).demotionPending, null);
-    assert.match(r.json.systemMessage, /nieuwe microvaardigheid demo\.l2\.lussen op L1/);
+    assert.match(r.json.systemMessage, /^\[leerharnas\] Extra steun voor een deelpatroon: demo\.l2\.lussen op L1 Aanvullen \(2 van 4 gelukt \(50%\)\)\. De hoofdvaardigheid demo\.l2 blijft L2\. Terugdraaien: /);
+    assert.doesNotMatch(r.json.systemMessage, /analist|lusgrenzen/, "the analyst's reason stays in the log, not in the chat (#31)");
   } finally { p.cleanup(); }
 });
 
@@ -234,7 +245,8 @@ test("S3a backstop: two microskills of one parent down within 14 days takes the 
   s.skills.splice(4, 0, { id: "demo.l2.tweede", parent: "demo.l2", title: "Tweede", level: "L2", keywords: [], placement: "done" });
   const p = makeProject({ skills: s, events: [
     { at: ago(3 * 24 * 60), type: "level", skill: "demo.l2.tweede", from: "L2", to: "L1", auto: true },
-    task("a", "demo.l2.micro", 4), explained("a", "demo.l2.micro"), task("b", "demo.l2.micro", 4), explained("b", "demo.l2.micro"), task("c", "demo.l2.micro", 4),
+    task("a", "demo.l2.micro", 4), explained("a", "demo.l2.micro"), task("b", "demo.l2.micro", 4), explained("b", "demo.l2.micro"),
+    task("h", "demo.l2.micro", 4), explained("h", "demo.l2.micro"), task("c", "demo.l2.micro", 4),
   ], sessions: { [SID]: session() } });
   try {
     const r = stop(p, [user(GOOD)], "[uitleg-ok c]");
@@ -260,17 +272,21 @@ test("S4: a new skill counts as L2 until its first task (the learner tries first
   } finally { p.cleanup(); }
 });
 
-test("S4: the highest rung of the first task sets the level: 0 -> L3, 3 -> L1", () => {
-  for (const [rung, level] of [[0, "L3"], [3, "L1"]]) {
+test("S4: the highest rung of the first task sets the level: 0 -> L3, 3 -> L1, at the approved explanation (12 Nov, #44)", () => {
+  for (const [rung, level, text] of [[0, "L3", /↑ demo\.nieuw staat nu op L3 Zelfstandig: taak \[\w+\] lukte zonder hint/], [3, "L1", /demo\.nieuw begint op L1 Aanvullen: taak \[\w+\] kostte trede 3/]]) {
     const p = makeProject({ skills: newSkill("L0"), files: { "opdrachten/05-x/X.cs": "" }, sessions: { [SID]: session({ activeSkill: "demo.nieuw", maxRung: rung }) } });
     try {
       check(p, "opdrachten/05-x", { Een: "Failed" }, 1);
       const st = p.session(SID); st.maxRung = rung; fs.writeFileSync(path.join(p.state, `session-${SID}.json`), JSON.stringify(st));
       const r = check(p, "opdrachten/05-x", { Een: "Passed" }, 2);
-      assert.match(r.stdout, new RegExp(`Plaatsing demo\\.nieuw: ${level}`));
+      assert.match(r.stdout, new RegExp(`na je goedgekeurde uitleg bepaalt deze taak je startniveau \\(${level}\\)`));
+      assert.equal(skillOf(p, "demo.nieuw").placement, undefined, "not placed at the green");
+      const tid = p.events().find((e) => e.type === "task").tid;
+      const s = stop(p, [user(GOOD)], `Klopt. [uitleg-ok ${tid}]`);
+      assert.match(s.json?.systemMessage ?? "", text);
       assert.equal(skillOf(p, "demo.nieuw").level, level);
       assert.equal(skillOf(p, "demo.nieuw").placement, "done");
-      assert.ok(p.events().some((e) => e.type === "placement" && e.rung === rung && e.to === level));
+      assert.ok(p.events().some((e) => e.type === "placement" && e.rung === rung && e.to === level && e.tid === tid));
     } finally { p.cleanup(); }
   }
 });

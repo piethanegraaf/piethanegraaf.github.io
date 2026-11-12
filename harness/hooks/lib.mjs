@@ -293,7 +293,8 @@ export const LAST_EXPORT_FILE = path.join(STATE_DIR, "last-export.json");
 const EXPORT_KEYS = ["tasks", "diarySessions", "levelChanges"];
 
 // Counted the same way as the dashboard: every task event, every "## " session in a diary file,
-// and every entry in the level history (placements and automatic changes included).
+// and every entry in the level history (placements and automatic changes included), except changes
+// without a difference such as L3 -> L3 (setup review of 12 Nov, #45: the dashboard leaves them out).
 export function exportTotals(data, events = readEvents()) {
   let diarySessions = 0;
   try {
@@ -304,7 +305,7 @@ export function exportTotals(data, events = readEvents()) {
   return {
     tasks: events.filter((e) => e.type === "task").length,
     diarySessions,
-    levelChanges: (data?.skills ?? []).reduce((n, s) => n + (Array.isArray(s.history) ? s.history.length : 0), 0),
+    levelChanges: (data?.skills ?? []).reduce((n, s) => n + (Array.isArray(s.history) ? s.history.filter((h) => !(h?.from && h.from === h.to)).length : 0), 0),
   };
 }
 
@@ -427,6 +428,7 @@ const sessionFile = (sid) => path.join(STATE_DIR, `session-${String(sid).replace
 // startedAt is set at the learner's first prompt (touch), not when a file happens to be created.
 const newSession = () => ({
   startedAt: null, lastActiveAt: null, activeMs: 0, activeSkill: null, folderSkill: null, folderSkillAt: null,
+  // famRung (#34) is not set here: an older session file without it counts all help (see taskRung).
   rung: 0, maxRung: 0, lastRungAt: null, lastRungActive: null, taskStartedAt: null, taskStartedActive: null,
   endRequested: false, nudged: false, lastTask: null, reviewHelp: [], explainWords: {}, conceptHelp: [], openTid: null, microOffers: [],
 });
@@ -464,7 +466,7 @@ export const activeMinutesSince = (st, mark) => Math.max(0, Math.round(((st.acti
 // (conceptHelp, with the task id it reserved: openTid).
 function resetLadder(st, now) {
   Object.assign(st, {
-    rung: 0, maxRung: 0, lastRungAt: null, lastRungActive: null, taskStartedAt: now, taskStartedActive: st.activeMs ?? 0,
+    rung: 0, maxRung: 0, famRung: 0, lastRungAt: null, lastRungActive: null, taskStartedAt: now, taskStartedActive: st.activeMs ?? 0,
     attempted: false, lastErrorSig: null, conceptHelp: [], openTid: null,
   });
   return st;
@@ -495,13 +497,26 @@ export function taskLogged(st, task, now = Date.now()) {
 // The rung of a task that is being logged: all help since the last task (st.maxRung), and the help
 // from the review of the previous task when it was about this task's family: the same id, the parent,
 // or a microskill of that parent (15c-1). Returns { rung, reviewRung }.
+// familyRung (setup review of 12 Nov, #34): the same without help about a concept of ANOTHER family
+// ([trede N #id]). The task keeps its full rung (honest); only automatic demotion and the placement
+// use the family rung, because the evidence belongs to the part it was about. An older session file
+// without st.famRung counts all help.
 export function taskRung(data, st, skillId) {
   const base = Number(st?.maxRung) || 0;
   const s = findSkill(data, skillId);
   const family = new Set(s ? familyIds(data, familyOf(s)) : [skillId]);
   const fromReview = (st?.reviewHelp ?? []).filter((r) => family.has(r.skill)).map((r) => Number(r.rung) || 0);
   const reviewRung = fromReview.length ? Math.max(...fromReview) : 0;
-  return { rung: Math.max(base, reviewRung), reviewRung };
+  const fam = typeof st?.famRung === "number" ? Math.min(st.famRung, base) : base;
+  return { rung: Math.max(base, reviewRung), reviewRung, familyRung: Math.max(fam, reviewRung) };
+}
+
+// Is this concept id a skill of another family than the task's? Then help about it is not help with
+// the task's own skill (#34). Unknown ids, zones and the task's own family: false.
+export function isOtherFamily(data, conceptId, taskSkill) {
+  const concept = data && conceptId ? findSkill(data, conceptId) : null;
+  const task = data && taskSkill ? findSkill(data, taskSkill) : null;
+  return Boolean(concept && concept.kind !== "zone" && task && familyOf(task) !== familyOf(concept));
 }
 
 // ---- Help per concept (setup review of 11 Nov 2026, afternoon, #26) ----
@@ -721,6 +736,8 @@ export function allTasks() {
         task.maxRung = Number(e.maxRung);
         if (task.maxRung >= 5) task.success = false;
         task.corrected = true;
+        // Nobody knows what the extra help was about: it counts for the family too (#34).
+        delete task.familyRung;
       }
     }
   }
@@ -733,6 +750,11 @@ export function allTasks() {
 }
 
 export const pendingTasks = () => allTasks().filter((t) => !t.explained && !t.lapsed);
+
+// The rung that counts for the task's own family (#34), and "solved" by that rung (rung <= 2). A task
+// that failed only because of a worked example about another concept (rung 5 with #id) is solved here.
+export const familyRungOf = (x) => Number(x?.familyRung ?? x?.maxRung ?? 0) || 0;
+export const solvedInFamily = (x) => Boolean(x) && (x.success || x.familyRung != null) && familyRungOf(x) <= 2;
 
 // Let open tasks lapse. keep(task) says which ones stay open. Returns the lapsed tasks.
 export function lapseTasks(reason, keep = () => false, session = null) {
@@ -753,22 +775,44 @@ export function newTaskId() {
 // moment (setup review §9.3): evidence for a promotion only counts on the level it was gathered at.
 // `reviewRung`: the part of maxRung that came from the review of the previous task (S3), if any.
 // `tid`: the id this task reserved when help about another concept was logged for it (#26).
-export function logTask({ skill, success = true, maxRung = 0, minutes = null, source, what, session, dir, level, reviewRung = 0, tid = null }) {
+// `familyRung`: the rung without help about a concept of another family (#34); only stored when lower.
+export function logTask({ skill, success = true, maxRung = 0, minutes = null, source, what, session, dir, level, reviewRung = 0, tid = null, familyRung = null }) {
   const t = { type: "task", tid: tid || newTaskId(), skill, success, maxRung, minutes, source, what, session, ...(dir ? { dir } : {}), ...(level ? { level } : {}),
-    ...(reviewRung > 0 ? { reviewRung } : {}) };
+    ...(reviewRung > 0 ? { reviewRung } : {}), ...(familyRung !== null && familyRung < maxRung ? { familyRung } : {}) };
   logEvent(t);
   return t;
 }
 
 // ---- Placement of a new skill (setup review S4) ----
-// A skill below L4 without any history and without own tasks has an open placement: the learner
-// tries first, with the L2 hint ladder, and the highest rung of the first task sets the level.
+// A skill below L4 without any history and without own explained tasks has an open placement: the
+// learner tries first, with the L2 hint ladder, and the highest rung of the first task sets the level.
+// The placement happens at the approved explanation of that task, not when it is logged (setup review
+// of 12 Nov, #44): a task whose explanation lapses places nothing, and the placement stays open.
 const PLACE = ["L3", "L2", "L2", "L1", "L1", "L0"]; // by highest rung 0..5
 export function isPlacementPending(data, s, tasks = null) {
   if (!s || s.kind === "zone" || s.placement === "done" || s.level === "L4") return false;
   if (s.placement === "pending") return true;
   if ((s.history ?? []).length) return false;
-  return !(tasks ?? allTasks()).some((x) => x.skill === s.id);
+  return !(tasks ?? allTasks()).some((x) => x.skill === s.id && x.explained);
+}
+
+// Called right after a task is explained (reflect-gate, replay): the placement of a new skill, with
+// its own message that names the evidence (#31: up is loud). The rung is the family rung (#34).
+// Returns the message, or null when there was nothing to place.
+export function placeAfterExplanation(data, skillId, task) {
+  const s = findSkill(data, skillId);
+  if (!s || !task) return null;
+  if (!isPlacementPending(data, s, allTasks().filter((x) => x.tid !== task.tid))) return null;
+  const rung = Math.min(5, Math.max(0, familyRungOf(task)));
+  const from = s.level, to = PLACE[rung];
+  s.level = to;
+  s.placement = "done";
+  scheduleOnLevel(data, s);
+  s.history = [...(s.history ?? []), { at: today(), atIso: new Date().toISOString(), from, to, note: t("note.placement", { rung }), placement: true, tid: task.tid }];
+  saveSkills(data);
+  logEvent({ type: "placement", skill: s.id, rung, from, to, tid: task.tid });
+  const key = rung === 0 ? "advice.placement.solo" : rung <= 2 ? "advice.placement.help" : "advice.placement.support";
+  return t(key, { id: s.id, rung, to, name: levelName(to), tid: task.tid });
 }
 
 // The level that counts now: an open placement counts as L2, an L4 skill with a due review as L3.
@@ -779,8 +823,9 @@ export function effectiveLevel(data, s, tasks = null) {
   return s.level;
 }
 
-// Called right after a task is logged (check.mjs, done, chat): placement of a new skill, or the
-// outcome of a due review. Returns { messages, pending } (pending: the demotion analyst is needed).
+// Called right after a task is logged (check.mjs, done, chat): the outcome of a due review, or a note
+// that this task will place a new skill once it is explained (#44). Returns { messages, pending }
+// (pending: the demotion analyst is needed).
 export function afterTask(data, skillId, task) {
   const s = findSkill(data, skillId);
   if (!s) return { messages: [], pending: null };
@@ -789,14 +834,7 @@ export function afterTask(data, skillId, task) {
   const rung = Math.min(5, Math.max(0, Number(task.maxRung) || 0));
   const earlier = allTasks().filter((x) => x.skill === s.id && x.tid !== task.tid);
   if (isPlacementPending(data, s, earlier)) {
-    const from = s.level, to = task.success === false ? "L0" : PLACE[rung];
-    s.level = to;
-    s.placement = "done";
-    scheduleOnLevel(data, s);
-    s.history = [...(s.history ?? []), { at: today(), atIso: new Date().toISOString(), from, to, note: t("note.placement", { rung }), placement: true }];
-    saveSkills(data);
-    logEvent({ type: "placement", skill: s.id, rung, from, to, tid: task.tid });
-    msgs.push(t("advice.placement", { id: s.id, rung, to, name: levelName(to) }));
+    msgs.push(t("advice.placementNext", { id: s.id, to: PLACE[Math.min(5, familyRungOf(task))] }));
   } else if (isReviewDue(s)) {
     // The review is the next task of this skill in real work: rung 0 pass, 1-2 shaky, else fail.
     const result = task.success === false || rung >= 3 ? "fail" : rung === 0 ? "pass" : "shaky";
@@ -839,17 +877,38 @@ export const lastLevelChange = (s, events = null) => {
   return h.length ? h[h.length - 1] : null;
 };
 
-// The criterion: at least 3 explained tasks in the last 10 (own tasks, since the last level change),
-// and under 70% solved (rung <= 2) or the last 2 not solved; or 2 reviews in a row failed.
+// The last level change itself (the history entry), or null.
+export function lastChangeEntry(s, events = null) {
+  const entries = (s?.history ?? []).filter((x) => x.to);
+  if (!entries.length) return null;
+  const evs = entries.some((x) => !x.atIso) ? events ?? readEvents() : events;
+  return entries.map((x) => ({ x, at: levelChangeAt(s, x, evs) })).filter((e) => e.at).sort((a, b) => String(a.at).localeCompare(String(b.at))).pop()?.x ?? null;
+}
+
+// The task that placed a skill, when the placement is its last level change (#36 a): that task counts
+// as evidence after the placement. Older placements have no tid in the history: then the placement event.
+export function placementTaskId(s, events = null) {
+  const h = lastChangeEntry(s, events);
+  if (!h?.placement) return null;
+  return h.tid ?? (events ?? readEvents()).filter((e) => e.type === "placement" && e.skill === s.id && (e.to ?? h.to) === h.to).pop()?.tid ?? null;
+}
+
+// Automatic demotion needs at least this many explained tasks (setup review of 12 Nov, #33). With 3,
+// one hard task in the first three after a level change was enough: at exactly the target of 85%
+// success that happens in 39% of the cases; with 4 it takes two failures (about 11%).
+export const DEMOTE_MIN_TASKS = 4;
+
+// The criterion: at least 4 explained tasks in the last 10 (own tasks, since the last level change),
+// and under 70% solved or the last 2 not solved; or 2 reviews in a row failed. "Solved" counts the
+// rung within the family (#34): help about a concept of another family is no failure of this skill.
 export function demotionCriterion(data, s) {
   if (!s || s.kind === "zone" || s.level === "L0") return null;
   const since = lastLevelChange(s);
   const own = allTasks().filter((x) => x.skill === s.id && x.explained && (!since || String(x.at) > since));
   const last = own.slice(-10);
-  const ok = (x) => x.success && (x.maxRung ?? 0) <= 2;
-  const nOk = last.filter(ok).length;
-  const lastTwoFailed = last.length >= 2 && last.slice(-2).every((x) => !ok(x));
-  if (last.length >= 3 && (nOk / last.length < 0.7 || lastTwoFailed)) {
+  const nOk = last.filter(solvedInFamily).length;
+  const lastTwoFailed = last.length >= 2 && last.slice(-2).every((x) => !solvedInFamily(x));
+  if (last.length >= DEMOTE_MIN_TASKS && (nOk / last.length < 0.7 || lastTwoFailed)) {
     const pct = Math.round((nOk / last.length) * 100);
     return { reason: t(lastTwoFailed ? "advice.auto.reasonLast2" : "advice.auto.reason", { ok: nOk, n: last.length, pct }), tids: last.map((x) => x.tid) };
   }
@@ -857,9 +916,30 @@ export function demotionCriterion(data, s) {
   return null;
 }
 
+// Open explanations of a skill's family. Down waits for them, just like up (#32): an open
+// explanation may be a success.
+export const openOfFamily = (data, s) => {
+  const ids = new Set(familyIds(data, familyOf(s)));
+  return pendingTasks().filter((x) => ids.has(x.skill));
+};
+
+// A pending demotion is judged on the evidence of NOW, not on that of the moment it was set (#32):
+// returns the refreshed pending, or null when the criterion no longer holds (then it is cancelled
+// and logged as demotion-cancelled).
+export function recheckDemotion(data, pending, session = null) {
+  const s = pending ? findSkill(data, pending.skill) : null;
+  const crit = s ? demotionCriterion(data, s) : null;
+  if (!crit) {
+    if (pending) logEvent({ type: "demotion-cancelled", skill: pending.skill, why: "criterion", session });
+    return null;
+  }
+  return { ...pending, tids: crit.tids, reason: crit.reason };
+}
+
 export const lowerLevel = (l) => LEVELS[Math.max(0, LEVELS.indexOf(l) - 1)];
 
-// Lowers one skill one step, logs it and returns the message for the learner.
+// Lowers one skill one step, logs it and returns the message for the learner: one quiet line with the
+// way back (#31: down is quiet). The reason is in the history and the log.
 export function demote(data, s, reason, by = "harnas") {
   const from = s.level, to = lowerLevel(from);
   if (to === from) return null;
@@ -870,7 +950,7 @@ export function demote(data, s, reason, by = "harnas") {
   logEvent({ type: "level", skill: s.id, from, to, auto: true, by, reason });
   const parent = s.parent ? findSkill(data, s.parent) : null;
   return t("advice.auto.demoted", {
-    id: s.id, from, to, reason,
+    id: s.id, from, to, name: levelName(to), reason,
     parent: parent ? t("advice.auto.parentStays", { parent: parent.id, level: parent.level }) : "",
     cmd: `! node .claude/hooks/skill.mjs set ${s.id} ${from} "${t("note.revert")}"`,
   });
@@ -890,10 +970,12 @@ export function backstop(data, parentId) {
 }
 
 // After an explained task (or a failed review): a microskill goes down right away; for a parent
-// the demotion analyst decides first (returns { pending }). Nothing happens without autoDemote.
+// the demotion analyst decides first (returns { pending }). Nothing happens without autoDemote, and
+// nothing while an explanation of that family is still open (#32).
 export function autoDemote(data, skillId) {
   if (!settingsOf(data).autoDemote) return null;
   const s = findSkill(data, skillId);
+  if (!s || openOfFamily(data, s).length) return null;
   const crit = demotionCriterion(data, s);
   if (!crit) return null;
   if (isMicro(s)) {
@@ -905,10 +987,11 @@ export function autoDemote(data, skillId) {
   return { pending: { skill: s.id, tids: crit.tids, reason: crit.reason, at: Date.now() } };
 }
 
-const isSolved = (x) => x.success && (x.maxRung ?? 0) <= 2;
-
-// The verdict of the demotion analyst (JSON from the marker [demotie {...}]), checked before
-// anything changes (setup review S3a). Returns { ok, error } or { ok, messages }.
+// The verdict of the demotion analyst (JSON from its report, or from the marker [demotie {...}]),
+// checked before anything changes (setup review S3a). The criterion is checked again first (#32): when
+// it no longer holds, the demotion is cancelled and nothing changes. The target may also be an existing
+// microskill of ANOTHER family (#34): the help was about that concept. Returns { ok, error } or
+// { ok, messages, cancelled }.
 export function applyVerdict(data, pending, v) {
   const fail = (error) => ({ ok: false, error, messages: [] });
   if (!v || typeof v !== "object" || Array.isArray(v)) return fail("no JSON object");
@@ -916,12 +999,16 @@ export function applyVerdict(data, pending, v) {
   if (!parent || isMicro(parent)) return fail("unknown parent skill");
   if (v.ouder !== parent.id) return fail(`"ouder" must be ${parent.id}`);
   if (!["micro", "ouder"].includes(v.oordeel)) return fail(`"oordeel" must be micro or ouder`);
+  const now = recheckDemotion(data, pending);
+  if (!now) return { ok: true, cancelled: true, messages: [t("advice.auto.cancelled", { id: parent.id, level: parent.level })] };
   const tasks = new Map(allTasks().map((x) => [x.tid, x]));
-  const failed = new Set((pending.tids ?? []).filter((tid) => tasks.has(tid) && !isSolved(tasks.get(tid))));
+  const failed = new Set([...(pending.tids ?? []), ...now.tids].filter((tid) => tasks.has(tid) && !solvedInFamily(tasks.get(tid))));
   const listed = Array.isArray(v.taken) ? v.taken : [];
   for (const x of listed) if (!failed.has(x?.tid)) return fail(`task ${x?.tid} is not a failed task of ${parent.id}`);
   const fresh = Array.isArray(v.nieuweMicro) ? v.nieuweMicro : [];
-  const family = new Set(familyIds(data, parent.id));
+  // The own family, plus existing microskills of other families (#34).
+  const otherMicro = (id) => { const m = findSkill(data, id); return Boolean(m && isMicro(m) && m.parent !== parent.id); };
+  const family = new Set([...familyIds(data, parent.id), ...data.skills.filter((m) => isMicro(m) && otherMicro(m.id)).map((m) => m.id)]);
   const keywordsOf = (m) => (Array.isArray(m.trefwoorden) ? m.trefwoorden : []).filter((k) => typeof k === "string" && k.trim()).map((k) => k.trim().toLowerCase());
   for (const m of fresh) {
     if (typeof m?.id !== "string" || !m.id.startsWith(parent.id + ".") || !/^[a-z0-9.-]+$/.test(m.id)) return fail(`invalid id ${m?.id}`);
@@ -938,7 +1025,8 @@ export function applyVerdict(data, pending, v) {
   const below = lowerLevel(parent.level);
   for (const m of fresh) {
     const micro = { id: m.id, parent: parent.id, title: m.titel.trim(), level: below, keywords: keywordsOf(m), placement: "done",
-      history: [{ at: today(), atIso: new Date().toISOString(), to: below, note: t("note.byAnalyst") }] };
+      // auto and by also in the record (#45): the dashboard shows how the change was decided.
+      history: [{ at: today(), atIso: new Date().toISOString(), to: below, note: t("note.byAnalyst"), auto: true, by: "demotie-analist" }] };
     scheduleOnLevel(data, micro);
     data.skills.splice(data.skills.indexOf(parent) + 1 + microsOf(data, parent.id).length, 0, micro);
     logEvent({ type: "micro-add", skill: m.id, parent: parent.id, level: below, auto: true, by: "demotie-analist" });
@@ -948,16 +1036,74 @@ export function applyVerdict(data, pending, v) {
     if (x.micro) logEvent({ type: "task-retag", tid: x.tid, from: tasks.get(x.tid).skill, to: x.micro, by: "demotie-analist", pattern: String(x.deelpatroon ?? "").slice(0, 200) });
   }
   logEvent({ type: "demotion-verdict", skill: parent.id, verdict: v.oordeel, target: v.doel, reason: String(v.reden ?? "").slice(0, 600), doubt: v.twijfel === true });
+  // Down is quiet (#31): one line with the way back. The analyst's reason stays in the log (and the diary).
   const msgs = [];
-  if (v.oordeel === "ouder") msgs.push(demote(data, parent, pending.reason, "demotie-analist"));
+  const doubt = v.twijfel === true ? t("advice.auto.doubt") : "";
+  if (v.oordeel === "ouder") msgs.push(demote(data, parent, now.reason, "demotie-analist"));
   else if (freshIds.has(v.doel)) {
-    msgs.push(t("advice.auto.newMicro", { id: v.doel, level: below, reason: pending.reason, parent: parent.id, plevel: parent.level,
+    msgs.push(t("advice.auto.newMicro", { id: v.doel, level: below, name: levelName(below), reason: now.reason, parent: parent.id, plevel: parent.level,
       cmd: `! node .claude/hooks/skill.mjs set ${v.doel} ${parent.level} "${t("note.revert")}"` }));
-  } else msgs.push(demote(data, findSkill(data, v.doel), pending.reason, "demotie-analist"));
-  if (v.oordeel === "micro") { const b = backstop(data, parent.id); if (b) msgs.push(b); }
-  if (v.reden) msgs.push(t("advice.auto.analyst", { reason: String(v.reden).slice(0, 400) }));
-  if (v.twijfel === true) msgs.push(t("advice.auto.doubt"));
-  return { ok: true, messages: msgs.filter(Boolean) };
+  } else msgs.push(demote(data, findSkill(data, v.doel), now.reason, "demotie-analist"));
+  if (v.oordeel === "micro") { const b = backstop(data, familyOf(findSkill(data, v.doel)) ?? parent.id); if (b) msgs.push(b); }
+  const out = msgs.filter(Boolean);
+  if (doubt && out.length) out[0] += doubt;
+  return { ok: true, messages: out };
+}
+
+// The verdict in the report of the demotion analyst itself (#31: no JSON in the chat). The agent runs
+// after the pending was set; its report is either the result of the Agent call (a synchronous agent)
+// or a later message from that agent (a background agent hands back its report). Returns
+// { json } / { error } from the latest report, or null when there is none (yet).
+export function verdictFromAgent(entries, sinceMs = 0) {
+  const ts = (e) => Date.parse(e?.timestamp ?? "") || 0;
+  const calls = new Map(); // tool_use id -> agent id (when known)
+  for (const e of entries) {
+    if (e?.type !== "assistant" || (sinceMs && ts(e) && ts(e) < sinceMs) || !Array.isArray(e.message?.content)) continue;
+    for (const p of e.message.content) {
+      if (p.type === "tool_use" && ["Task", "Agent"].includes(p.name) && p.input?.subagent_type === "demotie-analist") calls.set(p.id, null);
+    }
+  }
+  if (!calls.size) return null;
+  const reports = [];
+  for (const e of entries) {
+    if (e?.type !== "user" || (sinceMs && ts(e) && ts(e) < sinceMs)) continue;
+    const c = e.message?.content;
+    if (Array.isArray(c)) {
+      for (const p of c) {
+        if (p.type !== "tool_result" || !calls.has(p.tool_use_id)) continue;
+        const agentId = e.toolUseResult?.agentId ?? (String(entryResultText(p)).match(/agentId:\s*([\w-]+)/) ?? [])[1] ?? null;
+        if (agentId) calls.set(p.tool_use_id, agentId);
+        if (!e.toolUseResult?.isAsync) reports.push(entryResultText(p));
+      }
+    }
+    const o = e.origin && typeof e.origin === "object" ? e.origin : null;
+    if (o?.kind === "peer" && (o.name === "demotie-analist" || [...calls.values()].includes(o.from))) reports.push(o.handbackReportText ?? o.body ?? entryText(e));
+  }
+  for (const r of reports.reverse()) {
+    const found = findJsonVerdict(r);
+    if (found) return found;
+  }
+  return null;
+}
+const entryResultText = (p) => (typeof p.content === "string" ? p.content : Array.isArray(p.content) ? p.content.map((x) => x?.text ?? "").join("\n") : "");
+
+// The first JSON object in a text that has "oordeel" (balanced braces, strings respected).
+export function findJsonVerdict(text) {
+  const s = String(text ?? "");
+  for (let start = s.indexOf("{"); start >= 0; start = s.indexOf("{", start + 1)) {
+    let depth = 0, q = false;
+    for (let i = start; i < s.length; i++) {
+      const c = s[i];
+      if (q) { if (c === "\\") i++; else if (c === '"') q = false; continue; }
+      if (c === '"') q = true;
+      else if (c === "{") depth++;
+      else if (c === "}" && --depth === 0) {
+        try { const j = JSON.parse(s.slice(start, i + 1)); if (j && typeof j === "object" && "oordeel" in j) return { json: j }; } catch { /* try the next one */ }
+        break;
+      }
+    }
+  }
+  return null;
 }
 
 // Finds [demotie {...}] / [demotion {...}] in a text and parses the JSON (balanced braces).
@@ -1005,7 +1151,7 @@ export function levelAdvice(data, s, { assume = [] } = {}) {
     const lower = LEVELS[Math.max(0, LEVELS.indexOf(s.level) - 1)];
     return { dir: "down", text: t("advice.twoFailed", { id: s.id }), cmd: `set ${s.id} ${lower} "${t("note.twoFailed")}"` };
   }
-  if (!auto && st.n >= 3 && st.rate < 0.7) {
+  if (!auto && st.n >= DEMOTE_MIN_TASKS && st.rate < 0.7) {
     const lower = LEVELS[Math.max(0, LEVELS.indexOf(s.level) - 1)];
     return { dir: "down", text: t("advice.below70", { id: s.id, ok: st.ok, n: st.n }), cmd: `set ${s.id} ${lower} "${t("note.below70")}"` };
   }
@@ -1015,17 +1161,33 @@ export function levelAdvice(data, s, { assume = [] } = {}) {
 // ---- Promotion (setup review §9) ----
 // The evidence for a promotion: the last 10 explained tasks of the family since the last level
 // change of this skill, just like automatic demotion. The same tasks never carry two promotions (§9.3).
+// The task that placed the skill counts too (setup review of 12 Nov, #36 a): it is evidence of what the
+// learner could do on this level, and without it L4 took one exercise folder more than there are.
 export function promotionWindow(data, s, assume = []) {
   const ids = new Set(familyIds(data, s.id));
-  const since = lastLevelChange(s);
+  const events = readEvents();
+  const since = lastLevelChange(s, events);
+  const placed = placementTaskId(s, events);
   const extra = new Set(assume);
-  return allTasks().filter((x) => ids.has(x.skill) && (x.explained || extra.has(x.tid)) && !x.lapsed && (!since || String(x.at) > since)).slice(-10);
+  return allTasks().filter((x) => ids.has(x.skill) && (x.explained || extra.has(x.tid)) && !x.lapsed &&
+    (!since || String(x.at) > since || (placed && x.tid === placed))).slice(-10);
 }
 
-// A transfer task of this skill passed since its last level change (/mastery-check, §9.4).
-export function transferPassed(s) {
-  const since = lastLevelChange(s);
-  return readEvents().some((e) => e.type === "transfer-passed" && e.skill === s.id && (!since || String(e.at) > since));
+// The transfer task of this skill passed since its last level change (/mastery-check, §9.4): the
+// event, or null.
+export function transferEvent(s, events = null) {
+  const since = lastLevelChange(s, events);
+  return (events ?? readEvents()).filter((e) => e.type === "transfer-passed" && e.skill === s.id && (!since || String(e.at) > since)).pop() ?? null;
+}
+export const transferPassed = (s) => Boolean(transferEvent(s));
+
+// The evidence for L3 -> L4 on the tasks of the window. The transfer task counts as one of the three
+// times without a hint, and its day as a day (#36 b). { solo, n, days, transfer }.
+export function soloEvidence(tasks, transfer) {
+  const solo = tasks.filter((x) => x.success && (x.maxRung ?? 0) === 0);
+  const days = new Set(solo.map((x) => String(x.at).slice(0, 10)));
+  if (transfer) days.add(String(transfer.at).slice(0, 10));
+  return { solo: solo.length, n: solo.length + (transfer ? 1 : 0), days: days.size, transfer: Boolean(transfer) };
 }
 
 const nextLevel = (l) => LEVELS[Math.min(LEVELS.length - 1, LEVELS.indexOf(l) + 1)];
@@ -1033,7 +1195,7 @@ const solvedTask = (x) => x.success && (x.maxRung ?? 0) <= 2;
 
 // The criterion for one step up from `from`, on the tasks of the window. { ok, text, note } or
 // { ok: false, needsTransfer, text } when only the transfer task is missing (L3 -> L4).
-function stepUp(data, s, from, tasks, transferOk) {
+function stepUp(data, s, from, tasks, transfer) {
   const id = s.id;
   if (from === "L0") {
     // Explained and correctly predicted: Claude gives [uitleg-ok] only when the prediction was right too.
@@ -1054,12 +1216,16 @@ function stepUp(data, s, from, tasks, transferOk) {
       : { ok: false };
   }
   if (from === "L3") {
-    const solo = tasks.filter((x) => x.success && (x.maxRung ?? 0) === 0);
-    const days = new Set(solo.map((x) => String(x.at).slice(0, 10))).size;
-    if (solo.length < 3 || days < 2) return { ok: false };
-    return transferOk
-      ? { ok: true, text: t("advice.soloTransfer", { id, n: solo.length, days }), note: t("note.solo") }
-      : { ok: false, needsTransfer: true, text: t("advice.solo", { id, n: solo.length, days }) };
+    // Three times without a hint on at least 2 days, the transfer task being one of them (#36 b).
+    const ev = soloEvidence(tasks, transfer);
+    if (transfer) {
+      return ev.n >= 3 && ev.days >= 2
+        ? { ok: true, text: t("advice.soloTransfer", { id, n: ev.solo, days: ev.days }), note: t("note.solo", { n: ev.solo }) }
+        : { ok: false };
+    }
+    // Two tasks without a hint: the transfer task can be the third. On another day, if they were on one day.
+    if (ev.solo < 2) return { ok: false };
+    return { ok: false, needsTransfer: true, text: t("advice.solo", { id, n: ev.solo, days: ev.days, otherDay: ev.days < 2 ? t("advice.solo.otherDay") : "" }) };
   }
   return { ok: false };
 }
@@ -1073,7 +1239,7 @@ export function promotionAdvice(data, s, { assume = [] } = {}) {
   if (!s || s.kind === "zone" || s.level === "L4" || !LEVELS.includes(s.level) || isPlacementPending(data, s)) return null;
   const tasks = promotionWindow(data, s, assume);
   if (!tasks.length) return null;
-  const transferOk = transferPassed(s);
+  const transferOk = transferEvent(s);
   // A task of a microskill on L0/L1 also had help up front, even when the parent is higher.
   const helpUpFront = tasks.some((x) => x.level && LEVELS.indexOf(x.level) < 2);
   const canJump = LEVELS.indexOf(s.level) >= 2 && !helpUpFront;
@@ -1154,7 +1320,78 @@ export function promote(data, s, a, via = "voorstel") {
   if (s.placement === "pending") s.placement = "done";
   saveSkills(data);
   logEvent({ type: "level", skill: s.id, from, to, note: a.note, by: "learner", via });
-  return { ok: true, message: t("offer.promoted", { id: s.id, from, to, name: levelName(to), review: s.nextReview ? t("cli.set.firstReview", { date: s.nextReview }) : "" }) };
+  return { ok: true, message: t("offer.promoted", { id: s.id, from, to, name: levelName(to), evidence: a.text ?? "", review: s.nextReview ? t("cli.set.firstReview", { date: s.nextReview }) : "" }) };
+}
+
+// ---- Progress towards the next level (setup review of 12 Nov, #35) ----
+// What the window already has and what is still missing, in steps, never as a percentage (a bar that
+// starts slowly makes people give up). Uses the same window and rules as promotionAdvice.
+// Returns { id, from, to, items: [{ key, have, need, done }], close } or null (L4, zone, open placement).
+export function progressOf(data, s, { assume = [] } = {}) {
+  if (!s || s.kind === "zone" || !LEVELS.includes(s.level) || s.level === "L4" || isPlacementPending(data, s)) return null;
+  const tasks = promotionWindow(data, s, assume);
+  const to = nextLevel(s.level);
+  const items = [];
+  if (s.level === "L0") items.push({ key: "examples", have: tasks.filter((x) => x.success).length, need: 2 });
+  else if (s.level === "L1") items.push({ key: "gaps", have: tasks.filter((x) => x.success && (x.maxRung ?? 0) <= 1).length, need: 3 });
+  else if (s.level === "L2") {
+    const n = tasks.length, ok = tasks.filter(solvedTask).length, low = tasks.filter((x) => x.success && (x.maxRung ?? 0) <= 1).length;
+    const target = settingsOf(data).targetSuccess;
+    items.push({ key: "tasks", have: n, need: 5 });
+    items.push({ key: "solved", have: ok, need: Math.max(1, Math.ceil(target * Math.max(n, 5))) });
+    items.push({ key: "low", have: low, need: Math.ceil(Math.max(n, 5) / 2) });
+  } else {
+    const ev = soloEvidence(tasks, transferEvent(s));
+    items.push({ key: "solo", have: ev.n, need: 3 });
+    items.push({ key: "days", have: ev.days, need: 2 });
+    items.push({ key: "transfer", have: ev.transfer ? 1 : 0, need: 1 });
+  }
+  for (const it of items) it.done = it.have >= it.need;
+  return { id: s.id, from: s.level, to, items, close: tasks.length > 0 || items.some((x) => x.have > 0) };
+}
+
+// One line for the learner: "↗ ood.encapsulatie L3 → L4: zonder hint 2/3 · dagen 1/2 · transfertaak ○".
+export function progressLine(p) {
+  if (!p) return "";
+  const part = (it) => (it.key === "transfer" ? t("progress.transfer", { mark: it.done ? "✓" : "○" })
+    : t(`progress.${it.key}`, { have: it.have, need: it.need }) + (it.done ? " ✓" : ""));
+  return t("progress.line", { id: p.id, from: p.from, to: p.to, items: p.items.map(part).join(" · ") });
+}
+
+// The progress of the skills that are on their way (at least one task or the transfer since the last
+// level change), main skills and microskills.
+export const progressAll = (data) => data.skills.map((s) => progressOf(data, s)).filter((p) => p?.close);
+
+// ---- A next exercise when the folders run out (#36) ----
+// The exercise folders of a skill (of its parent, for a microskill) where no task was logged and no
+// test was measured yet. On L3 with none left, Claude names an existing next exercise: another exercise
+// of the course, a question of a practice test (logged with `done`), never an exercise it makes up.
+export function foldersLeft(data, s) {
+  const owner = isMicro(s) ? findSkill(data, s.parent) : s;
+  const dirs = exerciseDirs(owner);
+  if (!dirs.length) return null;
+  let tested = {};
+  try { tested = JSON.parse(fs.readFileSync(TESTS_FILE, "utf8")); } catch { /* none yet */ }
+  const usedDirs = new Set([...allTasks().map((x) => x.dir).filter(Boolean), ...Object.keys(tested).map((k) => k.split("::")[0])]);
+  return dirs.filter((d) => !usedDirs.has(d)).length;
+}
+
+export const needsNextExercise = (data, s) => Boolean(s && s.kind !== "zone" && s.level === "L3" && !isPlacementPending(data, s) && foldersLeft(data, s) === 0);
+
+// Recent level changes upwards (placement out of the start, a promotion), for the session start and
+// `status` (#31: up is loud). [{ id, from, to, at, placement }].
+export function recentUps(data, days = 7) {
+  const since = today(-days);
+  const out = [];
+  for (const s of data.skills) {
+    for (const h of s.history ?? []) {
+      // A new microskill (no "from") is no step up; neither is anything automatic.
+      if (!h.to || !h.at || h.at < since || h.auto || (!h.from && !h.placement)) continue;
+      const up = h.placement ? ["L3", "L4"].includes(h.to) : LEVELS.indexOf(h.to) > LEVELS.indexOf(h.from);
+      if (up) out.push({ id: s.id, from: h.from ?? null, to: h.to, at: h.at, placement: Boolean(h.placement) });
+    }
+  }
+  return out.sort((a, b) => String(a.at).localeCompare(String(b.at)));
 }
 
 // ---- A proposal for a microskill (setup review of 11 Nov 2026, afternoon, #22) ----

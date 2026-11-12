@@ -12,6 +12,7 @@ De harnas houdt de transfertaak bij met markers. Die verwerkt de Stop-hook; verz
 ## Stappen
 
 1. **Controleer of het kan.** Draai `node .claude/hooks/skill.mjs status` (mag). De vaardigheid `<id>` staat op L2 of L3, en bij de doorstroom-signalen staat dat alleen de transfertaak nog ontbreekt. Staat er iets anders, zeg dat eerlijk en stop.
+   - De transfertaak telt als één van de drie keer zonder hint, en haar dag als een dag. Staat er "op een andere dag", en is het vandaag de dag van die taken, zeg dan dat L4 daarna nog één taak zonder hint op een andere dag nodig heeft. De student kiest of het nu gebeurt.
 2. **Start.** Zet in je antwoord letterlijk `[transfer-start <id>]`. Vanaf nu geldt:
    - **geen hints, geen code, geen voorzet** (trede vast op 0);
    - geef je toch hulp, zet dan eerlijk `[trede N]`. Dan telt de transfertaak niet meer; de Stop-hook ziet dat.

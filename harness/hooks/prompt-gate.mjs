@@ -9,7 +9,7 @@ import {
   taskStats, ROOT, levelName, isMicro, microsOf, keywordMap, logTask, pendingTasks, levelAdvice, learnerText,
   settingsOf, codeExtRe, toolingRe, touch, activeMinutesSince, startTask, effectiveLevel, isPlacementPending, isReviewDue,
   afterTask, allTasks, readEvents, openOffer, promote, exerciseDirs, newWorkSignal, beginNewWork, noteExplanationWords,
-  taskRung, taskLogged, addMicro, t,
+  taskRung, taskLogged, addMicro, recheckDemotion, openOfFamily, familyRungOf, solvedInFamily, needsNextExercise, progressOf, progressLine, t,
 } from "./lib.mjs";
 import {
   HINT, SOLUTION, SOLVED_STRONG, SOLVED_WEAK, CODE_CONTEXT, NOT_SOLVED, END, RESUME, ATTEMPT, CHECKING,
@@ -294,11 +294,11 @@ if (attempt) st.attempted = true;
 // ---------- 3. Outcomes ----------
 if (solved && skill) {
   // All help since the last task, plus review help about this task's concept (S3).
-  const { rung: m, reviewRung } = taskRung(data, st, skill.id);
+  const { rung: m, reviewRung, familyRung } = taskRung(data, st, skill.id);
   const success = m < 5;
   const mins = activeMinutesSince(st, st.taskStartedActive);
   const tk = logTask({ skill: skill.id, success, maxRung: m, minutes: mins, source: "chat", session: sid, level, reviewRung: reviewRung > (st.maxRung ?? 0) ? reviewRung : 0,
-    tid: st.openTid });
+    tid: st.openTid, familyRung });
   // Honest words (#27): independent only at rung 0; at rung 1-2 solved with help up to that rung.
   const verdict = t(!success ? "pg.verdict.fail" : m === 0 ? "pg.verdict.solo" : m <= 2 ? "pg.verdict.ok" : "pg.verdict.help", { rung: m });
   ctx.push(t("pg.taskLogged", { id: skill.id, tid: tk.tid, rung: m, verdict }));
@@ -329,19 +329,42 @@ if (pending.length) {
 // The criterion was met for a parent skill: Claude calls the read-only agent demotie-analist after
 // the learner's current point, and puts its JSON in the marker [demotie {...}]. The Stop hook checks
 // the JSON and that the agent really ran in that turn. Without that, nothing changes automatically.
+// The evidence of NOW decides (setup review of 12 Nov, #32): a pending demotion whose criterion no longer
+// holds is cancelled, and while an explanation of that family is open the analyst waits.
 if (st.demotionPending && settings.autoDemote) {
+  const parent = findSkill(data, st.demotionPending.skill);
+  st.demotionPending = recheckDemotion(data, st.demotionPending, sid);
+  if (!st.demotionPending && parent) ctx.push(t("pg.notices", { list: t("advice.auto.cancelled", { id: parent.id, level: parent.level }) }));
+}
+if (st.demotionPending && settings.autoDemote && !openOfFamily(data, findSkill(data, st.demotionPending.skill)).length) {
   const dp = st.demotionPending;
   const byTid = new Map(allTasks().map((x) => [x.tid, x]));
   const tests = new Map(readEvents().filter((e) => e.type === "test-green").map((e) => [e.tid, e.tests]));
   const tdir = input.transcript_path ? path.dirname(String(input.transcript_path)) : null;
+  // gelukt and tredeInFamilie count the rung within the family (#34); hoogsteTrede is all help.
   const taken = (dp.tids ?? []).map((tid) => byTid.get(tid)).filter(Boolean).map((x) => ({
     tid: x.tid, wat: x.what ?? null, tests: tests.get(x.tid) ?? [], map: x.dir ?? null, hoogsteTrede: x.maxRung ?? 0,
-    gelukt: Boolean(x.success && (x.maxRung ?? 0) <= 2), sessie: x.session ?? null, tijd: x.at,
+    tredeInFamilie: familyRungOf(x), gelukt: solvedInFamily(x), sessie: x.session ?? null, tijd: x.at,
     transcript: tdir && x.session ? path.join(tdir, `${x.session}.jsonl`) : null,
   }));
   const micros = microsOf(data, dp.skill).map((m) => ({ id: m.id, titel: m.title, trefwoorden: m.keywords ?? [], niveau: m.level }));
-  const analystInput = { ouder: dp.skill, niveau: findSkill(data, dp.skill)?.level ?? null, reden: dp.reason, taken, microvaardigheden: micros };
+  // Existing microskills of other families: the analyst may choose one as the target (#34).
+  const others = data.skills.filter((m) => isMicro(m) && m.parent !== dp.skill).slice(0, 60)
+    .map((m) => ({ id: m.id, titel: m.title, trefwoorden: m.keywords ?? [], niveau: m.level }));
+  const analystInput = { ouder: dp.skill, niveau: findSkill(data, dp.skill)?.level ?? null, reden: dp.reason, taken, microvaardigheden: micros,
+    andereMicrovaardigheden: others };
   ctx.push(t("pg.analyst", { id: dp.skill, input: JSON.stringify(analystInput) }));
+}
+
+// The exercise folders of an L3 skill have run out (#36): Claude points to an existing next exercise.
+// Once per skill per session.
+{
+  const owner = skill && isMicro(skill) ? findSkill(data, skill.parent) : skill;
+  st.nextExerciseNoticed = st.nextExerciseNoticed ?? [];
+  if (owner && !st.nextExerciseNoticed.includes(owner.id) && needsNextExercise(data, owner)) {
+    st.nextExerciseNoticed.push(owner.id);
+    ctx.push(t("pg.nextExercise", { id: owner.id, progress: progressLine(progressOf(data, owner)) || "-" }));
+  }
 }
 
 // ---------- 4. Hint ladder per level ----------
@@ -375,7 +398,11 @@ if ((wantsHint || asksMore) && !solved && st.transfer?.skill) {
 
     if (why) {
       // A ceiling (asked for more explanation) is logged by the [trede N] Claude really gives, not by the ceiling.
-      if (!ceilingOnly) st.maxRung = Math.max(st.maxRung ?? 0, st.rung);
+      if (!ceilingOnly) {
+        st.maxRung = Math.max(st.maxRung ?? 0, st.rung);
+        // The ladder of the task's own skill: help within the family (#34).
+        st.famRung = Math.max(typeof st.famRung === "number" ? st.famRung : st.maxRung, st.rung);
+      }
       st.lastRungAt = now;
       st.lastRungActive = st.activeMs;
       logEvent({ type: "hint-unlock", skill: skill?.id ?? null, rung: st.rung, reason: why, session: sid });

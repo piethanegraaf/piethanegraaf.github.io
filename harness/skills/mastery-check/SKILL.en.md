@@ -12,6 +12,7 @@ The harness tracks the transfer task with markers. The Stop hook processes them;
 ## Steps
 
 1. **Check that it is possible.** Run `node .claude/hooks/skill.mjs status` (allowed). The skill `<id>` is at L2 or L3, and the promotion signals say that only the transfer task is missing. If not, say so honestly and stop.
+   - The transfer task counts as one of the three times without a hint, and its day as a day. When the signal says "on another day", and today is the day of those tasks, say that L4 then needs one more task without a hint on another day. The learner decides whether to do it now.
 2. **Start.** Put `[transfer-start <id>]` literally in your answer. From now on:
    - **no hints, no code, no lead** (rung fixed at 0);
    - if you do give help, mark it honestly with `[rung N]`. Then the transfer task no longer counts; the Stop hook sees that.

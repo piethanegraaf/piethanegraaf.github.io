@@ -88,10 +88,13 @@ export const CHECKING = any(
   String.raw`\b(whether it works|check (if|whether)|see if|test (if|whether))\b`,
 );
 
-// A "why" in an explanation.
+// A "why" in an explanation. A conditional with its consequence also reasons about why: "als er een
+// set zou zijn, dan zou het BSN kunnen veranderen" (setup review of 12 Nov, #38). Within one sentence.
 export const CAUSAL = any(
   String.raw`\b(omdat|want|doordat|zodat|daardoor|waardoor|daarom|dus|anders|in plaats van)\b`,
   String.raw`\b(because|since|so that|otherwise|instead of|therefore|which means|that'?s why|due to|as a result|hence)\b`,
+  String.raw`\b(als|wanneer|zodra)\b[^.!?\n]{2,160}?\b(dan|zou|zouden)\b`,
+  String.raw`\b(if|when)\b[^.!?\n]{2,160}?\b(then|would)\b`,
 );
 
 // The learner's answer to a promotion proposal (setup review §9.6). Only the learner's own prompt

@@ -27,15 +27,25 @@ test("add: a new main skill with an open placement; bad ids, doubles and microsk
   } finally { p.cleanup(); }
 });
 
-test("a skill added with add gets its level from its first task (placement)", () => {
-  const p = makeProject({ files: { "opdrachten/30-poly/Dier.cs": "class Dier {}" } });
+test("a skill added with add gets its level from its first task (placement), once that task is explained", () => {
+  const SID = "s-add";
+  const p = makeProject({ files: { "opdrachten/30-poly/Dier.cs": "class Dier {}" },
+    sessions: { [SID]: { startedAt: Date.now() - 600000, lastActiveAt: Date.now() - 60000, activeMs: 540000, rung: 0, maxRung: 0 } } });
   try {
     cli(p, "add", "ood.polymorfie", "Polymorfie");
     cli(p, "paths", "ood.polymorfie", "add", "opdrachten/30-*/**");
     const r = cli(p, "done", "ood.polymorfie", "eerste taak");
     assert.equal(r.code, 0, r.stderr);
+    assert.match(r.stdout, /na je goedgekeurde uitleg bepaalt deze taak je startniveau \(L3\)/);
+    assert.equal(skill(p, "ood.polymorfie").level, "L2", "not placed yet: the explanation comes first (#44)");
+    const tid = p.events().find((e) => e.type === "task").tid;
+    const file = path.join(p.root, "t.jsonl");
+    fs.writeFileSync(file, JSON.stringify({ type: "user", uuid: "u1", message: { role: "user", content:
+      "Het dier roept de methode van de subklasse aan omdat de methode virtual is en de subklasse hem overschrijft met override." } }) + "\n");
+    const s = p.hook("reflect-gate.mjs", { session_id: SID, transcript_path: file, last_assistant_message: `Klopt. [uitleg-ok ${tid}]` });
     assert.equal(skill(p, "ood.polymorfie").level, "L3", "rung 0 on the first task places it at L3");
-    assert.equal(p.events().filter((e) => e.type === "placement").length, 1);
+    assert.match(s.json?.systemMessage ?? "", /↑ ood\.polymorfie staat nu op L3 Zelfstandig: taak \[[a-z0-9]+\] lukte zonder hint/);
+    assert.deepEqual(p.events().filter((e) => e.type === "placement").map((e) => [e.tid, e.to]), [[tid, "L3"]]);
   } finally { p.cleanup(); }
 });
 

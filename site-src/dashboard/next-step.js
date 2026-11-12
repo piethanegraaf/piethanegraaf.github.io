@@ -8,18 +8,22 @@
   var rung = function (x) { return x.maxRung || 0; };
   var solved = function (x) { return Boolean(x.success) && rung(x) <= 2; };
 
-  // The moment of the last level change (the export gives changedAt; older exports only the day).
+  // The moment of the last level change. Newer exports give it as windowSince (the harness's own
+  // lastLevelChange); older exports give changedAt per history entry, or only the day.
   function lastChange(s) {
+    if (s.windowSince !== undefined) return s.windowSince;
     var h = (s.history || []).filter(function (x) { return x.to; })
       .map(function (x) { return x.changedAt || x.atIso || x.at; }).filter(Boolean).sort();
     return h.length ? h[h.length - 1] : null;
   }
 
-  // The evidence: the last 10 explained tasks of the family since the last level change.
+  // The evidence: the last 10 explained tasks of the family since the last level change, plus the task
+  // that placed the skill (setup review of 12 Nov, #36 a).
   function windowOf(s, tasks, family) {
     var since = lastChange(s);
+    var placed = s.placementTask || null;
     return tasks.filter(function (x) {
-      return family.has(x.skill) && x.explained && !x.lapsed && !x.void && (!since || String(x.at) > since);
+      return family.has(x.skill) && x.explained && !x.lapsed && !x.void && (!since || String(x.at) > since || (placed && x.id === placed));
     }).slice(-10);
   }
 
@@ -62,14 +66,17 @@
       return { kind: "rate", to: to, since: since, n: r.n, ok: r.ok, low: r.low, enough: r.enough, rate: r.rate, half: r.half,
         target: target, more: more, met: r.met };
     }
-    // L3 -> L4: three times independent (rung 0) on at least 2 days, plus a passed transfer task.
+    // L3 -> L4: three times independent (rung 0) on at least 2 days, the passed transfer task being one
+    // of the three, and its day a day (#36 b). Without it, two tasks without a hint are enough to do it.
     var solo = win.filter(function (x) { return x.success && rung(x) === 0; });
     var days = {};
     solo.forEach(function (x) { days[String(x.at).slice(0, 10)] = true; });
+    var passed = transfers.filter(function (tr) { return tr.passed && tr.skill === s.id && (!since || String(tr.at) > since); }).pop();
+    if (passed) days[String(passed.at).slice(0, 10)] = true;
     var nDays = Object.keys(days).length;
-    var transfer = transfers.some(function (tr) { return tr.passed && tr.skill === s.id && (!since || String(tr.at) > since); });
-    return { kind: "count", to: to, since: since, have: Math.min(solo.length, 3), need: 3, solo: solo.length, days: nDays,
-      transfer: transfer, met: solo.length >= 3 && nDays >= 2 && transfer };
+    var n = solo.length + (passed ? 1 : 0);
+    return { kind: "count", to: to, since: since, have: Math.min(n, 3), need: 3, solo: solo.length, days: nDays,
+      transfer: Boolean(passed), transferNext: !passed && solo.length >= 2, met: Boolean(passed) && n >= 3 && nDays >= 2 };
   }
 
   root.NextStep = { nextStep: nextStep, lastChange: lastChange, windowOf: windowOf };
