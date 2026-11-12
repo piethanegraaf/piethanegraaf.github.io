@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "generatedAt": "2026-11-12",
-  "exportedAt": "2026-11-12T10:30:01.969Z",
+  "exportedAt": "2026-11-12T17:25:12.867Z",
   "course": null,
   "language": "nl",
   "examDate": "2027-01-20",
@@ -26,6 +26,12 @@
       "lastReview": null,
       "lastSeen": null,
       "placement": null,
+      "start": {
+        "at": "2026-11-07T18:59:58.137Z",
+        "open": false
+      },
+      "windowSince": null,
+      "placementTask": null,
       "history": []
     },
     {
@@ -43,6 +49,12 @@
       "lastReview": null,
       "lastSeen": "2026-11-10",
       "placement": "done",
+      "start": {
+        "at": "2026-11-07T18:59:58.137Z",
+        "open": false
+      },
+      "windowSince": "2026-11-07T20:08:10.359Z",
+      "placementTask": null,
       "history": [
         {
           "at": "2026-11-07",
@@ -52,7 +64,9 @@
           "note": "vast op Reverse (void) en chainen",
           "notes": null,
           "auto": false,
-          "placement": false
+          "placement": false,
+          "kind": "manual",
+          "task": null
         }
       ]
     },
@@ -68,6 +82,12 @@
       "lastReview": null,
       "lastSeen": null,
       "placement": "done",
+      "start": {
+        "at": "2026-11-07T21:26:10.097Z",
+        "open": false
+      },
+      "windowSince": "2026-11-07T21:26:10.097Z",
+      "placementTask": null,
       "history": [
         {
           "at": "2026-11-07",
@@ -80,7 +100,9 @@
             "en": "created"
           },
           "auto": false,
-          "placement": false
+          "placement": false,
+          "kind": "manual",
+          "task": null
         }
       ]
     },
@@ -96,6 +118,12 @@
       "lastReview": null,
       "lastSeen": null,
       "placement": "done",
+      "start": {
+        "at": "2026-11-07T21:26:10.160Z",
+        "open": false
+      },
+      "windowSince": "2026-11-07T21:26:10.160Z",
+      "placementTask": null,
       "history": [
         {
           "at": "2026-11-07",
@@ -108,7 +136,9 @@
             "en": "created"
           },
           "auto": false,
-          "placement": false
+          "placement": false,
+          "kind": "manual",
+          "task": null
         }
       ]
     },
@@ -124,6 +154,12 @@
       "lastReview": null,
       "lastSeen": null,
       "placement": "done",
+      "start": {
+        "at": "2026-11-07T21:26:10.239Z",
+        "open": false
+      },
+      "windowSince": "2026-11-07T21:26:10.239Z",
+      "placementTask": null,
       "history": [
         {
           "at": "2026-11-07",
@@ -136,7 +172,9 @@
             "en": "created"
           },
           "auto": false,
-          "placement": false
+          "placement": false,
+          "kind": "manual",
+          "task": null
         }
       ]
     },
@@ -152,6 +190,12 @@
       "lastReview": null,
       "lastSeen": null,
       "placement": "done",
+      "start": {
+        "at": "2026-11-07T21:26:10.311Z",
+        "open": false
+      },
+      "windowSince": "2026-11-07T21:26:10.311Z",
+      "placementTask": null,
       "history": [
         {
           "at": "2026-11-07",
@@ -164,7 +208,9 @@
             "en": "created"
           },
           "auto": false,
-          "placement": false
+          "placement": false,
+          "kind": "manual",
+          "task": null
         }
       ]
     },
@@ -180,6 +226,12 @@
       "lastReview": null,
       "lastSeen": null,
       "placement": "done",
+      "start": {
+        "at": "2026-11-10T13:00:04.582Z",
+        "open": false
+      },
+      "windowSince": "2026-11-10T13:00:04.582Z",
+      "placementTask": null,
       "history": [
         {
           "at": "2026-11-10",
@@ -192,7 +244,9 @@
             "en": "created"
           },
           "auto": false,
-          "placement": false
+          "placement": false,
+          "kind": "manual",
+          "task": null
         }
       ]
     },
@@ -211,6 +265,12 @@
       "lastReview": null,
       "lastSeen": "2026-11-11",
       "placement": "done",
+      "start": {
+        "at": "2026-11-07T18:59:58.137Z",
+        "open": false
+      },
+      "windowSince": "2026-11-11T07:50:06.342Z",
+      "placementTask": null,
       "history": [
         {
           "at": "2026-11-11",
@@ -223,7 +283,9 @@
             "en": "5/5 solved"
           },
           "auto": false,
-          "placement": false
+          "placement": false,
+          "kind": "proposal",
+          "task": null
         }
       ]
     },
@@ -239,6 +301,12 @@
       "lastReview": null,
       "lastSeen": "2026-11-10",
       "placement": "done",
+      "start": {
+        "at": "2026-11-07T21:24:09.634Z",
+        "open": false
+      },
+      "windowSince": "2026-11-07T21:24:09.634Z",
+      "placementTask": null,
       "history": [
         {
           "at": "2026-11-07",
@@ -251,7 +319,9 @@
             "en": "created"
           },
           "auto": false,
-          "placement": false
+          "placement": false,
+          "kind": "manual",
+          "task": null
         }
       ]
     },
@@ -270,18 +340,13 @@
       "lastReview": null,
       "lastSeen": null,
       "placement": "done",
-      "history": [
-        {
-          "at": "2026-11-07",
-          "changedAt": "2026-11-07T21:24:39.559Z",
-          "from": "L3",
-          "to": "L3",
-          "note": "herhalingen starten",
-          "notes": null,
-          "auto": false,
-          "placement": false
-        }
-      ]
+      "start": {
+        "at": "2026-11-07T18:59:58.137Z",
+        "open": false
+      },
+      "windowSince": "2026-11-07T21:24:39.559Z",
+      "placementTask": null,
+      "history": []
     },
     {
       "id": "ood.associaties",
@@ -298,6 +363,12 @@
       "lastReview": null,
       "lastSeen": "2026-11-11",
       "placement": "done",
+      "start": {
+        "at": "2026-11-07T18:59:58.137Z",
+        "open": true
+      },
+      "windowSince": "2026-11-11T11:05:06.439Z",
+      "placementTask": "mwc0ilc5upcg",
       "history": [
         {
           "at": "2026-11-11",
@@ -310,7 +381,9 @@
             "en": "placement: highest rung 0 at the first task"
           },
           "auto": false,
-          "placement": true
+          "placement": true,
+          "kind": "placement",
+          "task": "mwc0ilc5upcg"
         }
       ]
     },
@@ -329,6 +402,12 @@
       "lastReview": null,
       "lastSeen": "2026-11-12",
       "placement": "done",
+      "start": {
+        "at": "2026-11-07T18:59:58.137Z",
+        "open": true
+      },
+      "windowSince": "2026-11-11T21:27:33.308Z",
+      "placementTask": "mwcmr2d61txn",
       "history": [
         {
           "at": "2026-11-11",
@@ -341,7 +420,9 @@
             "en": "placement: highest rung 0 at the first task"
           },
           "auto": false,
-          "placement": true
+          "placement": true,
+          "kind": "placement",
+          "task": "mwcmr2d61txn"
         }
       ]
     },
@@ -351,12 +432,18 @@
       "kind": null,
       "title": "Het deel in de constructor aan de property van het geheel toewijzen",
       "titles": null,
-      "level": "L2",
+      "level": "L3",
       "nextReview": null,
       "intervalIndex": 0,
       "lastReview": null,
       "lastSeen": "2026-11-12",
       "placement": "done",
+      "start": {
+        "at": "2026-11-12T07:31:09.995Z",
+        "open": false
+      },
+      "windowSince": "2026-11-12T16:53:45.540Z",
+      "placementTask": null,
       "history": [
         {
           "at": "2026-11-12",
@@ -369,7 +456,21 @@
             "en": "created by the demotion analyst"
           },
           "auto": false,
-          "placement": false
+          "placement": false,
+          "kind": "analyst",
+          "task": null
+        },
+        {
+          "at": "2026-11-12",
+          "changedAt": "2026-11-12T16:53:45.540Z",
+          "from": "L2",
+          "to": "L3",
+          "note": "teruggedraaid: verouderd bewijs (#32) en ongevraagde hints (#48)",
+          "notes": null,
+          "auto": false,
+          "placement": false,
+          "kind": "manual",
+          "task": null
         }
       ]
     },
@@ -388,6 +489,12 @@
       "lastReview": null,
       "lastSeen": "2026-11-12",
       "placement": "done",
+      "start": {
+        "at": "2026-11-07T18:59:58.137Z",
+        "open": true
+      },
+      "windowSince": "2026-11-12T07:46:16.660Z",
+      "placementTask": "mwd8uqxepvk9",
       "history": [
         {
           "at": "2026-11-12",
@@ -400,7 +507,9 @@
             "en": "placement: highest rung 0 at the first task"
           },
           "auto": false,
-          "placement": true
+          "placement": true,
+          "kind": "placement",
+          "task": "mwd8uqxepvk9"
         }
       ]
     },
@@ -419,6 +528,12 @@
       "lastReview": null,
       "lastSeen": null,
       "placement": "pending",
+      "start": {
+        "at": "2026-11-07T18:59:58.137Z",
+        "open": true
+      },
+      "windowSince": null,
+      "placementTask": null,
       "history": []
     },
     {
@@ -433,6 +548,12 @@
       "lastReview": null,
       "lastSeen": null,
       "placement": "done",
+      "start": {
+        "at": "2026-11-07T21:26:10.389Z",
+        "open": false
+      },
+      "windowSince": "2026-11-07T21:26:10.389Z",
+      "placementTask": null,
       "history": [
         {
           "at": "2026-11-07",
@@ -445,7 +566,9 @@
             "en": "created"
           },
           "auto": false,
-          "placement": false
+          "placement": false,
+          "kind": "manual",
+          "task": null
         }
       ]
     },
@@ -461,6 +584,12 @@
       "lastReview": null,
       "lastSeen": null,
       "placement": "done",
+      "start": {
+        "at": "2026-11-07T21:26:10.478Z",
+        "open": false
+      },
+      "windowSince": "2026-11-07T21:26:10.478Z",
+      "placementTask": null,
       "history": [
         {
           "at": "2026-11-07",
@@ -473,7 +602,9 @@
             "en": "created"
           },
           "auto": false,
-          "placement": false
+          "placement": false,
+          "kind": "manual",
+          "task": null
         }
       ]
     },
@@ -492,6 +623,12 @@
       "lastReview": null,
       "lastSeen": null,
       "placement": "pending",
+      "start": {
+        "at": "2026-11-07T18:59:58.137Z",
+        "open": true
+      },
+      "windowSince": null,
+      "placementTask": null,
       "history": []
     },
     {
@@ -509,6 +646,12 @@
       "lastReview": null,
       "lastSeen": null,
       "placement": "pending",
+      "start": {
+        "at": "2026-11-07T18:59:58.137Z",
+        "open": true
+      },
+      "windowSince": null,
+      "placementTask": null,
       "history": []
     },
     {
@@ -526,6 +669,12 @@
       "lastReview": null,
       "lastSeen": null,
       "placement": "pending",
+      "start": {
+        "at": "2026-11-07T18:59:58.137Z",
+        "open": true
+      },
+      "windowSince": null,
+      "placementTask": null,
       "history": []
     },
     {
@@ -543,6 +692,12 @@
       "lastReview": null,
       "lastSeen": null,
       "placement": "pending",
+      "start": {
+        "at": "2026-11-07T18:59:58.137Z",
+        "open": true
+      },
+      "windowSince": null,
+      "placementTask": null,
       "history": []
     },
     {
@@ -560,6 +715,12 @@
       "lastReview": null,
       "lastSeen": null,
       "placement": "pending",
+      "start": {
+        "at": "2026-11-07T18:59:58.137Z",
+        "open": true
+      },
+      "windowSince": null,
+      "placementTask": null,
       "history": []
     },
     {
@@ -577,6 +738,12 @@
       "lastReview": null,
       "lastSeen": null,
       "placement": "pending",
+      "start": {
+        "at": "2026-11-07T18:59:58.137Z",
+        "open": true
+      },
+      "windowSince": null,
+      "placementTask": null,
       "history": []
     },
     {
@@ -594,6 +761,12 @@
       "lastReview": null,
       "lastSeen": null,
       "placement": "pending",
+      "start": {
+        "at": "2026-11-07T18:59:58.137Z",
+        "open": true
+      },
+      "windowSince": null,
+      "placementTask": null,
       "history": []
     },
     {
@@ -611,6 +784,12 @@
       "lastReview": null,
       "lastSeen": null,
       "placement": "pending",
+      "start": {
+        "at": "2026-11-07T18:59:58.137Z",
+        "open": true
+      },
+      "windowSince": null,
+      "placementTask": null,
       "history": []
     },
     {
@@ -628,6 +807,12 @@
       "lastReview": null,
       "lastSeen": null,
       "placement": "pending",
+      "start": {
+        "at": "2026-11-11T19:47:24.408Z",
+        "open": true
+      },
+      "windowSince": null,
+      "placementTask": null,
       "history": []
     },
     {
@@ -645,6 +830,12 @@
       "lastReview": null,
       "lastSeen": null,
       "placement": "pending",
+      "start": {
+        "at": "2026-11-11T19:48:38.702Z",
+        "open": true
+      },
+      "windowSince": null,
+      "placementTask": null,
       "history": []
     },
     {
@@ -662,6 +853,12 @@
       "lastReview": null,
       "lastSeen": null,
       "placement": "pending",
+      "start": {
+        "at": "2026-11-11T19:49:04.627Z",
+        "open": true
+      },
+      "windowSince": null,
+      "placementTask": null,
       "history": []
     },
     {
@@ -679,6 +876,12 @@
       "lastReview": null,
       "lastSeen": null,
       "placement": "pending",
+      "start": {
+        "at": "2026-11-11T19:49:17.771Z",
+        "open": true
+      },
+      "windowSince": null,
+      "placementTask": null,
       "history": []
     },
     {
@@ -696,6 +899,12 @@
       "lastReview": null,
       "lastSeen": null,
       "placement": "pending",
+      "start": {
+        "at": "2026-11-11T22:03:25.204Z",
+        "open": true
+      },
+      "windowSince": null,
+      "placementTask": null,
       "history": []
     },
     {
@@ -713,6 +922,12 @@
       "lastReview": null,
       "lastSeen": null,
       "placement": "pending",
+      "start": {
+        "at": "2026-11-11T22:03:57.506Z",
+        "open": true
+      },
+      "windowSince": null,
+      "placementTask": null,
       "history": []
     },
     {
@@ -730,6 +945,12 @@
       "lastReview": null,
       "lastSeen": null,
       "placement": "pending",
+      "start": {
+        "at": "2026-11-11T22:03:57.595Z",
+        "open": true
+      },
+      "windowSince": null,
+      "placementTask": null,
       "history": []
     },
     {
@@ -747,6 +968,12 @@
       "lastReview": null,
       "lastSeen": null,
       "placement": "pending",
+      "start": {
+        "at": "2026-11-11T22:03:57.699Z",
+        "open": true
+      },
+      "windowSince": null,
+      "placementTask": null,
       "history": []
     },
     {
@@ -764,6 +991,12 @@
       "lastReview": null,
       "lastSeen": null,
       "placement": "pending",
+      "start": {
+        "at": "2026-11-11T22:03:57.770Z",
+        "open": true
+      },
+      "windowSince": null,
+      "placementTask": null,
       "history": []
     },
     {
@@ -781,6 +1014,12 @@
       "lastReview": null,
       "lastSeen": null,
       "placement": "pending",
+      "start": {
+        "at": "2026-11-11T22:03:57.850Z",
+        "open": true
+      },
+      "windowSince": null,
+      "placementTask": null,
       "history": []
     },
     {
@@ -798,6 +1037,12 @@
       "lastReview": null,
       "lastSeen": null,
       "placement": "pending",
+      "start": {
+        "at": "2026-11-11T22:03:57.940Z",
+        "open": true
+      },
+      "windowSince": null,
+      "placementTask": null,
       "history": []
     },
     {
@@ -815,6 +1060,12 @@
       "lastReview": null,
       "lastSeen": null,
       "placement": "pending",
+      "start": {
+        "at": "2026-11-11T22:03:58.023Z",
+        "open": true
+      },
+      "windowSince": null,
+      "placementTask": null,
       "history": []
     },
     {
@@ -832,6 +1083,12 @@
       "lastReview": null,
       "lastSeen": null,
       "placement": "pending",
+      "start": {
+        "at": "2026-11-11T22:03:58.102Z",
+        "open": true
+      },
+      "windowSince": null,
+      "placementTask": null,
       "history": []
     },
     {
@@ -849,6 +1106,12 @@
       "lastReview": null,
       "lastSeen": null,
       "placement": "pending",
+      "start": {
+        "at": "2026-11-11T22:04:15.560Z",
+        "open": true
+      },
+      "windowSince": null,
+      "placementTask": null,
       "history": []
     }
   ],
@@ -1663,6 +1926,56 @@
       "corrections": [],
       "void": false,
       "voidReason": null
+    },
+    {
+      "id": "mwdsp8hyahgt",
+      "at": "2026-11-12T17:01:51.815Z",
+      "skill": "ood.encapsulatie",
+      "source": "check",
+      "success": true,
+      "maxRung": 0,
+      "minutes": 22,
+      "reviewRung": null,
+      "what": "TemperatuurKanWordenIngesteld",
+      "explained": true,
+      "explanation": "omdat zodoende de temperatuur niet door andere methoden buiten de klasse kan overschreven worden en er regels zoals het zetten van temperaatuur binnen een bepaalde range afgedwongen kunnen worden. als je er een public veld van zou maken zouden andere methoden buiten de klas er bij kunnen en het ook kunnen overschrijven",
+      "explainedAt": "2026-11-12T17:08:04.392Z",
+      "explainedBy": null,
+      "lapsed": false,
+      "lapseReason": null,
+      "retaggedFrom": null,
+      "rejections": [],
+      "corrections": [],
+      "void": false,
+      "voidReason": null
+    },
+    {
+      "id": "mwdsygjhrw6r",
+      "at": "2026-11-12T17:09:02.141Z",
+      "skill": "ood.encapsulatie",
+      "source": "check",
+      "success": true,
+      "maxRung": 0,
+      "minutes": 1,
+      "reviewRung": null,
+      "what": "TemperatuurBuitenBereikWordtNietIngesteld",
+      "explained": true,
+      "explanation": "dan zou de temperatuur toch verkeerd blijven staan behalve als je het na de controle weer terug zou veranderen als het fout zit. omdat dit veel onnodig en omslachtig werk is doe je de controle eerst\nals _temp emaal overschreven is kan die niet meer makkelijk terug gezet worden",
+      "explainedAt": "2026-11-12T17:20:46.471Z",
+      "explainedBy": null,
+      "lapsed": false,
+      "lapseReason": null,
+      "retaggedFrom": null,
+      "rejections": [
+        {
+          "at": "2026-11-12T17:11:03.269Z",
+          "by": "claude",
+          "reasons": []
+        }
+      ],
+      "corrections": [],
+      "void": false,
+      "voidReason": null
     }
   ],
   "reviews": [],
@@ -1694,7 +2007,44 @@
       "reason": "securitycheck site (tooling)"
     }
   ],
-  "signals": [],
+  "signals": [
+    {
+      "skill": "ood.klassen-properties",
+      "dir": "transfer",
+      "text": "ood.klassen-properties: 2x zelfstandig op 1 dag(en); nog de transfertaak, die telt als één van de drie keer, op een andere dag",
+      "texts": {
+        "nl": "ood.klassen-properties: 2x zelfstandig op 1 dag(en); nog de transfertaak, die telt als één van de drie keer, op een andere dag",
+        "en": "ood.klassen-properties: 2x independent on 1 day(s); the transfer task is still missing, and it counts as one of the three times, on another day"
+      }
+    },
+    {
+      "skill": "ood.associaties",
+      "dir": "transfer",
+      "text": "ood.associaties: 2x zelfstandig op 1 dag(en); nog de transfertaak, die telt als één van de drie keer, op een andere dag",
+      "texts": {
+        "nl": "ood.associaties: 2x zelfstandig op 1 dag(en); nog de transfertaak, die telt als één van de drie keer, op een andere dag",
+        "en": "ood.associaties: 2x independent on 1 day(s); the transfer task is still missing, and it counts as one of the three times, on another day"
+      }
+    },
+    {
+      "skill": "ood.aggregatie-compositie",
+      "dir": "transfer",
+      "text": "ood.aggregatie-compositie: 5x zelfstandig op 2 dag(en); nog de transfertaak, die telt als één van de drie keer",
+      "texts": {
+        "nl": "ood.aggregatie-compositie: 5x zelfstandig op 2 dag(en); nog de transfertaak, die telt als één van de drie keer",
+        "en": "ood.aggregatie-compositie: 5x independent on 2 day(s); the transfer task is still missing, and it counts as one of the three times"
+      }
+    },
+    {
+      "skill": "ood.encapsulatie",
+      "dir": "transfer",
+      "text": "ood.encapsulatie: 5x zelfstandig op 1 dag(en); nog de transfertaak, die telt als één van de drie keer, op een andere dag",
+      "texts": {
+        "nl": "ood.encapsulatie: 5x zelfstandig op 1 dag(en); nog de transfertaak, die telt als één van de drie keer, op een andere dag",
+        "en": "ood.encapsulatie: 5x independent on 1 day(s); the transfer task is still missing, and it counts as one of the three times, on another day"
+      }
+    }
+  ],
   "activity": [
     {
       "date": "2026-11-07",
@@ -1748,10 +2098,10 @@
     },
     {
       "date": "2026-11-12",
-      "sessions": 2,
+      "sessions": 3,
       "hints": 0,
       "holds": 0,
-      "denials": 0,
+      "denials": 1,
       "overridesUsed": 0,
       "reviewHelp": 0,
       "helpDropped": 0
@@ -1876,6 +2226,23 @@
         "nextStep": "niet genoemd"
       },
       "calibration": "vooraf onbekend → alle drie de tests op trede 0 → niet te bepalen (geen score vooraf). Achteraf 5: dat past bij wat er gebeurde."
+    },
+    {
+      "date": "2026-11-12",
+      "n": 3,
+      "time": "±17:55–18:25",
+      "skills": "ood.encapsulatie (L3)",
+      "plan": "verder met de snek-challenges: 23-temperatuur-sensor",
+      "confidenceBefore": "onbekend (gevraagd over 23, niet beantwoord)",
+      "wentWell": "`ood.encapsulatie`: beide tests van 23 op trede 0. De temperatuur zit in een private veld, en de controle op het bereik staat in `SetTemperatuur`, vóór de toewijzing, zodat een ongeldige waarde er nooit in komt. Stand `ood.encapsulatie`: 6/6 gelukt, 5x zelfstandig, alles op 12 november.",
+      "signals": "uit `status`, alleen de transfertaak ontbreekt nog: · `ood.aggregatie-compositie` (5x zelfstandig op 2 dagen): `/mastery-check ood.aggregatie-compositie` · `ood.encapsulatie` (5x op 1 dag), `ood.klassen-properties` (2x op 1 dag), `ood.associaties` (2x op 1 dag): op een andere dag, met `/mastery-check <id>` · `cs.basis` L2 → L3: taken 5/5 en met hint 0–1 3/3, gelukt 4/5",
+      "reflection": {
+        "learned": "\"ik heb geleerd dat het lastig is om een overschreven variabele weer te reseten en dat je daarom eerst de checks in je functie doed voor de reset\"",
+        "confusing": "\"ik had over het hooft gezien dat het echt overschreven werd en nergens anders opgeslagen werd\"",
+        "confidenceAfter": "4",
+        "nextStep": "niet genoemd"
+      },
+      "calibration": "vooraf onbekend → beide tests op trede 0 → niet te bepalen (geen score vooraf). Achteraf 4."
     }
   ],
   "reviewHelp": [
@@ -1941,8 +2308,8 @@
       "referentie vs kopie, bijwerkingen": "reference vs copy, side effects",
       "lusgrenzen en off-by-one": "loop bounds and off-by-one",
       "veld vs lokale variabele vs property": "field vs local variable vs property",
-      "herhalingen starten": "start the reviews",
       "Het deel in de constructor aan de property van het geheel toewijzen": "Assigning the part to the property of the whole in the constructor",
+      "teruggedraaid: verouderd bewijs (#32) en ongevraagde hints (#48)": "reverted: outdated evidence (#32) and unsolicited hints (#48)",
       "testuitvoer lezen": "reading test output",
       "wat een test controleert: zichtbaar gedrag": "what a test checks: visible behaviour",
       "TestGeefEvenGetallenNegatief, TestGeefEvenGetallenTwee, TestGeefEvenGetallenTien": "TestGeefEvenGetallenNegatief, TestGeefEvenGetallenTwee, TestGeefEvenGetallenTien",
@@ -2002,6 +2369,10 @@
       "SalarisKanWordenAangepast, InitieelSalarisWordtCorrectIngesteld": "SalarisKanWordenAangepast, InitieelSalarisWordtCorrectIngesteld",
       "als het veld public zou staan dan zou het salaris door andere methoden overschreven kunnen worden en zou de nigatief salaris check omzeild kunnen worden\nmethodes binnen de class, methodes buiten de class kunnen niet bij een private veld\nOmdat methodes van buiten de klasse niet een private veld kunnen overschrijven": "if the field were public then the salary could be overwritten by other methods and the negative salary check could be bypassed\nmethods inside the class, methods outside the class can't get at a private field\nBecause methods from outside the class can't overwrite a private field",
       "SalarisKanNietNegatiefZijn": "SalarisKanNietNegatiefZijn",
+      "TemperatuurKanWordenIngesteld": "TemperatuurKanWordenIngesteld",
+      "omdat zodoende de temperatuur niet door andere methoden buiten de klasse kan overschreven worden en er regels zoals het zetten van temperaatuur binnen een bepaalde range afgedwongen kunnen worden. als je er een public veld van zou maken zouden andere methoden buiten de klas er bij kunnen en het ook kunnen overschrijven": "because that way the temperature can't be overwritten by other methods outside the class and rules like setting the temperature within a certain range can be enforced. if you made it a public field other methods outside the class could get at it and overwrite it too",
+      "TemperatuurBuitenBereikWordtNietIngesteld": "TemperatuurBuitenBereikWordtNietIngesteld",
+      "dan zou de temperatuur toch verkeerd blijven staan behalve als je het na de controle weer terug zou veranderen als het fout zit. omdat dit veel onnodig en omslachtig werk is doe je de controle eerst\nals _temp emaal overschreven is kan die niet meer makkelijk terug gezet worden": "then the temperature would just stay wrong unless you changed it back after the check if it's wrong. because that's a lot of unnecessary and cumbersome work you do the check first\nonce _temp has been overwritten it can't easily be set back anymore",
       "securitycheck site (tooling)": "security check site (tooling)",
       "cs.basis (L2), cs.basis.lus-grenzen (L2, nieuw), test.unit-tests (L1)": "cs.basis (L2), cs.basis.lus-grenzen (L2, new), test.unit-tests (L1)",
       "opdracht 04-even-getallen afmaken (niet expliciet benoemd)": "finish exercise 04-even-getallen (not stated explicitly)",
@@ -2063,7 +2434,14 @@
       "geen (`status`). Voor L3 → L4 telt ook: trede 0 op minstens 2 verschillende dagen. De drie taken op trede 0 vielen alle op 12 november.": "none (`status`). For L3 → L4 this also counts: rung 0 on at least 2 different days. The three tasks at rung 0 all fell on 12 November.",
       "vooraf onbekend → alle drie de tests op trede 0 → niet te bepalen (geen score vooraf). Achteraf 5: dat past bij wat er gebeurde.": "before unknown → all three tests at rung 0 → cannot be determined (no score beforehand). Afterwards 5: that fits what happened.",
       "\"private fields en dat methodes buiten de class ze niet kunnen overschrijven\"": "\"private fields and that methods outside the class can't overwrite them\"",
-      "\"was eigelijk allemaal wel duidelijk behalve dat ik mog moest checken dat salaris niet negatief was, had ik achteraf kunnen zien aan de unit tests\"": "\"it was actually all pretty clear except that I still had to check that the salary wasn't negative, in hindsight I could have seen that in the unit tests\""
+      "\"was eigelijk allemaal wel duidelijk behalve dat ik mog moest checken dat salaris niet negatief was, had ik achteraf kunnen zien aan de unit tests\"": "\"it was actually all pretty clear except that I still had to check that the salary wasn't negative, in hindsight I could have seen that in the unit tests\"",
+      "verder met de snek-challenges: 23-temperatuur-sensor": "continue with the snek challenges: 23-temperatuur-sensor",
+      "onbekend (gevraagd over 23, niet beantwoord)": "unknown (asked about 23, not answered)",
+      "`ood.encapsulatie`: beide tests van 23 op trede 0. De temperatuur zit in een private veld, en de controle op het bereik staat in `SetTemperatuur`, vóór de toewijzing, zodat een ongeldige waarde er nooit in komt. Stand `ood.encapsulatie`: 6/6 gelukt, 5x zelfstandig, alles op 12 november.": "`ood.encapsulatie`: both tests of 23 at rung 0. The temperature is in a private field, and the range check is in `SetTemperatuur`, before the assignment, so an invalid value never gets in. Standing of `ood.encapsulatie`: 6/6 succeeded, 5x independently, all on 12 November.",
+      "uit `status`, alleen de transfertaak ontbreekt nog: · `ood.aggregatie-compositie` (5x zelfstandig op 2 dagen): `/mastery-check ood.aggregatie-compositie` · `ood.encapsulatie` (5x op 1 dag), `ood.klassen-properties` (2x op 1 dag), `ood.associaties` (2x op 1 dag): op een andere dag, met `/mastery-check <id>` · `cs.basis` L2 → L3: taken 5/5 en met hint 0–1 3/3, gelukt 4/5": "from `status`, only the transfer task is still missing: · `ood.aggregatie-compositie` (5x independently on 2 days): `/mastery-check ood.aggregatie-compositie` · `ood.encapsulatie` (5x on 1 day), `ood.klassen-properties` (2x on 1 day), `ood.associaties` (2x on 1 day): on another day, with `/mastery-check <id>` · `cs.basis` L2 → L3: tasks 5/5 and with hint 0–1 3/3, succeeded 4/5",
+      "vooraf onbekend → beide tests op trede 0 → niet te bepalen (geen score vooraf). Achteraf 4.": "before unknown → both tests at rung 0 → cannot be determined (no score beforehand). Afterwards 4.",
+      "\"ik heb geleerd dat het lastig is om een overschreven variabele weer te reseten en dat je daarom eerst de checks in je functie doed voor de reset\"": "\"i learned that it's hard to reset an overwritten variable again and that that's why you do the checks in your function first before the reset\"",
+      "\"ik had over het hooft gezien dat het echt overschreven werd en nergens anders opgeslagen werd\"": "\"i had overlooked that it really got overwritten and wasn't stored anywhere else\""
     }
   }
 }
