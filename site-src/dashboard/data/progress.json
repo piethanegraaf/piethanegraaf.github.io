@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "generatedAt": "2026-11-12",
-  "exportedAt": "2026-11-12T17:25:12.867Z",
+  "exportedAt": "2026-11-12T22:19:48.607Z",
   "course": null,
   "language": "nl",
   "examDate": "2027-01-20",
@@ -1976,6 +1976,39 @@
       "corrections": [],
       "void": false,
       "voidReason": null
+    },
+    {
+      "id": "mwe3frl7kv9u",
+      "at": "2026-11-12T22:07:29.417Z",
+      "skill": "ood.encapsulatie",
+      "source": "check",
+      "success": true,
+      "maxRung": 2,
+      "minutes": 13,
+      "reviewRung": null,
+      "what": "OngeldigCijferWordtNietToegevoegd, CijferWordtToegevoegdEnGemiddeldeIsCorrect",
+      "explained": true,
+      "explanation": "als cijfer tussen 0 en 10 viel moest deze worden toegevoegd en anders moets deze niet worden toegevoegd. de eerste if had een of in plaats van een en waardoor alle cijfers niet werden weggeschreven naar de lijst. het gemiddelde werdt uitgerekend en omdat alle cijfers bij elkaar opgeteld werden, ook de ongeldige kwam daar 5 uit inpllaats van 8\nacht zat er niet bij allen 11 en -1 omdat 8 buiten de if condities viel\nwaar dus hij viel er binnen, maar om dat de add op de verkeerde plek stond ging het mis",
+      "explainedAt": "2026-11-12T22:16:26.281Z",
+      "explainedBy": null,
+      "lapsed": false,
+      "lapseReason": null,
+      "retaggedFrom": null,
+      "rejections": [
+        {
+          "at": "2026-11-12T22:13:33.942Z",
+          "by": "claude",
+          "reasons": []
+        },
+        {
+          "at": "2026-11-12T22:15:29.299Z",
+          "by": "claude",
+          "reasons": []
+        }
+      ],
+      "corrections": [],
+      "void": false,
+      "voidReason": null
     }
   ],
   "reviews": [],
@@ -1997,6 +2030,18 @@
       "skill": "ood.associaties",
       "tests": 1,
       "fixed": false
+    },
+    {
+      "at": "2026-11-12T21:50:23.949Z",
+      "skill": "ood.encapsulatie",
+      "tests": 1,
+      "fixed": false
+    },
+    {
+      "at": "2026-11-12T22:03:36.510Z",
+      "skill": "ood.encapsulatie",
+      "tests": 1,
+      "fixed": true
     }
   ],
   "overrides": [
@@ -2098,7 +2143,7 @@
     },
     {
       "date": "2026-11-12",
-      "sessions": 3,
+      "sessions": 4,
       "hints": 0,
       "holds": 0,
       "denials": 1,
@@ -2243,6 +2288,23 @@
         "nextStep": "niet genoemd"
       },
       "calibration": "vooraf onbekend → beide tests op trede 0 → niet te bepalen (geen score vooraf). Achteraf 4."
+    },
+    {
+      "date": "2026-11-12",
+      "n": 4,
+      "time": "±21:44–22:20",
+      "skills": "ood.encapsulatie (L3)",
+      "plan": "verder met de snek-challenges: 24-student-cijfers",
+      "confidenceBefore": "onbekend (gevraagd over 24, niet beantwoord)",
+      "wentWell": "`ood.encapsulatie`: 24 gelukt met hulp tot trede 2. De cijfers zitten in een private lijst die alleen via `VoegCijferToe` gevuld wordt. Het leren zat bij de validatie: een voorwaarde die \"geldig\" beschrijft, moet de toevoeging in de `if`-tak hebben, niet in de `else`. Stand `ood.encapsulatie`: 7/7 gelukt, 5x zelfstandig.",
+      "signals": "uit `status`, alleen de transfertaak ontbreekt nog: · `ood.aggregatie-compositie` (5x zelfstandig op 2 dagen): `/mastery-check ood.aggregatie-compositie` · `ood.encapsulatie` (5x op 1 dag), `ood.klassen-properties` (2x op 1 dag), `ood.associaties` (2x op 1 dag): op een andere dag, met `/mastery-check <id>`. De opdrachtmappen van deze drie zijn op. · `cs.basis` L2 → L3: taken 5/5 en met hint 0–1 3/3, gelukt 4/5",
+      "reflection": {
+        "learned": "\"niet if statement en groter dan klijner dan verwarren\"",
+        "confusing": "\"ik had niet door dat ik loggica verkeerd om had toegepast\"",
+        "confidenceAfter": "3",
+        "nextStep": "niet genoemd"
+      },
+      "calibration": "vooraf onbekend → gelukt met hulp tot trede 2 → niet te bepalen (geen score vooraf). Achteraf 3: dat past bij een taak die meer hulp kostte dan 22 en 23."
     }
   ],
   "reviewHelp": [
@@ -2296,6 +2358,13 @@
       "rung": 1,
       "taskSkill": "ood.encapsulatie",
       "task": "mwd8zxk2m14s"
+    },
+    {
+      "at": "2026-11-12T22:02:25.772Z",
+      "skill": "cs.basis",
+      "rung": 2,
+      "taskSkill": "ood.encapsulatie",
+      "task": "mwe3frl7kv9u"
     }
   ],
   "microProposals": [],
@@ -2373,6 +2442,8 @@
       "omdat zodoende de temperatuur niet door andere methoden buiten de klasse kan overschreven worden en er regels zoals het zetten van temperaatuur binnen een bepaalde range afgedwongen kunnen worden. als je er een public veld van zou maken zouden andere methoden buiten de klas er bij kunnen en het ook kunnen overschrijven": "because that way the temperature can't be overwritten by other methods outside the class and rules like setting the temperature within a certain range can be enforced. if you made it a public field other methods outside the class could get at it and overwrite it too",
       "TemperatuurBuitenBereikWordtNietIngesteld": "TemperatuurBuitenBereikWordtNietIngesteld",
       "dan zou de temperatuur toch verkeerd blijven staan behalve als je het na de controle weer terug zou veranderen als het fout zit. omdat dit veel onnodig en omslachtig werk is doe je de controle eerst\nals _temp emaal overschreven is kan die niet meer makkelijk terug gezet worden": "then the temperature would just stay wrong unless you changed it back after the check if it's wrong. because that's a lot of unnecessary and cumbersome work you do the check first\nonce _temp has been overwritten it can't easily be set back anymore",
+      "OngeldigCijferWordtNietToegevoegd, CijferWordtToegevoegdEnGemiddeldeIsCorrect": "OngeldigCijferWordtNietToegevoegd, CijferWordtToegevoegdEnGemiddeldeIsCorrect",
+      "als cijfer tussen 0 en 10 viel moest deze worden toegevoegd en anders moets deze niet worden toegevoegd. de eerste if had een of in plaats van een en waardoor alle cijfers niet werden weggeschreven naar de lijst. het gemiddelde werdt uitgerekend en omdat alle cijfers bij elkaar opgeteld werden, ook de ongeldige kwam daar 5 uit inpllaats van 8\nacht zat er niet bij allen 11 en -1 omdat 8 buiten de if condities viel\nwaar dus hij viel er binnen, maar om dat de add op de verkeerde plek stond ging het mis": "if the grade was between 0 and 10 it had to be added and otherwise it should not be added. the first if had an or instead of an and, so all the grades were not written to the list. the average was calculated and because all the grades were added up, including the invalid ones, it came out as 5 instead of 8\neight was not in it only 11 and -1 because 8 fell outside the if conditions\ntrue so it fell inside, but because the add was in the wrong place it went wrong",
       "securitycheck site (tooling)": "security check site (tooling)",
       "cs.basis (L2), cs.basis.lus-grenzen (L2, nieuw), test.unit-tests (L1)": "cs.basis (L2), cs.basis.lus-grenzen (L2, new), test.unit-tests (L1)",
       "opdracht 04-even-getallen afmaken (niet expliciet benoemd)": "finish exercise 04-even-getallen (not stated explicitly)",
@@ -2441,7 +2512,14 @@
       "uit `status`, alleen de transfertaak ontbreekt nog: · `ood.aggregatie-compositie` (5x zelfstandig op 2 dagen): `/mastery-check ood.aggregatie-compositie` · `ood.encapsulatie` (5x op 1 dag), `ood.klassen-properties` (2x op 1 dag), `ood.associaties` (2x op 1 dag): op een andere dag, met `/mastery-check <id>` · `cs.basis` L2 → L3: taken 5/5 en met hint 0–1 3/3, gelukt 4/5": "from `status`, only the transfer task is still missing: · `ood.aggregatie-compositie` (5x independently on 2 days): `/mastery-check ood.aggregatie-compositie` · `ood.encapsulatie` (5x on 1 day), `ood.klassen-properties` (2x on 1 day), `ood.associaties` (2x on 1 day): on another day, with `/mastery-check <id>` · `cs.basis` L2 → L3: tasks 5/5 and with hint 0–1 3/3, succeeded 4/5",
       "vooraf onbekend → beide tests op trede 0 → niet te bepalen (geen score vooraf). Achteraf 4.": "before unknown → both tests at rung 0 → cannot be determined (no score beforehand). Afterwards 4.",
       "\"ik heb geleerd dat het lastig is om een overschreven variabele weer te reseten en dat je daarom eerst de checks in je functie doed voor de reset\"": "\"i learned that it's hard to reset an overwritten variable again and that that's why you do the checks in your function first before the reset\"",
-      "\"ik had over het hooft gezien dat het echt overschreven werd en nergens anders opgeslagen werd\"": "\"i had overlooked that it really got overwritten and wasn't stored anywhere else\""
+      "\"ik had over het hooft gezien dat het echt overschreven werd en nergens anders opgeslagen werd\"": "\"i had overlooked that it really got overwritten and wasn't stored anywhere else\"",
+      "verder met de snek-challenges: 24-student-cijfers": "continue with the snek challenges: 24-student-cijfers",
+      "onbekend (gevraagd over 24, niet beantwoord)": "unknown (asked about 24, not answered)",
+      "`ood.encapsulatie`: 24 gelukt met hulp tot trede 2. De cijfers zitten in een private lijst die alleen via `VoegCijferToe` gevuld wordt. Het leren zat bij de validatie: een voorwaarde die \"geldig\" beschrijft, moet de toevoeging in de `if`-tak hebben, niet in de `else`. Stand `ood.encapsulatie`: 7/7 gelukt, 5x zelfstandig.": "`ood.encapsulatie`: 24 succeeded with help up to rung 2. The grades are in a private list that is only filled through `VoegCijferToe`. The learning was in the validation: a condition that describes \"valid\" needs the addition in the `if` branch, not in the `else`. Standing of `ood.encapsulatie`: 7/7 succeeded, 5x independently.",
+      "uit `status`, alleen de transfertaak ontbreekt nog: · `ood.aggregatie-compositie` (5x zelfstandig op 2 dagen): `/mastery-check ood.aggregatie-compositie` · `ood.encapsulatie` (5x op 1 dag), `ood.klassen-properties` (2x op 1 dag), `ood.associaties` (2x op 1 dag): op een andere dag, met `/mastery-check <id>`. De opdrachtmappen van deze drie zijn op. · `cs.basis` L2 → L3: taken 5/5 en met hint 0–1 3/3, gelukt 4/5": "from `status`, only the transfer task is still missing: · `ood.aggregatie-compositie` (5x independently on 2 days): `/mastery-check ood.aggregatie-compositie` · `ood.encapsulatie` (5x on 1 day), `ood.klassen-properties` (2x on 1 day), `ood.associaties` (2x on 1 day): on another day, with `/mastery-check <id>`. The exercise folders of these three are used up. · `cs.basis` L2 → L3: tasks 5/5 and with hint 0–1 3/3, succeeded 4/5",
+      "vooraf onbekend → gelukt met hulp tot trede 2 → niet te bepalen (geen score vooraf). Achteraf 3: dat past bij een taak die meer hulp kostte dan 22 en 23.": "before unknown → succeeded with help up to rung 2 → cannot be determined (no score beforehand). Afterwards 3: that fits a task that took more help than 22 and 23.",
+      "\"niet if statement en groter dan klijner dan verwarren\"": "\"don't mix up if statement and greater than less than\"",
+      "\"ik had niet door dat ik loggica verkeerd om had toegepast\"": "\"i didn't realize that i had applied the logic the wrong way around\""
     }
   }
 }
