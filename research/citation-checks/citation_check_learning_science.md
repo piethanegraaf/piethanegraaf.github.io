@@ -996,3 +996,600 @@ Method note: bibliographic data and abstracts came from OpenAlex and from the re
 
 #### Gaps
 - Full text not read: the size of the effects and how contingency was measured were not checked.
+
+## F. Sources checked on 12 November 2026 (positive feedback, demotions, gamification and the phase history)
+
+Scope: the sources behind the setup review of 12 November 2026. They cover positive feedback after a solved task, how a demotion is framed ("extra support"), the progress dashboard with its learning-phases card and level history, and whether to use game elements such as levels, badges and streaks. For each source, the claim as used in the review was checked against the abstract, and against the full text where it could be reached.
+
+Method note: bibliographic data for all 31 DOIs came from Crossref and OpenAlex. Abstracts came from OpenAlex or Crossref for 25 sources, from PubMed for Kirk-Johnson et al., and from ERIC for Mitrovic et al. Long & Aleven came from the Springer page, read in fragments through a fetch tool. For Mekler et al., the abstract was read in the full text. Two abstracts were only reached through secondary copies. For Bai et al., Semantic Scholar has the first half, and a University of Zurich course wiki has the full text. For Hanus & Fox, only search-engine snippets of a library catalogue record were available. Full texts were read for:
+- Mitrovic et al.: the accepted manuscript in the University of Canterbury repository;
+- Deci et al.: a copy on a University of Washington site;
+- Person et al.: a JSTOR scan on TalkBank;
+- Chi et al.: a copy on an ASU site;
+- Mekler et al.: a copy on a Harvard lab site.
+
+The other full texts were not read. ScienceDirect, ResearchGate and a library catalogue returned 403. The ACM Digital Library and the Coventry repository showed a bot check, and Springer redirected to a login. For Eskreis-Winkler & Fishbach, a search for replications found three later papers. Their abstracts were read on OpenAlex and PubMed.
+
+### F1. Baumeister, Bratslavsky, Finkenauer & Vohs (2001), "Bad is stronger than good"
+
+#### Takeaway
+**Verdict: correct, from the abstract.** The abstract says that bad feedback has more impact than good feedback and that bad information is processed more thoroughly. The paper is a broad narrative review across many areas of psychology, and learning processes are one of them.
+
+#### Cited Findings
+- Bibliographic: Review of General Psychology 5(4), 323–370, December 2001, DOI 10.1037/1089-2680.5.4.323. — [OpenAlex](https://api.openalex.org/works/https://doi.org/10.1037/1089-2680.5.4.323)
+- Abstract: "Bad emotions, bad parents, and bad feedback have more impact than good ones, and bad information is processed more thoroughly than good." — [Crossref](https://api.crossref.org/works/10.1037/1089-2680.5.4.323)
+- Abstract: the greater power of bad events is found in "everyday events, major life events (e.g., trauma), close relationship outcomes, social network patterns, interpersonal interactions, and learning processes." Also: "Hardly any exceptions (indicating greater power of good) can be found." — [Crossref](https://api.crossref.org/works/10.1037/1089-2680.5.4.323)
+
+#### Inferences
+- A demotion will probably weigh more than a promotion of the same size. That supports framing it carefully (one quiet line, "extra support") and making it easy to revert.
+- It also supports giving positive feedback more often than negative feedback. The paper gives no ratio, though, and does not test feedback in learning software.
+
+#### Gaps
+- Full text not read. Which learning studies it reviews, and how strong the effects are there, was not checked.
+
+### F2. Rewley, Guszcza, Dierst-Davies, Steier, Szwartz & Patel (2021), "Loss Aversion Explains Physical Activity Changes in a Behavioral Gamification Trial"
+
+#### Takeaway
+**Verdict: correct, from the abstract. Correct the title.** The reference gives a description, not the title. In a step-count trial with levels that went up and down each week, participants "generally" showed loss aversion when the level at stake had been earned, not when it had been given at the start (endowed).
+
+#### Cited Findings
+- Bibliographic: Games for Health Journal 10(6), 430–436, December 2021, DOI 10.1089/g4h.2021.0130. Title as above. — [Crossref](https://api.crossref.org/works/10.1089/g4h.2021.0130)
+- Abstract: "We enrolled 602 participants across four arms who were given pedometers. In the three experimental arms, participants began at the medium level and were allocated 70 points each week, losing 10 points each day they did not meet their step goal. Having at least 40 points at the end of the week resulted in a level increase, otherwise they lost a level." — [OpenAlex](https://api.openalex.org/works/https://doi.org/10.1089/g4h.2021.0130)
+- Abstract: "We find that participants in this trial generally exhibit loss aversion so long as the loss relates to something that was earned rather than endowed. This knowledge can be incorporated in future interventions using gamification by requiring participants to earn all levels as they progress." — [OpenAlex](https://api.openalex.org/works/https://doi.org/10.1089/g4h.2021.0130)
+
+#### Inferences
+- In the harness, levels after a promotion are earned, while the first level comes from a placement. If loss aversion attaches to earned levels, losing an earned level will feel like a loss. That can drive effort, and it can also hurt. Both support careful framing of a demotion.
+- This is physical activity with weekly points, not learning. It does not test what a demotion does to learning.
+
+#### Gaps
+- Full text not read. The comparison on day 7 is within the trial arms. A participant's position before day 7 follows from their own behaviour, so this comparison is not randomized.
+- The first reported interval, "18.40% (confidence interval [95% CI]: 18.26–19.90)", is not centred on the estimate. This could not be checked.
+
+### F3. Usher & Pajares (2008), "Sources of Self-Efficacy in School: Critical Review of the Literature and Future Directions"
+
+#### Takeaway
+**Verdict: correct, from the abstract, with "typically".** Mastery experience is "typically" the most influential source of self-efficacy. How strong each source is differs by gender, ethnicity, academic ability and academic domain.
+
+#### Cited Findings
+- Bibliographic: Review of Educational Research 78(4), 751–796, December 2008, DOI 10.3102/0034654308321456. — [OpenAlex](https://api.openalex.org/works/https://doi.org/10.3102/0034654308321456)
+- Abstract: "Although mastery experience is typically the most influential source of self-efficacy, the strength and influence of the sources differ as a function of contextual factors such as gender, ethnicity, academic ability, and academic domain." — [OpenAlex](https://api.openalex.org/works/https://doi.org/10.3102/0034654308321456)
+
+#### Inferences
+- This supports making the learner's own successes visible, for example tasks solved without help and the phase history.
+- It is a critical review of mostly correlational, self-report studies. It does not show that showing successes raises self-efficacy.
+
+#### Gaps
+- Full text not read. The number of studies reviewed was not checked.
+
+### F4. Byars-Winston, Diestelmann, Savoy & Hoyt (2017), "Unique effects and moderators of effects of sources on self-efficacy: A model-based meta-analysis"
+
+#### Takeaway
+**Verdict: correct, from the abstract.** Performance accomplishments (mastery experience) had "by far the strongest unique association" with academic self-efficacy across 61 studies. These are associations between self-reported sources and self-efficacy, not experimental effects.
+
+#### Cited Findings
+- Bibliographic: Journal of Counseling Psychology 64(6), 645–658, November 2017, DOI 10.1037/cou0000219. — [Crossref](https://api.crossref.org/works/10.1037/cou0000219)
+- Abstract: "In this meta-analysis (k = 61 studies of academic self-efficacy; N = 8,965)"; "PA showed by far the strongest unique association with self-efficacy beliefs." — [OpenAlex](https://api.openalex.org/works/https://doi.org/10.1037/cou0000219)
+- Abstract: "Subject area was a significant moderator, with sources collectively predicting self-efficacy more strongly in non-STEM (k = 14) compared with STEM (k = 47) subjects (R2 = .37 and .22, respectively)." — [OpenAlex](https://api.openalex.org/works/https://doi.org/10.1037/cou0000219)
+
+#### Inferences
+- Together with F3, this backs mastery experience as the main source. In STEM, the sources together explained less (R² = .22).
+
+#### Gaps
+- Full text not read. The path coefficients per source were not checked.
+
+### F5. Kivetz, Urminsky & Zheng (2006), "The Goal-Gradient Hypothesis Resurrected: Purchase Acceleration, Illusionary Goal Progress, and Customer Retention"
+
+#### Takeaway
+**Verdict: correct, from the abstract.** People in a café reward programme and on a song-rating site put in more effort as they got closer to the reward. An illusion of progress (two "bonus" stamps) also sped them up.
+
+#### Cited Findings
+- Bibliographic: Journal of Marketing Research 43(1), 39–58, February 2006, DOI 10.1509/jmkr.43.1.39. — [OpenAlex](https://api.openalex.org/works/https://doi.org/10.1509/jmkr.43.1.39)
+- Abstract: "participants in a real café reward program purchase coffee more frequently the closer they are to earning a free coffee". — [OpenAlex](https://api.openalex.org/works/https://doi.org/10.1509/jmkr.43.1.39)
+- Abstract: "the illusion of progress toward the goal induces purchase acceleration (e.g., customers who receive a 12-stamp coffee card with 2 preexisting “bonus” stamps complete the 10 required purchases faster than customers who receive a “regular” 10-stamp card)". — [OpenAlex](https://api.openalex.org/works/https://doi.org/10.1509/jmkr.43.1.39)
+- Abstract: "effort investment is a function of the proportion of original distance remaining to the goal." — [OpenAlex](https://api.openalex.org/works/https://doi.org/10.1509/jmkr.43.1.39)
+
+#### Inferences
+- This supports showing the distance to the next level. The bonus-stamp result shows that the display itself changes behaviour, which is a reason to keep it honest.
+- The studies measured purchases and ratings, not learning. More effort near a goal is not the same as more learning.
+
+#### Gaps
+- Full text not read.
+
+### F6. Koo & Fishbach (2012), "The Small-Area Hypothesis: Effects of Progress Monitoring on Goal Adherence"
+
+#### Takeaway
+**Verdict: correct, from the abstract.** Early in a goal, pointing attention at what is done motivates more than pointing at what remains. Near the goal, it is the other way around. The proposed mechanism is an illusion of fast progress.
+
+#### Cited Findings
+- Bibliographic: Journal of Consumer Research 39(3), 493–509, October 2012 (online January 2012), DOI 10.1086/663827. — [OpenAlex](https://api.openalex.org/works/https://doi.org/10.1086/663827)
+- Abstract: "at the beginning of goal pursuit, directing attention to accumulated progress increases goal adherence relative to directing attention to remaining progress (e.g., 20% completed is more impactful than 80% remaining)". — [OpenAlex](https://api.openalex.org/works/https://doi.org/10.1086/663827)
+- Abstract: "with closeness to the goal, directing attention to accumulated progress lessens goal adherence relative to directing attention to remaining progress (e.g., 20% remaining is more impactful than 80% completed; studies 1–2)". — [OpenAlex](https://api.openalex.org/works/https://doi.org/10.1086/663827)
+- Abstract: "The focus on small areas increases motivation by creating an illusion of fast progress (study 3)." — [OpenAlex](https://api.openalex.org/works/https://doi.org/10.1086/663827)
+
+#### Inferences
+- For the progress text towards a level, show what is done when little is done and what remains when little remains, for example "1 of 3 done" early and "1 more" late.
+- The studies are consumer and goal-adherence studies, not learning tasks.
+
+#### Gaps
+- Full text not read. The samples and settings of the four studies were not checked.
+
+### F7. Harkin, Webb, Chang, Prestwich, Conner, Kellar, Benn & Sheeran (2016), "Does monitoring goal progress promote goal attainment? A meta-analysis of the experimental evidence"
+
+#### Takeaway
+**Verdict: correct, from the abstract.** Across 138 randomized studies, interventions that promoted progress monitoring increased goal attainment (d+ = 0.40). Effects were larger when the outcomes were reported or made public, and when the information was physically recorded.
+
+#### Cited Findings
+- Bibliographic: Psychological Bulletin 142(2), 198–229, February 2016 (online October 2015), DOI 10.1037/bul0000025. — [Crossref](https://api.crossref.org/works/10.1037/bul0000025)
+- Abstract: "A systematic literature search identified 138 studies (N = 19,951) that randomly allocated participants to an intervention designed to promote monitoring of goal progress versus a control condition." — [OpenAlex](https://api.openalex.org/works/https://doi.org/10.1037/bul0000025)
+- Abstract: the interventions "promoted goal attainment (d+ = 0.40, 95% CI [0.32, 0.48])", and "changes in the frequency of progress monitoring mediated the effect of the interventions on goal attainment." — [OpenAlex](https://api.openalex.org/works/https://doi.org/10.1037/bul0000025)
+- Abstract: "progress monitoring had larger effects on goal attainment when the outcomes were reported or made public, and when the information was physically recorded." — [OpenAlex](https://api.openalex.org/works/https://doi.org/10.1037/bul0000025)
+
+#### Inferences
+- This supports the diary and the dashboard as a record of progress.
+- "Reported or made public" is not a reason to publish a learner's data. Making data public has privacy costs, and the abstract does not say which kind of reporting drives the effect.
+
+#### Gaps
+- Full text not read. How many of the 138 studies concerned learning goals was not checked.
+
+### F8. Villar, Callegaro & Yang (2013), "Where Am I? A Meta-Analysis of Experiments on the Effects of Progress Indicators for Web Surveys"
+
+#### Takeaway
+**Verdict: correct, from the abstract.** Across 32 randomized experiments, progress indicators that ran slow at first and fast later (slow-to-fast) increased drop-off. Fast-to-slow indicators reduced it, and a constant indicator did not help significantly.
+
+#### Cited Findings
+- Bibliographic: Social Science Computer Review 31(6), 744–762, December 2013 (online August 2013), DOI 10.1177/0894439313497468. — [OpenAlex](https://api.openalex.org/works/https://doi.org/10.1177/0894439313497468)
+- Abstract: "we analyzed 32 randomized experiments comparing drop-off rates of an experimental group who completed an online survey in which a progress indicator was shown to drop-off rates of a control group to whom the progress indicator was not shown." — [OpenAlex](https://api.openalex.org/works/https://doi.org/10.1177/0894439313497468)
+- Abstract: "using a constant progress indicator does not significantly help reduce drop-offs"; "Fast-to-slow indicators reduced drop-offs, whereas slow-to-fast indicators increased drop-offs." — [OpenAlex](https://api.openalex.org/works/https://doi.org/10.1177/0894439313497468)
+- Abstract: "among the studies in which a small incentive was promised, showing a constant progress indicator increased the drop-off rate." — [OpenAlex](https://api.openalex.org/works/https://doi.org/10.1177/0894439313497468)
+
+#### Inferences
+- A display that shows little progress early, such as one long bar from L0 to L4, may discourage. Progress per level or per skill makes early steps visible.
+- Breaking off a survey is not quitting a course, so this is a direction, not a parameter.
+
+#### Gaps
+- Full text not read. The effect sizes are not in the abstract.
+
+### F9. Rawson & Dunlosky (2011), "Optimizing schedules of retrieval practice for durable and efficient learning: How much is enough?"
+
+#### Takeaway
+**Verdict: the claim is correct, from the abstract. Its use for L4 is only partly supported.** Across 3 experiments (N = 533), relearning sessions reduced the effect of the initial criterion. The authors recommend 3 correct recalls first, then 3 relearning sessions "at widely spaced intervals". The study did not compare more tasks in one session with the same tasks across sessions directly. It did show that after relearning, extra correct recalls in the first session added little.
+
+#### Cited Findings
+- Bibliographic: Journal of Experimental Psychology: General 140(3), 283–302, 2011, DOI 10.1037/a0023956. — [Crossref](https://api.crossref.org/works/10.1037/a0023956)
+- Abstract: "Across 3 experiments, 533 students learned conceptual material via retrieval practice with restudy. Items were practiced until they were correctly recalled from 1 to 4 times during an initial learning session and were then practiced again to 1 correct recall in 1-5 subsequent relearning sessions". — [OpenAlex](https://api.openalex.org/works/https://doi.org/10.1037/a0023956)
+- Abstract: "Durability was measured by cued recall and rate of relearning 1-4 months after practice". — [OpenAlex](https://api.openalex.org/works/https://doi.org/10.1037/a0023956)
+- Abstract: "the effects of initial learning criterion were strong prior to relearning but then diminished as relearning increased. Relearning had pronounced effects on long-term retention with a relatively minimal cost in terms of additional practice trials." — [OpenAlex](https://api.openalex.org/works/https://doi.org/10.1037/a0023956)
+- Abstract: "our prescriptive conclusion for students is to practice recalling concepts to an initial criterion of 3 correct recalls and then to relearn them 3 times at widely spaced intervals." — [OpenAlex](https://api.openalex.org/works/https://doi.org/10.1037/a0023956)
+
+#### Inferences
+- The study supports spreading the L4 evidence over separate sessions rather than adding tasks to one session.
+- The study used "widely spaced" relearning and tested 1–4 months later. The harness uses about 3 sessions on 2 days, which is much tighter. The material was conceptual and tested by cued recall, not programming.
+
+#### Gaps
+- Full text not read. The intervals between relearning sessions were not checked.
+
+### F10. Deci, Koestner & Ryan (1999), "A meta-analytic review of experiments examining the effects of extrinsic rewards on intrinsic motivation"
+
+#### Takeaway
+**Verdict: correct, from the abstract and the full text, with two refinements.**
+1. Positive feedback raised free-choice intrinsic motivation for college students (d = 0.43, 14 studies) but not for children (d = 0.11, not significant, 7 studies). "More for college students than children" is therefore an understatement: for children there was no effect on free choice. The overall self-reported d = 0.31 is after removing 3 outliers; with all 24 studies it was 0.36.
+2. "Performance-contingent" is a subcategory of expected tangible rewards. It undermined free-choice motivation (d = −0.28) but did not affect self-reported interest.
+
+#### Cited Findings
+- Bibliographic: Psychological Bulletin 125(6), 627–668, 1999, DOI 10.1037/0033-2909.125.6.627. — [Crossref](https://api.crossref.org/works/10.1037/0033-2909.125.6.627)
+- Abstract: "engagement-contingent, completion-contingent, and performance-contingent rewards significantly undermined free-choice intrinsic motivation (d = -0.40, -0.36, and -0.28, respectively)". — [OpenAlex](https://api.openalex.org/works/https://doi.org/10.1037/0033-2909.125.6.627)
+- Abstract: "Positive feedback enhanced both free-choice behavior (d = 0.33) and self-reported interest (d = 0.31)." Also: "verbal rewards tended to be less enhancing for children than college students." — [OpenAlex](https://api.openalex.org/works/https://doi.org/10.1037/0033-2909.125.6.627)
+- Full text: "The 7 studies of verbal-reward effects for children yielded a nonsignificant composite effect size of d = 0.11 (CI = -0.11, 0.34)"; for the 14 college-student effects, "d = 0.43 (CI = 0.27, 0.58)". — [full text, University of Washington copy](https://depts.washington.edu/techdocs/papers/deciExtrinsicRewardsAndIntrinsicMotivation99.pdf)
+- Full text: "Symbolic rewards such as "good-player certificates" were considered tangible even though positive feedback was typically implicit in them." Expected tangible rewards "were further coded as task-noncontingent, engagement-contingent, completion-contingent, or performance-contingent". — [full text](https://depts.washington.edu/techdocs/papers/deciExtrinsicRewardsAndIntrinsicMotivation99.pdf)
+- Full text: "Performance-contingent rewards did not affect self-reported interest". Self-report: "The composite d = 0.36" for all 24 studies; "d = 0.31" after excluding 3 outliers. — [full text](https://depts.washington.edu/techdocs/papers/deciExtrinsicRewardsAndIntrinsicMotivation99.pdf)
+
+#### Inferences
+- Verbal, informational positive feedback fits students in higher education, the age group where it helped.
+- Badges and certificates count as tangible (symbolic) rewards in this coding. A badge given for good performance therefore belongs on the undermining side, not on the positive-feedback side.
+- These are mostly lab experiments with interesting tasks. The outcome is intrinsic motivation, not learning.
+
+#### Gaps
+- The later debate (re-analyses by Cameron and colleagues) was not checked. The full text was a copy of the database HTML on a university site, not the publisher's PDF.
+
+### F11. Henderlong & Lepper (2002), "The effects of praise on children's intrinsic motivation: A review and synthesis"
+
+#### Takeaway
+**Verdict: correct, from the abstract. Correct the author name.** The article was published under "Jennifer Henderlong" (Crossref). "Henderlong Corpus" is her later name, as OpenAlex shows, so cite it as Henderlong & Lepper (2002). One nuance: the abstract says competence "without an overreliance on social comparisons", not without any social comparison.
+
+#### Cited Findings
+- Bibliographic: Psychological Bulletin 128(5), 774–795, 2002, DOI 10.1037/0033-2909.128.5.774. Authors per Crossref: Jennifer Henderlong, Mark R. Lepper. — [Crossref](https://api.crossref.org/works/10.1037/0033-2909.128.5.774)
+- Abstract: "Provided that praise is perceived as sincere, it is particularly beneficial to motivation when it encourages performance attributions to controllable causes, promotes autonomy, enhances competence without an overreliance on social comparisons, and conveys attainable standards and expectations." — [OpenAlex](https://api.openalex.org/works/https://doi.org/10.1037/0033-2909.128.5.774)
+- Abstract: "The motivational consequences of praise also can be moderated by characteristics of the recipient, such as age, gender, and culture." — [OpenAlex](https://api.openalex.org/works/https://doi.org/10.1037/0033-2909.128.5.774)
+
+#### Inferences
+- This supports praise that names the strategy or (micro)skill that worked (a controllable cause), never compares with others, and points to an attainable next step.
+- The review is about children. Applying it to adult students is an extrapolation, and F10 shows that age matters.
+
+#### Gaps
+- Full text not read.
+
+### F12. Mitrovic, Ohlsson & Barrow (2013), "The effect of positive feedback in a constraint-based intelligent tutoring system"
+
+#### Takeaway
+**Verdict: correct as a summary, but the evidence is thin (full text read).**
+- In SQL-Tutor, students who also got positive feedback reached about the same knowledge (about 10 constraints) in about half the time.
+- Only 41 students were analysed. Time on the system was not controlled: students chose how long to use it.
+- There was no difference on the course exam.
+
+#### Cited Findings
+- Bibliographic: Computers & Education 60(1), 264–272, January 2013 (online July 2012), DOI 10.1016/j.compedu.2012.07.002. — [Crossref](https://api.crossref.org/works/10.1016/j.compedu.2012.07.002)
+- Abstract: "Empirical evaluation shows that students who were interacting with the augmented version of SQL-Tutor learned at twice the speed as the students who interacted with the standard, error feedback only, version." — [ERIC](https://eric.ed.gov/?id=EJ1006964)
+- Abstract: "We hypothesize that positive feedback works by reducing student uncertainty about tentative but correct problem solving steps." Positive feedback should communicate "(a) those features of the situation that made the action the correct one", "(b) the description of the action at a conceptual level and (c) the important aspect of the change in the problem state brought about by the action." — [ERIC](https://eric.ed.gov/?id=EJ1006964)
+- Full text: "Of the remaining 41 students, 18 were assigned to the experimental group, all males, and 23 to the control group, 21 males and 2 females." — [accepted manuscript, University of Canterbury](https://ir.canterbury.ac.nz/handle/10092/7398)
+- Full text: "we did not have control over how much time the students spent interacting with the tutoring system"; "the experimental group spent half as much time as the control group, 92.3 minutes as compared to 193.8 minutes"; "the two groups acquired approximately the same amount of knowledge." — [accepted manuscript](https://ir.canterbury.ac.nz/handle/10092/7398)
+- Full text: "There is no significant difference in the examination scores." Also: "Our results should not be interpreted as saying that positive feedback is more effective than negative feedback". — [accepted manuscript](https://ir.canterbury.ac.nz/handle/10092/7398)
+
+#### Inferences
+- This source is closest to the harness: a tutor for a programming-like language, with error feedback as the baseline.
+- It supports adding positive feedback on correct steps when that feedback explains what made the step correct. It does not support generic praise.
+- It does not show better learning, only the same learning in less time, in a small sample where students chose how long to practise.
+
+#### Gaps
+- The published version was not read. The accepted manuscript says "Mastery was reached in 60% of the time" in one place and "approximately half" in another.
+- An earlier conference paper (Barrow et al., ITS 2008) reports a similar result. Whether it uses the same sample was not checked.
+
+### F13. Finkelstein & Fishbach (2012), "Tell Me What I Did Wrong: Experts Seek and Respond to Negative Feedback"
+
+#### Takeaway
+**Verdict: correct, from the abstract.** Novices sought and responded to positive feedback, and experts to negative feedback. Positive feedback raised novices' commitment. Negative feedback raised experts' sense that they were not making enough progress.
+
+#### Cited Findings
+- Bibliographic: Journal of Consumer Research 39(1), 22–38, June 2012, DOI 10.1086/661934. — [OpenAlex](https://api.openalex.org/works/https://doi.org/10.1086/661934)
+- Abstract: the shift was documented "in a variety of domains, including feedback on language acquisition, pursuit of environmental causes, and use of consumer products." — [OpenAlex](https://api.openalex.org/works/https://doi.org/10.1086/661934)
+- Abstract: "Across these domains, novices sought and responded to positive feedback, and experts sought and responded to negative feedback." Also: "positive feedback increased novices’ commitment, and negative feedback increased experts’ sense that they were making insufficient progress." — [OpenAlex](https://api.openalex.org/works/https://doi.org/10.1086/661934)
+
+#### Inferences
+- This supports more positive feedback at the low levels, and more direct corrective feedback at L3 and L4.
+- "Expert" here means more experienced in a domain, such as advanced language students. It was not tested in programming.
+
+#### Gaps
+- Full text not read. The number of studies and N are not in the abstract.
+
+### F14. Eskreis-Winkler & Fishbach (2019), "Not Learning From Failure—the Greatest Failure of All"
+
+#### Takeaway
+**Verdict: correct as a summary of the paper; contested as a general rule.** In five studies, people learned less from failure feedback than from success feedback that carried the same information, and the authors explain this by ego threat and tuning out. Later work limits the claim:
+- Close replications found the effect (Keith et al., 2022; Gok & Fyfe, 2024).
+- The effect disappeared when corrective feedback or brief instruction followed the failure.
+- A 2025 commentary argues that the core task is confounded with answering consistently (Spiller, 2025).
+
+#### Cited Findings
+- Bibliographic: Psychological Science 30(12), 1733–1744, December 2019 (online November 2019), DOI 10.1177/0956797619881133. — [Crossref](https://api.crossref.org/works/10.1177/0956797619881133)
+- Abstract: "Yet in five studies (total N = 1,674), failure did the opposite: It undermined learning." Participants "answered binary-choice questions, following which they were told they answered correctly (success feedback) or incorrectly (failure feedback). Both types of feedback conveyed the correct answer, because there were only two answer choices." — [Crossref](https://api.crossref.org/works/10.1177/0956797619881133)
+- Abstract: "Failure is ego threatening, which causes people to tune out." Participants "learned just as much from other people’s failure as from others’ success." — [Crossref](https://api.crossref.org/works/10.1177/0956797619881133)
+- Keith, Horvath, Klamar & Frese (2022), Journal of Experimental Psychology: General 151(8), e19–e25, DOI 10.1037/xge0001170, two preregistered experiments, N = 520:
+    - "The tune-out effect fully replicated in those experimental conditions that represented close replications of the original study".
+    - "The effect also disappeared when additional corrective feedback was given (Experiment 2)."
+
+    — [OpenAlex](https://api.openalex.org/works/https://doi.org/10.1037/xge0001170)
+- Gok & Fyfe (2024), Journal of Experimental Psychology: General 153(9), 2328–2344, DOI 10.1037/xge0001632, six preregistered experiments, N = 1,306:
+    - "When it was a rule-based task and brief instructions on the rule were provided after feedback, there was no evidence of a detrimental effect of failure".
+    - "the tune-out reactions to failure during feedback disappear and may even be reversed when subsequent learning opportunities are provided."
+
+    — [PubMed](https://pubmed.ncbi.nlm.nih.gov/39235891/)
+- Spiller (2025), Psychological Science 36(11), 874–881, DOI 10.1177/09567976251333666, a commentary: "Because the effect of failure on performance is confounded with consistency, the Script Task is not diagnostic regarding whether people learn less from failure unless consistency is ruled out." — [OpenAlex](https://api.openalex.org/works/https://doi.org/10.1177/09567976251333666)
+
+#### Inferences
+- The harness follows a failed test with information: the test output and the hint ladder. That is the condition in which the tune-out effect disappeared.
+- So this source does not argue against honest failure feedback. It argues for following a failure with a next step, and for framing a demotion as support rather than a verdict on the person.
+
+#### Gaps
+- The full texts were not read. Whether the original authors replied to Spiller was not checked.
+
+### F15. Person, Kreuz, Zwaan & Graesser (1995), "Pragmatics and Pedagogy: Conversational Rules and Politeness Strategies May Inhibit Effective Tutoring"
+
+#### Takeaway
+**Verdict: correct, from the full text, and hedged ("may").** The authors analyse examples from two tutoring corpora (research methods and algebra). They argue that tutors avoid negative feedback because it threatens the student's face, which "may inhibit" effective tutoring. It is an analysis of examples, not a test of learning.
+
+#### Cited Findings
+- Bibliographic: Cognition and Instruction 13(2), 161–188, June 1995, DOI 10.1207/s1532690xci1302_1. Crossref and OpenAlex list the first author as "Natalie K. Pearson", but the article itself has "Natalie K. Person". The reference is right and the metadata has a typo. — [Crossref](https://api.crossref.org/works/10.1207/s1532690xci1302_1)
+- Abstract: "We examined two cross-aged tutoring corpora from research methods and algebra tutoring sessions to show how these rules and strategies can potentially enhance and inhibit effective tutoring." Also: "We suggest that politeness strategies are more prevalent in less constrained domains, even though their use may inhibit effective tutoring." — [OpenAlex](https://api.openalex.org/works/https://doi.org/10.1207/s1532690xci1302_1)
+- Full text: "Vague answers on the part of the student are normally met with positive feedback from the tutor rather than negative feedback (Graesser, 1993b)." — [full text, JSTOR scan on TalkBank](https://talkbank.org/class/access/0docs/person1995.pdf)
+- Full text: "It seems likely that tutors avoid negative feedback as much as possible, because it is very face threatening for the student. Consequently, this convention of normal conversation may inhibit the effectiveness of the tutoring process." — [full text](https://talkbank.org/class/access/0docs/person1995.pdf)
+- Full text, on errors: "Because, by definition, this is a face-threatening act, it seems likely that the politeness strategies will be employed to make the feedback less aversive." — [full text](https://talkbank.org/class/access/0docs/person1995.pdf)
+
+#### Inferences
+- A polite AI tutor carries the same risk: positive feedback on vague or wrong answers.
+- That supports tying positive feedback to an objective signal, such as green tests in `check.mjs`, rather than to the tutor's judgement in conversation.
+- It does not show how much learning the softening costs.
+
+#### Gaps
+- The figure that tutors give positive and negative feedback to wrong answers "with roughly equal likelihood" is cited from Graesser (1993b). That source was not checked.
+
+### F16. Chi, Siler, Jeong, Yamauchi & Hausmann (2001), "Learning from human tutoring"
+
+#### Takeaway
+**Verdict: correct, from the abstract and the full text, with two limits.**
+- The comparison runs across two small studies of 11 students each. The same 11 tutors returned a week later with new students, so this was not a randomized comparison.
+- Tutors were told to hold back both explanations and feedback. Their explanations nearly stopped, and their feedback halved.
+
+#### Cited Findings
+- Bibliographic: Cognitive Science 25(4), 471–533, July 2001, DOI 10.1207/s15516709cog2504_1. — [OpenAlex](https://api.openalex.org/works/https://doi.org/10.1207/s15516709cog2504_1)
+- Abstract: "tutors were suppressed from giving explanations and feedback. Instead, tutors were encouraged to prompt the students. Surprisingly, students learned just as effectively even when tutors were suppressed from giving explanations and feedback." — [OpenAlex](https://api.openalex.org/works/https://doi.org/10.1207/s15516709cog2504_1)
+- Full text: "Tutors were 11 college students … who had expertise in the domain of the human circulatory system, although they were unskilled tutors." Also: "The students were 11 eighth-graders". — [full text, ASU copy](https://education.asu.edu/sites/default/files/lcl/image3_2.pdf)
+- Full text: "The same 11 tutors were asked to return a week later for a second session of tutoring. Each of them tutored a different student". — [full text](https://education.asu.edu/sites/default/files/lcl/image3_2.pdf)
+- Full text: "tutors' explanations dropped from 327 in tutoring (Fig. 2) to 7 in prompting (Fig. 7); similarly, tutors' feedback dropped from 94 in tutoring to 44 in prompting." — [full text](https://education.asu.edu/sites/default/files/lcl/image3_2.pdf)
+
+#### Inferences
+- This supports content-free prompts ("what do you think?") as a real rung on the hint ladder. Feedback and explanation are not the only active ingredients.
+- "Just as effectively" with 11 students per study is weak evidence of equivalence.
+
+#### Gaps
+- No formal equivalence test was looked for.
+
+### F17. Soderstrom & Bjork (2015), "Learning Versus Performance: An Integrative Review"
+
+#### Takeaway
+**Verdict: correct, from the abstract.** Performance during practice is "often" an unreliable index of learning, and people often misread it as a guide to long-term learning. This source is also cited in B2.
+
+#### Cited Findings
+- Bibliographic: Perspectives on Psychological Science 10(2), 176–199, March 2015, DOI 10.1177/1745691615569000. — [Crossref](https://api.crossref.org/works/10.1177/1745691615569000)
+- Abstract: "what we can observe and measure is performance, which is often an unreliable index of whether the relatively long-term changes that constitute learning have taken place." Also: "certain manipulations can have opposite effects on learning and performance". — [OpenAlex](https://api.openalex.org/works/https://doi.org/10.1177/1745691615569000)
+- Abstract: "people often mistakenly interpret their performance during acquisition as a reliable guide to long-term learning." — [OpenAlex](https://api.openalex.org/works/https://doi.org/10.1177/1745691615569000)
+
+#### Inferences
+- This supports not demoting on one bad session, and asking for evidence on at least 2 days before mastery.
+- It also supports telling learners that a hard session is not evidence that they learned less.
+
+#### Gaps
+- Full text not read.
+
+### F18. Kirk-Johnson, Galla & Fraundorf (2019), "Perceiving effort as poor learning: The misinterpreted-effort hypothesis of how experienced effort and perceived learning relate to study strategy choice"
+
+#### Takeaway
+**Verdict: partly correct.** The first half holds in all three studies: learners who found a strategy more effortful rated it as less effective and chose it less often. "Although it helped memory more" was shown only in Study 3. There it was an association between choosing the more effortful strategy and better long-term retention. The paper also has a fourth study, on whether giving ratings drove the results.
+
+#### Cited Findings
+- Bibliographic: Cognitive Psychology 115, article 101237, December 2019 (online August 2019), DOI 10.1016/j.cogpsych.2019.101237. — [Crossref](https://api.crossref.org/works/10.1016/j.cogpsych.2019.101237)
+- Abstract: "In three studies, learners experienced a pair of contrasting study strategies (Study 1: interleaved vs. blocked schedule; Studies 2 & 3: retrieval practice vs. restudy) and rated their perceptions of each strategy before choosing one for future use." — [PubMed](https://pubmed.ncbi.nlm.nih.gov/31470194/)
+- Abstract: "In all three studies, mediation analysis revealed that participants who perceived a strategy as more effortful rated it as less effective for learning and, in turn, were less likely to choose it for future study." — [PubMed](https://pubmed.ncbi.nlm.nih.gov/31470194/)
+- Abstract: "Further, choosing the more effortful strategy was associated with better long-term retention (Study 3), contrary to participants' judgments. A final fourth study suggested that these relationships were not driven by the mere act of providing ratings." — [PubMed](https://pubmed.ncbi.nlm.nih.gov/31470194/)
+
+#### Inferences
+- This supports the one-time message at the session start that effort is the goal, not failure.
+- It is about how learners judge study strategies, not about feedback or demotions.
+
+#### Gaps
+- Full text not read. N per study is not in the abstract.
+
+### F19. de Bruin, Biwer, Hui, Onan, David & Wiradhany (2023), "Worth the Effort: the Start and Stick to Desirable Difficulties (S2D2) Framework"
+
+#### Takeaway
+**Verdict: correct, from the abstract. Correct the author list.** The paper has six authors, not four: add Louise David and Wisnu Wiradhany. Learners experience desirable difficulties as high effort and low learning, and resist them. The framework describes how to support them to start and to persist, and it reviews evidence and sets a research agenda.
+
+#### Cited Findings
+- Bibliographic: Educational Psychology Review 35(2), article 41, 2023 (online 27 March 2023), DOI 10.1007/s10648-023-09766-w. — [Crossref](https://api.crossref.org/works/10.1007/s10648-023-09766-w)
+- Abstract: "Learners often do not appreciate the beneficial effects of desirable difficulties, and the negative experiences of high effort and perceived low learning make them resistant to engage in desirable difficulties (Biwer et al., 2020a)." — [OpenAlex](https://api.openalex.org/works/https://doi.org/10.1007/s10648-023-09766-w)
+- Abstract: the aim is "(1) to describe evidence for the central role of perceived effort and perceived learning in (dis)engagement in desirable difficulties, and (2) to review evidence on, and provide an agenda for research to improve learners’ self-regulated use of desirable difficulties to help them start and persist when learning feels tough, but is actually effective." — [OpenAlex](https://api.openalex.org/works/https://doi.org/10.1007/s10648-023-09766-w)
+
+#### Inferences
+- This supports the effort message and gives it a framework. It does not say which wording works, and part of the proposed support is still a research agenda.
+
+#### Gaps
+- The open-access full text was not read (Springer redirected).
+
+### F20. Zepeda, Martin & Butler (2020), "Motivational strategies to engage learners in desirable difficulties"
+
+#### Takeaway
+**Verdict: correct, from the abstract.** The paper reviews five levers: finding value, reducing cost, reframing appraisals and attributions, creating appropriate challenges, and providing choice. "Little empirical work yet" is our reading of the authors' "clear need for empirical work". The abstract does not say how much work exists.
+
+#### Cited Findings
+- Bibliographic: Journal of Applied Research in Memory and Cognition 9(4), 468–474, December 2020, DOI 10.1016/j.jarmac.2020.08.007. — [Crossref](https://api.crossref.org/works/10.1016/j.jarmac.2020.08.007)
+- Abstract: "many learners choose not to use the learning strategies and/or disengage when they are implemented by a teacher." — [OpenAlex](https://api.openalex.org/works/https://doi.org/10.1016/j.jarmac.2020.08.007)
+- Abstract: "five areas of psychological research on motivation that provide strategies for increasing engagement and persistence: finding value, reducing cost, reframing appraisals and attributions, creating appropriate challenges, and providing choice." — [OpenAlex](https://api.openalex.org/works/https://doi.org/10.1016/j.jarmac.2020.08.007)
+- Abstract: "there is a clear need for empirical work to investigate and theoretical frameworks to explain the interplay between motivation and learning strategies that create desirable difficulties." — [OpenAlex](https://api.openalex.org/works/https://doi.org/10.1016/j.jarmac.2020.08.007)
+
+#### Inferences
+- This gives a checklist. The harness already uses some levers: reframing (the effort message, "extra support"), choice (only the learner's "yes, promote" raises a level) and fitting challenge (levels).
+- The evidence for each lever comes from general motivation research, not from tests with desirable difficulties.
+
+#### Gaps
+- Full text not read.
+
+### F21. Shih & Alexander (2000), "Interacting effects of goal setting and self- or other-referenced feedback on children's development of self-efficacy and cognitive skill within the Taiwanese classroom"
+
+#### Takeaway
+**Verdict: correct, from the abstract.** In a randomized study of 84 fourth-graders, self-referenced feedback led to higher fraction skill and self-efficacy than social-referenced feedback, and goal setting had no effect. The social-referenced group became less willing over the sessions and set lower goals over time. The paper uses "social-referenced", not "other-referenced".
+
+#### Cited Findings
+- Bibliographic: Journal of Educational Psychology 92(3), 536–543, 2000, DOI 10.1037/0022-0663.92.3.536. — [Crossref](https://api.crossref.org/works/10.1037/0022-0663.92.3.536)
+- Abstract: "Eighty-four fourth-grade Taiwanese children were randomly assigned to 1 of 4 treatment groups: goal setting with self-referenced feedback, goal setting with social-referenced feedback, self-referenced feedback only, and social-referenced feedback only." — [OpenAlex](https://api.openalex.org/works/https://doi.org/10.1037/0022-0663.92.3.536)
+- Abstract: "Children in the self-referenced groups demonstrated significantly higher fraction skill and self-efficacy than did children in the social-referenced groups; goal setting had no effect." — [OpenAlex](https://api.openalex.org/works/https://doi.org/10.1037/0022-0663.92.3.536)
+- Abstract: "There was a deterioration of social-referenced students' willingness to perform the task over multiple sessions, with this group setting significantly lower goals over time." — [OpenAlex](https://api.openalex.org/works/https://doi.org/10.1037/0022-0663.92.3.536)
+
+#### Inferences
+- This supports the dashboard rule "compare you only with yourself, never with others".
+- The participants were children (about 21 per group) learning fractions in Taiwan, so the result reaches students in higher education only by extension.
+
+#### Gaps
+- Full text not read. From the abstract alone, it is not clear which groups set goals in each session.
+
+### F22. Aguilar (2018), "Examining the Relationship Between Comparative and Self-Focused Academic Data Visualizations in At-Risk College Students' Academic Motivation"
+
+#### Takeaway
+**Verdict: correct, from the abstract, with one addition.** In interviews with 60 at-risk college students, self-focused visualisations drew statements about mastering material. Visualisations with a class average disheartened students "and/or" made them feel accountable to do better. So comparison was not only negative.
+
+#### Cited Findings
+- Bibliographic: Journal of Research on Technology in Education 50(1), 84–103, January 2018 (online December 2017), DOI 10.1080/15391523.2017.1401498. — [Crossref](https://api.crossref.org/works/10.1080/15391523.2017.1401498)
+- Abstract: the study "utilizes interviews (n = 60) to investigate how students at risk of college failure interpret visualizations of their potential academic achievement." — [OpenAlex](https://api.openalex.org/works/https://doi.org/10.1080/15391523.2017.1401498)
+- Abstract: "visualizations only containing information about students themselves (i.e., self-focused affordances) evoked statements centered on mastering material." Also: "Visualizations containing information about students and a class average (i.e., comparative information), on the other hand, evoked responses that disheartened students and/or made them feel accountable to do better." — [OpenAlex](https://api.openalex.org/works/https://doi.org/10.1080/15391523.2017.1401498)
+- Abstract, design guidelines: "(1) Never assume that more information is better; (2) anticipate and mitigate against potential misinterpretations—or harmful alternative interpretations—of visualizations; and (3) always suggest a way for students to improve." — [OpenAlex](https://api.openalex.org/works/https://doi.org/10.1080/15391523.2017.1401498)
+
+#### Inferences
+- This supports a dashboard that shows only the learner's own data. Guideline 3 (always suggest a way to improve) fits the phase card.
+- It is qualitative. It shows how students talk about the graphs, not what the graphs do to their behaviour or learning.
+
+#### Gaps
+- Full text not read.
+
+### F23. Long & Aleven (2017), "Enhancing learning outcomes through self-regulated learning support with an Open Learner Model"
+
+#### Takeaway
+**Verdict: correct, from the publisher's abstract.** There were two classroom experiments with 302 students in grades 7 and 8. In the first, smaller experiment, the open learner model (OLM) had a main effect on learning. In the second, larger one there was no main effect, but an interaction: students with the OLM learned better when shared control over problem selection was offered.
+
+#### Cited Findings
+- Bibliographic: User Modeling and User-Adapted Interaction 27(1), 55–88, March 2017 (online 31 December 2016), DOI 10.1007/s11257-016-9186-6. — [Crossref](https://api.crossref.org/works/10.1007/s11257-016-9186-6)
+- Abstract, read in fragments through a fetch tool: "In two classroom experiments with a total of 302 7th- and 8th-grade students, we investigated the effect of (a) an OLM that supports students' self-assessment of their equation-solving skills and (b) shared control over problem selection, on students’ equation-solving abilities, enjoyment of learning with the tutor, …". — [Springer](https://link.springer.com/article/10.1007/s11257-016-9186-6)
+- Abstract: "In the first, smaller experiment, the hypothesized main effect of the OLM on students’ learning outcomes was confirmed; we found no main effect of shared control of problem selection, nor an interaction." — [Springer](https://link.springer.com/article/10.1007/s11257-016-9186-6)
+- Abstract: "In the second, larger experiment, the hypothesized main effects were not confirmed, but we found an interaction such that the students who had access to the OLM learned significantly better equation-solving skills than their counterparts when shared control over problem selection was offered in the system." — [Springer](https://link.springer.com/article/10.1007/s11257-016-9186-6)
+- Abstract: "They suggest that an OLM is especially effective if it is designed to support multiple SRL processes." — [Springer](https://link.springer.com/article/10.1007/s11257-016-9186-6)
+
+#### Inferences
+- This supports showing learners their own skill model, with the caveat that the effect did not hold on its own in the larger experiment.
+- The harness's form of shared control (the learner confirms a promotion) differs from choosing the difficulty of the next problem.
+
+#### Gaps
+- Full text not read. The N per experiment, the effect sizes and exactly what the OLM showed were not checked.
+
+### F24. Kay & Kummerfeld (2012), "Creating personalized systems that people can scrutinize and control: Drivers, principles and experience"
+
+#### Takeaway
+**Verdict: correct, from the abstract.** The paper offers design principles for scrutable user models, drawn from twenty years of work on one framework (Personis). It gives principles, not effect sizes. "See why the model believes something" captures the idea; the abstract's words are "understanding and controlling".
+
+#### Cited Findings
+- Bibliographic: ACM Transactions on Interactive Intelligent Systems 2(4), 1–42 (pages per Crossref), December 2012, DOI 10.1145/2395123.2395129. — [Crossref](https://api.crossref.org/works/10.1145/2395123.2395129)
+- Abstract: "We offer scrutable user models as a foundation for tackling these problems." It presents "design principles and showing how they were established over our twenty years of work on the Personis software framework." — [OpenAlex](https://api.openalex.org/works/https://doi.org/10.1145/2395123.2395129)
+- Abstract: "Our contributions are the set of principles for scrutable personalization linked to our experience from creating and evaluating frameworks and associated applications built upon them." The approach works "by enabling users to scrutinize their user models as a basis for understanding and controlling personalization." — [OpenAlex](https://api.openalex.org/works/https://doi.org/10.1145/2395123.2395129)
+
+#### Inferences
+- This supports showing how each level change was decided in the level history (placement, proposal, by hand, analyst), and letting the learner revert it.
+- It is not evidence that scrutability improves learning.
+
+#### Gaps
+- Full text not read. The principles themselves were not listed or checked.
+
+### F25. Kaliisa, Misiejuk, López-Pernas, Khalil & Saqr (2024), "Have Learning Analytics Dashboards Lived Up to the Hype? A Systematic Review of Impact on Students' Achievement, Motivation, Participation and Attitude"
+
+#### Takeaway
+**Verdict: correct, but incomplete.** Across 38 studies there was no evidence that dashboards improve achievement, and the effects on motivation and attitudes were modest. The claim leaves out the one positive finding: a relatively substantial effect on participation, with medium to large effects in several studies. The authors also note serious design weaknesses in many of the studies.
+
+#### Cited Findings
+- Bibliographic: LAK '24, Proceedings of the 14th Learning Analytics and Knowledge Conference, 295–304, March 2024, DOI 10.1145/3636555.3636884. — [Crossref](https://api.crossref.org/works/10.1145/3636555.3636884)
+- Abstract: "This systematic review synthesizes the findings of 38 research studies". Also: "there is no evidence to support the conclusion that LADs have lived up to the promise of improving academic achievement. Most studies reported negligible or small effects, with limited evidence from well-powered controlled experiments." — [OpenAlex](https://api.openalex.org/works/https://doi.org/10.1145/3636555.3636884)
+- Abstract: "the impact of LADs on motivation and attitudes appeared modest, with only a few exceptions demonstrating significant effects." — [OpenAlex](https://api.openalex.org/works/https://doi.org/10.1145/3636555.3636884)
+- Abstract: "Notably, LADs showed a relatively substantial impact on student participation. Several studies reported medium to large effect sizes". Also: "Many studies merely compared users and non-users of LADs, confounding the dashboard effect with student engagement levels." — [OpenAlex](https://api.openalex.org/works/https://doi.org/10.1145/3636555.3636884)
+
+#### Inferences
+- Do not present the dashboard as a way to better grades. If it helps, the most likely route is engagement, such as coming back to practise.
+- Most dashboards in the review serve whole courses. A personal dashboard for one learner is a different setting.
+
+#### Gaps
+- Full text not read. Which kinds of dashboards drove the participation effects was not checked.
+
+### F26. Sailer & Homner (2020), "The Gamification of Learning: a Meta-analysis"
+
+#### Takeaway
+**Verdict: correct, from the abstract.** Gamification had small positive effects on cognitive (g = .49), motivational (g = .36) and behavioural (g = .25) learning outcomes. Only the cognitive effect was stable among high-rigour studies. The authors call the other two "less stable", which is softer than "unstable".
+
+#### Cited Findings
+- Bibliographic: Educational Psychology Review 32(1), 77–112, March 2020 (online August 2019), DOI 10.1007/s10648-019-09498-w. — [Crossref](https://api.crossref.org/works/10.1007/s10648-019-09498-w)
+- Abstract: cognitive "g = .49, 95% CI [0.30, 0.69], k = 19, N = 1686"; motivational "g = .36, 95% CI [0.18, 0.54], k = 16, N = 2246"; behavioural "g = .25, 95% CI [0.04, 0.46], k = 9, N = 951". — [OpenAlex](https://api.openalex.org/works/https://doi.org/10.1007/s10648-019-09498-w)
+- Abstract: "Whereas the effect of gamification on cognitive learning outcomes was stable in a subsplit analysis of studies employing high methodological rigor, effects on motivational and behavioral outcomes were less stable." — [OpenAlex](https://api.openalex.org/works/https://doi.org/10.1007/s10648-019-09498-w)
+- Abstract: "Inclusion of game fiction and social interaction were significant moderators of the effect of gamification on behavioral learning outcomes." — [OpenAlex](https://api.openalex.org/works/https://doi.org/10.1007/s10648-019-09498-w)
+
+#### Inferences
+- These are average effects over very different gamified designs. They say little about levels alone, or about a single learner without social interaction.
+
+#### Gaps
+- Full text not read. The effects per game element were not checked.
+
+### F27. Mekler, Brühlmann, Tuch & Opwis (2017), "Towards understanding the effects of individual gamification elements on intrinsic motivation and performance"
+
+#### Takeaway
+**Verdict: correct, from the full text.** With 273 participants, points, levels and leaderboards increased the number of tags produced but not their quality. They had no effect on intrinsic motivation or competence. The task was a single online image-tagging session of about 22 minutes, not a learning task.
+
+#### Cited Findings
+- Bibliographic: Computers in Human Behavior 71, 525–534, June 2017 (online September 2015), DOI 10.1016/j.chb.2015.08.048. — [Crossref](https://api.crossref.org/works/10.1016/j.chb.2015.08.048)
+- Abstract: "Compared to a control condition, game elements did not significantly affect competence or intrinsic motivation, irrespective of participants' causality orientation." — [full text, copy on a Harvard lab site](https://glassmanlab.seas.harvard.edu/annotated_works/mekler17.pdf)
+- Abstract: "points, and especially levels and leaderboard led to a significantly higher amount of tags generated compared to the control group." Also: "points, levels and leaderboards functioned as extrinsic incentives, effective only for promoting performance quantity." — [full text](https://glassmanlab.seas.harvard.edu/annotated_works/mekler17.pdf)
+- Full text: "A total of 273 participants"; "participants in the game element conditions did not generate tags of significantly higher quality". Also: "participants took on average around 22 min to complete the study." — [full text](https://glassmanlab.seas.harvard.edu/annotated_works/mekler17.pdf)
+
+#### Inferences
+- Levels can push the number of tasks without better work or more intrinsic motivation.
+- The harness gates levels on quality evidence (solved without help, own-words explanation), which guards against this.
+
+#### Gaps
+- None for the claim. The leaderboard used fictitious participants, which limits what it says about real comparison.
+
+### F28. Landers (2014), "Developing a Theory of Gamified Learning: Linking Serious Games and Gamification of Learning"
+
+#### Takeaway
+**Verdict: correct for the mechanism; the second half is our reading.** In this theory, gamification changes learning-related behaviours or attitudes. These then affect learning either by strengthening the link between the quality of the instruction and the outcomes, or directly. "It enhances instruction, it does not replace it" is a fair reading of the moderating path, but these words are not in the abstract. It is a theory paper without data.
+
+#### Cited Findings
+- Bibliographic: Simulation & Gaming 45(6), 752–768, December 2014, DOI 10.1177/1046878114563660. — [OpenAlex](https://api.openalex.org/works/https://doi.org/10.1177/1046878114563660)
+- Abstract: "gamification is defined as the use of game attributes, as defined by the Bedwell taxonomy, outside the context of a game with the purpose of affecting learning-related behaviors or attitudes." — [OpenAlex](https://api.openalex.org/works/https://doi.org/10.1177/1046878114563660)
+- Abstract: "These behaviors/attitudes, in turn, influence learning by one or two processes: by strengthening the relationship between instructional design quality and outcomes (a moderating process) and/or by influencing learning directly (a mediating process)." — [OpenAlex](https://api.openalex.org/works/https://doi.org/10.1177/1046878114563660)
+
+#### Inferences
+- A game element in the harness should aim at a behaviour that matters, such as returning for a spaced session or explaining in one's own words. It can only help if the instruction behind it is sound.
+
+#### Gaps
+- Full text not read.
+
+### F29. Silverman & Barasch (2023), "On or Off Track: How (Broken) Streaks Affect Consumer Decisions"
+
+#### Takeaway
+**Verdict: correct, from the abstract, including both extra parts.** Across seven studies, an intact streak led to more later engagement than a broken one. The effect was stronger when people blamed the break on themselves, and weaker when they could "repair" the streak. Note that the comparison is an intact against a broken streak, not a streak against no streak.
+
+#### Cited Findings
+- Bibliographic: Journal of Consumer Research 49(6), 1095–1117, issue of 2023 (online 30 June 2022), DOI 10.1093/jcr/ucac029. OpenAlex gives the year as 2022. — [Crossref](https://api.crossref.org/works/10.1093/jcr/ucac029)
+- Abstract: streaks are "behaviors performed consecutively three or more times". Also: "In seven studies, we find that intact streaks highlighted via behavioral logs increase consumers’ subsequent engagement in that behavior, relative to when broken streaks are highlighted." — [Crossref](https://api.crossref.org/works/10.1093/jcr/ucac029)
+- Abstract: "this effect is independent of actual past behavior and depends solely on how that behavior is represented within the log." — [Crossref](https://api.crossref.org/works/10.1093/jcr/ucac029)
+- Abstract: "the effect of intact (vs. broken) logged streaks is amplified when consumers attribute a break in the streak to themselves rather than to external factors, and attenuated when consumers can “repair” a broken streak." — [Crossref](https://api.crossref.org/works/10.1093/jcr/ucac029)
+
+#### Inferences
+- If the harness ever shows a streak (for example, days in a row), a broken one may lower engagement, and a repair option softens that.
+- Because the effect depends only on how behaviour is shown, the choice of display is itself an intervention.
+- The outcomes are consumer behaviours, not learning.
+
+#### Gaps
+- Full text not read. Effect sizes were not checked.
+
+### F30. Bai, Hew & Huang (2020), "Does gamification improve student learning outcome? Evidence from a meta-analysis and synthesis of qualitative data in educational contexts"
+
+#### Takeaway
+**Verdict: correct, partly from a secondary copy of the abstract.** Thirty interventions from 24 quantitative studies gave an overall g = 0.504 on academic performance. Students liked gamification for enthusiasm, feedback, recognition and goal setting. They disliked it because it adds no utility and can cause anxiety or jealousy. The effect size is from Semantic Scholar's copy of the abstract, which stops right after it. The qualitative part is from a University of Zurich course wiki.
+
+#### Cited Findings
+- Bibliographic: Educational Research Review 30, article 100322, June 2020, DOI 10.1016/j.edurev.2020.100322. A secondary page gives volume 33; Crossref says 30. — [Crossref](https://api.crossref.org/works/10.1016/j.edurev.2020.100322)
+- Abstract: "This study is a meta-analysis of 30 independent interventions (3,202 participants) drawn from 24 quantitative studies". Also: "The results show an overall significant medium effect size in favor of gamification over learning without gamification (Hedges' g = 0.504, 95% CI [0.284–0.723]". — [Semantic Scholar](https://api.semanticscholar.org/graph/v1/paper/DOI:10.1016/j.edurev.2020.100322?fields=abstract)
+- Abstract, secondary copy: "four reasons for learners’ enjoyment of gamification: (a) gamification can foster enthusiasm; (b) gamification can provide feedback on performance; (c) gamification can fulfill learners’ needs for recognition; and (d) gamification can promote goal setting, and two reasons for their dislike of gamification: (a) gamification does not bring additional utility and (b) gamification can cause anxiety or jealousy." — [UZH course wiki](https://www.gbl.uzh.ch/quartz/references/Bai-et-al.-%282020%29)
+
+#### Inferences
+- The anxiety and jealousy findings fit the choice of no leaderboard and no comparison with others.
+- g ≈ 0.50 is an average over varied designs and is close to Sailer & Homner's cognitive estimate (F26).
+
+#### Gaps
+- The publisher's abstract was not reached (ScienceDirect returned 403). The number of qualitative studies (32, per the secondary page) was not seen in the abstract. Full text not read.
+
+### F31. Hanus & Fox (2015), "Assessing the effects of gamification in the classroom: A longitudinal study on intrinsic motivation, social comparison, satisfaction, effort, and academic performance"
+
+#### Takeaway
+**Verdict: correct, from a secondary copy of the abstract.** A course with badges and a leaderboard was compared with the same course without them over a 16-week semester. Students in the gamified course showed less motivation, satisfaction and empowerment over time. Their final exam scores were lower, an effect mediated by intrinsic motivation. Two cautions:
+- This compares two courses, not randomly assigned students.
+- A corrigendum was published in 2018, and I could not read what it corrects.
+
+#### Cited Findings
+- Bibliographic: Computers & Education 80, 152–161, January 2015 (online September 2014), DOI 10.1016/j.compedu.2014.08.019. — [Crossref](https://api.crossref.org/works/10.1016/j.compedu.2014.08.019)
+- Corrigendum: Computers & Education 127, 298 (December 2018), DOI 10.1016/j.compedu.2018.09.019. It is registered in Crossref as an erratum to this article. — [Crossref](https://api.crossref.org/works/10.1016/j.compedu.2018.09.019)
+- Abstract, seen only in search-engine snippets of a library catalogue record (the page itself returned 403):
+    - "One course received a gamified curriculum, featuring a leaderboard and badges, whereas the other course received the same curriculum without the gamified elements."
+    - "Students were measured at four points during a 16-week semester."
+    - "The effect of course type on students' final exam scores was mediated by students' levels of intrinsic motivation, with students in the gamified course showing less motivation and lower final exam scores than the non-gamified class."
+
+    — [catalogue record](https://ersearch2.cvtisr.sk/vufind/SummonRecord/FETCH-LOGICAL-c408t-d82df39d2133f93d47d3d98f9c9aadee3039f9f89021367e6820fad79509cf9e3/Details?lng=en)
+- Summary line on a paper-index page (not the abstract): "It was found that students in the gamified course showed less motivation, satisfaction, and empowerment over time than those in the non-gamified class". — [ai.updf.com](https://ai.updf.com/paper-detail/assessing-the-effects-of-gamification-in-the-classroom-a-longitudinal-hanus-fox-dff76a9862467d426113ec530f83942016ae3a97)
+
+#### Inferences
+- Badges and a leaderboard over a whole course lowered intrinsic motivation, and through it exam scores. This supports leaving out a leaderboard and being careful with badges (see also F10 on symbolic rewards).
+- It is one study of two classes.
+
+#### Gaps
+- The publisher's abstract and the full text were not reached: ScienceDirect returned 403, and the ACM Digital Library showed a bot check. The sample of 71 students was seen only in search summaries.
+- The content of the 2018 corrigendum is unknown, so whether it changes the results was not checked.

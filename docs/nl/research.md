@@ -596,8 +596,9 @@ De verschuiving pleit dus voor het **toevoegen** van bewuste oefening in vaardig
 | P11 | **Handhaaf vangrails in de workflow, niet alleen in prompts.** | Barth 2026 (alleen prompts: geen effect); Oreopoulos 2026; Sankaranarayanan 2026; Teo 2026 (tutors helpen te veel) | Matig |
 | P12 | **Oefen onder toetsomstandigheden vóór de toets**: op tijd, zonder AI, in de IDE van je toets, na eerst leren zonder druk. | Transfer-appropriate processing (Morris 1977); Pan & Rickard 2018; Hinze & Rapp 2014; Driskell 2001 | Matig (geen IDE-specifieke studie) |
 | P13 | **Train toezicht als aparte vaardigheid**: AI-uitvoer lezen, testen, debuggen en specificeren, bij onderwerpen die je al zelf kunt schrijven. | Paradox van het toezicht (Anthropic 2025b); sollicitatievormen van werkgevers; CS1-LLM; Pădurean 2026; §2.9 | Afleiding, consistent over bronnen heen |
+| P14 | **Niveaus informeren, ze belonen niet.** Geen punten, badges, reeksen of leaderboards: een niveau zegt welke hulp je krijgt, niet welke status je hebt. Toon voortgang ten opzichte van je eigen eerdere werk, niet ten opzichte van anderen. | Gamification: kleine effecten, alleen het cognitieve blijft staan in strenge studies (Sailer & Homner 2020); punten, levels en leaderboards verhoogden de hoeveelheid werk, niet de kwaliteit of de intrinsieke motivatie (Mekler et al. 2017); een vak met badges en een leaderboard ging samen met minder motivatie en lagere tentamencijfers (Hanus & Fox 2015, twee vakken vergeleken); beloningen die afhangen van prestatie verlaagden de motivatie bij vrije keuze (Deci et al. 1999); een gebroken reeks verlaagt de inzet (Silverman & Barasch 2023); feedback ten opzichte van je eigen werk werkte beter dan sociale vergelijking (Shih & Alexander 2000) | Matig (tegen het toevoegen van deze elementen) |
 
-Samen genomen bouwen P1–P6 en P11 een vaardigheid op, besteden P7 en P13 die uit, en houdt P8 die op peil. §2.12 past die afweging toe op junior developers op hun werk.
+Samen genomen bouwen P1–P6 en P11 een vaardigheid op, besteden P7 en P13 die uit, en houdt P8 die op peil. P14 houdt de niveaus informatief, en toont voortgang ten opzichte van jezelf (§10.7). §2.12 past die afweging toe op junior developers op hun werk.
 
 ### 2.12 Het eeuwige-juniorprobleem
 
@@ -1862,6 +1863,38 @@ Geschreven door Piet Hanegraaf met Claude (Anthropic); zie de [AI-verklaring](ai
 - Belland, B. R., Walker, A. E., Kim, N. J., & Lefler, M. (2017). Synthesizing results from empirical research on computer-based scaffolding in STEM education: A meta-analysis. *Review of Educational Research, 87*(2), 309–344. https://doi.org/10.3102/0034654316670999
 - van de Pol, J., Volman, M., Oort, F., & Beishuizen, J. (2015). The effects of scaffolding in the classroom: Support contingency and student independent working time in relation to student achievement, task effort and appreciation of support. *Instructional Science, 43*(5), 615–641. https://doi.org/10.1007/s11251-015-9351-z
 
+**Toegevoegd op 12 november 2026: positieve feedback, demoties en de fasegeschiedenis**
+
+- Aguilar, S. J. (2018). Examining the relationship between comparative and self-focused academic data visualizations in at-risk college students' academic motivation. *Journal of Research on Technology in Education, 50*(1), 84–103. https://doi.org/10.1080/15391523.2017.1401498
+- Baumeister, R. F., Bratslavsky, E., Finkenauer, C., & Vohs, K. D. (2001). Bad is stronger than good. *Review of General Psychology, 5*(4), 323–370. https://doi.org/10.1037/1089-2680.5.4.323
+- de Bruin, A. B. H., Biwer, F., Hui, L., Onan, E., David, L., & Wiradhany, W. (2023). Worth the effort: The Start and Stick to Desirable Difficulties (S2D2) framework. *Educational Psychology Review, 35*(2), 41. https://doi.org/10.1007/s10648-023-09766-w
+- Deci, E. L., Koestner, R., & Ryan, R. M. (1999). A meta-analytic review of experiments examining the effects of extrinsic rewards on intrinsic motivation. *Psychological Bulletin, 125*(6), 627–668. https://doi.org/10.1037/0033-2909.125.6.627
+- Eskreis-Winkler, L., & Fishbach, A. (2019). Not learning from failure—the greatest failure of all. *Psychological Science, 30*(12), 1733–1744. https://doi.org/10.1177/0956797619881133
+- Finkelstein, S. R., & Fishbach, A. (2012). Tell me what I did wrong: Experts seek and respond to negative feedback. *Journal of Consumer Research, 39*(1), 22–38. https://doi.org/10.1086/661934
+- Gok, S., & Fyfe, E. R. (2024). Learning from failure: The roles of self-focused feedback, task expectations, and subsequent instruction. *Journal of Experimental Psychology: General, 153*(9), 2328–2344. https://doi.org/10.1037/xge0001632
+- Hanus, M. D., & Fox, J. (2015). Assessing the effects of gamification in the classroom: A longitudinal study on intrinsic motivation, social comparison, satisfaction, effort, and academic performance. *Computers & Education, 80*, 152–161. https://doi.org/10.1016/j.compedu.2014.08.019
+- Harkin, B., Webb, T. L., Chang, B. P. I., Prestwich, A., Conner, M., Kellar, I., Benn, Y., & Sheeran, P. (2016). Does monitoring goal progress promote goal attainment? A meta-analysis of the experimental evidence. *Psychological Bulletin, 142*(2), 198–229. https://doi.org/10.1037/bul0000025
+- Henderlong, J., & Lepper, M. R. (2002). The effects of praise on children's intrinsic motivation: A review and synthesis. *Psychological Bulletin, 128*(5), 774–795. https://doi.org/10.1037/0033-2909.128.5.774
+- Kaliisa, R., Misiejuk, K., López-Pernas, S., Khalil, M., & Saqr, M. (2024). Have learning analytics dashboards lived up to the hype? A systematic review of impact on students' achievement, motivation, participation and attitude. *Proc. LAK '24*, 295–304. https://doi.org/10.1145/3636555.3636884
+- Kay, J., & Kummerfeld, B. (2012). Creating personalized systems that people can scrutinize and control: Drivers, principles and experience. *ACM Transactions on Interactive Intelligent Systems, 2*(4), 1–42. https://doi.org/10.1145/2395123.2395129
+- Keith, N., Horvath, D., Klamar, A., & Frese, M. (2022). Failure to learn from failure is mitigated by loss-framing and corrective feedback: A replication and test of the boundary conditions of the tune-out effect. *Journal of Experimental Psychology: General, 151*(8), e19–e25. https://doi.org/10.1037/xge0001170
+- Kirk-Johnson, A., Galla, B. M., & Fraundorf, S. H. (2019). Perceiving effort as poor learning: The misinterpreted-effort hypothesis of how experienced effort and perceived learning relate to study strategy choice. *Cognitive Psychology, 115*, 101237. https://doi.org/10.1016/j.cogpsych.2019.101237
+- Kivetz, R., Urminsky, O., & Zheng, Y. (2006). The goal-gradient hypothesis resurrected: Purchase acceleration, illusionary goal progress, and customer retention. *Journal of Marketing Research, 43*(1), 39–58. https://doi.org/10.1509/jmkr.43.1.39
+- Koo, M., & Fishbach, A. (2012). The small-area hypothesis: Effects of progress monitoring on goal adherence. *Journal of Consumer Research, 39*(3), 493–509. https://doi.org/10.1086/663827
+- Long, Y., & Aleven, V. (2017). Enhancing learning outcomes through self-regulated learning support with an open learner model. *User Modeling and User-Adapted Interaction, 27*(1), 55–88. https://doi.org/10.1007/s11257-016-9186-6
+- Mekler, E. D., Brühlmann, F., Tuch, A. N., & Opwis, K. (2017). Towards understanding the effects of individual gamification elements on intrinsic motivation and performance. *Computers in Human Behavior, 71*, 525–534. https://doi.org/10.1016/j.chb.2015.08.048
+- Mitrovic, A., Ohlsson, S., & Barrow, D. K. (2013). The effect of positive feedback in a constraint-based intelligent tutoring system. *Computers & Education, 60*(1), 264–272. https://doi.org/10.1016/j.compedu.2012.07.002
+- Person, N. K., Kreuz, R. J., Zwaan, R. A., & Graesser, A. C. (1995). Pragmatics and pedagogy: Conversational rules and politeness strategies may inhibit effective tutoring. *Cognition and Instruction, 13*(2), 161–188. https://doi.org/10.1207/s1532690xci1302_1
+- Rawson, K. A., & Dunlosky, J. (2011). Optimizing schedules of retrieval practice for durable and efficient learning: How much is enough? *Journal of Experimental Psychology: General, 140*(3), 283–302. https://doi.org/10.1037/a0023956
+- Rewley, J., Guszcza, J., Dierst-Davies, R., Steier, D., Szwartz, G., & Patel, M. (2021). Loss aversion explains physical activity changes in a behavioral gamification trial. *Games for Health Journal, 10*(6), 430–436. https://doi.org/10.1089/g4h.2021.0130
+- Sailer, M., & Homner, L. (2020). The gamification of learning: A meta-analysis. *Educational Psychology Review, 32*(1), 77–112. https://doi.org/10.1007/s10648-019-09498-w
+- Shih, S.-S., & Alexander, J. M. (2000). Interacting effects of goal setting and self- or other-referenced feedback on children's development of self-efficacy and cognitive skill within the Taiwanese classroom. *Journal of Educational Psychology, 92*(3), 536–543. https://doi.org/10.1037/0022-0663.92.3.536
+- Silverman, J., & Barasch, A. (2023). On or off track: How (broken) streaks affect consumer decisions. *Journal of Consumer Research, 49*(6), 1095–1117. https://doi.org/10.1093/jcr/ucac029
+- Soderstrom, N. C., & Bjork, R. A. (2015). Learning versus performance: An integrative review. *Perspectives on Psychological Science, 10*(2), 176–199. https://doi.org/10.1177/1745691615569000
+- Usher, E. L., & Pajares, F. (2008). Sources of self-efficacy in school: Critical review of the literature and future directions. *Review of Educational Research, 78*(4), 751–796. https://doi.org/10.3102/0034654308321456
+- Villar, A., Callegaro, M., & Yang, Y. (2013). Where am I? A meta-analysis of experiments on the effects of progress indicators for web surveys. *Social Science Computer Review, 31*(6), 744–762. https://doi.org/10.1177/0894439313497468
+- Zepeda, C. D., Martin, R. S., & Butler, A. C. (2020). Motivational strategies to engage learners in desirable difficulties. *Journal of Applied Research in Memory and Cognition, 9*(4), 468–474. https://doi.org/10.1016/j.jarmac.2020.08.007
+
 ---
 
 <a id="bijlage-implementatieschetsen"></a>
@@ -2308,11 +2341,80 @@ Hulp over een concept van een andere familie blijft bij de taak en wordt ook bij
 - **28: ook in `check.mjs`.** Na hulp vraagt de regel over de uitleg nu naar het punt waar de hulp nodig was. De Stop-hook is niet veranderd.
 - **30: met `--yes` of zonder terminal stopt hij,** tenzij er ook `--force` bij staat. Een vraag alleen had in de pilot niet geholpen: de update kwam uit een andere Claude-sessie, en die kan geen vraag beantwoorden. "Lopend" betekent een sessie die in de laatste `idleMinutes` (standaard 20) actief was. De hooks kunnen oefenen en praten over de harnas niet uit elkaar houden, dus elke sessie in de map telt.
 
+### 10.7 Herziening van 12 november 2026: positieve feedback, demoties en de fasegeschiedenis
+
+Na de sessies van 11 en 12 november zei de student: "waarom heb ik tot nu toe alleen maar automatische demoties gehad en geen promoties?" De setup is kritisch tegen dat gevoel gehouden, en tegen de literatuur over positieve feedback, gamification en desirable difficulties. Die review is niet gepubliceerd, omdat er leerdata in staan. De nummering loopt door (31–46). Elk punt is eerst aan de literatuur getoetst, daarna besliste de student. De gekozen punten zijn in de harnas gebouwd; waar de bouw afwijkt van het plan, staat dat in §10.7.3.
+
+**De feiten tegenover het gevoel.** De log liet 4 keer omhoog zien (1 promotie die de student bevestigde, 3 plaatsingen) en 1 keer omlaag: een nieuwe microvaardigheid, terwijl de ouder op L3 bleef. Een bestaand niveau was nooit automatisch gezakt. Maar de 4 keer omhoog waren stil (één regel in de uitvoer van `check.mjs`), en de ene keer omlaag was het luidste moment van de harnas: een hookmelding, een agent-run en een blok JSON in de chat. Daaromheen was bijna elke goedgekeurde uitleg eerst één keer afgewezen (24 goedgekeurd, 22 afgewezen). Het gevoel was een eerlijk signaal over hoe de feedback *voelde*, niet over hoe de student presteerde.
+
+#### 10.7.1 Besluiten
+
+| # | Besluit | Getoetst aan | Oordeel |
+|---|---|---|---|
+| 31 | **Omhoog is luid, omlaag is stil.** Een plaatsing of promotie krijgt een eigen melding met ↑ en het bewijs, ook bij de sessiestart en in `status`. Omlaag is één regel, "extra steun voor …", met de weg terug. De harnas leest het oordeel van de demotie-analist uit het rapport van de agent zelf, dus er komt geen JSON in de chat; de controle van het oordeel blijft. | Slechte gebeurtenissen en slechte feedback wegen zwaarder dan goede (Baumeister et al. 2001). Verliesaversie trad in het algemeen op bij levels die verdiend waren, niet bij levels die gegeven werden (Rewley et al. 2021). Een eigen succeservaring is meestal de sterkste bron van self-efficacy (Usher & Pajares 2008), en alleen als die als succes wordt gezien. | **Gesteund.** |
+| 32 | **Bug: een verlaging werd uitgevoerd op oud bewijs.** Toen het oordeel van de analist werd verwerkt, klopte het criterium niet meer (3 van 4 gelukt, 75%). Nu wordt het criterium opnieuw gecontroleerd, in de prompt-gate en bij het uitvoeren van het oordeel; klopt het niet meer, dan gaat er niets omlaag (`demotion-cancelled`). Omlaag wacht ook zolang er een uitleg van die familie openstaat, net als omhoog. | (bug) | **Opgelost.** |
+| 33 | **Minstens 4 uitgelegde taken voordat het omlaag gaat** (het was 3), voor beide regels. De analist houdt alleen `micro` en `ouder`. | De harnas mikt op ongeveer 85% succes (P4). Met 3 taken is één moeizame taak genoeg: bij precies 85% gebeurt dat in 39% van de gevallen; met 4 taken zijn er twee nodig (ongeveer 11%). Meer dan een derde van de feedbackinterventies verlaagt de prestatie, vooral als de aandacht naar het zelf gaat (Kluger & DeNisi 1996). | **Gesteund.** Het plan was 5 taken en een derde oordeel "niet verlagen"; de student koos 4, als tussenweg. |
+| 34 | **Omlaag telt de trede binnen de familie.** Hulp over een concept van een andere familie (`[trede N #id]`) is geen mislukking van de vaardigheid van de taak. De taak houdt zijn volle trede (eerlijk, #26). De analist mag een bestaande microvaardigheid van een andere familie kiezen. | Knowledge tracing: het bewijs hoort bij de regel waar het over ging (Corbett & Anderson 1994). | **Gesteund (een meetfout, zoals #26).** |
+| 35 | **De voortgang naar het volgende niveau, in de chat,** in stappen, nooit als percentage: na elke taak, bij `status` en bij de sessiestart. | De inzet stijgt naarmate het doel dichterbij komt (Kivetz et al. 2006); toon aan het begin wat al gedaan is, en dicht bij het doel wat nog rest (Koo & Fishbach 2012). Voortgang bijhouden helpt doelen bereiken (Harkin et al. 2016). Een voortgangsbalk die traag begint verhoogt de uitval (Villar et al. 2013): dus stappen, geen percentage. | **Gesteund.** |
+| 36 | **L4 binnen bereik.** (a) De taak die een vaardigheid plaatste telt mee na de plaatsing. (b) De transfertaak is één van de drie keer zonder hint, en haar dag een dag. Zijn de opdrachtmappen van een L3-vaardigheid op, dan wijst Claude een bestaande volgende oefening aan; een oefentoetsvraag telt mee via `done`. Ontwerpdoel: wie dagelijks oefent en de stof beheerst, haalt L4 in ongeveer 3 sessies op 2 dagen; een test bewaakt dat. De dag blijft de UTC-datum. | Mastery learning werkt door voldoende oefenkansen met feedback (Kulik et al. 1990). Een criterium dat niet te halen is, is een plafond, en dat ondermijnt het gevoel van competentie (Ryan & Deci 2000). Opnieuw leren in latere sessies woog zwaarder dan extra goede antwoorden in de eerste sessie (Rawson & Dunlosky 2011). Hun sessies lagen ver uit elkaar en het ging om begrippen, niet om code: "ongeveer 3 sessies op 2 dagen" is een afleiding, en een krappe. | **Gesteund.** In de woorden van de student: de trage weg naar L4 "is niet werkbaar voor een junior dev". |
+| 37 | **Eerst lof, dan de eis.** `check.mjs` noemt wat lukte en de (micro)vaardigheid, en geeft de uitleg als uitnodiging. Met hulp: "hier zat het leren: `<concept>`". Een uitwerking (trede 5) heeft een eigen, eerlijke tekst (een bug: die kreeg de zachte tekst van trede 3–4). | Verbale positieve feedback verhoogde de intrinsieke motivatie bij vrije keuze voor studenten, niet voor kinderen (Deci, Koestner & Ryan 1999). Lof werkt als hij oprecht is en wijst op oorzaken die de leerder zelf beïnvloedt (Henderlong & Lepper 2002). Met positieve feedback op juiste stappen leerden studenten in SQL-Tutor even veel in ongeveer de helft van de tijd (Mitrovic et al. 2013; 41 studenten, geen verschil op het tentamen). | **Gesteund.** |
+| 38 | **Eerst noemen wat klopt, dan één vervolgvraag.** De eis blijft. De waaromcheck accepteert ook "als …, dan/zou …" in één zin. | Beginners zoeken en gebruiken positieve feedback (Finkelstein & Fishbach 2012). Mensen leerden minder van falen dan van succes, bij dezelfde informatie (Eskreis-Winkler & Fishbach 2019); in replicaties verdween dat effect als er corrigerende feedback of een korte instructie volgde (Keith et al. 2022; Gok & Fyfe 2024), en dat is wat een vervolgvraag doet. Tegen te zacht: beleefdheid kan de fout verbergen (Person et al. 1995), dus het gat wordt wel benoemd. De eis zelf blijft gesteund (zelfuitleg, Bisra et al. 2018). | **Gesteund voor de vorm, niet voor minder strengheid.** De regel "als … dan" kwam uit een sessie waarin een goede uitleg werd afgewezen omdat er geen redenwoord in stond. |
+| 39 | **Moeite is het doel, geen falen.** Na een taak met hulp: "hier zat het leren". Eén keer, bij de eerste sessiestart, een korte uitleg. | De prestatie tijdens het oefenen is een slechte maat voor leren (Soderstrom & Bjork 2015). Leerders vonden de strategie die moeite kost minder effectief en kozen haar minder vaak (Kirk-Johnson et al. 2019). Leerders hebben steun nodig om aan desirable difficulties te beginnen en ze vol te houden (de Bruin et al. 2023); één hefboom is moeite anders duiden (Zepeda et al. 2020). | **Gesteund**, als raamwerk: er is nog weinig empirisch werk naar deze hefbomen. |
+| 40 | **Bug in de woorden van het dashboard:** de tegel "zelfstandig gelukt" telde trede ≤ 2. Nu twee tegels: "gelukt (trede ≤ 2)" en "zelfstandig (trede 0)". | #27 | **Opgelost.** |
+| 45 | **De fasegeschiedenis op het dashboard** (met #41): per vaardigheid één band over de dagen, met "start" apart; taken als stippen; microvaardigheden onder hun ouder; elke wijziging gemarkeerd met hoe hij besloten is; één zin die alleen met jezelf vergelijkt. De export zegt nu hoe een wijziging besloten is (`kind`, een vaste lijst woorden) en laat wijzigingen zonder verschil weg. | Feedback ten opzichte van je eigen eerdere werk gaf meer vaardigheid en self-efficacy dan feedback ten opzichte van klasgenoten (Shih & Alexander 2000, een experiment met 84 kinderen). Een klasgemiddelde ontmoedigde een deel van de studenten (Aguilar 2018, interviews). Het leerdermodel openen kan helpen (Long & Aleven 2017), en een model hoort te laten zien waarop het oordeel rust (Kay & Kummerfeld 2012). | **Gesteund, als afleiding:** er is geen studie gevonden die een geschiedenisweergave van een leerdermodel toetst. Dashboards in het algemeen lieten geen effect op prestaties zien, een bescheiden effect op motivatie en een groter effect op deelname (Kaliisa et al. 2024). De echte toets: na twee weken vragen of het gevoel "alleen omlaag" veranderd is. |
+| 42 | **Afwijzingen per taak op het openbare dashboard.** | Voortgang openbaar rapporteren helpt (Harkin et al. 2016); falen kan mensen doen afhaken (Eskreis-Winkler & Fishbach 2019). | **Deels gesteund, niet gekozen:** de student hield ze openbaar, met de redenen. |
+| 43 | **Geen punten, badges, reeksen of leaderboards.** Een niveau informeert: het zegt welke hulp je krijgt, niet welke status je hebt. | Zie P14 (§2.11). | **Gesteund, een ontwerpregel.** |
+| 44 | **Kleine punten.** De plaatsing gebeurt nu bij de goedgekeurde uitleg. De fouten in het lesmateriaal worden niet gemeld. De Mermaid-diagrammen zijn na de bouw nagelopen. | — | **Gebouwd.** |
+| 46 | **Eén taak van de student "zou als zelfstandig moeten tellen"**, omdat de test van het vak fout was. De trede kwam van een vraag over wat de test verwacht, niet van de fout. | Eerlijk loggen (R2). | **Niet gesteund, zo gelaten.** |
+
+#### 10.7.2 Omlaag, zoals gebouwd
+
+```mermaid
+flowchart TD
+    E["an explained task"] --> O{"an explanation of the<br/>family still open?"}
+    O -->|yes| W["wait"]
+    O -->|no| K{"criterion: 4+ tasks, under 70%<br/>or the last 2 failed,<br/>rung within the family"}
+    K -->|no| N["nothing"]
+    K -->|microskill| M["one level down:<br/>one quiet line"]
+    K -->|main skill| A["demotion analyst<br/>reads, decides micro or parent"]
+    A -->|report| R{"Stop hook: verdict valid,<br/>criterion still holds?"}
+    R -->|no longer holds| C["cancelled:<br/>'stays L3'"]
+    R -->|yes| D["extra support for a microskill,<br/>or the parent one level down"]
+```
+
+Omlaag wacht op open uitleg, telt alleen de hulp binnen de familie, en wordt opnieuw gecontroleerd op het bewijs van het moment waarop het wordt uitgevoerd. Het rapport van de analist gaat naar de Stop-hook, niet de chat in.
+
+#### 10.7.3 Waar de bouw afwijkt van het plan
+
+- **38: alleen "dan" of "zou".** "Als …" telt alleen als waarom met "dan" of "zou" (of "then"/"would") in dezelfde zin. Lossere woorden ("kan", "is") zouden een kale bewering doorlaten.
+- **44 en 36 (a) samen.** Omdat de plaatsing nu bij de uitleg gebeurt, ná de taak, moet de plaatsingstaak expliciet in het venster komen; anders zou (a) nooit tellen. Oudere plaatsingen zonder taak-id vinden die in het event `placement`.
+- **34: ook de plaatsing.** Ook de plaatsing gebruikt de trede binnen de familie: hulp over een ander concept zegt niets over de nieuwe vaardigheid.
+- **31: het rapport van de analist wordt gelezen, niet geplakt.** Een agent op de achtergrond geeft zijn rapport terug als bericht; de Stop-hook haalt het oordeel daaruit (of uit het resultaat van een agent die direct antwoordt). Een oordeel in dat rapport dat de harnas weigert, blokkeert Claude niet: de verlaging blijft openstaan. De marker `[demotie {...}]` werkt nog als terugval.
+- **35: welke vaardigheden.** De voortgangsregels gaan over de vaardigheden met minstens één taak sinds hun laatste niveauwijziging.
+- **36: de volgende oefening één keer per sessie.** De hook zegt Claude één keer per vaardigheid en sessie dat de mappen op zijn.
+- **45: op het dashboard een microvaardigheid alleen als er iets mee gebeurde** (een taak, een wijziging of extra steun). Een plaatsing telt als een fase hoger als die op L3 of L4 uitkomt.
+- **45: `levelChanges` zonder wijzigingen zonder verschil.** De eerste melding "sinds de laatste export" na de update kan één wijziging minder tellen.
+- **Een ouder sessiebestand** heeft nog geen familietrede: dat telt alle hulp mee, tot de volgende taak begint.
+
 ---
 
 <a id="11-wijzigingslog"></a>
 
 ## 11. Wijzigingslog {#changelog}
+
+### 12 november 2026: positieve feedback, demoties en de fasegeschiedenis
+
+De pilotstudent besliste over de punten 31–46 van de review van 12 november; ze zijn dezelfde dag gebouwd.
+
+- **§10.7 (nieuw):** de besluiten, waaraan ze getoetst zijn, een diagram van omlaag zoals gebouwd, en waar de bouw afwijkt van het plan.
+- **§2.11, P14 (nieuw):** niveaus informeren, ze belonen niet (besluit 43).
+- **§5, de controle van de Mermaid-diagrammen (besluit 44):** een architectuur (§5.1) en een sessie (§5.4) "zoals gebouwd"; het toestandsdiagram met de punten eronder (§5.2) en de hintladder (§5.3) volgen de bouw; de tabel van de hooks noemt wat er veranderde. De diagrammen van §10.4–§10.6 blijven staan als verslag van die herzieningen.
+- **§8:** nieuwe bronnen. Elke bron is eerst aan de samenvatting getoetst; de notities staan in [de citatiecheck](https://github.com/piethanegraaf/piethanegraaf.github.io/blob/main/research/citation-checks/citation_check_learning_science.md), sectie F. De controle veranderde een paar beweringen:
+  - Rawson & Dunlosky (2011) steunt het ontwerpdoel voor L4 maar deels: hun sessies om opnieuw te leren lagen ver uit elkaar.
+  - Eskreis-Winkler & Fishbach (2019) staat erin met de replicaties die het inperken (Keith et al. 2022; Gok & Fyfe 2024).
+  - Kirk-Johnson et al. (2019) staat erin voor het oordeel over moeite, niet voor een beter geheugen.
+  - Henderlong & Lepper (2002) is de juiste naam.
+- **Niet veranderd:** de conclusies van §2.
 
 ### 11 november 2026 (nacht, laatste): het bewijs voor meebewegende hints (P3)
 
