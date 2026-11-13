@@ -99,11 +99,11 @@ Each part follows a principle with empirical support from learning science and f
 
 ### Is using Claude Code for practice cheating?
 
-Whether you may use AI is up to your course, not to the harness. The harness makes sure the AI does not do the practice for you: at L1–L3 a hook blocks it from writing, building or testing your code, and every exception you allow is logged. Check your course's AI policy.
+Whether you may use AI is up to your course, not to the harness. The harness makes sure the AI does not do the practice for you: at L1–L3 a hook blocks it from writing, building or testing your code, and every exception you allow is logged. Check your course's AI policy. For graded work, such as a final assignment, you can name its repo as [graded work](how-it-works.md#graded-work): then Claude writes nothing there, gives hints up to rung 4, and every answer goes into an AI-use log for your statement of AI use.
 
 ### Can I stop Claude Code from writing my code?
 
-Yes. That is what the guard hook does: per skill, at levels L1–L3, it blocks Claude from writing, deleting, building or testing your code. You can still allow it for a while with an override that you set yourself, and that is logged. See [How it works](how-it-works.md#the-guard).
+Yes. That is what the guard hook does: per skill, at levels L1–L3, it blocks Claude from writing, deleting, building or testing your code. You can still allow it for a while with an override that you set yourself, and that is logged. In the paths of graded work it blocks this at every level, and there is no override. See [How it works](how-it-works.md#the-guard).
 
 ### Does it work for courses other than C#?
 

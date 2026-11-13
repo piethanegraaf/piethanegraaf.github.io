@@ -18,7 +18,7 @@ Dat heeft waarschijnlijk een prijs: zolang een vaardigheid op L1–L3 staat, ron
 
 Installeer met `--map junior-dotnet`. De kaart heeft tien vaardigheden: debuggen, onbekende code lezen, unit tests, veilig refactoren, ASP.NET Core-API's, EF Core en LINQ, async/await, veiligheid, code van AI reviewen en een taak specificeren voor een agent.
 
-De guard beschermt alleen bestanden onder de paden van een vaardigheid. Een vaardigheid zonder paden, zoals debuggen, krijgt wel de hintladder, maar de guard houdt niets tegen. Pas de kaart aan op je eigen codebase (zie [Een eigen vak](configuration.md#een-eigen-vak)).
+De guard beschermt alleen bestanden onder de paden van een vaardigheid (en de paden van [beoordeeld werk](how-it-works.md#beoordeeld-werk), die je op je werk niet nodig hebt). Een vaardigheid zonder paden, zoals debuggen, krijgt wel de hintladder, maar de guard houdt niets tegen. Pas de kaart aan op je eigen codebase (zie [Een eigen vak](configuration.md#een-eigen-vak)).
 
 ## Op je werk
 

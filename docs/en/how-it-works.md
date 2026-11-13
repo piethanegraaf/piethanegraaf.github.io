@@ -56,7 +56,8 @@ For a **new skill** time does not count. A rung only goes up when you say you ar
 
 At L1–L3, `guard.mjs` blocks Claude from writing, deleting, building or testing code. Which files are code and which commands build is set in the [settings](configuration.md). The guard also protects:
 
-- the record and the state in `.learning/`;
+- the record and the state in `.learning/`, also when the record is in another folder (`--learning-dir`);
+- the paths of [graded work](#graded-work) and its AI-use log, at every level, without override, also outside the project;
 - the harness itself: the hooks, `.claude/settings.json`, the diary, mastery-check and update-dashboard skills, and the rules.
 
 The guard first splits a shell command into simple commands. It looks at the program that runs, not at words in the arguments: `grep "msbuild"` is not a build, but `bash -c "dotnet test"` is.

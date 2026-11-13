@@ -14,7 +14,8 @@ The learning harness runs Node.js scripts as Claude Code hooks on your own compu
 
 - **No network traffic.** The hooks, `install.mjs` and `export.mjs` never connect to the internet.
 - **No `eval` and no shell.** Commands such as `dotnet test` are started with an argument list, never through a shell with your input in it.
-- **Your data stays local.** Learning data lives in `.learning/` in your project, which the installer adds to `.gitignore`.
+- **Your data stays local.** Learning data lives in `.learning/` in your project, which the installer adds to `.gitignore`. With `install.mjs --learning-dir` a second folder, such as the repo of a graded assignment, uses the record of your practice folder: then it stays there, and the path to it is in `.claude/leerharnas.local.json`, which is also in `.gitignore`.
+- **The AI-use log of graded work is meant for git.** In the paths of graded work the hooks write `ai-verantwoording/` (`ai-use/` in English): your prompts and Claude's answers, without tool output. That folder is not in `.gitignore`, because your teacher reads it. The same filters as the export remove e-mail addresses, your home folder, transcript paths and your own terms from it. Read it, and run the security check, before you push it.
 - **The installer never overwrites without a backup.** It first shows what it will do, only changes files after `--yes`, and copies every file it changes to `.claude/leerharnas-backup/<time>/`. `--update` never touches your data or your own `CLAUDE.md`.
 - **The export is filtered.** `export.mjs` only exports a whitelist of fields, filters e-mail addresses, paths, user names, session ids and your own terms in `.learning/private.json`, and shows what it filtered with `--dry-run`.
 
@@ -40,7 +41,8 @@ De leerharnas draait Node.js-scripts als hooks van Claude Code op je eigen compu
 
 - **Geen netwerkverkeer.** De hooks, `install.mjs` en `export.mjs` maken nooit verbinding met internet.
 - **Geen `eval` en geen shell.** Commando's als `dotnet test` starten met een lijst van argumenten, nooit via een shell met jouw invoer erin.
-- **Je data blijft lokaal.** De leerdata staat in `.learning/` in je project. De installer zet die map in `.gitignore`.
+- **Je data blijft lokaal.** De leerdata staat in `.learning/` in je project. De installer zet die map in `.gitignore`. Met `install.mjs --learning-dir` gebruikt een tweede map, zoals de repo van een beoordeelde opdracht, het register van je oefenmap: dan blijft het daar, en het pad ernaartoe staat in `.claude/leerharnas.local.json`, dat ook in `.gitignore` staat.
+- **Het AI-logboek van beoordeeld werk is bedoeld voor git.** In de paden van beoordeeld werk schrijven de hooks `ai-verantwoording/`: je prompts en de antwoorden van Claude, zonder uitvoer van tools. Die map staat niet in `.gitignore`, want je docent leest hem. Dezelfde filters als bij de export halen er e-mailadressen, je thuismap, transcriptpaden en je eigen termen uit. Lees hem, en draai de securitycheck, voordat je hem pusht.
 - **De installer overschrijft nooit zonder backup.** Hij laat eerst zien wat hij gaat doen, wijzigt pas iets na `--yes`, en kopieert elk bestand dat hij wijzigt naar `.claude/leerharnas-backup/<tijd>/`. `--update` laat je data en je eigen `CLAUDE.md` altijd staan.
 - **De export wordt gefilterd.** `export.mjs` exporteert alleen een whitelist van velden, filtert e-mailadressen, paden, gebruikersnamen, sessie-id's en je eigen termen uit `.learning/private.json`, en toont met `--dry-run` wat er is weggefilterd.
 

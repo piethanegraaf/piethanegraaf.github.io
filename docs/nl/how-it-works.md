@@ -56,7 +56,8 @@ Bij een **nieuwe vaardigheid** telt de tijd niet. Een trede gaat pas omhoog als 
 
 Bij L1–L3 blokkeert `guard.mjs` dat Claude code schrijft, verwijdert, bouwt of test. Welke bestanden code zijn en welke commando's bouwen, staat in de [instellingen](configuration.md). De guard beschermt ook:
 
-- het register en de state in `.learning/`;
+- het register en de state in `.learning/`, ook als het register in een andere map staat (`--learning-dir`);
+- de paden van [beoordeeld werk](#beoordeeld-werk) en het AI-logboek daarvan, op elk niveau, zonder override, ook buiten het project;
 - de harnas zelf: de hooks, `.claude/settings.json`, de skills diary, mastery-check en update-dashboard, en de regels.
 
 Een shell-commando splitst de guard eerst in losse commando's. Hij kijkt naar het programma dat draait, niet naar woorden in de argumenten: `grep "msbuild"` is geen build, maar `bash -c "dotnet test"` wel.
