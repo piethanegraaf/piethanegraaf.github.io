@@ -314,6 +314,31 @@ export function isRecordFile(p, cwd = ROOT) {
   return /^skills\.json$/i.test(inLearn) || /^state(\/|$)/i.test(inLearn);
 }
 
+// ---- Whole folders of the harness and the record (security review of 13 Nov, V3) ----
+// A write with one of these folders as its target (rm -rf .claude/hooks, mv .learning x, cp -r … .claude) reaches
+// every file inside: the guard treats the folder like its files.
+const PROTECTED_DIRS = new Set([".claude", ".claude/hooks", ".claude/skills", ".claude/skills/diary", ".claude/skills/mastery-check",
+  ".claude/skills/update-dashboard", ".claude/agents", ".learning", ".learning/state"]);
+const sameDir = (a, b) => path.relative(path.resolve(a), path.resolve(b)) === "";
+export function protectedDirOf(p) {
+  if (!p) return null;
+  const abs = path.resolve(String(p));
+  const r = rel(abs);
+  if (r !== null && PROTECTED_DIRS.has(r.replace(/\/+$/, "").toLowerCase())) return r.startsWith(".learning") ? "record" : "harness";
+  if (sameDir(LEARN, abs) || sameDir(path.join(LEARN, "state"), abs)) return "record";
+  return null;
+}
+// A folder that holds the harness or the record (the project itself, or a folder above it): deleting or moving it
+// takes them along. "harness", "record" or null.
+export function holdsProtected(p) {
+  if (!p) return null;
+  const abs = path.resolve(String(p));
+  const holds = (t) => { const r = path.relative(abs, t); return r === "" || (!r.startsWith("..") && !path.isAbsolute(r)); };
+  if (holds(path.join(ROOT, ".claude", "hooks"))) return "harness";
+  if (holds(LEARN)) return "record";
+  return null;
+}
+
 // ---- Graded work (setup of 13 Nov, #49, #50, #54) ----
 // OER art. 7.11, AI level 1: GenAI as an aid ("to generate ideas or bring structure"), never as the maker of
 // the work. settings.graded = { paths, aiLevel, maxRung, logDir }:

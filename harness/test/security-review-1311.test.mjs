@@ -111,3 +111,20 @@ test("V2: braces still separate a block, but not inside a word", () => {
   assert.deepEqual(argv("{ echo a; echo b; }"), [["echo", "a"], ["echo", "b"]]);
   assert.deepEqual(argv("cp x ~/{a,b}/c"), [["cp", "x", "~/{a,b}/c"]]);
 });
+
+// ---------- V3 (medium): whole folders of the harness and the record ----------
+test("V3: a protected folder as the target, or a bare name after cd, is denied", () => {
+  for (const cmd of [
+    "rm -rf .claude/hooks", "rm -rf .claude/hooks/", "mv .claude .claude-off", "cd .claude && rm -rf hooks",
+    "cd .claude/hooks && rm guard.mjs", "rm -rf .learning", "mv .learning .learning-off", "rm -rf .learning/state",
+    "cd .learning && echo '{}' | tee skills.json", "cp -r /tmp/evil/. .claude/hooks", "rm -rf .",
+  ]) assert.equal(decision(bash(cmd)), "deny", cmd);
+  assert.equal(decision(bash(String.raw`rm .claud\e/hooks/guard.mjs`)), "deny", "escape");
+  assert.equal(decision(bash(String.raw`echo '{}' > .learning/skills.jso\n`)), "deny", "escape");
+  assert.equal(decision(ps(String.raw`Remove-Item -Recurse -Force .claude\hooks`)), "deny", "PowerShell");
+  assert.equal(decision(bash("rm guard.mjs", p.abs(".claude/hooks"))), "deny", "cwd inside the hooks folder");
+  // Controls: ordinary files and folders, and moving something INTO the project, stay allowed.
+  for (const cmd of ["rm notes.txt", "rm -rf build", "mv a.txt b.txt", "mv /tmp/x.txt .", "cp README.md docs/", "tee log.txt"]) {
+    assert.equal(decision(bash(cmd)), "allow", cmd);
+  }
+});

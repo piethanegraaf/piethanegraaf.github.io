@@ -7,7 +7,7 @@ import os from "node:os";
 import path from "node:path";
 import {
   readStdin, loadSkills, levelForPath, isOverrideActive, logEvent, rel, isHarnessPath,
-  codeExtRe, buildRes, PROTECTED, levelName, t, ROOT, isRecordFile, gradedOf, isGradedPath, isGradedDir, mentionsGraded,
+  codeExtRe, buildRes, PROTECTED, levelName, t, ROOT, isRecordFile, gradedOf, isGradedPath, isGradedDir, mentionsGraded, protectedDirOf, holdsProtected,
   loadSession, saveSession,
 } from "./lib.mjs";
 import { parseCommand, commandName } from "./shell.mjs";
@@ -38,6 +38,10 @@ const CLI_READ = new Set(["list", "status", "since-export"]);
 // The scripts in .claude/hooks/ that Claude may run itself: the CLI (read commands only), the test runner (a
 // build, judged below) and the scaffold of graded work. Every other hook script changes state when run by hand.
 const HOOK_SCRIPTS_RUNNABLE = new Set(["skill.mjs", "check.mjs", "scaffold.mjs"]);
+// Programs that delete or move the paths they name (security review V3): a folder that holds the harness or the
+// record may not be one of them. For a move, only the sources count (the last word is where it goes).
+const DELETES = new Set(["rm", "rmdir", "rd", "del", "erase", "remove-item", "ri", "unlink"]);
+const MOVES = new Set(["mv", "move", "move-item", "mi", "ren", "rename", "rename-item", "rni"]);
 const TODO = "TODO(human)";
 const CD = new Set(["cd", "pushd", "set-location", "sl", "chdir", "push-location"]);
 const NOWHERE = /^(\/dev\/null|\$null|nul)$/i;
@@ -301,7 +305,17 @@ if (tool === "Bash" || tool === "PowerShell") {
     // Writes: redirect targets, plus the files named by a command that writes (cp, sed -i, Set-Content ...).
     const targets = redirects.filter((r) => !NOWHERE.test(r)).map((r) => resolvePath(cwd, r));
     const writes = argv.length > 0 && writesFiles(argv, raw);
-    if (writes) for (const a of args) if (!/^-/.test(a) && looksLikePath(a)) targets.push(resolvePath(cwd, a));
+    // Every word of a program that writes, also a bare name after cd ("cd .learning && tee skills.json", V3).
+    if (writes) for (const a of args) if (!/^-/.test(a)) targets.push(resolvePath(cwd, a));
+    // Deleting or moving a folder that holds the harness or the record (rm -rf ., mv <project> x), V3.
+    {
+      const words = args.filter((a) => !/^-/.test(a));
+      const gone = DELETES.has(name) ? words : MOVES.has(name) ? words.slice(0, -1) : [];
+      for (const a of gone) {
+        const kind = holdsProtected(resolvePath(cwd, a));
+        if (kind) deny(t(kind === "record" ? "guard.recordCmd" : "guard.harness"), { tool, cmd: short });
+      }
+    }
     // A download names its output with an option, or lands in the working folder (review of 13 Nov, night:
     // the arc42 zip is fetched with curl, and must never land in graded work this way).
     if (name === "curl" || name === "wget") {
@@ -318,6 +332,8 @@ if (tool === "Bash" || tool === "PowerShell") {
       const r = rel(p);
       if (isRecordFile(p)) deny(t("guard.recordCmd"), { tool, cmd: short });
       if (isHarnessPath(r)) deny(t("guard.harness"), { tool, cmd: short });
+      const dir = protectedDirOf(p);
+      if (dir) deny(t(dir === "record" ? "guard.recordCmd" : "guard.harness"), { tool, cmd: short });
       if (CODE_EXT.test(p)) addPath(p, false);
     }
     // Graded work (#49, #54): any write there, by any program, also outside this project.
