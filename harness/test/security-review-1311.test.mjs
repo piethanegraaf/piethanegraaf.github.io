@@ -186,3 +186,23 @@ test("V5: the user-level gate protects its own files from other projects", () =>
     assert.equal(gate({ file_path: path.join(other, "x.txt"), content: "x" }), "allow", "another project");
   } finally { fs.rmSync(home, { recursive: true, force: true }); fs.rmSync(other, { recursive: true, force: true }); }
 });
+
+// ---------- V6 (low): override reasons of a sensitive skill ----------
+test("V6: the export keeps the reason of an override for a sensitive skill at home", () => {
+  const skills = fakeSkills();
+  skills.skills.push({ id: "security.sql-params", title: "Queries", level: "L2", paths: [], sensitive: true, placement: "done" });
+  const e = makeProject({ skills, events: [
+    { at: "2026-11-13T10:00:00.000Z", type: "override", skill: "security.sql-params", minutes: 30, reason: "fix voor de SQLi in KlantRepository" },
+    { at: "2026-11-13T10:05:00.000Z", type: "override", skill: "demo.l2", minutes: 30, reason: "tooling" },
+  ] });
+  try {
+    const out = path.join(e.root, "progress.json");
+    const r = run(path.join(HARNESS, "export.mjs"), [e.root, "--out", out, "--allow-untranslated"]);
+    assert.equal(r.code, 0, r.stderr);
+    const json = JSON.parse(fs.readFileSync(out, "utf8"));
+    assert.ok(!JSON.stringify(json).includes("KlantRepository"));
+    const sec = json.overrides.find((o) => o.skill === "security.sql-params");
+    assert.deepEqual([sec.reason, sec.withheld, sec.minutes], [null, true, 30]);
+    assert.equal(json.overrides.find((o) => o.skill === "demo.l2").reason, "tooling");
+  } finally { e.cleanup(); }
+});
