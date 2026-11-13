@@ -234,3 +234,15 @@ test("V7: a write through a link or junction lands where it really goes", () => 
     assert.equal(write(p, path.join(outside, "free.cs")), "allow", "a real folder outside the project");
   } finally { done(); fs.rmSync(outside, { recursive: true, force: true }); }
 });
+
+// ---------- V8 (low): the user-name filter with letters outside ASCII ----------
+import { fixedFilters, makeScrubber } from "../hooks/privacy.mjs";
+
+test("V8: the user-name filter catches Zoë and André, and leaves longer words alone", () => {
+  const { scrub } = makeScrubber(fixedFilters({ userNames: ["Zoë", "Dubois", "André", "Émile"] }));
+  assert.equal(scrub("Zoë Dubois en Émile en André hielpen", "f"), "[gebruiker] [gebruiker] en [gebruiker] en [gebruiker] hielpen");
+  assert.equal(scrub("zoë hielp", "f"), "[gebruiker] hielp");
+  assert.equal(scrub("Zoëtje en Andréas bleven", "f"), "Zoëtje en Andréas bleven");
+  // Control: an ASCII name still works as before.
+  assert.equal(makeScrubber(fixedFilters({ userNames: ["jdoe"] })).scrub("groeten van jdoe", "f"), "groeten van [gebruiker]");
+});

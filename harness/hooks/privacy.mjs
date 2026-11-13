@@ -15,7 +15,8 @@ export function fixedFilters({ userNames = [] } = {}) {
     { id: "windows-path", re: /\b[A-Z]:[\\/][^\s"'`()<>|]*/gi, to: "[pad]" },
     { id: "unix-path", re: /(?<![\w.])\/(?:home|Users|mnt|[a-z])\/[^\s"'`()<>|]+/g, to: "[pad]" },
     { id: "uuid", re: /\b[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\b/gi, to: "[sessie]" },
-    ...(names.length ? [{ id: "user-name", re: new RegExp(`\\b(${names.map(escapeRe).join("|")})\\b`, "gi"), to: "[gebruiker]" }] : []),
+    // Unicode word boundaries, as for private.json (security review V8: \b missed Zoë and André, and cut Zoëtje).
+    ...(names.length ? [{ id: "user-name", re: new RegExp(`(?<![\\p{L}\\p{N}_])(${names.map(escapeRe).join("|")})(?![\\p{L}\\p{N}_])`, "giu"), to: "[gebruiker]" }] : []),
   ];
 }
 
