@@ -10,7 +10,7 @@ A security review of the whole repository (`main`, `6846e01`), done with Claude 
 
 | # | Severity | Finding | Where | Status |
 |---|---|---|---|---|
-| V1 | High | A quoted or escaped subcommand of `skill.mjs` passes the guard: Claude can grant itself an override, raise a level, or switch off graded work | `harness/hooks/guard.mjs` (`RECORD_CMD`) | open |
+| V1 | High | A quoted or escaped subcommand of `skill.mjs` passes the guard: Claude can grant itself an override, raise a level, or switch off graded work | `harness/hooks/guard.mjs` (`RECORD_CMD`) | fixed: the subcommand is read from the parsed words; only list, status and since-export; no other hook script by hand; bash escapes are removed before judging |
 | V2 | High | `${HOME}`, other variables, backslash escapes and brace expansion hide a graded path from the guard: Claude can write, commit and push in graded work, and forge the AI-use log | `harness/hooks/shell.mjs`, `guard.mjs` (`resolvePath`) | open |
 | V3 | Medium | A whole protected folder as the target (`rm -rf .claude/hooks`, `mv .claude …`, `rm -rf .learning`), a bare file name after `cd`, or an escape passes the guard; without its hook scripts the guard fails open | `harness/hooks/lib.mjs` (`isHarnessPath`, `isRecordFile`), `guard.mjs` (`looksLikePath`) | open |
 | V4 | Medium | A folder as the target of a write or delete (`rm -rf <exercise>`, `cp -r … <exercise>`, `tar -C`, `unzip -d`, `git checkout -- <folder>`) reaches protected L1–L3 code | `harness/hooks/guard.mjs` (write targets) | open |

@@ -31,8 +31,13 @@ function writesFiles(argv, raw) {
   if (name === "git" && /^(checkout|restore|reset|stash|apply|rm|mv|clean)$/i.test(argv[1] ?? "")) return true;
   return /WriteAll(Text|Lines|Bytes)|\bAppendAll(Text|Lines)\b/i.test(raw);
 }
-// Everything except list/status changes the learner's record.
+// Everything except list/status changes the learner's record. RECORD_CMD is only a first, textual check; the
+// decision is made on the parsed words (security review of 13 Nov, V1: a quoted subcommand passed the regex).
 const RECORD_CMD = /skill\.mjs["']?\s+(set|review|override|untask|correct|add-micro|add|done|setting|paths|replay)\b/i;
+const CLI_READ = new Set(["list", "status", "since-export"]);
+// The scripts in .claude/hooks/ that Claude may run itself: the CLI (read commands only), the test runner (a
+// build, judged below) and the scaffold of graded work. Every other hook script changes state when run by hand.
+const HOOK_SCRIPTS_RUNNABLE = new Set(["skill.mjs", "check.mjs", "scaffold.mjs"]);
 const TODO = "TODO(human)";
 const CD = new Set(["cd", "pushd", "set-location", "sl", "chdir", "push-location"]);
 const NOWHERE = /^(\/dev\/null|\$null|nul)$/i;
@@ -196,7 +201,8 @@ if (tool === "Bash" || tool === "PowerShell") {
   const cmd = String(ti.command ?? "");
   const short = cmd.slice(0, 200);
   if (RECORD_CMD.test(cmd)) deny(t("guard.recordCmd"), { tool, cmd: short });
-  const parsed = parseCommand(cmd);
+  // Bash removes quotes and backslash escapes before it runs a word; PowerShell does not (V1, V2, V3).
+  const parsed = parseCommand(cmd, { shell: tool === "PowerShell" ? "powershell" : "bash" });
   // eval, iex, Invoke-Expression, powershell -EncodedCommand: the guard cannot see what runs.
   if (parsed.opaque) deny(t("guard.opaque"), { tool, cmd: short });
 
@@ -223,6 +229,18 @@ if (tool === "Bash" || tool === "PowerShell") {
   for (const { argv, redirects, raw } of parsed.commands) {
     const name = commandName(argv[0]);
     const args = argv.slice(1);
+    // The learner's CLI and the other hook scripts, decided on the parsed words (V1): skill.mjs only with a
+    // read command, and no hook script that changes state when run by hand (prompt-gate, reflect-gate ...).
+    {
+      const k = argv.findIndex((w) => /\.mjs$/i.test(w) && rel(resolvePath(cwd, w))?.toLowerCase().startsWith(".claude/hooks/"));
+      if (k !== -1 && !HOOK_SCRIPTS_RUNNABLE.has(commandName(argv[k]))) deny(t("guard.harness"), { tool, cmd: short });
+      // skill.mjs by name, wherever it is (a copy outside .claude/hooks/ writes the same record).
+      const s = argv.findIndex((w) => commandName(w) === "skill.mjs");
+      if (s !== -1) {
+        const sub = argv.slice(s + 1).find((a) => !/^-/.test(a));
+        if (sub !== undefined && !CLI_READ.has(sub.toLowerCase())) deny(t("guard.recordCmd"), { tool, cmd: short });
+      }
+    }
     if (CD.has(name)) {
       const target = args.find((a) => !/^-/.test(a));
       if (target) cwd = resolvePath(cwd, target);

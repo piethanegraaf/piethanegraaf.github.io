@@ -42,7 +42,10 @@ function matchParen(s, i) {
 
 // Splits text into segments of words. Each segment: { words: [...], redirects: [...], raw }.
 // Substitutions ($(...) and backticks) are returned separately in `inner`.
-function lex(s) {
+// shell "bash": a backslash outside quotes escapes the next character, as bash does before it runs a word
+// (security review of 13 Nov, V1-V3: `s\et`, `.claud\e/hooks` and `Lijst.c\s` hid what really ran). In
+// "powershell" and "cmd" a backslash is a path separator and stays.
+function lex(s, shell = "bash") {
   const segments = [];
   const inner = [];
   let words = [], redirects = [], word = null, raw = "", pendingRedirect = false;
@@ -62,9 +65,26 @@ function lex(s) {
 
   for (let i = 0; i < s.length; i++) {
     const c = s[i], n = s[i + 1];
+    // bash: \x is x, and a backslash before a newline continues the line.
+    if (shell === "bash" && c === "\\") {
+      if (n === "\n") { i++; continue; }
+      if (n === "\r" && s[i + 2] === "\n") { i += 2; continue; }
+      if (n !== undefined) add(n);
+      raw += s.slice(i, i + 2);
+      i++;
+      continue;
+    }
     // Quotes: the content is one word, without the quotes.
     if (c === "'" || c === '"') {
-      const end = s.indexOf(c, i + 1);
+      // A double-quoted text ends at the first quote that is not escaped (\" in bash and in the old behaviour).
+      let end = s.indexOf(c, i + 1);
+      if (c === '"') {
+        end = -1;
+        for (let k = i + 1; k < s.length; k++) {
+          if (s[k] === "\\" && (shell === "bash" || s[k + 1] === '"')) { k++; continue; }
+          if (s[k] === '"') { end = k; break; }
+        }
+      }
       const body = end === -1 ? s.slice(i + 1) : s.slice(i + 1, end);
       if (c === '"') {
         // Command substitution also works inside double quotes.
@@ -74,7 +94,8 @@ function lex(s) {
         }
         for (const m of body.matchAll(/`([^`\n]+)`/g)) inner.push(m[1]);
       }
-      add(body.replace(/\\"/g, '"'));
+      // In bash double quotes \ escapes only " \ $ ` (and a newline); in single quotes nothing.
+      add(c === '"' && shell === "bash" ? body.replace(/\\(["\\$`])/g, "$1") : c === '"' ? body.replace(/\\"/g, '"') : body);
       raw += s.slice(i, end === -1 ? s.length : end + 1);
       i = end === -1 ? s.length : end;
       continue;
@@ -135,7 +156,7 @@ function lex(s) {
 }
 
 // Turns one segment into the command it really runs, looking through wrappers and nested shells.
-function resolve(seg, depth, out) {
+function resolve(seg, depth, out, shell) {
   let argv = seg.words.filter((w) => w !== "");
   // Leading VAR=value assignments (bash) are not the command.
   while (argv.length && /^[A-Za-z_][A-Za-z0-9_]*=/.test(argv[0])) argv = argv.slice(1);
@@ -156,22 +177,22 @@ function resolve(seg, depth, out) {
     }
     if (SHELLS.has(name)) {
       const k = argv.findIndex((w, idx) => idx > 0 && /^-[a-z]*c[a-z]*$/i.test(w));
-      if (k !== -1 && argv[k + 1] !== undefined) { parseInto(argv[k + 1], depth + 1, out); return; }
+      if (k !== -1 && argv[k + 1] !== undefined) { parseInto(argv[k + 1], depth + 1, out, "bash"); return; }
     }
     if (name === "cmd") {
       const k = argv.findIndex((w, idx) => idx > 0 && /^\/[ck]$/i.test(w));
-      if (k !== -1) { parseInto(argv.slice(k + 1).join(" "), depth + 1, out); return; }
+      if (k !== -1) { parseInto(argv.slice(k + 1).join(" "), depth + 1, out, "cmd"); return; }
     }
     if (POWERSHELL.has(name)) {
       const opts = argv.slice(1);
       if (opts.some((w) => /^-e(c|ncodedcommand|ncodedc?o?m?m?a?n?d?)?$/i.test(w))) { out.opaque = true; return; }
       const k = opts.findIndex((w) => /^-c(o(m(m(a(n(d)?)?)?)?)?)?$/i.test(w));
-      if (k !== -1) { parseInto(opts.slice(k + 1).join(" "), depth + 1, out); return; }
+      if (k !== -1) { parseInto(opts.slice(k + 1).join(" "), depth + 1, out, "powershell"); return; }
       const f = opts.findIndex((w) => /^-f(ile)?$/i.test(w));
       if (f === -1) {
         // powershell "dotnet test" runs its first non-option argument as a command.
         const firstArg = opts.findIndex((w) => !/^-/.test(w));
-        if (firstArg !== -1) { parseInto(opts.slice(firstArg).join(" "), depth + 1, out); return; }
+        if (firstArg !== -1) { parseInto(opts.slice(firstArg).join(" "), depth + 1, out, "powershell"); return; }
       }
     }
     break;
@@ -179,15 +200,15 @@ function resolve(seg, depth, out) {
   if (argv.length || seg.redirects.length) out.commands.push({ argv, redirects: seg.redirects, raw: seg.raw });
 }
 
-function parseInto(text, depth, out) {
+function parseInto(text, depth, out, shell = "bash") {
   if (depth > MAX_DEPTH) { out.opaque = true; return; }
-  const { segments, inner } = lex(String(text ?? ""));
-  for (const seg of segments) resolve(seg, depth, out);
-  for (const sub of inner) parseInto(sub, depth + 1, out);
+  const { segments, inner } = lex(String(text ?? ""), shell);
+  for (const seg of segments) resolve(seg, depth, out, shell);
+  for (const sub of inner) parseInto(sub, depth + 1, out, shell);
 }
 
-export function parseCommand(cmd) {
+export function parseCommand(cmd, { shell = "bash" } = {}) {
   const out = { commands: [], opaque: false };
-  parseInto(cmd, 0, out);
+  parseInto(cmd, 0, out, shell);
   return out;
 }
