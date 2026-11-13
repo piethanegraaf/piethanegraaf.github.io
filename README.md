@@ -10,6 +10,8 @@ A learning harness for [Claude Code](https://docs.claude.com/en/docs/claude-code
 
 **Site:** https://piethanegraaf.github.io/ · **Dashboard:** https://piethanegraaf.github.io/dashboard/?lang=en · **C# OOP cheat sheet:** https://piethanegraaf.github.io/cheatsheet/
 
+**Read more:** [Claude Code learning mode vs. a learning harness](https://piethanegraaf.github.io/claude-code-learning-mode/) (why only hooks enforce) · [Secure coding exercises in C# and .NET](https://piethanegraaf.github.io/secure-coding-exercises/) · [Anthropic's study on AI and coding skills: what to do with it](https://piethanegraaf.github.io/ai-coding-skills-study/) · [Key terms](https://piethanegraaf.github.io/key-terms/)
+
 ## What it does
 
 - **Levels per skill** (L0 demonstrate → L4 automated). At L1–L3 a hook blocks the AI from writing, building or testing your code.

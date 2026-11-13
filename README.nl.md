@@ -10,6 +10,8 @@ Een leerharnas voor [Claude Code](https://docs.claude.com/en/docs/claude-code/ov
 
 **Site:** https://piethanegraaf.github.io/nl/ · **Dashboard:** https://piethanegraaf.github.io/dashboard/?lang=nl · **C# OOP-cheat sheet:** https://piethanegraaf.github.io/nl/cheatsheet/
 
+**Lees verder:** [Leermodus van Claude Code vs. een leerharnas](https://piethanegraaf.github.io/nl/claude-code-learning-mode/) (waarom alleen hooks afdwingen) · [Oefeningen veilig programmeren in C# en .NET](https://piethanegraaf.github.io/nl/secure-coding-exercises/) · [Het onderzoek van Anthropic naar AI en programmeervaardigheden](https://piethanegraaf.github.io/nl/ai-coding-skills-study/) · [Begrippen](https://piethanegraaf.github.io/nl/key-terms/)
+
 ## Wat het doet
 
 - **Niveaus per vaardigheid** (L0 voordoen → L4 geautomatiseerd). Op L1–L3 blokkeert een hook dat de AI jouw code schrijft, bouwt of test.
