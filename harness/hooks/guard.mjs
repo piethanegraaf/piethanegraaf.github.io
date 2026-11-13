@@ -240,6 +240,18 @@ if (tool === "Bash" || tool === "PowerShell") {
     const targets = redirects.filter((r) => !NOWHERE.test(r)).map((r) => resolvePath(cwd, r));
     const writes = argv.length > 0 && writesFiles(argv, raw);
     if (writes) for (const a of args) if (!/^-/.test(a) && looksLikePath(a)) targets.push(resolvePath(cwd, a));
+    // A download names its output with an option, or lands in the working folder (review of 13 Nov, night:
+    // the arc42 zip is fetched with curl, and must never land in graded work this way).
+    if (name === "curl" || name === "wget") {
+      let named = false;
+      for (let k = 0; k < args.length; k++) {
+        if (/^(-o|--output|--output-document)$/.test(args[k]) || (name === "wget" && args[k] === "-O")) {
+          if (args[k + 1]) { targets.push(resolvePath(cwd, args[k + 1])); named = true; }
+        } else if (name === "wget" && /^(-P|--directory-prefix)$/.test(args[k]) && args[k + 1]) { targets.push(path.join(resolvePath(cwd, args[k + 1]), "__download__")); named = true; }
+      }
+      const remoteName = name === "curl" && args.some((a) => /^(-O|--remote-name|--remote-name-all)$/.test(a) || /^-[a-zA-Z]*O[a-zA-Z]*$/.test(a));
+      if (remoteName || (name === "wget" && !named)) targets.push(path.join(cwd, "__download__"));
+    }
     for (const p of targets) {
       const r = rel(p);
       if (isRecordFile(p)) deny(t("guard.recordCmd"), { tool, cmd: short });

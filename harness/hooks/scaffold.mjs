@@ -1,15 +1,18 @@
 // Scaffolding from an official template, unchanged (review of 13 Nov, night, #55).
 //
-//   node .claude/hooks/scaffold.mjs arc42 <folder> [--lang nl|en] [--with-help] [--from <zip>]
+//   node .claude/hooks/scaffold.mjs arc42 <folder> --from <zip> [--lang nl|en] [--with-help]
 //
 // In graded work Claude writes no content (OER art. 7.11, AI level 1). An official template is not AI
-// content: this script downloads the arc42 template (GitHub Markdown, one file per chapter) from the
-// release of the arc42 project on GitHub, checks its sha256 against the value pinned below, and
-// unpacks it as it is into a new or empty folder. Nothing is added or changed. The guard allows this
-// script (only this copy, in .claude/hooks/) in graded work and the AI-use log gets a row for it.
+// content: this script takes the zip of the arc42 template (GitHub Markdown, one file per chapter) of a
+// fixed release, checks its sha256 against the value pinned below, and unpacks it as it is into a new or
+// empty folder. Nothing is added or changed. The guard allows this script (only this copy, in
+// .claude/hooks/) in graded work and the AI-use log gets a row for it.
 //
+// The harness itself never goes on the network (SECURITY.md; the security check blocks network code in
+// harness/). So the zip is downloaded first, outside the graded folder, by the learner or by Claude with
+// curl; without --from this script prints the URL and the command. A zip with another sha256 is refused,
+// so nobody can pack their own content into "the template".
 // --with-help: the version with the explanation per chapter (arc42 "withhelp"); without it the plain one.
-// --from <zip>: a zip the learner downloaded; it must have the same sha256 as the official one.
 // Source and licence: https://arc42.org, https://github.com/arc42/arc42-template (CC BY-SA 4.0).
 import fs from "node:fs";
 import path from "node:path";
@@ -88,21 +91,15 @@ export function extractTo(entries, dir) {
 
 const sha256 = (buf) => crypto.createHash("sha256").update(buf).digest("hex");
 
-// Get the template (download, or the learner's own zip), check it, unpack it. `fetchZip` and `digests`
-// can be replaced in a test; the command line always uses the pinned values.
-export async function scaffoldArc42({ dir, lang = "nl", withHelp = false, from = null, digests = ARC42_DIGESTS, fetchZip = null }) {
+// Check the downloaded zip and unpack it. `digests` can be replaced in a test; the command line always
+// uses the pinned values.
+export function scaffoldArc42({ dir, lang = "nl", withHelp = false, from, digests = ARC42_DIGESTS }) {
   const asset = arc42Asset(lang, withHelp);
   const url = arc42Url(asset);
   const want = digests[asset];
   if (!want) throw new Error(`no digest for ${asset}`);
   let buf;
-  if (from) buf = fs.readFileSync(from);
-  else if (fetchZip) buf = await fetchZip(url);
-  else {
-    const res = await fetch(url, { redirect: "follow" });
-    if (!res.ok) throw Object.assign(new Error(`HTTP ${res.status}`), { code: "DOWNLOAD" });
-    buf = Buffer.from(await res.arrayBuffer());
-  }
+  try { buf = fs.readFileSync(from); } catch (e) { throw Object.assign(new Error(String(e.message)), { code: "NO_ZIP", url, asset }); }
   const got = sha256(buf);
   if (got !== want) throw Object.assign(new Error(`sha256 ${got} ≠ ${want}`), { code: "DIGEST" });
   const files = extractTo(readZip(buf), dir);
@@ -122,15 +119,17 @@ async function main(argv) {
   }
   if (lang === null) { try { lang = settingsOf(loadSkills()).language; } catch { lang = "nl"; } }
   if (!["nl", "en"].includes(lang)) { console.error(t("cli.scaffold.usage")); process.exit(1); }
+  const asset = arc42Asset(lang, withHelp);
+  if (!from) { console.log(t("cli.scaffold.needZip", { url: arc42Url(asset), asset, dir: folder, lang, help: withHelp ? " --with-help" : "" })); process.exit(1); }
   const dir = path.resolve(process.cwd(), folder);
   try {
-    const r = await scaffoldArc42({ dir, lang, withHelp, from });
+    const r = scaffoldArc42({ dir, lang, withHelp, from });
     console.log(t("cli.scaffold.done", { files: r.files, dir: folder, release: r.release, asset: r.asset, url: r.url, sha: r.sha256 }));
   } catch (e) {
-    const key = e.code === "NOT_EMPTY" ? "cli.scaffold.notEmpty" : e.code === "DIGEST" ? "cli.scaffold.digest" : e.code === "DOWNLOAD" ? "cli.scaffold.download" : "cli.scaffold.failed";
-    console.error(t(key, { dir: folder, error: String(e.message).slice(0, 200) }));
+    const key = e.code === "NOT_EMPTY" ? "cli.scaffold.notEmpty" : e.code === "DIGEST" ? "cli.scaffold.digest" : e.code === "NO_ZIP" ? "cli.scaffold.noZip" : "cli.scaffold.failed";
+    console.error(t(key, { dir: folder, error: String(e.message).slice(0, 200), url: arc42Url(asset) }));
     process.exit(1);
   }
 }
 
-if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) await main(process.argv.slice(2));
+if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) main(process.argv.slice(2));

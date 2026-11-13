@@ -46,7 +46,7 @@ export function gradedPathsOf(folder) {
   return { paths: [...new Set(paths)], lang: data?.settings?.language === "en" ? "en" : "nl" };
 }
 
-// Extra names to block in prompts: subfolders with a solution or project file ("Makerlab"), when specific.
+// Extra names to block in prompts: subfolders with a solution or project file ("Webshop"), when specific.
 export function namesOf(paths) {
   const out = new Set();
   for (const p of paths) {

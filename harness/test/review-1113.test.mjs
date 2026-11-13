@@ -64,13 +64,13 @@ test("#55: fixed tooling is allowed in graded work and logged; content, commits 
   try {
     const R = slash(repo);
     const allowed = [
-      `cd "${R}" && dotnet new sln -n Makerlab`,
-      `cd "${R}" && dotnet new console -o Makerlab.App`,
-      `cd "${R}" && dotnet new nunit -o Makerlab.Tests`,
+      `cd "${R}" && dotnet new sln -n Webshop`,
+      `cd "${R}" && dotnet new console -o Webshop.App`,
+      `cd "${R}" && dotnet new nunit -o Webshop.Tests`,
       `cd "${R}" && dotnet new gitignore`,
-      `cd "${R}" && dotnet sln add Makerlab.App/Makerlab.App.csproj`,
-      `cd "${R}" && dotnet add Makerlab.Tests reference Makerlab.App`,
-      `cd "${R}" && dotnet add Makerlab.App package Serilog`,
+      `cd "${R}" && dotnet sln add Webshop.App/Webshop.App.csproj`,
+      `cd "${R}" && dotnet add Webshop.Tests reference Webshop.App`,
+      `cd "${R}" && dotnet add Webshop.App package Serilog`,
       `git -C "${R}" init`,
       `cd "${R}" && git remote add origin https://example.com/x.git`,
       `cd "${R}" && git branch -m main`,
@@ -147,31 +147,52 @@ function makeZip(entries) {
   return Buffer.concat([...locals, cd, end]);
 }
 
-test("#55: scaffold.mjs unpacks the template unchanged, only with the pinned sha256, and never over existing work", async () => {
+test("#55: scaffold.mjs unpacks the template unchanged, only with the pinned sha256, and never over existing work", () => {
   const dir = tmp("scaffold");
   try {
     const zip = makeZip([{ name: "01_introductie.md", data: "# 1. Introductie\n", deflate: true }, { name: "images/" }, { name: "images/logo.png", data: "PNG" }]);
+    const from = path.join(dir, "arc42.zip");
+    fs.writeFileSync(from, zip);
     const digests = { [arc42Asset("nl", false)]: crypto.createHash("sha256").update(zip).digest("hex") };
-    const r = await scaffoldArc42({ dir: path.join(dir, "arc42"), lang: "nl", digests, fetchZip: async () => zip });
+    const r = scaffoldArc42({ dir: path.join(dir, "arc42"), lang: "nl", digests, from });
     assert.equal(r.files, 2);
     assert.equal(fs.readFileSync(path.join(dir, "arc42", "01_introductie.md"), "utf8"), "# 1. Introductie\n");
     assert.match(r.url, /^https:\/\/github\.com\/arc42\/arc42-template\/releases\/download\/2026\.10\.19\/arc42-template-NL-plain-gitHubMarkdownMP\.zip$/);
-    await assert.rejects(scaffoldArc42({ dir: path.join(dir, "arc42"), lang: "nl", digests, fetchZip: async () => zip }), (e) => e.code === "NOT_EMPTY");
-    await assert.rejects(scaffoldArc42({ dir: path.join(dir, "ander"), lang: "nl", fetchZip: async () => zip }), (e) => e.code === "DIGEST");
+    assert.throws(() => scaffoldArc42({ dir: path.join(dir, "arc42"), lang: "nl", digests, from }), (e) => e.code === "NOT_EMPTY");
+    // The pinned digests: a zip that is not the official one is refused, whoever made it.
+    assert.throws(() => scaffoldArc42({ dir: path.join(dir, "ander"), lang: "nl", from }), (e) => e.code === "DIGEST");
     assert.equal(fs.existsSync(path.join(dir, "ander")), false, "nothing is made when the file is not the official one");
+    assert.throws(() => scaffoldArc42({ dir: path.join(dir, "x"), lang: "nl", digests, from: path.join(dir, "bestaat-niet.zip") }), (e) => e.code === "NO_ZIP");
     assert.throws(() => extractTo(readZip(makeZip([{ name: "../buiten.md", data: "x" }])), path.join(dir, "slip")), /unsafe name/);
     for (const v of Object.values(ARC42_DIGESTS)) assert.match(v, /^[0-9a-f]{64}$/);
     assert.equal(Object.keys(ARC42_DIGESTS).length, 4);
   } finally { rm(dir); }
 });
 
-test("#55: scaffold.mjs without arguments shows its usage and writes nothing", () => {
+test("#55: scaffold.mjs has no network code; without --from it shows the official link and writes nothing", () => {
+  const src = fs.readFileSync(path.join(HARNESS, "hooks", "scaffold.mjs"), "utf8");
+  assert.doesNotMatch(src, /(?<![\w.])fetch\s*\(|node:(http|https|net|tls)/, "the harness never goes on the network (SECURITY.md)");
   const p = makeProject();
   try {
-    const r = p.cli("scaffold.mjs", []);
+    let r = p.cli("scaffold.mjs", []);
     assert.equal(r.code, 1);
-    assert.match(r.stdout, /scaffold\.mjs arc42 <map>/);
+    assert.match(r.stdout, /scaffold\.mjs arc42 <map> --from <zip>/);
+    r = p.cli("scaffold.mjs", ["arc42", "Docs/arc42"]);
+    assert.equal(r.code, 1);
+    assert.match(r.stdout, /curl -L -o "[^"]*arc42-template-NL-plain-gitHubMarkdownMP\.zip" https:\/\/github\.com\/arc42\//);
+    assert.equal(fs.existsSync(p.abs("Docs")), false);
   } finally { p.cleanup(); }
+});
+
+test("#55: a download into graded work is a write; into a temporary folder it is not", () => {
+  const { p, repo, done } = setup();
+  try {
+    const R = slash(repo), T = slash(os.tmpdir());
+    assert.equal(decision(bash(p, `curl -L -o "${R}/Docs/a.zip" https://example.com/a.zip`)), "deny");
+    assert.equal(decision(bash(p, "curl -sSLO https://example.com/a.zip", repo)), "deny");
+    assert.equal(decision(bash(p, `wget -P "${R}" https://example.com/a.zip`)), "deny");
+    assert.equal(decision(bash(p, `curl -L -o "${T}/arc42.zip" https://example.com/a.zip`)), "allow");
+  } finally { done(); }
 });
 
 // ---------- #58 stop phrases, everything in one message ----------
@@ -277,7 +298,7 @@ test("#57: in graded work 'af:' needs a changed file there; a Mermaid class diag
   try {
     // A task of this family logged just now: nothing changed since.
     fs.appendFileSync(path.join(p.state, "events.jsonl"), JSON.stringify({ at: new Date(Date.now() + 1000).toISOString(), type: "task", tid: "t0", skill: "uml.klassendiagram", success: true, maxRung: 0, source: "af", explained: true }) + "\n");
-    let r = p.hook("prompt-gate.mjs", { session_id: SID, prompt: "af: Device-klasse #uml.klassendiagram" });
+    let r = p.hook("prompt-gate.mjs", { session_id: SID, prompt: "af: Product-klasse #uml.klassendiagram" });
     assert.match(ctxOf(r), /niets gewijzigd/);
     assert.ok(p.events().some((e) => e.type === "af-refused"));
     // A new class diagram in the repo, without a skill in the session: the content decides.
@@ -285,11 +306,11 @@ test("#57: in graded work 'af:' needs a changed file there; a Mermaid class diag
     fs.writeFileSync(path.join(p.state, `session-${S2}.json`), JSON.stringify({ startedAt: Date.now(), graded: true }));
     fs.mkdirSync(path.join(target, "Arc42"), { recursive: true });
     const later = new Date(Date.now() + 5000);
-    fs.writeFileSync(path.join(target, "Arc42", "05_building_block_view.md"), "# 5\n\n```mermaid\nclassDiagram\n  Device <|-- Printer\n```\n");
+    fs.writeFileSync(path.join(target, "Arc42", "05_building_block_view.md"), "# 5\n\n```mermaid\nclassDiagram\n  Product <|-- Boek\n```\n");
     fs.utimesSync(path.join(target, "Arc42", "05_building_block_view.md"), later, later);
-    r = p.hook("prompt-gate.mjs", { session_id: S2, prompt: "af: overerving naar de apparaten" });
+    r = p.hook("prompt-gate.mjs", { session_id: S2, prompt: "af: overerving naar de producttypes" });
     const task = p.events().filter((e) => e.type === "task").pop();
-    assert.deepEqual([task.skill, task.source, task.what], ["uml.klassendiagram", "af", "overerving naar de apparaten"]);
+    assert.deepEqual([task.skill, task.source, task.what], ["uml.klassendiagram", "af", "overerving naar de producttypes"]);
   } finally { done(); }
 });
 
@@ -297,14 +318,14 @@ test("#57: the start lists work in the graded folder since the previous session,
   const OLD = "11111111-2222-3333-4444-555555555555";
   const { p, target, done } = setup({ inProject: true, sessions: { [OLD]: { lastActiveAt: Date.now() - 3600000, activeMs: 2 * 60000 } } });
   try {
-    fs.mkdirSync(path.join(target, "Makerlab", "Arc42"), { recursive: true });
-    fs.writeFileSync(path.join(target, "Makerlab", "Arc42", "Building_Block_View.md"), "```mermaid\nclassDiagram\n  class Device\n```\n");
-    fs.writeFileSync(path.join(target, "Makerlab", "Notities.txt"), "x");
+    fs.mkdirSync(path.join(target, "Webshop", "Arc42"), { recursive: true });
+    fs.writeFileSync(path.join(target, "Webshop", "Arc42", "Building_Block_View.md"), "```mermaid\nclassDiagram\n  class Product\n```\n");
+    fs.writeFileSync(path.join(target, "Webshop", "Notities.txt"), "x");
     const r = p.hook("session-start.mjs", { source: "startup", session_id: "nieuw" });
     const ctx = ctxOf(r);
     assert.match(ctx, /Gewijzigd in de opdracht sinds de vorige sessie/);
-    assert.match(ctx, /- Makerlab\/Arc42\/Building_Block_View\.md → uml\.klassendiagram \(via de inhoud\)/);
-    assert.match(ctx, /- Makerlab\/Notities\.txt → geen koppeling/);
+    assert.match(ctx, /- Webshop\/Arc42\/Building_Block_View\.md → uml\.klassendiagram \(via de inhoud\)/);
+    assert.match(ctx, /- Webshop\/Notities\.txt → geen koppeling/);
     assert.match(ctx, /af: <onderdeel>[\s\S]*skill\.mjs paths <id> add/);
     assert.doesNotMatch(ctx, /^- (\.learning|ai-verantwoording|\.claude)/m, "the record, the log and the harness are not work");
   } finally { done(); }
@@ -338,7 +359,7 @@ test("#59: [logboek \"…\"] fills the empty last column of this session, only w
 // ---------- #61 the user-level gate ----------
 
 const GATE = path.join(HARNESS, "user", "graded-gate.mjs");
-function gateHome(paths, names = ["Makerlab"]) {
+function gateHome(paths, names = ["Webshop"]) {
   const home = tmp("home");
   fs.mkdirSync(path.join(home, ".claude", "leerharnas"), { recursive: true });
   fs.writeFileSync(path.join(home, ".claude", "leerharnas", "graded.json"), JSON.stringify({ paths, names, messages: { prompt: "PROMPT-DICHT", tool: "TOOL-DICHT" } }));
@@ -352,13 +373,13 @@ test("#61: from another folder a prompt about the graded work is blocked, other 
   try {
     const name = path.basename(repo);
     const prompt = (text) => gate(home, { hook_event_name: "UserPromptSubmit", cwd: other, prompt: text });
-    assert.equal(prompt(`kijk in ${slash(repo)}/Makerlab/Arc42`).json?.decision, "block");
+    assert.equal(prompt(`kijk in ${slash(repo)}/Webshop/Arc42`).json?.decision, "block");
     assert.equal(prompt(`hoe gaat het met ${name}?`).json?.reason, "PROMPT-DICHT");
-    assert.equal(prompt("waar staat de Makerlab solution?").json?.decision, "block");
+    assert.equal(prompt("waar staat de Webshop solution?").json?.decision, "block");
     assert.equal(prompt("how does adding mermaid class diagrams work?").json, null);
-    assert.equal(prompt("makerlabs zijn leuk").json, null, "a longer word is not the name");
+    assert.equal(prompt("webshops zijn leuk").json, null, "a longer word is not the name");
     // Inside the graded project itself the project's own harness decides.
-    assert.equal(gate(home, { hook_event_name: "UserPromptSubmit", cwd: repo, prompt: "Makerlab" }).json, null);
+    assert.equal(gate(home, { hook_event_name: "UserPromptSubmit", cwd: repo, prompt: "Webshop" }).json, null);
   } finally { rm(repo, other, home); }
 });
 
@@ -369,17 +390,17 @@ test("#61: from another folder every tool on the graded work is denied, also rea
     const R = slash(repo);
     const tool = (tool_name, tool_input) => decision(gate(home, { hook_event_name: "PreToolUse", cwd: other, tool_name, tool_input }));
     assert.equal(tool("Read", { file_path: `${R}/ai-verantwoording/logboek.md` }), "deny");
-    assert.equal(tool("Read", { file_path: `${R}/Makerlab/Program.cs` }), "deny");
+    assert.equal(tool("Read", { file_path: `${R}/Webshop/Program.cs` }), "deny");
     assert.equal(tool("Glob", { pattern: `${R}/**/*.md` }), "deny");
     assert.equal(tool("Grep", { pattern: "class", path: R }), "deny");
-    assert.equal(tool("Bash", { command: `cat "${R}/Makerlab/Program.cs"` }), "deny");
+    assert.equal(tool("Bash", { command: `cat "${R}/Webshop/Program.cs"` }), "deny");
     assert.equal(tool("Bash", { command: `git -C "${R}" log --oneline` }), "deny");
     assert.equal(tool("Write", { file_path: `${R}/x.md`, content: "x" }), "deny");
     // The setup itself.
     assert.equal(tool("Read", { file_path: `${R}/.claude/settings.json` }), "allow");
     assert.equal(tool("Edit", { file_path: `${R}/CLAUDE.md`, old_string: "a", new_string: "b" }), "allow");
     assert.equal(tool("Bash", { command: `node harness/install.mjs "${R}" --update --yes` }), "allow");
-    assert.equal(tool("Bash", { command: `node harness/install.mjs "${R}" --update --yes && cat "${R}/Makerlab/Program.cs"` }), "deny");
+    assert.equal(tool("Bash", { command: `node harness/install.mjs "${R}" --update --yes && cat "${R}/Webshop/Program.cs"` }), "deny");
     // Other work is not touched.
     assert.equal(tool("Read", { file_path: path.join(other, "README.md") }), "allow");
     assert.equal(tool("Bash", { command: "git status" }), "allow");
@@ -394,8 +415,8 @@ test("#61: install.mjs --user-guard shows a plan, merges ~/.claude and can remov
   const { p, repo, done } = setup();
   const home = tmp("home");
   try {
-    fs.mkdirSync(path.join(repo, "Makerlab"), { recursive: true });
-    fs.writeFileSync(path.join(repo, "Makerlab", "Makerlab.sln"), "");
+    fs.mkdirSync(path.join(repo, "Webshop"), { recursive: true });
+    fs.writeFileSync(path.join(repo, "Webshop", "Webshop.sln"), "");
     fs.mkdirSync(path.join(home, ".claude"), { recursive: true });
     fs.writeFileSync(path.join(home, ".claude", "settings.json"), JSON.stringify({ cleanupPeriodDays: 365, hooks: { Stop: [{ hooks: [{ type: "command", command: "node eigen.mjs" }] }] } }));
     fs.writeFileSync(path.join(home, ".claude", "CLAUDE.md"), "# Mijn regels\n");
@@ -403,13 +424,13 @@ test("#61: install.mjs --user-guard shows a plan, merges ~/.claude and can remov
     const inst = (...args) => run(path.join(HARNESS, "install.mjs"), [p.root, "--user-guard", ...args], { env });
     let r = inst("--dry-run");
     assert.equal(r.code, 0, r.stderr);
-    assert.match(r.stdout, /Makerlab/);
+    assert.match(r.stdout, /Webshop/);
     assert.equal(fs.existsSync(path.join(home, ".claude", "leerharnas", "graded.json")), false, "a dry run writes nothing");
     r = inst("--yes");
     assert.equal(r.code, 0, r.stderr);
     const cfg = JSON.parse(fs.readFileSync(path.join(home, ".claude", "leerharnas", "graded.json"), "utf8"));
     assert.deepEqual(cfg.paths, [slash(repo)]);
-    assert.deepEqual(cfg.names, ["Makerlab"]);
+    assert.deepEqual(cfg.names, ["Webshop"]);
     const s = JSON.parse(fs.readFileSync(path.join(home, ".claude", "settings.json"), "utf8"));
     assert.equal(s.cleanupPeriodDays, 365, "your own settings stay");
     assert.equal(s.hooks.Stop[0].hooks[0].command, "node eigen.mjs");

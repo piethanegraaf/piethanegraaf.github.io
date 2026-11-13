@@ -440,11 +440,10 @@
   "ss.changed.none": "no link",
   "ss.msg.catchUp": "Session {sid8} of {day} closed without a diary entry: Claude first offers a short catch-up diary.",
   "ss.msg.changed": "{n} file(s) in the assignment changed since your previous session: Claude proposes to report finished parts.",
-  "cli.scaffold.usage": "Usage: node .claude/hooks/scaffold.mjs arc42 <folder> [--lang nl|en] [--with-help] [--from <zip>]\nPuts the official arc42 template (GitHub Markdown, one file per chapter) unchanged into a new or empty folder. --with-help: the version with an explanation per chapter. --from: a zip you downloaded yourself (with the same sha256 as the official one).",
+  "cli.scaffold.usage": "Usage: node .claude/hooks/scaffold.mjs arc42 <folder> --from <zip> [--lang nl|en] [--with-help]\nPuts the official arc42 template (GitHub Markdown, one file per chapter) unchanged into a new or empty folder. Download the zip first (yourself, or Claude with curl), outside the folder of the assignment; without --from the script shows the link. --with-help: the version with an explanation per chapter.",
   "cli.scaffold.done": "arc42 template unpacked unchanged into {dir}: {files} files. Release {release}, {asset}, sha256 {sha}. Source: {url} (arc42.org, licence CC BY-SA 4.0). Cite the source in your report.",
   "cli.scaffold.notEmpty": "The folder {dir} already exists and is not empty. Choose a new or empty folder: the template overwrites nothing.",
   "cli.scaffold.digest": "The file is not the official template ({error}). Nothing was unpacked.",
-  "cli.scaffold.download": "The download failed ({error}). Download the template yourself from arc42.org and use --from <zip>.",
   "cli.scaffold.failed": "Unpacking failed: {error}",
   "install.userGuard.head": "Graded work closed from other folders (#61): changes in {dir}",
   "install.userGuard.headRemove": "Remove the gate for graded work from {dir}",
@@ -455,5 +454,7 @@
   "install.userGuard.noGraded": "The record of {dir} has no graded work (settings.graded). Set it first with `setting graded add \"<path>\"`.",
   "install.userGuard.msgPrompt": "Learning harness: this question is about graded work ({dir}). Ask it in a session in that folder: only there do the exam rules apply (the hint ladder up to rung 4 and the AI-use log). From other folders the graded work is closed.",
   "install.userGuard.msgTool": "Learning harness: graded work ({dir}) is closed from another folder, also for reading. Only the setup (.claude/ and CLAUDE.md) is open. Work on the assignment in a session in that folder itself. Tell the learner, and do not look for another way.",
-  "install.userGuard.claudeBlock": "## Graded work (learning harness)\n\nGraded work: {dir} (also: {names}). Answer questions about that work only in a session in that folder: the exam rules apply there (the hint ladder up to rung 4 and the AI-use log). In every other folder, also with a general question that may be meant for that assignment (for example about an arc42 chapter or a class diagram): first ask whether it is about the assignment. If it is, do not help, but point to a session in that folder."
+  "install.userGuard.claudeBlock": "## Graded work (learning harness)\n\nGraded work: {dir} (also: {names}). Answer questions about that work only in a session in that folder: the exam rules apply there (the hint ladder up to rung 4 and the AI-use log). In every other folder, also with a general question that may be meant for that assignment (for example about an arc42 chapter or a class diagram): first ask whether it is about the assignment. If it is, do not help, but point to a session in that folder.",
+  "cli.scaffold.needZip": "The harness itself never goes on the network. First download the official template, outside the folder of the assignment, and pass it on:\n  curl -L -o \"<temporary folder>/{asset}\" {url}\n  node .claude/hooks/scaffold.mjs arc42 {dir} --lang {lang}{help} --from \"<temporary folder>/{asset}\"\nThe sha256 of the zip is checked; the script does not unpack another zip.",
+  "cli.scaffold.noZip": "The zip file cannot be read ({error}). Download it first: {url}"
 }

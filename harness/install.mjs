@@ -1,5 +1,6 @@
 #!/usr/bin/env node
-// Leerharnas installer. No dependencies, no network, no shell: it only copies files into the target folder.
+// Leerharnas installer. No dependencies, no network, no shell: it only copies files into the target folder
+// (and, only with --user-guard, into ~/.claude/; see user/user-guard.mjs).
 //
 //   node harness/install.mjs <doelmap> [--map ood|junior-dotnet] [--lang nl|en] [--course "<vak>"] [--exam JJJJ-MM-DD] [--dry-run] [--yes]
 //   node harness/install.mjs <doelmap> --update [--dry-run] [--yes] [--force]

@@ -440,11 +440,10 @@
   "ss.changed.none": "geen koppeling",
   "ss.msg.catchUp": "Sessie {sid8} van {day} sloot zonder dagboek: Claude biedt eerst een kort inhaaldagboek aan.",
   "ss.msg.changed": "{n} bestand(en) in de opdracht gewijzigd sinds je vorige sessie: Claude stelt voor om afgeronde onderdelen af te melden.",
-  "cli.scaffold.usage": "Gebruik: node .claude/hooks/scaffold.mjs arc42 <map> [--lang nl|en] [--with-help] [--from <zip>]\nZet het officiële arc42-sjabloon (GitHub Markdown, één bestand per hoofdstuk) ongewijzigd in een nieuwe of lege map. --with-help: de versie met uitleg per hoofdstuk. --from: een zip die je zelf downloadde (met dezelfde sha256 als de officiële).",
+  "cli.scaffold.usage": "Gebruik: node .claude/hooks/scaffold.mjs arc42 <map> --from <zip> [--lang nl|en] [--with-help]\nZet het officiële arc42-sjabloon (GitHub Markdown, één bestand per hoofdstuk) ongewijzigd in een nieuwe of lege map. De zip download je eerst zelf (of Claude met curl), buiten de map van de opdracht; zonder --from toont het script de link. --with-help: de versie met uitleg per hoofdstuk.",
   "cli.scaffold.done": "arc42-sjabloon ongewijzigd uitgepakt in {dir}: {files} bestanden. Release {release}, {asset}, sha256 {sha}. Bron: {url} (arc42.org, licentie CC BY-SA 4.0). Vermeld de bron in je verslag.",
   "cli.scaffold.notEmpty": "De map {dir} bestaat al en is niet leeg. Kies een nieuwe of lege map: het sjabloon overschrijft niets.",
   "cli.scaffold.digest": "Het bestand is niet het officiële sjabloon ({error}). Er is niets uitgepakt.",
-  "cli.scaffold.download": "Downloaden mislukt ({error}). Download het sjabloon zelf van arc42.org en gebruik --from <zip>.",
   "cli.scaffold.failed": "Uitpakken mislukt: {error}",
   "install.userGuard.head": "Beoordeeld werk dicht vanuit andere mappen (#61): wijzigingen in {dir}",
   "install.userGuard.headRemove": "De poort voor beoordeeld werk weghalen uit {dir}",
@@ -455,5 +454,7 @@
   "install.userGuard.noGraded": "In het register van {dir} staat geen beoordeeld werk (settings.graded). Zet het eerst met `setting graded add \"<pad>\"`.",
   "install.userGuard.msgPrompt": "Leerharnas: deze vraag gaat over beoordeeld werk ({dir}). Stel hem in een sessie in die map: alleen daar gelden de regels van de OER (de hintladder tot trede 4 en het AI-logboek). Vanuit andere mappen is het beoordeelde werk dicht.",
   "install.userGuard.msgTool": "Leerharnas: beoordeeld werk ({dir}) is dicht vanuit een andere map, ook om te lezen. Alleen de setup (.claude/ en CLAUDE.md) is open. Werk aan de opdracht in een sessie in die map zelf. Zeg dat tegen de student en zoek geen andere weg.",
-  "install.userGuard.claudeBlock": "## Beoordeeld werk (leerharnas)\n\nBeoordeeld werk: {dir} (ook: {names}). Vragen over dat werk beantwoord je alleen in een sessie in die map: daar gelden de regels van de OER (de hintladder tot trede 4 en het AI-logboek). In elke andere map, ook bij een algemene vraag die voor die opdracht bedoeld kan zijn (bijvoorbeeld over een arc42-hoofdstuk of een klassendiagram): vraag eerst of het over de opdracht gaat. Zo ja, help dan niet, maar verwijs naar een sessie in die map."
+  "install.userGuard.claudeBlock": "## Beoordeeld werk (leerharnas)\n\nBeoordeeld werk: {dir} (ook: {names}). Vragen over dat werk beantwoord je alleen in een sessie in die map: daar gelden de regels van de OER (de hintladder tot trede 4 en het AI-logboek). In elke andere map, ook bij een algemene vraag die voor die opdracht bedoeld kan zijn (bijvoorbeeld over een arc42-hoofdstuk of een klassendiagram): vraag eerst of het over de opdracht gaat. Zo ja, help dan niet, maar verwijs naar een sessie in die map.",
+  "cli.scaffold.needZip": "De harnas gaat zelf nooit het netwerk op. Download eerst het officiële sjabloon, buiten de map van de opdracht, en geef het mee:\n  curl -L -o \"<tijdelijke map>/{asset}\" {url}\n  node .claude/hooks/scaffold.mjs arc42 {dir} --lang {lang}{help} --from \"<tijdelijke map>/{asset}\"\nDe sha256 van de zip wordt gecontroleerd; een andere zip pakt het script niet uit.",
+  "cli.scaffold.noZip": "Het zipbestand is niet te lezen ({error}). Download het eerst: {url}"
 }
