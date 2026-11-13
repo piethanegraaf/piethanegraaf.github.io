@@ -8,10 +8,11 @@ description: "The four Claude Code hooks of the learning harness, every skill.mj
 
 | Event | Script | What it does |
 |---|---|---|
-| `SessionStart` | `session-start.mjs` | Puts the record, open explanations and promotion proposals in the context, and asks for your goal. You also see an open proposal yourself, in the message at the start. Open explanations of earlier sessions lapse here. It does not mention reviews. After a first export to the dashboard, its message also says what is new since then (see `since-export`), unless `dashboardRepo` is `off`. |
-| `UserPromptSubmit` | `prompt-gate.mjs` | Recognises the skill, decides whether a new rung may unlock, logs solved tasks and asks for explanations. Sets the level when you confirm a proposal with "yes, promote", and adds a microskill when you confirm a proposal with "yes, add". During a transfer task no rung unlocks. Agent messages, notifications and system reminders do not count as your words. |
-| `PreToolUse` | `guard.mjs` | Blocks writing, building and testing code at L1–L3, and every change to the record, the state and the harness itself. It judges a shell command per simple command, by the program that runs. It always refuses `eval`, `iex` and `Invoke-Expression`. One program is allowed on purpose: the dashboard export `node <repo>/harness/export.mjs <practice folder>`, which in the practice folder only writes `last-export.json` (not with `--out` into the practice folder). |
-| `Stop` | `reflect-gate.mjs` | Processes the markers in Claude's answer, checks your explanation, the transfer task and the verdict of the demotion analyst, and asks for the diary when you want to stop. When an explanation meets a promotion criterion, it shows you the proposal right away. It also shows a proposal for a microskill when Claude asks for one and this session has the evidence. After the diary, what is still open lapses. |
+| `SessionStart` | `session-start.mjs` | Puts the record, open explanations and promotion proposals in the context, and asks for your goal. You also see an open proposal yourself, in the message at the start. Open explanations of earlier sessions lapse here. It does not mention reviews. After a first export to the dashboard, its message also says what is new since then (see `since-export`), unless `dashboardRepo` is `off`. It offers a catch-up diary, once, for an earlier session with work that closed without a diary entry. In the graded project it lists the files changed since the previous session, with their skill (through `paths` or through the content). |
+| `UserPromptSubmit` | `prompt-gate.mjs` | Recognises the skill, decides whether a new rung may unlock, logs solved tasks and asks for explanations. Sets the level when you confirm a proposal with "yes, promote", and adds a microskill when you confirm a proposal with "yes, add". During a transfer task no rung unlocks. Agent messages, notifications and system reminders do not count as your words. Logs your first message as the plan (`plan`) and a number after Claude's "(1–5)" as your confidence (`confidence`). A message that starts with `done: <part>` (or `af: <onderdeel>`) logs a task like `done`. It recognises a stop request at the start of a message ("done", "klaar") and, in a short message, at its end ("I want to stop", "laten we afronden"). |
+| `PreToolUse` | `guard.mjs` | Blocks writing, building and testing code at L1–L3, and every change to the record, the state and the harness itself. It judges a shell command per simple command, by the program that runs. It always refuses `eval`, `iex` and `Invoke-Expression`. One program is allowed on purpose: the dashboard export `node <repo>/harness/export.mjs <practice folder>`, which in the practice folder only writes `last-export.json` (not with `--out` into the practice folder). In graded work it allows fixed tooling only (`dotnet new` with sln/console/classlib/nunit/xunit/gitignore, `dotnet sln add`, `dotnet add reference\|package`, `git init`, `git remote add`, `git branch -m`, `mkdir`, `scaffold.mjs arc42`) and logs it; git commands that only read (`status`, `log`, `remote -v`, `branch --show-current` …) are always allowed. |
+| `Stop` | `reflect-gate.mjs` | Processes the markers in Claude's answer, checks your explanation, the transfer task and the verdict of the demotion analyst, and asks for the diary when you want to stop. When an explanation meets a promotion criterion, it shows you the proposal right away. It also shows a proposal for a microskill when Claude asks for one and this session has the evidence. After the diary, what is still open lapses. In graded work it writes the AI-use log, with a row per allowed tooling command, and puts your own words in the last column (`[log "…"]`). |
+| `SessionEnd` | `session-end.mjs` | Notes when the session ended and whether there was work without a diary entry, for the catch-up diary at the next start. Asks and blocks nothing. |
 
 ## `skill.mjs` (you run it yourself, with `!`)
 
@@ -23,7 +24,7 @@ description: "The four Claude Code hooks of the learning harness, every skill.mj
 | `review <id> pass\|shaky\|fail` | Record the outcome of a review yourself. Usually not needed: the next task of an L4 skill decides it. |
 | `add <id> "title" ["keywords"]` | Add a new main skill, for example for a part of the exam that is not in the map. It starts with an open placement: your first task sets the level. Link folders with `paths`. Logged as the event `skill-add`. |
 | `add-micro <parent> <id> <level> "title" "keywords"` | Add a microskill. With `autoDemote` the demotion analyst also creates one itself, at the parent's level minus 1. After real help in a session, the harness can also propose one; you add it with "yes, add" in the chat. |
-| `done <id> "what"` | Log a task without a test (design, UML). |
+| `done <id> "what"` | Log a task without a test (design, UML). Without a command: a message that starts with `done: <part>`. |
 | `untask <id>` | Void the last logged task of a skill. |
 | `correct <task-id> rung <1-5> "reason"` | More help than logged: only raises the rung. |
 | `correct <task-id> void "reason"` | Void one task. |
@@ -64,6 +65,8 @@ Runs `dotnet test` with a trx logger and shows a short summary. A test that goes
 | `[demotie {...}]` / `[demotion {...}]` | Only a fallback: the Stop hook reads the analyst's verdict from the agent's own report, so Claude does not put the JSON in the chat. The marker is applied only when the agent really ran in that turn. |
 | `[transfer-start <id>]` | Start of the transfer task (`/mastery-check`), only at L2 or L3. From then on every `[rung N]` counts against the transfer task. |
 | `[transfer-ok <id>]` / `[transfer-no <id>]` (`[transfer-nee <id>]`) | The transfer task passed or not. `ok` only counts without help since the start, and when your last message passes the same check as an explanation. |
+| `[check-question <id> right\|half\|open]` / `[controlevraag <id> goed\|half\|open]` | The outcome of a check question at the end of the session, about the skill `id`. Logged as `check-question`: evidence for a proposal for a microskill, never for a level. |
+| `[log "<text>"]` / `[logboek "<text>"]` | Graded work: your own words for the last column of the AI-use log. The Stop hook writes them only when they are, word for word, part of your message, and only in the empty rows of this session (`[log <8 characters of a session id> "<text>"]` for a catch-up diary). |
 | `<!-- session: <id> -->` / `<!-- sessie: <id> -->` | In the diary: the entry of this session. |
 
 ## Skills
@@ -145,6 +148,19 @@ And of the setup of 13 November 2026 (graded work):
 | `graded-log-error` | The hook could not write the AI-use log (with the error). |
 | `security-warnings` | `check.mjs` with `securityAnalyzer`: the number of warnings and the rules (such as `CA2100`), without file names. |
 
+And of the review of 13 November 2026, night (the first sessions on the final assignment):
+
+| Event | Meaning |
+|---|---|
+| `graded-tooling` | The guard allowed a fixed tooling command in graded work (`cmd`, with `~` for the home folder). It gets a row in the AI-use log. |
+| `plan`, `confidence` | Your first message of the session (at most 300 characters), and the number 1–5 you gave after Claude's "(1–5)". Not exported to the dashboard. |
+| `session-end` | The session closed, with `reason`, `diary` and `work`. |
+| `catchup-offered` | The start offered a catch-up diary for the session `of`. |
+| `task` with `source: af` | A task you logged with `done: <part>` or `af: <onderdeel>`. The dashboard shows it as `done`. |
+| `af-refused` | `af:` in graded work without a changed file since the last task of that skill. |
+| `check-question` | The outcome of a check question: `right`, `half` or `open`. |
+| `log-filled`, `log-fill-refused` | Your own words went into the last column of the AI-use log (`rows`), or the text was not word for word yours. |
+
 ## Files
 
 ```text
@@ -167,11 +183,22 @@ ai-verantwoording/   (ai-use/ in English)
 .claude/leerharnas.local.json   the record of another folder (install.mjs --learning-dir); not in git
 ```
 
+With the user-level gate (`install.mjs <folder> --user-guard`):
+
+```text
+~/.claude/leerharnas/graded-gate.mjs   the gate, in every project
+~/.claude/leerharnas/graded.json       the graded paths, the names to block, the messages
+~/.claude/settings.json                two hooks added (UserPromptSubmit, PreToolUse); the rest stays
+~/.claude/CLAUDE.md                    a block between <!-- leerharnas:graded:start/end -->
+```
+
 ## Scripts in this repository
 
 | Script | What |
 |---|---|
-| `harness/install.mjs` | Install and update. See [Install](install.md). |
+| `harness/install.mjs` | Install and update. With `--user-guard` also the user-level gate for graded work. See [Install](install.md). |
+| `harness/hooks/scaffold.mjs` | `arc42 <folder> --from <zip> [--lang nl\|en] [--with-help]`: the official arc42 template (release 2026.10.19, GitHub Markdown, one file per chapter), from a zip downloaded first (without `--from` it shows the link and the `curl` command), checked against a pinned sha256 and unpacked unchanged into a new or empty folder. It has no network code. Installed as `.claude/hooks/scaffold.mjs`; in graded work the guard allows only that copy. |
+| `harness/user/graded-gate.mjs` | The user-level gate (#61), installed by `install.mjs --user-guard`. |
 | `harness/export.mjs` | Export progress for the dashboard, with privacy filters. Also writes `.learning/state/last-export.json` in the practice folder. From a practice session the guard allows it on purpose. See [Configuration and privacy](configuration.md). |
 | `harness/security-check.mjs` | The check before anything goes online. |
 | `harness/demo.mjs` | Rebuild the dashboard's demo data. |

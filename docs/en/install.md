@@ -84,6 +84,13 @@ node harness/install.mjs ../<assignment> --map ood --lang en --learning-dir "C:/
 - No `.learning/` is made in the repo. The path of the record goes into `.claude/leerharnas.local.json`, which the installer adds to `.gitignore`. `--update` keeps it.
 - Then name the repo as graded work, in a session or with `!`: `node .claude/hooks/skill.mjs setting graded add "C:/Users/<you>/source/repos/<assignment>"`. Use an absolute path: the setting is in the shared record, so it also protects the repo from a session in your practice folder. See [Graded work](how-it-works.md#graded-work).
 - **What goes into git:** `.claude/` (your teacher sees the rules the AI followed) and `ai-verantwoording/` (the AI-use log). `.learning/` and `.claude/leerharnas.local.json` stay out. Run the security check before you push the log: it is in a repo your teacher reads.
+- **Close the assignment from other folders** (optional, but advised). A question about the assignment asked in a session in another folder gets no limit on rungs and no row in the log. The user-level gate closes that:
+
+    ```bash
+    node harness/install.mjs ../<assignment> --user-guard
+    ```
+
+    It reads the graded paths from the record, shows its plan, and asks before it writes in `~/.claude/` (the gate and its config, two hooks in `settings.json`, a block in `CLAUDE.md`; a backup of what changes). From then on, in every other folder, a prompt that names the assignment (its path, its folder name, or the folder of its solution) is blocked, and every tool on its paths is refused, reading too. Only the setup there (`.claude/` and `CLAUDE.md`) stays open, so `--update` keeps working. Run it again after `setting graded add`; take it away with `--user-guard --remove`.
 
 ## Before you practise
 

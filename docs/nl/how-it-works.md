@@ -78,12 +78,23 @@ In die paden:
 
 - **Geldt de hintladder van L2 voor elke vaardigheid**, ook voor een op L3 of L4, met de vasttimer. Hij gaat tot trede 4 (`setting graded maxRung` kan hem lager zetten). Een uitwerking (trede 5) is daar nooit beschikbaar. Vraag je erom, dan weigert Claude, met een verwijzing naar de OER.
 - **Is trede 4 een voorbeeld van hooguit 5 regels over een ander onderwerp.** Het implementeert niets wat de opdracht vraagt. Je typt je eigen code, en je plakt het voorbeeld nooit.
-- **Schrijft Claude niets**, op geen enkel niveau, ook geen tooling, Dockerfile of pipeline, en bouwt of test Claude daar niet. De guard blokkeert het, ook vanuit een sessie in een andere map, en er is geen override. Jij typt alles en draait de tests zelf. Lezen mag.
+- **Schrijft Claude geen inhoud**, op geen enkel niveau: geen code, tekst, diagram, Dockerfile of pipeline, en geen commit of push (versiebeheer wordt ook beoordeeld). Claude bouwt of test daar niet. De guard blokkeert het, ook vanuit een sessie in een andere map, en er is geen override. Jij typt alles en draait de tests zelf. Lezen mag.
+- **Mag vaste tooling wel.** Daar maakt een generator of een officieel sjabloon de inhoud, niet de AI: `dotnet new` (sln, console, classlib, nunit, xunit, gitignore), `dotnet sln add`, `dotnet add reference` of `package`, `git init`, `git remote add`, `git branch -m`, `mkdir`, en `node .claude/hooks/scaffold.mjs arc42 <map> --from <zip>`. Dat laatste zet het officiële [arc42](https://arc42.org)-sjabloon ongewijzigd in een nieuwe of lege map, gecontroleerd met een vaste sha256. De harnas downloadt de zip niet zelf; zonder `--from` toont het script de link en het `curl`-commando, naar een tijdelijke map buiten de opdracht. Elk zo'n commando krijgt een regel "tooling (geen AI-inhoud)" in het logboek. Al het andere blijft geblokkeerd.
 - **Tellen taken en uitleg in eigen woorden gewoon mee.** Wie de eigen code kan uitleggen, kan die ook verdedigen.
 - **Komt elk antwoord in een AI-logboek**, in `ai-verantwoording/` in de repo. De hooks schrijven het, nooit Claude:
-    - `logboek.md`: een regel per antwoord, met de tijd, de sessie, de vaardigheid, de trede en de soort hulp (vraag, concept, schets, codevoorbeeld, review). De laatste kolom is van jou: wat je ermee deed en hoe je het controleerde. `/diary` vraagt je die in te vullen.
+    - `logboek.md`: een regel per antwoord, met de tijd, de sessie, de vaardigheid, de trede en de soort hulp (vraag, concept, schets, codevoorbeeld, review, tooling). De laatste kolom is van jou: wat je ermee deed en hoe je het controleerde. `/diary` vraagt erom, en je antwoord komt letterlijk in die kolom. De hook controleert eerst dat de woorden van jou zijn; Claude schrijft daar nooit.
     - `sessies/<datum>-<sessie>.md`: je prompts en de tekst van Claude in die sessie, zonder de uitvoer van tools. Claude Code heeft geen deellink naar een sessie, dus deze export komt daarvoor in de plaats. Een privacyfilter haalt e-mailadressen, je thuismap (wordt `~`) en de berichten van de hooks weg.
     - `README.md`: het AI-niveau, de ladder, een APA-verwijzing en hoe de export tot stand komt. Hij wordt één keer geschreven; daarna is hij van jou.
+
+**Dicht vanuit andere mappen.** Een vraag over de opdracht die je in een andere map stelt, bijvoorbeeld in de repo van deze site, krijgt geen trede-grens en geen regel in het logboek. Dat gat sluit je met een poort op gebruikersniveau:
+
+```text
+node harness/install.mjs <map met de harnas> --user-guard
+```
+
+Die schrijft alleen in `~/.claude/`, nadat hij het plan heeft laten zien. Vanaf dan wordt in elke andere map een prompt die de opdracht noemt tegengehouden, en elke tool op de paden ervan geweigerd, ook lezen. De setup zelf (`.claude/` en `CLAUDE.md` daar) blijft open. Met `--remove` haal je hem weer weg. Een algemene vraag zonder de naam, zoals "hoe werkt een Mermaid-klassendiagram?", ziet een hook niet. Daarom vraagt een regel in `~/.claude/CLAUDE.md` Claude om eerst na te gaan of het over de opdracht gaat.
+
+**Werk tussen sessies.** Werkte je in je IDE aan de opdracht terwijl er geen sessie liep? Dan noemt de volgende sessiestart de gewijzigde bestanden, met de vaardigheid waar ze bij horen: via de paden van een vaardigheid, of via de inhoud (een Mermaid-`classDiagram` hoort bij `uml.klassendiagram`). Claude stelt dan per afgerond onderdeel een taak voor.
 
 Op AI-niveau 0 (`setting graded aiLevel 0`) geeft Claude bij dat werk geen enkele hulp. Vraag je docent welke delen van een assessment op niveau 0 zijn en welke op niveau 1. Het onderzoek legt de keuzes uit in [§10.8](research.md#108-herziening-van-13-november-2026-beoordeeld-werk-volgens-de-oer).
 
@@ -93,7 +104,7 @@ Op AI-niveau 0 (`setting graded aiLevel 0`) geeft Claude bij dat werk geen enkel
 
 **Draai eerst `check.mjs`.** Kies je een opdracht, dan geeft Claude je `! node .claude/hooks/check.mjs <map>`. Draai hem vóór je code schrijft: die eerste run is het begin. Schreef je de code toch eerst, en is de eerste run meteen helemaal groen? Dan telt het toch als taak, zolang je de code in deze sessie hebt gewijzigd.
 
-Een taak wordt gelogd als een test van rood naar groen gaat (`check.mjs`), als je hem zelf afmeldt (`done`), of als je in de chat zegt dat de tests groen zijn. Hij telt pas mee na een uitleg **in je eigen woorden**, met twee sleutels:
+Een taak wordt gelogd als een test van rood naar groen gaat (`check.mjs`), als je hem zelf afmeldt (`done`, of een bericht dat begint met `af: <onderdeel>`, zonder commando), of als je in de chat zegt dat de tests groen zijn. Werk zonder test, zoals een klassendiagram, knip je op in **onderdelen met een naam**: "de klasse Product", "de overerving naar de producttypes". Elk afgerond onderdeel is een eigen taak, met een eigen uitleg. Kleine stappen met een naam helpen het leren en een eerlijk beeld van wat je kunt; opknippen om meer taken te krijgen niet ([onderzoek §10.10](research.md#1010-herziening-van-13-november-2026-nacht-de-eerste-sessies-aan-de-eindopdracht)). Bij beoordeeld werk telt `af:` alleen als er sinds de vorige taak van die vaardigheid een bestand in de opdracht is gewijzigd. Hij telt pas mee na een uitleg **in je eigen woorden**, met twee sleutels:
 
 1. Claude beoordeelt de inhoud en zet `[uitleg-ok <tid>]` of `[uitleg-nee <tid>]`. Bij `uitleg-nee` noemt Claude eerst wat al klopt, en stelt dan één vervolgvraag die naar het gat wijst: een vervolgvraag, geen afwijzing. De eis blijft even streng. De vraag hangt af van wat er gebeurde. Na hulp (trede 1 of hoger): over het concept van de hoogste hint, want daar zat je vast. Na een mislukte poging zonder hint (rood of een compileerfout): waarom werkt het nu, en waarom de eerste poging niet? Meteen groen: één vraag naar het principe van de opdracht. Claude vraagt door tot het principe klopt.
 2. De Stop-hook controleert je eigen woorden: **al je berichten sinds de taak is gelogd, samen**. Een antwoord in drie korte berichten telt als één. Samen moeten ze minstens 12 woorden buiten code hebben, een *waarom* (omdat, doordat, zodat …, of een redenering "als …, dan/zou …" in één zin), en ze mogen niet uit Claude's tekst zijn overgenomen. Een bericht van vóór het loggen telt niet mee.
@@ -151,7 +162,11 @@ Alleen jouw eigen "ja, toevoegen" (of "yes, add") voegt hem toe, op het niveau v
 
 ## Het dagboek
 
-Als je stopt, schrijft `/diary` de feiten van de sessie op, en jij de reflectie: wat je leerde, wat verwarrend was, en hoe zeker je bent. Zonder dagboekentry laat de Stop-hook de sessie niet sluiten (hooguit twee keer per stopverzoek).
+**Voor de start is geen commando nodig.** De hooks starten de sessie zelf als je Claude Code opent. Je eerste bericht wordt gelogd als het plan, en het getal dat je geeft als Claude naar je zelfvertrouwen (1–5) vraagt, als je zelfvertrouwen vooraf. Het dagboek vergelijkt dat getal met wat er gebeurde.
+
+Als je stopt, schrijft `/diary` de feiten van de sessie op, en jij de reflectie: wat je leerde, wat verwarrend was, en hoe zeker je bent. Je hoeft nergens om te vragen: "klaar", "ik wil stoppen" of "laten we afronden" is genoeg. Claude vraagt dan alles in **één bericht**: open uitleg, 2 tot 3 **controlevragen** over de concepten van deze sessie, de drie reflectievragen, en bij beoordeeld werk de logboekvraag. Controlevragen beantwoord je uit het hoofd, en ze vragen naar een reden of een toepassing in je eigen werk. Je krijgt per antwoord feedback; een open antwoord is geen falen, maar wat de volgende keer terugkomt. Zonder dagboekentry laat de Stop-hook de sessie niet sluiten (hooguit twee keer per stopverzoek).
+
+Sloot je een sessie zonder dagboek, bijvoorbeeld door het venster te sluiten? Dan biedt de volgende start één keer een kort inhaaldagboek aan voor die sessie.
 
 Boven de drie reflectievragen staat een waarschuwing: *"Let op: je antwoorden komen letterlijk, met een vertaling, op het openbare dashboard."* Een privé-optie is er niet. Wat niet online mag, zet je in `.learning/private.json`.
 

@@ -84,6 +84,13 @@ node harness/install.mjs ../<opdracht> --map ood --lang nl --learning-dir "C:/Us
 - Er komt geen `.learning/` in de repo. Het pad van het register gaat in `.claude/leerharnas.local.json`, dat de installer aan `.gitignore` toevoegt. `--update` houdt het.
 - Noem de repo daarna als beoordeeld werk, in een sessie of met `!`: `node .claude/hooks/skill.mjs setting graded add "C:/Users/<jij>/source/repos/<opdracht>"`. Gebruik een absoluut pad: de instelling staat in het gedeelde register, dus ze beschermt de repo ook vanuit een sessie in je oefenmap. Zie [Beoordeeld werk](how-it-works.md#beoordeeld-werk).
 - **Wat in git komt:** `.claude/` (je docent ziet welke regels de AI volgde) en `ai-verantwoording/` (het AI-logboek). `.learning/` en `.claude/leerharnas.local.json` blijven erbuiten. Draai de securitycheck voordat je het logboek pusht: het staat in een repo die je docent leest.
+- **Sluit de opdracht af vanuit andere mappen** (optioneel, maar aangeraden). Een vraag over de opdracht die je in een sessie in een andere map stelt, krijgt geen trede-grens en geen regel in het logboek. De poort op gebruikersniveau sluit dat af:
+
+    ```bash
+    node harness/install.mjs ../<opdracht> --user-guard
+    ```
+
+    Hij leest de beoordeelde paden uit het register, laat zijn plan zien en vraagt het voordat hij in `~/.claude/` schrijft: de poort en zijn instellingen, twee hooks in `settings.json` en een blok in `CLAUDE.md`, met een backup van wat verandert. Vanaf dan wordt in elke andere map een prompt die de opdracht noemt (het pad, de mapnaam of de map van de solution) tegengehouden, en elke tool op de paden ervan geweigerd, ook lezen. Alleen de setup daar (`.claude/` en `CLAUDE.md`) blijft open, zodat `--update` blijft werken. Draai hem opnieuw na `setting graded add`; weghalen doe je met `--user-guard --remove`.
 
 ## Voordat je gaat oefenen
 

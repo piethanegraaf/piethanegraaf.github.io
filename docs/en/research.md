@@ -1160,7 +1160,9 @@ As built, you run the tests yourself with `check.mjs`. It logs the task, praises
 | `prompt-gate.mjs` | `UserPromptSubmit` | Matches your prompt to a skill using keywords from `skill-map.yaml`, adds the policy for that level and the current hint rung, starts or updates the stuck timer, and handles `/override`. *Revised (§10.2, item 10):* ignores agent reports, task notifications and system reminders, and logs `prompt-ignored` | Can add context. Can block only on abuse patterns (optional) |
 | `ownership-guard.mjs` | `PreToolUse` (matcher `Edit\|Write\|MultiEdit\|NotebookEdit`) | Blocks AI edits to files, or parts of files, that belong to a skill at L1–L3. At L1 it allows a write only if it contains `TODO(human)` gaps | **Yes** (`permissionDecision: deny`) |
 | ~~`evidence-log.mjs`~~ → `check.mjs` (built) | CLI, which you run yourself with `!` | *Revised (§10):* because you run the tests yourself, a PostToolUse hook never sees them. `check.mjs` runs `dotnet test` with a trx logger, prints a readable summary, remembers per test method whether it was green, and logs a red→green transition as a task with the current hint rung. It works for any .NET test project (practice exercises and project work) | No |
-| `reflect-gate.mjs` | `Stop` | If you worked on a skill and there is no diary entry yet, it blocks **once** and tells Claude to run the reflection. It uses `stop_hook_active` to avoid loops. *Revised (§10):* it also reads Claude's last answer from the transcript and processes the `[trede N]` and `[uitleg-ok <tid>]` markers. That second marker is accepted only if your own message passes the deterministic explanation check. *Revised (§10.7):* at an approved explanation it places a new skill; it checks a pending demotion again; and it reads the demotion analyst's verdict from the agent's report | Yes, once |
+| `reflect-gate.mjs` | `Stop` | If you worked on a skill and there is no diary entry yet, it blocks **once** and tells Claude to run the reflection. It uses `stop_hook_active` to avoid loops. *Revised (§10):* it also reads Claude's last answer from the transcript and processes the `[trede N]` and `[uitleg-ok <tid>]` markers. That second marker is accepted only if your own message passes the deterministic explanation check. *Revised (§10.7):* at an approved explanation it places a new skill; it checks a pending demotion again; and it reads the demotion analyst's verdict from the agent's report. *Revised (§10.10):* it logs check questions, notes when Claude asked for the confidence, and writes the learner's own words in the AI-use log | Yes, once |
+| `session-end.mjs` | `SessionEnd` | *Added (§10.10):* notes how a session ended and whether there was work without a diary entry, so the next start can offer a catch-up diary | No |
+| `graded-gate.mjs` (user level, optional) | `UserPromptSubmit` and `PreToolUse`, in every project outside the graded folder | *Added (§10.10):* blocks a prompt that names the graded assignment and refuses every tool on its paths, reading too; the setup (`.claude/`, `CLAUDE.md`) stays open | **Yes** |
 
 !!! example "Example: one student's situation"
     The harness was first tried by a second-year HBO-ICT student who practised OOD in C#. The course exercises came with .NET unit tests, and the student ran them, not Claude. That is why `check.mjs` runs `dotnet test`. The diagrams and examples in this section still use Java from the original design (`mvn test`, `src/Payment.java`).
@@ -1985,6 +1987,11 @@ Written by Piet Hanegraaf with Claude (Anthropic); see the [AI statement](ai-sta
 - Weir, C., Becker, I., Noble, J., Blair, L., Sasse, M. A., & Rashid, A. (2020). Interventions for long-term software security: Creating a lightweight program of assurance techniques for developers. *Software: Practice and Experience, 50*(3), 275–298. https://doi.org/10.1002/spe.2774
 - Zhao, S., Wang, D., Zhang, K., Luo, J., Li, Z., & Li, L. (2026). Is vibe coding safe? Benchmarking vulnerability of agent-generated code in real-world tasks (SusVibes). *Proc. ICML 2026*, PMLR 306. https://arxiv.org/abs/2512.03262
 
+**Added on 13 November 2026 (night): a task per part and check questions**
+
+- Bandura, A., & Schunk, D. H. (1981). Cultivating competence, self-efficacy, and intrinsic interest through proximal self-motivation. *Journal of Personality and Social Psychology, 41*(3), 586–598. https://doi.org/10.1037/0022-3514.41.3.586
+- Yang, C., Luo, L., Vadillo, M. A., Yu, R., & Shanks, D. R. (2021). Testing (quizzing) boosts classroom learning: A systematic and meta-analytic review. *Psychological Bulletin, 147*(4), 399–435. https://doi.org/10.1037/bul0000309
+
 ---
 
 <a id="appendix-implementation-sketches"></a>
@@ -2567,11 +2574,68 @@ The analyser only looks for patterns it knows. A clean run is therefore no proof
 - **An existing install keeps `security.basics`.** `--update` leaves your record alone. To get the four skills, add them with `add` or install again.
 - **Not built:** access control and dependencies (§2.13: no analyser finds access-control flaws reliably, and a package check needs a network), and exercises with attack strings as tests.
 
+### 10.10 Revision of 13 November 2026 (night): the first sessions on the final assignment
+
+The pilot student worked on the final assignment for the first time, and the harness got in the way in four places. Claude refused to put the official arc42 template in the repo, although the exam rules allow AI to "bring structure" and the template is not AI content. Nothing showed that the session had started, and the confidence question went unanswered without trace. A class diagram the student finished in the IDE, between two sessions, counted for nothing. And the closing questions only came after the student asked for them. A review of that evening also found three gaps: "I want to stop" and "laten we afronden" were not recognised as a stop request, the guard refused `git remote -v` as a write, and help on the assignment asked in another folder had no rung limit and no row in the log. The student decided points 55–62 with multiple-choice questions; 62 fell away because 61 covers it. The setup document stays private.
+
+#### 10.10.1 Decisions
+
+| # | Decision | Checked against | Verdict |
+|---|---|---|---|
+| 55 | **Fixed tooling in graded work.** The guard allows a short list of deterministic commands there: `dotnet new` (sln, console, classlib, nunit, xunit, gitignore; not with `--force`), `dotnet sln add`, `dotnet add reference\|package`, `git init`, `git remote add`, `git branch -m`, `mkdir`, and `scaffold.mjs arc42`, which unpacks the official template unchanged after a sha256 check. Each becomes a row "tooling (no AI content)" in the log. Content, commits, the pipeline and the Dockerfile stay the student's. | The grading form scores the code, the UML, the tests, the pipeline, version control and the report, so all of that stays closed. The exam rules forbid AI that makes content (OER art. 1.41(3c)); a generator or an official template makes no AI content. | **Policy, built.** |
+| 56 | **The start stays automatic** (a start command can be forgotten, and then nothing counts). The harness logs the plan (the first message) and the confidence (a number after Claude's "(1–5)") itself. A SessionEnd hook notes how a session ended; the next start offers a catch-up diary, once, for a session with work but without a diary entry. | Calibration of self-judgement needs the confidence beforehand (see §10.4). | **Built.** |
+| 57 | **A task per part.** Work without a test is split into named parts; each finished part is a task with its own explanation. `af: <what>` (or `done: <what>`) at the start of a message counts as `done`, without a `!` command. The start lists the files changed in the graded folder since the previous session, with their skill by `paths` or by content (a Mermaid `classDiagram` → `uml.klassendiagram`). | Proximal subgoals beat a distal goal for learning, self-efficacy and accurate self-judgement (Bandura & Schunk, 1981). | **Supported, with a condition:** a part must be a real step the learner can explain on its own, or the promotion criterion is reached by splitting. The rules for Claude say so; the explanation gate per part keeps it honest. |
+| 58 | **Ending in one message.** More stop phrases ("ik wil stoppen", "laten we afronden", "I want to finish this session"), only at the end of a short message. Then one message with the open explanations, 2–3 check questions, the reflection and the log question. Check questions are logged (`check-question`) as evidence for a microskill, never for a level. | Retrieval beats restudying for later retention (Roediger & Karpicke, 2006; Adesope et al., 2017), also in real courses, with corrective feedback as a moderator (Yang et al., 2021). Transfer is largest for application and inference questions (Pan & Rickard, 2018). | **Supported, with three conditions:** answers from memory; questions about a reason or an application in the learner's own work, not a definition; feedback per answer. **Advice, not built:** one open question again at the start of the next session would add a spaced repetition. |
+| 59 | **The learner's own words in the last column of the log.** Claude marks the part of the learner's answer with `[log "…"]`; the Stop hook writes it only when it is, word for word, part of what the learner typed, and only in empty cells of that session. | The exam rules ask the student to check and account for the output; the words must be the student's (R11). | **Built.** Two keys, as for an explanation. |
+| 60 | **git commands that only read** (`remote -v`, `branch --show-current`, `config --get`, `stash list`, `tag -l` …) are allowed in graded work. | (bug) | **Fixed.** |
+| 61 | **Graded work is closed from other folders.** A gate at user level (`install.mjs <folder> --user-guard`) runs in every project outside the graded folder: it blocks a prompt that names the assignment, and refuses every tool on its paths, reading too. Only the setup (`.claude/`, `CLAUDE.md`) stays open. A rule in `~/.claude/CLAUDE.md` covers general questions a hook cannot see. | The help that evening came from a session in another folder: no rung limit, no log row (R11). | **Built**, not installed on any machine: that is the student's step. |
+| 62 | Log per turn instead of per session outside the graded folder. | — | **Dropped:** 61 closes the other folders. |
+
+#### 10.10.2 A session on the final assignment, as built
+
+```mermaid
+flowchart TD
+    O["a prompt in another folder"] --> G{"user-level gate:<br/>names the assignment?"}
+    G -->|"yes"| B["blocked: ask it in a session<br/>in the folder of the assignment"]
+    G -->|"no"| X["the usual rules there"]
+    S["a session in the folder<br/>of the assignment"] --> ST["session start: a catch-up diary,<br/>files changed since last time"]
+    ST --> PL["first message: plan;<br/>number after (1-5): confidence"]
+    PL --> W["work: hints up to rung 4,<br/>fixed tooling logged"]
+    W --> AF["done or af: a part"]
+    AF --> E["explanation in own words"]
+    E --> W
+    W --> END{"stop phrase?"}
+    END -->|"yes"| ONE["one message: explanations,<br/>check questions, reflection,<br/>log question"]
+    ONE --> LOG["Stop hook: the learner's words<br/>in the last column of the log"]
+    LOG --> SE["SessionEnd: end noted"]
+```
+
+The gate and the project's own harness never judge the same prompt: inside the folder of the assignment the gate steps aside.
+
+#### 10.10.3 Where the build differs from the plan
+
+- **The template is pinned, and the harness does not download it.** The plan was a script that downloads the template. The security check refuses network code in the harness (SECURITY.md promises none), and that block cannot be allowed. So the zip is downloaded first, outside the graded folder, by the student or by Claude with `curl`; `scaffold.mjs --from <zip>` then checks a sha256 pinned in the script (release 2026.10.19 of arc42, GitHub Markdown, one file per chapter) and unpacks it. A zip with another checksum is refused: otherwise Claude could pack its own content into a zip. It only unpacks into a new or empty folder. The guard now also treats a download into graded work (`curl -o`, `curl -O`, `wget`) as a write.
+- **The guard only allows its own copy** of `scaffold.mjs` (`.claude/hooks/`, protected like every hook). A script that Claude writes elsewhere and runs with `node` is still not visible to the guard, as noted in §10.8.3.
+- **`af:` needs a change in graded work.** A part counts only when a file of the assignment changed since the last task of that skill. Outside graded work `af:` works like `done`.
+- **The plan is the first message**, not a summary of it. A "hello" becomes the plan. The diary uses it as it is.
+- **A catch-up diary is offered for sessions of the last 7 days**, once each, newest first, never for a session that is still active in another window.
+- **The gate needs a config** in `~/.claude/leerharnas/graded.json`, written by the installer from the record. After `setting graded add` the student runs `--user-guard` again. Names that are too general (`src`, `Tests`, `Domain`) are not blocked in prompts; a solution folder such as `Webshop` is.
+- **A general question without the name** of the assignment cannot be seen by a hook. The block in `~/.claude/CLAUDE.md` asks Claude to check first; that is a rule, not enforcement.
+- **This section is §10.10**, because §10.9 was taken by the security map the same evening.
+
 ---
 
 <a id="11-change-log"></a>
 
 ## 11. Change log {#changelog}
+
+### 13 November 2026 (night): the first sessions on the final assignment
+
+The pilot student decided points 55–62 after the first sessions on the final assignment; 55–61 were built the same night, 62 fell away.
+
+- **§10.10 (new):** the decisions, a diagram of a session on the final assignment as built, and where the build differs from the plan.
+- **§8:** 2 new references (Bandura & Schunk, 1981; Yang et al., 2021). They were checked first, together with Roediger & Karpicke (2006), Adesope et al. (2017) and Pan & Rickard (2018), which were already cited; the notes are in [the citation check](https://github.com/piethanegraaf/piethanegraaf.github.io/blob/main/research/citation-checks/citation_check_learning_science.md), section I. The check adds conditions, no correction: a part must be a real step, and a check question asks for a reason or an application. It also advises a spaced repeat of one open question at the next start; that was not built.
+- **Not changed:** the conclusions of §2.
 
 ### 13 November 2026 (evening): the security map
 

@@ -17,7 +17,8 @@ The learning harness lets students use Claude Code in a programming course witho
 
 Does your institution allow AI as an aid in graded work, but not AI-written code? At CHE, for example, the exam rules (OER art. 7.11) allow AI level 1: AI "to generate ideas or bring structure", with a statement of how it was used. The student can then name the repo of the assignment as graded work. In those paths:
 
-- **Claude writes nothing**, at any level and without an override: no code, no tooling, no builds or tests. Reading is allowed.
+- **Claude writes no content**, at any level and without an override: no code, text or diagrams, no builds or tests, and no commits. Reading is allowed. Fixed tooling is allowed and logged: a generator such as `dotnet new`, the git set-up (`git init`, `git remote add`), new folders, and the official arc42 template unchanged. There the generator or the template makes the content, not the AI.
+- **Closed from other folders**, when the student installs the user-level gate: a question about the assignment asked in another folder is blocked, and Claude cannot read the assignment from there. That keeps help on the assignment inside the session where the log is written.
 - **Help stops at rung 4**: a question, where to look, a sketch, or an example of at most 5 lines on another topic. A worked solution is never available there. At AI level 0 Claude gives no help at all.
 - **Every answer goes into an AI-use log** in the repo, in `ai-verantwoording/` (`ai-use/` in English), written by the hooks and not by Claude: one row per answer with the rung and the kind of help, and an export of each session. The last column is for the student: what they did with the help and how they checked it.
 
