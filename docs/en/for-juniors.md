@@ -18,7 +18,7 @@ It probably has a cost: while a skill is at L1–L3, you finish fewer tasks. Eac
 
 Install with `--map junior-dotnet`. The map has ten skills: debugging, reading unfamiliar code, unit tests, refactoring safely, ASP.NET Core APIs, EF Core and LINQ, async/await, security basics, reviewing code written by AI, and specifying a task for an agent.
 
-The guard only protects files under the paths of a skill. A skill without paths, such as debugging, still gets the hint ladder, but nothing is blocked. Adapt the map to your own codebase (see [Your own course](configuration.md#your-own-course)).
+The guard only protects files under the paths of a skill (and the paths of [graded work](how-it-works.md#graded-work), which you will not need at work). A skill without paths, such as debugging, still gets the hint ladder, but nothing is blocked. Adapt the map to your own codebase (see [Your own course](configuration.md#your-own-course)).
 
 ## At work
 
