@@ -726,7 +726,7 @@ Deze sectie maakt van de risico's een plan dat je op je eigen toetsdatum legt. D
 | R8 | Gespreide onderhoudschecks met oplopende intervallen (bijv. 3 → 7 → 21 → 60 → 120 dagen). Een mislukte check zet de vaardigheid terug naar L3. Op L4 moet je de aanpak van de AI bij steekproeven voorspellen of reviewen. | `SessionStart`-hook + `/review-due`-skill | Laag |
 | R9 | De AI moet documentatie citeren, en jij draait de tests zelf (`check.mjs`). Behandel code en uitleg van de AI als onbetrouwbaar. Wees extra voorzichtig met interfaces, abstracte klassen en overerving, waar AI het zwakst is, en met alles wat met beveiliging te maken heeft: controleer die met het cursusmateriaal of de C#-documentatie. Fouten in uitleg die je vindt, worden gelogd als "AI-fouten". | CLAUDE.md, `check.mjs` | Gemiddeld |
 | R10 | Het dagboek legt vast wat *jij* schreef. Voor het inleveren oefen je "verdedig je ontwerp" met `/mastery-check --defend`. | Dagboek + skill | Laag |
-| R11 | Beoordeeld werk: behandel elke vaardigheid als L3 (CLAUDE.md), en houd een log van je AI-gebruik bij voor de AI-verantwoording: promptlinks, wat de AI deed en hoe je het controleerde (zoals OER art. 7.11 van CHE bijvoorbeeld vraagt). Vraag je docent welke delen van je eindassessment op AI-niveau 0 zijn en welke op AI-niveau 1 (§4.2). Volg altijd de regels van de cursus en de instelling. | CLAUDE.md + dagboek | Laag |
+| R11 | Beoordeeld werk (§10.8): noem de paden met `setting graded`. Daar gaat de hintladder tot trede 4 voor elke vaardigheid, is een uitwerking nooit beschikbaar, en blokkeert de guard elke schrijfactie van Claude, ook buiten het project. De hooks houden een AI-logboek bij in de repo: een regel per antwoord, een export van elke sessie (Claude Code heeft geen deellink) en een APA-verwijzing. Jij vult in wat je met de hulp deed en hoe je het controleerde (zoals OER art. 7.11 van CHE bijvoorbeeld vraagt). Vraag je docent welke delen van je eindassessment op AI-niveau 0 zijn en welke op AI-niveau 1 (§4.2). Volg altijd de regels van de cursus en de instelling. | Hooks (guard, prompt-gate, Stop) + `ai-verantwoording/` | Laag |
 | R12 | Houd de harnas klein (~5 hooks, 1 skill) en bekijk de opzet elke maand. Begrens de tijd voor werk aan de harnas: hooguit één fix per sessie, en alleen onderzoek als dat zou veranderen wat je oefent. Onderzoek naar de harnas telt ook als werk aan de harnas: stop ermee tot na je toets, tenzij een hook niet goed werkt. | Dagboek (noteer de minuten aan de harnas vs. aan oefenen) | Gemiddeld |
 | R13 | Houd `.learning/`, `research_notes/` en transcripten buiten gedeelde repo's (`.gitignore`), en sla alleen op wat nodig is. Publiceren is een keuze van de lerende, en dan gaat alleen een gefilterde selectie online: de export voor het dashboard neemt alleen vaste velden mee en filtert de privétermen van de lerende (`.learning/private.json`), vóór elke push draait een securitycheck, en de lerende leest eerst de diff. Het dagboek zegt dat reflecties op het openbare dashboard komen. De pilotstudent koos ervoor zo'n selectie te publiceren. | `.gitignore`, `export.mjs`, `security-check.mjs` | Laag |
 | R14 | **Oefen onder toetsomstandigheden.** Doe vanaf ongeveer twee weken voor elke toets sessies op tijd, zonder AI, in de IDE van je toets. Begin kort en doe daarna volledige proeftoetsen (de oefentoetsen van je cursus). Leer eerst zonder druk. Kijk achteraf terug, en gebruik `claude-study` alleen voor wat je zelf hebt gevonden. | Stappenplan hieronder; dagboek | Gemiddeld |
@@ -885,7 +885,7 @@ flowchart LR
     SS --> C
     P --> PG --> C
     C -- writes or tests code --> GU
-    GU -- L1-L3: deny --> C
+    GU -- L1-L3, or graded work: deny --> C
     C --> RG
     CLI --> EV
     CLI --> SR
@@ -895,9 +895,13 @@ flowchart LR
     C -. demotion of a main skill .-> DA
     DA -. report with the verdict .-> RG
     SK --> DI
+    subgraph Repo["repo of graded work (in git)"]
+        LOG[(ai-verantwoording/:<br/>logboek.md, sessies/, README.md)]
+    end
+    RG -- session about graded work --> LOG
 ```
 
-Zoals gebouwd zijn de vier hooks deterministisch. De guard blokkeert code op L1–L3. De reflect-gate controleert markers en uitleg, plaatst een nieuwe vaardigheid en toont voorstellen. De demotie-analist leest alleen, en zijn rapport gaat naar de reflect-gate, niet de chat in.
+Zoals gebouwd zijn de vier hooks deterministisch. De guard blokkeert code op L1–L3, en elke schrijfactie in beoordeeld werk (§10.8). De reflect-gate controleert markers en uitleg, plaatst een nieuwe vaardigheid en toont voorstellen. De demotie-analist leest alleen, en zijn rapport gaat naar de reflect-gate, niet de chat in.
 
 **Ontwerpkeuzes:**
 
@@ -1895,6 +1899,12 @@ Geschreven door Piet Hanegraaf met Claude (Anthropic); zie de [AI-verklaring](ai
 - Villar, A., Callegaro, M., & Yang, Y. (2013). Where am I? A meta-analysis of experiments on the effects of progress indicators for web surveys. *Social Science Computer Review, 31*(6), 744–762. https://doi.org/10.1177/0894439313497468
 - Zepeda, C. D., Martin, R. S., & Butler, A. C. (2020). Motivational strategies to engage learners in desirable difficulties. *Journal of Applied Research in Memory and Cognition, 9*(4), 468–474. https://doi.org/10.1016/j.jarmac.2020.08.007
 
+**Toegevoegd op 13 november 2026: beoordeeld werk**
+
+- Loibl, K., Roll, I., & Rummel, N. (2017). Towards a theory of when and how problem solving followed by instruction supports learning. *Educational Psychology Review, 29*(4), 693–715. https://doi.org/10.1007/s10648-016-9379-x
+- Shih, B., Koedinger, K. R., & Scheines, R. (2008). A response time model for bottom-out hints as worked examples. *Proc. EDM 2008*, 117–126.
+- van Gog, T., Kester, L., & Paas, F. (2011). Effects of worked examples, example-problem, and problem-example pairs on novices' learning. *Contemporary Educational Psychology, 36*(3), 212–218. https://doi.org/10.1016/j.cedpsych.2010.10.004
+
 ---
 
 <a id="bijlage-implementatieschetsen"></a>
@@ -2396,11 +2406,61 @@ Omlaag wacht op open uitleg, telt alleen de hulp binnen de familie, en wordt opn
 - **45: `levelChanges` zonder wijzigingen zonder verschil.** De eerste melding "sinds de laatste export" na de update kan één wijziging minder tellen.
 - **Een ouder sessiebestand** heeft nog geen familietrede: dat telt alle hulp mee, tot de volgende taak begint.
 
+### 10.8 Herziening van 13 november 2026: beoordeeld werk volgens de OER
+
+De student vroeg om de setup in lijn te brengen met de OER, zodat de harnas kan helpen bij de eindopdracht van het vak. De OER staat daar AI-niveau 1 toe: GenAI als hulpmiddel, "bijvoorbeeld om ideeën te genereren of structuur aan te brengen", met een verantwoording van het gebruik. Ongeoorloofd gebruik van AI die content maakt ("tekst, afbeeldingen, code") is fraude (OER art. 1.41 lid 3c). Het setupdocument met de besluiten blijft privé, omdat het over de eigen opdracht van de student gaat. De nummering loopt door (49–54). De student besliste 49, 50 en 53 met meerkeuzevragen; 51 is meteen gedaan; 52 blijft open.
+
+#### 10.8.1 Besluiten
+
+| # | Besluit | Getoetst aan | Oordeel |
+|---|---|---|---|
+| 49 | **De hintladder tot trede 4 bij beoordeeld werk.** In de paden van `settings.graded` gelden de ladder van L2 en de vasttimer voor elke vaardigheid, ook op L3 en L4. Trede 5 (een uitwerking) bestaat daar niet; een vraag erom wordt geweigerd met een verwijzing naar de OER. Trede 4 is een voorbeeld van hooguit 5 regels over een ander onderwerp. Claude schrijft daar niets, op geen enkel niveau. | Alleen uitleg *zonder* het antwoord leidde tot leren; een eigen keuze gevolgd door het antwoord van de AI niet (Gajos & Mamykina 2022). Eerst proberen en dan een voorbeeld was voor beginners niet beter dan alleen oefenen (van Gog et al. 2011), terwijl probleemoplossen vóór instructie gemiddeld helpt (Sinha & Kapur 2021), als de instructie voortbouwt op de poging van de student (Loibl et al. 2017). De meest concrete hint kan werken als uitgewerkt voorbeeld als de student erover nadenkt (Shih et al. 2008). AI-tutors trekken de grens verschillend: CodeAid toont algemene voorbeeldcode (Kazemitabaar et al. 2024), CodeHelp haalt alle voorbeeldcode weg (Liffiton et al. 2023). R10: minder eigenaarschap bij onbeperkt ChatGPT (Bergh et al. 2026, preprint), niet getest voor kleine voorbeelden. | **Ondersteund, met voorwaarden.** Het advies is gelijk aan het besluit. Drie voorwaarden gaan in de regels voor Claude: het voorbeeld implementeert geen gedrag uit de opdracht en past niet door hernoemen; de student typt de eigen code en plakt nooit; de uitleg na de taak vraagt ook waarin het voorbeeld verschilt van de oplossing van de student. Of een voorbeeld op trede 4 nog "ideeën genereren of structuur aanbrengen" is, zegt de instelling; het logboek noemt het. |
+| 50 | **Een AI-logboek in de repo van de opdracht** (`ai-verantwoording/`): een regel per antwoord (wanneer, sessie, vaardigheid, trede, soort hulp), geschreven door de Stop-hook, een laatste kolom die de student invult ("wat ik ermee deed / hoe gecontroleerd"), een export van elke sessie, en een README met het AI-niveau, een APA-verwijzing en "Claude Code heeft geen deellink". De privacyfilters van de dashboardexport worden hergebruikt: e-mail, de thuismap (wordt `~`), hook- en systeemberichten. | De OER vraagt op niveau 1 promptlinks of de melding dat de applicatie die niet heeft, een APA-verwijzing, en een controle van de uitvoer door de student. Detectie van AI-tekst is onbetrouwbaar (Scarfe et al. 2024), dus de eigen vastlegging van de student is de bescherming (R11). | **Gebouwd.** Een eis uit het beleid, geen claim over leren. |
+| 51 | **De prompts bewaren tot het beoordelingsmoment:** Claude Code bewaart transcripten 365 dagen in plaats van 30. | De OER: bewaar de prompts tot het beoordelingsmoment. | **Gedaan** door de student, in de instellingen van Claude Code. |
+| 52 | **Oefenen voor de momenten op niveau 0** (de diagnostische toets en de uitbreiding bij het assessment, zonder AI). | — | **Open.** Een voorstel voor januari. |
+| 53 | **De harnas in de repo van de opdracht, met één register.** De repo gebruikt het register van de oefenmap (`install.mjs --learning-dir`), zodat een taak in de opdracht meetelt voor dezelfde vaardigheid. `.claude/` en `ai-verantwoording/` gaan in git (de docent ziet welke regels de AI volgde); `.learning/` niet. | Het bewijs hoort bij de vaardigheid waar het over gaat (Corbett & Anderson 1994). R13 (privacy). | **Gebouwd.** |
+| 54 | **Bug: de guard liet een schrijfactie buiten het project door.** Een sessie in de oefenmap kon vrij schrijven in de repo van de opdracht. Nu worden de paden van beoordeeld werk altijd getoetst, ook buiten het project. | (bug) | **Opgelost.** |
+
+#### 10.8.2 Beoordeeld werk, zoals gebouwd
+
+```mermaid
+flowchart TD
+    P["een prompt of een toolaanroep"] --> Q{"beoordeeld werk?<br/>settings.graded.paths,<br/>ook buiten het project"}
+    Q -->|nee| N["de gewone regels per niveau"]
+    Q -->|"Claude schrijft, bouwt,<br/>commit of draait inline code"| D["guard: geweigerd,<br/>geen override"]
+    Q -->|"de student vraagt"| L["hintladder van L2<br/>tot trede 4,<br/>nooit trede 5"]
+    L --> A["Claude antwoordt,<br/>met een eerlijke trede-marker"]
+    A --> S["Stop-hook: een regel in logboek.md,<br/>de export in sessies/,<br/>README.md één keer"]
+    S --> F["/diary: de student vult in<br/>wat er met de hulp gebeurde<br/>en hoe dat gecontroleerd is"]
+```
+
+De guard beslist op het pad, niet op het niveau: beoordeeld werk is beschermd op elk niveau en vanuit elke map. Alleen de hooks schrijven het logboek; de student schrijft de laatste kolom.
+
+#### 10.8.3 Waar de bouw afwijkt van het plan
+
+- **De export van een sessie wordt na elk antwoord geschreven**, niet alleen aan het eind. Een sessie die zonder nette afsluiting stopt, staat dus toch helemaal in het logboek.
+- **Wanneer een sessie als beoordeeld werk telt:** dit project is beoordeeld werk, de werkmap is het, de prompt noemt de map van de opdracht, of Claude gebruikte een tool op een beoordeeld pad (las er een bestand). Daarna blijft de sessie beoordeeld: de voorzichtige kant.
+- **De guard blokkeert ook bouwen en testen** in beoordeeld werk, net als op L2, en git-commando's die de repo wijzigen, en inline code (`node -e`, `python -c`) die daar draait. Lezen mag. Een script dat Claude elders zou schrijven en dat bij het draaien in de repo schrijft, ziet de guard niet; de regels verbieden zo'n omweg.
+- **Het pad van het register staat niet in het manifest** maar in `.claude/leerharnas.local.json`, dat niet in git komt: het manifest gaat de repo in, en het pad bevat de thuismap.
+- **De laatste kolom wordt niet met de twee sleutels** van de uitlegcheck gecontroleerd: de student schrijft hem in het bestand. `/diary` vraagt erom, en aan het eind van de sessie noemt de harnas de regels die nog leeg zijn.
+- **De drie voorwaarden uit de literatuurtoets** zijn regels voor Claude (CLAUDE.md), geen hook dwingt ze af.
+- **Open:** de vorm van de APA-verwijzing, getoetst aan de richtlijn van de bibliotheek van de instelling.
+
 ---
 
 <a id="11-wijzigingslog"></a>
 
 ## 11. Wijzigingslog {#changelog}
+
+### 13 november 2026: beoordeeld werk volgens de OER
+
+De pilotstudent besliste over de punten 49–54 van de setup van 13 november; 49, 50, 53 en 54 zijn dezelfde dag gebouwd.
+
+- **§10.8 (nieuw):** de besluiten, de literatuurtoets van trede 4, een diagram van beoordeeld werk zoals gebouwd, en waar de bouw afwijkt van het plan.
+- **§3, R11:** de mitigatie noemt wat de harnas nu doet bij beoordeeld werk.
+- **§5.1:** de architectuur "zoals gebouwd" toont het AI-logboek in de repo.
+- **§8:** drie nieuwe bronnen. De bronnen van besluit 49 zijn eerst gecontroleerd; de notities staan in [de citatiecheck](https://github.com/piethanegraaf/piethanegraaf.github.io/blob/main/research/citation-checks/citation_check_learning_science.md), sectie G. De check vond geen studie van precies dit geval: het bewijs is indirect. Hij vond ook dat Bergh et al. (2026) een preprint is en geen conditie met kleine voorbeelden had.
+- **Niet veranderd:** de conclusies van §2.
 
 ### 12 november 2026: positieve feedback, demoties en de fasegeschiedenis
 

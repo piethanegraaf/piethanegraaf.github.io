@@ -19,6 +19,7 @@ De instellingen staan in `.learning/skills.json`, onder `settings`. Je wijzigt z
 | `targetSuccess` | `0.85` | Het doel voor doorstromen van L2 naar L3. |
 | `autoDemote` | `false` | Automatisch omlaag op bewijs, met de demotie-analist voor een hoofdvaardigheid. Zet het pas aan als het loggen een paar sessies betrouwbaar was: `setting autoDemote true`. |
 | `dashboardRepo` | geen | Het absolute pad van je clone van de repo met het dashboard, zodat `/diary` het dashboard vanuit je oefenmap kan bijwerken. `off` als je geen dashboard gebruikt: dan vraagt `/diary` er niet naar. Zie [Na het dagboek](progress-dashboard.md#na-het-dagboek). |
+| `graded` | geen | Beoordeeld werk: `{ paths, aiLevel, maxRung, logDir }`. Zet het met `setting graded add "<pad>"`; zie [Beoordeeld werk](how-it-works.md#beoordeeld-werk). `aiLevel` 1 (standaard) geeft de hintladder tot `maxRung` (standaard en hooguit 4); `aiLevel` 0 geeft geen hulp. `logDir` is standaard `ai-verantwoording/` in het eerste pad. |
 | `codeExtensions` | `cs, csproj, sln, slnx` | Welke bestanden code van de student zijn. De OOD-kaart voegt `razor, cshtml, sql, yml, yaml` toe, voor een project met een UI, een database en een pipeline. |
 | `codeFiles` | (leeg) | Bestanden zonder sprekende extensie die ook werk van de student zijn, op naam. `*` staat voor alles behalve `/`. De OOD-kaart zet `Dockerfile, appsettings*.json`. |
 | `buildCommands` | `dotnet build/test/run …`, `msbuild` | Reguliere expressies voor commando's die bouwen of testen. `check.mjs` telt altijd mee. |

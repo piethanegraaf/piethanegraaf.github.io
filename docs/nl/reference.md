@@ -29,6 +29,7 @@ description: "De vier Claude Code-hooks van de leerharnas, elk commando van skil
 | `correct <taak-id> schrap "reden"` | Eén taak schrappen. |
 | `override <id\|*> <minuten> "reden"` | Tijdelijk toestaan dat Claude code schrijft (hooguit 240 minuten, gelogd). |
 | `setting <sleutel> <waarde>` | `examDate`, `stuckTimerMinutes`, `idleMinutes`, `defaultLevel`, `course`, `language`, `autoDemote`, `dashboardRepo` (het absolute pad van je clone van de repo met het dashboard, of `off`), en `codeExtensions` en `codeFiles` als lijst met komma's. Zie [Configuratie](configuration.md). |
+| `setting graded add\|remove "<pad>"` | Beoordeeld werk: de paden (absoluut, of relatief aan het project) waar Claude niets schrijft en de hintladder tot trede 4 gaat. Ook `setting graded maxRung 0..4`, `aiLevel 0\|1`, `logDir "<pad>"` en `off`. Zie [Beoordeeld werk](how-it-works.md#beoordeeld-werk). Gelogd als het event `setting`. |
 | `paths <id> add|remove "<glob>"` | Welke opdrachtmappen bij een vaardigheid horen, bijvoorbeeld `paths ood.associaties add "ood-opdrachten-01/09-*/**"`. De map bepaalt de vaardigheid van een taak en het niveau dat de guard gebruikt. Niet voor een microvaardigheid: die gebruikt het niveau van de hoofdvaardigheid. Heeft een andere vaardigheid hetzelfde pad, dan waarschuwt hij. Gelogd als event `paths`. |
 | `replay <transcript.jsonl> [--dry-run]` | Herstelt uitleggen die in de chat zijn goedgekeurd maar niet gelogd. Hij zoekt de markers `[uitleg-ok <tid>]` en controleert jouw bericht met dezelfde check als de Stop-hook. Alleen wat beide sleutels haalt, telt, met bron `replay`. |
 
@@ -131,6 +132,17 @@ En van de setupreview van 12 november 2026 (positieve feedback, demoties en de f
 | `demotion-rejected` met `source: agent-report` | Een oordeel in het rapport van de analist dat de harnas weigerde. De verlaging blijft openstaan. |
 | `effort-intro` | De eenmalige melding bij de sessiestart dat moeite het doel is, geen falen. |
 
+En van de setup van 13 november 2026 (beoordeeld werk):
+
+| Event | Betekenis |
+|---|---|
+| `graded-session` | Deze sessie gaat over beoordeeld werk, met `why`: `project`, `cwd`, `prompt` of `tool`. Vanaf dan komt elk antwoord in het AI-logboek. |
+| `deny` met `graded: true` | De guard blokkeerde schrijven, bouwen of een commit in beoordeeld werk. |
+| `hint-hold` met `graded: true` | Geen nieuwe trede: het plafond van beoordeeld werk, of AI-niveau 0. |
+| `graded-solution-refused` | De student vroeg om een uitwerking bij beoordeeld werk; Claude kreeg de opdracht te weigeren. |
+| `graded-over-max` | Een antwoord had een trede boven het plafond. Het logboek noemt het, en de student kreeg een melding. |
+| `graded-log-error` | De hook kon het AI-logboek niet schrijven (met de fout). |
+
 ## Bestanden
 
 ```text
@@ -141,6 +153,16 @@ En van de setupreview van 12 november 2026 (positieve feedback, demoties en de f
   diary/JJJJ-MM-DD.md
   state/             events.jsonl, tests.json, session-*.json, overrides.json,
                      last-export.json (moment en totalen van de laatste dashboardexport)
+```
+
+In de repo van beoordeeld werk (alleen de hooks schrijven hier):
+
+```text
+ai-verantwoording/
+  README.md          AI-niveau, de ladder, APA-verwijzing, hoe de export tot stand komt (één keer geschreven)
+  logboek.md         een regel per antwoord; de laatste kolom vul je zelf in
+  sessies/<datum>-<sessie>.md   je prompts en de tekst van Claude, zonder tooluitvoer
+.claude/leerharnas.local.json   het register van een andere map (install.mjs --learning-dir); niet in git
 ```
 
 ## Scripts in deze repository

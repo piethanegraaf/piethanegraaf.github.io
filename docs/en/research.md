@@ -726,7 +726,7 @@ This section turns the risks into a plan you can lay on your own exam date. The 
 | R8 | Spaced maintenance checks on expanding intervals (e.g. 3 → 7 → 21 → 60 → 120 days). A failed check demotes the skill to L3. At L4 you must predict or review the AI's approach on samples. | `SessionStart` hook + `/review-due` skill | Low |
 | R9 | The AI must cite docs, and you run the tests yourself (`check.mjs`). Treat AI code and explanations as untrusted. Be especially careful with interfaces, abstract classes and inheritance, where AI is weakest, and with anything security-related: cross-check those with the course material or the C# docs. Explanation errors you find get logged as "AI errors". | CLAUDE.md, `check.mjs` | Medium |
 | R10 | Diary records what *you* wrote. Before handing in, a "defend your design" rehearsal with `/mastery-check --defend`. | Diary + skill | Low |
-| R11 | Graded work: treat every skill as L3 (CLAUDE.md), and keep an AI-use log for the AI-use statement: prompt links, what the AI did, and how you checked it (as CHE's OER art. 7.11 asks, for example). Ask your teacher which parts of your final assessment are level 0 and which are level 1 (§4.2). Always follow course and institution rules. | CLAUDE.md + diary | Low |
+| R11 | Graded work (§10.8): name its paths with `setting graded`. There the hint ladder goes up to rung 4 for every skill, a worked solution is never available, and the guard blocks every write by Claude, also outside the project. The hooks keep an AI-use log in the repo: a row per answer, an export of each session (Claude Code has no share link), and an APA reference. You fill in what you did with the help and how you checked it (as CHE's OER art. 7.11 asks, for example). Ask your teacher which parts of your final assessment are level 0 and which are level 1 (§4.2). Always follow course and institution rules. | Hooks (guard, prompt-gate, Stop) + `ai-verantwoording/` | Low |
 | R12 | Keep the harness small (~5 hooks, 1 skill) and review it monthly. Time-box harness work: at most one fix per session, and research only when it would change what you practise. Research about the harness counts as harness work too: stop it until after your exam, unless a hook misfires. | Diary (note minutes spent on the harness vs. practice) | Medium |
 | R13 | Keep `.learning/`, `research_notes/` and transcripts out of shared repos (`.gitignore`), and store only what is needed. Publishing is the learner's choice, and then only a filtered selection goes online: the dashboard export takes listed fields only and filters the learner's private terms (`.learning/private.json`), a security check runs before every push, and the learner reads the diff first. The diary says that reflections appear on the public dashboard. The pilot student chose to publish such a selection. | `.gitignore`, `export.mjs`, `security-check.mjs` | Low |
 | R14 | **Practise under test conditions.** From about two weeks before each test, do timed sessions without AI in the IDE of your exam. Start short, then do full mock exams (your course's practice tests). Learn at low stakes first. Review afterwards, and use `claude-study` only for what you found yourself. | Step plan below; diary | Medium |
@@ -885,7 +885,7 @@ flowchart LR
     SS --> C
     P --> PG --> C
     C -- writes or tests code --> GU
-    GU -- L1-L3: deny --> C
+    GU -- L1-L3, or graded work: deny --> C
     C --> RG
     CLI --> EV
     CLI --> SR
@@ -895,9 +895,13 @@ flowchart LR
     C -. demotion of a main skill .-> DA
     DA -. report with the verdict .-> RG
     SK --> DI
+    subgraph Repo["repo of graded work (in git)"]
+        LOG[(ai-verantwoording/:<br/>logboek.md, sessies/, README.md)]
+    end
+    RG -- session about graded work --> LOG
 ```
 
-As built, the four hooks are deterministic. The guard blocks code at L1–L3. The reflect-gate checks markers and explanations, places a new skill and shows proposals. The demotion analyst only reads, and its report goes to the reflect-gate, not into the chat.
+As built, the four hooks are deterministic. The guard blocks code at L1–L3, and every write in graded work (§10.8). The reflect-gate checks markers and explanations, places a new skill and shows proposals. The demotion analyst only reads, and its report goes to the reflect-gate, not into the chat.
 
 **Design choices:**
 
@@ -1895,6 +1899,12 @@ Written by Piet Hanegraaf with Claude (Anthropic); see the [AI statement](ai-sta
 - Villar, A., Callegaro, M., & Yang, Y. (2013). Where am I? A meta-analysis of experiments on the effects of progress indicators for web surveys. *Social Science Computer Review, 31*(6), 744–762. https://doi.org/10.1177/0894439313497468
 - Zepeda, C. D., Martin, R. S., & Butler, A. C. (2020). Motivational strategies to engage learners in desirable difficulties. *Journal of Applied Research in Memory and Cognition, 9*(4), 468–474. https://doi.org/10.1016/j.jarmac.2020.08.007
 
+**Added on 13 November 2026: graded work**
+
+- Loibl, K., Roll, I., & Rummel, N. (2017). Towards a theory of when and how problem solving followed by instruction supports learning. *Educational Psychology Review, 29*(4), 693–715. https://doi.org/10.1007/s10648-016-9379-x
+- Shih, B., Koedinger, K. R., & Scheines, R. (2008). A response time model for bottom-out hints as worked examples. *Proc. EDM 2008*, 117–126.
+- van Gog, T., Kester, L., & Paas, F. (2011). Effects of worked examples, example-problem, and problem-example pairs on novices' learning. *Contemporary Educational Psychology, 36*(3), 212–218. https://doi.org/10.1016/j.cedpsych.2010.10.004
+
 ---
 
 <a id="appendix-implementation-sketches"></a>
@@ -2396,11 +2406,61 @@ Down waits for open explanations, counts only the help within the family, and is
 - **45: `levelChanges` without changes without a difference.** The first "since the last export" after the update may count one change less.
 - **An older session file** has no family rung yet: it counts all help, until the next task starts.
 
+### 10.8 Revision of 13 November 2026: graded work under the exam rules
+
+The student asked to make the setup fit the exam rules (OER), so the harness can help with the final assignment of the course. The rules allow AI level 1 there: GenAI as an aid, "for example to generate ideas or bring structure", with a statement of how it was used. Unauthorized use of AI that makes content ("text, images, code") counts as fraud (OER art. 1.41(3c)). The setup document with the decisions stays private, because it is about the student's own assignment. The numbers continue (49–54). The student decided 49, 50 and 53 with multiple-choice questions; 51 was done right away; 52 stays open.
+
+#### 10.8.1 Decisions
+
+| # | Decision | Checked against | Verdict |
+|---|---|---|---|
+| 49 | **The hint ladder up to rung 4 in graded work.** In the paths of `settings.graded` the L2 ladder and the stuck timer hold for every skill, also at L3 and L4. Rung 5 (a worked solution) does not exist there; a request for it is refused with a reference to the exam rules. Rung 4 is an example of at most 5 lines on another topic. Claude writes nothing there, at no level. | Learning came only from an explanation *without* the answer; an own choice followed by the AI's answer gave none (Gajos & Mamykina 2022). Try first, then an example was not better than practice alone for novices (van Gog et al. 2011), while problem solving before instruction helps on average (Sinha & Kapur 2021), when the instruction builds on the student's attempt (Loibl et al. 2017). The most concrete hint can work as a worked example when the student thinks about it (Shih et al. 2008). LLM tutors draw the line differently: CodeAid shows generic example code (Kazemitabaar et al. 2024), CodeHelp removes all of it (Liffiton et al. 2023). R10: lower ownership with unrestricted ChatGPT (Bergh et al. 2026, preprint), not tested for small examples. | **Supported, with conditions.** The advice is the same as the decision. Three conditions go into the rules for Claude: the example implements no behaviour of the assignment and does not fit by renaming; the student types their own code and never pastes; the explanation after the task also asks how the example differs from the student's solution. Whether a rung-4 example still counts as "generating ideas or bringing structure" is for the institution to say; the log names it. |
+| 50 | **An AI-use log in the repo of the assignment** (`ai-verantwoording/`): a row per answer (when, session, skill, rung, kind of help) written by the Stop hook, a last column the student fills in ("what I did with it / how I checked it"), an export of every session, and a README with the AI level, an APA reference and "Claude Code has no share link". The privacy filters of the dashboard export are reused: e-mail, the home folder (becomes `~`), hook and system messages. | The exam rules at level 1 ask for prompt links or a statement that the tool has none, an APA reference, and a check of the output by the student. Detection of AI text is unreliable (Scarfe et al. 2024), so the student's own record is the protection (R11). | **Built.** A policy requirement, not a learning claim. |
+| 51 | **Keep the prompts until the assessment:** Claude Code keeps transcripts 365 days instead of 30. | The exam rules: keep the prompts until the assessment. | **Done** by the student, in the Claude Code settings. |
+| 52 | **Practice for the moments at level 0** (the diagnostic test and the extension during the assessment, without AI). | — | **Open.** A proposal for January. |
+| 53 | **The harness in the repo of the assignment, with one record.** The repo uses the record of the practice folder (`install.mjs --learning-dir`), so a task in the assignment counts for the same skill. `.claude/` and `ai-verantwoording/` go into git (the teacher sees the rules the AI followed); `.learning/` does not. | The evidence belongs to the skill it is about (Corbett & Anderson 1994). R13 (privacy). | **Built.** |
+| 54 | **Bug: the guard let a write outside the project through.** A session in the practice folder could write freely in the repo of the assignment. Now the paths of graded work are tested always, also outside the project. | (bug) | **Fixed.** |
+
+#### 10.8.2 Graded work, as built
+
+```mermaid
+flowchart TD
+    P["a prompt or a tool call"] --> Q{"graded work?<br/>settings.graded.paths,<br/>also outside the project"}
+    Q -->|no| N["the normal rules per level"]
+    Q -->|"Claude writes, builds,<br/>commits or runs inline code"| D["guard: deny,<br/>no override"]
+    Q -->|"the student asks"| L["hint ladder of L2<br/>up to rung 4,<br/>never rung 5"]
+    L --> A["Claude answers,<br/>with an honest rung marker"]
+    A --> S["Stop hook: a row in logboek.md,<br/>the export in sessies/,<br/>README.md once"]
+    S --> F["/diary: the student fills in<br/>what they did with it<br/>and how they checked it"]
+```
+
+The guard decides on the path, not on the level: graded work is protected at every level and from every folder. The log is written by the hooks only; the student writes the last column.
+
+#### 10.8.3 Where the build differs from the plan
+
+- **The export of a session is written after every answer**, not only at the end. A session that ends without a clean exit is still complete in the log.
+- **When a session counts as graded:** this project is graded work, the working folder is, the prompt names the folder of the assignment, or Claude used a tool on a graded path (it read a file there). After that, the session stays graded: the cautious side.
+- **The guard also blocks building and testing** in graded work, as at L2, and git commands that change the repo, and inline code (`node -e`, `python -c`) run there. Reading is allowed. A script that Claude would write elsewhere and that writes into the repo when run cannot be seen by the guard; the rules forbid such a detour.
+- **The path of the record is not in the manifest** but in `.claude/leerharnas.local.json`, which is not in git: the manifest goes into the repo, and the path contains the home folder.
+- **The last column is not checked with the two keys** of the explanation check: the student writes it in the file. `/diary` asks for it, and at the end of the session the harness names the rows that are still empty.
+- **The three conditions of the literature check** are rules for Claude (CLAUDE.md), not enforced by a hook.
+- **Open:** the form of the APA reference against the guide of the institution's library.
+
 ---
 
 <a id="11-change-log"></a>
 
 ## 11. Change log {#changelog}
+
+### 13 November 2026: graded work under the exam rules
+
+The pilot student decided points 49–54 of the setup of 13 November; 49, 50, 53 and 54 were built the same day.
+
+- **§10.8 (new):** the decisions, the literature check of rung 4, a diagram of graded work as built, and where the build differs from the plan.
+- **§3, R11:** the mitigation names what the harness now does for graded work.
+- **§5.1:** the "as built" architecture shows the AI-use log in the repo.
+- **§8:** three new references. The sources of decision 49 were checked first; the notes are in [the citation check](https://github.com/piethanegraaf/piethanegraaf.github.io/blob/main/research/citation-checks/citation_check_learning_science.md), section G. The check found no study of exactly this case: the evidence is indirect. It also found that Bergh et al. (2026) is a preprint and had no condition with small examples.
+- **Not changed:** the conclusions of §2.
 
 ### 12 November 2026: positive feedback, demotions and the phase history
 

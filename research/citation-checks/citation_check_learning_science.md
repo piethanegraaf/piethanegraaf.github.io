@@ -1593,3 +1593,176 @@ The other full texts were not read. ScienceDirect, ResearchGate and a library ca
 #### Gaps
 - The publisher's abstract and the full text were not reached: ScienceDirect returned 403, and the ACM Digital Library showed a bot check. The sample of 71 students was seen only in search summaries.
 - The content of the 2018 corrigendum is unknown, so whether it changes the results was not checked.
+
+## G. Sources checked on 13 November 2026 (rung 4 in graded work)
+
+Scope: This check tests one decision. In graded work (OER art. 7.11, AI level 1), the hint ladder goes up to rung 4. Rung 4 is a mini code example of at most 5 lines on a different topic, so an analogous problem and not the student's own product. It unlocks only after a visible own attempt or a stuck timer (12 active minutes). After the task, the student explains the principle in their own words (the explanation gate). The AI-use log names the help as "code example (rung 4)". We test rung 4 against Gajos & Mamykina (2022), against the literature on worked examples and hints after an attempt, against two LLM programming assistants that withhold solutions (CodeAid, CodeHelp), and against risk R10 (weaker ownership and memory, Bergh et al. 2026). Nine sources are covered, plus one supporting study inside G2.
+
+Method note: Bibliographic data came from the Crossref API for all DOIs (Gajos & Mamykina, van Gog et al., Coppens et al., Loibl et al., Sinha & Kapur, Koedinger & Aleven, CodeAid, CodeHelp). Bergh et al. has no DOI; its data came from the arXiv API. Shih et al. (EDM 2008) has no DOI; the title and abstract came from the authors' PDF on cmu.edu, and the page range (117-126) came from a search listing, because dblp blocked automated access. Abstracts were taken verbatim from arXiv (Gajos & Mamykina, CodeAid, CodeHelp, Bergh et al.), from Crossref (Sinha & Kapur), from Springer article pages (Loibl et al., Koedinger & Aleven), from the Erasmus University repository record (van Gog et al.) and from the open PDF (Coppens et al., Shih et al.). Full texts read: Gajos & Mamykina (arXiv version), CodeAid (arXiv v2), CodeHelp (arXiv v1), Bergh et al. (arXiv), Shih et al. (author PDF), Coppens et al. (first pages). Not read in full: van Gog et al. (the open-access PDF at research.ou.nl returned an HTML page), Loibl et al., Sinha & Kapur and Koedinger & Aleven (paywalled; abstracts only). Optional question 5 (whether AI-made code examples count as AI-generated content under AI-use declaration policies) was not checked.
+
+### G1. Gajos & Mamykina (2022), "Do People Engage Cognitively with AI? Impact of AI Assistance on Incidental Learning"
+
+#### Takeaway
+**Verdict: does not speak against rung 4, but sets a condition.** Learning only happened when people got an explanation and still had to make the decision themselves. Making your own choice first and then seeing the AI answer (the "Update" design) did not produce learning. So "a visible own attempt first" is not enough on its own. A rung-4 example fits the "explanation only" side only if the student still has to do a real transfer step to their own problem.
+
+#### Cited Findings
+- Bibliographic: Proceedings of the 27th International Conference on Intelligent User Interfaces (IUI '22), pp. 794-806, DOI 10.1145/3490099.3511138. Evidence grade B (three online experiments plus one replication; n = 251, 268, 221 and 300). — [Crossref](https://api.crossref.org/works/10.1145/3490099.3511138)
+- Abstract: "In the first experiment, we found that when people were presented with both a recommendation and an explanation before making their choice, they made better decisions than they did when they received no such help, but they did not learn. In the second experiment, participants first made their own choice, and only then saw a recommendation and an explanation from AI; this condition also resulted in improved decisions, but no learning. However, in our third experiment, participants were presented with just an AI explanation but no recommendation and had to arrive at their own decision. This condition led to both more accurate decisions and learning gains. We hypothesize that learning gains in this condition were due to deeper engagement with explanations needed to arrive at the decisions." — [arXiv](https://arxiv.org/abs/2202.05402)
+- Full text, Experiment 2: "Contrary to our expectations, participants did not learn more in the Update condition (M=0.121) than in the Minimal feedback condition (M=0.157, Z=0.71, n.s., r=0.04)." — [arXiv](https://arxiv.org/abs/2202.05402)
+- Full text, discussion of the explanation-only condition: "if they wanted to benefit from it, they had to process it carefully enough to infer which decision the explanation supported." — [arXiv](https://arxiv.org/abs/2202.05402)
+- Conditions in detail: the task was to choose which of two meals has more of a macronutrient. The "explanation" was one short fact, for example "Avocados are a significant source of fat". Participants came from LabintheWild and Amazon Mechanical Turk. — [arXiv](https://arxiv.org/abs/2202.05402)
+
+#### Inferences
+- The paper has no condition with an analogous example on a different problem. So it cannot say directly whether rung 4 is "the answer" or "an explanation without the answer".
+- The mechanism the authors propose is that the person must still infer the decision. An analogous example on a different topic keeps that inference step: the student must map the example to their own classes. In that sense rung 4 sits closer to "explanation only" than to "recommendation".
+- This holds only if the mapping step is real. If the example has the same structure as the student's own step and only the names differ, the student just renames. Then it works like the "recommendation" condition, and Experiment 2 shows that an earlier own attempt does not rescue learning in that case.
+- The explanation gate pushes toward the deeper processing that the authors link to learning. That is in favour of rung 4 as designed.
+
+#### Gaps
+- Nutrition decisions by lay adults are far from object-oriented design in C#. The explanations were single facts, not procedures or code.
+- Only immediate learning was measured; the authors write "we only measured immediate learning".
+- The visual design in Experiment 3 also differed (arrows pointed to the explanation). The authors judge this effect small.
+
+### G2. van Gog, Kester & Paas (2011), "Effects of worked examples, example-problem, and problem-example pairs on novices' learning"
+
+#### Takeaway
+**Verdict: supports examples for novices, but warns about "problem first, then example".** Worked examples and example-problem pairs beat problem solving alone. Problem-example pairs (try first, then see the example) did not beat problem solving alone. A later study (Coppens et al. 2019) found the same order effect. This is about planned first-time instruction for novices, not about help after being stuck.
+
+#### Cited Findings
+- Bibliographic: Contemporary Educational Psychology, 36(3), 212-218, DOI 10.1016/j.cedpsych.2010.10.004. Evidence grade B (single experiment). — [Crossref](https://api.crossref.org/works/10.1016/j.cedpsych.2010.10.004)
+- Abstract: "Based on prior research, it was hypothesized and confirmed that WE and WE-PS would lead to lower cognitive load during learning and higher learning outcomes than PS. In addition, the open questions of whether there would be any differences between WE and WE-PS, and whether there would be any differences between PS-WE and PS were explored. Results showed no differences between WE and WE-PS or between PS-WE and PS. This study can inform instructional designers on which example-based learning strategies to implement: it does not seem necessary to alternate example study and problem solving, but when doing so, example-problem pairs should be used rather than problem-example pairs." — [EUR repository](https://repub.eur.nl/pub/26205)
+- Supporting study: Coppens, Hoogerheide, Snippe, Flunger & van Gog (2019), Instructional Science, 47(3), 279-297, DOI 10.1007/s11251-019-09484-3. Abstract: "Studying example–problem pairs was more efficient than studying problem–example pairs, both for gifted and nongifted primary school students." Evidence grade B. — [Crossref](https://api.crossref.org/works/10.1007/s11251-019-09484-3), [open PDF](https://dspace.library.uu.nl/bitstream/handle/1874/384159/Coppens2019_Article_EffectsOfProblemExampleAndExam.pdf?sequence=1)
+
+#### Inferences
+- An example is a strong learning tool for novices. That speaks for having a code-example rung at all.
+- "Attempt first, then example" was not better than practice alone in this study. The attempt-before-help gate is therefore justified by other reasons (ownership, honesty of the AI-use statement, desirable difficulty), not by this study.
+- The 12-minute stuck timer is a sensible exit: the study does not support long struggle before an example.
+
+#### Gaps
+- Full text not read (the open PDF link returned HTML). I could not check whether the examples in the pairs were the same task or an isomorphic task.
+- Secondary school students and electrical-circuit troubleshooting, not second-year programming students.
+
+### G3. Loibl, Roll & Rummel (2017), "Towards a Theory of When and How Problem Solving Followed by Instruction Supports Learning"
+
+#### Takeaway
+**Verdict: supports instruction after an attempt, with a design condition.** Problem solving followed by instruction helps only when the instruction uses contrasting cases or builds on the student's own solution. A generic example given after an attempt is not enough by itself.
+
+#### Cited Findings
+- Bibliographic: Educational Psychology Review, 29(4), 693-715, DOI 10.1007/s10648-016-9379-x (online 2016). Evidence grade B (narrative review of experiments, not a meta-analysis). — [Crossref](https://api.crossref.org/works/10.1007/s10648-016-9379-x)
+- Abstract: "The review shows that PS-I fosters learning only if specific design features (namely contrasting cases or building instruction on student solutions) are implemented." — [Springer](https://link.springer.com/article/10.1007/s10648-016-9379-x)
+
+#### Inferences
+- A rung-4 example works best when the tutor ties it to the student's own attempt. For example: "Here is the pattern in another domain. What is different in your attempt?" That makes the example a contrasting case.
+- The explanation gate can ask the student to name the difference between the example and their own code.
+
+#### Gaps
+- Full text not read (paywall). The reviewed studies are mostly maths and science concepts, not code.
+
+### G4. Sinha & Kapur (2021), "When Problem Solving Followed by Instruction Works: Evidence for Productive Failure"
+
+#### Takeaway
+**Verdict: supports "attempt first, then instruction" in general.** A meta-analysis of 53 studies found a moderate effect in favour of problem solving before instruction. This balances G2. It concerns instruction phases, not 5-line hints.
+
+#### Cited Findings
+- Bibliographic: Review of Educational Research, 91(5), 761-798, DOI 10.3102/00346543211019105. Evidence grade A (meta-analysis). — [Crossref](https://api.crossref.org/works/10.3102/00346543211019105)
+- Abstract: "we report evidence from a meta-analysis of 53 studies with 166 comparisons that compared PS-I with I-PS design. Our results showed a significant, moderate effect in favor of PS-I (Hedge's g 0.36 [95% confidence interval 0.20; 0.51]). The effects were even stronger (Hedge's g ranging between 0.37 and 0.58) when PS-I was implemented with high fidelity to the principles of Productive Failure (PF), a subset variant of PS-I design." — [Crossref](https://api.crossref.org/works/10.3102/00346543211019105)
+- Abstract, limit: "Contrasting trends were, however, observed for younger age learners (second to fifth graders) and for the learning of domain-general skills, for which effect sizes favored I-PS." — [Crossref](https://api.crossref.org/works/10.3102/00346543211019105)
+
+#### Inferences
+- The rule "an own attempt before more help" has meta-analytic support for adult learners. Rung 4 after an attempt fits this order.
+- Productive Failure means instruction that builds on what students tried. Again this points to tying the example to the student's attempt.
+
+#### Gaps
+- Full text not read. Only the Crossref abstract. No data on short code examples or AI tutors.
+
+### G5. Koedinger & Aleven (2007), "Exploring the Assistance Dilemma in Experiments with Cognitive Tutors"
+
+#### Takeaway
+**Verdict: unclear by design.** The authors call the balance between giving and withholding help an open problem. The paper gives no rule that would forbid or require a rung-4 example.
+
+#### Cited Findings
+- Bibliographic: Educational Psychology Review, 19(3), 239-264, DOI 10.1007/s10648-007-9049-0. Evidence grade B (review of experiments). — [Crossref](https://api.crossref.org/works/10.1007/s10648-007-9049-0)
+- Abstract: "How should learning environments balance information or assistance giving and withholding to achieve optimal student learning? How best to achieve this balance remains a fundamental open problem in instructional science. We call this problem the “assistance dilemma” and emphasize the need for further science to yield specific conditions and parameters that indicate when and to what extent to use information giving versus information withholding forms of interaction." — [Springer](https://link.springer.com/article/10.1007/s10648-007-9049-0)
+
+#### Inferences
+- The ladder with gates is one concrete answer to this dilemma. The literature does not decide where the top rung should be for graded work. That makes it a value choice for the student, within the exam rules.
+
+#### Gaps
+- Full text not read (paywall).
+
+### G6. Shih, Koedinger & Scheines (2008), "A Response Time Model for Bottom-Out Hints as Worked Examples"
+
+#### Takeaway
+**Verdict: supports a top rung if the student pauses and thinks about it.** The most concrete hint (one step short of the answer) can work as a worked example. It predicted learning when students spent time thinking about it. Fast clicking through hints did not.
+
+#### Cited Findings
+- Bibliographic: Proceedings of the 1st International Conference on Educational Data Mining (EDM 2008), pp. 117-126, no DOI. Evidence grade C (correlational log analysis, 39 students in a geometry tutor). — [author PDF](https://www.cmu.edu/dietrich/philosophy/docs/scheines/Shih_Koedinger_Scheines_2008_EDM.pdf)
+- Abstract: "We propose that some examples of this behavior are not abusive and that bottom-out hints can act as worked examples. We create a model for distinguishing good student use of bottom-out hints from bad student use of bottom-out hints by means of logged response times. We show that this model not only predicts learning, but captures behaviors related to self-explanation." — [author PDF](https://www.cmu.edu/dietrich/philosophy/docs/scheines/Shih_Koedinger_Scheines_2008_EDM.pdf)
+- Full text: "the bottom-out hint does everything shy of entering the answer." and "Both sets of results show that thinking about bottom-out hints predicts learning." — [author PDF](https://www.cmu.edu/dietrich/philosophy/docs/scheines/Shih_Koedinger_Scheines_2008_EDM.pdf)
+
+#### Inferences
+- The bottom-out hint here is the answer for the same step. That is closer to rung 5 than to rung 4. Rung 4 (other topic) gives away less.
+- What matters is thinking time and self-explanation after the concrete help. The explanation gate supports this. A short pause or a question about the example before the student goes back to coding fits the finding.
+
+#### Gaps
+- Correlation, not experiment. Small sample. Geometry, not programming. Page range from a search listing, because dblp blocked the check.
+
+### G7. Kazemitabaar et al. (2024), "CodeAid: Evaluating a Classroom Deployment of an LLM-based Programming Assistant that Balances Student and Educator Needs"
+
+#### Takeaway
+**Verdict: partly supports rung 4.** CodeAid withheld solution code but showed pseudo-code and, in its first version, generic example code. The authors treat generic example code as different from a direct solution. But they suggest showing example code mainly for questions not directly tied to assessments. So rung 4 in graded work goes a bit further than their advice.
+
+#### Cited Findings
+- Bibliographic: Proceedings of the CHI Conference on Human Factors in Computing Systems (CHI '24), pp. 1-20, DOI 10.1145/3613904.3642773. Evidence grade C (deployment with 700 students, thematic analysis, interviews). — [Crossref](https://api.crossref.org/works/10.1145/3613904.3642773)
+- Abstract: "We developed CodeAid, an LLM-powered programming assistant delivering helpful, technically correct responses, without revealing code solutions. CodeAid answers conceptual questions, generates pseudo-code with line-by-line explanations, and annotates student's incorrect code with fix suggestions. We deployed CodeAid in a programming class of 700 students for a 12-week semester." — [arXiv](https://arxiv.org/abs/2401.11314)
+- Full text: "For 24% of queries, it produced pseudo-code, of which 16% were high-level and generic example codes, while 6% were the pseudo-code that implemented a specific behavior. These specific pseudo-codes, although indirect, might have revealed the high-level ideas about implementing a particular behavior that was required in an assignment." — [arXiv](https://arxiv.org/abs/2401.11314)
+- Full text: "Furthermore, since code examples are a crucial learning resource [38], future AI assistants can differentiate between example code and direct solutions. [...] Consequently, future tools could be designed to display example code in response to queries not directly related to course assessments." — [arXiv](https://arxiv.org/abs/2401.11314)
+
+#### Inferences
+- The line CodeAid draws matches the line between rung 4 (generic example) and rung 5 (solution). It also shows the risk: a specific sketch "might have revealed" the idea that the assignment required.
+- The test for a rung-4 example should be: is it generic, or does it implement a behaviour the assignment asks for? Only the first is rung 4.
+
+#### Gaps
+- No learning outcome was measured, so we do not know if generic examples helped learning more than pseudo-code alone. The course was C, not C#.
+
+### G8. Liffiton, Sheese, Savelka & Denny (2023), "CodeHelp: Using Large Language Models with Guardrails for Scalable Support in Programming Classes"
+
+#### Takeaway
+**Verdict: a stricter line than rung 4.** CodeHelp removes every example code block from its answers. The designers argue that any example code can hand over an assignment's answer. This is a design choice, not a measured result.
+
+#### Cited Findings
+- Bibliographic: Proceedings of the 23rd Koli Calling International Conference on Computing Education Research, pp. 1-11, DOI 10.1145/3631802.3631830. Evidence grade C (deployment with 52 students over 12 weeks). — [Crossref](https://api.crossref.org/works/10.1145/3631802.3631830)
+- Abstract: "In this paper, we introduce CodeHelp, a novel LLM-powered tool designed with guardrails to provide on-demand assistance to programming students without directly revealing solutions." — [arXiv](https://arxiv.org/abs/2308.06921)
+- Full text, a design goal: "Never include complete solutions that the student can copy without thinking or learning." — [arXiv](https://arxiv.org/abs/2308.06921)
+- Full text, code-removal prompt: "any example code [...] can give the student an assignment's answer rather than help them figure it out themselves." — [arXiv](https://arxiv.org/abs/2308.06921)
+
+#### Inferences
+- A careful tool for graded first-year work sits at rung 3. Rung 4 is a step beyond that.
+- The fear in CodeHelp is "example = answer". The rung-4 rules (other topic, at most 5 lines) target exactly that fear. They only work if the "other topic" rule is real and checked.
+
+#### Gaps
+- First-year students, Python and data science. No comparison with and without example code, so no evidence that removing code helps learning.
+
+### G9. Bergh, Tag, Vassar & Renzella (2026), "Your Programming Students' Cognition with ChatGPT: Higher Performance, Lower Retention, and Reduced Ownership"
+
+#### Takeaway
+**Verdict: confirms R10 for open ChatGPT use; says nothing direct about small examples.** With unrestricted ChatGPT, students scored higher but recalled less and claimed far less of their own code (45% vs 81%). Students could paste the full task into ChatGPT. The authors ask for tools that require active contribution. Rung 4 with an explanation gate is an attempt at that, but it was not tested.
+
+#### Cited Findings
+- Bibliographic: arXiv preprint 2609.21194 (submitted 18 September 2026), 17 pages, no DOI, not yet peer reviewed. Evidence grade B (single controlled experiment, 55 students analysed). — [arXiv](https://arxiv.org/abs/2609.21194)
+- Abstract: "ChatGPT-assisted students achieved higher coding scores (89% vs. 69%) but lower recall scores immediately (41% vs. 53%) and after 48 hours (39% vs. 52%). There was no significant difference in the loss of recall information over 48 hours between the groups. Self-reported mental effort increased less across tasks in the ChatGPT condition (Holm-adjusted p = .047), and students attributed less of the submitted code to themselves (45% vs. 81%)." — [arXiv](https://arxiv.org/abs/2609.21194)
+- Abstract, conclusion: "They motivate the need for assessment practices and AI learning tools that require students to explain, retrieve, and contribute to the work they submit as active participants in their education." — [arXiv](https://arxiv.org/abs/2609.21194)
+- Full text, method: "Participants in both conditions were told they could copy and paste any material from the assessment, including the full instructions and the scaffold code, into the application in the assistance panel (ChatGPT/Google)." — [arXiv](https://arxiv.org/abs/2609.21194)
+- Full text, design implication: "Systems must support active contribution to preserve ownership." — [arXiv](https://arxiv.org/abs/2609.21194)
+
+#### Inferences
+- The ownership loss was measured with full, unrestricted ChatGPT help. A 5-line example on another topic, after an attempt, is a much smaller dose. It is plausible but not shown that ownership stays closer to the no-AI level.
+- The explanation gate matches the authors' call to make students "explain, retrieve, and contribute". Retrieval (recalling the principle later without the example) is not in the ladder yet.
+- If the student pastes the example and edits it, the code partly stops being their own. If the student types their own version after closing the example, ownership is more likely to stay.
+
+#### Gaps
+- Preprint. C programming, short lab tasks, one session. No condition with limited or example-only AI help. I found no study that compares ownership between small examples and full solutions. Schooler & Storm (2021) and Grinschgl (2021) from R10 were not re-checked here.
+
+### G-summary. What the check means for rung 4 in graded work
+
+Rung 4 is supported with conditions. No source tested exactly this case (an analogous example of at most 5 lines after an attempt, with an explanation gate, in graded work), so the evidence is indirect. Gajos & Mamykina (G1) do not speak against rung 4. They speak against help that hands over the decision. They also show that an own attempt first does not save learning if the answer follows. Rung 4 is on the safe side of that line only while the student still has to transfer the example to their own design. Work on examples and on "attempt first, then instruction" (G2 to G6) supports a concrete example after effort, best when it is tied to the student's own attempt and followed by thinking time and self-explanation. LLM tools draw the line at different points: CodeAid allows generic example code (G7), and CodeHelp removes all example code (G8). So rung 4 is a defensible middle choice, not the most careful one. R10 (G9) is real for unrestricted ChatGPT, but there is no evidence that a small, different-topic example causes the same loss of ownership. The explanation gate fits what those authors ask for. Recommendation: keep rung 4, with three small conditions. (1) Isomorphism check: the example must not become part of the student's code by renaming alone. It uses a different domain and must not implement a behaviour the assignment asks for. (2) The student types their own code after reading the example and never pastes it. (3) The explanation gate also asks how the example differs from the student's own attempt (a contrasting case). An optional fourth condition: when rung 4 opens via the stuck timer alone, the tutor first asks for a short written try based on the rung-3 sketch. This advice does not differ from the student's decision to keep rung 4. It only adds safeguards, and the decision stays with the student. Open point: whether a rung-4 code example still counts as "generating ideas or bringing structure" under OER art. 7.11 level 1 is a question for the institution. It was not checked here, and logging it as "code example (rung 4)" is the right transparent step.

@@ -65,6 +65,27 @@ Eén programma laat de guard bewust toe, ook al schrijft het in `.learning/state
 
 Wil je toch dat Claude iets doet, dan zet je zelf een override: `! node .claude/hooks/skill.mjs override ood.overerving 30 "reden"`. Die wordt gelogd en staat in het dagboek.
 
+## Beoordeeld werk
+
+Sommig werk wordt beoordeeld, bijvoorbeeld de eindopdracht van een vak. Je instelling bepaalt hoeveel AI daar mag helpen. Bij CHE staat de OER (art. 7.11) bijvoorbeeld AI-niveau 1 toe: AI als hulpmiddel, "bijvoorbeeld om ideeën te genereren of structuur aan te brengen", met een verantwoording van hoe je het gebruikte. Code of tekst die AI maakte in beoordeeld werk geldt als fraude. Je noemt de paden van dat werk zelf, bijvoorbeeld de map van de repo:
+
+```text
+! node .claude/hooks/skill.mjs setting graded add "C:/Users/<jij>/source/repos/<opdracht>"
+```
+
+In die paden:
+
+- **Geldt de hintladder van L2 voor elke vaardigheid**, ook voor een op L3 of L4, met de vasttimer. Hij gaat tot trede 4 (`setting graded maxRung` kan hem lager zetten). Een uitwerking (trede 5) is daar nooit beschikbaar. Vraag je erom, dan weigert Claude, met een verwijzing naar de OER.
+- **Is trede 4 een voorbeeld van hooguit 5 regels over een ander onderwerp.** Het implementeert niets wat de opdracht vraagt. Je typt je eigen code, en je plakt het voorbeeld nooit.
+- **Schrijft Claude niets**, op geen enkel niveau, ook geen tooling, Dockerfile of pipeline, en bouwt of test Claude daar niet. De guard blokkeert het, ook vanuit een sessie in een andere map, en er is geen override. Jij typt alles en draait de tests zelf. Lezen mag.
+- **Tellen taken en uitleg in eigen woorden gewoon mee.** Wie de eigen code kan uitleggen, kan die ook verdedigen.
+- **Komt elk antwoord in een AI-logboek**, in `ai-verantwoording/` in de repo. De hooks schrijven het, nooit Claude:
+    - `logboek.md`: een regel per antwoord, met de tijd, de sessie, de vaardigheid, de trede en de soort hulp (vraag, concept, schets, codevoorbeeld, review). De laatste kolom is van jou: wat je ermee deed en hoe je het controleerde. `/diary` vraagt je die in te vullen.
+    - `sessies/<datum>-<sessie>.md`: je prompts en de tekst van Claude in die sessie, zonder de uitvoer van tools. Claude Code heeft geen deellink naar een sessie, dus deze export komt daarvoor in de plaats. Een privacyfilter haalt e-mailadressen, je thuismap (wordt `~`) en de berichten van de hooks weg.
+    - `README.md`: het AI-niveau, de ladder, een APA-verwijzing en hoe de export tot stand komt. Hij wordt één keer geschreven; daarna is hij van jou.
+
+Op AI-niveau 0 (`setting graded aiLevel 0`) geeft Claude bij dat werk geen enkele hulp. Vraag je docent welke delen van een assessment op niveau 0 zijn en welke op niveau 1. Het onderzoek legt de keuzes uit in [§10.8](research.md#108-herziening-van-13-november-2026-beoordeeld-werk-volgens-de-oer).
+
 ## Taken en uitleg in eigen woorden
 
 **Een taak begint** als je aan nieuw werk begint. De harnas gaat alleen af op vaste signalen, nooit op een trefwoord: code gewijzigd in een andere opdrachtmap, `check.mjs` in een andere map, of de volledige naam van een andere opdrachtmap (zoals `10-artsen-en-patienten`) of een `#id` van een andere vaardigheidsfamilie in je bericht. Dan beginnen de hintladder en de tijd van de taak opnieuw. Gewone hulp sinds de vorige taak hoorde bij werk dat je niet afmaakte: die telt niet voor de nieuwe taak, maar wordt gelogd als `help-dropped`, zodat je hem nog ziet.
