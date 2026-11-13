@@ -29,7 +29,7 @@ description: "AI that does your thinking while you practise lowers what you can 
 
 The table of contents is in the sidebar.
 
-> **Status note.** Sections 1–9 are the original design. §1–4, §6–8 and §5.3/§5.7 were revised on 8 November 2026 with research from May–November 2026, the shift in skill needs, and a critical review of the original literature review; what changed and why is in the change log (§11). The harness as actually built differs in places: there are microskills, a test runner (`check.mjs`) instead of a PostToolUse evidence hook, a hard own-words explanation check, placement of a new skill by a first attempt, automatic demotion on evidence, Fibonacci reviews at L4 through real work, and a tooling zone. Those differences are summarized in §10, which reports what the first sessions showed; §10.4 covers the revision of 10 November 2026. If you use the harness, its `CLAUDE.md` is authoritative for day-to-day rules. A short literature update on 10 November 2026 added seven sources (change log, §11). On 11 November 2026, §2.12 (the eternal-junior problem) and §6.1 (an invitation to run a randomized trial) were added.
+> **Status note.** Sections 1–9 are the original design. §1–4, §6–8 and §5.3/§5.7 were revised on 8 November 2026 with research from May–November 2026, the shift in skill needs, and a critical review of the original literature review; what changed and why is in the change log (§11). The harness as actually built differs in places: there are microskills, a test runner (`check.mjs`) instead of a PostToolUse evidence hook, a hard own-words explanation check, placement of a new skill by a first attempt, automatic demotion on evidence, Fibonacci reviews at L4 through real work, and a tooling zone. Those differences are summarized in §10, which reports what the first sessions showed; §10.4 covers the revision of 10 November 2026. If you use the harness, its `CLAUDE.md` is authoritative for day-to-day rules. A short literature update on 10 November 2026 added seven sources (change log, §11). On 11 November 2026, §2.12 (the eternal-junior problem) and §6.1 (an invitation to run a randomized trial) were added. On 13 November 2026, §2.13 (secure code as a first niche for juniors) was added.
 
 ---
 
@@ -648,6 +648,53 @@ Aviation made the same trade-off. Airline pilots supervise the autopilot most of
 - **The map.** There is an example map for juniors at work in C#/.NET (`junior-dotnet`). In it, code outside the mapped skills is L4, so the AI may write it and only the skills being learned are protected. A junior has to adapt its paths to their own codebase, the guard only protects skills that have paths, and automatic logging of tasks from tests only works with `dotnet test`.
 
 **How strong is this?** Every part of the trade-off follows a principle with empirical support (§2.11). The combination, and its use at work, have not been tested. A narrative review cannot show that this is the best trade-off; only a trial can. §6.1 proposes one. The sources, with a link for every claim, are in the [notes on the eternal-junior problem](notes/eternal_junior.md).
+
+### 2.13 Secure code as a first niche for juniors
+
+**The problem.** A junior asks Claude Code for a search page that shows the user's search term back. The code compiles, the tests pass and the page works. Whether the search term is encoded before it goes into the HTML, the junior does not see, and that is exactly where AI code fails most often. Security adds a second gap to the one in §2.12: code that works but is not safe. This section asks whether secure coding is a good first niche for the harness, and which angle fits the current phase of the project: (A) junior developers who learn basic security at work, or (B) junior security specialists in a SOC, as a pentester or as an AppSec engineer. All sources below were checked on 13 November 2026 ([citation check](https://github.com/piethanegraaf/piethanegraaf.github.io/blob/main/research/citation-checks/citation_check_learning_science.md), section H).
+
+**AI code is often insecure, especially when an agent builds a whole feature.**
+
+- **Single snippets.** In security scenarios about 40% of Copilot's programs were vulnerable (Pearce et al., 2022; evidence grade C). A replication in Python saw that share fall from 36.5% to 27.3% (Majdinasab et al., 2024; C). In real GitHub projects, 29.5% of the Python snippets and 24.2% of the JavaScript snippets from AI assistants had a weakness, spread over 43 CWE types (Fu et al., 2025; C).
+- **Whole features.** In BaxBench the best model was correct and secure on 35% of the backend tasks (Vero et al., 2025; C). In SusVibes, with real feature requests for agents, the best setup (SWE-agent with Claude 4 Sonnet) was functionally correct on 57% of the tasks, but also secure on 11.8%. Naming the vulnerability type in the prompt barely helped (Zhao et al., 2026; C).
+- **By language and kind of flaw.** In Veracode's measurement of October 2026, C# scored 60%. Cross-site scripting was handled correctly in 18% of cases and log injection in 13%, while SQL injection (84%) and cryptography (87%) mostly go right. The best models, among them Claude Opus 5.5, reached 73% (Veracode, 2026; C, vendor).
+- **New kinds of flaws.** Code models invent package names: at least 5.2% for commercial and 21.7% for open-source models. An attacker can register such a name (Spracklen et al., 2025; C).
+
+**The most persistent effect is confidence that is not justified.** In a randomized study, participants with an AI assistant wrote less secure code and more often believed it was secure. Those who trusted the AI less did better (Perry et al., 2023; B, n = 47). Other experiments found no difference, or only a small one, in the code itself (Sandoval et al., 2023; Mousavi et al., 2026; Jost et al., 2026, preprint; all B). What does keep coming back is that people do not notice that their code is insecure. Developers say they check AI code like a colleague's code, and rarely report security problems. The authors conclude that they overestimate their own checking (Klemmer et al., 2024; C). Participants picked the most and the least secure AI suggestion about equally often (37.7% vs 35.0%), and those who edited suggestions more had fewer vulnerabilities (Khalid et al., 2026; C, to appear at IEEE S&P 2027). Almost no one put security requirements in the first prompt (Bappy et al., 2026; C).
+
+Whether juniors are more vulnerable to this has not been shown. Experience predicted secure code significantly, but modestly (Jost et al., 2026), and a study that compares juniors and seniors with AI directly on security is missing. So the harness can say "experience counts in security, and AI does not replace it". It cannot yet say that AI puts juniors at extra risk.
+
+**What juniors lack.** The problem is understanding, not carelessness. In a contest where teams built, attacked and fixed software, the mistakes in 78% of the 94 projects came from misunderstanding security concepts, and in 21% from a simple slip (Votipka et al., 2020; C). Security also stays an afterthought as long as nobody asks for it. None of the ten students without an instruction stored passwords securely, and with the instruction four of ten did (Naiakshina et al., 2017; C). Freelancers did not either, unless they were asked (Naiakshina et al., 2019; C).
+
+What helps is attention at the moment of the decision. Reviewers who were told to focus on security had about eight times higher odds of finding the vulnerability; a checklist added nothing significant (Braz et al., 2022; B, n = 150, mostly professionals). A plug-in that flagged security problems in the IDE reduced the errors in the code being written (Nguyen et al., 2017; B, n = 39). Six hours of workshops over three months changed the practice of teams, and after twelve months that was still visible in the two teams that could be interviewed again (Weir et al., 2020; C). No training method has been tested in a randomized trial with juniors at work.
+
+**What employers have to show.** Job ads say little: no study counts security requirements in ads for developers. The pressure comes from laws and standards, and reaches the developer through the employer.
+
+- **The Dutch Cyberbeveiligingswet** (Stb. 2026, 187), the Dutch implementation of NIS2, has applied since 15 August 2026 to more than 8,000 organisations (Rijksoverheid, 2026; law).
+- **The Cyber Resilience Act** has required manufacturers since 11 September 2026 to give an early warning of actively exploited vulnerabilities within 24 hours and a notification within 72 hours. From 11 December 2027, products with digital elements must, on the basis of the risk assessment, be made available without known exploitable vulnerabilities, and the manufacturer keeps an SBOM (Regulation (EU) 2024/2847; law).
+- **Standards and guidelines** make it concrete. ISO/IEC 27001:2022 gained its own control for secure coding (A.8.28). NIST SSDF asks for role-based training (PO.2.2), secure coding practices (PW.5) and code review (PW.7). OWASP SAMM starts with awareness for everyone who builds software, and level 1 of OWASP ASVS 5.0 is the baseline. In Dutch there are the NCSC's ICT security guidelines for web applications (May 2024).
+- **Not a job, but part of the job.** The European ECSF has twelve role profiles, and none of them is software developer (ENISA, 2022). For a developer, security is not a role but a skill within their own work.
+
+**Two angles.**
+
+| | A: junior developer learns secure coding | B: junior security specialist |
+|---|---|---|
+| Where the work happens | in code files, where the guard works | in terminals, tools and reports |
+| Fits C# and `dotnet test` | yes; `security.basics` is already in `junior-dotnet` | hardly |
+| What the harness addresses | confidence in AI code, and explaining why something is secure | explaining and reporting yes, the guard no |
+| New risks | small: defensive work | dual use: an agent with a shell can run scans or exploits |
+| Audience | all junior developers | smaller, and the entry route is shrinking |
+
+Angle B fits this phase poorly. SOC analysts check alarms by hand (Alahmadi et al., 2022; C). Security work needs much technical knowledge, but the tasks and skills asked for are largely non-technical (PTvT & Dialogic, 2024; C). The "answer" there is a command or a judgement, and the AI can give it in the chat without writing a file. The shortages are mainly at medior and senior level; according to the same report, the supply of junior graduates matches demand, except for specialist profiles. Of 856 security professionals who use AI, 56% said AI has already reduced the need for entry-level roles (ISC2, 2026; C, industry association). The idea behind the hint ladder does work in security education: on pwn.college, 309 students asked a Socratic tutor that did not know the solutions directly for the solution in only 3.5% of their questions (Tompkins et al., 2026; C).
+
+**The plan, as a hypothesis.** Angle A becomes the first niche, as a deepening of `junior-dotnet` and not as a new product. It fits what the research finds most often: people do not notice that AI code is insecure. The harness already asks for an explanation in your own words of why something works. For security that becomes: what does an attacker control, which measure stops it, and how do you check that? Not built yet:
+
+- splitting `security.basics` into four skills: output encoding and input validation, parameterized queries, secrets and configuration, and reviewing AI code for security;
+- a static analyser next to `dotnet test` whose warnings the learner explains, with the caveat that a clean run does not mean the code is secure;
+- a rule that examples at rungs 4 and 5 never contain an insecure pattern, in every map including `ood`, because Claude makes those examples itself;
+- filtering security findings out of the dashboard export, so that no employer's vulnerabilities go online.
+
+**How strong is this?** The evidence that AI code is often insecure is broad, but comes mostly from benchmarks, and the figures per language come from a vendor. That juniors are more vulnerable has not been shown, and no training method has been tested in a randomized trial with juniors at work. Whether the harness makes juniors code more securely is a hypothesis for the trial in §6.1. There is also an opportunity: no study measures, with an agentic tool, both whether code is secure and whether its author rightly thinks so. The sources are in the [notes on secure code for juniors](notes/secure_coding_juniors.md).
 
 ---
 
@@ -1905,6 +1952,39 @@ Written by Piet Hanegraaf with Claude (Anthropic); see the [AI statement](ai-sta
 - Shih, B., Koedinger, K. R., & Scheines, R. (2008). A response time model for bottom-out hints as worked examples. *Proc. EDM 2008*, 117–126.
 - van Gog, T., Kester, L., & Paas, F. (2011). Effects of worked examples, example-problem, and problem-example pairs on novices' learning. *Contemporary Educational Psychology, 36*(3), 212–218. https://doi.org/10.1016/j.cedpsych.2010.10.004
 
+**Added on 13 November 2026: secure code for juniors**
+
+- Alahmadi, B. A., Axon, L., & Martinovic, I. (2022). 99% false positives: A qualitative study of SOC analysts' perspectives on security alarms. *Proc. USENIX Security 2022*, 2783–2800. https://www.usenix.org/conference/usenixsecurity22/presentation/alahmadi
+- Bappy, F. H., et al. (2026). From preventive to reactive: How AI coding assistants transform developers' security awareness. *Proc. SOUPS 2026*, 257–274. https://www.usenix.org/conference/soups2026/presentation/bappy
+- Braz, L., Aeberhard, C., Çalikli, G., & Bacchelli, A. (2022). Less is more: Supporting developers in vulnerability detection during code review. *Proc. ICSE 2022*, 1317–1329. https://doi.org/10.1145/3510003.3511560
+- ENISA. (2022). *European Cybersecurity Skills Framework (ECSF): Role profiles* [framework]. https://doi.org/10.2824/859537
+- European Parliament & Council. (2024). Regulation (EU) 2024/2847 on horizontal cybersecurity requirements for products with digital elements (Cyber Resilience Act) [law]. https://eur-lex.europa.eu/eli/reg/2024/2847/oj/eng
+- Fu, Y., et al. (2025). Security weaknesses of Copilot-generated code in GitHub projects: An empirical study. *ACM Transactions on Software Engineering and Methodology, 34*(8), 1–34. https://doi.org/10.1145/3716848
+- ISC2. (2026). *Rethinking AI's impact on cybersecurity roles* [industry survey, 14 July]. https://www.isc2.org/Insights/2026/07/rethinking-ai-impact-on-cybersecurity-roles
+- ISO/IEC. (2022). *ISO/IEC 27001:2022, Information security management systems: Requirements* (Annex A, control 8.28 Secure coding) [standard]. https://www.iso.org/standard/27001
+- Jost, N., Berens, B., Karl, M., Horstmann, S. A., Johns, M., & Naiakshina, A. (2026). The impact of AI-assisted development on software security: A study of Gemini and developer experience [Preprint]. arXiv:2603.15298. https://arxiv.org/abs/2603.15298
+- Khalid, H., Thompson, R. E., Sabater, A., Mussiba, P., Fulton, K. R., & Votipka, D. (2026). (Don't) trust, but (don't) verify: Developers' attention to security in AI-generated code. To appear in *Proc. IEEE S&P 2027*. arXiv:2609.21020. https://arxiv.org/abs/2609.21020
+- Klemmer, J. H., et al. (2024). Using AI assistants in software development: A qualitative study on security practices and concerns. *Proc. ACM CCS 2024*, 2726–2740. https://doi.org/10.1145/3658644.3690283
+- Majdinasab, V., et al. (2024). Assessing the security of GitHub Copilot's generated code: A targeted replication study. *Proc. SANER 2024*, 435–444. https://doi.org/10.1109/SANER60148.2024.00051
+- Mousavi, Z., Islam, C., Babar, M. A., Abuadbba, A., & Moore, K. (2026). Understanding the impact of AI code assistants on security API usage: An empirical study. Accepted at *RAID 2026*. arXiv:2607.11348. https://arxiv.org/abs/2607.11348
+- Naiakshina, A., Danilova, A., Tiefenau, C., Herzog, M., Dechand, S., & Smith, M. (2017). Why do developers get password storage wrong? A qualitative usability study. *Proc. ACM CCS 2017*, 311–328. https://doi.org/10.1145/3133956.3134082
+- Naiakshina, A., Danilova, A., Gerlitz, E., von Zezschwitz, E., & Smith, M. (2019). "If you want, I can store the encrypted password." A password-storage field study with freelance developers. *Proc. CHI 2019*. https://doi.org/10.1145/3290605.3300370
+- NCSC. (2024). *ICT-beveiligingsrichtlijnen voor webapplicaties* [guideline, May]. https://www.ncsc.nl/api/media/sites/default/files/Richtlijn%20ICT%20beveiligingsrichtlijnen%20webapplicaties%2007-24_0.pdf
+- Nguyen, D. C., Wermke, D., Acar, Y., Backes, M., Weir, C., & Fahl, S. (2017). A stitch in time: Supporting Android developers in writing secure code. *Proc. ACM CCS 2017*, 1065–1077. https://doi.org/10.1145/3133956.3133977
+- OWASP. (2025). *Application Security Verification Standard 5.0.0*; *Software Assurance Maturity Model: Education & Guidance* [standards]. https://owasp.org/www-project-application-security-verification-standard/ ; https://owaspsamm.org/model/governance/education-and-guidance/
+- Pearce, H., Ahmad, B., Tan, B., Dolan-Gavitt, B., & Karri, R. (2022). Asleep at the keyboard? Assessing the security of GitHub Copilot's code contributions. *Proc. IEEE S&P 2022*, 754–768. https://doi.org/10.1109/SP46214.2022.9833571
+- Perry, N., Srivastava, M., Kumar, D., & Boneh, D. (2023). Do users write more insecure code with AI assistants? *Proc. ACM CCS 2023*, 2785–2799. https://doi.org/10.1145/3576915.3623157
+- Platform Talent voor Technologie & Dialogic. (2024). *Onderzoeksrapportage onderwijs en arbeidsmarkt cybersecurity* [report for the Ministry of Economic Affairs; Kamerstuk 26643, nr. 1164]. https://open.overheid.nl/documenten/c0ac3595-28e3-43df-aa85-7d9e8a426c25/file
+- Rijksoverheid. (2026, 7 July). *Cyberbeveiligingswet en Wet weerbaarheid kritieke entiteiten vanaf 15 augustus 2026 van kracht* [news]; Cyberbeveiligingswet, Stb. 2026, 187 [law]. https://www.rijksoverheid.nl/actueel/nieuws/2026/07/07/cyberbeveiligingswet-en-wet-weerbaarheid-kritieke-entiteiten-vanaf-15-augustus-2026-van-kracht ; https://zoek.officielebekendmakingen.nl/stb-2026-187.html
+- Sandoval, G., Pearce, H., Nys, T., Karri, R., Garg, S., & Dolan-Gavitt, B. (2023). Lost at C: A user study on the security implications of large language model code assistants. *Proc. USENIX Security 2023*, 2205–2222. https://www.usenix.org/conference/usenixsecurity23/presentation/sandoval
+- Souppaya, M., Scarfone, K., & Dodson, D. (2022). *Secure Software Development Framework (SSDF) version 1.1* (NIST SP 800-218) [standard]. https://doi.org/10.6028/NIST.SP.800-218
+- Spracklen, J., Wijewickrama, R., Sakib, A. H. M. N., Maiti, A., Viswanath, B., & Jadliwala, M. (2025). We have a package for you! A comprehensive analysis of package hallucinations by code generating LLMs. *Proc. USENIX Security 2025*, 3687–3706. https://www.usenix.org/conference/usenixsecurity25/presentation/spracklen
+- Tompkins, M., et al. (2026). Do hackers dream of electric teachers? A large-scale, in-situ measurement of cybersecurity student behaviors and educational performance with AI tutors. *Proc. ACM CCS 2026*, 1820–1834. https://doi.org/10.1145/3830454.3846694
+- Vero, M., et al. (2025). BaxBench: Can LLMs generate correct and secure backends? *Proc. ICML 2025*, PMLR 267. https://arxiv.org/abs/2502.11844
+- Votipka, D., Fulton, K. R., Parker, J., Hou, M., Mazurek, M. L., & Hicks, M. (2020). Understanding security mistakes developers make: Qualitative analysis from Build It, Break It, Fix It. *Proc. USENIX Security 2020*, 109–126. https://www.usenix.org/conference/usenixsecurity20/presentation/votipka-understanding
+- Weir, C., Becker, I., Noble, J., Blair, L., Sasse, M. A., & Rashid, A. (2020). Interventions for long-term software security: Creating a lightweight program of assurance techniques for developers. *Software: Practice and Experience, 50*(3), 275–298. https://doi.org/10.1002/spe.2774
+- Zhao, S., Wang, D., Zhang, K., Luo, J., Li, Z., & Li, L. (2026). Is vibe coding safe? Benchmarking vulnerability of agent-generated code in real-world tasks (SusVibes). *Proc. ICML 2026*, PMLR 306. https://arxiv.org/abs/2512.03262
+
 ---
 
 <a id="appendix-implementation-sketches"></a>
@@ -2451,6 +2531,15 @@ The guard decides on the path, not on the level: graded work is protected at eve
 <a id="11-change-log"></a>
 
 ## 11. Change log {#changelog}
+
+### 13 November 2026: secure code as a first niche for juniors
+
+The pilot student asked whether cybersecurity is a good first niche, and which angle fits: junior developers who learn basic security at work, or junior security specialists.
+
+- **§2.13 (new):** AI code and security, confidence that is not justified, what juniors lack, what laws and standards ask of employers, the two angles side by side, and the plan as a hypothesis: angle A, as a deepening of `junior-dotnet`.
+- **§8:** 30 new references. They were checked first; the notes are in [the citation check](https://github.com/piethanegraaf/piethanegraaf.github.io/blob/main/research/citation-checks/citation_check_learning_science.md), section H. The check corrected, among other things, the SusVibes figures (57% correct and 11.8% secure in the ICML version, not 61% and 10.5%), the Staatsblad number of the Cyberbeveiligingswet (2026, 187), the source of a UWV figure (no longer used), and that the effect in Braz et al. is an odds ratio.
+- **Notes:** [secure code for juniors](notes/secure_coding_juniors.md).
+- **Not changed:** the harness itself. The security map, the analyser and the rule for examples have not been built.
 
 ### 13 November 2026: graded work under the exam rules
 
