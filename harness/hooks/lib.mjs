@@ -74,6 +74,9 @@ export const DEFAULT_SETTINGS = {
   dashboardRepo: null,
   // Graded work (setup of 13 Nov, #49/#50/#54): { paths, aiLevel, maxRung, logDir } or null. See gradedOf().
   graded: null,
+  // check.mjs also runs the security rules of the .NET SDK's own analyzers (research §2.13). Offline;
+  // on in the junior-dotnet map. See securityWarnings().
+  securityAnalyzer: false,
   targetSuccess: 0.85,
   // Files whose content belongs to the learner (the guard protects them at L1-L3).
   codeExtensions: ["cs", "csproj", "sln", "slnx"],
@@ -165,6 +168,37 @@ export const isMicro = (s) => Boolean(s?.parent);
 export const familyOf = (s) => (s ? (s.parent ?? s.id) : null);
 export const microsOf = (data, parentId) => data.skills.filter((s) => s.parent === parentId);
 export const familyIds = (data, id) => [id, ...microsOf(data, id).map((m) => m.id)];
+
+// A skill whose free texts stay out of the dashboard export (the security skills: an explanation can
+// say where an employer's code is vulnerable). Its microskills inherit it.
+export const isSensitive = (data, id) => {
+  const s = id ? findSkill(data, id) : null;
+  return Boolean(s?.sensitive || (s?.parent && findSkill(data, s.parent)?.sensitive));
+};
+
+// ---------- The security analyser (research §2.13) ----------
+// check.mjs passes these to a full `dotnet build` and to `dotnet test` when securityAnalyzer is on: every
+// security rule of the analyzers that come with the .NET SDK, as warnings, also in a project that treats
+// warnings as errors. No network, and no change to the project's files.
+export const SECURITY_ANALYZER_ARGS = ["-p:EnableNETAnalyzers=true", "-p:AnalysisModeSecurity=All", "-p:CodeAnalysisTreatWarningsAsErrors=false"];
+// The rules of the Security category: CA2100, CA2109, CA2119, CA2153, CA2300-CA2362 (deserialization),
+// CA3001-CA3147 (injection, XML) and CA5350-CA5405 (cryptography, certificates, tokens).
+export const SECURITY_RULE = /^CA(2100|2109|2119|2153|23\d\d|3\d{3}|5[34]\d\d)$/;
+// The security warnings in the output of dotnet: [{ file, line, rule, message }], once per place and rule.
+// MSBuild prints a warning as "<file>(<line>,<col>): warning CA2100: <message> [<project>]", often twice.
+export function securityWarnings(out) {
+  const seen = new Set();
+  const list = [];
+  for (const raw of String(out ?? "").split(/\r?\n/)) {
+    const m = raw.match(/^\s*(.+?)\((\d+),\d+(?:,\d+,\d+)?\):\s+warning\s+(CA\d{4}):\s+(.*?)(?:\s+\[[^\]]+\])?\s*$/);
+    if (!m || !SECURITY_RULE.test(m[3])) continue;
+    const key = `${m[1]}|${m[2]}|${m[3]}`;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    list.push({ file: m[1].trim(), line: Number(m[2]), rule: m[3], message: m[4].trim() });
+  }
+  return list;
+}
 
 // ---- Spaced reviews: Fibonacci intervals (1, 2, 3, 5, 8, 13, 21, 34, ...) ----
 export function fib(i) {

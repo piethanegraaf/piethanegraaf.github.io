@@ -16,7 +16,7 @@ Dat heeft waarschijnlijk een prijs: zolang een vaardigheid op L1–L3 staat, ron
 
 ## De voorbeeldkaart voor C#/.NET
 
-Installeer met `--map junior-dotnet`. De kaart heeft tien vaardigheden: debuggen, onbekende code lezen, unit tests, veilig refactoren, ASP.NET Core-API's, EF Core en LINQ, async/await, veiligheid, code van AI reviewen en een taak specificeren voor een agent.
+Installeer met `--map junior-dotnet`. De kaart heeft dertien vaardigheden: debuggen, onbekende code lezen, unit tests, veilig refactoren, ASP.NET Core-API's, EF Core en LINQ, async/await, vier securityvaardigheden (zie hieronder), code van AI reviewen en een taak specificeren voor een agent.
 
 De guard beschermt alleen bestanden onder de paden van een vaardigheid (en de paden van [beoordeeld werk](how-it-works.md#beoordeeld-werk), die je op je werk niet nodig hebt). Een vaardigheid zonder paden, zoals debuggen, krijgt wel de hintladder, maar de guard houdt niets tegen. Pas de kaart aan op je eigen codebase (zie [Een eigen vak](configuration.md#een-eigen-vak)).
 
@@ -26,14 +26,14 @@ Je vraagt Claude Code om een zoekpagina die de zoekterm van de gebruiker terugto
 
 Het grootste risico is niet de code zelf, maar je vertrouwen erin. Wie met een AI-assistent werkt, denkt vaker dan terecht dat de code veilig is, en merkt niet waar het misgaat. Wat wel helpt, is aandacht op het moment van de beslissing: reviewers die de opdracht kregen op security te letten, vonden de kwetsbaarheid veel vaker, en een checklist voegde daar niets aan toe. Je werkgever gaat er ook naar vragen. Sinds augustus 2026 vallen ruim 8.000 organisaties onder de Cyberbeveiligingswet, en vanaf december 2027 mogen producten onder de Cyber Resilience Act niet meer met bekende uitbuitbare kwetsbaarheden op de markt komen.
 
-Daarom is veilig programmeren de eerste niche die we voor juniors uitwerken. Het plan:
+Daarom is veilig programmeren de eerste niche die we voor juniors uitwerken. Sinds 13 november 2026 zit het in de kaart `junior-dotnet`:
 
-- `security.basics` wordt vier vaardigheden: uitvoer coderen en invoer valideren, geparametriseerde queries, geheimen en configuratie, en AI-code reviewen op security.
-- Je legt bij een securitytaak uit wat een aanvaller in handen heeft, welke maatregel dat tegenhoudt, en hoe je dat controleert.
-- Naast `dotnet test` komt een statische analyser. Jij legt de waarschuwingen uit; Claude lost ze niet voor je op.
-- Bevindingen over kwetsbaarheden gaan niet mee in de export voor het dashboard.
+- **Vier securityvaardigheden:** uitvoer coderen en invoer valideren (`security.output-encoding`), geparametriseerde queries (`security.sql-params`), geheimen en configuratie (`security.secrets-config`), en AI-code reviewen op security (`security.ai-review`).
+- **De aanvaller eerst.** Trede 1 is altijd de vraag: wat heeft een aanvaller hier in handen? Bij de uitleg van een securitytaak zeg je wat de aanvaller in handen heeft, welke maatregel dat tegenhoudt, hoe je dat controleert, en hoe zeker je bent.
+- **Een analyser naast je tests.** `check.mjs` bouwt je code eerst opnieuw met de securityregels van de .NET SDK, zonder netwerk en zonder je projectbestanden te wijzigen. Jij legt de waarschuwingen uit; op L1–L3 lost Claude ze niet voor je op. Geen waarschuwingen betekent niet dat de code veilig is: toegangscontrole en logica ziet de analyser niet.
+- **Niets over kwetsbaarheden online.** De vrije teksten van securitytaken, zoals je uitleg en de namen van tests, gaan niet mee in de export voor het dashboard. Alleen de cijfers gaan mee.
 
-Dit is nog niet gebouwd, en of het juniors veiliger laat programmeren, is niet getest. De studies en hun grenzen staan in [§2.13 van het onderzoek](research.md#213-veilige-code-als-eerste-niche-voor-juniors).
+Securityfouten zitten verspreid door de code, dus deze vaardigheden hebben geen paden: de guard houdt Claude hier niet tegen, de regels wel. Zet de analyser uit met `! node .claude/hooks/skill.mjs setting securityAnalyzer false`. Of dit juniors veiliger laat programmeren, is niet getest. De studies en hun grenzen staan in [§2.13 van het onderzoek](research.md#213-veilige-code-als-eerste-niche-voor-juniors).
 
 ## Op je werk
 

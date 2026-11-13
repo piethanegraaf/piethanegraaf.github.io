@@ -687,7 +687,7 @@ Wat helpt, is aandacht op het moment van de beslissing. Reviewers die de opdrach
 
 Hoek B past slecht bij deze fase. SOC-analisten controleren alarmen met de hand (Alahmadi et al., 2022; C). Securitywerk vraagt veel technische kennis, maar de gevraagde taken en vaardigheden zijn grotendeels niet-technisch (PTvT & Dialogic, 2024; C). Het "antwoord" is daar een commando of een oordeel, en dat kan de AI in de chat geven zonder een bestand te schrijven. De tekorten zitten vooral bij medior en senior; het aanbod van junior hbo- en wo-afgestudeerden sluit volgens hetzelfde rapport aan op de vraag, behalve bij specialistische profielen. Van 856 securityprofessionals die AI gebruiken, zei 56% dat AI de behoefte aan instapfuncties al heeft verminderd (ISC2, 2026; C, brancheorganisatie). Het idee achter de hintladder werkt wel in securityonderwijs: op pwn.college vroegen 309 studenten een socratische tutor, die de oplossingen niet kende, in maar 3,5% van hun vragen direct om de oplossing (Tompkins et al., 2026; C).
 
-**Het plan, als hypothese.** Hoek A wordt de eerste niche, als verdieping van `junior-dotnet` en niet als een nieuw product. Het sluit aan op wat het onderzoek het vaakst vindt: mensen merken niet dat AI-code onveilig is. De harnas laat al in eigen woorden uitleggen waarom iets werkt. Voor security wordt dat: wat heeft een aanvaller in handen, welke maatregel houdt dat tegen, en hoe controleer je dat? Nog niet gebouwd zijn:
+**Het plan, als hypothese.** Hoek A wordt de eerste niche, als verdieping van `junior-dotnet` en niet als een nieuw product. Het sluit aan op wat het onderzoek het vaakst vindt: mensen merken niet dat AI-code onveilig is. De harnas laat al in eigen woorden uitleggen waarom iets werkt. Voor security wordt dat: wat heeft een aanvaller in handen, welke maatregel houdt dat tegen, en hoe controleer je dat? Op 13 november 2026 is gebouwd (§10.9):
 
 - `security.basics` opsplitsen in vier vaardigheden: uitvoer coderen en invoer valideren, geparametriseerde queries, geheimen en configuratie, en AI-code reviewen op security;
 - naast `dotnet test` een statische analyser waarvan de leerling de waarschuwingen zelf uitlegt, met de kanttekening dat een schone run niet betekent dat de code veilig is;
@@ -2526,11 +2526,60 @@ De guard beslist op het pad, niet op het niveau: beoordeeld werk is beschermd op
 - **De drie voorwaarden uit de literatuurtoets** zijn regels voor Claude (CLAUDE.md), geen hook dwingt ze af.
 - **Open:** de vorm van de APA-verwijzing, getoetst aan de richtlijn van de bibliotheek van de instelling.
 
+### 10.9 Herziening van 13 november 2026 (avond): de securitykaart
+
+De pilotstudent koos voor het hele plan van §2.13 in één keer, met vier losse vaardigheden in plaats van één familie met microvaardigheden.
+
+#### 10.9.1 Besluiten
+
+| Besluit | Gebouwd |
+|---|---|
+| `security.basics` wordt vier losse vaardigheden | `security.output-encoding`, `security.sql-params`, `security.secrets-config` en `security.ai-review`, op L2, zonder paden, elk met trefwoorden. `review.ai-code` blijft apart, voor review in het algemeen. |
+| De aanvaller eerst | In de notities van de kaart: trede 1 is altijd "Wat heeft een aanvaller hier in handen?", en de uitleg van een securitytaak heeft drie delen (wat de aanvaller in handen heeft, welke maatregel dat tegenhoudt, hoe je dat controleert) plus een zekerheid van 1 tot 5 (Braz et al., 2022; Perry et al., 2023). |
+| Een analyser naast `dotnet test` | `check.mjs` met de instelling `securityAnalyzer` (aan in `junior-dotnet`): eerst een volledige build met alle securityregels van de analyzers van de .NET SDK, dan de tests. De leerling legt de waarschuwingen uit; Claude lost ze op L1–L3 niet op. |
+| Voorbeelden leren geen onveilig patroon aan | Een regel in de regels van élke kaart, ook `ood`: het voorbeeld op trede 4, de uitwerking op trede 5 en een voorbeeld op L0 bevatten nooit geplakte SQL, ongecodeerde invoer in HTML of een log, een geheim in de code, `System.Random` voor een token, of uitgeschakelde certificaatcontrole. |
+| Niets over kwetsbaarheden online | Een vaardigheid kan `sensitive` zijn; de vier securityvaardigheden zijn het. De export houdt dan de cijfers van hun taken, maar niet de vrije teksten: de testnamen, de uitleg, de redenen van een afwijzing of correctie, vrije notities bij een niveauwijziging, en de titel van een microvaardigheid eronder. |
+
+#### 10.9.2 Een securitytaak, zoals gebouwd
+
+```mermaid
+flowchart TD
+    P["de leerling vraagt iets over<br/>een query, uitvoer of een geheim"] --> K{"trefwoorden:<br/>een security-vaardigheid?"}
+    K -->|"nee"| N["de gewone regels per niveau"]
+    K -->|"ja, op L1-L3"| H["hintladder; trede 1:<br/>wat heeft een aanvaller hier in handen?"]
+    H --> W["de leerling schrijft de code"]
+    W --> C["check.mjs"]
+    C --> B["dotnet build --no-incremental<br/>met AnalysisModeSecurity=All"]
+    B --> T["dotnet test met dezelfde instellingen"]
+    T --> R["groen of rood, en de security-<br/>waarschuwingen met regel en regelnummer"]
+    R --> U["uitleg: aanvaller, maatregel,<br/>controle, zekerheid 1-5"]
+    U --> E["export: cijfers wel,<br/>vrije teksten niet"]
+```
+
+De analyser kijkt alleen naar patronen die hij kent. Een schone run is daarom geen bewijs, en dat zegt `check.mjs` er ook bij.
+
+#### 10.9.3 Waar de bouw afwijkt van het plan
+
+- **De analyser bouwt opnieuw.** Het plan was één build. Een proef met een echt project liet zien dat de analyzers alleen melden als de compiler draait: na een build die al bijgewerkt was, kwam er geen enkele waarschuwing, ook niet voor `System.Random`. `check.mjs` bouwt daarom eerst met `--no-incremental`, en draait de tests met dezelfde instellingen, zodat ze niet nog eens compileren. Dat kost tijd bij een grote solution; de instelling kan uit.
+- **Een project dat waarschuwingen als fouten behandelt, blijft bouwen.** `CodeAnalysisTreatWarningsAsErrors=false` houdt de securityregels op waarschuwing, ook met `TreatWarningsAsErrors` in het project. Getest op een echt project.
+- **De guard beschermt de securityvaardigheden niet.** Security loopt dwars door bestanden heen, dus de vaardigheden hebben geen paden. Op L1–L3 houdt Claude zich aan de notities van de kaart; geen hook dwingt dat af.
+- **Het dashboard toont geen aparte melding** bij een taak zonder teksten. De export zet `withheld: true`; de taak staat er met zijn trede en uitkomst.
+- **Een bestaande installatie houdt `security.basics`.** `--update` laat je register staan. Wie de vier vaardigheden wil, voegt ze toe met `add` of installeert opnieuw.
+- **Niet gebouwd:** toegangscontrole en afhankelijkheden (§2.13: geen analyser vindt toegangsfouten betrouwbaar, en een controle op pakketten vraagt een netwerk), en oefeningen met aanvalsstrings als tests.
+
 ---
 
 <a id="11-wijzigingslog"></a>
 
 ## 11. Wijzigingslog {#changelog}
+
+### 13 november 2026 (avond): de securitykaart
+
+De pilotstudent koos voor het hele plan van §2.13; het is dezelfde avond gebouwd.
+
+- **§10.9 (nieuw):** de besluiten, een diagram van een securitytaak zoals gebouwd, en waar de bouw afwijkt van het plan (de analyser bouwt opnieuw, de guard beschermt de securityvaardigheden niet).
+- **§2.13:** het plan zegt nu wat gebouwd is.
+- **Niet veranderd:** de conclusies van §2. Er zijn geen nieuwe bronnen.
 
 ### 13 november 2026: veilige code als eerste niche voor juniors
 

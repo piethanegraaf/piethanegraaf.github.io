@@ -28,7 +28,7 @@ description: "De vier Claude Code-hooks van de leerharnas, elk commando van skil
 | `correct <taak-id> trede <1-5> "reden"` | Meer hulp dan gelogd: de trede alleen **omhoog** zetten. |
 | `correct <taak-id> schrap "reden"` | Eén taak schrappen. |
 | `override <id\|*> <minuten> "reden"` | Tijdelijk toestaan dat Claude code schrijft (hooguit 240 minuten, gelogd). |
-| `setting <sleutel> <waarde>` | `examDate`, `stuckTimerMinutes`, `idleMinutes`, `defaultLevel`, `course`, `language`, `autoDemote`, `dashboardRepo` (het absolute pad van je clone van de repo met het dashboard, of `off`), en `codeExtensions` en `codeFiles` als lijst met komma's. Zie [Configuratie](configuration.md). |
+| `setting <sleutel> <waarde>` | `examDate`, `stuckTimerMinutes`, `idleMinutes`, `defaultLevel`, `course`, `language`, `autoDemote`, `securityAnalyzer`, `dashboardRepo` (het absolute pad van je clone van de repo met het dashboard, of `off`), en `codeExtensions` en `codeFiles` als lijst met komma's. Zie [Configuratie](configuration.md). |
 | `setting graded add\|remove "<pad>"` | Beoordeeld werk: de paden (absoluut, of relatief aan het project) waar Claude niets schrijft en de hintladder tot trede 4 gaat. Ook `setting graded maxRung 0..4`, `aiLevel 0\|1`, `logDir "<pad>"` en `off`. Zie [Beoordeeld werk](how-it-works.md#beoordeeld-werk). Gelogd als het event `setting`. |
 | `paths <id> add|remove "<glob>"` | Welke opdrachtmappen bij een vaardigheid horen, bijvoorbeeld `paths ood.associaties add "ood-opdrachten-01/09-*/**"`. De map bepaalt de vaardigheid van een taak en het niveau dat de guard gebruikt. Niet voor een microvaardigheid: die gebruikt het niveau van de hoofdvaardigheid. Heeft een andere vaardigheid hetzelfde pad, dan waarschuwt hij. Gelogd als event `paths`. |
 | `replay <transcript.jsonl> [--dry-run]` | Herstelt uitleggen die in de chat zijn goedgekeurd maar niet gelogd. Hij zoekt de markers `[uitleg-ok <tid>]` en controleert jouw bericht met dezelfde check als de Stop-hook. Alleen wat beide sleutels haalt, telt, met bron `replay`. |
@@ -48,6 +48,7 @@ Draait `dotnet test` met een trx-logger en toont een korte samenvatting. Een tes
 - **Een compileerfout is een startpunt.** Bouwt de map niet (`error CSxxxx`), dan onthoudt `check.mjs` dat. Een test die bij de eerste build die wel lukt groen is, telt dan als nieuw groen. Een fout van de tooling (`NETSDK`, `MSB`) telt niet.
 - **De map bepaalt de vaardigheid.** Na een run in een map kiest een trefwoord in je prompt alleen nog een microvaardigheid binnen die familie. Naar een andere familie wissel je met `#id` of de naam van de opdracht.
 - **`global.json`:** vraagt die een oudere SDK dan het project gebruikt, zonder `rollForward` naar een nieuwere hoofdversie, dan waarschuwt `check.mjs`.
+- **Security-analyser.** Met `securityAnalyzer` bouwt `check.mjs` de map eerst opnieuw (`dotnet build --no-incremental`) met de securityregels van de .NET SDK (`AnalysisModeSecurity=All`, nooit als fout), en draait daarna de tests met dezelfde instellingen. Het toont elke waarschuwing met regel, bestand en regelnummer, en vraagt jou die uit te leggen. Opnieuw bouwen is nodig, omdat de analyzers alleen melden als de compiler echt draait.
 - Een map relatief aan het project werkt ook als je shell in een andere map staat.
 
 ## Markers in Claude's antwoord
@@ -142,6 +143,7 @@ En van de setup van 13 november 2026 (beoordeeld werk):
 | `graded-solution-refused` | De student vroeg om een uitwerking bij beoordeeld werk; Claude kreeg de opdracht te weigeren. |
 | `graded-over-max` | Een antwoord had een trede boven het plafond. Het logboek noemt het, en de student kreeg een melding. |
 | `graded-log-error` | De hook kon het AI-logboek niet schrijven (met de fout). |
+| `security-warnings` | `check.mjs` met `securityAnalyzer`: het aantal waarschuwingen en de regels (zoals `CA2100`), zonder bestandsnamen. |
 
 ## Bestanden
 

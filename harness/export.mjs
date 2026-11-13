@@ -284,6 +284,15 @@ export async function build(project, { previous = null, todo = null } = {}) {
     }
   }
 
+  // Tasks of a sensitive skill (the security skills, research §2.13) keep their numbers, but not their
+  // free texts: an explanation or a test name can say where an employer's code is vulnerable.
+  for (const tk of tasks) {
+    if (!lib.isSensitive(data, tk.skill) && !lib.isSensitive(data, tk.retaggedFrom)) continue;
+    tk.what = null; tk.explanation = null; tk.voidReason = null; tk.withheld = true;
+    for (const r of tk.rejections) r.reasons = [];
+    for (const c of tk.corrections) c.reason = null;
+  }
+
   // Regressions per skill (folder -> skill), without test names or paths.
   const regressions = events.filter((e) => e.type === "regression" || e.type === "regression-fixed").map((e) => {
     const s = e.dir ? lib.skillForPath(data, path.join(project, e.dir, "__probe__", "x.cs")) : null;
@@ -405,7 +414,9 @@ export async function build(project, { previous = null, todo = null } = {}) {
   const firstEvent = events.length ? events[0].at : null;
   const addedAt = new Map(events.filter((e) => e.type === "skill-add" || e.type === "micro-add").map((e) => [e.skill, e.at]));
   const skills = data.skills.map((s) => ({
-    id: s.id, parent: s.parent ?? null, kind: s.kind ?? null, title: scrub(s.title, "skill.title"), titles: titlesOf(s), level: s.level,
+    // A microskill of a sensitive skill gets its title from Claude, which can name a vulnerable spot: its id only.
+    id: s.id, parent: s.parent ?? null, kind: s.kind ?? null, level: s.level, titles: titlesOf(s),
+    title: s.parent && lib.isSensitive(data, s.id) ? s.id : scrub(s.title, "skill.title"),
     // Reviews are only for L4; an older schedule on a lower level is not shown.
     nextReview: lib.REVIEWED.has(s.level) ? s.nextReview ?? null : null, intervalIndex: s.intervalIndex ?? 0,
     lastReview: s.lastReview ? { at: s.lastReview.at, result: s.lastReview.result } : null,
@@ -422,7 +433,9 @@ export async function build(project, { previous = null, todo = null } = {}) {
     // changedAt: the exact moment of the change (see lib.levelChangeAt). Changes without a difference
     // (L3 -> L3) are left out (#45); kind says how it was decided, task which task placed the skill.
     history: (s.history ?? []).filter((h) => !(h.from && h.to && h.from === h.to)).map((h) => ({
-      at: h.at, changedAt: h.to ? lib.levelChangeAt(s, h, events) : null, from: h.from ?? null, to: h.to, note: scrub(h.note ?? null, "skill.history"),
+      // A free note of a sensitive skill stays home too; a fixed note of the harness (notes) is safe.
+      at: h.at, changedAt: h.to ? lib.levelChangeAt(s, h, events) : null, from: h.from ?? null, to: h.to,
+      note: lib.isSensitive(data, s.id) && !notesOf(h.note ?? null) ? null : scrub(h.note ?? null, "skill.history"),
       notes: notesOf(h.note ?? null), auto: h.auto === true, placement: h.placement === true, kind: kindOf(h, s),
       task: h.placement ? tidOf(h.tid ?? events.filter((e) => e.type === "placement" && e.skill === s.id && e.to === h.to).pop()?.tid) : null })),
   }));

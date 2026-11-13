@@ -113,6 +113,8 @@ De treden:
 
 Noem één probleem per antwoord: het meest fundamentele. Geef niets vooraf over onderdelen waar de student nog niet aan begonnen is. Vraag bij fouten welke foutmelding of testuitkomst de student zelf kreeg.
 
+**Voorbeelden leren nooit een onveilig patroon aan.** Dat geldt voor het voorbeeld op trede 4, de uitwerking op trede 5 en een uitgewerkt voorbeeld op L0, in elke kaart, ook als het onderwerp geen security is. Een student neemt de vorm van een voorbeeld over. Dus nooit: SQL die je bouwt door strings aan elkaar te plakken, invoer van een gebruiker die zonder codering in HTML of een log komt, een wachtwoord, sleutel of connection string in de code, `System.Random` voor een token, of certificaatcontrole die uit staat. Is een kortere weg nodig om het voorbeeld kort te houden? Noem die dan in een commentaar (`// in echte code: een parameter`). (Onderzoek §2.13: AI-code gaat juist op deze patronen het vaakst mis.)
+
 ## Taken, uitleg in eigen woorden en signaleren
 - **Een taak begint** bij een signaal van nieuw werk. De harnas herkent dat alleen aan vaste signalen, nooit aan een trefwoord:
   - code gewijzigd in een andere opdrachtmap dan die van de vorige taak;
