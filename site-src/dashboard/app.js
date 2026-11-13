@@ -4,7 +4,7 @@
 (() => {
   const UI = {
     nl: {
-      skip: "Naar de inhoud", title: "Leerdashboard", brand: "Leerharnas", real: "Echte data", demo: "Demo", theme: "Thema wisselen",
+      skip: "Naar de inhoud", title: "Leerdashboard", brand: "Leerharnas", brandHref: "../nl/", real: "Echte data", demo: "Demo", theme: "Thema wisselen",
       loading: "Laden…", loadError: "De data kon niet geladen worden ({file}). Open het dashboard via een webserver, bijvoorbeeld: python -m http.server",
       fallback: "Er is nog geen echte data (data/progress.json). Je ziet de demo met verzonnen data.",
       ownLanguage: "De eigen teksten van de student (uitleg, dagboek en eigen notities en microvaardigheden) staan in de taal waarin ze geschreven zijn: {language}.", langNames: { nl: "Nederlands", en: "Engels" },
@@ -61,9 +61,9 @@
       up: "Omhoog", upText: "de harnas stelt het voor, direct na de uitleg die het criterium haalt, en jij zegt \"ja, doorzetten\". Het bewijs zijn je laatste 10 uitgelegde taken sinds de vorige wijziging. Vanaf L2 kan een sprong, bijvoorbeeld L2 → L4 met de transfertaak.",
       down: "Omlaag", downText: "valt het bewijs tegen (minder dan 70% gelukt over minstens 4 taken, de laatste 2 mislukt, of 2 herhalingen op rij mislukt), dan krijg je extra steun: één niveau terug, vaak alleen voor een deelpatroon. Hulp over een ander concept telt niet mee, en omlaag wacht op een open uitleg. Automatisch als autoDemote aan staat, anders als advies.",
       levelsInfoMore: "De sterkte van het bewijs komt uit het literatuuronderzoek. Meer:",
-      howLink: "Hoe het werkt", howHref: "../how-it-works/#niveaus-per-vaardigheid",
-      researchLink: "de autonomieladder (§5.2)", researchHref: "../research/#52-de-autonomieladder-per-vaardigheid",
-      principlesLink: "ontwerpprincipes (§2.11)", principlesHref: "../research/#211-synthese-ontwerpprincipes",
+      howLink: "Hoe het werkt", howHref: "../nl/how-it-works/#niveaus-per-vaardigheid",
+      researchLink: "de autonomieladder (§5.2)", researchHref: "../nl/research/#52-de-autonomieladder-per-vaardigheid",
+      principlesLink: "ontwerpprincipes (§2.11)", principlesHref: "../nl/research/#211-synthese-ontwerpprincipes",
       showTable: "Tabel", showChart: "Grafiek", level: "Niveau", name: "Naam", count: "Aantal", skillsCol: "Vaardigheden",
       skills: "Per vaardigheid", skillsHint: "Per vaardigheid zie je wat je nog nodig hebt voor het volgende niveau. Dat telt alleen de taken sinds je laatste niveauwijziging, net als de harnas. 'Laatste 10' is hoe het de laatste tijd ging; gelukt = opgelost met hooguit trede 2.",
       nsTo: "Naar {to}", nsSince: "telt sinds {date}", nsPlacement: "Plaatsing", nsPlacementText: "je eerste taak bepaalt het niveau", nsMaintain: "Onderhoud", nsNoReview: "geen herhaling gepland",
@@ -100,12 +100,12 @@
       duringTask: "Tijdens een taak van", microProposals: "Voorstellen voor een microvaardigheid", microProposalsHint: "De harnas stelt een microvaardigheid voor na echte hulp (trede 2 of hoger). Alleen een ja van de lerende voegt hem toe.",
       microskill: "Microvaardigheid", why: "Waarom", outcome: "Uitkomst",
       evidence: { review: "review-hulp", concept: "hulp over een ander concept", task: "taak" }, mOutcome: { added: "toegevoegd", declined: "nee", noAnswer: "geen antwoord" },
-      footAi: "De leerharnas, dit dashboard en de docs zijn gemaakt met hulp van Claude (Anthropic). De leerdata en de reflecties zijn van de student zelf; de vertalingen ervan zijn van Claude.", footAiLink: "AI-verklaring", footAiHref: "../ai-statement/",
+      footAi: "De leerharnas, dit dashboard en de docs zijn gemaakt met hulp van Claude (Anthropic). De leerdata en de reflecties zijn van de student zelf; de vertalingen ervan zijn van Claude.", footAiLink: "AI-verklaring", footAiHref: "../nl/ai-statement/",
       footCode: "Code", footOr: "of een", footCommercial: "commerciële licentie", footTexts: "teksten en data",
-      footSource: "Broncode op GitHub", footDocs: "Uitleg bij het dashboard", footDocsHref: "../progress-dashboard/", focus: "Ga naar {id}", tableRegion: "Tabel, scrollbaar",
+      footSource: "Broncode op GitHub", footDocs: "Uitleg bij het dashboard", footDocsHref: "../nl/progress-dashboard/", focus: "Ga naar {id}", tableRegion: "Tabel, scrollbaar",
     },
     en: {
-      skip: "Skip to content", title: "Learning dashboard", brand: "Learning harness", real: "Real data", demo: "Demo", theme: "Toggle theme",
+      skip: "Skip to content", title: "Learning dashboard", brand: "Learning harness", brandHref: "../", real: "Real data", demo: "Demo", theme: "Toggle theme",
       loading: "Loading…", loadError: "The data could not be loaded ({file}). Open the dashboard through a web server, for example: python -m http.server",
       fallback: "There is no real data yet (data/progress.json). You see the demo with made-up data.",
       ownLanguage: "The learner's own texts (explanations, the diary, own notes and microskills) are shown in the language they were written in: {language}.", langNames: { nl: "Dutch", en: "English" },
@@ -160,9 +160,9 @@
       up: "Up", upText: "the harness proposes it right after the explanation that meets the criterion, and you say \"yes, promote\". The evidence is your last 10 explained tasks since the previous change. From L2 a jump is possible, for example L2 → L4 with the transfer task.",
       down: "Down", downText: "if the evidence falls short (under 70% solved over at least 4 tasks, the last 2 failed, or 2 reviews in a row failed), you get extra support: one level back, often only for a sub-pattern. Help about another concept does not count, and down waits for an open explanation. Automatically when autoDemote is on, otherwise as advice.",
       levelsInfoMore: "The strength of the evidence comes from the literature review. More:",
-      howLink: "How it works", howHref: "../en/how-it-works/#levels-per-skill",
-      researchLink: "the Autonomy Ladder (§5.2)", researchHref: "../en/research/#52-the-autonomy-ladder-per-skill",
-      principlesLink: "design principles (§2.11)", principlesHref: "../en/research/#211-synthesis-design-principles",
+      howLink: "How it works", howHref: "../how-it-works/#levels-per-skill",
+      researchLink: "the Autonomy Ladder (§5.2)", researchHref: "../research/#52-the-autonomy-ladder-per-skill",
+      principlesLink: "design principles (§2.11)", principlesHref: "../research/#211-synthesis-design-principles",
       showTable: "Table", showChart: "Chart", level: "Level", name: "Name", count: "Count", skillsCol: "Skills",
       skills: "Per skill", skillsHint: "Per skill you see what you still need for the next level. That only counts the tasks since your last level change, just like the harness. 'Last 10' is how it went lately; solved = with at most rung 2.",
       nsTo: "To {to}", nsSince: "counts since {date}", nsPlacement: "Placement", nsPlacementText: "your first task sets the level", nsMaintain: "Maintenance", nsNoReview: "no review planned",
@@ -199,9 +199,9 @@
       duringTask: "During a task of", microProposals: "Proposals for a microskill", microProposalsHint: "The harness proposes a microskill after real help (rung 2 or higher). Only the learner's yes adds it.",
       microskill: "Microskill", why: "Why", outcome: "Outcome",
       evidence: { review: "review help", concept: "help about another concept", task: "task" }, mOutcome: { added: "added", declined: "no", noAnswer: "no answer" },
-      footAi: "The learning harness, this dashboard and the docs were made with help from Claude (Anthropic). The learning data and the reflections are the learner's own; their translations are by Claude.", footAiLink: "AI statement", footAiHref: "../en/ai-statement/",
+      footAi: "The learning harness, this dashboard and the docs were made with help from Claude (Anthropic). The learning data and the reflections are the learner's own; their translations are by Claude.", footAiLink: "AI statement", footAiHref: "../ai-statement/",
       footCode: "Code", footOr: "or a", footCommercial: "commercial licence", footTexts: "texts and data",
-      footSource: "Source code on GitHub", footDocs: "About the dashboard", footDocsHref: "../en/progress-dashboard/", focus: "Go to {id}", tableRegion: "Table, scrollable",
+      footSource: "Source code on GitHub", footDocs: "About the dashboard", footDocsHref: "../progress-dashboard/", focus: "Go to {id}", tableRegion: "Table, scrollable",
     },
   };
   const LEVELS = ["L0", "L1", "L2", "L3", "L4"];
@@ -857,6 +857,7 @@
     document.title = t("title");
     $("title").textContent = t("title");
     $("brand").textContent = t("brand");
+    $("brand").setAttribute("href", t("brandHref"));
     $("skip").textContent = t("skip");
     $("src-real").textContent = t("real");
     $("src-demo").textContent = t("demo");

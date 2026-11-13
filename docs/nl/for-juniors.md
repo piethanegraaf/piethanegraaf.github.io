@@ -59,7 +59,7 @@ Deze map werkt zoals de OOD-oefenmap: elke oefening hoort bij haar vaardigheid, 
 
 ## Waarom dit ertoe doet
 
-Juniors die een agent al het werk laten doen, kunnen junior blijven: het [onderzoek naar het eeuwige-juniorprobleem](research.md#212-het-eeuwige-juniorprobleem) behandelt de studies en de parallellen met andere beroepen, en de [onderzoeksnotities](/en/notes/eternal_junior/) (Engels) geven de bronnen.
+Juniors die een agent al het werk laten doen, kunnen junior blijven: het [onderzoek naar het eeuwige-juniorprobleem](research.md#212-het-eeuwige-juniorprobleem) behandelt de studies en de parallellen met andere beroepen, en de [onderzoeksnotities](/notes/eternal_junior/) (Engels) geven de bronnen.
 
 ## Volgende stap
 

@@ -11,7 +11,7 @@ abstract: >-
   from writing practice code, help comes in steps, and a dashboard tracks skill levels. Made
   with help from Claude (Anthropic); see the AI statement on the site.
 repository-code: "https://github.com/piethanegraaf/piethanegraaf.github.io"
-url: "https://piethanegraaf.github.io/en/"
+url: "https://piethanegraaf.github.io/"
 license: AGPL-3.0-only
 keywords:
   - claude-code

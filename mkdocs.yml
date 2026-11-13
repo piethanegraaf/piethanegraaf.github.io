@@ -1,26 +1,28 @@
-# MkDocs configuration for the project site (docs in docs/nl and docs/en).
+# MkDocs configuration for the project site (docs in docs/en and docs/nl).
 # Build: mkdocs build --strict (see .github/workflows/build-deploy.yml)
+# English is the default language and lives at the root; Dutch lives under /nl/.
+# The old English URLs under /en/ redirect to the root (harness/site-redirects.mjs).
 
-site_name: Leerharnas
+site_name: Learning harness
 site_url: https://piethanegraaf.github.io/
 site_author: Piet Hanegraaf
 # The fallback description for pages without their own `description:` in the front matter.
 site_description: >-
-  Een gratis, open-source leerharnas voor Claude Code, voor studenten en junior developers: hooks
-  voorkomen dat de AI je oefencode schrijft, hulp komt in stappen en een dashboard volgt je vaardigheden.
+  A free, open-source Claude Code setup for students and junior developers. Hooks stop
+  the AI from writing practice code, help comes in steps, and a dashboard tracks skill levels.
 docs_dir: docs
 site_dir: site
 strict: true
 
 copyright: >-
-  © 2026 Piet Hanegraaf · Code: AGPL-3.0 · Teksten, docs en data: CC BY-NC 4.0 ·
-  Gemaakt met hulp van Claude (Anthropic), zie de AI-verklaring
+  © 2026 Piet Hanegraaf · Code: AGPL-3.0 · Texts, docs and data: CC BY-NC 4.0 ·
+  Made with help from Claude (Anthropic), see the AI statement
 
 theme:
   name: material
   # overrides/main.html: hreflang, page titles and JSON-LD. overrides/sitemap.xml: the sitemap.
   custom_dir: overrides
-  language: nl
+  language: en
   font:
     text: IBM Plex Sans
     code: JetBrains Mono
@@ -31,14 +33,14 @@ theme:
       accent: purple
       toggle:
         icon: material/weather-night
-        name: Donker thema
+        name: Dark theme
     - media: "(prefers-color-scheme: dark)"
       scheme: slate
       primary: deep purple
       accent: purple
       toggle:
         icon: material/weather-sunny
-        name: Licht thema
+        name: Light theme
   features:
     - content.code.copy
     - navigation.sections
@@ -60,45 +62,49 @@ plugins:
       enabled: !ENV [CI, false]
   - i18n:
       docs_structure: folder
+      # The fallback is needed for the shared files in docs/assets: without it the Dutch build has none.
+      # It also builds a copy of each English-only research note under /nl/notes/. Those copies have the
+      # English note as their canonical and stay out of the sitemap (overrides/), and the Dutch pages
+      # link to the English notes.
       fallback_to_default: true
       reconfigure_material: true
       reconfigure_search: true
       languages:
-        - locale: nl
-          name: Nederlands
-          default: true
-          build: true
-          site_name: Leerharnas
         - locale: en
           name: English
+          default: true
           build: true
           site_name: Learning harness
+        - locale: nl
+          name: Nederlands
+          build: true
+          site_name: Leerharnas
           site_description: >-
-            A free, open-source Claude Code setup for students and junior developers. Hooks stop
-            the AI from writing practice code, help comes in steps, and a dashboard tracks skill levels.
+            Een gratis, open-source leerharnas voor Claude Code, voor studenten en junior developers: hooks
+            voorkomen dat de AI je oefencode schrijft, hulp komt in stappen en een dashboard volgt je vaardigheden.
           copyright: >-
-            © 2026 Piet Hanegraaf · Code: AGPL-3.0 · Texts, docs and data: CC BY-NC 4.0 ·
-            Made with help from Claude (Anthropic), see the AI statement
-          # Own nav: the dashboard and the cheat sheet have an English URL of their own.
+            © 2026 Piet Hanegraaf · Code: AGPL-3.0 · Teksten, docs en data: CC BY-NC 4.0 ·
+            Gemaakt met hulp van Claude (Anthropic), zie de AI-verklaring
+          # Own nav: the dashboard and the cheat sheet have a Dutch URL of their own.
           nav:
-            - Home: index.md
-            - Get started:
-                - How it works: how-it-works.md
-                - Install: install.md
-                - Configuration and privacy: configuration.md
-                - Updating the dashboard: progress-dashboard.md
-                - Reference: reference.md
-                - For junior developers: for-juniors.md
-                - For educators: for-educators.md
-            - Tools:
-                - Dashboard: /dashboard/?lang=en
-                - C# OOP cheat sheet: /en/cheatsheet/
-            - Research:
-                - Literature review: research.md
-                - For researchers: researchers.md
-            - About this project:
-                - About me: about.md
-                - AI statement: ai-statement.md
+            - Start: index.md
+            - Aan de slag:
+                - Hoe het werkt: how-it-works.md
+                - Installeren: install.md
+                - Configuratie en privacy: configuration.md
+                - Dashboard bijwerken: progress-dashboard.md
+                - Naslag: reference.md
+                - Voor junior developers: for-juniors.md
+                - Voor docenten: for-educators.md
+            - Gebruiken:
+                - Dashboard: /dashboard/?lang=nl
+                - C# OOP-cheat sheet: /nl/cheatsheet/
+            - Onderzoek:
+                - Literatuuronderzoek: research.md
+                - Voor onderzoekers: researchers.md
+            - Over dit project:
+                - Over mij: about.md
+                - AI-verklaring: ai-statement.md
 
   # The date of the last change per page, from git (CI checks out the full history).
   # It has to come after i18n, which gives every page its locale.
@@ -108,24 +114,24 @@ plugins:
 # Every item sits under a heading. The research notes are not in the menu:
 # they are linked from the literature review (and the notes overview).
 nav:
-  - Start: index.md
-  - Aan de slag:
-      - Hoe het werkt: how-it-works.md
-      - Installeren: install.md
-      - Configuratie en privacy: configuration.md
-      - Dashboard bijwerken: progress-dashboard.md
-      - Naslag: reference.md
-      - Voor junior developers: for-juniors.md
-      - Voor docenten: for-educators.md
-  - Gebruiken:
-      - Dashboard: /dashboard/
-      - C# OOP-cheat sheet: /cheatsheet/
-  - Onderzoek:
-      - Literatuuronderzoek: research.md
-      - Voor onderzoekers: researchers.md
-  - Over dit project:
-      - Over mij: about.md
-      - AI-verklaring: ai-statement.md
+  - Home: index.md
+  - Get started:
+      - How it works: how-it-works.md
+      - Install: install.md
+      - Configuration and privacy: configuration.md
+      - Updating the dashboard: progress-dashboard.md
+      - Reference: reference.md
+      - For junior developers: for-juniors.md
+      - For educators: for-educators.md
+  - Tools:
+      - Dashboard: /dashboard/?lang=en
+      - C# OOP cheat sheet: /cheatsheet/
+  - Research:
+      - Literature review: research.md
+      - For researchers: researchers.md
+  - About this project:
+      - About me: about.md
+      - AI statement: ai-statement.md
 
 # The footer icons (Material draws them as inline SVG: nothing is loaded from elsewhere).
 extra:

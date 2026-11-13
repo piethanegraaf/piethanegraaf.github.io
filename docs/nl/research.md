@@ -7,7 +7,7 @@ description: "AI die tijdens het oefenen voor je denkt, verlaagt wat je daarna z
 **Piet Hanegraaf, met Claude (Anthropic)** · [Over de maker](about.md) · [Zo citeer je dit](#cite)
 
 !!! warning "Machinevertaling"
-    Dit is een machinevertaling door Claude (Anthropic) van het [Engelse origineel](../en/research/). Een mens heeft de vertaling niet nagekeken. Bij twijfel geldt de Engelse tekst.
+    Dit is een machinevertaling door Claude (Anthropic) van het [Engelse origineel](/research/). Een mens heeft de vertaling niet nagekeken. Bij twijfel geldt de Engelse tekst.
 
 *Opgesteld 7 november 2026 · herzien 8 november 2026, herschreven voor studenten en docenten op 10 november 2026 en dezelfde dag bijgewerkt met nieuwe literatuur, uitgebreid voor junior developers op hun werk op 11 november 2026 (zie §11) · Voor studenten die programmeren en Object-Oriented Design (OOD) leren met AI, voor hun docenten, en voor junior developers op hun werk*
 
@@ -112,7 +112,7 @@ De hooks zijn een **zelfbindingsmechanisme** (commitment device) dat je zelf kie
 
 Dit is een **narratief literatuuroverzicht**, geen systematisch overzicht. De eerste versie (7 november 2026) had geen zoekprotocol, geen inclusiecriteria en geen kwaliteitsbeoordeling. Ook stonden gerandomiseerde experimenten, kleine interviewstudies en preprints door elkaar in dezelfde tabellen. De herziening van 8 november 2026 voegde toe:
 
-- **Gerichte zoekopdrachten.** Vier zoekopdrachten besloegen mei–november 2026: leeronderzoek, de arbeidsmarkt, de economie van coderen met AI, en beleid over vaardigheden en toetsing. Twee citatiecontroles vergeleken de oorspronkelijke beweringen met hun primaire bronnen. De aantekeningen, met een link bij elk getal, staan in de [onderzoeksnotities](notes/index.md) (Engels). De synthese staat in `reports/` en is niet gepubliceerd. Een korte vervolgzoektocht op 10 november 2026 besloeg 8–10 november en studies die de eerste zoekopdrachten hadden gemist (zie de [notities bij de update](/en/notes/update_2026-11-10/){ hreflang="en" }, Engels).
+- **Gerichte zoekopdrachten.** Vier zoekopdrachten besloegen mei–november 2026: leeronderzoek, de arbeidsmarkt, de economie van coderen met AI, en beleid over vaardigheden en toetsing. Twee citatiecontroles vergeleken de oorspronkelijke beweringen met hun primaire bronnen. De aantekeningen, met een link bij elk getal, staan in de [onderzoeksnotities](notes/index.md) (Engels). De synthese staat in `reports/` en is niet gepubliceerd. Een korte vervolgzoektocht op 10 november 2026 besloeg 8–10 november en studies die de eerste zoekopdrachten hadden gemist (zie de [notities bij de update](/notes/update_2026-11-10/){ hreflang="en" }, Engels).
 - **Correcties** overal waar een bewering verder ging dan de bron (opgesomd in het wijzigingslogboek, §11).
 - **Een bewijsgraad** voor elke studie:
 
@@ -615,7 +615,7 @@ Samen genomen bouwen P1–P6 en P11 een vaardigheid op, besteden P7 en P13 die u
     - **Robotchirurgie.** Artsen in opleiding kregen veel minder praktijk dan bij open chirurgie. Wie toch vaardig werd, deed dat via "shadow learning" buiten de goedgekeurde routes. Dat leidde tot hyperspecialisatie en minder experts (Beane, 2019; een etnografie van twee jaar op vijf locaties plus interviews in 13 academische ziekenhuizen; bewijsgraad C). Beane (2024) trekt dit breder naar slimme technologie op het werk: vaardigheid groeit door uitdaging, complexiteit en contact met experts, en technologie die wordt ingezet om experts productiever te maken, tast alle drie aan.
     - **Geneeskunde.** Ervaren endoscopisten vonden zonder AI minder adenomen nadat ze routinematig met AI hadden gewerkt (Budzyń et al., 2025; §2.10).
 
-**Ontwikkelaars beschrijven hetzelfde patroon (bewijsgraad D).** Sinds 2024 beschrijven engineers, managers en bestuurders het in talks, interviews, nieuwsartikelen en blogs. De citaten en links staan in de [notities](/en/notes/eternal_junior/#3-practitioner-sources-talks-interviews-news-and-blogs-grade-d){ hreflang="en" } (Engels).
+**Ontwikkelaars beschrijven hetzelfde patroon (bewijsgraad D).** Sinds 2024 beschrijven engineers, managers en bestuurders het in talks, interviews, nieuwsartikelen en blogs. De citaten en links staan in de [notities](/notes/eternal_junior/#3-practitioner-sources-talks-interviews-news-and-blogs-grade-d){ hreflang="en" } (Engels).
 
 - **Juniors die niet groeien.** "The output looked senior. The understanding was still junior" (Scalzo, LeadDev 2026). AI heeft de leerervaringen van elke trede van de loopbaanladder weggehaald: "The result is juniors who ship like mids but can't debug like them" (Allan, QCon London 2026). Juniors die de "hard way" overslaan, "may plateau early" (Osmani, 2025). In een enquête van The Pragmatic Engineer (2026) krijgen juniors minder taken waaraan ze kunnen groeien.
 - **De pijplijn.** Het kost "seven-plus years" om een bekwame engineer te vormen, en geen juniors opleiden is "cannibalizing our own future" (Majors, 2024). De CEO van AWS noemde juniors vervangen door AI "the dumbest thing I've ever heard" (Garman, 2025). Twee leidinggevenden van Microsoft beschrijven een "AI drag" voor beginnende developers en stellen een preceptorprogramma met senior mentoren voor (Russinovich & Hanselman, CACM 2026).
@@ -647,7 +647,7 @@ De luchtvaart maakte dezelfde afweging. Verkeersvliegers houden het grootste dee
 - **De organisatie.** Of een junior tijd krijgt om met de hand te oefenen, hangt af van het team (Feng, Yun & Wang, 2026; Yu & Moon, 2026). De harnas is een zelfbindingsmechanisme dat de junior zelf kiest (P10). Legt een werkgever hem op, dan geldt dat argument niet meer, en dan vragen de leerdata om andere privacyregels.
 - **De kaart.** Er is een voorbeeldkaart voor juniors op het werk in C#/.NET (`junior-dotnet`). Daarin staat code buiten de vaardigheden van de kaart op L4: die mag de AI schrijven, en alleen de vaardigheden die je leert, zijn beschermd. Een junior moet de paden aanpassen aan de eigen codebase, de guard beschermt alleen vaardigheden met paden, en taken automatisch vastleggen vanuit tests werkt alleen met `dotnet test`.
 
-**Hoe sterk is dit?** Elk onderdeel van de afweging volgt een principe met empirische steun (§2.11). De combinatie, en het gebruik op het werk, zijn niet getest. Een narratief literatuuroverzicht kan niet laten zien dat dit de beste afweging is; alleen een experiment kan dat. §6.1 stelt er een voor. De bronnen, met een link bij elke bewering, staan in de [notities over het eeuwige-juniorprobleem](/en/notes/eternal_junior/){ hreflang="en" } (Engels).
+**Hoe sterk is dit?** Elk onderdeel van de afweging volgt een principe met empirische steun (§2.11). De combinatie, en het gebruik op het werk, zijn niet getest. Een narratief literatuuroverzicht kan niet laten zien dat dit de beste afweging is; alleen een experiment kan dat. §6.1 stelt er een voor. De bronnen, met een link bij elke bewering, staan in de [notities over het eeuwige-juniorprobleem](/notes/eternal_junior/){ hreflang="en" } (Engels).
 
 ### 2.13 Veilige code als eerste niche voor juniors
 
@@ -694,7 +694,7 @@ Hoek B past slecht bij deze fase. SOC-analisten controleren alarmen met de hand 
 - een regel dat voorbeelden op trede 4 en 5 nooit een onveilig patroon bevatten, in elke kaart, ook `ood`, omdat Claude die voorbeelden zelf maakt;
 - securitybevindingen uit de dashboardexport filteren, zodat er geen kwetsbaarheden van een werkgever online komen.
 
-**Hoe sterk is dit?** Het bewijs dat AI-code vaak onveilig is, is breed, maar komt vooral uit benchmarks, en de cijfers per taal komen van een leverancier. Dat juniors extra kwetsbaar zijn, is niet aangetoond, en geen trainingsmethode is gerandomiseerd getest met juniors op het werk. Of de harnas juniors veiliger laat programmeren, is een hypothese voor het experiment van §6.1. Daar ligt ook een kans: geen studie meet met een agentische tool tegelijk of code veilig is en of de maker dat terecht denkt. De bronnen staan in de [notities over veilige code voor juniors](/en/notes/secure_coding_juniors/){ hreflang="en" } (Engels).
+**Hoe sterk is dit?** Het bewijs dat AI-code vaak onveilig is, is breed, maar komt vooral uit benchmarks, en de cijfers per taal komen van een leverancier. Dat juniors extra kwetsbaar zijn, is niet aangetoond, en geen trainingsmethode is gerandomiseerd getest met juniors op het werk. Of de harnas juniors veiliger laat programmeren, is een hypothese voor het experiment van §6.1. Daar ligt ook een kans: geen studie meet met een agentische tool tegelijk of code veilig is en of de maker dat terecht denkt. De bronnen staan in de [notities over veilige code voor juniors](/notes/secure_coding_juniors/){ hreflang="en" } (Engels).
 
 ---
 
@@ -1600,7 +1600,7 @@ Geschreven door Piet Hanegraaf met Claude (Anthropic); zie de [AI-verklaring](ai
   title        = {Learning to Code (and {OOD}) with {AI}: Literature Review, Risk Assessment and a Learning-Preserving {Claude Code} Setup},
   year         = {2026},
   month        = nov,
-  howpublished = {\url{https://piethanegraaf.github.io/en/research/}},
+  howpublished = {\url{https://piethanegraaf.github.io/research/}},
   note         = {Version of 11 November 2026. Written with Claude (Anthropic).}
 }
 ```
@@ -1870,7 +1870,7 @@ Geschreven door Piet Hanegraaf met Claude (Anthropic); zie de [AI-verklaring](ai
 
 **Toegevoegd bij de literatuurupdate van 10 november 2026**
 
-*Bronlinks per cijfer staan in de [notities bij de update](/en/notes/update_2026-11-10/){ hreflang="en" } (Engels). Preprints, working papers en het proefschrift zijn niet peer-reviewed.*
+*Bronlinks per cijfer staan in de [notities bij de update](/notes/update_2026-11-10/){ hreflang="en" } (Engels). Preprints, working papers en het proefschrift zijn niet peer-reviewed.*
 
 - Albadarin, Y. (2026). *Capturing the impact of generative AI on higher-order thinking, creativity, and cognitive dynamics during debugging* [doctoral dissertation, University of Eastern Finland; figures from the university Q&A of 10 November 2026, dissertation not read]. https://phys.org/news/2026-11-qa-exploring-generative-ai-impact.html
 - Bergh, C., Tag, B., Vassar, A., & Renzella, J. (2026). *Your programming students' cognition with ChatGPT: Higher performance, lower retention, and reduced ownership*. arXiv:2609.21194 [preprint]. https://arxiv.org/abs/2609.21194
@@ -1882,7 +1882,7 @@ Geschreven door Piet Hanegraaf met Claude (Anthropic); zie de [AI-verklaring](ai
 
 **Toegevoegd op 11 november 2026: junior developers op hun werk**
 
-*Bronlinks per bewering, en de praktijkbronnen (talks, interviews, nieuwsartikelen en blogs), staan in de [notities over het eeuwige-juniorprobleem](/en/notes/eternal_junior/){ hreflang="en" } (Engels).*
+*Bronlinks per bewering, en de praktijkbronnen (talks, interviews, nieuwsartikelen en blogs), staan in de [notities over het eeuwige-juniorprobleem](/notes/eternal_junior/){ hreflang="en" } (Engels).*
 
 - Beane, M. (2019). Shadow learning: Building robotic surgical skill when approved means fail. *Administrative Science Quarterly, 64*(1), 87–123. https://doi.org/10.1177/0001839217751692
 - Beane, M. (2024). *The skill code: How to save human ability in an age of intelligent machines*. Harper Business.
@@ -2694,7 +2694,7 @@ De pilotstudent vroeg of cybersecurity een goede eerste niche is, en welke inval
 
 - **§2.13 (nieuw):** AI-code en security, vertrouwen dat niet klopt, wat juniors missen, wat wetten en normen van werkgevers vragen, de twee invalshoeken naast elkaar, en het plan als hypothese: hoek A, als verdieping van `junior-dotnet`.
 - **§8:** 30 nieuwe bronnen. Ze zijn eerst gecontroleerd; de notities staan in [de citatiecheck](https://github.com/piethanegraaf/piethanegraaf.github.io/blob/main/research/citation-checks/citation_check_learning_science.md), sectie H. De check corrigeerde onder meer de cijfers van SusVibes (57% correct en 11,8% veilig in de ICML-versie, niet 61% en 10,5%), het Staatsblad van de Cyberbeveiligingswet (2026, 187), de bron van een UWV-cijfer (niet meer gebruikt), en dat het effect bij Braz et al. een odds ratio is.
-- **Notities:** [veilige code voor juniors](/en/notes/secure_coding_juniors/){ hreflang="en" } (Engels).
+- **Notities:** [veilige code voor juniors](/notes/secure_coding_juniors/){ hreflang="en" } (Engels).
 - **Niet veranderd:** de harnas zelf. De securitykaart, de analyser en de regel voor voorbeelden zijn nog niet gebouwd.
 
 ### 13 november 2026: beoordeeld werk volgens de OER
@@ -2766,7 +2766,7 @@ De pilotstudent besloot deze wijzigingen na een volgende sessie, en elk besluit 
 - **Een voorbeeldkaart voor juniors op het werk** (`junior-dotnet`, C#/.NET), waarin code buiten de vaardigheden van de kaart op L4 staat (§2.12, "Wat de harnas niet oplost").
 - **§6.1, nieuw:** een uitnodiging voor een gerandomiseerd experiment, met het volledige voorstel op de pagina [Voor onderzoekers](researchers.md).
 - **§7:** twee nieuwe beperkingen: niet uitgeprobeerd op het werk, en praktijkbronnen tonen zorg, geen bewijs.
-- **§8:** nieuwe literatuur, met de bronlinks in de [notities over het eeuwige-juniorprobleem](/en/notes/eternal_junior/){ hreflang="en" } (Engels).
+- **§8:** nieuwe literatuur, met de bronlinks in de [notities over het eeuwige-juniorprobleem](/notes/eternal_junior/){ hreflang="en" } (Engels).
 - **Hoe sterk de bewering is.** De harnas wordt gepresenteerd als opgebouwd uit principes met empirische steun, met een combinatie die niet is getest. Hij wordt niet gepresenteerd als de beste of de best gevalideerde aanpak: een narratief literatuuroverzicht kan dat niet laten zien.
 - **Niet veranderd:** het ontwerp (§5) en de conclusies van §2.1–2.11.
 - **Hoe:** gerichte zoekopdrachten op het web door Claude in één sessie. Elke wetenschappelijke bron is nagelopen in de primaire tekst of op de pagina van de uitgever. De praktijkbronnen zijn nagelopen op hun eigen pagina; de notities zeggen waar dat niet lukte.
@@ -2783,7 +2783,7 @@ De student in de pilot besloot tot deze wijzigingen na een latere sessie, en elk
 
 ### 10 november 2026 (later): literatuurupdate, 8–10 november
 
-Een korte zoektocht naar studies die na de notities van 7 november verschenen, en naar studies die die zoekopdrachten hadden gemist. De notities, met een link bij elk cijfer, staan in de [notities bij de update](/en/notes/update_2026-11-10/){ hreflang="en" } (Engels).
+Een korte zoektocht naar studies die na de notities van 7 november verschenen, en naar studies die die zoekopdrachten hadden gemist. De notities, met een link bij elk cijfer, staan in de [notities bij de update](/notes/update_2026-11-10/){ hreflang="en" } (Engels).
 
 - **Nieuw sinds 8 november:**
     - Albadarin (2026), proefschrift: in een quasi-experiment onthield de groep zonder AI na zeven weken meer (§1, §2.8, §3 R1, §7);

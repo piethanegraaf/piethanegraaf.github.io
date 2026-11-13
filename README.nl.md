@@ -2,13 +2,13 @@
 
 *English: [README.md](README.md)*
 
-**Leerharnas voor Claude Code: hooks voorkomen dat de AI je oefencode schrijft, met niveaus per vaardigheid, een voortgangsdashboard en een literatuuronderzoek.** Documentatie: https://piethanegraaf.github.io/
+**Leerharnas voor Claude Code: hooks voorkomen dat de AI je oefencode schrijft, met niveaus per vaardigheid, een voortgangsdashboard en een literatuuronderzoek.** Documentatie: https://piethanegraaf.github.io/nl/
 
 Een leerharnas voor [Claude Code](https://docs.claude.com/en/docs/claude-code/overview) die zorgt dat je **zelf** leert programmeren, ook als er een AI meekijkt. Hij is er voor studenten, en voor junior developers op hun werk die niet junior willen blijven omdat de AI al het werk doet.
 
-**Het idee:** bouw een vaardigheid eerst zelf op (L0–L3, hints in plaats van oplossingen), besteed die daarna uit aan de AI (L4), en onderhoud die met korte herhalingen in je eigen werk. Elk onderdeel volgt een principe met empirische steun; of de combinatie werkt, is nog niet getest. Onderzoekers zijn uitgenodigd om dat te toetsen in een gerandomiseerd experiment: zie [Voor onderzoekers](https://piethanegraaf.github.io/researchers/).
+**Het idee:** bouw een vaardigheid eerst zelf op (L0–L3, hints in plaats van oplossingen), besteed die daarna uit aan de AI (L4), en onderhoud die met korte herhalingen in je eigen werk. Elk onderdeel volgt een principe met empirische steun; of de combinatie werkt, is nog niet getest. Onderzoekers zijn uitgenodigd om dat te toetsen in een gerandomiseerd experiment: zie [Voor onderzoekers](https://piethanegraaf.github.io/nl/researchers/).
 
-**Site:** https://piethanegraaf.github.io/ · **Dashboard:** https://piethanegraaf.github.io/dashboard/ · **C# OOP-cheat sheet:** https://piethanegraaf.github.io/cheatsheet/
+**Site:** https://piethanegraaf.github.io/nl/ · **Dashboard:** https://piethanegraaf.github.io/dashboard/?lang=nl · **C# OOP-cheat sheet:** https://piethanegraaf.github.io/nl/cheatsheet/
 
 ## Wat het doet
 
@@ -33,7 +33,7 @@ node harness/install.mjs ../mijn-oefenmap --lang nl          # laat het plan zie
 node harness/install.mjs ../mijn-oefenmap --lang nl --yes    # installeert
 ```
 
-Nodig: Claude Code, Node.js 18+ (22 of 24 aangeraden), en de .NET SDK voor de testrunner. Zie de [installatie](https://piethanegraaf.github.io/install/).
+Nodig: Claude Code, Node.js 18+ (22 of 24 aangeraden), en de .NET SDK voor de testrunner. Zie de [installatie](https://piethanegraaf.github.io/nl/install/).
 
 ## De repository
 
@@ -52,7 +52,7 @@ De hooks draaien op je eigen computer, zonder netwerkverkeer, `eval` of shell. J
 
 ## AI-verklaring
 
-De harnas, het dashboard, de documentatie en het onderzoek zijn gemaakt met hulp van Claude (Anthropic). De leerdata en de reflecties in het dashboard zijn van de student zelf. Zie de [AI-verklaring](https://piethanegraaf.github.io/ai-statement/).
+De harnas, het dashboard, de documentatie en het onderzoek zijn gemaakt met hulp van Claude (Anthropic). De leerdata en de reflecties in het dashboard zijn van de student zelf. Zie de [AI-verklaring](https://piethanegraaf.github.io/nl/ai-statement/).
 
 ## Licentie
 

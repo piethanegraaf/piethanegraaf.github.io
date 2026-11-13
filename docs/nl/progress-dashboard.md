@@ -10,7 +10,7 @@ description: "Wat het voortgangsdashboard per vaardigheid laat zien, van niveaus
 
 *Het dashboard met verzonnen demodata.*
 
-Het [dashboard](/dashboard/) laat de voortgang per vaardigheid en microvaardigheid zien:
+Het [dashboard](/dashboard/?lang=nl) laat de voortgang per vaardigheid en microvaardigheid zien:
 
 - twee tegels: **gelukt** (hooguit trede 2) en **zelfstandig** (trede 0), geteld zoals de harnas ze telt;
 - de **leerfasen**: per vaardigheid één band over de dagen, in de kleur van het niveau, met "start" gestippeld zolang de plaatsing openstond. Microvaardigheden staan dunner onder hun ouder. Je taken zijn stippen boven de band, in de kleur van de trede. Elke wijziging heeft een markering (▲ een fase hoger, ▼ extra steun, ● een start of een nieuwe microvaardigheid); wijs hem aan om te zien hoe hij besloten is: een voorstel dat jij bevestigde, een plaatsing, met de hand, een teruggedraaide verlaging, of de analist. Eén zin bovenaan vergelijkt je alleen met jezelf, nooit met anderen;
@@ -27,7 +27,7 @@ Het [dashboard](/dashboard/) laat de voortgang per vaardigheid en microvaardighe
 - **doorstroom- en terugvalsignalen**, **regressies** en **overrides**;
 - een **dagboektijdlijn** met je reflecties en de **kalibratie**: je zelfvertrouwen vooraf en achteraf.
 
-Elke grafiek heeft een tabelweergave. Je kunt wisselen tussen Nederlands en Engels, en tussen de echte data en de [demo met verzonnen data](/dashboard/?data=demo).
+Elke grafiek heeft een tabelweergave. Je kunt wisselen tussen Nederlands en Engels, en tussen de echte data en de [demo met verzonnen data](/dashboard/?lang=nl&data=demo).
 
 ## Je eigen data publiceren
 

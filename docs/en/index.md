@@ -76,7 +76,7 @@ Junior developers face the same trap: the agent gets the work done, but the skil
 
     The course's reference: classes, inheritance, UML, patterns.
 
-    [Go to the cheat sheet](/en/cheatsheet/)
+    [Go to the cheat sheet](/cheatsheet/)
 
 </div>
 

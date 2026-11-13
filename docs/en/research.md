@@ -1600,7 +1600,7 @@ Written by Piet Hanegraaf with Claude (Anthropic); see the [AI statement](ai-sta
   title        = {Learning to Code (and {OOD}) with {AI}: Literature Review, Risk Assessment and a Learning-Preserving {Claude Code} Setup},
   year         = {2026},
   month        = nov,
-  howpublished = {\url{https://piethanegraaf.github.io/en/research/}},
+  howpublished = {\url{https://piethanegraaf.github.io/research/}},
   note         = {Version of 11 November 2026. Written with Claude (Anthropic).}
 }
 ```

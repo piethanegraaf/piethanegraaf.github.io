@@ -3,13 +3,13 @@
   "entries": [
     { "rule": "privacy.*", "path": "harness/test/**", "reason": "Nepdata in tests (verzonnen namen, paden, e-mailadressen en sessie-id): de tests controleren juist dat zulke gegevens worden weggefilterd." },
 
-    { "rule": "web.inline-script", "path": "site-src/cheatsheet/index.html", "reason": "Besluit 10-11-2026: statische scripts van de cheat sheet zelf (themaknop, ingebouwde highlight.js 11.11.1 en de runner die de codeblokken kleurt). Geen invoer van gebruikers. De gebouwde site staat ze toe via sha256-hashes in de CSP (site-csp.mjs)." },
-    { "rule": "web.html-sink", "path": "site-src/cheatsheet/index.html", "reason": "Besluit 10-11-2026: innerHTML krijgt alleen de uitvoer van hljs.highlight(), die de broncode escapet. Er komt geen vrije tekst van buiten in." },
-    { "rule": "web.csp", "path": "site-src/cheatsheet/index.html", "reason": "Besluit 10-11-2026: de bron heeft geen CSP; de gebouwde pagina krijgt er een met hashes van de inline scripts (site-csp.mjs), en de site-check eist die." },
-    { "rule": "privacy.email", "path": "site-src/cheatsheet/index.html", "match": "@voorbeeld.nl", "reason": "Besluit 10-11-2026: verzonnen adres in de C#-voorbeelden over validatie." },
-    { "rule": "web.inline-script", "path": "site-src/en/cheatsheet/index.html", "reason": "Zelfde besluit als voor site-src/cheatsheet/index.html (10-11-2026): de Engelse vertaling heeft dezelfde scripts." },
-    { "rule": "web.html-sink", "path": "site-src/en/cheatsheet/index.html", "reason": "Zelfde besluit als voor site-src/cheatsheet/index.html (10-11-2026): innerHTML krijgt alleen de uitvoer van hljs.highlight()." },
-    { "rule": "web.csp", "path": "site-src/en/cheatsheet/index.html", "reason": "Zelfde besluit als voor site-src/cheatsheet/index.html (10-11-2026): de gebouwde pagina krijgt een CSP met hashes (site-csp.mjs)." },
+    { "rule": "web.inline-script", "path": "site-src/nl/cheatsheet/index.html", "reason": "Besluit 10-11-2026: statische scripts van de cheat sheet zelf (themaknop, ingebouwde highlight.js 11.11.1 en de runner die de codeblokken kleurt). Geen invoer van gebruikers. De gebouwde site staat ze toe via sha256-hashes in de CSP (site-csp.mjs)." },
+    { "rule": "web.html-sink", "path": "site-src/nl/cheatsheet/index.html", "reason": "Besluit 10-11-2026: innerHTML krijgt alleen de uitvoer van hljs.highlight(), die de broncode escapet. Er komt geen vrije tekst van buiten in." },
+    { "rule": "web.csp", "path": "site-src/nl/cheatsheet/index.html", "reason": "Besluit 10-11-2026: de bron heeft geen CSP; de gebouwde pagina krijgt er een met hashes van de inline scripts (site-csp.mjs), en de site-check eist die." },
+    { "rule": "privacy.email", "path": "site-src/nl/cheatsheet/index.html", "match": "@voorbeeld.nl", "reason": "Besluit 10-11-2026: verzonnen adres in de C#-voorbeelden over validatie." },
+    { "rule": "web.inline-script", "path": "site-src/cheatsheet/index.html", "reason": "Zelfde besluit als voor de Nederlandse cheat sheet, site-src/nl/cheatsheet/index.html (10-11-2026): de Engelse vertaling heeft dezelfde scripts." },
+    { "rule": "web.html-sink", "path": "site-src/cheatsheet/index.html", "reason": "Zelfde besluit als voor de Nederlandse cheat sheet, site-src/nl/cheatsheet/index.html (10-11-2026): innerHTML krijgt alleen de uitvoer van hljs.highlight()." },
+    { "rule": "web.csp", "path": "site-src/cheatsheet/index.html", "reason": "Zelfde besluit als voor de Nederlandse cheat sheet, site-src/nl/cheatsheet/index.html (10-11-2026): de gebouwde pagina krijgt een CSP met hashes (site-csp.mjs)." },
     { "rule": "privacy.email", "path": "index.html", "match": "@voorbeeld.nl", "reason": "Besluit 10-11-2026: hetzelfde verzonnen adres, in oudere commits waarin de cheat sheet nog in de root stond." },
     { "rule": "privacy.email", "path": "README*.md", "match": "hanegraafpiet@gmail", "reason": "Besluit van Piet, 10-11-2026: het eigen adres van Piet staat bewust in de README's als contact voor een commerciële licentie (dual licensing, AGPL-3.0-only). Alleen in de README's, nergens anders." },
 
