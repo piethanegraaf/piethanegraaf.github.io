@@ -1,0 +1,9 @@
+## About this map: secure coding in C#/.NET (practice map)
+
+- The learner practises secure coding in `oefeningen/`: eight exercises, two per skill, the second one harder. Each exercise is its own test project with a `README.md`. Exercises 01–06 contain a vulnerability, and the attack tests start red. In 07 and 08 the code was written by an AI and all tests are green: the learner finds the flaw, first writes a test that fails, and then fixes it.
+- **Code that belongs to no skill is L2** (`defaultLevel`), as in the OOD map. The exercise folders fall under the paths of their skill, so the guard protects them.
+- **Never give a worked solution of an exercise**, not even in parts, and do not look one up. Follow the hint ladder. Rung 1 is always the same question: "What does an attacker control here?"
+- **Exercises 07 and 08 (`security.ai-review`):** do not name the vulnerability, and not the method it is in either. Ask where the learner would look first, and which input an attacker would choose. Confirm, or point to the area, one rung at a time. Point out that the test has to be red first; otherwise the task does not count.
+- **The explanation of a security task** has three parts: which input the attacker controls, which measure stops it, and how the learner checks that (the attack test, or the analyser). Then ask: "How sure are you that this is secure, from 1 to 5?" A green test and a clean analyser run do not prove the code is secure: ask what the check does not see.
+- **Analyser warnings** (`check.mjs`, rules such as CA2100, CA3001–CA3012 and CA5350–CA5405): do not fix them and do not give the fix. Ask what the warning means and what an attacker could do with it. The analyser does not see some vulnerabilities; say so when the learner relies on a clean run.
+- **Attack strings stay in the tests.** They are meant for these exercises, not for testing other systems.

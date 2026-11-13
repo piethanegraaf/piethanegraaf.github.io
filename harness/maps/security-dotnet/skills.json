@@ -1,0 +1,78 @@
+{
+  "_info": {
+    "nl": "Oefenkaart voor veilig programmeren in C#/.NET. install.mjs kopieert dit naar .learning/skills.json en zet acht oefeningen in oefeningen/: twee per vaardigheid, de tweede moeilijker. Elke oefening is een eigen testproject; de aanvalstests zijn eerst rood. Code die bij geen vaardigheid hoort, staat op L2 (defaultLevel), net als in de OOD-kaart: ook daar schrijft de AI geen code voor je. Het niveau van een vaardigheid bepaalt je eerste poging. check.mjs draait hier ook de securityregels van de .NET SDK (securityAnalyzer).",
+    "en": "Practice map for secure coding in C#/.NET. install.mjs copies it to .learning/skills.json and puts eight exercises in oefeningen/: two per skill, the second one harder. Each exercise is its own test project; the attack tests start red. Code that belongs to no skill is L2 (defaultLevel), as in the OOD map: the AI does not write code for you there either. Your first attempt sets the level of a skill. check.mjs also runs the security rules of the .NET SDK here (securityAnalyzer)."
+  },
+  "settings": {
+    "course": "Veilig programmeren in C#/.NET (oefenkaart)",
+    "language": "nl",
+    "examDate": null,
+    "defaultLevel": "L2",
+    "stuckTimerMinutes": 12,
+    "targetSuccess": 0.85,
+    "securityAnalyzer": true
+  },
+  "skills": [
+    {
+      "id": "zone.voorbeelden",
+      "kind": "zone",
+      "title": {
+        "nl": "Uitgewerkte voorbeelden (AI mag hier schrijven)",
+        "en": "Worked examples (the AI may write here)"
+      },
+      "level": "L0",
+      "paths": [
+        "voorbeelden/**"
+      ],
+      "priority": 20
+    },
+    {
+      "id": "security.sql-params",
+      "title": {
+        "nl": "Geparametriseerde queries: geen SQL injection, ook niet met FromSqlRaw of Dapper",
+        "en": "Parameterized queries: no SQL injection, also not with FromSqlRaw or Dapper"
+      },
+      "level": "L2",
+      "paths": [
+        "oefeningen/01-*/**",
+        "oefeningen/02-*/**"
+      ]
+    },
+    {
+      "id": "security.output-encoding",
+      "title": {
+        "nl": "Uitvoer coderen en invoer valideren: XSS en log injection voorkomen, invoer controleren aan de rand",
+        "en": "Output encoding and input validation: prevent XSS and log injection, check input at the boundary"
+      },
+      "level": "L2",
+      "paths": [
+        "oefeningen/03-*/**",
+        "oefeningen/04-*/**"
+      ]
+    },
+    {
+      "id": "security.secrets-config",
+      "title": {
+        "nl": "Geheimen en configuratie: geen secrets in code, user-secrets of een vault, veilige willekeur voor tokens",
+        "en": "Secrets and configuration: no secrets in code, user-secrets or a vault, secure randomness for tokens"
+      },
+      "level": "L2",
+      "paths": [
+        "oefeningen/05-*/**",
+        "oefeningen/06-*/**"
+      ]
+    },
+    {
+      "id": "security.ai-review",
+      "title": {
+        "nl": "AI-code reviewen op security: wat heeft een aanvaller in handen, en houdt de code dat tegen?",
+        "en": "Reviewing AI code for security: what does an attacker control, and does the code stop it?"
+      },
+      "level": "L2",
+      "paths": [
+        "oefeningen/07-*/**",
+        "oefeningen/08-*/**"
+      ]
+    }
+  ]
+}

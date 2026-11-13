@@ -16,6 +16,14 @@ test("file names: forbidden types and data are BLOKKEER, images are TWIJFEL, cod
   assert.ok(has(nameRules("tool.exe"), "BLOKKEER", "file.unknown"));
   // XML only as a sitemap, by name.
   for (const f of ["data/export.xml", "site-src/feed.xml", "sitemap.xml.bak", "site-src/notasitemap.xml"]) assert.ok(has(nameRules(f), "BLOKKEER", "file.unknown"), f);
+  // C# only as the exercises of a map; a solution, a database or C# anywhere else is not.
+  for (const f of ["harness/maps/security-dotnet/exercises/01-sql-search/UserSearch.cs", "harness/maps/security-dotnet/exercises/01-sql-search/SqlSearch.csproj"]) {
+    assert.deepEqual(nameRules(f), [], f);
+  }
+  for (const f of ["src/Program.cs", "harness/maps/security-dotnet/Solution.cs", "harness/maps/security-dotnet/exercises/Top.cs", "harness/maps/security-dotnet/exercises/01-x/App.sln"]) {
+    assert.ok(has(nameRules(f), "BLOKKEER", "file.unknown"), f);
+  }
+  assert.ok(has(nameRules("harness/maps/security-dotnet/exercises/01-x/users.db"), "BLOKKEER", "file.type"));
   for (const f of ["harness/hooks/lib.mjs", "docs/nl/index.md", "mkdocs.yml", "requirements.txt", "LICENSE-docs", ".gitignore", "site-src/dashboard/app.js",
     "overrides/sitemap.xml", "site-src/sitemap-tools.xml", "CITATION.cff"]) {
     assert.deepEqual(nameRules(f), [], f);
