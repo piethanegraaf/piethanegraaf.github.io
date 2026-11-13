@@ -45,6 +45,13 @@ Goal: self-regulation (plan → execution → reflection). The learner writes th
 
    Copy the answers **literally**: do not correct or add anything. If the learner does not want to reflect, write "skipped".
 
+   **Graded work** (the context of the learning harness says GRADED WORK, or there are `graded-session` events of this session): in the same message, also ask about the AI-use log. For example:
+   > 4. In the AI-use log (`log.md` in the folder from the context), fill in the last column for the rows of this session (session `<first 8 characters of the id>`): what did you do with the help, and how did you check that it was right?
+
+   Never write that column yourself: the guard blocks it, and the statement is the learner's. In the facts, say how many rows this session has in the log and what the highest rung was.
+
+   **Record in another folder** (the context names `learningDir`): read and write the record, the events and the diary in that folder, not in `.learning/` of this project.
+
 3. **Append to** `.learning/diary/YYYY-MM-DD.md` (today's date). If the file already exists, put the entry below it as a new session. Use this format:
 
    Put the marker `<!-- session: <session-id> -->` right below the heading. The session id is in the context of the learning harness. Without that marker the Stop hook does not let you close.

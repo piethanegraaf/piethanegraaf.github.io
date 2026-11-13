@@ -29,6 +29,7 @@ description: "The four Claude Code hooks of the learning harness, every skill.mj
 | `correct <task-id> void "reason"` | Void one task. |
 | `override <id\|*> <minutes> "reason"` | Temporarily allow Claude to write code (at most 240 minutes, logged). |
 | `setting <key> <value>` | `examDate`, `stuckTimerMinutes`, `idleMinutes`, `defaultLevel`, `course`, `language`, `autoDemote`, `dashboardRepo` (the absolute path of your clone of the repo with the dashboard, or `off`), and `codeExtensions` and `codeFiles` as a comma-separated list. See [Configuration](configuration.md). |
+| `setting graded add\|remove "<path>"` | Graded work: the paths (absolute, or relative to the project) where Claude writes nothing and the hint ladder goes up to rung 4. Also `setting graded maxRung 0..4`, `aiLevel 0\|1`, `logDir "<path>"` and `off`. See [Graded work](how-it-works.md#graded-work). Logged as the event `setting`. |
 | `paths <id> add|remove "<glob>"` | Which exercise folders belong to a skill, for example `paths ood.associaties add "ood-opdrachten-01/09-*/**"`. The folder decides the skill of a task and the level the guard uses. Not for a microskill: it uses the level of its parent. If another skill has the same path, it warns you. Logged as the event `paths`. |
 | `replay <transcript.jsonl> [--dry-run]` | Recovers explanations that were approved in the chat but not logged. It finds the markers `[explain-ok <tid>]` and checks your message with the same check as the Stop hook. Only what passes both keys counts, with source `replay`. |
 
@@ -131,6 +132,17 @@ And of the setup review of 12 November 2026 (positive feedback, demotions and th
 | `demotion-rejected` with `source: agent-report` | A verdict in the analyst's own report that the harness refused. The demotion stays pending. |
 | `effort-intro` | The one-time message at the session start that effort is the goal, not failure. |
 
+And of the setup of 13 November 2026 (graded work):
+
+| Event | Meaning |
+|---|---|
+| `graded-session` | This session is about graded work, with `why`: `project`, `cwd`, `prompt` or `tool`. From then on every answer goes into the AI-use log. |
+| `deny` with `graded: true` | The guard blocked a write, build or commit in graded work. |
+| `hint-hold` with `graded: true` | No new rung: the ceiling of graded work, or AI level 0. |
+| `graded-solution-refused` | The student asked for a worked solution in graded work; Claude was told to refuse. |
+| `graded-over-max` | An answer had a rung above the ceiling. The log names it, and the student was told. |
+| `graded-log-error` | The hook could not write the AI-use log (with the error). |
+
 ## Files
 
 ```text
@@ -141,6 +153,16 @@ And of the setup review of 12 November 2026 (positive feedback, demotions and th
   diary/YYYY-MM-DD.md
   state/             events.jsonl, tests.json, session-*.json, overrides.json,
                      last-export.json (moment and totals of the last dashboard export)
+```
+
+In the repo of graded work (written by the hooks only):
+
+```text
+ai-verantwoording/   (ai-use/ in English)
+  README.md          AI level, the ladder, APA reference, how the export is made (written once)
+  logboek.md         one row per answer; you fill in the last column (log.md in English)
+  sessies/<date>-<session>.md   your prompts and Claude's text, without tool output (sessions/ in English)
+.claude/leerharnas.local.json   the record of another folder (install.mjs --learning-dir); not in git
 ```
 
 ## Scripts in this repository

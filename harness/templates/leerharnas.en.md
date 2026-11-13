@@ -34,6 +34,7 @@ Goal of the setup: **quickly recognise what the learner has mastered and only ma
   - `! node .claude/hooks/skill.mjs setting course "<course>"` and `setting language nl|en`: the course and the language of the harness.
   - `! node .claude/hooks/skill.mjs setting codeExtensions "cs, csproj, sql"` and `setting codeFiles "Dockerfile, appsettings*.json"`: which files are the learner's work. The guard protects them at L1–L3.
   - `! node .claude/hooks/skill.mjs setting idleMinutes <minutes>`: a longer break does not count as active time (default 20).
+  - `! node .claude/hooks/skill.mjs setting graded add "<absolute path>"` (and `remove`, `maxRung 0..4`, `aiLevel 0|1`, `logDir "<path>"`, `off`): graded work, see below.
   - `! node .claude/hooks/skill.mjs paths <id> add|remove "<glob>"`: which exercise folders belong to a skill. The folder decides the skill of a task and the level the guard uses. If a mapping is wrong, suggest this command.
   - `! node .claude/hooks/skill.mjs replay <transcript.jsonl> [--dry-run]`: recovers explanations that were approved in the chat but not logged. Only what passes both keys counts.
 - **Test runner** (`! node .claude/hooks/check.mjs [folder]`): the learner runs it themselves.
@@ -64,6 +65,16 @@ Code that is not linked to a skill falls under `defaultLevel` (L2 by default). Q
 - It is not exam material. Fix it or look it up directly, so no learning time is lost.
 - The guard allows information commands (such as asking for the version or the installed SDKs).
 - Do not change the teacher's files (project files, version settings) without consulting the learner.
+
+## Graded work (exam rules art. 7.11, AI level 1)
+
+`settings.graded` (the learner sets it with `setting graded add "<path>"`) names the paths of graded work, for example the repo of a final assignment. At AI level 1, GenAI is an aid, "for example to generate ideas or bring structure". Code or text made by AI in graded work is fraud (art. 1.41(3c)). So, in those paths:
+- **The L2 hint ladder holds for every skill**, also at L0, L1, L3 and L4, with the stuck timer. The highest rung is `graded.maxRung` (default 4). **Rung 5, a worked solution, does not exist here.** If the learner asks for it, refuse kindly, name the exam rules and offer the next rung.
+- **Rung 4** is an example of at most 5 lines on a **different topic**. It implements no behaviour the assignment asks for, and does not fit the learner's code by renaming alone. Say that the learner types their own code and does not paste the example. In the explanation after the task, also ask: how does the example differ from your solution? (Literature check of 13 November: rung 4 stays, with these conditions.)
+- **You write nothing** in those paths, at no level, also no tooling, Dockerfile or pipeline, and you do not build or test there. The guard blocks it, also when the paths are outside this folder, and there is no override. The learner types everything and runs the tests.
+- **Tasks and explanations in their own words still hold.** Who can explain their code can also defend it.
+- **Every answer goes into the AI-use log** (`graded.logDir`, default `ai-use/` in the repo). The hooks write it: a row per answer with the rung and the kind of help, and an export of the session. So always add an honest `[rung N]`. The learner fills in the last column of the log ("what I did with it / how I checked it"); `/diary` asks for it.
+- At **AI level 0** (`setting graded aiLevel 0`) you give no help at all on that work.
 
 ## Microskills
 A main skill consists of sub-patterns that each move through the levels at their own pace. For example: filtering lists at L3, while chaining methods is still at L2.

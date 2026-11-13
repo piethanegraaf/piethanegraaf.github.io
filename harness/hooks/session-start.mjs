@@ -6,6 +6,7 @@ import {
   readStdin, loadSkills, loadOverrides, today, taskStats, levelName, DIARY_DIR, lapseTasks, readEvents,
   isMicro, pendingTasks, recentWins, levelAdvice, settingsOf, isPlacementPending, effectiveLevel, adviceCommand, openOffer, t,
   dashboardAfterDiary, hasNewSinceExport, sinceExportLine, recentUps, progressAll, progressLine, needsNextExercise, logEvent,
+  gradedOf, LEARN, LEARN_ELSEWHERE,
 } from "./lib.mjs";
 
 let input = {};
@@ -84,7 +85,17 @@ const ritual = source === "startup" || source === "clear"
   ? t("ss.ritual.start", { steps: steps.map((s, i) => `${i + 1}. ${s}`).join("\n") })
   : t("ss.ritual.resume");
 
+// Graded work (setup of 13 Nov, #49): the rules and where the AI-use log goes. Also when this session
+// itself is not about it yet: a session in the practice folder must not write there either (#54).
+const G = gradedOf(data);
+const gradedLine = G ? t(G.aiLevel === 0 ? "ss.graded.level0" : "ss.graded", { dir: G.bases.join(", "), max: G.maxRung, log: G.logDir, level: G.aiLevel }) : "";
+
+// One record for two folders (#53): the record, the state and the diary are in another folder.
+const elsewhereLine = LEARN_ELSEWHERE ? t("ss.learnElsewhere", { dir: LEARN.split("\\").join("/") }) : "";
+
 const ctx = [
+  ...(gradedLine ? [gradedLine, ""] : []),
+  ...(elsewhereLine ? [elsewhereLine, ""] : []),
   t("ss.active", { day }) +
     (settings.course ? " " + t("ss.course", { course: settings.course }) : "") +
     " " + (exam ? t("ss.exam", { exam, days: daysToExam }) : t("ss.noExam")),
@@ -108,6 +119,7 @@ const msg = t("ss.msg", { n: skills.length }) +
   (pending.length ? t("ss.msg.pending", { n: pending.length }) : "") +
   (offers.length ? t("ss.msg.offers", { list: offers.map((o) => `${o.id} ${o.from} → ${o.to}`).join(", ") }) : "") +
   (overrides.length ? t("ss.msg.overrides", { n: overrides.length }) : "") +
+  (G ? "\n" + t("ss.msg.graded", { max: G.maxRung, level: G.aiLevel }) : "") +
   [upsLine, progressText, effortLine].filter(Boolean).map((l) => "\n" + l).join("") +
   // Only after a first export, only when something is new since then, and never with dashboardRepo off.
   (hasNewSinceExport(since) ? "\n" + sinceExportLine(since) : "");

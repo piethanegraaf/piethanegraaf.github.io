@@ -10,6 +10,7 @@ import {
   settingsOf, codeExtRe, toolingRe, touch, activeMinutesSince, startTask, effectiveLevel, isPlacementPending, isReviewDue,
   afterTask, allTasks, readEvents, openOffer, promote, exerciseDirs, newWorkSignal, beginNewWork, noteExplanationWords,
   taskRung, taskLogged, addMicro, recheckDemotion, openOfFamily, familyRungOf, solvedInFamily, needsNextExercise, progressOf, progressLine, t,
+  gradedOf, gradedWhy,
 } from "./lib.mjs";
 import {
   HINT, SOLUTION, SOLVED_STRONG, SOLVED_WEAK, CODE_CONTEXT, NOT_SOLVED, END, RESUME, ATTEMPT, CHECKING,
@@ -219,6 +220,20 @@ const skill = st.activeSkill ? findSkill(data, st.activeSkill) : null;
 const level = skill ? effectiveLevel(data, skill) : settings.defaultLevel;
 const placementOpen = skill ? isPlacementPending(data, skill) : false;
 
+// Graded work (setup of 13 Nov, #49): OER art. 7.11, AI level 1. The session is about graded work when this
+// project is, the working folder is, or the prompt names a graded folder; then it stays so (the cautious
+// side). The hint ladder of L2 and the stuck timer hold for every skill, also at L0, L1, L3 and L4, up to
+// graded.maxRung (at most 4): a worked solution (rung 5) is never available there.
+const G = gradedOf(data);
+if (G && !st.graded) {
+  const why = gradedWhy(data, { cwd: input.cwd ?? null, prompt }, G);
+  if (why) { st.graded = true; logEvent({ type: "graded-session", why, session: sid }); }
+}
+const graded = Boolean(G && st.graded);
+const ladderLevel = graded ? "L2" : level;
+const cap = graded ? G.maxRung : 4;
+if (graded) ctx.push(t(G.aiLevel === 0 ? "pg.graded.level0" : "pg.graded", { max: G.maxRung, dir: G.bases.join(", "), log: G.logDir }));
+
 // Notices from the Stop hook or a "!" run (automatic demotion, placement): tell the learner.
 if (Array.isArray(st.notices) && st.notices.length) {
   ctx.push(t("pg.notices", { list: st.notices.join("\n") }));
@@ -387,14 +402,21 @@ if ((wantsHint || asksMore) && !solved && st.transfer?.skill) {
   // During the transfer task no rung unlocks: help ends the transfer task instead (§9.4).
   logEvent({ type: "hint-hold", skill: skill?.id ?? null, rung: st.rung, session: sid, transfer: true });
   ctx.push(t("pg.transferHint", { id: st.transfer.skill }));
+} else if ((wantsHint || asksMore) && !solved && graded && cap === 0) {
+  // AI level 0: no help on this work at all (the line pg.graded.level0 above says so).
+  logEvent({ type: "hint-hold", skill: skill?.id ?? null, rung: 0, session: sid, graded: true });
 } else if ((wantsHint || asksMore) && !solved) {
-  if (level === "L2") {
+  if (ladderLevel === "L2") {
     let why = null, ceilingOnly = false;
-    if (wantsSolution && st.rung >= 4) { st.rung = 5; why = t("pg.why.solutionAfter4"); }
-    else if (asksMore && st.rung < 4) { st.rung = 4; why = t("pg.why.asksMore"); ceilingOnly = true; }
-    else if (placementOpen) { const w = placementWhy(); if (w) { st.rung = Math.min(st.rung + 1, 4); why = w; } }
+    // A rung above the ceiling of graded work never unlocks (an older rung of this session counts as the ceiling).
+    // At the ceiling of graded work nothing new unlocks; outside graded work the old behaviour stays.
+    if (graded && st.rung > cap) st.rung = cap;
+    const below = !graded || st.rung < cap;
+    if (wantsSolution && st.rung >= 4 && !graded) { st.rung = 5; why = t("pg.why.solutionAfter4"); }
+    else if (asksMore && st.rung < cap) { st.rung = cap; why = t("pg.why.asksMore"); ceilingOnly = true; }
+    else if (placementOpen) { const w = placementWhy(); if (w && below) { st.rung = Math.min(st.rung + 1, cap); why = w; } }
     else if (st.rung === 0) { st.rung = 1; why = t("pg.why.first"); }
-    else if (attempt || timerUp) { st.rung = Math.min(st.rung + 1, 4); why = attempt ? attemptWhy : t("pg.why.stuck", { min: minutes, timer: T }); }
+    else if ((attempt || timerUp) && below) { st.rung = Math.min(st.rung + 1, cap); why = attempt ? attemptWhy : t("pg.why.stuck", { min: minutes, timer: T }); }
 
     if (why) {
       // A ceiling (asked for more explanation) is logged by the [trede N] Claude really gives, not by the ceiling.
@@ -408,8 +430,11 @@ if ((wantsHint || asksMore) && !solved && st.transfer?.skill) {
       logEvent({ type: "hint-unlock", skill: skill?.id ?? null, rung: st.rung, reason: why, session: sid });
       ctx.push(st.rung === 5 ? t("pg.rung5") : ceilingOnly ? t("pg.unlockedUpTo", { rung: st.rung, mark: t("pg.rungMark") })
         : t("pg.unlocked", { rung: st.rung, name: rungName(st.rung), why }));
-    } else if (st.rung === 5) {
+    } else if (st.rung === 5 && !graded) {
       ctx.push(t("pg.rung5reached"));
+    } else if (graded && st.rung >= cap) {
+      logEvent({ type: "hint-hold", skill: skill?.id ?? null, rung: st.rung, session: sid, graded: true });
+      ctx.push(t("pg.graded.cap", { rung: st.rung, name: rungName(st.rung) }));
     } else if (placementOpen) {
       logEvent({ type: "hint-hold", skill: skill?.id ?? null, rung: st.rung, session: sid, placement: true });
       ctx.push(t("pg.holdPlacement", { rung: st.rung, name: rungName(st.rung) }));
@@ -418,7 +443,10 @@ if ((wantsHint || asksMore) && !solved && st.transfer?.skill) {
       logEvent({ type: "hint-hold", skill: skill?.id ?? null, rung: st.rung, session: sid });
       ctx.push(t("pg.hold", { min: minutes, left, rung: st.rung, name: rungName(st.rung) }));
     }
-    if (wantsSolution && st.rung < 5) ctx.push(t("pg.wantsSolution", { rung: st.rung }));
+    if (wantsSolution && graded) {
+      logEvent({ type: "graded-solution-refused", skill: skill?.id ?? null, rung: st.rung, session: sid });
+      ctx.push(t("pg.graded.noSolution", { rung: st.rung, max: cap }));
+    } else if (wantsSolution && st.rung < 5) ctx.push(t("pg.wantsSolution", { rung: st.rung }));
   } else if (level === "L3") {
     ctx.push((attempt ? t("pg.L3.attempt", { why: attemptWhy }) : t("pg.L3.noAttempt")) + " " + t("pg.L3.tail", { mark: t("pg.rungMark") }));
   } else if (level === "L1") {
@@ -452,7 +480,7 @@ if (skill || wantsHint || ctx.length) {
   const head = skill
     ? t("pg.head", {
       name, level, levelName: levelName(level),
-      help: level === "L2" ? `${t("pg.head.unlocked", { rung: st.rung, rungName: rungName(st.rung) })} · ${givenText}` : givenText,
+      help: ladderLevel === "L2" ? `${t("pg.head.unlocked", { rung: st.rung, rungName: rungName(st.rung) })} · ${givenText}` : givenText,
       stats: stats.n ? t("pg.head.stats", { ok: stats.ok, n: stats.n, pct: Math.round(settings.targetSuccess * 100) }) : t("pg.head.noTasks"),
       pending: stats.pending ? t("pg.head.pending", { n: stats.pending }) : "",
     })

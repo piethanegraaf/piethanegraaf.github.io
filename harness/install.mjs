@@ -11,6 +11,10 @@
 // - --update while a practice session runs in the target (a session state active in the last idleMinutes,
 //   default 20) would change the rules under that session. In a terminal it asks first; with --yes or
 //   without a terminal it stops, unless --force is given too (setup review of 11 Nov, afternoon, #30).
+// - --learning-dir <absolute path> (setup of 13 Nov, #53): this folder uses the record of another folder, for example
+//   the repo of a graded assignment with the .learning/ of the practice folder, so a task there counts for the same
+//   skill. It goes in .claude/leerharnas.local.json, which is not in git (it holds an absolute path). No .learning/
+//   is made here, and the record there is never changed. --update keeps it.
 import fs from "node:fs";
 import path from "node:path";
 import crypto from "node:crypto";
@@ -21,6 +25,7 @@ import { t, setLanguage } from "./hooks/i18n.mjs";
 const HARNESS = path.dirname(fileURLToPath(import.meta.url));
 const VERSION = JSON.parse(fs.readFileSync(path.join(HARNESS, "package.json"), "utf8")).version;
 const MANIFEST = ".claude/leerharnas.json";
+const LOCAL = ".claude/leerharnas.local.json";
 const BACKUP_DIR = ".claude/leerharnas-backup";
 const IMPORT_LINE = "@.claude/leerharnas.md";
 const LANGS = ["nl", "en"];
@@ -40,7 +45,7 @@ const readText = (p) => { try { return fs.readFileSync(p, "utf8"); } catch { ret
 
 // ---------- 1. Arguments ----------
 function parseArgs(argv) {
-  const o = { target: null, update: false, dryRun: false, yes: false, force: false, map: null, lang: null, course: null, exam: null };
+  const o = { target: null, update: false, dryRun: false, yes: false, force: false, map: null, lang: null, course: null, exam: null, learningDir: null };
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
     const val = () => { if (i + 1 >= argv.length) fail("install.needsValue", { opt: a }); return argv[++i]; };
@@ -52,6 +57,7 @@ function parseArgs(argv) {
     else if (a === "--lang") o.lang = val();
     else if (a === "--course") o.course = val();
     else if (a === "--exam") o.exam = val();
+    else if (a === "--learning-dir") o.learningDir = val();
     else if (a === "--help" || a === "-h") { usage(); process.exit(0); }
     else if (a.startsWith("-")) fail("install.unknownOption", { opt: a });
     else if (!o.target) o.target = a;
@@ -94,8 +100,21 @@ const legacy = !manifest && fs.existsSync(inTarget(".claude/hooks/guard.mjs"));
 if (!opts.update && (manifest || legacy)) fail("install.already");
 if (opts.update && !manifest && !legacy) fail("install.notInstalled");
 
+// One record for two folders (#53): --learning-dir, or the one an earlier install wrote in .claude/leerharnas.local.json.
+let localConfig = null;
+try { localConfig = JSON.parse(readText(inTarget(LOCAL)) ?? "null"); } catch { /* an unreadable file is replaced */ }
+const learningDirRaw = opts.learningDir ?? (typeof localConfig?.learningDir === "string" ? localConfig.learningDir : null);
+const learningDir = learningDirRaw === null ? null : path.resolve(learningDirRaw.replace(/^\/([a-zA-Z])\//, "$1:/"));
+if (learningDir !== null) {
+  const absolute = path.isAbsolute(learningDirRaw) || /^\/[a-zA-Z]\//.test(learningDirRaw);
+  if (!absolute || !fs.existsSync(path.join(learningDir, "skills.json"))) fail("install.badLearningDir", { dir: learningDirRaw });
+  const r = path.relative(TARGET, learningDir);
+  if (!r.startsWith("..") && !path.isAbsolute(r)) fail("install.badLearningDir", { dir: learningDirRaw });
+}
+const recordFile = learningDir ? path.join(learningDir, "skills.json") : inTarget(".learning/skills.json");
+
 let existingSettings = null;
-try { existingSettings = JSON.parse(readText(inTarget(".learning/skills.json")) ?? "null")?.settings ?? null; } catch { /* data stays untouched */ }
+try { existingSettings = JSON.parse(readText(recordFile) ?? "null")?.settings ?? null; } catch { /* data stays untouched */ }
 
 const lang = opts.lang ?? manifest?.language ?? existingSettings?.language ?? "nl";
 const mapId = opts.map ?? manifest?.map ?? "ood";
@@ -183,7 +202,7 @@ function initialSkills() {
 
 function withGitignore(text) {
   const lines = (text ?? "").split(/\r?\n/).map((l) => l.trim());
-  const missing = [".learning/", `${BACKUP_DIR}/`].filter((l) => !lines.includes(l) && !lines.includes("/" + l));
+  const missing = [".learning/", `${BACKUP_DIR}/`, LOCAL].filter((l) => !lines.includes(l) && !lines.includes("/" + l));
   if (!missing.length) return null;
   const head = text === null ? "" : text.replace(/\s*$/, "\n\n");
   return head + t("install.gitignoreComment") + "\n" + missing.join("\n") + "\n";
@@ -215,11 +234,23 @@ for (const rel of Object.keys(manifest?.files ?? {})) {
   else if (cur === next) add(rel, "same");
   else add(rel, "merge", next, "mergeSettings");
 }
-for (const [rel, make] of [[".learning/skills.json", initialSkills], [".learning/keywords.json", () => fs.readFileSync(path.join(HARNESS, "maps", mapId, "keywords.json"), "utf8")]]) {
-  if (readText(inTarget(rel)) === null) add(rel, "new", make(), "map");
-  else add(rel, "keep", null, "data");
+if (learningDir) {
+  // The record of another folder: nothing is made here, and the record there is never changed.
+  noteVars.dir = learningDir.split(path.sep).join("/");
+  if (opts.exam !== null || opts.course !== null) notes.push(t("install.learningDirSettings"));
+  add(".learning/", "keep", null, "learningDir");
+  const next = JSON.stringify({ learningDir }, null, 2) + "\n";
+  const cur = readText(inTarget(LOCAL));
+  if (cur === null) add(LOCAL, "new", next);
+  else if (cur === next) add(LOCAL, "same");
+  else add(LOCAL, "replace", next, "backup");
+} else {
+  for (const [rel, make] of [[".learning/skills.json", initialSkills], [".learning/keywords.json", () => fs.readFileSync(path.join(HARNESS, "maps", mapId, "keywords.json"), "utf8")]]) {
+    if (readText(inTarget(rel)) === null) add(rel, "new", make(), "map");
+    else add(rel, "keep", null, "data");
+  }
+  if (!fs.existsSync(inTarget(".learning/diary"))) add(".learning/diary/", "mkdir", null);
 }
-if (!fs.existsSync(inTarget(".learning/diary"))) add(".learning/diary/", "mkdir", null);
 {
   const rel = "CLAUDE.md";
   const cur = readText(inTarget(rel));
@@ -243,7 +274,7 @@ function activeSession(now = Date.now()) {
   const idleSetting = Number(existingSettings?.idleMinutes);
   const idle = idleSetting > 0 ? idleSetting : 20;
   let dir;
-  try { dir = inTarget(".learning/state"); } catch { return null; }
+  try { dir = learningDir ? path.join(learningDir, "state") : inTarget(".learning/state"); } catch { return null; }
   let files = [];
   try { files = fs.readdirSync(dir).filter((f) => /^session-.*\.json$/.test(f)); } catch { return null; }
   let last = 0;

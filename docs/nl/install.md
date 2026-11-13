@@ -73,6 +73,18 @@ Op het werk installeer je de harnas in een repository die je met je team deelt. 
 
 Een installatie die alleen naar lokale bestanden schrijft, bestaat nog niet.
 
+## In de repo van een beoordeelde opdracht
+
+Voor beoordeeld werk, zoals de eindopdracht van een vak, kun je de harnas in de repo van die opdracht installeren en hem het register van je oefenmap laten gebruiken. Dan telt een taak in de opdracht mee voor dezelfde vaardigheid:
+
+```bash
+node harness/install.mjs ../<opdracht> --map ood --lang nl --learning-dir "C:/Users/<jij>/<oefenmap>/.learning"
+```
+
+- Er komt geen `.learning/` in de repo. Het pad van het register gaat in `.claude/leerharnas.local.json`, dat de installer aan `.gitignore` toevoegt. `--update` houdt het.
+- Noem de repo daarna als beoordeeld werk, in een sessie of met `!`: `node .claude/hooks/skill.mjs setting graded add "C:/Users/<jij>/source/repos/<opdracht>"`. Gebruik een absoluut pad: de instelling staat in het gedeelde register, dus ze beschermt de repo ook vanuit een sessie in je oefenmap. Zie [Beoordeeld werk](how-it-works.md#beoordeeld-werk).
+- **Wat in git komt:** `.claude/` (je docent ziet welke regels de AI volgde) en `ai-verantwoording/` (het AI-logboek). `.learning/` en `.claude/leerharnas.local.json` blijven erbuiten. Draai de securitycheck voordat je het logboek pusht: het staat in een repo die je docent leest.
+
 ## Voordat je gaat oefenen
 
 Zet de AI-hulp buiten Claude Code uit. Anders vult je IDE de code aan die je zelf hoort te schrijven, en daar ziet de harnas niets van.

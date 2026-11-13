@@ -19,6 +19,7 @@ The settings live in `.learning/skills.json`, under `settings`. Change them with
 | `targetSuccess` | `0.85` | The target for moving from L2 to L3. |
 | `autoDemote` | `false` | Automatic demotion on evidence, with the demotion analyst for a main skill. Only turn it on once the logging has been reliable for a few sessions: `setting autoDemote true`. |
 | `dashboardRepo` | none | The absolute path of your clone of the repo with the dashboard, so that `/diary` can update the dashboard from your practice folder. `off` when you do not use the dashboard: then `/diary` does not ask about it. See [After the diary](progress-dashboard.md#after-the-diary). |
+| `graded` | none | Graded work: `{ paths, aiLevel, maxRung, logDir }`. Set it with `setting graded add "<path>"`; see [Graded work](how-it-works.md#graded-work). `aiLevel` 1 (default) gives the hint ladder up to `maxRung` (default and at most 4); `aiLevel` 0 gives no help. `logDir` defaults to `ai-verantwoording/` in the first path. |
 | `codeExtensions` | `cs, csproj, sln, slnx` | Which files are the learner's code. The OOD map adds `razor, cshtml, sql, yml, yaml`, for a project with a UI, a database and a pipeline. |
 | `codeFiles` | (empty) | Files without a telling extension that are also the learner's work, by name. `*` stands for anything but `/`. The OOD map sets `Dockerfile, appsettings*.json`. |
 | `buildCommands` | `dotnet build/test/run …`, `msbuild` | Regular expressions for commands that build or test. `check.mjs` always counts. |

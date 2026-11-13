@@ -73,6 +73,18 @@ At work you install the harness in a repository that your team shares. The harne
 
 An install that only writes to local files does not exist yet.
 
+## In the repo of a graded assignment
+
+For graded work, such as the final assignment of a course, you can install the harness in the repo of that assignment and let it use the record of your practice folder. Then a task in the assignment counts for the same skill:
+
+```bash
+node harness/install.mjs ../<assignment> --map ood --lang en --learning-dir "C:/Users/<you>/<practice folder>/.learning"
+```
+
+- No `.learning/` is made in the repo. The path of the record goes into `.claude/leerharnas.local.json`, which the installer adds to `.gitignore`. `--update` keeps it.
+- Then name the repo as graded work, in a session or with `!`: `node .claude/hooks/skill.mjs setting graded add "C:/Users/<you>/source/repos/<assignment>"`. Use an absolute path: the setting is in the shared record, so it also protects the repo from a session in your practice folder. See [Graded work](how-it-works.md#graded-work).
+- **What goes into git:** `.claude/` (your teacher sees the rules the AI followed) and `ai-verantwoording/` (the AI-use log). `.learning/` and `.claude/leerharnas.local.json` stay out. Run the security check before you push the log: it is in a repo your teacher reads.
+
 ## Before you practise
 
 Turn off AI help outside Claude Code. Otherwise your IDE completes the code you are supposed to write yourself, and the harness sees none of it.

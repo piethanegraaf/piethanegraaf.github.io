@@ -27,9 +27,11 @@ import {
   isLearnerEntry, learnerEntryText, entryText, readTranscript, loadSkills, findSkill, familyIds, autoDemote,
   applyVerdict, findVerdict, lapseTasks, promotionAdvice, offerIsNew, offerText, newWorkSignal, beginNewWork, explanationText,
   noteConceptHelp, checkMicroProposal, microOfferText, readEvents, isOtherFamily, familyOf, placeAfterExplanation, recheckDemotion,
-  verdictFromAgent, t,
+  verdictFromAgent, t, gradedOf, isGradedPath, isGradedDir, mentionsGraded,
 } from "./lib.mjs";
+import path from "node:path";
 import { RUNG_MARK, REVIEW_RUNG_MARK, EXPLAIN_MARK, TRANSFER_MARK, MICRO_MARK, parseMicroMark } from "./patterns.mjs";
+import { logAnswer, openRows } from "./graded.mjs";
 
 let input;
 try { input = JSON.parse(await readStdin()); } catch { process.exit(0); }
@@ -301,6 +303,40 @@ if (st.demotionPending && data) {
         if (!input.stop_hook_active) block(t("rg.verdictBad", { error: r.error }));
       }
     }
+  }
+}
+
+// ---------- 1e. Graded work: the AI-use log (setup of 13 Nov, #50) ----------
+// A session is about graded work when prompt-gate saw that (this project, the working folder, or a prompt
+// that names the folder), or when Claude used a tool on a graded path in this turn (it read a file there).
+// Then every answer gets a row in the log, and the export of the session is written again.
+const G = data ? gradedOf(data) : null;
+if (G && !st.graded) {
+  const turn = entries.slice(lastPromptIdx + 1);
+  const touched = turn.some((e) => e.type === "assistant" && Array.isArray(e.message?.content) && e.message.content.some((p) => {
+    if (p.type !== "tool_use") return false;
+    const x = p.input ?? {};
+    return [x.file_path, x.notebook_path, x.path].some((v) => typeof v === "string" && isGradedPath(data, v, input.cwd ?? undefined, G))
+      || (typeof x.command === "string" && mentionsGraded(G, x.command));
+  }));
+  const why = touched ? "tool" : input.cwd && isGradedDir(data, input.cwd, undefined, G) ? "cwd" : null;
+  if (why) { st.graded = true; logEvent({ type: "graded-session", why, session: sid }); }
+}
+if (G && st.graded) {
+  const rungs = [...answer.matchAll(RUNG_MARK)].map((m) => Number(m[1]));
+  const reviews = [...answer.matchAll(REVIEW_RUNG_MARK)].map((m) => Number(m[1]));
+  const rung = Math.max(0, ...rungs, ...reviews);
+  const review = reviews.length > 0 && Math.max(...reviews) >= Math.max(0, ...rungs);
+  // A worked solution is never allowed in graded work: say so to the student. The row says it honestly.
+  if (rung > G.maxRung) {
+    logEvent({ type: "graded-over-max", rung, max: G.maxRung, session: sid });
+    notice(t("rg.graded.overMax", { rung, max: G.maxRung }));
+  }
+  const r = logAnswer(G, st, { sid, entries, lastMessage, key: String(promptKey), skill: rungSkill, rung, review });
+  if (!r.ok) logEvent({ type: "graded-log-error", error: r.error, session: sid });
+  if (r.ok && st.endRequested && openRows(G, sid) > 0 && !st.gradedReminded) {
+    st.gradedReminded = true;
+    notice(t("rg.graded.fillIn", { n: openRows(G, sid), file: path.basename(r.log) }));
   }
 }
 

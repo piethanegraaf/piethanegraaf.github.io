@@ -13,6 +13,8 @@
 //   node .claude/hooks/skill.mjs override <id|*> <minutes> "<reason>"
 //   node .claude/hooks/skill.mjs setting <key> <value>     (examDate, stuckTimerMinutes, idleMinutes, defaultLevel, course, language,
 //                                                           autoDemote, codeExtensions, codeFiles, dashboardRepo <absolute path>|off)
+//   node .claude/hooks/skill.mjs setting graded add|remove "<path>" | maxRung 0..4 | aiLevel 0|1 | logDir "<path>" | off
+//                                                          (graded work: OER AI level 1, the hint ladder up to rung 4, Claude writes nothing there)
 //   node .claude/hooks/skill.mjs paths <id> add|remove "<glob>"   (which exercise folders belong to a skill)
 //   node .claude/hooks/skill.mjs replay <transcript.jsonl> [--dry-run]   (recover explanations a hook missed)
 //   node .claude/hooks/skill.mjs since-export              what is new since the last dashboard export, and after /diary
@@ -30,7 +32,7 @@ import {
   lapseTasks, afterTask, isReviewDue, isPlacementPending, effectiveLevel, adviceCommand, openOffer,
   activeMinutesSince, readTranscript, isLearnerEntry, learnerEntryText, entryText, checkExplanation, t, language,
   sinceExportLine, dashboardAfterDiary, parseDashboardRepo, addMicro, conceptHelpOf, readEvents,
-  recentUps, progressAll, progressLine, needsNextExercise, placeAfterExplanation,
+  recentUps, progressAll, progressLine, needsNextExercise, placeAfterExplanation, gradedOf,
 } from "./lib.mjs";
 import { EXPLAIN_MARK } from "./patterns.mjs";
 
@@ -332,6 +334,38 @@ switch (cmd) {
       saveSkills(data);
       logEvent({ type: "setting", key, value: r.value });
       console.log(`${key} = ${r.value}`);
+      break;
+    }
+    if (key === "graded") {
+      // Graded work (setup of 13 Nov, #49, #50, #54): only the learner sets it, and it is logged.
+      //   setting graded add|remove "<path or glob>"   absolute (also outside this project), or relative to it
+      //   setting graded maxRung 0..4 | aiLevel 0|1 | logDir "<absolute path>" | off
+      const [sub, ...vals] = rest;
+      const val = vals.join(" ").trim().replace(/^["']|["']$/g, "");
+      const g = data.settings?.graded && typeof data.settings.graded === "object" ? { ...data.settings.graded } : {};
+      g.paths = Array.isArray(g.paths) ? g.paths : [];
+      const clean = (p) => p.replace(/\\/g, "/").replace(/(.)\/+$/, "$1");
+      if (sub === "off") {
+        data.settings = data.settings ?? {};
+        data.settings.graded = null;
+      } else if (sub === "add" || sub === "remove") {
+        if (!val || /[\r\n<>|"]/.test(val) || val.length > 260) exit("cli.graded.usage");
+        const p = clean(val);
+        if (sub === "add" && !g.paths.includes(p)) g.paths.push(p);
+        if (sub === "remove") g.paths = g.paths.filter((x) => x !== p);
+      } else if (sub === "maxRung" && /^[0-4]$/.test(val)) g.maxRung = Number(val);
+      else if (sub === "aiLevel" && /^[01]$/.test(val)) g.aiLevel = Number(val);
+      else if (sub === "logDir" && val && !/[\r\n<>|"*?]/.test(val) && (path.isAbsolute(val) || /^\/[a-z]\//i.test(val))) g.logDir = clean(val);
+      else exit("cli.graded.usage");
+      if (sub !== "off") {
+        data.settings = data.settings ?? {};
+        data.settings.graded = { aiLevel: 1, maxRung: 4, ...g };
+      }
+      saveSkills(data);
+      logEvent({ type: "setting", key, value: sub === "off" ? "off" : `${sub} ${val}`.trim() });
+      const G = gradedOf(data);
+      console.log(G ? t("cli.graded.now", { paths: G.paths.join(", "), level: G.aiLevel, max: G.maxRung, log: G.logDir })
+        : t("cli.graded.off"));
       break;
     }
     const allowed = {

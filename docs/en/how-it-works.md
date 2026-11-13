@@ -65,6 +65,27 @@ One program is allowed on purpose, even though it writes in `.learning/state/`: 
 
 If you still want Claude to do something, you set an override yourself: `! node .claude/hooks/skill.mjs override ood.overerving 30 "reason"`. It is logged and shows up in the diary.
 
+## Graded work
+
+Some work is graded, for example the final assignment of a course. Your institution decides how much AI may help there. At CHE, for example, the exam rules (OER art. 7.11) allow AI level 1: AI as an aid, "for example to generate ideas or bring structure", with a statement of how you used it. Code or text made by AI in graded work counts as fraud. You name the paths of that work yourself, for example the folder of its repo:
+
+```text
+! node .claude/hooks/skill.mjs setting graded add "C:/Users/<you>/source/repos/<assignment>"
+```
+
+In those paths:
+
+- **The hint ladder of L2 holds for every skill**, also for one at L3 or L4, with the stuck timer. It goes up to rung 4 (`setting graded maxRung` can lower it). A worked solution (rung 5) is never available there. Ask for one and Claude refuses, with a reference to the exam rules.
+- **Rung 4 is an example of at most 5 lines on another topic.** It implements nothing the assignment asks for. You type your own code, and you never paste the example.
+- **Claude writes nothing there**, at no level, also no tooling, Dockerfile or pipeline, and it does not build or test there. The guard blocks it, also from a session in another folder, and there is no override. You type everything and run the tests yourself. Reading is allowed.
+- **Tasks and explanations in your own words still count.** Who can explain their code can also defend it.
+- **Every answer goes into an AI-use log**, in `ai-verantwoording/` in the repo (`ai-use/` in English). The hooks write it, never Claude:
+    - `logboek.md`: one row per answer, with the time, the session, the skill, the rung and the kind of help (question, concept, sketch, code example, review). The last column is yours: what you did with it and how you checked it. `/diary` asks you to fill it in.
+    - `sessies/<date>-<session>.md`: your prompts and Claude's text of that session, without the output of tools. Claude Code has no share link to a session, so this export takes its place. A privacy filter removes e-mail addresses, your home folder (it becomes `~`) and the messages of the hooks.
+    - `README.md`: the AI level, the ladder, an APA reference and how the export is made. It is written once; after that it is yours.
+
+At AI level 0 (`setting graded aiLevel 0`) Claude gives no help at all on that work. Ask your teacher which parts of an assessment are level 0 and which are level 1. The research explains the choices in [§10.8](research.md#108-revision-of-13-november-2026-graded-work-under-the-exam-rules).
+
 ## Tasks and explanations in your own words
 
 **A task begins** when you start new work. The harness only goes by fixed signals, never by a keyword: code changed in another exercise folder, `check.mjs` in another folder, or the full name of another exercise folder (such as `10-artsen-en-patienten`) or a `#id` of another skill family in your message. Then the hint ladder and the task time start again. Ordinary help since the previous task was for work you did not finish: it does not count for the new task, but it is logged as `help-dropped`, so you can still see it.
