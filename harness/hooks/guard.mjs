@@ -236,7 +236,9 @@ if (tool === "Bash" || tool === "PowerShell") {
     return { text: s, unknown: u ? u.index : -1 };
   };
   const unresolvedWordAt = (cwd, w) => expand(w, cwd).unknown !== -1;
-  const resolvePath = (cwd, p) => path.resolve(cwd, expand(p, cwd).text.replace(/^\/([a-zA-Z])\//, "$1:/"));
+  // PowerShell takes \ as a folder separator on every platform (Remove-Item .claude\hooks on Linux too).
+  const sep = (s) => (tool === "PowerShell" ? s.replace(/\\/g, "/") : s);
+  const resolvePath = (cwd, p) => path.resolve(cwd, sep(expand(p, cwd).text).replace(/^\/([a-zA-Z])\//, "$1:/"));
   // Could this word point into graded work? A word the guard cannot resolve counts when its known part (the folder
   // before the unknown part) is graded, or when nothing of it is known.
   // Brace expansion {a,b}: every alternative is a path of its own (at most 32).

@@ -428,6 +428,12 @@ export function gradedOf(data) {
   const logDir = typeof g.logDir === "string" && g.logDir.trim() ? absPath(g.logDir).replace(/(.)\/+$/, "$1") : `${bases[0]}/${t("graded.dirName")}`;
   const res = paths.map((p) => (GLOB_CHAR.test(p) ? globToRegex(p) : new RegExp(`^${escapeRe(p)}(?:/.*)?$`, "i")));
   res.push(new RegExp(`^${escapeRe(logDir)}(?:/.*)?$`, "i"));
+  // The same folders by their real path, when the setting names them by a link or a short 8.3 name (security
+  // review V7: a short home folder in the setting, the long one behind a junction).
+  for (const p of [...paths.filter((x) => !GLOB_CHAR.test(x)), logDir]) {
+    const real = realPath(p).split(path.sep).join("/");
+    if (real.toLowerCase() !== p.toLowerCase()) res.push(new RegExp(`^${escapeRe(real)}(?:/.*)?$`, "i"));
+  }
   return { paths, bases, aiLevel, maxRung, logDir, res };
 }
 
