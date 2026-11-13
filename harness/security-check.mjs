@@ -50,6 +50,10 @@ const IMAGE_EXT = new Set(["png", "jpg", "jpeg", "gif", "webp", "ico", "avif"]);
 const ALLOWED_NAMES = /^(LICENSE(-docs)?|CITATION\.cff|\.gitignore|\.gitkeep|\.gitattributes|CNAME|\.nojekyll)$/;
 // XML only as a sitemap (overrides/sitemap.xml, site-src/sitemap-tools.xml), by name, like requirements*.txt.
 const SITEMAP = /^sitemap[\w-]*\.xml$/;
+// C# only as the exercises of a map (security-dotnet): code and project files, nowhere else. Their content
+// gets the same checks as every other text file.
+const EXERCISE = /^harness\/maps\/[a-z0-9-]+\/exercises\/[^/]+\//;
+const EXERCISE_EXT = new Set(["cs", "csproj"]);
 
 function nameRules(file) {
   const out = [];
@@ -63,7 +67,7 @@ function nameRules(file) {
   if (/toets|beoordelingsformulier|minicasus|lesopdracht|diagnostische|exam-prep/i.test(base)) add(B, "file.course", "lijkt materiaal van een docent of toets");
   if (/\.(pdf|docx?|xlsx?|pptx?|zip|7z|rar|drawio|jsonl|trx|sqlite|db)$/i.test(base)) add(B, "file.type", `verboden bestandstype .${ext}`);
   else if (IMAGE_EXT.has(ext)) add(T, "file.image", "afbeelding: controleer op schermafdrukken met persoonlijke gegevens");
-  else if (!ALLOWED_EXT.has(ext) && !ALLOWED_NAMES.test(base) && !SITEMAP.test(base) && !/^requirements.*\.txt$/.test(base)) add(B, "file.unknown", `bestandstype niet op de allowlist (${ext || base})`);
+  else if (!ALLOWED_EXT.has(ext) && !(EXERCISE.test(file) && EXERCISE_EXT.has(ext)) && !ALLOWED_NAMES.test(base) && !SITEMAP.test(base) && !/^requirements.*\.txt$/.test(base)) add(B, "file.unknown", `bestandstype niet op de allowlist (${ext || base})`);
   return out;
 }
 

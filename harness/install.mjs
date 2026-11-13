@@ -2,7 +2,7 @@
 // Leerharnas installer. No dependencies, no network, no shell: it only copies files into the target folder
 // (and, only with --user-guard, into ~/.claude/; see user/user-guard.mjs).
 //
-//   node harness/install.mjs <doelmap> [--map ood|junior-dotnet] [--lang nl|en] [--course "<vak>"] [--exam JJJJ-MM-DD] [--dry-run] [--yes]
+//   node harness/install.mjs <doelmap> [--map ood|junior-dotnet|security-dotnet] [--lang nl|en] [--course "<vak>"] [--exam JJJJ-MM-DD] [--dry-run] [--yes]
 //   node harness/install.mjs <doelmap> --update [--dry-run] [--yes] [--force]
 //   node harness/install.mjs <doelmap> --user-guard [--remove] [--dry-run] [--yes]   (graded work closed from other folders, #61)
 //
@@ -17,6 +17,8 @@
 //   the repo of a graded assignment with the .learning/ of the practice folder, so a task there counts for the same
 //   skill. It goes in .claude/leerharnas.local.json, which is not in git (it holds an absolute path). No .learning/
 //   is made here, and the record there is never changed. --update keeps it.
+// - A map with exercises (security-dotnet) puts them in oefeningen/. An exercise that is already there is never
+//   replaced: it is the learner's work.
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
@@ -30,6 +32,8 @@ const VERSION = JSON.parse(fs.readFileSync(path.join(HARNESS, "package.json"), "
 const MANIFEST = ".claude/leerharnas.json";
 const LOCAL = ".claude/leerharnas.local.json";
 const BACKUP_DIR = ".claude/leerharnas-backup";
+// Where the exercises of a map go (security-dotnet); the paths of its skills point here.
+const EXERCISES_DIR = "oefeningen";
 const IMPORT_LINE = "@.claude/leerharnas.md";
 const LANGS = ["nl", "en"];
 const HOOKS = [
@@ -287,6 +291,30 @@ if (learningDir) {
   }
   if (!fs.existsSync(inTarget(".learning/diary"))) add(".learning/diary/", "mkdir", null);
 }
+// The exercises of a map (security-dotnet): maps/<id>/exercises/<exercise>/ goes to oefeningen/<exercise>/,
+// with README.<lang>.md as README.md. They are the learner's work from then on: an exercise that is already
+// there is never replaced, also not by --update; a new exercise in a later version does arrive.
+const EXERCISES = path.join(HARNESS, "maps", mapId, "exercises");
+if (fs.existsSync(EXERCISES)) {
+  const filesOf = (dir, base = "") => fs.readdirSync(dir, { withFileTypes: true }).flatMap((e) => {
+    const rel = base ? `${base}/${e.name}` : e.name;
+    if (e.isDirectory()) return /^(bin|obj|\.vs|\.idea)$/i.test(e.name) ? [] : filesOf(path.join(dir, e.name), rel);
+    const m = e.name.match(/^README\.([a-z]{2})\.md$/);
+    if (m && m[1] !== lang) return [];
+    return [{ rel: m ? (base ? `${base}/README.md` : "README.md") : rel, content: fs.readFileSync(path.join(dir, e.name), "utf8") }];
+  });
+  const entries = fs.readdirSync(EXERCISES, { withFileTypes: true }).sort((a, b) => a.name.localeCompare(b.name));
+  for (const e of entries) {
+    if (e.isDirectory()) {
+      const rel = `${EXERCISES_DIR}/${e.name}/`;
+      if (fs.existsSync(inTarget(rel.replace(/\/$/, "")))) add(rel, "keep", null, "exerciseKept");
+      else add(rel, "new", filesOf(path.join(EXERCISES, e.name)), "exercise");
+    }
+  }
+  // The overview of all exercises, in the language of choice.
+  const overview = localized(EXERCISES, "README");
+  if (overview !== null && readText(inTarget(`${EXERCISES_DIR}/README.md`)) === null) add(`${EXERCISES_DIR}/README.md`, "new", overview);
+}
 {
   const rel = "CLAUDE.md";
   const cur = readText(inTarget(rel));
@@ -376,6 +404,14 @@ for (const p of changes) {
   const abs = inTarget(p.rel.replace(/\/$/, ""));
   if (p.action === "mkdir") fs.mkdirSync(abs, { recursive: true });
   else if (p.action === "delete") fs.rmSync(abs);
+  else if (Array.isArray(p.content)) {
+    // A folder with its files (an exercise).
+    for (const f of p.content) {
+      const dest = inTarget(p.rel + f.rel);
+      fs.mkdirSync(path.dirname(dest), { recursive: true });
+      fs.writeFileSync(dest, f.content);
+    }
+  }
   else {
     fs.mkdirSync(path.dirname(abs), { recursive: true });
     fs.writeFileSync(abs, p.content);
@@ -390,3 +426,4 @@ fs.writeFileSync(inTarget(MANIFEST), JSON.stringify({
 
 console.log("\n" + t("install.done", { n: changes.length, backup: backups ? t("install.doneBackup", { dir: backupRoot }) : "" }));
 if (!opts.update) console.log(t("install.next", { dir: TARGET }));
+if (!opts.update && fs.existsSync(EXERCISES)) console.log(t("install.nextExercises", { dir: EXERCISES_DIR }));

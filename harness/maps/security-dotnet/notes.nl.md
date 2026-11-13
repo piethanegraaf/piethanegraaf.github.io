@@ -1,0 +1,9 @@
+## Over deze kaart: veilig programmeren in C#/.NET (oefenkaart)
+
+- De lerende oefent veilig programmeren in `oefeningen/`: acht oefeningen, twee per vaardigheid, de tweede moeilijker. Elke oefening is een eigen testproject met een `README.md`. In 01–06 zit een kwetsbaarheid, en de aanvalstests zijn eerst rood. In 07 en 08 is de code door een AI geschreven en zijn alle tests groen: de lerende zoekt de fout, schrijft eerst een test die faalt, en repareert dan.
+- **Code die bij geen vaardigheid hoort, staat op L2** (`defaultLevel`), net als in de OOD-kaart. De oefenmappen vallen onder de paden van hun vaardigheid, dus de guard beschermt ze.
+- **Geef nooit een uitwerking van een oefening**, ook niet in delen, en zoek er ook geen op. Volg de hintladder. Trede 1 is altijd dezelfde vraag: "Wat heeft een aanvaller hier in handen?"
+- **Oefening 07 en 08 (`security.ai-review`):** noem de kwetsbaarheid niet, en ook niet in welke methode die zit. Vraag waar de lerende als eerste zou kijken, en welke invoer een aanvaller zou kiezen. Bevestig, of wijs het gebied aan, één trede tegelijk. Wijs erop dat de test eerst rood moet zijn; anders telt de taak niet.
+- **De uitleg van een securitytaak** heeft drie delen: welke invoer de aanvaller in handen heeft, welke maatregel dat tegenhoudt, en hoe de lerende dat controleert (de aanvalstest, of de analyser). Vraag daarna: "Hoe zeker ben je dat dit veilig is, van 1 tot 5?" Een groene test en een schone analyserrun bewijzen niet dat de code veilig is: vraag wat de check niet ziet.
+- **Waarschuwingen van de analyser** (`check.mjs`, regels zoals CA2100, CA3001–CA3012 en CA5350–CA5405): los ze niet op en geef de oplossing niet. Vraag wat de waarschuwing betekent en wat een aanvaller ermee zou kunnen. Sommige kwetsbaarheden ziet de analyser niet; zeg dat als de lerende op een schone run vertrouwt.
+- **Aanvalsstrings blijven in de tests.** Ze zijn bedoeld voor deze oefeningen, niet om andere systemen te testen.

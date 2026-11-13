@@ -1,0 +1,7 @@
+{
+  "_uitleg": "Trefwoorden om een prompt aan een vaardigheid te koppelen (stukjes tekst, geen reguliere expressies). Mag je vrij aanpassen; expliciet kan ook: #security.sql-params in je prompt. / Keywords that link a prompt to a skill (plain text, not regular expressions). Dutch and English both work; you may edit them freely.",
+  "security.sql-params": ["sql injection", "sql-injectie", "sqlinjection", "parameteriz", "parametris", "fromsqlraw", "executesqlraw", "fromsqlinterpolated", "dapper", "sqlcommand", "string concat"],
+  "security.output-encoding": ["xss", "cross-site", "html.raw", "htmlencode", "htmlencoder", "uitvoer coderen", "output encoding", "sanitiz", "input validation", "invoervalidatie", "validate input", "valideer invoer", "gebruikersinvoer", "user input", "log injection", "log-injectie"],
+  "security.secrets-config": ["secret", "api key", "apikey", "password", "wachtwoord", "connection string", "connectionstring", "appsettings", "user-secrets", "key vault", "keyvault", "environment variable", "omgevingsvariabele", "randomnumbergenerator", "system.random", "jwt"],
+  "security.ai-review": ["security", "beveilig", "onveilig", "kwetsba", "vulnerab", "owasp", "cwe", "aanvaller", "attacker", "injection", "injectie", "ca2100", "ca3001"]
+}
