@@ -1766,3 +1766,687 @@ Method note: Bibliographic data came from the Crossref API for all DOIs (Gajos &
 ### G-summary. What the check means for rung 4 in graded work
 
 Rung 4 is supported with conditions. No source tested exactly this case (an analogous example of at most 5 lines after an attempt, with an explanation gate, in graded work), so the evidence is indirect. Gajos & Mamykina (G1) do not speak against rung 4. They speak against help that hands over the decision. They also show that an own attempt first does not save learning if the answer follows. Rung 4 is on the safe side of that line only while the student still has to transfer the example to their own design. Work on examples and on "attempt first, then instruction" (G2 to G6) supports a concrete example after effort, best when it is tied to the student's own attempt and followed by thinking time and self-explanation. LLM tools draw the line at different points: CodeAid allows generic example code (G7), and CodeHelp removes all example code (G8). So rung 4 is a defensible middle choice, not the most careful one. R10 (G9) is real for unrestricted ChatGPT, but there is no evidence that a small, different-topic example causes the same loss of ownership. The explanation gate fits what those authors ask for. Recommendation: keep rung 4, with three small conditions. (1) Isomorphism check: the example must not become part of the student's code by renaming alone. It uses a different domain and must not implement a behaviour the assignment asks for. (2) The student types their own code after reading the example and never pastes it. (3) The explanation gate also asks how the example differs from the student's own attempt (a contrasting case). An optional fourth condition: when rung 4 opens via the stuck timer alone, the tutor first asks for a short written try based on the rung-3 sketch. This advice does not differ from the student's decision to keep rung 4. It only adds safeguards, and the decision stays with the student. Open point: whether a rung-4 code example still counts as "generating ideas or bringing structure" under OER art. 7.11 level 1 is a question for the institution. It was not checked here, and logging it as "code example (rung 4)" is the right transparent step.
+
+## H. Sources checked on 13 November 2026 (secure code as a first niche for juniors)
+
+This check covers the sources of §2.13 of the research and of the section "Secure code next to an AI agent" on the page for junior developers. It has two parts: H1–H16 on the security of AI-generated code and how developers handle it, and H17–H35 on secure coding by developers, junior security roles and the regulatory frame. Each part ends with the corrections it asked for. All of them were applied before publication. Three sources were checked but are not cited in the review: Kudriavtseva et al. (H14), Lam et al. (H22) and ISC2 2025 (H25). The UWV figures (H34) were left out, because the cited page did not contain them. Shen & Tamkin (H16) was already in the references.
+
+Disclosure: the check was done by Claude agents (Claude Opus 5.5, an Anthropic model). One Veracode figure (H15) concerns that model, and Shen & Tamkin (H16) is by Anthropic.
+
+**Part 1 (H1–H16): the security of AI-generated code and AI-assisted developers**
+
+Scope: This check covers the sixteen sources we plan to cite in the literature review section on the security of AI-generated code, how developers (and juniors in particular) handle that code, and what AI help does to skill formation. For each source we checked the authors, year, title, venue and peer-review status, DOI or URL, and every specific claim or number we plan to use. Sixteen sources are covered: five benchmark or code-analysis studies (H1-H6), eight user studies, interview studies or surveys (H7-H14), one vendor report (H15) and one learning experiment (H16).
+
+Method note: Bibliographic data came from the Crossref API for all DOIs: Pearce et al. (10.1109/SP46214.2022.9833571), Majdinasab et al. (10.1109/SANER60148.2024.00051, found through a Crossref bibliographic query), Fu et al. (10.1145/3716848, found the same way), Perry et al. (10.1145/3576915.3623157), Klemmer et al. (10.1145/3658644.3690283, the DOI given on the arXiv record) and Kudriavtseva et al. (10.1145/3672608.3707778). Metadata and abstracts for all arXiv IDs came from the arXiv API (export.arxiv.org), including the earlier versions of 2512.03262 (v1-v3) and 2502.11844 (v1-v2), so we could see how the numbers changed between versions. Venue data for the USENIX papers (Spracklen et al., Sandoval et al., Bappy et al.) came from the USENIX presentation pages and their BibTeX. Venue status for BaxBench and SusVibes came from the PMLR header on the first page of the arXiv PDF. Full texts read and searched: BaxBench (arXiv v3), SusVibes (arXiv v4), Perry et al. (arXiv v3), Sandoval et al. (arXiv v4), Klemmer et al. (arXiv v2), Fu et al. (arXiv v4, searched only), Mousavi et al. (arXiv v1), Jost et al. (arXiv v2), Khalid et al. (arXiv v1), Bappy et al. (arXiv v2), Shen & Tamkin (arXiv v2), and Kudriavtseva et al. (the open-access PDF in the Leiden University repository, CC BY-SA 4.0). The Veracode figures came from Veracode's own blog post and press release, both dated 29 October 2026. Pearce et al., Majdinasab et al. and Spracklen et al. were checked against the abstract only, because the claims are stated there word for word. Note: the arXiv API abstract for Khalid et al. (2609.21020) stops after the first paragraph. The results paragraph appears only in the PDF.
+
+### H1. Pearce, Ahmad, Tan, Dolan-Gavitt & Karri (2022), "Asleep at the Keyboard? Assessing the Security of GitHub Copilot's Code Contributions"
+
+#### Takeaway
+**Verdict: confirmed.** All five authors, the year, the title, the venue, the DOI and the arXiv ID match. The abstract states the ~40% figure for 1,689 programs across 89 scenarios word for word.
+
+#### Cited Findings
+- Bibliographic: 2022 IEEE Symposium on Security and Privacy (SP), pp. 754-768, May 2022, DOI 10.1109/SP46214.2022.9833571; arXiv 2108.09293 (v3). Peer-reviewed conference paper. Evidence grade B (systematic benchmark of one tool, with the vulnerability check done by CodeQL plus manual review). — [Crossref](https://api.crossref.org/works/10.1109/SP46214.2022.9833571), [arXiv](https://arxiv.org/abs/2108.09293)
+- Abstract: "In total, we produce 89 different scenarios for Copilot to complete, producing 1,689 programs. Of these, we found approximately 40% to be vulnerable." — [arXiv](https://arxiv.org/abs/2108.09293)
+
+#### Inferences
+- The scenarios were deliberately built around high-risk CWEs (MITRE "Top 25"). So "40%" is a rate for security-relevant prompts, not for code in general.
+
+#### Gaps
+- This was the 2021 Copilot (Codex). Later versions do better (see H2).
+
+### H2. Majdinasab, Bishop, Rasheed, Moradidakhel, Tahir & Khomh (2024), "Assessing the Security of GitHub Copilot's Generated Code - A Targeted Replication Study"
+
+#### Takeaway
+**Verdict: confirmed.** The numbers are 36.54% → 27.25%. The 36.54% baseline is the Python part of Pearce et al., not the overall ~40%.
+
+#### Cited Findings
+- Bibliographic: 2024 IEEE International Conference on Software Analysis, Evolution and Reengineering (SANER), pp. 435-444, DOI 10.1109/SANER60148.2024.00051; arXiv 2311.11177 (v1 only). Peer-reviewed conference paper. Evidence grade B (replication with newer Copilot and CodeQL versions). — [Crossref](https://api.crossref.org/works/10.1109/SANER60148.2024.00051), [arXiv](https://arxiv.org/abs/2311.11177)
+- Abstract: "The replication focused on the presence of security vulnerabilities in Python code. Our results indicate that, even with the improvements in newer versions of Copilot, the percentage of vulnerable code suggestions has reduced from 36.54% to 27.25%." — [arXiv](https://arxiv.org/abs/2311.11177)
+- Abstract: "Nonetheless, it remains evident that the model still suggests insecure code." — [arXiv](https://arxiv.org/abs/2311.11177)
+
+#### Inferences
+- If the review places this next to H1, it should say that both numbers are for Python only. Otherwise the reader compares 40% (all languages) with 27% (Python).
+
+#### Gaps
+- Python only. The C and Verilog scenarios of the original were not replicated.
+
+### H3. Fu, Liang, Tahir, Li, Shahin, Yu & Chen (2025), "Security Weaknesses of Copilot-Generated Code in GitHub Projects: An Empirical Study"
+
+#### Takeaway
+**Verdict: confirmed.** 29.5% (Python), 24.2% (JavaScript), 43 CWE categories and "up to 55.5%" fixed by Copilot Chat are all stated in the abstract. One nuance: the 733 snippets also include code from CodeWhisperer and Codeium, not only Copilot.
+
+#### Cited Findings
+- Bibliographic: ACM Transactions on Software Engineering and Methodology 34(8), article pp. 1-34, published online 6 October 2025, DOI 10.1145/3716848; arXiv 2310.02059 (v4, "Preprint accepted for publication in ACM Transactions on Software Engineering and Methodology (TOSEM), 2025"). Peer-reviewed journal. Evidence grade B (static analysis of code found in the wild). — [Crossref](https://api.crossref.org/works/10.1145/3716848), [arXiv](https://arxiv.org/abs/2310.02059)
+- Abstract: "Our analysis identified 733 snippets, revealing a high likelihood of security weaknesses, with 29.5% of Python and 24.2% of JavaScript snippets affected. These issues span 43 Common Weakness Enumeration (CWE) categories, including significant ones like CWE-330: Use of Insufficiently Random Values, CWE-94: Improper Control of Generation of Code, and CWE-79: Cross-site Scripting." — [arXiv](https://arxiv.org/abs/2310.02059)
+- Abstract: "We further examined using Copilot Chat to fix security issues in Copilot-generated code by providing Copilot Chat with warning messages from the static analysis tools, and up to 55.5% of the security issues can be fixed." — [arXiv](https://arxiv.org/abs/2310.02059)
+- Abstract, data set: "analyzing code snippets generated by GitHub Copilot and two other AI code generation tools (i.e., CodeWhisperer and Codeium) from GitHub projects." — [arXiv](https://arxiv.org/abs/2310.02059)
+
+#### Inferences
+- This is real-world code that developers kept and committed, so it complements the prompt benchmarks (H1, H2).
+- The fix result supports pairing AI code with static analysis. It does not show that AI fixes issues without the warnings.
+
+#### Gaps
+- Snippets were found by keyword search for self-declared AI-generated code. The authors note that the label "GitHub Copilot" in a file did not always mean the code was generated by it, so attribution is not certain.
+- The full text is inconsistent: the introduction says "43 different CWEs" in one place and "among the 38 CWEs identified" a few lines later. Cite 43 as the abstract does.
+
+### H4. Vero, Mündler, Chibotaru, Raychev, Baader, Jovanović, He & Vechev (2025), "BaxBench: Can LLMs Generate Correct and Secure Backends?"
+
+#### Takeaway
+**Verdict: confirmed (~35%, not 38%).** In the main results, the best model for correct-and-secure code is OpenAI o3-mini at 35% (sec_pass@1). The introduction rounds the ceiling to 37%. No 38% figure appears. The abstract itself gives a different headline: o1 reaches 62% correctness, and about half of the correct programs could be exploited.
+
+#### Cited Findings
+- Bibliographic: Proceedings of the 42nd International Conference on Machine Learning (ICML 2025), Vancouver, PMLR 267; arXiv 2502.11844 (v3, 30 May 2025). No DOI. Peer-reviewed conference paper (ICML). Evidence grade B (benchmark: 392 tasks, 28 scenarios × 14 frameworks, 11 LLMs, exploits actually run). — [arXiv](https://arxiv.org/abs/2502.11844)
+- Figure 3 caption (v3): "While sec_pass@1 is significantly higher for models with a higher pass@1 score, even for the best model, OPENAI O3-MINI, it only reaches 35%. As such, even flagship LLMs are not yet ready for automated development in production." — [arXiv](https://arxiv.org/abs/2502.11844)
+- Introduction (v3): "As shown in Fig. 1, even flagship LLMs struggle to generate deployment-ready backends, not surpassing a mere 37% correct and secure generation rate on BAXBENCH." — [arXiv](https://arxiv.org/abs/2502.11844)
+- Abstract (v3): "(i) even the best model, OpenAI o1, achieves a mere 62% on code correctness; (ii) on average, we could successfully execute security exploits on around half of the correct programs generated by each LLM". Versions v1 and v2 said "60%" and "more than half". — [arXiv](https://arxiv.org/abs/2502.11844)
+
+#### Inferences
+- "At most about a third of backends are both correct and secure" is a safe paraphrase.
+- The paper also finds that a generic security reminder in the prompt helps the reasoning models (o1, o3-mini, DeepSeek-R1) but not the non-reasoning models. This could be useful where the review discusses prompting for security.
+
+#### Gaps
+- The 2025 model generation only (o1, o3-mini, Claude 3.5 Sonnet, DeepSeek-R1, among others). Newer models were not tested in this paper.
+- The 35% and 37% figures appear to come from different settings (Fig. 3 versus Fig. 1). I did not trace which prompt setting gives the 37%.
+
+### H5. Zhao, Wang, Zhang, Luo, Li & Li (2026), "Is Vibe Coding Safe? Benchmarking Vulnerability of Agent-Generated Code in Real-World Tasks" (SusVibes)
+
+#### Takeaway
+**Verdict: corrected.** The authors and the venue are confirmed (Zhao et al., accepted at ICML 2026). But 61% / 10.5% are the numbers from the earlier preprint versions (v1-v2, 200 tasks). The final version (v3-v4, the ICML paper, 186 tasks) reports **57% functionally correct and 11.8% secure** for SWE-Agent with Claude 4 Sonnet. The claim that hints barely helped is confirmed: correct-and-secure rose from 11.8% to at most 15.1%, while functional correctness fell.
+
+#### Cited Findings
+- Bibliographic: Songwen Zhao, Danqing Wang, Kexun Zhang, Jiaxuan Luo, Zhuo Li, Lei Li. Proceedings of the 43rd International Conference on Machine Learning (ICML 2026), Seoul, PMLR 306; arXiv 2512.03262 (v4, 21 September 2026; comment "Accepted in ICML 2026"). No DOI. Peer-reviewed conference paper. Evidence grade B (benchmark: 186 real-world feature-request tasks, 12 agent/model settings). — [arXiv](https://arxiv.org/abs/2512.03262)
+- Abstract (v4): "Although 57% of the solutions from SWE-Agent with Claude 4 Sonnet are functionally correct, only 11.8% are secure. Further experiments demonstrate that preliminary security strategies, such as augmenting the feature request with vulnerability hints, cannot mitigate these security issues." — [arXiv](https://arxiv.org/abs/2512.03262v4)
+- Abstract (v1, 2 December 2025, superseded): "Although 61% of the solutions from SWE-Agent with Claude 4 Sonnet are functionally correct, only 10.5% are secure." — [arXiv v1](https://arxiv.org/abs/2512.03262v1)
+- Full text, Section 4.2: "The best functionally performing approach, SWE-AGENT integrated with Claude 4 Sonnet resolved 57% of the tasks, yet 79.3% of these functionally correct solutions are insecure." — [arXiv](https://arxiv.org/abs/2512.03262v4)
+- Full text, Table 5 (SWE-Agent + Claude 4 Sonnet): FuncPass 57.0 (generic) / 50.0 (self-selection) / 55.4 (oracle CWE hint); SecPass 11.8 / 14.5 / 15.1. Caption: "Both degrade functional performance while slightly increasing the number of correct-and-secure solutions." — [arXiv](https://arxiv.org/abs/2512.03262v4)
+
+#### Inferences
+- "Secure" here means SecPass: correct AND secure, as a share of all tasks. So "secure on 11.8% of tasks" is accurate. "11.8% of its correct solutions were secure" would be wrong; that share is about 21% (100% - 79.3%).
+- SWE-Agent + Claude 4 Sonnet is the best configuration for functional correctness. It is not the most secure: by the paper's subset measure, Gemini 2.5 Pro is the most secure LLM.
+
+#### Gaps
+- The frameworks and models are from 2025 (Claude 4 Sonnet, Kimi K2, Gemini 2.5 Pro, Gemini 3 Pro). Results may not carry over to newer agents.
+
+### H6. Spracklen, Wijewickrama, Sakib, Maiti, Viswanath & Jadliwala (2025), "We Have a Package for You! A Comprehensive Analysis of Package Hallucinations by Code Generating LLMs"
+
+#### Takeaway
+**Verdict: confirmed.** 5.2% (commercial), 21.7% (open-source) and 205,474 unique hallucinated names are stated in the abstract. These are average rates per model group ("at least").
+
+#### Cited Findings
+- Bibliographic: 34th USENIX Security Symposium (USENIX Security 25), pp. 3687-3706, ISBN 978-1-939133-52-6; arXiv 2406.10279 (v3). No DOI. Peer-reviewed conference paper; Distinguished Paper Award. Evidence grade B (16 LLMs, 576,000 code samples in Python and JavaScript). — [USENIX](https://www.usenix.org/conference/usenixsecurity25/presentation/spracklen), [arXiv](https://arxiv.org/abs/2406.10279)
+- Abstract: "Our findings reveal that that the average percentage of hallucinated packages is at least 5.2% for commercial models and 21.7% for open-source models, including a staggering 205,474 unique examples of hallucinated package names, further underscoring the severity and pervasiveness of this threat." — [USENIX](https://www.usenix.org/conference/usenixsecurity25/presentation/spracklen)
+
+#### Inferences
+- This supports a rule such as "check that every suggested package exists and is the intended one before installing it". It is a supply-chain risk, separate from vulnerabilities inside the generated code.
+
+#### Gaps
+- The models tested date from 2023-2024. Full text not read; the abstract states the claims exactly.
+
+### H7. Perry, Srivastava, Kumar & Boneh (2023), "Do Users Write More Insecure Code with AI Assistants?"
+
+#### Takeaway
+**Verdict: confirmed.** n = 47 (54 recruited, 47 analysed: 33 with the assistant, 14 without). All three findings are stated in the abstract.
+
+#### Cited Findings
+- Bibliographic: Proceedings of the 2023 ACM SIGSAC Conference on Computer and Communications Security (CCS '23), pp. 2785-2799, DOI 10.1145/3576915.3623157; arXiv 2211.03622 (v3, full version). Peer-reviewed conference paper. Evidence grade B (randomised user study with a small, unbalanced control group). — [Crossref](https://api.crossref.org/works/10.1145/3576915.3623157), [arXiv](https://arxiv.org/abs/2211.03622)
+- Abstract: "Overall, we find that participants who had access to an AI assistant based on OpenAI's codex-davinci-002 model wrote significantly less secure code than those without access. Additionally, participants with access to an AI assistant were more likely to believe they wrote secure code than those without access to the AI assistant." — [arXiv](https://arxiv.org/abs/2211.03622)
+- Abstract: "Furthermore, we find that participants who trusted the AI less and engaged more with the language and format of their prompts (e.g. re-phrasing, adjusting temperature) provided code with fewer security vulnerabilities." — [arXiv](https://arxiv.org/abs/2211.03622)
+- Full text, Section 3: "After excluding data points of participants who failed the prescreening or quit the study, we were left with 47 participants-- 33 in the experiment group and 14 in the control group." — [arXiv](https://arxiv.org/abs/2211.03622)
+
+#### Inferences
+- The finding that "trusting less and engaging more" goes with fewer vulnerabilities is correlational, not an experimental effect.
+
+#### Gaps
+- Codex-davinci-002 is an old model. Participants ranged from undergraduates to professionals.
+
+### H8. Sandoval, Pearce, Nys, Karri, Garg & Dolan-Gavitt (2023), "Lost at C: A User Study on the Security Implications of Large Language Model Code Assistants"
+
+#### Takeaway
+**Verdict: confirmed.** N = 58 student programmers. "No greater than 10% more than the control" is word for word. The authors read this as *no* new security risk, which is the opposite direction from H7.
+
+#### Cited Findings
+- Bibliographic: 32nd USENIX Security Symposium (USENIX Security 23), Anaheim, pp. 2205-2222, ISBN 978-1-939133-37-3; arXiv 2208.09727 (v4). No DOI. Peer-reviewed conference paper. Evidence grade B (controlled user study). — [USENIX](https://www.usenix.org/conference/usenixsecurity23/presentation/sandoval), [arXiv](https://arxiv.org/abs/2208.09727)
+- Abstract: "We conduct a security-driven user study (N=58) to assess code written by student programmers when assisted by LLMs." — [arXiv](https://arxiv.org/abs/2208.09727)
+- Abstract: "Our results indicate that the security impact in this setting (low-level C with pointer and array manipulations) is small: AI-assisted users produce critical security bugs at a rate no greater than 10% more than the control, indicating the use of LLMs does not introduce new security risks." — [arXiv](https://arxiv.org/abs/2208.09727)
+
+#### Inferences
+- The review should present this as a null or small-effect result that contrasts with Perry et al., not as evidence of harm.
+
+#### Gaps
+- One task (a linked list in C) and students only.
+
+### H9. Klemmer, Horstmann, Patnaik, Ludden, Burton, Powers, Massacci, Rahman, Votipka, Lipford, Rashid, Naiakshina & Fahl (2024), "Using AI Assistants in Software Development: A Qualitative Study on Security Practices and Concerns"
+
+#### Takeaway
+**Verdict: corrected.** The paper does not compare what participants say with what they do; it observed no behaviour. What it reports is (a) participants say they scrutinise AI output like human code, and rarely report having met security issues; (b) the authors find a "mismatch" between this reported scrutiny and the negative security effects found *in earlier experiments* (Pearce, Perry and others). From that they conclude that professionals overestimate how well they can scrutinise AI output.
+
+#### Cited Findings
+- Bibliographic: Proceedings of the 2024 ACM SIGSAC Conference on Computer and Communications Security (CCS '24), pp. 2726-2740, DOI 10.1145/3658644.3690283; arXiv 2405.06371 (v2, extended version). Peer-reviewed conference paper. Evidence grade C (qualitative: 27 semi-structured interviews plus 190 Reddit posts and comments). — [Crossref](https://api.crossref.org/works/10.1145/3658644.3690283), [arXiv](https://arxiv.org/abs/2405.06371)
+- Abstract: "Their overall mistrust leads to checking AI suggestions in similar ways to human code, although they expect improvements and, therefore, a heavier use for security tasks in the future." — [arXiv](https://arxiv.org/abs/2405.06371)
+- Full text, Section 4: "Despite the widespread security and quality concerns, participants rarely reported facing security issues using AI assistants." — [arXiv](https://arxiv.org/abs/2405.06371)
+- Full text, Section 5.2.1: "While our participants reported to critically scrutinize AI suggestions (Section 4.2.3) due to general mistrust and did not perceive negative security impact from AI usage, a negative security impact is evident in practice [56, 66, 68, 71, 76]. This mismatch reveals a skewed self-perception, so that software professionals overestimate their capabilities in scrutinizing AI suggestion for security." — [arXiv](https://arxiv.org/abs/2405.06371)
+
+#### Inferences
+- The "mismatch" is an inference across studies by the authors, not a measured within-person gap. Bappy et al. (H13) and Mousavi et al. (H10) observe a stated-versus-actual gap directly; they are better sources for that point.
+
+#### Gaps
+- Interviews took place before agentic tools became common. The sample is professionals, not juniors.
+
+### H10. Mousavi, Islam, Babar, Abuadbba & Moore (2026), "Understanding the Impact of AI Code Assistants on Security API Usage: An Empirical Study"
+
+#### Takeaway
+**Verdict: confirmed.** 44 professional developers did tasks with and without Copilot (a within-subject design). Copilot improved functional correctness but had no significant effect on secure API use, and many participants did not recognise that their code was insecure. In fact no implementation was fully secure in either condition.
+
+#### Cited Findings
+- Bibliographic: Zahra Mousavi, Chadni Islam, M. Ali Babar, Alsharif Abuadbba, Kristen Moore. arXiv 2607.11348 (v1, 13 July 2026), "Accepted for publication at the 29th International Symposium on Research in Attacks, Intrusions and Defenses (RAID 2026)". Accepted peer-reviewed paper; no proceedings DOI found. Evidence grade B (within-subject experiment, n = 44, two security-API tasks: JSSE/TLS and OAuth). — [arXiv](https://arxiv.org/abs/2607.11348)
+- Abstract: "We conducted a study with 44 developers who completed security API programming tasks with and without GitHub Copilot assistance. Our findings show that, while Copilot improves functional correctness and marginally reduces certain insecure patterns, it does not significantly improve secure API usage." — [arXiv](https://arxiv.org/abs/2607.11348)
+- Abstract: "We also found that developers rarely raised security concerns when engaging with Copilot, and many did not recognize that their final implementations remained insecure." — [arXiv](https://arxiv.org/abs/2607.11348)
+- Conclusion: "No participant produced a fully secure implementation, regardless of AI assistance or background, highlighting the ongoing challenges of secure software development." — [arXiv](https://arxiv.org/abs/2607.11348)
+
+#### Inferences
+- The overconfidence was present without Copilot as well. The paper found "no statistically significant effect of Copilot on these self-assessments". So overconfidence is a general developer problem here, not one specific to AI.
+
+#### Gaps
+- Two tasks in one domain (security APIs in Java). Only two participants raised security in their prompts.
+
+### H11. Jost, Berens, Karl, Horstmann, Johns & Naiakshina (2026), "The Impact of AI-Assisted Development on Software Security: A Study of Gemini and Developer Experience"
+
+#### Takeaway
+**Verdict: corrected (wording).** n = 159 and the null result for Gemini are confirmed. But programming experience "significantly" improved security with a modest effect size. "Strongly predicts" overstates it.
+
+#### Cited Findings
+- Bibliographic: Nadine Jost, Benjamin Berens, Manuel Karl, Stefan Albert Horstmann, Martin Johns, Alena Naiakshina. arXiv 2603.15298 (v2, 17 March 2026). No venue or journal reference on the arXiv record. Preprint, not peer-reviewed. Evidence grade B (between-group experiment with three arms: no AI, free Gemini, paid Gemini). — [arXiv](https://arxiv.org/abs/2603.15298)
+- Abstract: "Therefore, we conducted a quantitative programming study with software developers (n=159) exploring the impact of Google's AI tool Gemini on code security. [...] While we did not observe significant differences between using Gemini in terms of secure software development, programming experience significantly improved code security and cannot be fully substituted by Gemini." — [arXiv](https://arxiv.org/abs/2603.15298)
+- Full text, RQ1 results: "A one-standard-deviation increase in overall programming experience raised the odds of a higher security score by a factor of 1.43 (95 % CI [1.14, 1.81], p=0.002). In probability terms, the predicted security success rate increased from 30% (mean experience) to 38% at +1 SD." The raw correlation was r = 0.2 (p = 0.018). — [arXiv](https://arxiv.org/abs/2603.15298)
+
+#### Inferences
+- This is relevant to juniors: experience mattered and Gemini did not make up for a lack of it. The size of the effect, however, is modest.
+- Security *experience* did not help (OR 0.75, p = 0.058, trend in the opposite direction).
+
+#### Gaps
+- Mostly freelancers recruited online (91 of 159). One Python task scored on 5 security items.
+
+### H12. Khalid, Thompson, Sabater, Mussiba, Fulton & Votipka (2026), "(Don't) Trust, but (Don't) Verify: Developers' Attention to Security in AI-Generated Code"
+
+#### Takeaway
+**Verdict: corrected (venue only).** All the numbers are confirmed: 100 participants, 37.7% vs 35.0%, 22% fully secure, more edits linked to fewer vulnerabilities, 16 of 23 interviewees. But the paper is not just a preprint: the arXiv record says "To appear at IEEE Security and Privacy (S&P) '27".
+
+#### Cited Findings
+- Bibliographic: Hamza Khalid, Ronald E. Thompson, Alejandra Sabater, Perucy Mussiba, Kelsey R. Fulton, Daniel Votipka. arXiv 2609.21020 (v1, 17 September 2026), "To appear at IEEE Security and Privacy (S&P) '27". Accepted peer-reviewed paper, not yet in the proceedings; no DOI. Evidence grade B (remote observational study, n = 100, four C linked-list tasks, five fixed AI suggestions per task; 23 interviews). — [arXiv](https://arxiv.org/abs/2609.21020)
+- Full text, Section 4.1: "we found they selected the most secure suggestions in 37.7% of cases, suggestions with some vulnerabilities in 27.3% of cases, and the least secure suggestions in 35.0% of cases." — [arXiv](https://arxiv.org/abs/2609.21020)
+- Full text: "Security analysis revealed only 88 (22%) submissions were fully secure, i.e. free of vulnerabilities. While 42% of participants submitted at least one secure solution, only 5% submitted secure code for all four tasks." — [arXiv](https://arxiv.org/abs/2609.21020)
+- Full text: "Our Poisson regression (Table 2) showed participants produced final submissions with statistically significantly fewer vulnerabilities the more lines they changed (β = -0.5, p < 0.001)." — [arXiv](https://arxiv.org/abs/2609.21020)
+- Full text, Section 4.2.1: "Although participants were informed their solutions would be evaluated for security, 16 of 23 interviewees said they did not take any explicit steps to address security in their solutions, citing several reasons." — [arXiv](https://arxiv.org/abs/2609.21020)
+
+#### Inferences
+- The 22% is per submission (88 of 400), not per participant.
+- The authors also report that participants' confidence in their code's security correlated with its actual security. This nuances the overconfidence story from H7 and H10.
+
+#### Gaps
+- Fixed suggestions, not live prompting. 25 participants used an outside AI assistant through the built-in browser.
+
+### H13. Bappy, Hossain, Meheraj, Akhand, Tabassum, Zaman, Hasan & Islam (2026), "From Preventive to Reactive: How AI Coding Assistants Transform Developers' Security Awareness"
+
+#### Takeaway
+**Verdict: corrected (details).** The SOUPS 2026 venue is confirmed. 15 engineers were *interviewed*, but 14 took part in the observed coding sessions. The predictor that was tested is the "experience cohort" (when the developer entered the profession relative to AI tools), not seniority as such. The text does add that neither cohort nor seniority aligned with who caught issues. This is qualitative; no statistical test was done.
+
+#### Cited Findings
+- Bibliographic: Twenty-Second Symposium on Usable Privacy and Security (SOUPS 2026), pp. 257-274, ISBN 978-1-939133-59-5; arXiv 2605.23130 (v2). No DOI. Peer-reviewed conference paper. Evidence grade C (qualitative: 15 interviews, 14 observed coding sessions). — [USENIX](https://www.usenix.org/conference/soups2026/presentation/bappy), [arXiv](https://arxiv.org/abs/2605.23130)
+- Abstract: "Notably, none of our coding session participants specified security requirements in their initial prompts, even when they possessed the relevant knowledge, revealing a decoupling of security awareness from security behavior." — [USENIX](https://www.usenix.org/conference/soups2026/presentation/bappy)
+- Full text, Section 5: "Crucially, the coding sessions revealed a sharper picture: none of the 14 participants mentioned security in their initial prompts, and only 2 caught unstated security issues unprompted, a divergence between stated concern and observed behavior that held across experience levels." — [arXiv](https://arxiv.org/abs/2605.23130)
+- Full text, Section 5.2.2: "The 2 participants who caught unstated security issues (P10 and P12) represent different cohorts (AI-era and Pre-AI, respectively) and different levels of seniority." — [arXiv](https://arxiv.org/abs/2605.23130)
+- Full text, Section 5: "P10, despite having approximately 1.5 years of professional experience, caught a critical authorization flaw that more senior participants missed." — [arXiv](https://arxiv.org/abs/2605.23130)
+
+#### Inferences
+- This is direct observational evidence for the gap between what developers say and what they do. It is a better source for that point than H9.
+
+#### Gaps
+- The paper contradicts itself in one place: one paragraph says "12 of the 14 participants included no security considerations in their initial prompts", while the abstract and the other sections say none did. Cite "none" with the abstract, or say "none (or nearly none)".
+- n = 14, so "did not predict" means "no visible pattern", not a tested null result.
+
+### H14. Kudriavtseva, Hotak & Gadyatskaya (2025), "My Code Is Less Secure with Gen AI: Surveying Developers' Perceptions of the Impact of Code Generation Tools on Security"
+
+#### Takeaway
+**Verdict: confirmed, but add the size caveat.** The authors are Arina Kudriavtseva, Nisar Ahmad Hotak and Olga Gadyatskaya (Leiden University). The survey had 105 valid respondents. The only respondents who were "very confident" were juniors. But that group was **1%** of respondents (about one person), and "junior" includes students and learners with 0-2 years' experience.
+
+#### Cited Findings
+- Bibliographic: Proceedings of the 40th ACM/SIGAPP Symposium on Applied Computing (SAC '25), pp. 1637-1646, 31 March 2025, DOI 10.1145/3672608.3707778. Peer-reviewed conference paper. Evidence grade C (self-report survey; 196 responses, 105 valid). — [Crossref](https://api.crossref.org/works/10.1145/3672608.3707778), [Leiden repository PDF](https://scholarlypublications.universiteitleiden.nl/handle/1887/4283611)
+- Section 3.4: "A quarter (25%) reported feeling somewhat or very confident in the security of AI-generated code. Notably, a larger percentage (11%) lacked confidence entirely, compared to the small group (1%) who were very confident." — [Leiden PDF](https://scholarlypublications.universiteitleiden.nl/handle/1887/4283611)
+- Section 3.4: "When examining the confidence levels based on experience, it is interesting to note that the small group of developers who were very confident in AI-generated code were only juniors. On the other hand, medior (14%) and senior (15%) developers were more likely to express a complete lack of confidence compared to juniors (5%)." — [Leiden PDF](https://scholarlypublications.universiteitleiden.nl/handle/1887/4283611)
+- Section 2: "we group the participants into junior (student/learning, 0-2 years of experience), medior (3-5 years), and senior (more than 6 years) groups based on their years of experience." — [Leiden PDF](https://scholarlypublications.universiteitleiden.nl/handle/1887/4283611)
+
+#### Inferences
+- The more robust junior finding is a different one: juniors perceived their secure-coding proficiency to *rise* with AI, while seniors perceived it to fall. The authors suggest a Dunning-Kruger explanation, but only as a hypothesis.
+
+#### Gaps
+- Self-selected online sample; about half are not professional developers. The authors themselves say the results may not generalise.
+
+### H15. Veracode (29 October 2026), "Fall 2026 GenAI Code Security Update" (blog, by Natalie Tischler) and press release "Veracode Finds First Meaningful Gain in AI Code Security Since 2025 as Average Pass Rate Hits 62%"
+
+#### Takeaway
+**Verdict: confirmed.** Every number matches the press release, which rounds them. The blog gives more decimals: SQL injection 83.7%, log injection 12.6%, C# 59.55%, Python 64.22%, JavaScript 56.99%, Java 31.00%. The 73% best score is shared by two models.
+
+#### Cited Findings
+- Bibliographic: Veracode blog, 29 October 2026, https://www.veracode.com/blog/fall-2026-genai-code-security/ (also reached via https://www.veracode.com/?p=33093); press release, 29 October 2026, https://www.veracode.com/press-release/veracode-finds-first-meaningful-gain-in-ai-code-security-since-2025-as-average-pass-rate-hits-62/ (reached via https://www.veracode.com/?p=33104). Vendor publication, not peer-reviewed. Evidence grade C (18 models, 4 languages, 4 CWEs, prompts without security guidance; the full method is in a separate report that was not read). — [blog](https://www.veracode.com/blog/fall-2026-genai-code-security/), [press release](https://www.veracode.com/press-release/veracode-finds-first-meaningful-gain-in-ai-code-security-since-2025-as-average-pass-rate-hits-62/)
+- Blog: "The average security pass rate jumped from 56% to 62% . This is the first meaningful movement in the series. The vulnerability rate dropped from roughly 44% to ~38% ." — [blog](https://www.veracode.com/blog/fall-2026-genai-code-security/)
+- Press release: "Java remains the dramatic outlier at 31 percent, barely up from 30 percent in July. The gap between Java and the other three languages (Python at 64 percent, C# at 60 percent, and JavaScript at 57 percent) is still 26–33 percentage points." — [press release](https://www.veracode.com/press-release/veracode-finds-first-meaningful-gain-in-ai-code-security-since-2025-as-average-pass-rate-hits-62/)
+- Press release: "Despite being one of the weaker categories, XSS rose to 18 percent [...]. Meanwhile, crypto (CWE-327) held at 87 percent, Structured Query Language (SQL) injection (CWE-89) held at 84 percent, and log injection (CWE-117) remained flat at 13 percent." — [press release](https://www.veracode.com/press-release/veracode-finds-first-meaningful-gain-in-ai-code-security-since-2025-as-average-pass-rate-hits-62/)
+- Press release: "Claude Opus 5.5 and GPT-6-Sol tied at 73 percent, dethroning GPT-5.5, which led the summer 2026 snapshot at 68 percent." — [press release](https://www.veracode.com/press-release/veracode-finds-first-meaningful-gain-in-ai-code-security-since-2025-as-average-pass-rate-hits-62/)
+
+#### Inferences
+- Veracode itself says the gain comes mostly from XSS, while log injection and Java are unchanged. If the review cites "56% → 62%", it should say that.
+- For a C# course: C# is at about 60%, so roughly four in ten tasks still fail the security check without security guidance in the prompt.
+
+#### Gaps
+- Vendor research, and the vendor sells scanning tools ("a mid-tier model at a 60 percent pass rate plus Veracode scanning is more accurate…"). The full report and its method were not read.
+- Disclosure: one of the two top models (Claude Opus 5.5) is the model that ran this check. The figures are quoted from Veracode and not interpreted further.
+
+### H16. Shen & Tamkin (2026), "How AI Impacts Skill Formation"
+
+#### Takeaway
+**Verdict: confirmed.** The study was randomised. AI help made conceptual understanding, code reading and debugging worse, with no significant average speed-up. Three of the six interaction patterns involved cognitive engagement and preserved learning. All of this is in the abstract. Sample: 52 participants (26 per arm), learning the Python Trio library.
+
+#### Cited Findings
+- Bibliographic: Judy Hanwen Shen, Alex Tamkin. arXiv 2601.20245 (v2, 1 February 2026). Preprint, not peer-reviewed. Work done in the Anthropic Fellows Program. Evidence grade B (pre-registered, between-subjects randomised experiment; n = 52 in the main study). — [arXiv](https://arxiv.org/abs/2601.20245)
+- Abstract: "We find that AI use impairs conceptual understanding, code reading, and debugging abilities, without delivering significant efficiency gains on average. Participants who fully delegated coding tasks showed some productivity improvements, but at the cost of learning the library." — [arXiv](https://arxiv.org/abs/2601.20245)
+- Abstract: "We identify six distinct AI interaction patterns, three of which involve cognitive engagement and preserve learning outcomes even when participants receive AI assistance." — [arXiv](https://arxiv.org/abs/2601.20245)
+- Full text, Introduction: "using AI assistance to complete tasks that involve this new library resulted in a reduction in the evaluation score by 17% or two grade points (Cohen's d = 0.738, p = 0.010)." — [arXiv](https://arxiv.org/abs/2601.20245)
+
+#### Inferences
+- The finding that the "engaged patterns preserved learning" comes from a post-hoc grouping of the 26 treatment participants. It is a hypothesis-generating result, not a randomised comparison.
+
+#### Gaps
+- One short session (35 minutes), an immediate quiz only, and participants with at least one year of Python. Not reviewed by peers yet. The authors were at Anthropic.
+
+### Corrections for the review (part 1)
+
+1. **H5 (SusVibes) - numbers and version.** Replace "functionally correct on ~61% of tasks, secure on ~10.5%" with: "In the ICML 2026 version of SusVibes (186 real-world tasks), the best-performing setup, SWE-Agent with Claude 4 Sonnet, produced functionally correct code for 57% of tasks, but only 11.8% of tasks were both correct and secure; 79.3% of its correct solutions were insecure (Zhao et al., 2026)." The 61%/10.5% figures belong to the superseded preprint v1-v2 (200 tasks). Authors: Zhao, Wang, Zhang, Luo, Li & Li; venue ICML 2026 (PMLR 306). For the hints: "adding the vulnerability type to the prompt raised correct-and-secure solutions only from 11.8% to at most 15.1%, while functional correctness dropped".
+2. **H4 (BaxBench) - figure.** Use "35%", not 38%: "even the best model (OpenAI o3-mini) produced backends that were both correct and secure in only 35% of tasks (Vero et al., 2025)". If the review wants the introduction's ceiling, say "at most 37%". Do not use 38%.
+3. **H9 (Klemmer et al.) - claim reframed.** Replace "this does not match their reported behaviour" with: "Professionals said they check AI suggestions as they would human code and rarely reported running into security issues; the authors note that this reported scrutiny clashes with the security problems found in experimental studies, and conclude that professionals overestimate how well they can scrutinise AI output (Klemmer et al., 2024)." The paper observed no behaviour.
+4. **H11 (Jost et al.) - wording.** Replace "programming experience strongly predicts code security" with "programming experience significantly predicted code security (odds ratio 1.43 per SD of experience; predicted success 30% → 38%), and Gemini did not make up for it". Label it as a preprint.
+5. **H12 (Khalid et al.) - venue.** Replace "preprint" with "to appear at IEEE S&P 2027 (arXiv 2609.21020)". Optionally add that 22% is per submission (88 of 400).
+6. **H13 (Bappy et al.) - details.** "15 engineers interviewed, 14 observed in coding sessions; none of the 14 put security requirements in their initial prompt" (note that one paragraph of the paper says 12 of 14). Replace "seniority did not predict security performance" with "neither experience cohort nor seniority aligned with who caught security issues (a qualitative observation, n = 14)".
+7. **H14 (Kudriavtseva et al.) - authors and size caveat.** Authors: Kudriavtseva, Hotak & Gadyatskaya (2025), "My Code Is Less Secure with Gen AI: Surveying Developers' Perceptions of the Impact of Code Generation Tools on Security", SAC '25. Add the caveat: "only 1% of the 105 respondents were very confident in AI-generated code, and all of them were juniors (students and developers with 0-2 years' experience)".
+8. **H2 (Majdinasab et al.) - precision.** Write the numbers as 36.54% → 27.25% and say they are for Python, so they are not compared with Pearce et al.'s overall 40%.
+9. **H3 (Fu et al.) - precision.** The 733 snippets include code from CodeWhisperer and Codeium as well as Copilot. Write "AI-generated (mainly Copilot) snippets in GitHub projects".
+10. **H15 (Veracode) - precision.** The numbers stand, but cite them as vendor research (grade C). Say that the gain comes mostly from XSS, and that two models share the best score of 73%.
+
+No source was missing, and no ID pointed to a different paper.
+
+**Part 2 (H17–H35): secure coding, junior roles and the regulatory frame**
+
+Scope: This part checks 19 sources (H17 to H35) that the literature review section plans to cite. Together they support four lines of argument. (1) Developers' security mistakes come mostly from conceptual gaps and missing prompts, not from slips: Votipka et al., Naiakshina et al. (2017, 2019), Lam et al. (2) Light interventions that work: a security focus prompt in code review, an in-IDE plugin, and short workshops: Braz et al., Nguyen et al., Weir et al. (3) The AI and labour-market context for juniors: Tompkins et al., Alahmadi et al., ISC2 (2025, 2026), the Dialogic/PTvT report for EZK, UWV. (4) The normative frame: the Dutch Cyberbeveiligingswet, the EU Cyber Resilience Act, NIST SSDF, ISO/IEC 27001:2022 control 8.28, ENISA ECSF, OWASP SAMM and ASVS, and the NCSC web application guidelines. For each source we checked authors, year, title, venue and review status (or document type), DOI or URL, and each planned claim.
+
+Method note: Bibliographic data came from the Crossref API for every DOI (Braz et al., both Naiakshina papers, Nguyen et al., Weir et al., Lam et al., Tompkins et al.). The two USENIX Security papers (Votipka et al., Alahmadi et al.) have no DOI; their data came from the USENIX proceedings PDFs. arXiv records came from the arXiv API (1708.08759, 2202.04586, 2602.17448). Full texts read with pdftotext: Votipka et al. (USENIX PDF), Naiakshina et al. 2017 (arXiv), Braz et al. (arXiv), Nguyen et al. (open CCS PDF at acmccs.github.io), Weir et al. (UCL author PDF), Lam et al. (author PDF at wisc.edu), Tompkins et al. (arXiv v3), Alahmadi et al. (USENIX PDF), the Dialogic/PTvT report (open.overheid.nl), NIST SP 800-218 (nvlpubs PDF), the ENISA ECSF role profiles PDF, the NCSC guideline PDF and two UWV PDFs. Naiakshina et al. 2019 was not read in full: the authors' PDF on net.cs.uni-bonn.de could not be reached (connection refused); the abstract was taken from the passwordresearch.com mirror. EUR-Lex itself could not be reached (certificate error); the CRA text was taken from the same Official Journal document in the EU Publications Office (CELEX 32024R2847, cellar). The ISC2 pages, the Rijksoverheid news item, the Staatsblad pages, OWASP SAMM, the OWASP ASVS project page and GitHub release list, CSRC (NIST) pages and the UWV web pages were read as HTML. Older versions of the UWV ICT page were read through the Internet Archive (snapshot of 14 July 2026). ISO/IEC 27001:2022 is paywalled; control 8.28 was confirmed through the ISO catalogue page (edition and date) plus a certification body (DQS). Quotes are verbatim from these sources; Dutch quotes are left in Dutch.
+
+### H17. Votipka, Fulton, Parker, Hou, Mazurek & Hicks (2020), "Understanding security mistakes developers make: Qualitative analysis from Build It, Break It, Fix It"
+
+#### Takeaway
+**Verdict: confirmed.** All three numbers match the abstract: 94 projects, 78% with misunderstanding-type vulnerabilities, 21% with simple mistakes. One detail matters for how we use it: the participants were not novices. Most were post-degree professionals in a MOOC capstone, with an average of 8.9 years of development experience.
+
+#### Cited Findings
+- Bibliographic: Proceedings of the 29th USENIX Security Symposium (USENIX Security 20), August 12-14, 2020, pp. 109-126; peer-reviewed (Distinguished Paper Award); no DOI. Evidence grade B (systematic qualitative coding of 94 contest projects and 866 exploits). — [USENIX](https://www.usenix.org/conference/usenixsecurity20/presentation/votipka-understanding)
+- Abstract: "For example, simple mistakes were least common: only 21% of projects introduced such an error. Conversely, vulnerabilities arising from a misunderstanding of security concepts were significantly more common, appearing in 78% of projects." — [USENIX PDF](https://www.usenix.org/system/files/sec20-votipka-understanding.pdf)
+- Abstract: "we conducted an in-depth analysis of 94 submissions to a secure-programming contest designed to mimic real-world constraints: correctness, performance, and security." — [USENIX PDF](https://www.usenix.org/system/files/sec20-votipka-understanding.pdf)
+- Sample: "we decided to consider a sample of 94 projects--just under 67% of the total." (out of 142). — [USENIX PDF](https://www.usenix.org/system/files/sec20-votipka-understanding.pdf)
+- Participants: "Although these participants were students, most were also post-degree professionals; overall, participants had a average of 8.9 years software development experience." — [USENIX PDF](https://www.usenix.org/system/files/sec20-votipka-understanding.pdf)
+
+#### Inferences
+- The finding supports teaching security concepts (for example integrity next to confidentiality), not only checklists against slips. The authors call for "better security training that focuses on less-intuitive concepts like integrity".
+- Because participants were experienced, the 78% is not a "junior" figure. It shows that experience alone does not remove conceptual errors.
+
+#### Gaps
+- Contest setting (three problem types, teams of 1 to 7). The 94 projects were sampled on purpose, not at random.
+- Teams were primed for security by the contest; the authors note this may make them more careful than typical developers.
+
+### H18. Naiakshina, Danilova, Tiefenau, Herzog, Dechand & Smith (2017), "Why Do Developers Get Password Storage Wrong? A Qualitative Usability Study"; and Naiakshina, Danilova, Gerlitz, von Zezschwitz & Smith (2019), "If you want, I can store the encrypted password."
+
+#### Takeaway
+**Verdict: confirmed, with a sample-size detail.** In the 2017 study, none of the 10 students who were not asked for security stored passwords securely. The 2019 abstract states that freelancers, like the students, "do not store passwords securely unless prompted". Note: even with prompting, only 4 of 10 students reached a secure solution in 2017, so prompting is necessary but not sufficient.
+
+#### Cited Findings
+- Bibliographic (2017): Proceedings of the 2017 ACM SIGSAC Conference on Computer and Communications Security (CCS '17), pp. 311-328, DOI 10.1145/3133956.3134082; arXiv 1708.08759. Peer-reviewed. Evidence grade C (qualitative lab study, n = 20 CS students, 2 x 2 design). — [Crossref](https://api.crossref.org/works/10.1145/3133956.3134082), [arXiv](https://arxiv.org/abs/1708.08759)
+- 2017, results: "Not a single participant from the non-primed groups, either working with JSF or Spring, stored the end-user passwords securely in the database." — [arXiv](https://arxiv.org/abs/1708.08759)
+- 2017, section 4.6: "None of the 10 non-primed participants implemented a secure solution." — [arXiv](https://arxiv.org/abs/1708.08759)
+- 2017, primed group: "From the primed groups, SP1, SP3, SP4, and JP4 were able to store the password securely with a security score of 6." — [arXiv](https://arxiv.org/abs/1708.08759)
+- Bibliographic (2019): Proceedings of the 2019 CHI Conference on Human Factors in Computing Systems (CHI '19), paper pp. 1-12, DOI 10.1145/3290605.3300370. Peer-reviewed. Evidence grade C (mixed-methods field study with hired freelancers). — [Crossref](https://api.crossref.org/works/10.1145/3290605.3300370)
+- 2019, abstract: "The authors' results showed that, without explicit prompting, none of the students implemented secure password storage." and "we reveal that, similar to the students, freelancers do not store passwords securely unless prompted, they have misconceptions about secure password storage, and they use outdated methods." — [abstract mirror, passwordresearch.com](https://passwordresearch.com/papers/paper807.html)
+
+#### Inferences
+- The "prompt" effect links to H19 (Braz et al.): telling people to look at security changes behaviour in both writing and reviewing code. A harness that asks the security question explicitly is in line with both.
+- "Unless prompted" in the freelancer abstract is a group-level statement; it does not say that all non-prompted freelancers failed.
+
+#### Gaps
+- 2019 full text not read (authors' server unreachable). The number of freelancers and the per-group secure rates were not checked. Do not cite a "none" or a percentage for freelancers without the full text.
+- 2017: 20 students, lab setting, Java web frameworks only; the authors note participants knew they were in a study.
+
+### H19. Braz, Aeberhard, Çalikli & Bacchelli (2022), "Less is More: Supporting Developers in Vulnerability Detection during Code Review"
+
+#### Takeaway
+**Verdict: confirmed, two wording fixes.** n = 150 and "eight times" are correct, but "eight times" is an odds ratio, not a probability ratio (the abstract says "probability"; the results section says "expressed in odds ratio"). The checklist was not the OWASP checklist itself but a 22-item checklist derived from it (and a 7-item tailored one); neither improved detection significantly.
+
+#### Cited Findings
+- Bibliographic: Proceedings of the 44th International Conference on Software Engineering (ICSE '22), pp. 1317-1329, DOI 10.1145/3510003.3511560; arXiv 2202.04586 (title changed to match ICSE). Peer-reviewed. Evidence grade B (randomised online experiment, n = 150). — [Crossref](https://api.crossref.org/works/10.1145/3510003.3511560), [arXiv](https://arxiv.org/abs/2202.04586)
+- Abstract: "we conduct an online experiment with 150 participants, of which 71% report to have three or more years of professional development experience. Our results show that simply asking reviewers to focus on security during the code review increases eight times the probability of vulnerability detection." — [arXiv](https://arxiv.org/abs/2202.04586)
+- Results: "expressed in odds ratio, these results show that participants assigned to any of SI, SC, and TC are eight times more likely to find a vulnerability than those assigned to NI" — [arXiv](https://arxiv.org/abs/2202.04586)
+- Abstract: "The presence of a security checklist does not significantly improve the outcome further, even when the checklist is tailored to the change under review and the existing vulnerabilities in the change." — [arXiv](https://arxiv.org/abs/2202.04586)
+- Method: "we designed the checklist available to participants of SC by reducing the OWASP checklist to 22 security items structured in 3 categories and 7 subcategories." — [arXiv](https://arxiv.org/abs/2202.04586)
+
+#### Inferences
+- A security focus instruction is cheap and effective; adding a long checklist on top of it is not. This supports a short, explicit "look at security now" step over a long checklist.
+
+#### Gaps
+- Mostly experienced developers, not students. One code change with two vulnerabilities (both in the Sensitive Data Exposure group). The checklist comparison (RQ2) used 117 participants.
+
+### H20. Nguyen, Wermke, Acar, Backes, Weir & Fahl (2017), "A Stitch in Time: Supporting Android Developers in Writing Secure Code"
+
+#### Takeaway
+**Verdict: confirmed, with nuance.** n = 39 (developers and students) and "significantly less security problems" with the FixDroid IDE plugin are in the paper. The effect was large for the encryption and connection tasks and small for the SQLite task.
+
+#### Cited Findings
+- Bibliographic: Proceedings of the 2017 ACM SIGSAC Conference on Computer and Communications Security (CCS '17), pp. 1065-1077, DOI 10.1145/3133956.3133977. Peer-reviewed. Evidence grade B (between-groups remote experiment, n = 39, plus a pilot with 9). — [Crossref](https://api.crossref.org/works/10.1145/3133956.3133977), [open PDF](https://acmccs.github.io/papers/p1065-nguyenA.pdf)
+- Abstract: "we identify key UI requirements and demonstrate that code delivered with such a tool by developers previously inexperienced in security contains significantly less security problems." — [open PDF](https://acmccs.github.io/papers/p1065-nguyenA.pdf)
+- Introduction: "we improved FixDroid and performed a remote user study with Android developers and students (n=39) to evaluate the security benefits of FixDroid." — [open PDF](https://acmccs.github.io/papers/p1065-nguyenA.pdf)
+- Results: "We were pleased to see a dramatic difference in security success, with more than twice the proportion achieving a secure solution in the Encryption and Connection tasks. Interestingly there was little difference in security success for the SQLite task." — [open PDF](https://acmccs.github.io/papers/p1065-nguyenA.pdf)
+
+#### Inferences
+- In-the-moment feedback while writing code helps. This fits an AI or linter step that flags a security issue during the task rather than after it.
+
+#### Gaps
+- Android-specific APIs (crypto, TLS, SQL). Functional correctness did not differ between groups. No retention or learning test after the task.
+
+### H21. Weir, Becker, Noble, Blair, Sasse & Rashid (2020), "Interventions for long-term software security: Creating a lightweight program of assurance techniques for developers"
+
+#### Takeaway
+**Verdict: corrected (title and authors).** The PDF at the UCL URL is not "A passion for security". It is the Software: Practice and Experience paper "Interventions for long-term software security", with six authors. The claims hold: six hours of facilitated workshops over three months, in three organisations, with interviews after twelve months. But the 12-month follow-up only worked for two of the three teams: in Team C only one interviewee was still at the company and there was no response.
+
+#### Cited Findings
+- Bibliographic: Software: Practice and Experience, 50(3), 275-298, DOI 10.1002/spe.2774 (online 12 November 2019; issue 2020). Peer-reviewed journal. Evidence grade C (participatory action research with three teams; interviews). — [Crossref](https://api.crossref.org/works/10.1002/spe.2774), [author PDF](https://sec.cs.ucl.ac.uk/fileadmin/sec/publications/WeirSPEJournalPaper.pdf)
+- Note: "A Passion for Security: Intervening to Help Software Developers" is a different paper by Weir, Becker & Blair, ICSE-SEIP 2021, pp. 21-30, DOI 10.1109/ICSE-SEIP52600.2021.00011. — [Crossref](https://api.crossref.org/works/10.1109/icse-seip52600.2021.00011)
+- Abstract: "We propose that a series of lightweight interventions, six hours of facilitated workshops delivered over three months, can improve a team's motivation to consider security and awareness of assurance techniques, changing its security culture even when no security experts are involved." — [author PDF](https://sec.cs.ucl.ac.uk/fileadmin/sec/publications/WeirSPEJournalPaper.pdf)
+- Abstract: "we delivered the workshops to three software development organizations, and evaluated their effectiveness through interviews beforehand, immediately afterwards, and after twelve months. We found that the interventions can be effective with teams with limited or no security experience, and that improvement is long lasting." — [author PDF](https://sec.cs.ucl.ac.uk/fileadmin/sec/publications/WeirSPEJournalPaper.pdf)
+- Team C: "After one year, only one of the initial interviewees was still with the company and we received no response to our interview requests." — [author PDF](https://sec.cs.ucl.ac.uk/fileadmin/sec/publications/WeirSPEJournalPaper.pdf)
+
+#### Inferences
+- Short, repeated, facilitated sessions can shift team habits. This supports "small doses over time" rather than one long training.
+
+#### Gaps
+- Three teams, interview data, no control group. "Long lasting" rests on two teams. The paper extends the authors' ICSE-SEIP 2019 paper (DOI 10.1109/ICSE-SEIP.2019.00013).
+
+### H22. Lam, Fang, Almansoori, Chatterjee & Soosai Raj (2022), "Identifying Gaps in the Secure Programming Knowledge and Skills of Students"
+
+#### Takeaway
+**Verdict: confirmed.** 21 students from two US R1 universities, coding interviews; the authors conclude that students "lack the key fundamental skills to write secure programs". The context is C and memory safety after a Computer Systems course.
+
+#### Cited Findings
+- Bibliographic: Proceedings of the 53rd ACM Technical Symposium on Computer Science Education V. 1 (SIGCSE 2022), pp. 703-709, DOI 10.1145/3478431.3499391. Peer-reviewed. Evidence grade C (qualitative think-aloud coding interviews, n = 21). — [Crossref](https://api.crossref.org/works/10.1145/3478431.3499391), [author PDF](https://pages.cs.wisc.edu/~chatterjee/papers/sigcse22-gapsinsecprog.pdf)
+- Abstract: "we conducted a coding interview with 21 students from two R1 universities in the United States." — [author PDF](https://pages.cs.wisc.edu/~chatterjee/papers/sigcse22-gapsinsecprog.pdf)
+- Abstract: "Our results suggest that students lack the key fundamental skills to write secure programs. For example, students rarely pay attention to details, such as compiler warnings, and often do not read programming language documentation with care." — [author PDF](https://pages.cs.wisc.edu/~chatterjee/papers/sigcse22-gapsinsecprog.pdf)
+
+#### Inferences
+- The gaps are partly general programming habits (reading warnings and documentation), not only security knowledge. That supports teaching security inside normal programming work.
+
+#### Gaps
+- C/C++ (gets, strcpy, buffer overflows), not managed languages such as C#. US students only; small sample.
+
+### H23. Tompkins, Agarwal, Soneji, Wasinger, Nelson, Leach, Hasan, Doupé, Votipka, Shoshitaishvili & Mink (2026), "Do Hackers Dream of Electric Teachers?: A Large-Scale, In-Situ Measurement of Cybersecurity Student Behaviors and Educational Performance with AI Tutors"
+
+#### Takeaway
+**Verdict: confirmed, venue now final, three wording fixes.** Published in the CCS 2026 proceedings (Crossref record, pp. 1820-1834). 309 students, terminal and last saved file as context, no access to solutions, 3.5% solution requests: all confirmed. Fix 1: Reactive conversations had lower completion than Short conversations (in 8 of 9 modules); against Proactive no single module was significant (only the module-averaged contrast was). Fix 2: 40.6% and 57.3% are shares of the 293 survey respondents, not of 309. Fix 3: the finding is correlational.
+
+#### Cited Findings
+- Bibliographic: Proceedings of the 2026 ACM SIGSAC Conference on Computer and Communications Security (CCS '26, The Hague), pp. 1820-1834, DOI 10.1145/3830454.3846694; arXiv 2602.17448 (v3, 12 Oct 2026, comment "Published at ACM CCS 2026"). Peer-reviewed. Evidence grade C (large observational study; correlational). — [Crossref](https://api.crossref.org/works/10.1145/3830454.3846694), [arXiv](https://arxiv.org/abs/2602.17448)
+- Abstract: "we conducted a semester-long observational study of an embedded AI tutor with 309 students in an upper-division introductory cybersecurity course." — [arXiv](https://arxiv.org/abs/2602.17448)
+- Tutor context: "(d) the current Linux system context, composed of the latest saved file and active terminal history to capture command usage and outputs" and "the system does not have access to a solution, discouraging extraction and encouraging students to build one cooperatively." (model: GPT-4o; course on pwn.college) — [arXiv](https://arxiv.org/abs/2602.17448)
+- Solution requests: "only a small minority of queries (3.5%) are direct solution requests." — [arXiv](https://arxiv.org/abs/2602.17448)
+- Completion: "in eight of nine modules, Reactive conversations are associated with significantly lower completion rates than Short conversations (Table 8)." — [arXiv](https://arxiv.org/abs/2602.17448)
+- Proactive vs Reactive: "Although Proactive conversations showed equal or higher raw completion rates than Reactive in all nine modules, no per-module contrast achieved statistical significance." The module-averaged contrast was OR = 1.27 (95% CI [1.06, 1.51]). — [arXiv](https://arxiv.org/abs/2602.17448)
+- Trust: "only 40.6% (=119) agreed they could trust the tutor's information." (survey n = 293) — [arXiv](https://arxiv.org/abs/2602.17448)
+- Use: "In Q13, 168 (57.3%) participants reported stopping or reducing their use of the tutor during the semester" — [arXiv](https://arxiv.org/abs/2602.17448)
+
+#### Inferences
+- A Socratic tutor that sees the student's terminal and file but not the answer is a workable design: few students asked straight for the answer.
+- "Reactive" use (pasting errors and asking the tutor to find the problem) goes together with lower completion. This supports asking students to state their own hypothesis before they ask the AI.
+
+#### Gaps
+- Observational; the authors say the association has both a between-student and a within-student part, so it is not a causal effect of style.
+- One US course (720 enrolled, 309 consented). The tutor became less useful on harder modules, which also drove the 57.3%.
+
+### H24. Alahmadi, Axon & Martinovic (2022), "99% False Positives: A Qualitative Study of SOC Analysts' Perspectives on Security Alarms"
+
+#### Takeaway
+**Verdict: partly supported; needs rewording.** Analysts do validate alarms manually, and they perceive high false-positive rates. But "99%" is one analyst's quote, and the paper's main finding is that most of what analysts call false positives are in fact "benign triggers": true alarms caused by legitimate behaviour. So "most alarms are false positives" overstates the paper.
+
+#### Cited Findings
+- Bibliographic: Proceedings of the 31st USENIX Security Symposium (USENIX Security 22), August 10-12, 2022, pp. 2783-2800; peer-reviewed; no DOI. Evidence grade C (survey n = 20, interviews n = 21). — [USENIX](https://www.usenix.org/conference/usenixsecurity22/presentation/alahmadi), [USENIX PDF](https://www.usenix.org/system/files/sec22-alahmadi.pdf)
+- Abstract: "In an online survey we conducted with security practitioners (n = 20) working in SOCs, practitioners confirmed the high FP rates of the tools used, requiring manual validation." — [USENIX PDF](https://www.usenix.org/system/files/sec22-alahmadi.pdf)
+- Abstract: "Our results highlight that, despite the perceived volume of FPs, most are attributed to benign triggers--true alarms, explained by legitimate behavior in the organization's environment, which analysts may choose to ignore." — [USENIX PDF](https://www.usenix.org/system/files/sec22-alahmadi.pdf)
+- Source of the title: "B3 quantified it as 99%, stating: "We know 99% of the alarms we generate are false positives, but we still have to look at them."" — [USENIX PDF](https://www.usenix.org/system/files/sec22-alahmadi.pdf)
+
+#### Inferences
+- The paper supports "alarm validation is manual and tedious, and needs knowledge of the environment". That is the kind of judgement work that AI can speed up but that juniors used to learn by doing.
+
+#### Gaps
+- Small qualitative sample from seven SOCs. No measured false-positive rate.
+
+### H25. ISC2 (2025), "2025 ISC2 Cybersecurity Workforce Study"
+
+#### Takeaway
+**Verdict: confirmed, with a wording note.** 16,029 respondents; no workforce-gap estimate this year; 5% entry/junior-level respondents; 3% entered through internships or apprenticeships. "39% hiring freeze" means 39% of respondents reported hiring freezes at their organisation. Note: the same page later says "overall average of 34%" for hiring freezes, which looks like an internal inconsistency (34% is the promotion-freeze figure). Cite 39% with the exact wording.
+
+#### Cited Findings
+- Bibliographic: ISC2 Insights web report, 4 December 2025; industry survey report (not peer-reviewed). Evidence grade C (large non-probability online survey, July-August 2025). — [ISC2](https://www.isc2.org/Insights/2025/12/2025-ISC2-Cybersecurity-Workforce-Study)
+- "A record 16,029 cybersecurity practitioners and decision-makers participated in the 2025 study" — [ISC2](https://www.isc2.org/Insights/2025/12/2025-ISC2-Cybersecurity-Workforce-Study)
+- "Hiring freezes also remained broadly flat, increasing by 1% from 2024 to 39%." — [ISC2](https://www.isc2.org/Insights/2025/12/2025-ISC2-Cybersecurity-Workforce-Study)
+- Same page, later: "Nearly half (49%) of enterprise organizations are still implementing cybersecurity hiring freezes, significantly higher than the overall average of 34%" — [ISC2](https://www.isc2.org/Insights/2025/12/2025-ISC2-Cybersecurity-Workforce-Study)
+- "Therefore, ISC2 has not included an estimate of the cybersecurity workforce gap this year." — [ISC2](https://www.isc2.org/Insights/2025/12/2025-ISC2-Cybersecurity-Workforce-Study)
+- Appendix, Respondent Level: "Entry/junior-level staff 5%" — [ISC2](https://www.isc2.org/Insights/2025/12/2025-ISC2-Cybersecurity-Workforce-Study)
+- "those who secured a cybersecurity role via an internship or apprenticeship (which only 3% of participants experienced) had the highest rate (69%) of recommending that pathway to others." — [ISC2](https://www.isc2.org/Insights/2025/12/2025-ISC2-Cybersecurity-Workforce-Study)
+
+#### Inferences
+- With only 5% junior respondents, the study mostly reflects the view of experienced staff on junior pathways.
+- Among those aged 21-29, internship or apprenticeship entry is higher (8% within the 38% non-IT, non-cyber-education group), so "3%" describes the whole sample, not young entrants.
+
+#### Gaps
+- Only the web version was read, not the PDF report. The 39% vs 34% inconsistency was not resolved.
+
+### H26. ISC2 (2026), "ISC2 Research: Rethinking AI's Impact on Cybersecurity Roles"
+
+#### Takeaway
+**Verdict: confirmed.** 856 cybersecurity professionals who use AI in their roles, surveyed in May 2026. 56% say AI reduced the need for entry-level positions; 53% say AI creates new types of entry-level roles; 37% say AI reduced hands-on learning opportunities (36% say it has not).
+
+#### Cited Findings
+- Bibliographic: ISC2 Insights web report, 14 July 2026; industry survey report (not peer-reviewed). Evidence grade C (non-probability survey of AI users). — [ISC2](https://www.isc2.org/Insights/2026/07/rethinking-ai-impact-on-cybersecurity-roles)
+- "in May 2026 ISC2 conducted a survey of 856 cybersecurity professionals who use AI in their roles." — [ISC2](https://www.isc2.org/Insights/2026/07/rethinking-ai-impact-on-cybersecurity-roles)
+- "The majority of participants (56%) said that AI has somewhat or significantly reduced the need for entry-level positions over the past year." — [ISC2](https://www.isc2.org/Insights/2026/07/rethinking-ai-impact-on-cybersecurity-roles)
+- "Over half of participants (53%) believe that AI is creating new types of entry-level roles" — [ISC2](https://www.isc2.org/Insights/2026/07/rethinking-ai-impact-on-cybersecurity-roles)
+- "Participants were nearly evenly split on whether they believe AI has reduced hands-on learning opportunities in their workplace, with 37% saying it has and 36% saying it has not." — [ISC2](https://www.isc2.org/Insights/2026/07/rethinking-ai-impact-on-cybersecurity-roles)
+
+#### Inferences
+- "56% reduced" and "53% new roles" can both be true: the page frames it as roles "evolving" rather than narrowing.
+- The 37% must be cited with its 36% counterpart; it is a split, not a majority.
+
+#### Gaps
+- Perceptions of AI users only; no data on actual hiring. Only the web version was read.
+
+### H27. Platform Talent voor Technologie & Dialogic (2024), "Onderzoeksrapportage Onderwijs en Arbeidsmarkt Cybersecurity" (with the "Adviesrapport Onderwijs en Arbeidsmarkt Cybersecurity" in the same PDF)
+
+#### Takeaway
+**Verdict: confirmed, with an important definitional caveat.** The figures are in the report. But the 19,000 vacancies for 2022 use a broad definition that includes a "Cybersecurity – laag" category, which the authors themselves advise not to count as cybersecurity professionals. With narrower definitions the report gives 4,200 to 18,900, and CBS / pr-eDICT come to about 4,000. The ~3,000 per year is the inflow into higher education (hbo and wo) programmes with a "relevant" cyber component.
+
+#### Cited Findings
+- Bibliographic: Platform Talent voor Technologie (PTvT) & Dialogic, "Onderzoeksrapportage Onderwijs en Arbeidsmarkt Cybersecurity", commissioned by the Ministry of Economic Affairs and Climate (EZK); research period September 2023 to February 2024. The report carries no date in its text. It was sent to the House as annex (bijlage 1142874) to the Kamerbrief of 15 March 2024 (Kamerstuk 26643, nr. 1164; published 16 May 2024). Government-commissioned report (grey literature, not peer-reviewed). Evidence grade B for the vacancy counts (Jobdigger vacancy data, 2018-2022), C for the qualitative parts. — [open.overheid.nl PDF](https://open.overheid.nl/documenten/c0ac3595-28e3-43df-aa85-7d9e8a426c25/file), [Kamerstuk 26643-1164](https://zoek.officielebekendmakingen.nl/kst-26643-1164.html), [Dialogic](https://dialogic.nl/en/projecten/onderwijs-en-arbeidsmarkt-cybersecurity)
+- Summary: "In de vacatureanalyse is een groeiende vraag naar cybersecurity expertise te zien op de arbeidsmarkt: van circa 8.000 in 2018 tot circa 19.000 in 2022, voor zowel de specialistische cybersecurityprofielen als de bredere functieprofielen waar cybersecurity een onderdeel van uitmaakt." — [PDF](https://open.overheid.nl/documenten/c0ac3595-28e3-43df-aa85-7d9e8a426c25/file)
+- Definitions (p. 36): "Binnen dit onderzoek is er een bredere operationalisering van cybersecurity gebruikt, en komen we tot 4.200 – 18.900 vacatures afhankelijk van de gekozen benadering. Wij zouden niet aanraden om de categorie `Cybersecurity – laag' mee te tellen als cybersecurity professionals" — [PDF](https://open.overheid.nl/documenten/c0ac3595-28e3-43df-aa85-7d9e8a426c25/file)
+- Seniority: "Hieruit blijkt dat, voor zover bekend, circa driekwart van de vacatures betrekking heeft op medior- en seniorfuncties." — [PDF](https://open.overheid.nl/documenten/c0ac3595-28e3-43df-aa85-7d9e8a426c25/file)
+- Inflow: "De instroom van studenten met een relevant onderdeel cybersecurity in hun studie blijft de laatste drie jaren redelijk gelijk; rond de 3000 studenten jaarlijks." (section on hbo and wo) — [PDF](https://open.overheid.nl/documenten/c0ac3595-28e3-43df-aa85-7d9e8a426c25/file)
+- Junior match: "Bij het hoger onderwijs zien we relatief te weinig hbo en wo-gediplomeerden met een specialistisch cybersecurity profiel afstuderen ten opzichte van de vraag op de arbeidsmarkt. Het aantal ho-gediplomeerden dat een `substantiële' component cybersecurity in de opleiding heeft gehad is echter op peil met de vraag." — [PDF](https://open.overheid.nl/documenten/c0ac3595-28e3-43df-aa85-7d9e8a426c25/file)
+- Skills: "Over de hele linie is er relatief veel technische kennis vereist om actief te zijn binnen de cybersecurity, maar de benodigde vaardigheden en uit te voeren taken zijn daarentegen voor een groot deel niet-technisch van aard." — [PDF](https://open.overheid.nl/documenten/c0ac3595-28e3-43df-aa85-7d9e8a426c25/file)
+
+#### Inferences
+- The shortage is at medior and senior level; the report puts the main task in lifelong learning (LLO), not in more junior graduates.
+- "Largely non-technical" must keep its first half: technical knowledge is still required.
+
+#### Gaps
+- Vacancies are a proxy for demand (the report says so). Data end in 2022, before the generative-AI wave.
+
+### H28. Cyberbeveiligingswet (Netherlands, 2026): Act of 8 July 2026, Stb. 2026, 187; entry into force set by the Cyberbeveiligingsbesluit, Stb. 2026, 189
+
+#### Takeaway
+**Verdict: corrected (citation) and partly unconfirmed (numbers).** In force on 15 August 2026: confirmed. But Staatsblad 2026, 189 is the Cyberbeveiligingsbesluit (the implementing decree that also sets the date). The Act itself is Staatsblad 2026, 187. "Ruim 8000 organisaties" is confirmed by the Rijksoverheid news item of 7 July 2026. The "~1,000 organisations" under the old Wbni is not in either source; we could not confirm it.
+
+#### Cited Findings
+- Type: Dutch Act (wet) implementing Directive (EU) 2022/2555 (NIS2), replacing the Wbni. Normative. — [Stb. 2026, 187](https://zoek.officielebekendmakingen.nl/stb-2026-187.html)
+- Stb. 2026, 187: "Wet van 8 juli 2026, houdende regels ter implementatie van Richtlijn (EU) 2022/2555"; published 10-07-2026. Art. 107: "Deze wet treedt in werking op een bij koninklijk besluit te bepalen tijdstip" — [Stb. 2026, 187](https://zoek.officielebekendmakingen.nl/stb-2026-187.html)
+- Stb. 2026, 189: "Besluit van 8 juli 2026, houdende regels ter uitvoering van de Cyberbeveiligingswet en tot vaststelling van het tijdstip van inwerkingtreding van de Cyberbeveiligingswet (Cyberbeveiligingsbesluit)". Art. 35: "De Cyberbeveiligingswet en dit besluit treden in werking met ingang van 15 augustus 2026." — [Stb. 2026, 189](https://zoek.officielebekendmakingen.nl/stb-2026-189.html)
+- Rijksoverheid, 7 July 2026: "De wetten treden op 15 augustus 2026 in werking. Vanaf dat moment gelden nieuwe verplichtingen voor ruim 8000 organisaties in Nederland op het gebied van cyberbeveiliging." — [Rijksoverheid](https://www.rijksoverheid.nl/actueel/nieuws/2026/07/07/cyberbeveiligingswet-en-wet-weerbaarheid-kritieke-entiteiten-vanaf-15-augustus-2026-van-kracht)
+
+#### Inferences
+- More organisations under a duty of care and board responsibility means more demand for people who can do secure development and incident work, also in non-IT sectors.
+
+#### Gaps
+- The Wbni baseline ("~1,000") needs its own source (for example the explanatory memorandum to the Cbw or an NCSC/NCTV page). Until then, write "from a much smaller group under the Wbni to more than 8,000".
+
+### H29. Regulation (EU) 2024/2847 (Cyber Resilience Act)
+
+#### Takeaway
+**Verdict: confirmed, two precision fixes.** Article 14 applies from 11 September 2026; the rest from 11 December 2027 (Chapter IV from 11 June 2026). 24 h early warning and 72 h notification: confirmed for actively exploited vulnerabilities (and severe incidents). Annex I wording: products must be "made available on the market" (not "placed") without known exploitable vulnerabilities and with a secure by default configuration, "on the basis of the cybersecurity risk assessment ... and where applicable". The SBOM duty is in Annex I Part II point (1).
+
+#### Cited Findings
+- Bibliographic: Regulation (EU) 2024/2847 of the European Parliament and of the Council of 23 October 2024 on horizontal cybersecurity requirements for products with digital elements (Cyber Resilience Act), OJ L, 2024/2847, 20.11.2024. Normative. — [EUR-Lex](https://eur-lex.europa.eu/eli/reg/2024/2847/oj/eng) (text read via the Publications Office copy of the same OJ document: [cellar](https://publications.europa.eu/resource/celex/32024R2847))
+- Art. 14(2)(a): "an early warning notification of an actively exploited vulnerability, without undue delay and in any event within 24 hours of the manufacturer becoming aware of it" — [EUR-Lex](https://eur-lex.europa.eu/eli/reg/2024/2847/oj/eng)
+- Art. 14(2)(b): "unless the relevant information has already been provided, a vulnerability notification, without undue delay and in any event within 72 hours of the manufacturer becoming aware of the actively exploited vulnerability" — [EUR-Lex](https://eur-lex.europa.eu/eli/reg/2024/2847/oj/eng)
+- Art. 71(2): "This Regulation shall apply from 11 December 2027. However, Article 14 shall apply from 11 September 2026 and Chapter IV (Articles 35 to 51) shall apply from 11 June 2026." — [EUR-Lex](https://eur-lex.europa.eu/eli/reg/2024/2847/oj/eng)
+- Annex I, Part I(2): "On the basis of the cybersecurity risk assessment referred to in Article 13(2) and where applicable, products with digital elements shall: (a) be made available on the market without known exploitable vulnerabilities; (b) be made available on the market with a secure by default configuration" — [EUR-Lex](https://eur-lex.europa.eu/eli/reg/2024/2847/oj/eng)
+- Annex I, Part II(1): "identify and document vulnerabilities and components contained in products with digital elements, including by drawing up a software bill of materials in a commonly used and machine-readable format covering at the very least the top-level dependencies of the products" — [EUR-Lex](https://eur-lex.europa.eu/eli/reg/2024/2847/oj/eng)
+- Commission CRA reporting page: "As of 11 September 2026, manufacturers are required to report actively exploited vulnerabilities and severe incidents impacting the security of products with digital elements." and "They need to submit an early warning within 24 hours of becoming aware, and a full notification within 72 hours." — [European Commission](https://digital-strategy.ec.europa.eu/en/policies/cra-reporting)
+
+#### Inferences
+- Art. 69(3) (transitional) makes Article 14 apply also to products placed on the market before 11 December 2027. So reporting already applies to software that juniors work on today.
+
+#### Gaps
+- None for the claims checked.
+
+### H30. Souppaya, Scarfone & Dodson (2022), NIST SP 800-218, "Secure Software Development Framework (SSDF) Version 1.1: Recommendations for Mitigating the Risk of Software Vulnerabilities"
+
+#### Takeaway
+**Verdict: confirmed.** PO.2.2 (task: role-based training), PW.5 (practice: secure coding) and PW.7 (practice: review and/or analyse human-readable code) exist with the stated content. SP 800-218 Rev. 1 (SSDF v1.2) is still an initial public draft as of 13 November 2026 (published 17 December 2025, comments closed 30 January 2026; no later draft or final on CSRC).
+
+#### Cited Findings
+- Bibliographic: NIST Special Publication 800-218, February 2022, DOI 10.6028/NIST.SP.800-218. Government standard/guidance. Normative (voluntary framework). — [CSRC](https://csrc.nist.gov/pubs/sp/800/218/final)
+- PO.2.2: "Provide role-based training for all personnel with responsibilities that contribute to secure development. Periodically review personnel proficiency and role-based training, and update the training as needed." — [NIST PDF](https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-218.pdf)
+- PW.5: "Create Source Code by Adhering to Secure Coding Practices (PW.5)"; PW.5.1: "Follow all secure coding practices that are appropriate to the development languages and environment to meet the organization's requirements." — [NIST PDF](https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-218.pdf)
+- PW.7: "Review and/or Analyze Human-Readable Code to Identify Vulnerabilities and Verify Compliance with Security Requirements (PW.7)" — [NIST PDF](https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-218.pdf)
+- Rev. 1: "NIST SP 800-218 Rev. 1 (Initial Public Draft) Secure Software Development Framework (SSDF) Version 1.2"; "Date Published: December 17, 2025"; "Comments Due: January 30, 2026 (public comment period is CLOSED)"; DOI 10.6028/NIST.SP.800-218r1.ipd. — [CSRC](https://csrc.nist.gov/pubs/sp/800/218/r1/ipd)
+
+#### Inferences
+- PO.2.2 makes training role-based and recurring, which matches the SAMM level-2 idea (H33).
+
+#### Gaps
+- None for the claims checked. Call it "practice PW.5/PW.7" and "task PO.2.2".
+
+### H31. ISO/IEC 27001:2022, Annex A control 8.28 "Secure coding"
+
+#### Takeaway
+**Verdict: confirmed (secondary source).** ISO/IEC 27001:2022 (edition 3, 2022-10) has 93 Annex A controls, of which 11 are new; 8.28 Secure coding is one of them.
+
+#### Cited Findings
+- Bibliographic: ISO/IEC 27001:2022, Information security, cybersecurity and privacy protection — Information security management systems — Requirements, edition 3, October 2022. International standard. Normative. — [ISO](https://www.iso.org/standard/27001)
+- DQS (certification body): "Annex A of the new ISO/IEC 27001:2022 version now includes a total of 93 controls, of which the following 11 controls are new:" (list includes "A.8.28 Secure coding"). — [DQS](https://www.dqsglobal.com/gb-en/blog/new-iso-27001-2022-key-changes)
+- DQS: "ISO ... has included "Secure Coding" as a new control 8.28 in the new ISO/IEC 27002 and ISO/IEC 27001:2022 , Annex A standards." — [DQS](https://www.dqsglobal.com/en/explore/blog/secure-coding-challenge-in-information-security)
+
+#### Inferences
+- The guidance text for 8.28 is in ISO/IEC 27002:2022; Annex A only names the control.
+
+#### Gaps
+- The standard text itself was not read (paywall).
+
+### H32. ENISA (2022), "European Cybersecurity Skills Framework (ECSF)"
+
+#### Takeaway
+**Verdict: confirmed, with a nuance.** 12 profiles, none called "software developer". The closest is Cybersecurity Implementer, whose alternative titles include "Cybersecurity Developer" and "DevSecOps Engineer". That profile develops cybersecurity solutions; it is not a general secure-coding developer role.
+
+#### Cited Findings
+- Bibliographic: ENISA, European Cybersecurity Skills Framework (ECSF) Role Profiles, September 2022, ISBN 978-92-9204-584-5, DOI 10.2824/859537. EU agency framework. Normative (voluntary). — [ENISA PDF](https://www.enisa.europa.eu/sites/default/files/publications/European%20Cybersecurity%20Skills%20Framework%20Role%20Profiles.pdf)
+- ENISA page: "The ECSF summarises the cybersecurity-related roles into 12 profiles" — [ENISA](https://www.enisa.europa.eu/topics/skills-and-competences/skills-development/european-cybersecurity-skills-framework-ecsf)
+- The 12 profiles (overview, verbatim): Chief Information Security Officer (CISO); Cyber Incident Responder; Cyber Legal, Policy and Compliance Officer; Cyber Threat Intelligence Specialist; Cybersecurity Architect; Cybersecurity Auditor; Cybersecurity Educator; Cybersecurity Implementer; Cybersecurity Researcher; Cybersecurity Risk Manager; Digital Forensics Investigator; Penetration Tester. — [ENISA PDF](https://www.enisa.europa.eu/sites/default/files/publications/European%20Cybersecurity%20Skills%20Framework%20Role%20Profiles.pdf)
+- Implementer: "Alternative Title(s) Information Security Implementer Cybersecurity Solutions Expert Cybersecurity Developer Cybersecurity Engineer Development, Security & Operations (DevSecOps) Engineer"; summary: "Develop, deploy and operate cybersecurity solutions (systems, assets, software, controls and services) on infrastructures and products." — [ENISA PDF](https://www.enisa.europa.eu/sites/default/files/publications/European%20Cybersecurity%20Skills%20Framework%20Role%20Profiles.pdf)
+
+#### Inferences
+- The ECSF describes security specialists. Secure coding by ordinary developers falls between frameworks, which is a point the review can make.
+
+#### Gaps
+- None for the claims checked.
+
+### H33. OWASP SAMM v2, Governance — Education & Guidance; and OWASP ASVS 5.0.0 (2025)
+
+#### Takeaway
+**Verdict: confirmed, small wording fix.** SAMM Training and Awareness level 1 is awareness training "for all personnel involved in software development" (not literally "all"); level 2 is "technology and role-specific guidance". ASVS 5.0.0 was published on 30 May 2025; Level 1 is described as the minimum and the baseline to start from.
+
+#### Cited Findings
+- Bibliographic: OWASP Software Assurance Maturity Model (SAMM), Education & Guidance practice, web model page. Community standard. Normative (voluntary). — [OWASP SAMM](https://owaspsamm.org/model/governance/education-and-guidance/)
+- SAMM, stream A (Training and Awareness): "Provide security awareness training for all personnel involved in software development." (maturity 1); "Offer technology and role-specific guidance, including security nuances of each language and platform." (maturity 2) — [OWASP SAMM](https://owaspsamm.org/model/governance/education-and-guidance/)
+- Bibliographic: OWASP Application Security Verification Standard 5.0.0, released 30 May 2025 (GitHub tag v5.0.0_release). Community standard. Normative (voluntary). — [OWASP ASVS](https://owasp.org/www-project-application-security-verification-standard/), [GitHub release](https://github.com/OWASP/ASVS/releases/tag/v5.0.0_release)
+- ASVS 5.0.0, "What is the ASVS": "This level contains the minimum requirements to consider when securing an application and represents a critical starting point. This level contains around 20% of the ASVS requirements." and "Forking should start with ASVS Level 1 as a baseline, advancing to Levels 2 or 3 based on the application's risk." — [GitHub source](https://github.com/OWASP/ASVS/blob/v5.0.0_release/5.0/en/0x03-What-is-the-ASVS.md)
+
+#### Inferences
+- ASVS L1 is small (about 20% of requirements), which makes it a realistic target for student or junior work.
+
+#### Gaps
+- SAMM version on the web page is not stated on the practice page itself (the model is SAMM v2).
+
+### H34. UWV, ICT labour-market pages (2023-2026)
+
+#### Takeaway
+**Verdict: corrected (source and numbers).** The cited article "Arbeidskrapte ICT'ers neemt af, maar is nog altijd groot" contains none of the four figures. It gives "ruim 5.300" WW benefits in April 2025. The 18,800 (Q4 2025) and 6,200 (February 2026) come from the UWV ICT sector page as it stood in July 2026 (Internet Archive, 14 July 2026). That page now (November 2026) says "iets meer dan 18.900" vacancies in Q2 2026 and "bijna 6.400" WW benefits in July 2026. The +270% for software developers comes from the UWV factsheet "ICT in beeld" of August 2023 and covers the five years up to 2022. "Developers wat makkelijker te vinden" was not found in any UWV source we read; the closest is that webdevelopers show the largest drop in tightness, while still "zeer krap" (UWV, 27 May 2025).
+
+#### Cited Findings
+- Type: UWV labour-market information pages and factsheets (Dutch public employment service). Official statistics-based grey literature. Evidence grade B.
+- Article as cited: "Toch zijn er relatief weinig ICT'ers met een WW-uitkering. In april 2025 gaat het om ruim 5.300 personen. In totaal werken bijna 560.000 mensen in een ICT-beroep." — [UWV article](https://www.uwv.nl/nl/arbeidsmarktinformatie/sector/ict/arbeidskrapte-icters-neemt-af-maar-altijd-groot)
+- UWV ICT sector page, snapshot 14 July 2026: "In het vierde kwartaal van 2025 stonden er bijna 18.800 ICT-vacatures open." and "In februari 2026 waren het er bijna 6.200." (WW benefits) — [Internet Archive](https://web.archive.org/web/20260714184438/https://www.uwv.nl/nl/arbeidsmarktinformatie/sector/ict)
+- UWV ICT sector page, current (read 13 November 2026): "In het tweede kwartaal van 2026 waren er iets meer dan 18.900 ICT-vacatures." and "In juli 2026 waren het er bijna 6.400." — [UWV](https://www.uwv.nl/nl/arbeidsmarktinformatie/sector/ict)
+- UWV factsheet "ICT in beeld" (August 2023): "Met name de vraag naar softwareontwikkelaars (+270%) en securityspecialisten (+167%) is in de afgelopen 5 jaar sterk toegenomen." — [UWV PDF](https://www.uwv.nl/assets-kai/files/6e32b054-43eb-4133-95ae-affc3c234e4f/Factsheet_ict.pdf)
+- UWV "ICT-beroepen in beeld" (27 May 2025): "Webdevelopers laten de grootste daling van de krapte zien. Overigens blijft de typering van de spanning voor vrijwel alle ICT-beroepen, ook voor de webdevelopers, na deze daling nog altijd `zeer krap'." — [UWV PDF](https://www.uwv.nl/assets-kai/files/7bb39f40-eed5-4c0f-a869-c417416f0bf4/ICT-beroepen-in-beeld.pdf)
+- Article, entry for starters: "Ook worden minder vaak zij-instromers aangenomen. Hierdoor is het voor werkzoekenden moeilijker om in de branche te starten." — [UWV article](https://www.uwv.nl/nl/arbeidsmarktinformatie/sector/ict/arbeidskrapte-icters-neemt-af-maar-altijd-groot)
+
+#### Inferences
+- The trend is stable across versions: fewer vacancies, more WW benefits since 2023, still "zeer krap". Use the current numbers with their dates.
+- The +270% describes 2017-2022 demand, before the drop. Using it next to 2026 figures without a date would mislead.
+
+#### Gaps
+- "Wat makkelijker te vinden" not found. If it comes from a UWV podcast or another page, add that source; otherwise drop the quote.
+
+### H35. NCSC (2024), "ICT-beveiligingsrichtlijnen voor webapplicaties"
+
+#### Takeaway
+**Verdict: confirmed, date nuance.** Title confirmed. The colophon says "mei 2024"; the file name says "07-24". Cite as May 2024 (the colophon is the document's own date).
+
+#### Cited Findings
+- Bibliographic: Nationaal Cyber Security Centrum (NCSC), "ICT-beveiligingsrichtlijnen voor webapplicaties", Den Haag, mei 2024. Government guideline (not legally binding: "Deze informatie is niet juridisch bindend."). Normative (guidance). — [NCSC PDF](https://www.ncsc.nl/api/media/sites/default/files/Richtlijn%20ICT%20beveiligingsrichtlijnen%20webapplicaties%2007-24_0.pdf), [NCSC page](https://www.ncsc.nl/webapplicaties/ict-beveiligingsrichtlijnen-webapplicaties)
+- Colophon: "Publicatie Nationaal Cyber Security Centrum (NCSC) ... mei 2024 Deze informatie is niet juridisch bindend." — [NCSC PDF](https://www.ncsc.nl/api/media/sites/default/files/Richtlijn%20ICT%20beveiligingsrichtlijnen%20webapplicaties%2007-24_0.pdf)
+- NCSC page: "Sinds 2012 publiceert het NCSC ICT-beveiligingsrichtlijnen voor webapplicaties. Deze richtlijnen zijn nu bijgewerkt naar de huidige tijd." — [NCSC page](https://www.ncsc.nl/webapplicaties/ict-beveiligingsrichtlijnen-webapplicaties)
+
+#### Inferences
+- A Dutch, free reference for web application security that maps to the SIVA framework; usable next to ASVS.
+
+#### Gaps
+- The NCSC landing page shows the file with date 17-4-2026 (upload date on the new site), not a new edition. We found no edition after May 2024.
+
+### Corrections for the review (part 2)
+
+1. **H19 Braz et al.:** "~8 times more likely" → "about eight times higher odds of finding the vulnerability (odds ratio)". "An OWASP checklist" → "a security checklist derived from the OWASP code review checklist (22 items), or a tailored 7-item version, added no significant improvement". Add: most participants were professionals (71% with 3+ years).
+2. **H18 Naiakshina 2017:** keep "none of the 10 non-primed students", and add "even when asked, only 4 of 10 stored passwords securely". **Naiakshina 2019:** cite only the abstract wording ("freelancers do not store passwords securely unless prompted"); no counts until the full text is checked.
+3. **H21 Weir et al.:** replace title and authors with: Weir, C., Becker, I., Noble, J., Blair, L., Sasse, M. A., & Rashid, A. (2020). Interventions for long-term software security: Creating a lightweight program of assurance techniques for developers. Software: Practice and Experience, 50(3), 275-298. https://doi.org/10.1002/spe.2774. Rephrase: "six hours of workshops over three months in three organisations; at twelve months the change was still visible in the two teams that could be re-interviewed".
+4. **H23 Tompkins et al.:** venue → "ACM CCS 2026, pp. 1820-1834, DOI 10.1145/3830454.3846694". "Reactive conversations were associated with lower completion" → "...with lower completion than short, focused conversations (8 of 9 modules); the difference with proactive conversations was small and not significant per module (correlational)". "40.6% trusted" and "57.3% reduced or stopped" → "of the 293 survey respondents".
+5. **H24 Alahmadi et al.:** "most alarms are false positives" → "SOC analysts validate alarms manually and perceive very high false-positive rates (one analyst: '99%'); the authors find that many of these 'false positives' are benign triggers, true alarms caused by legitimate activity".
+6. **H25 ISC2 2025:** "39% hiring freeze" → "39% of respondents reported hiring freezes at their organisation". Optionally note the page also says "overall average of 34%". The other figures stand.
+7. **H26 ISC2 2026:** add the respondent frame: "a May 2026 survey of 856 cybersecurity professionals who use AI in their roles". Cite 37% together with "36% said it has not".
+8. **H27 Dialogic/PTvT:** title "Onderzoeksrapportage Onderwijs en Arbeidsmarkt Cybersecurity" (PTvT & Dialogic, for EZK; sent to the House with the Kamerbrief of 15 March 2024, Kamerstuk 26643, nr. 1164). Add to the vacancy claim: "using a broad definition; narrower definitions give about 4,000-4,200 in 2022". "~3,000 students/year start programmes with a substantial cyber component" → "about 3,000 students a year start hbo/wo programmes with a relevant cybersecurity component". "Tasks/skills largely non-technical" → keep "although much technical knowledge is required".
+9. **H28 Cyberbeveiligingswet:** cite the Act as Stb. 2026, 187 (Wet van 8 juli 2026) and the entry into force as Cyberbeveiligingsbesluit, Stb. 2026, 189, art. 35. Drop "~1,000" or find a source; write "applies to more than 8,000 organisations (Rijksoverheid, 7 July 2026)".
+10. **H29 CRA:** "placed on the market" → "made available on the market"; add "on the basis of the risk assessment and where applicable". Make clear the 24 h / 72 h deadlines concern actively exploited vulnerabilities (and severe incidents). Chapter IV applies from 11 June 2026 if mentioned.
+11. **H30 NIST SSDF:** "PO.2.2" is a task, PW.5 and PW.7 are practices. SP 800-218r1 (v1.2): "initial public draft of 17 December 2025; comment period closed 30 January 2026; not final as of November 2026".
+12. **H32 ECSF:** add "the Implementer profile lists 'Cybersecurity Developer' and 'DevSecOps Engineer' as alternative titles, but it covers building security solutions, not secure coding by general developers".
+13. **H33 OWASP:** SAMM level 1 → "awareness training for all personnel involved in software development". ASVS → "ASVS 5.0.0 (30 May 2025); Level 1 is the minimum and the recommended baseline".
+14. **H34 UWV:** replace the source and the numbers. Either "about 18,800 ICT vacancies in Q4 2025 and about 6,200 WW benefits in February 2026 (UWV ICT sector page, July 2026 version)" or, preferably, the current figures: "just over 18,900 ICT vacancies in Q2 2026 and almost 6,400 WW benefits in July 2026 (UWV, read 13 November 2026)". Cite +270% as "demand for software developers rose 270% in the five years up to 2022 (UWV, ICT in beeld, August 2023)". Drop "developers wat makkelijker te vinden" unless a source is found; the closest supported statement is "webdevelopers show the largest drop in labour-market tightness, but it remains 'zeer krap' (UWV, May 2025)".
+15. **H35 NCSC:** date → "mei 2024" (colophon).
+16. **No change needed:** H17 Votipka et al., H20 Nguyen et al., H22 Lam et al., H31 ISO/IEC 27001:2022 control 8.28.

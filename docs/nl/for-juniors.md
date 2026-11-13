@@ -20,6 +20,21 @@ Installeer met `--map junior-dotnet`. De kaart heeft tien vaardigheden: debuggen
 
 De guard beschermt alleen bestanden onder de paden van een vaardigheid (en de paden van [beoordeeld werk](how-it-works.md#beoordeeld-werk), die je op je werk niet nodig hebt). Een vaardigheid zonder paden, zoals debuggen, krijgt wel de hintladder, maar de guard houdt niets tegen. Pas de kaart aan op je eigen codebase (zie [Een eigen vak](configuration.md#een-eigen-vak)).
 
+## Veilige code naast een AI-agent
+
+Je vraagt Claude Code om een zoekpagina die de zoekterm van de gebruiker terugtoont. De code compileert, de tests slagen en de pagina werkt. Of de zoekterm wordt gecodeerd voordat die in de HTML komt, zie je niet, en daar gaat AI-code het vaakst mis. In een meting van oktober 2026 ging cross-site scripting maar in 18% van de gevallen goed. Bij echte feature-verzoeken was de beste agent in 57% van de taken correct, maar in 11,8% ook veilig.
+
+Het grootste risico is niet de code zelf, maar je vertrouwen erin. Wie met een AI-assistent werkt, denkt vaker dan terecht dat de code veilig is, en merkt niet waar het misgaat. Wat wel helpt, is aandacht op het moment van de beslissing: reviewers die de opdracht kregen op security te letten, vonden de kwetsbaarheid veel vaker, en een checklist voegde daar niets aan toe. Je werkgever gaat er ook naar vragen. Sinds augustus 2026 vallen ruim 8.000 organisaties onder de Cyberbeveiligingswet, en vanaf december 2027 mogen producten onder de Cyber Resilience Act niet meer met bekende uitbuitbare kwetsbaarheden op de markt komen.
+
+Daarom is veilig programmeren de eerste niche die we voor juniors uitwerken. Het plan:
+
+- `security.basics` wordt vier vaardigheden: uitvoer coderen en invoer valideren, geparametriseerde queries, geheimen en configuratie, en AI-code reviewen op security.
+- Je legt bij een securitytaak uit wat een aanvaller in handen heeft, welke maatregel dat tegenhoudt, en hoe je dat controleert.
+- Naast `dotnet test` komt een statische analyser. Jij legt de waarschuwingen uit; Claude lost ze niet voor je op.
+- Bevindingen over kwetsbaarheden gaan niet mee in de export voor het dashboard.
+
+Dit is nog niet gebouwd, en of het juniors veiliger laat programmeren, is niet getest. De studies en hun grenzen staan in [§2.13 van het onderzoek](research.md#213-veilige-code-als-eerste-niche-voor-juniors).
+
 ## Op je werk
 
 - **Houd hem buiten de commits van het team.** De harnas is je eigen commitment device. Zet zijn bestanden in `.git/info/exclude`, en commit de wijzigingen aan gedeelde bestanden niet zonder afspraak met je team. Zie [In de repository van een team](install.md#in-de-repository-van-een-team).

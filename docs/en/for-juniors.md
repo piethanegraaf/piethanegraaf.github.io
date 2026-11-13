@@ -20,6 +20,21 @@ Install with `--map junior-dotnet`. The map has ten skills: debugging, reading u
 
 The guard only protects files under the paths of a skill (and the paths of [graded work](how-it-works.md#graded-work), which you will not need at work). A skill without paths, such as debugging, still gets the hint ladder, but nothing is blocked. Adapt the map to your own codebase (see [Your own course](configuration.md#your-own-course)).
 
+## Secure code next to an AI agent
+
+You ask Claude Code for a search page that shows the user's search term back. The code compiles, the tests pass and the page works. Whether the search term is encoded before it goes into the HTML, you do not see, and that is where AI code fails most often. In a measurement of October 2026, cross-site scripting was handled correctly in only 18% of cases. On real feature requests, the best agent was correct on 57% of the tasks, but also secure on 11.8%.
+
+The biggest risk is not the code itself, but your confidence in it. People who work with an AI assistant more often believe their code is secure than is justified, and do not notice where it goes wrong. What does help is attention at the moment of the decision: reviewers who were told to focus on security found the vulnerability much more often, and a checklist added nothing to that. Your employer will ask for it too. Since August 2026 more than 8,000 Dutch organisations fall under the Cyberbeveiligingswet (the Dutch NIS2 law), and from December 2027 products under the EU Cyber Resilience Act may no longer be made available with known exploitable vulnerabilities.
+
+That is why secure coding is the first niche we are working out for juniors. The plan:
+
+- `security.basics` becomes four skills: output encoding and input validation, parameterized queries, secrets and configuration, and reviewing AI code for security.
+- For a security task, you explain what an attacker controls, which measure stops it, and how you check that.
+- A static analyser comes next to `dotnet test`. You explain the warnings; Claude does not fix them for you.
+- Findings about vulnerabilities stay out of the export for the dashboard.
+
+This has not been built yet, and whether it makes juniors code more securely has not been tested. The studies and their limits are in [§2.13 of the research](research.md#213-secure-code-as-a-first-niche-for-juniors).
+
 ## At work
 
 - **Keep it out of the team's commits.** The harness is your own commitment device. Add its files to `.git/info/exclude`, and do not commit the changes to shared files without agreeing it with your team. See [In a team repository](install.md#in-a-team-repository).

@@ -30,7 +30,7 @@ description: "AI die tijdens het oefenen voor je denkt, verlaagt wat je daarna z
 
 De inhoudsopgave staat in de zijbalk.
 
-> **Statusnotitie.** Secties 1–9 zijn het oorspronkelijke ontwerp. §1–4, §6–8 en §5.3/§5.7 zijn op 8 november 2026 herzien met onderzoek uit mei–november 2026, de verschuiving in benodigde vaardigheden en een kritische beoordeling van het oorspronkelijke literatuuronderzoek. Wat er veranderd is en waarom, staat in het wijzigingslogboek (§11). De harnas zoals die echt is gebouwd, wijkt op punten af: er zijn microvaardigheden, een testrunner (`check.mjs`) in plaats van een PostToolUse-hook voor bewijs, een harde controle op uitleg in eigen woorden, plaatsing van een nieuwe vaardigheid door een eerste poging, automatisch omlaag op bewijs, Fibonacci-herhalingen op L4 via echt werk, en een toolingzone. Die verschillen staan samengevat in §10, waarin staat wat de eerste sessies lieten zien; §10.4 gaat over de herziening van 10 november 2026. Als je de harnas gebruikt, is de `CLAUDE.md` daarvan leidend voor de dagelijkse regels. Een korte literatuurupdate op 10 november 2026 voegde zeven bronnen toe (wijzigingslogboek, §11). Op 11 november 2026 kwamen §2.12 (het eeuwige-juniorprobleem) en §6.1 (een uitnodiging voor een gerandomiseerd experiment) erbij.
+> **Statusnotitie.** Secties 1–9 zijn het oorspronkelijke ontwerp. §1–4, §6–8 en §5.3/§5.7 zijn op 8 november 2026 herzien met onderzoek uit mei–november 2026, de verschuiving in benodigde vaardigheden en een kritische beoordeling van het oorspronkelijke literatuuronderzoek. Wat er veranderd is en waarom, staat in het wijzigingslogboek (§11). De harnas zoals die echt is gebouwd, wijkt op punten af: er zijn microvaardigheden, een testrunner (`check.mjs`) in plaats van een PostToolUse-hook voor bewijs, een harde controle op uitleg in eigen woorden, plaatsing van een nieuwe vaardigheid door een eerste poging, automatisch omlaag op bewijs, Fibonacci-herhalingen op L4 via echt werk, en een toolingzone. Die verschillen staan samengevat in §10, waarin staat wat de eerste sessies lieten zien; §10.4 gaat over de herziening van 10 november 2026. Als je de harnas gebruikt, is de `CLAUDE.md` daarvan leidend voor de dagelijkse regels. Een korte literatuurupdate op 10 november 2026 voegde zeven bronnen toe (wijzigingslogboek, §11). Op 11 november 2026 kwamen §2.12 (het eeuwige-juniorprobleem) en §6.1 (een uitnodiging voor een gerandomiseerd experiment) erbij. Op 13 november 2026 kwam §2.13 erbij (veilige code als eerste niche voor juniors).
 
 ---
 
@@ -648,6 +648,53 @@ De luchtvaart maakte dezelfde afweging. Verkeersvliegers houden het grootste dee
 - **De kaart.** Er is een voorbeeldkaart voor juniors op het werk in C#/.NET (`junior-dotnet`). Daarin staat code buiten de vaardigheden van de kaart op L4: die mag de AI schrijven, en alleen de vaardigheden die je leert, zijn beschermd. Een junior moet de paden aanpassen aan de eigen codebase, de guard beschermt alleen vaardigheden met paden, en taken automatisch vastleggen vanuit tests werkt alleen met `dotnet test`.
 
 **Hoe sterk is dit?** Elk onderdeel van de afweging volgt een principe met empirische steun (§2.11). De combinatie, en het gebruik op het werk, zijn niet getest. Een narratief literatuuroverzicht kan niet laten zien dat dit de beste afweging is; alleen een experiment kan dat. §6.1 stelt er een voor. De bronnen, met een link bij elke bewering, staan in de [notities over het eeuwige-juniorprobleem](/en/notes/eternal_junior/){ hreflang="en" } (Engels).
+
+### 2.13 Veilige code als eerste niche voor juniors
+
+**Het probleem.** Een junior vraagt Claude Code om een zoekpagina die de zoekterm van de gebruiker terugtoont. De code compileert, de tests slagen en de pagina werkt. Of de zoekterm wordt gecodeerd voordat die in de HTML komt, ziet de junior niet, en juist daar gaat AI-code het vaakst mis. Bij security komt er dus een tweede gat bij het gat van §2.12: code die werkt, maar niet veilig is. Deze sectie vraagt of veilig programmeren een goede eerste niche is voor de harnas, en welke invalshoek dan past bij de huidige fase van het project: (A) junior developers die op het werk basale security leren, of (B) junior securityspecialisten in een SOC, als pentester of als AppSec-engineer. Alle bronnen hieronder zijn op 13 november 2026 nagelopen ([citatiecheck](https://github.com/piethanegraaf/piethanegraaf.github.io/blob/main/research/citation-checks/citation_check_learning_science.md), sectie H).
+
+**AI-code is vaak onveilig, vooral als een agent een hele feature bouwt.**
+
+- **Losse codefragmenten.** In securityscenario's was ongeveer 40% van de programma's van Copilot kwetsbaar (Pearce et al., 2022; bewijsgraad C). Een replicatie in Python zag dat aandeel dalen van 36,5% naar 27,3% (Majdinasab et al., 2024; C). In echte GitHub-projecten had 29,5% van de Python-fragmenten en 24,2% van de JavaScript-fragmenten van AI-assistenten een zwakte, verspreid over 43 CWE-typen (Fu et al., 2025; C).
+- **Hele features.** In BaxBench was het beste model in 35% van de backendtaken correct én veilig (Vero et al., 2025; C). In SusVibes, met echte feature-verzoeken voor agents, was de beste opzet (SWE-agent met Claude 4 Sonnet) in 57% van de taken functioneel correct, maar in 11,8% ook veilig. Het type kwetsbaarheid in de prompt noemen hielp nauwelijks (Zhao et al., 2026; C).
+- **Per taal en soort fout.** In de meting van oktober 2026 van Veracode haalde C# 60%. Cross-site scripting ging in 18% van de gevallen goed en log injection in 13%, terwijl SQL injection (84%) en cryptografie (87%) meestal goed gaan. De beste modellen, waaronder Claude Opus 5.5, kwamen op 73% (Veracode, 2026; C, leverancier).
+- **Nieuwe soorten fouten.** Codemodellen verzinnen pakketnamen: minstens 5,2% bij commerciële en 21,7% bij open-sourcemodellen. Een aanvaller kan zo'n naam registreren (Spracklen et al., 2025; C).
+
+**Het hardnekkigste effect is vertrouwen dat niet klopt.** In een gerandomiseerde studie schreven deelnemers met een AI-assistent minder veilige code en dachten ze vaker dat die veilig was. Wie de AI minder vertrouwde, deed het beter (Perry et al., 2023; B, n = 47). Andere experimenten vonden geen of maar een klein verschil in de code zelf (Sandoval et al., 2023; Mousavi et al., 2026; Jost et al., 2026, preprint; alle B). Wat wel steeds terugkomt, is dat mensen niet merken dat hun code onveilig is. Ontwikkelaars zeggen dat ze AI-code net zo controleren als code van een collega, en melden zelden securityproblemen. De auteurs concluderen dat ze hun eigen controle overschatten (Klemmer et al., 2024; C). Deelnemers kozen de veiligste en de onveiligste AI-suggestie ongeveer even vaak (37,7% tegen 35,0%), en wie suggesties meer bewerkte, had minder kwetsbaarheden (Khalid et al., 2026; C, verschijnt bij IEEE S&P 2027). Bijna niemand zette securityeisen in de eerste prompt (Bappy et al., 2026; C).
+
+Of juniors hier extra kwetsbaar voor zijn, is niet aangetoond. Ervaring voorspelde veilige code significant, maar bescheiden (Jost et al., 2026), en een studie die juniors en seniors met AI rechtstreeks op security vergelijkt, ontbreekt. De harnas kan dus zeggen: "bij security telt ervaring, en AI vervangt die niet". Hij kan nog niet zeggen dat juniors door AI extra gevaar lopen.
+
+**Wat juniors missen.** Het probleem is begrip, geen slordigheid. In een wedstrijd waarin teams software bouwden, aanvielen en repareerden, kwamen de fouten in 78% van de 94 projecten uit een verkeerd begrip van securityconcepten, en in 21% uit een eenvoudige vergissing (Votipka et al., 2020; C). Security blijft bovendien een bijzaak zolang niemand ernaar vraagt. Geen van de tien studenten zonder opdracht sloeg wachtwoorden veilig op, en met opdracht deden vier van de tien het (Naiakshina et al., 2017; C). Freelancers deden het evenmin, tenzij erom werd gevraagd (Naiakshina et al., 2019; C).
+
+Wat helpt, is aandacht op het moment van de beslissing. Reviewers die de opdracht kregen op security te letten, hadden ongeveer acht keer hogere odds om de kwetsbaarheid te vinden; een checklist voegde niets significants toe (Braz et al., 2022; B, n = 150, vooral professionals). Een plug-in die securityproblemen in de IDE markeerde, verminderde de fouten in de code die werd geschreven (Nguyen et al., 2017; B, n = 39). Zes uur workshops in drie maanden veranderde de praktijk van teams, en na twaalf maanden was dat nog te zien in de twee teams die opnieuw konden worden geïnterviewd (Weir et al., 2020; C). Geen enkele trainingsmethode is in een gerandomiseerd experiment met juniors op het werk getest.
+
+**Wat werkgevers moeten aantonen.** Vacatures zeggen weinig: er is geen studie die securityeisen in vacatures voor developers telt. De druk komt uit wetten en normen, en bereikt de developer via de werkgever.
+
+- **De Cyberbeveiligingswet** (Stb. 2026, 187), de Nederlandse invoering van NIS2, geldt sinds 15 augustus 2026 voor ruim 8.000 organisaties (Rijksoverheid, 2026; wet).
+- **De Cyber Resilience Act** verplicht fabrikanten sinds 11 september 2026 om actief uitgebuite kwetsbaarheden binnen 24 uur vooraf te melden en binnen 72 uur te melden. Vanaf 11 december 2027 moeten producten met digitale elementen, op basis van de risicoanalyse, op de markt komen zonder bekende uitbuitbare kwetsbaarheden, en houdt de fabrikant een SBOM bij (Verordening (EU) 2024/2847; wet).
+- **Normen en richtlijnen** maken het concreet. ISO/IEC 27001:2022 kreeg een eigen maatregel voor secure coding (A.8.28). NIST SSDF vraagt rolgebonden training (PO.2.2), veilige codeerpraktijken (PW.5) en codereview (PW.7). OWASP SAMM begint met bewustwording voor iedereen die software maakt, en niveau 1 van OWASP ASVS 5.0 is de basislijst. In het Nederlands zijn er de ICT-beveiligingsrichtlijnen voor webapplicaties van het NCSC (mei 2024).
+- **Geen beroep, wel een deel van het vak.** Het Europese ECSF kent twaalf rolprofielen, en geen daarvan is softwaredeveloper (ENISA, 2022). Voor een developer is security dus geen functie, maar een vaardigheid binnen het eigen werk.
+
+**Twee invalshoeken.**
+
+| | A: junior developer leert veilig programmeren | B: junior securityspecialist |
+|---|---|---|
+| Waar het werk gebeurt | in codebestanden, waar de guard werkt | in terminals, tools en rapporten |
+| Past bij C# en `dotnet test` | ja; `security.basics` staat al in `junior-dotnet` | nauwelijks |
+| Wat de harnas raakt | het vertrouwen in AI-code, en uitleggen waarom iets veilig is | uitleggen en rapporteren wel, de guard niet |
+| Nieuwe risico's | klein: defensief werk | dual-use: een agent met een shell kan scans of exploits draaien |
+| Doelgroep | alle junior developers | kleiner, en de instroom krimpt |
+
+Hoek B past slecht bij deze fase. SOC-analisten controleren alarmen met de hand (Alahmadi et al., 2022; C). Securitywerk vraagt veel technische kennis, maar de gevraagde taken en vaardigheden zijn grotendeels niet-technisch (PTvT & Dialogic, 2024; C). Het "antwoord" is daar een commando of een oordeel, en dat kan de AI in de chat geven zonder een bestand te schrijven. De tekorten zitten vooral bij medior en senior; het aanbod van junior hbo- en wo-afgestudeerden sluit volgens hetzelfde rapport aan op de vraag, behalve bij specialistische profielen. Van 856 securityprofessionals die AI gebruiken, zei 56% dat AI de behoefte aan instapfuncties al heeft verminderd (ISC2, 2026; C, brancheorganisatie). Het idee achter de hintladder werkt wel in securityonderwijs: op pwn.college vroegen 309 studenten een socratische tutor, die de oplossingen niet kende, in maar 3,5% van hun vragen direct om de oplossing (Tompkins et al., 2026; C).
+
+**Het plan, als hypothese.** Hoek A wordt de eerste niche, als verdieping van `junior-dotnet` en niet als een nieuw product. Het sluit aan op wat het onderzoek het vaakst vindt: mensen merken niet dat AI-code onveilig is. De harnas laat al in eigen woorden uitleggen waarom iets werkt. Voor security wordt dat: wat heeft een aanvaller in handen, welke maatregel houdt dat tegen, en hoe controleer je dat? Nog niet gebouwd zijn:
+
+- `security.basics` opsplitsen in vier vaardigheden: uitvoer coderen en invoer valideren, geparametriseerde queries, geheimen en configuratie, en AI-code reviewen op security;
+- naast `dotnet test` een statische analyser waarvan de leerling de waarschuwingen zelf uitlegt, met de kanttekening dat een schone run niet betekent dat de code veilig is;
+- een regel dat voorbeelden op trede 4 en 5 nooit een onveilig patroon bevatten, in elke kaart, ook `ood`, omdat Claude die voorbeelden zelf maakt;
+- securitybevindingen uit de dashboardexport filteren, zodat er geen kwetsbaarheden van een werkgever online komen.
+
+**Hoe sterk is dit?** Het bewijs dat AI-code vaak onveilig is, is breed, maar komt vooral uit benchmarks, en de cijfers per taal komen van een leverancier. Dat juniors extra kwetsbaar zijn, is niet aangetoond, en geen trainingsmethode is gerandomiseerd getest met juniors op het werk. Of de harnas juniors veiliger laat programmeren, is een hypothese voor het experiment van §6.1. Daar ligt ook een kans: geen studie meet met een agentische tool tegelijk of code veilig is en of de maker dat terecht denkt. De bronnen staan in de [notities over veilige code voor juniors](/en/notes/secure_coding_juniors/){ hreflang="en" } (Engels).
 
 ---
 
@@ -1905,6 +1952,39 @@ Geschreven door Piet Hanegraaf met Claude (Anthropic); zie de [AI-verklaring](ai
 - Shih, B., Koedinger, K. R., & Scheines, R. (2008). A response time model for bottom-out hints as worked examples. *Proc. EDM 2008*, 117–126.
 - van Gog, T., Kester, L., & Paas, F. (2011). Effects of worked examples, example-problem, and problem-example pairs on novices' learning. *Contemporary Educational Psychology, 36*(3), 212–218. https://doi.org/10.1016/j.cedpsych.2010.10.004
 
+**Toegevoegd op 13 november 2026: veilige code voor juniors**
+
+- Alahmadi, B. A., Axon, L., & Martinovic, I. (2022). 99% false positives: A qualitative study of SOC analysts' perspectives on security alarms. *Proc. USENIX Security 2022*, 2783–2800. https://www.usenix.org/conference/usenixsecurity22/presentation/alahmadi
+- Bappy, F. H., et al. (2026). From preventive to reactive: How AI coding assistants transform developers' security awareness. *Proc. SOUPS 2026*, 257–274. https://www.usenix.org/conference/soups2026/presentation/bappy
+- Braz, L., Aeberhard, C., Çalikli, G., & Bacchelli, A. (2022). Less is more: Supporting developers in vulnerability detection during code review. *Proc. ICSE 2022*, 1317–1329. https://doi.org/10.1145/3510003.3511560
+- ENISA. (2022). *European Cybersecurity Skills Framework (ECSF): Role profiles* [framework]. https://doi.org/10.2824/859537
+- European Parliament & Council. (2024). Regulation (EU) 2024/2847 on horizontal cybersecurity requirements for products with digital elements (Cyber Resilience Act) [law]. https://eur-lex.europa.eu/eli/reg/2024/2847/oj/eng
+- Fu, Y., et al. (2025). Security weaknesses of Copilot-generated code in GitHub projects: An empirical study. *ACM Transactions on Software Engineering and Methodology, 34*(8), 1–34. https://doi.org/10.1145/3716848
+- ISC2. (2026). *Rethinking AI's impact on cybersecurity roles* [industry survey, 14 July]. https://www.isc2.org/Insights/2026/07/rethinking-ai-impact-on-cybersecurity-roles
+- ISO/IEC. (2022). *ISO/IEC 27001:2022, Information security management systems: Requirements* (Annex A, control 8.28 Secure coding) [standard]. https://www.iso.org/standard/27001
+- Jost, N., Berens, B., Karl, M., Horstmann, S. A., Johns, M., & Naiakshina, A. (2026). The impact of AI-assisted development on software security: A study of Gemini and developer experience [Preprint]. arXiv:2603.15298. https://arxiv.org/abs/2603.15298
+- Khalid, H., Thompson, R. E., Sabater, A., Mussiba, P., Fulton, K. R., & Votipka, D. (2026). (Don't) trust, but (don't) verify: Developers' attention to security in AI-generated code. To appear in *Proc. IEEE S&P 2027*. arXiv:2609.21020. https://arxiv.org/abs/2609.21020
+- Klemmer, J. H., et al. (2024). Using AI assistants in software development: A qualitative study on security practices and concerns. *Proc. ACM CCS 2024*, 2726–2740. https://doi.org/10.1145/3658644.3690283
+- Majdinasab, V., et al. (2024). Assessing the security of GitHub Copilot's generated code: A targeted replication study. *Proc. SANER 2024*, 435–444. https://doi.org/10.1109/SANER60148.2024.00051
+- Mousavi, Z., Islam, C., Babar, M. A., Abuadbba, A., & Moore, K. (2026). Understanding the impact of AI code assistants on security API usage: An empirical study. Accepted at *RAID 2026*. arXiv:2607.11348. https://arxiv.org/abs/2607.11348
+- Naiakshina, A., Danilova, A., Tiefenau, C., Herzog, M., Dechand, S., & Smith, M. (2017). Why do developers get password storage wrong? A qualitative usability study. *Proc. ACM CCS 2017*, 311–328. https://doi.org/10.1145/3133956.3134082
+- Naiakshina, A., Danilova, A., Gerlitz, E., von Zezschwitz, E., & Smith, M. (2019). "If you want, I can store the encrypted password." A password-storage field study with freelance developers. *Proc. CHI 2019*. https://doi.org/10.1145/3290605.3300370
+- NCSC. (2024). *ICT-beveiligingsrichtlijnen voor webapplicaties* [guideline, May]. https://www.ncsc.nl/api/media/sites/default/files/Richtlijn%20ICT%20beveiligingsrichtlijnen%20webapplicaties%2007-24_0.pdf
+- Nguyen, D. C., Wermke, D., Acar, Y., Backes, M., Weir, C., & Fahl, S. (2017). A stitch in time: Supporting Android developers in writing secure code. *Proc. ACM CCS 2017*, 1065–1077. https://doi.org/10.1145/3133956.3133977
+- OWASP. (2025). *Application Security Verification Standard 5.0.0*; *Software Assurance Maturity Model: Education & Guidance* [standards]. https://owasp.org/www-project-application-security-verification-standard/ ; https://owaspsamm.org/model/governance/education-and-guidance/
+- Pearce, H., Ahmad, B., Tan, B., Dolan-Gavitt, B., & Karri, R. (2022). Asleep at the keyboard? Assessing the security of GitHub Copilot's code contributions. *Proc. IEEE S&P 2022*, 754–768. https://doi.org/10.1109/SP46214.2022.9833571
+- Perry, N., Srivastava, M., Kumar, D., & Boneh, D. (2023). Do users write more insecure code with AI assistants? *Proc. ACM CCS 2023*, 2785–2799. https://doi.org/10.1145/3576915.3623157
+- Platform Talent voor Technologie & Dialogic. (2024). *Onderzoeksrapportage onderwijs en arbeidsmarkt cybersecurity* [report for the Ministry of Economic Affairs; Kamerstuk 26643, nr. 1164]. https://open.overheid.nl/documenten/c0ac3595-28e3-43df-aa85-7d9e8a426c25/file
+- Rijksoverheid. (2026, 7 July). *Cyberbeveiligingswet en Wet weerbaarheid kritieke entiteiten vanaf 15 augustus 2026 van kracht* [news]; Cyberbeveiligingswet, Stb. 2026, 187 [law]. https://www.rijksoverheid.nl/actueel/nieuws/2026/07/07/cyberbeveiligingswet-en-wet-weerbaarheid-kritieke-entiteiten-vanaf-15-augustus-2026-van-kracht ; https://zoek.officielebekendmakingen.nl/stb-2026-187.html
+- Sandoval, G., Pearce, H., Nys, T., Karri, R., Garg, S., & Dolan-Gavitt, B. (2023). Lost at C: A user study on the security implications of large language model code assistants. *Proc. USENIX Security 2023*, 2205–2222. https://www.usenix.org/conference/usenixsecurity23/presentation/sandoval
+- Souppaya, M., Scarfone, K., & Dodson, D. (2022). *Secure Software Development Framework (SSDF) version 1.1* (NIST SP 800-218) [standard]. https://doi.org/10.6028/NIST.SP.800-218
+- Spracklen, J., Wijewickrama, R., Sakib, A. H. M. N., Maiti, A., Viswanath, B., & Jadliwala, M. (2025). We have a package for you! A comprehensive analysis of package hallucinations by code generating LLMs. *Proc. USENIX Security 2025*, 3687–3706. https://www.usenix.org/conference/usenixsecurity25/presentation/spracklen
+- Tompkins, M., et al. (2026). Do hackers dream of electric teachers? A large-scale, in-situ measurement of cybersecurity student behaviors and educational performance with AI tutors. *Proc. ACM CCS 2026*, 1820–1834. https://doi.org/10.1145/3830454.3846694
+- Vero, M., et al. (2025). BaxBench: Can LLMs generate correct and secure backends? *Proc. ICML 2025*, PMLR 267. https://arxiv.org/abs/2502.11844
+- Votipka, D., Fulton, K. R., Parker, J., Hou, M., Mazurek, M. L., & Hicks, M. (2020). Understanding security mistakes developers make: Qualitative analysis from Build It, Break It, Fix It. *Proc. USENIX Security 2020*, 109–126. https://www.usenix.org/conference/usenixsecurity20/presentation/votipka-understanding
+- Weir, C., Becker, I., Noble, J., Blair, L., Sasse, M. A., & Rashid, A. (2020). Interventions for long-term software security: Creating a lightweight program of assurance techniques for developers. *Software: Practice and Experience, 50*(3), 275–298. https://doi.org/10.1002/spe.2774
+- Zhao, S., Wang, D., Zhang, K., Luo, J., Li, Z., & Li, L. (2026). Is vibe coding safe? Benchmarking vulnerability of agent-generated code in real-world tasks (SusVibes). *Proc. ICML 2026*, PMLR 306. https://arxiv.org/abs/2512.03262
+
 ---
 
 <a id="bijlage-implementatieschetsen"></a>
@@ -2451,6 +2531,15 @@ De guard beslist op het pad, niet op het niveau: beoordeeld werk is beschermd op
 <a id="11-wijzigingslog"></a>
 
 ## 11. Wijzigingslog {#changelog}
+
+### 13 november 2026: veilige code als eerste niche voor juniors
+
+De pilotstudent vroeg of cybersecurity een goede eerste niche is, en welke invalshoek past: junior developers die op het werk basale security leren, of junior securityspecialisten.
+
+- **§2.13 (nieuw):** AI-code en security, vertrouwen dat niet klopt, wat juniors missen, wat wetten en normen van werkgevers vragen, de twee invalshoeken naast elkaar, en het plan als hypothese: hoek A, als verdieping van `junior-dotnet`.
+- **§8:** 30 nieuwe bronnen. Ze zijn eerst gecontroleerd; de notities staan in [de citatiecheck](https://github.com/piethanegraaf/piethanegraaf.github.io/blob/main/research/citation-checks/citation_check_learning_science.md), sectie H. De check corrigeerde onder meer de cijfers van SusVibes (57% correct en 11,8% veilig in de ICML-versie, niet 61% en 10,5%), het Staatsblad van de Cyberbeveiligingswet (2026, 187), de bron van een UWV-cijfer (niet meer gebruikt), en dat het effect bij Braz et al. een odds ratio is.
+- **Notities:** [veilige code voor juniors](/en/notes/secure_coding_juniors/){ hreflang="en" } (Engels).
+- **Niet veranderd:** de harnas zelf. De securitykaart, de analyser en de regel voor voorbeelden zijn nog niet gebouwd.
 
 ### 13 november 2026: beoordeeld werk volgens de OER
 
