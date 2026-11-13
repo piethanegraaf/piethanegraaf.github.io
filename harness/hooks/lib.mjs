@@ -719,6 +719,54 @@ export function changedCodeFiles(data, since, { under = "", limit = 50 } = {}) {
   return out;
 }
 
+// ---- Work in graded folders between and during sessions (review of 13 Nov, night, #57) ----
+// Files in the graded folders changed after `since` (ms): every kind of file, not only code (a class
+// diagram is Markdown), without build output, IDE folders, git, the harness and the AI-use log.
+// Absolute paths with forward slashes, newest first.
+const GRADED_SKIP = /^(bin|obj|\.vs|\.idea|\.vscode|\.git|\.claude|\.learning|node_modules|TestResults)$/i;
+export function gradedChangedFiles(G, since, { limit = 20 } = {}) {
+  if (!G) return [];
+  const out = [];
+  let budget = 6000;
+  const log = path.resolve(G.logDir);
+  const walk = (dir) => {
+    let entries = [];
+    try { entries = fs.readdirSync(dir, { withFileTypes: true }); } catch { return; }
+    for (const e of entries) {
+      if (budget-- <= 0) return;
+      const f = path.join(dir, e.name);
+      if (e.isDirectory()) { if (!GRADED_SKIP.test(e.name) && path.resolve(f) !== log) walk(f); continue; }
+      if (!e.isFile() || /^(CLAUDE\.md|\.gitignore|\.DS_Store)$/i.test(e.name)) continue;
+      try { const m = fs.statSync(f).mtimeMs; if (m > since) out.push({ file: f.split(path.sep).join("/"), mtime: m }); } catch { /* skip */ }
+    }
+  };
+  for (const b of G.bases) {
+    try { if (fs.statSync(b).isDirectory()) walk(b); } catch { /* a base that does not exist yet */ }
+  }
+  return out.sort((a, b) => b.mtime - a.mtime).slice(0, limit);
+}
+
+// The skill a file shows by its content: a Mermaid diagram in Markdown. Only skills that exist in the record.
+const CONTENT_SKILLS = [
+  [/```mermaid[^\n]*\n(?:\s*%%[^\n]*\n)*\s*classDiagram\b/i, "uml.klassendiagram"],
+  [/```mermaid[^\n]*\n(?:\s*%%[^\n]*\n)*\s*stateDiagram/i, "uml.toestandsdiagram"],
+  [/```mermaid[^\n]*\n(?:\s*%%[^\n]*\n)*\s*sequenceDiagram\b/i, "uml.sequentiediagram"],
+];
+export function skillsForContent(data, file) {
+  if (!/\.(md|markdown)$/i.test(file)) return [];
+  let text = "";
+  try { if (fs.statSync(file).size > 512 * 1024) return []; text = fs.readFileSync(file, "utf8"); } catch { return []; }
+  return CONTENT_SKILLS.filter(([re, id]) => re.test(text) && findSkill(data, id)).map(([, id]) => findSkill(data, id));
+}
+
+// The skill of a (changed) file: its folder through `paths` first, then its content. { skill, by } or null.
+export function skillForFile(data, file) {
+  const s = skillForPath(data, file);
+  if (s && s.kind !== "zone") return { skill: s, by: "paths" };
+  const c = skillsForContent(data, file)[0];
+  return c ? { skill: c, by: "content" } : null;
+}
+
 // The exercise folders of a skill: the folders in the project that match its paths.
 export function exerciseDirs(skill) {
   const dirs = [];
@@ -1636,9 +1684,45 @@ export function checkExplanation(text, assistantTexts = []) {
   return { ok: reasons.length === 0, reasons };
 }
 
-export function diaryHasSession(sid) {
+// `all`: every diary file instead of the last three (a catch-up diary can be days later, #56).
+export function diaryHasSession(sid, { all = false } = {}) {
   try {
-    return fs.readdirSync(DIARY_DIR).filter((f) => f.endsWith(".md")).sort().slice(-3)
+    const files = fs.readdirSync(DIARY_DIR).filter((f) => f.endsWith(".md")).sort();
+    return (all ? files : files.slice(-3))
       .some((f) => fs.readFileSync(path.join(DIARY_DIR, f), "utf8").match(sessionMarker(sid)) !== null);
   } catch { return false; }
+}
+
+// Was there work in a session that a diary entry should cover (review of 13 Nov, night, #56)? A task, help,
+// graded work, a refused "af:", or at least 10 active minutes.
+const WORK_EVENTS = new Set(["task", "rung-mark", "hint-unlock", "review-help", "concept-help", "task-explained", "graded-session",
+  "transfer-start", "af-refused", "graded-tooling"]);
+export function sessionWork(sid, st = null, events = readEvents()) {
+  const kinds = [...new Set(events.filter((e) => e.session === sid && WORK_EVENTS.has(e.type)).map((e) => e.type))];
+  const minutes = Math.round((Number(st?.activeMs) || 0) / 60000);
+  return { has: kinds.length > 0 || minutes >= 10, kinds, minutes };
+}
+
+// Earlier sessions with work but without a diary entry, newest first (#56): of the last `days` days, not the
+// current session, not one that is still active in parallel (within idleMinutes), and not one whose catch-up
+// was offered before. [{ sid, last, minutes, kinds }]
+export function catchUpSessions(data, currentSid, { days = 7, limit = 1, now = Date.now() } = {}) {
+  const idle = Math.max(1, Number(settingsOf(data).idleMinutes) || DEFAULT_SETTINGS.idleMinutes) * 60000;
+  const events = readEvents();
+  const offered = new Set(events.filter((e) => e.type === "catchup-offered").map((e) => e.of));
+  let files = [];
+  try { files = fs.readdirSync(STATE_DIR).filter((f) => /^session-.+\.json$/.test(f)); } catch { return []; }
+  const out = [];
+  for (const f of files) {
+    const sid = f.slice("session-".length, -".json".length);
+    if (sid === currentSid || offered.has(sid)) continue;
+    let st;
+    try { st = JSON.parse(fs.readFileSync(path.join(STATE_DIR, f), "utf8")); } catch { continue; }
+    const last = Number(st.endedAt) || Number(st.lastActiveAt) || 0;
+    if (!last || now - last > days * 86400000 || (!st.endedAt && now - last < idle)) continue;
+    const w = sessionWork(sid, st, events);
+    if (!w.has || diaryHasSession(sid, { all: true })) continue;
+    out.push({ sid, last, minutes: w.minutes, kinds: w.kinds });
+  }
+  return out.sort((a, b) => b.last - a.last).slice(0, limit);
 }

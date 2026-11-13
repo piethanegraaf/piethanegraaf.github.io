@@ -43,7 +43,9 @@ test("a fresh install: code, data from the map, settings with $CLAUDE_PROJECT_DI
 
     const settings = JSON.parse(read(d, ".claude/settings.json"));
     const cmds = Object.values(settings.hooks).flat().flatMap((g) => g.hooks.map((h) => h.command));
-    assert.equal(cmds.length, 4);
+    // Five hooks since the review of 13 Nov, night (#56: SessionEnd).
+    assert.equal(cmds.length, 5);
+    assert.match(settings.hooks.SessionEnd[0].hooks[0].command, /session-end\.mjs"$/);
     for (const c of cmds) assert.match(c, /^node "\$CLAUDE_PROJECT_DIR\/\.claude\/hooks\/[a-z-]+\.mjs"$/);
     assert.equal(settings.hooks.PreToolUse[0].matcher, "Edit|Write|MultiEdit|NotebookEdit|Bash|PowerShell");
     assert.ok(!read(d, ".claude/settings.json").includes(d), "no absolute paths");
@@ -199,7 +201,7 @@ test("--update of an older install: absolute hook paths are replaced, your own s
     const cmds = Object.values(s.hooks).flat().flatMap((g) => g.hooks.map((h) => h.command));
     assert.ok(cmds.includes("node scripts/eigen-hook.mjs"));
     assert.ok(!cmds.some((c) => c.includes(abs)), "absolute paths are gone");
-    assert.equal(cmds.filter((c) => c.includes("$CLAUDE_PROJECT_DIR")).length, 4);
+    assert.equal(cmds.filter((c) => c.includes("$CLAUDE_PROJECT_DIR")).length, 5);
     assert.match(read(d, "CLAUDE.md"), /^# Eigen\n\n@\.claude\/leerharnas\.md\n$/);
     assert.ok(exists(d, ".learning/skills.json"), "missing data is created");
     const backups = listAll(path.join(d, ".claude/leerharnas-backup"));

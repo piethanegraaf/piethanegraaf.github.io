@@ -1160,7 +1160,9 @@ Zoals gebouwd draai je de tests zelf met `check.mjs`. Dat logt de taak, geeft ee
 | `prompt-gate.mjs` | `UserPromptSubmit` | Koppelt je prompt aan een vaardigheid met trefwoorden uit `skill-map.yaml`, voegt het beleid voor dat niveau en de huidige hinttrede toe, start de vastloop-timer of werkt die bij, en handelt `/override` af. *Herzien (§10.2, punt 10):* negeert agentrapporten, taakmeldingen en systeemherinneringen, en logt `prompt-ignored` | Kan context toevoegen. Kan alleen blokkeren bij patronen van misbruik (optioneel) |
 | `ownership-guard.mjs` | `PreToolUse` (matcher `Edit\|Write\|MultiEdit\|NotebookEdit`) | Blokkeert bewerkingen door de AI in bestanden, of delen van bestanden, die horen bij een vaardigheid op L1–L3. Op L1 laat hij een schrijfactie alleen toe als er `TODO(human)`-gaten in staan | **Ja** (`permissionDecision: deny`) |
 | ~~`evidence-log.mjs`~~ → `check.mjs` (gebouwd) | CLI, die je zelf start met `!` | *Herzien (§10):* omdat je de tests zelf draait, ziet een PostToolUse-hook ze nooit. `check.mjs` draait `dotnet test` met een trx-logger, toont een leesbare samenvatting, onthoudt per testmethode of die groen was, en logt een overgang van rood naar groen als taak, samen met de huidige hinttrede. Het werkt voor elk .NET-testproject (oefenopgaven en projectwerk) | Nee |
-| `reflect-gate.mjs` | `Stop` | Als je aan een vaardigheid hebt gewerkt en er nog geen dagboeknotitie is, blokkeert hij **één keer** en zegt hij tegen Claude dat de reflectie moet gebeuren. Hij gebruikt `stop_hook_active` om lussen te voorkomen. *Herzien (§10):* hij leest ook het laatste antwoord van Claude uit het transcript en verwerkt de markers `[trede N]` en `[uitleg-ok <tid>]`. Die tweede marker telt alleen als je eigen bericht door de deterministische uitlegcontrole komt. *Herzien (§10.7):* bij een goedgekeurde uitleg plaatst hij een nieuwe vaardigheid; hij controleert een verlaging die openstaat opnieuw; en hij leest het oordeel van de demotie-analist uit het rapport van de agent | Ja, één keer |
+| `reflect-gate.mjs` | `Stop` | Als je aan een vaardigheid hebt gewerkt en er nog geen dagboeknotitie is, blokkeert hij **één keer** en zegt hij tegen Claude dat de reflectie moet gebeuren. Hij gebruikt `stop_hook_active` om lussen te voorkomen. *Herzien (§10):* hij leest ook het laatste antwoord van Claude uit het transcript en verwerkt de markers `[trede N]` en `[uitleg-ok <tid>]`. Die tweede marker telt alleen als je eigen bericht door de deterministische uitlegcontrole komt. *Herzien (§10.7):* bij een goedgekeurde uitleg plaatst hij een nieuwe vaardigheid; hij controleert een verlaging die openstaat opnieuw; en hij leest het oordeel van de demotie-analist uit het rapport van de agent. *Herzien (§10.10):* hij logt controlevragen, noteert wanneer Claude naar het zelfvertrouwen vroeg, en schrijft de eigen woorden van de student in het AI-logboek | Ja, één keer |
+| `session-end.mjs` | `SessionEnd` | *Toegevoegd (§10.10):* noteert hoe een sessie eindigde en of er werk was zonder dagboek, zodat de volgende start een inhaaldagboek kan aanbieden | Nee |
+| `graded-gate.mjs` (gebruikersniveau, optioneel) | `UserPromptSubmit` en `PreToolUse`, in elk project buiten de beoordeelde map | *Toegevoegd (§10.10):* houdt een prompt tegen die de beoordeelde opdracht noemt en weigert elke tool op de paden ervan, ook lezen; de setup (`.claude/`, `CLAUDE.md`) blijft open | **Ja** |
 
 !!! example "Voorbeeld: de situatie van één student"
     De harnas werd voor het eerst uitgeprobeerd door een tweedejaarsstudent HBO-ICT die OOD oefende in C#. Bij de oefenopgaven van de cursus hoorden .NET-unittests, en die draaide de student zelf, niet Claude. Daarom draait `check.mjs` het commando `dotnet test`. De diagrammen en voorbeelden in deze sectie gebruiken nog Java uit het oorspronkelijke ontwerp (`mvn test`, `src/Payment.java`).
@@ -1985,6 +1987,11 @@ Geschreven door Piet Hanegraaf met Claude (Anthropic); zie de [AI-verklaring](ai
 - Weir, C., Becker, I., Noble, J., Blair, L., Sasse, M. A., & Rashid, A. (2020). Interventions for long-term software security: Creating a lightweight program of assurance techniques for developers. *Software: Practice and Experience, 50*(3), 275–298. https://doi.org/10.1002/spe.2774
 - Zhao, S., Wang, D., Zhang, K., Luo, J., Li, Z., & Li, L. (2026). Is vibe coding safe? Benchmarking vulnerability of agent-generated code in real-world tasks (SusVibes). *Proc. ICML 2026*, PMLR 306. https://arxiv.org/abs/2512.03262
 
+**Toegevoegd op 13 november 2026 (nacht): een taak per onderdeel en controlevragen**
+
+- Bandura, A., & Schunk, D. H. (1981). Cultivating competence, self-efficacy, and intrinsic interest through proximal self-motivation. *Journal of Personality and Social Psychology, 41*(3), 586–598. https://doi.org/10.1037/0022-3514.41.3.586
+- Yang, C., Luo, L., Vadillo, M. A., Yu, R., & Shanks, D. R. (2021). Testing (quizzing) boosts classroom learning: A systematic and meta-analytic review. *Psychological Bulletin, 147*(4), 399–435. https://doi.org/10.1037/bul0000309
+
 ---
 
 <a id="bijlage-implementatieschetsen"></a>
@@ -2567,11 +2574,68 @@ De analyser kijkt alleen naar patronen die hij kent. Een schone run is daarom ge
 - **Een bestaande installatie houdt `security.basics`.** `--update` laat je register staan. Wie de vier vaardigheden wil, voegt ze toe met `add` of installeert opnieuw.
 - **Niet gebouwd:** toegangscontrole en afhankelijkheden (§2.13: geen analyser vindt toegangsfouten betrouwbaar, en een controle op pakketten vraagt een netwerk), en oefeningen met aanvalsstrings als tests.
 
+### 10.10 Herziening van 13 november 2026 (nacht): de eerste sessies aan de eindopdracht
+
+De pilotstudent werkte voor het eerst aan de eindopdracht, en de harnas zat op vier plekken in de weg. Claude weigerde het officiële arc42-sjabloon in de repo te zetten, terwijl de OER toestaat dat AI "structuur aanbrengt" en het sjabloon geen AI-inhoud is. Niets liet zien dat de sessie begonnen was, en de vraag naar het zelfvertrouwen bleef zonder spoor onbeantwoord. Een klassendiagram dat de student tussen twee sessies in de IDE afmaakte, telde nergens mee. En de afsluitende vragen kwamen pas toen de student erom vroeg. Een review van die avond vond nog drie gaten: "ik wil stoppen" en "laten we afronden" werden niet als stopverzoek herkend, de guard weigerde `git remote -v` als schrijfactie, en hulp bij de opdracht die in een andere map werd gevraagd, had geen trede-grens en geen regel in het logboek. De student besliste punt 55–62 met meerkeuzevragen; 62 viel weg omdat 61 het dekt. Het setupdocument blijft privé.
+
+#### 10.10.1 Besluiten
+
+| # | Besluit | Getoetst aan | Oordeel |
+|---|---|---|---|
+| 55 | **Vaste tooling in beoordeeld werk.** De guard laat daar een korte lijst deterministische commando's toe: `dotnet new` (sln, console, classlib, nunit, xunit, gitignore; niet met `--force`), `dotnet sln add`, `dotnet add reference\|package`, `git init`, `git remote add`, `git branch -m`, `mkdir`, en `scaffold.mjs arc42`, dat het officiële sjabloon na een sha256-controle ongewijzigd uitpakt. Elk wordt een regel "tooling (geen AI-inhoud)" in het logboek. Inhoud, commits, de pipeline en de Dockerfile blijven van de student. | Het beoordelingsformulier beoordeelt de code, de UML, de tests, de pipeline, het versiebeheer en het verslag, dus dat blijft allemaal dicht. De OER verbiedt AI die inhoud maakt (art. 1.41 lid 3c); een generator of een officieel sjabloon maakt geen AI-inhoud. | **Beleid, gebouwd.** |
+| 56 | **De start blijft automatisch** (een startcommando kun je vergeten, en dan telt er niets). De harnas logt zelf het plan (het eerste bericht) en het zelfvertrouwen (een getal na Claude's "(1–5)"). Een SessionEnd-hook noteert hoe een sessie eindigde; de volgende start biedt één keer een inhaaldagboek aan voor een sessie met werk maar zonder dagboek. | Kalibratie van het eigen oordeel vraagt het zelfvertrouwen vooraf (zie §10.4). | **Gebouwd.** |
+| 57 | **Een taak per onderdeel.** Werk zonder test wordt opgeknipt in onderdelen met een naam; elk afgerond onderdeel is een taak met een eigen uitleg. `af: <wat>` (of `done: <what>`) aan het begin van een bericht telt als `done`, zonder `!`-commando. De start noemt de bestanden die sinds de vorige sessie in de beoordeelde map zijn gewijzigd, met hun vaardigheid via `paths` of via de inhoud (een Mermaid-`classDiagram` → `uml.klassendiagram`). | Nabije subdoelen winnen het van een ver doel, voor leren, zelfvertrouwen en een juist oordeel over het eigen kunnen (Bandura & Schunk, 1981). | **Ondersteund, met een voorwaarde:** een onderdeel moet een echte stap zijn die de student los kan uitleggen, anders wordt het doorstroomcriterium gehaald door op te knippen. De regels voor Claude zeggen dat; de uitlegcontrole per onderdeel houdt het eerlijk. |
+| 58 | **Afsluiten in één bericht.** Meer stopzinnen ("ik wil stoppen", "laten we afronden", "I want to finish this session"), alleen aan het eind van een kort bericht. Daarna één bericht met de open uitleg, 2–3 controlevragen, de reflectie en de logboekvraag. Controlevragen worden gelogd (`check-question`) als bewijs voor een microvaardigheid, nooit voor een niveau. | Ophalen wint het van opnieuw lezen voor later onthouden (Roediger & Karpicke, 2006; Adesope et al., 2017), ook in echte vakken, met corrigerende feedback als moderator (Yang et al., 2021). Transfer is het grootst bij toepassings- en redeneervragen (Pan & Rickard, 2018). | **Ondersteund, met drie voorwaarden:** antwoorden uit het hoofd; vragen naar een reden of een toepassing in het eigen werk, niet naar een definitie; feedback per antwoord. **Advies, niet gebouwd:** één open vraag opnieuw stellen bij de start van de volgende sessie geeft een gespreide herhaling. |
+| 59 | **De eigen woorden van de student in de laatste kolom van het logboek.** Claude markeert het deel van het antwoord met `[logboek "…"]`; de Stop-hook schrijft het alleen als het letterlijk deel is van wat de student typte, en alleen in lege cellen van die sessie. | De OER vraagt de student de output te controleren en te verantwoorden; de woorden moeten van de student zijn (R11). | **Gebouwd.** Twee sleutels, net als bij een uitleg. |
+| 60 | **git-commando's die alleen lezen** (`remote -v`, `branch --show-current`, `config --get`, `stash list`, `tag -l` …) mogen in beoordeeld werk. | (bug) | **Opgelost.** |
+| 61 | **Beoordeeld werk is dicht vanuit andere mappen.** Een poort op gebruikersniveau (`install.mjs <map> --user-guard`) draait in elk project buiten de beoordeelde map: hij houdt een prompt tegen die de opdracht noemt, en weigert elke tool op de paden ervan, ook lezen. Alleen de setup (`.claude/`, `CLAUDE.md`) blijft open. Een regel in `~/.claude/CLAUDE.md` dekt algemene vragen die een hook niet ziet. | De hulp van die avond kwam uit een sessie in een andere map: geen trede-grens, geen regel in het logboek (R11). | **Gebouwd**, op geen enkele computer geïnstalleerd: dat is de stap van de student. |
+| 62 | Buiten de beoordeelde map per beurt loggen in plaats van per sessie. | — | **Vervallen:** 61 sluit de andere mappen af. |
+
+#### 10.10.2 Een sessie aan de eindopdracht, zoals gebouwd
+
+```mermaid
+flowchart TD
+    O["een prompt in een andere map"] --> G{"poort op gebruikersniveau:<br/>noemt hij de opdracht?"}
+    G -->|"ja"| B["tegengehouden: stel hem in een sessie<br/>in de map van de opdracht"]
+    G -->|"nee"| X["daar de gewone regels"]
+    S["een sessie in de map<br/>van de opdracht"] --> ST["sessiestart: een inhaaldagboek,<br/>bestanden gewijzigd sinds de vorige keer"]
+    ST --> PL["eerste bericht: plan;<br/>getal na (1-5): zelfvertrouwen"]
+    PL --> W["werk: hints tot trede 4,<br/>vaste tooling gelogd"]
+    W --> AF["done of af: een onderdeel"]
+    AF --> E["uitleg in eigen woorden"]
+    E --> W
+    W --> END{"stopzin?"}
+    END -->|"ja"| ONE["één bericht: uitleg,<br/>controlevragen, reflectie,<br/>logboekvraag"]
+    ONE --> LOG["Stop-hook: de woorden van de student<br/>in de laatste kolom van het logboek"]
+    LOG --> SE["SessionEnd: einde genoteerd"]
+```
+
+De poort en de eigen harnas van het project beoordelen nooit dezelfde prompt: in de map van de opdracht stapt de poort opzij.
+
+#### 10.10.3 Waar de bouw afwijkt van het plan
+
+- **Het sjabloon ligt vast, en de harnas downloadt het niet.** Het plan was een script dat het sjabloon downloadt. De securitycheck weigert netwerkcode in de harnas (SECURITY.md belooft dat er geen is), en die blokkade kan niet worden toegestaan. Daarom wordt de zip eerst gedownload, buiten de beoordeelde map, door de student of door Claude met `curl`; `scaffold.mjs --from <zip>` controleert dan een sha256 die in het script staat (release 2026.10.19 van arc42, GitHub Markdown, één bestand per hoofdstuk) en pakt hem uit. Een zip met een andere checksum wordt geweigerd: anders zou Claude eigen inhoud in een zip kunnen stoppen. Hij pakt alleen uit in een nieuwe of lege map. De guard telt nu ook een download naar beoordeeld werk (`curl -o`, `curl -O`, `wget`) als schrijfactie.
+- **De guard laat alleen zijn eigen kopie toe** van `scaffold.mjs` (`.claude/hooks/`, beschermd zoals elke hook). Een script dat Claude elders schrijft en met `node` draait, ziet de guard nog steeds niet, zoals al in §10.8.3 stond.
+- **`af:` vraagt een wijziging in beoordeeld werk.** Een onderdeel telt alleen als er sinds de vorige taak van die vaardigheid een bestand in de opdracht is gewijzigd. Buiten beoordeeld werk werkt `af:` als `done`.
+- **Het plan is het eerste bericht**, niet een samenvatting ervan. Een "hoi" wordt dus het plan. Het dagboek gebruikt het zoals het is.
+- **Een inhaaldagboek wordt aangeboden voor sessies van de laatste 7 dagen**, één keer per sessie, de nieuwste eerst, en nooit voor een sessie die nog in een ander venster loopt.
+- **De poort heeft instellingen nodig** in `~/.claude/leerharnas/graded.json`, die de installer uit het register schrijft. Na `setting graded add` draait de student `--user-guard` opnieuw. Te algemene namen (`src`, `Tests`, `Domain`) worden in prompts niet tegengehouden; een solutionmap zoals `Webshop` wel.
+- **Een algemene vraag zonder de naam** van de opdracht ziet een hook niet. Het blok in `~/.claude/CLAUDE.md` vraagt Claude om eerst na te gaan; dat is een regel, geen afdwinging.
+- **Deze sectie is §10.10**, omdat §10.9 dezelfde avond al voor de securitykaart werd gebruikt.
+
 ---
 
 <a id="11-wijzigingslog"></a>
 
 ## 11. Wijzigingslog {#changelog}
+
+### 13 november 2026 (nacht): de eerste sessies aan de eindopdracht
+
+De pilotstudent besliste punt 55–62 na de eerste sessies aan de eindopdracht; 55–61 zijn dezelfde nacht gebouwd, 62 viel weg.
+
+- **§10.10 (nieuw):** de besluiten, een diagram van een sessie aan de eindopdracht zoals gebouwd, en waar de bouw afwijkt van het plan.
+- **§8:** 2 nieuwe referenties (Bandura & Schunk, 1981; Yang et al., 2021). Die zijn eerst gecontroleerd, samen met Roediger & Karpicke (2006), Adesope et al. (2017) en Pan & Rickard (2018), die al geciteerd werden; de aantekeningen staan in [de citatiecheck](https://github.com/piethanegraaf/piethanegraaf.github.io/blob/main/research/citation-checks/citation_check_learning_science.md), sectie I. De check voegt voorwaarden toe, geen correctie: een onderdeel moet een echte stap zijn, en een controlevraag vraagt naar een reden of een toepassing. Hij raadt ook een gespreide herhaling van één open vraag bij de volgende start aan; die is niet gebouwd.
+- **Niet veranderd:** de conclusies van §2.
 
 ### 13 november 2026 (avond): de securitykaart
 

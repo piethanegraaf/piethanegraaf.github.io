@@ -78,12 +78,23 @@ In those paths:
 
 - **The hint ladder of L2 holds for every skill**, also for one at L3 or L4, with the stuck timer. It goes up to rung 4 (`setting graded maxRung` can lower it). A worked solution (rung 5) is never available there. Ask for one and Claude refuses, with a reference to the exam rules.
 - **Rung 4 is an example of at most 5 lines on another topic.** It implements nothing the assignment asks for. You type your own code, and you never paste the example.
-- **Claude writes nothing there**, at no level, also no tooling, Dockerfile or pipeline, and it does not build or test there. The guard blocks it, also from a session in another folder, and there is no override. You type everything and run the tests yourself. Reading is allowed.
+- **Claude writes no content there**, at no level: no code, text, diagram, Dockerfile or pipeline, and no commit or push (version control is graded too). It does not build or test there. The guard blocks it, also from a session in another folder, and there is no override. You type everything and run the tests yourself. Reading is allowed.
+- **Fixed tooling is allowed.** There a generator or an official template makes the content, not the AI: `dotnet new` (sln, console, classlib, nunit, xunit, gitignore), `dotnet sln add`, `dotnet add reference` or `package`, `git init`, `git remote add`, `git branch -m`, `mkdir`, and `node .claude/hooks/scaffold.mjs arc42 <folder> --from <zip>`, which puts the official [arc42](https://arc42.org) template into a new or empty folder, unchanged and checked against a pinned sha256. The harness does not download the zip itself; without `--from` the script shows the link and the `curl` command, to a temporary folder outside the assignment. Every such command gets a row "tooling (no AI content)" in the log. Anything else stays blocked.
 - **Tasks and explanations in your own words still count.** Who can explain their code can also defend it.
 - **Every answer goes into an AI-use log**, in `ai-verantwoording/` in the repo (`ai-use/` in English). The hooks write it, never Claude:
-    - `logboek.md`: one row per answer, with the time, the session, the skill, the rung and the kind of help (question, concept, sketch, code example, review). The last column is yours: what you did with it and how you checked it. `/diary` asks you to fill it in.
+    - `logboek.md`: one row per answer, with the time, the session, the skill, the rung and the kind of help (question, concept, sketch, code example, review, tooling). The last column is yours: what you did with it and how you checked it. `/diary` asks for it; your answer goes into that column word for word. The hook checks that the words are yours before it writes them, and Claude never writes there.
     - `sessies/<date>-<session>.md`: your prompts and Claude's text of that session, without the output of tools. Claude Code has no share link to a session, so this export takes its place. A privacy filter removes e-mail addresses, your home folder (it becomes `~`) and the messages of the hooks.
     - `README.md`: the AI level, the ladder, an APA reference and how the export is made. It is written once; after that it is yours.
+
+**Closed from other folders.** A question about the assignment asked in another folder, for example in the repo of this site, gets no limit on rungs and no row in the log. You can close that gap with a gate at user level:
+
+```text
+node harness/install.mjs <folder with the harness> --user-guard
+```
+
+It writes in `~/.claude/` only, after showing the plan: from then on, in every other folder, a prompt that names the assignment is blocked, and every tool on its paths is refused, also reading. The setup itself (`.claude/` and `CLAUDE.md` there) stays open. `--remove` takes it away again. A general question without the name, such as "how does a Mermaid class diagram work?", is not visible to a hook, so a rule in `~/.claude/CLAUDE.md` asks Claude to check first whether it is about the assignment.
+
+**Work between sessions.** Did you work on the assignment in your IDE while no session ran? Then the next session start lists the files that changed, with the skill they belong to: through the paths of a skill, or through the content (a Mermaid `classDiagram` belongs to `uml.klassendiagram`). Claude then proposes a task per finished part.
 
 At AI level 0 (`setting graded aiLevel 0`) Claude gives no help at all on that work. Ask your teacher which parts of an assessment are level 0 and which are level 1. The research explains the choices in [§10.8](research.md#108-revision-of-13-november-2026-graded-work-under-the-exam-rules).
 
@@ -93,7 +104,7 @@ At AI level 0 (`setting graded aiLevel 0`) Claude gives no help at all on that w
 
 **Run `check.mjs` first.** When you pick an exercise, Claude gives you `! node .claude/hooks/check.mjs <folder>`. Run it before you write code: that first run is the start. Did you write the code first, and is the first run all green at once? Then it still counts as a task, as long as you changed the code in this session.
 
-A task is logged when a test goes from red to green (`check.mjs`), when you log it yourself (`done`), or when you say in the chat that the tests pass. It only counts after an explanation **in your own words**, with two keys:
+A task is logged when a test goes from red to green (`check.mjs`), when you log it yourself (`done`, or a message that starts with `done: <part>`, without a command), or when you say in the chat that the tests pass. Work without a test, such as a class diagram, is split into **parts with a name**: "the Product class", "the inheritance to the product types". Each finished part is a task of its own, with its own explanation. Small, named steps help learning and an honest view of what you can do; splitting only to get more tasks does not ([research §10.10](research.md#1010-revision-of-13-november-2026-night-the-first-sessions-on-the-final-assignment)). In graded work `done:` only counts when a file of the assignment changed since the last task of that skill. It only counts after an explanation **in your own words**, with two keys:
 
 1. Claude judges the content and writes `[explain-ok <tid>]` or `[explain-no <tid>]`. With `explain-no` Claude first names what is already right, and then asks one follow-up question that points to the gap: a follow-up question, not a rejection. The requirement stays just as strict. The question depends on what happened. After help (rung 1 or higher): about the concept of the highest hint, because that is where you were stuck. After a failed attempt without a hint (red or a compile error): why does it work now, and why did the first attempt not? Green at once: one question about the principle of the exercise. Claude keeps asking until the principle is right.
 2. The Stop hook checks your own words: **all your messages since the task was logged, together**. An answer in three short messages counts as one. Together they need at least 12 words outside code, a *why* (because, so that, otherwise …, or a reasoning "if …, then/would …" in one sentence), and they must not be copied from Claude's text. A message from before the task was logged does not count.
@@ -151,7 +162,11 @@ Only your own "yes, add" (or "ja, toevoegen") adds it, at the main skill's level
 
 ## The diary
 
-When you stop, `/diary` writes down the facts of the session, and you write the reflection: what you learned, what was confusing, and how confident you are. Without a diary entry the Stop hook does not let the session close (at most twice per stop request).
+**The start needs no command.** The hooks start the session themselves when you open Claude Code. Your first message is logged as the plan, and the number you give when Claude asks for your confidence (1–5) as your confidence beforehand. The diary compares that number with what happened.
+
+When you stop, `/diary` writes down the facts of the session, and you write the reflection: what you learned, what was confusing, and how confident you are. You do not have to ask for anything: "done", "I want to stop" or "let's wrap up" is enough. Claude then asks everything in **one message**: open explanations, 2 to 3 **check questions** about the concepts of this session, the three reflection questions, and for graded work the log question. Check questions are answered from memory and ask for a reason or an application in your own work. You get feedback per answer; an open answer is not a failure, it is what comes back next time. Without a diary entry the Stop hook does not let the session close (at most twice per stop request).
+
+Closed a session without a diary entry, for example by closing the window? Then the next start offers a short catch-up diary for that session, once.
 
 Above the three reflection questions there is a warning: *"Note: your answers appear word for word, with a translation, on the public dashboard."* There is no private option. Whatever must not go online goes into `.learning/private.json`.
 

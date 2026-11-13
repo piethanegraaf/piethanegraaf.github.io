@@ -99,7 +99,7 @@ Each part follows a principle with empirical support from learning science and f
 
 ### Is using Claude Code for practice cheating?
 
-Whether you may use AI is up to your course, not to the harness. The harness makes sure the AI does not do the practice for you: at L1–L3 a hook blocks it from writing, building or testing your code, and every exception you allow is logged. Check your course's AI policy. For graded work, such as a final assignment, you can name its repo as [graded work](how-it-works.md#graded-work): then Claude writes nothing there, gives hints up to rung 4, and every answer goes into an AI-use log for your statement of AI use.
+Whether you may use AI is up to your course, not to the harness. The harness makes sure the AI does not do the practice for you: at L1–L3 a hook blocks it from writing, building or testing your code, and every exception you allow is logged. Check your course's AI policy. For graded work, such as a final assignment, you can name its repo as [graded work](how-it-works.md#graded-work): then Claude writes no content there (only fixed tooling, such as `dotnet new` or the official arc42 template), gives hints up to rung 4, and every answer goes into an AI-use log for your statement of AI use.
 
 ### Can I stop Claude Code from writing my code?
 

@@ -8,10 +8,11 @@ description: "De vier Claude Code-hooks van de leerharnas, elk commando van skil
 
 | Event | Script | Wat het doet |
 |---|---|---|
-| `SessionStart` | `session-start.mjs` | Zet het register, open uitleg en doorstroomvoorstellen in de context, en vraagt naar je doel. Een open voorstel zie je ook zelf, in de melding bij de start. Open uitleg van eerdere sessies vervalt hier. Herhalingen noemt hij niet. Na een eerste export naar het dashboard meldt hij ook wat er sindsdien nieuw is (zie `since-export`), behalve als `dashboardRepo` op `off` staat. |
-| `UserPromptSubmit` | `prompt-gate.mjs` | Herkent de vaardigheid, bepaalt of er een nieuwe trede bij mag, logt opgeloste taken en vraagt om uitleg. Zet het niveau als jij een voorstel bevestigt met "ja, doorzetten", en voegt een microvaardigheid toe als jij een voorstel bevestigt met "ja, toevoegen". Tijdens een transfertaak ontgrendelt geen trede. Berichten van agents, notificaties en systeemherinneringen tellen niet als jouw woorden. |
-| `PreToolUse` | `guard.mjs` | Blokkeert schrijven, bouwen en testen van code op L1–L3, en elke wijziging aan het register, de state en de harnas zelf. Een shell-commando beoordeelt hij per los commando, op het programma dat draait. `eval`, `iex` en `Invoke-Expression` weigert hij altijd. Eén programma laat hij bewust toe: de dashboardexport `node <repo>/harness/export.mjs <oefenmap>`, die in de oefenmap alleen `last-export.json` schrijft (niet met `--out` in de oefenmap). |
-| `Stop` | `reflect-gate.mjs` | Verwerkt de markers in Claude's antwoord, controleert je uitleg, de transfertaak en het oordeel van de demotie-analist, en vraagt om het dagboek als je wilt stoppen. Haalt een uitleg een doorstroomcriterium, dan laat hij je meteen het voorstel zien. Hij toont ook een voorstel voor een microvaardigheid, als Claude erom vraagt en deze sessie het bewijs heeft. Na het dagboek vervalt wat nog open staat. |
+| `SessionStart` | `session-start.mjs` | Zet het register, open uitleg en doorstroomvoorstellen in de context, en vraagt naar je doel. Een open voorstel zie je ook zelf, in de melding bij de start. Open uitleg van eerdere sessies vervalt hier. Herhalingen noemt hij niet. Na een eerste export naar het dashboard meldt hij ook wat er sindsdien nieuw is (zie `since-export`), behalve als `dashboardRepo` op `off` staat. Voor een eerdere sessie met werk die zonder dagboek sloot, biedt hij één keer een inhaaldagboek aan. In het beoordeelde project noemt hij de bestanden die sinds de vorige sessie zijn gewijzigd, met hun vaardigheid (via `paths` of via de inhoud). |
+| `UserPromptSubmit` | `prompt-gate.mjs` | Herkent de vaardigheid, bepaalt of er een nieuwe trede bij mag, logt opgeloste taken en vraagt om uitleg. Zet het niveau als jij een voorstel bevestigt met "ja, doorzetten", en voegt een microvaardigheid toe als jij een voorstel bevestigt met "ja, toevoegen". Tijdens een transfertaak ontgrendelt geen trede. Berichten van agents, notificaties en systeemherinneringen tellen niet als jouw woorden. Logt je eerste bericht als het plan (`plan`) en een getal na Claude's "(1–5)" als je zelfvertrouwen (`confidence`). Een bericht dat begint met `af: <onderdeel>` (of `done: <part>`) logt een taak, net als `done`. Een stopverzoek herkent hij aan het begin van een bericht ("klaar", "stoppen") en, in een kort bericht, aan het eind ("ik wil stoppen", "laten we afronden"). |
+| `PreToolUse` | `guard.mjs` | Blokkeert schrijven, bouwen en testen van code op L1–L3, en elke wijziging aan het register, de state en de harnas zelf. Een shell-commando beoordeelt hij per los commando, op het programma dat draait. `eval`, `iex` en `Invoke-Expression` weigert hij altijd. Eén programma laat hij bewust toe: de dashboardexport `node <repo>/harness/export.mjs <oefenmap>`, die in de oefenmap alleen `last-export.json` schrijft (niet met `--out` in de oefenmap). In beoordeeld werk laat hij alleen vaste tooling toe (`dotnet new` met sln/console/classlib/nunit/xunit/gitignore, `dotnet sln add`, `dotnet add reference\|package`, `git init`, `git remote add`, `git branch -m`, `mkdir`, `scaffold.mjs arc42`), en die logt hij; git-commando's die alleen lezen (`status`, `log`, `remote -v`, `branch --show-current` …) mogen altijd. |
+| `Stop` | `reflect-gate.mjs` | Verwerkt de markers in Claude's antwoord, controleert je uitleg, de transfertaak en het oordeel van de demotie-analist, en vraagt om het dagboek als je wilt stoppen. Haalt een uitleg een doorstroomcriterium, dan laat hij je meteen het voorstel zien. Hij toont ook een voorstel voor een microvaardigheid, als Claude erom vraagt en deze sessie het bewijs heeft. Na het dagboek vervalt wat nog open staat. Bij beoordeeld werk schrijft hij het AI-logboek, met een regel per toegestaan tooling-commando, en zet hij jouw eigen woorden in de laatste kolom (`[logboek "…"]`). |
+| `SessionEnd` | `session-end.mjs` | Noteert wanneer de sessie eindigde en of er werk was zonder dagboek, voor het inhaaldagboek bij de volgende start. Vraagt en blokkeert niets. |
 
 ## `skill.mjs` (je draait het zelf, met `!`)
 
@@ -23,7 +24,7 @@ description: "De vier Claude Code-hooks van de leerharnas, elk commando van skil
 | `review <id> pass\|shaky\|fail` | De uitkomst van een herhaling zelf opgeven. Meestal niet nodig: de eerstvolgende taak van een L4-vaardigheid bepaalt hem. |
 | `add <id> "titel" ["trefwoorden"]` | Een nieuwe hoofdvaardigheid toevoegen, bijvoorbeeld voor een onderdeel van de toets dat niet in de kaart staat. Hij begint met een open plaatsing: je eerste taak bepaalt het niveau. Mappen koppel je met `paths`. Gelogd als event `skill-add`. |
 | `add-micro <parent> <id> <niveau> "titel" "trefwoorden"` | Een microvaardigheid toevoegen. Met `autoDemote` maakt de demotie-analist er ook zelf een aan, op het niveau van de ouder min 1. Na echte hulp in een sessie kan de harnas er ook een voorstellen; die voeg je toe met "ja, toevoegen" in de chat. |
-| `done <id> "wat"` | Een taak zonder test afmelden (ontwerp, UML). |
+| `done <id> "wat"` | Een taak zonder test afmelden (ontwerp, UML). Zonder commando: een bericht dat begint met `af: <onderdeel>`. |
 | `untask <id>` | De laatst gelogde taak van een vaardigheid schrappen. |
 | `correct <taak-id> trede <1-5> "reden"` | Meer hulp dan gelogd: de trede alleen **omhoog** zetten. |
 | `correct <taak-id> schrap "reden"` | Eén taak schrappen. |
@@ -64,6 +65,8 @@ Draait `dotnet test` met een trx-logger en toont een korte samenvatting. Een tes
 | `[demotie {...}]` / `[demotion {...}]` | Alleen een terugval: de Stop-hook leest het oordeel van de analist uit het rapport van de agent zelf, dus Claude zet de JSON niet in de chat. De marker wordt alleen uitgevoerd als de agent in die beurt echt gedraaid heeft. |
 | `[transfer-start <id>]` | Begin van de transfertaak (`/mastery-check`), alleen op L2 of L3. Vanaf dan telt elke `[trede N]` tegen de transfertaak. |
 | `[transfer-ok <id>]` / `[transfer-nee <id>]` (`[transfer-no <id>]`) | De transfertaak is gehaald of niet. `ok` telt alleen zonder hulp sinds de start, en als jouw laatste bericht dezelfde check haalt als een uitleg. |
+| `[controlevraag <id> goed\|half\|open]` / `[check-question <id> right\|half\|open]` | De uitkomst van een controlevraag aan het eind van de sessie, over de vaardigheid `id`. Gelogd als `check-question`: bewijs voor een voorstel voor een microvaardigheid, nooit voor een niveau. |
+| `[logboek "<tekst>"]` / `[log "<text>"]` | Beoordeeld werk: jouw eigen woorden voor de laatste kolom van het AI-logboek. De Stop-hook schrijft ze alleen als ze letterlijk deel zijn van jouw bericht, en alleen in de lege regels van deze sessie (`[logboek <8 tekens van een sessie-id> "<tekst>"]` bij een inhaaldagboek). |
 | `<!-- sessie: <id> -->` / `<!-- session: <id> -->` | In het dagboek: de entry van deze sessie. |
 
 ## Skills
@@ -145,6 +148,19 @@ En van de setup van 13 november 2026 (beoordeeld werk):
 | `graded-log-error` | De hook kon het AI-logboek niet schrijven (met de fout). |
 | `security-warnings` | `check.mjs` met `securityAnalyzer`: het aantal waarschuwingen en de regels (zoals `CA2100`), zonder bestandsnamen. |
 
+En van de review van 13 november 2026, 's avonds (de eerste sessies aan de eindopdracht):
+
+| Event | Betekenis |
+|---|---|
+| `graded-tooling` | De guard liet een vast tooling-commando toe in beoordeeld werk (`cmd`, met `~` voor de thuismap). Het krijgt een regel in het AI-logboek. |
+| `plan`, `confidence` | Je eerste bericht van de sessie (hooguit 300 tekens), en het getal 1–5 dat je gaf na Claude's "(1–5)". Gaat niet naar het dashboard. |
+| `session-end` | De sessie sloot, met `reason`, `diary` en `work`. |
+| `catchup-offered` | De start bood een inhaaldagboek aan voor de sessie `of`. |
+| `task` met `source: af` | Een taak die je afmeldde met `af: <onderdeel>` of `done: <part>`. Het dashboard toont hem als `done`. |
+| `af-refused` | `af:` in beoordeeld werk zonder gewijzigd bestand sinds de vorige taak van die vaardigheid. |
+| `check-question` | De uitkomst van een controlevraag: `right`, `half` of `open`. |
+| `log-filled`, `log-fill-refused` | Je eigen woorden kwamen in de laatste kolom van het AI-logboek (`rows`), of de tekst was niet letterlijk van jou. |
+
 ## Bestanden
 
 ```text
@@ -167,11 +183,22 @@ ai-verantwoording/
 .claude/leerharnas.local.json   het register van een andere map (install.mjs --learning-dir); niet in git
 ```
 
+Met de poort op gebruikersniveau (`install.mjs <map> --user-guard`):
+
+```text
+~/.claude/leerharnas/graded-gate.mjs   de poort, in elk project
+~/.claude/leerharnas/graded.json       de beoordeelde paden, de namen die tegengehouden worden, de meldingen
+~/.claude/settings.json                twee hooks erbij (UserPromptSubmit, PreToolUse); de rest blijft
+~/.claude/CLAUDE.md                    een blok tussen <!-- leerharnas:graded:start/end -->
+```
+
 ## Scripts in deze repository
 
 | Script | Wat |
 |---|---|
-| `harness/install.mjs` | Installeren en bijwerken. Zie [Installeren](install.md). |
+| `harness/install.mjs` | Installeren en bijwerken. Met `--user-guard` ook de poort op gebruikersniveau voor beoordeeld werk. Zie [Installeren](install.md). |
+| `harness/hooks/scaffold.mjs` | `arc42 <map> --from <zip> [--lang nl\|en] [--with-help]`: het officiële arc42-sjabloon (release 2026.10.19, GitHub Markdown, één bestand per hoofdstuk), uit een zip die eerst gedownload is (zonder `--from` toont hij de link en het `curl`-commando), gecontroleerd met een vaste sha256 en ongewijzigd uitgepakt in een nieuwe of lege map. Hij heeft geen netwerkcode. Geïnstalleerd als `.claude/hooks/scaffold.mjs`; in beoordeeld werk laat de guard alleen die kopie toe. |
+| `harness/user/graded-gate.mjs` | De poort op gebruikersniveau (#61), geïnstalleerd door `install.mjs --user-guard`. |
 | `harness/export.mjs` | Voortgang exporteren voor het dashboard, met privacyfilters. Schrijft ook `.learning/state/last-export.json` in de oefenmap. Vanuit een oefensessie laat de guard hem bewust toe. Zie [Configuratie en privacy](configuration.md). |
 | `harness/security-check.mjs` | De controle vóór alles wat online gaat. |
 | `harness/demo.mjs` | De demo-data voor het dashboard opnieuw maken. |

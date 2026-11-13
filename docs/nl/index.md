@@ -99,7 +99,7 @@ Elk onderdeel volgt een principe met empirische steun uit de leerwetenschap en u
 
 ### Is oefenen met Claude Code spieken?
 
-Of je AI mag gebruiken, bepaalt je vak, niet de harnas. De harnas zorgt dat de AI het oefenen niet van je overneemt: op L1–L3 blokkeert een hook dat de AI je code schrijft, bouwt of test, en elke uitzondering die je toestaat wordt gelogd. Kijk in de AI-regels van je vak. Voor beoordeeld werk, zoals een eindopdracht, kun je de repo daarvan instellen als [beoordeeld werk](how-it-works.md#beoordeeld-werk): dan schrijft Claude daar niets, krijg je hints tot trede 4, en komt elk antwoord in een AI-logboek voor je verantwoording.
+Of je AI mag gebruiken, bepaalt je vak, niet de harnas. De harnas zorgt dat de AI het oefenen niet van je overneemt: op L1–L3 blokkeert een hook dat de AI je code schrijft, bouwt of test, en elke uitzondering die je toestaat wordt gelogd. Kijk in de AI-regels van je vak. Voor beoordeeld werk, zoals een eindopdracht, kun je de repo daarvan instellen als [beoordeeld werk](how-it-works.md#beoordeeld-werk): dan schrijft Claude daar geen inhoud (alleen vaste tooling, zoals `dotnet new` of het officiële arc42-sjabloon), krijg je hints tot trede 4, en komt elk antwoord in een AI-logboek voor je verantwoording.
 
 ### Kan ik voorkomen dat Claude Code mijn code schrijft?
 

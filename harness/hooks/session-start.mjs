@@ -6,8 +6,9 @@ import {
   readStdin, loadSkills, loadOverrides, today, taskStats, levelName, DIARY_DIR, lapseTasks, readEvents,
   isMicro, pendingTasks, recentWins, levelAdvice, settingsOf, isPlacementPending, effectiveLevel, adviceCommand, openOffer, t,
   dashboardAfterDiary, hasNewSinceExport, sinceExportLine, recentUps, progressAll, progressLine, needsNextExercise, logEvent,
-  gradedOf, LEARN, LEARN_ELSEWHERE,
+  gradedOf, LEARN, LEARN_ELSEWHERE, catchUpSessions, gradedChangedFiles, skillForFile, isGradedDir, ROOT, STATE_DIR,
 } from "./lib.mjs";
+import path from "node:path";
 
 let input = {};
 try { input = JSON.parse(await readStdin()); } catch { /* ignore */ }
@@ -65,7 +66,41 @@ const progress = progressAll(data);
 const progressText = progress.length ? t("ss.progress", { list: progress.map((p) => "  " + progressLine(p)).join("\n") }) : "";
 const noFolders = skills.filter((s) => !isMicro(s) && needsNextExercise(data, s)).map((s) => s.id);
 
+const fresh = source === "startup" || source === "clear";
+const G = gradedOf(data);
+const sid8 = (s) => String(s).slice(0, 8);
+const dayOf = (ms) => new Date(ms).toLocaleDateString("sv-SE");
+
+// A session with work that closed without a diary entry (review of 13 Nov, night, #56): a short catch-up
+// diary first, once. The entry gets the marker of THAT session.
+const catchUp = fresh ? catchUpSessions(data, input.session_id ?? null) : [];
+for (const c of catchUp) logEvent({ type: "catchup-offered", of: c.sid, session: input.session_id ?? null });
+
+// Work in the graded folder since the previous session (#57): files that changed while no session ran, for
+// example a class diagram made in the IDE. Claude proposes a task per finished part ("af: <what>"), and the
+// `paths` command for a folder that belongs to no skill. Only in the graded project itself.
+let changedLines = [];
+if (fresh && G && isGradedDir(data, ROOT, ROOT, G)) {
+  let since = 0;
+  try {
+    for (const f of fs.readdirSync(STATE_DIR).filter((x) => /^session-.+\.json$/.test(x) && x !== `session-${input.session_id}.json`)) {
+      const st = JSON.parse(fs.readFileSync(path.join(STATE_DIR, f), "utf8"));
+      since = Math.max(since, Number(st.endedAt) || 0, Number(st.lastActiveAt) || 0);
+    }
+  } catch { /* no earlier session */ }
+  if (since) {
+    changedLines = gradedChangedFiles(G, since, { limit: 12 }).map((f) => {
+      const base = G.bases.find((b) => f.file.toLowerCase().startsWith(b.toLowerCase() + "/")) ?? null;
+      const shown = base ? f.file.slice(base.length + 1) : f.file;
+      const s = skillForFile(data, f.file);
+      return `- ${shown} → ${s ? `${s.skill.id} (${t(s.by === "paths" ? "ss.changed.byPaths" : "ss.changed.byContent")})` : t("ss.changed.none")}`;
+    });
+  }
+}
+
 const steps = [];
+if (catchUp.length) steps.push(t("ss.step.catchUp", { sid: catchUp[0].sid, sid8: sid8(catchUp[0].sid), day: dayOf(catchUp[0].last), min: catchUp[0].minutes }));
+if (changedLines.length) steps.push(t("ss.step.changed", { n: changedLines.length }));
 if (pending.length) steps.push(t("ss.step.pending", { n: pending.length, list: pending.map((x) => `${x.skill} [${x.tid}]`).join(", ") }));
 if (wins.length || advice.length) {
   steps.push(t("ss.step.signal", {
@@ -87,7 +122,6 @@ const ritual = source === "startup" || source === "clear"
 
 // Graded work (setup of 13 Nov, #49): the rules and where the AI-use log goes. Also when this session
 // itself is not about it yet: a session in the practice folder must not write there either (#54).
-const G = gradedOf(data);
 const gradedLine = G ? t(G.aiLevel === 0 ? "ss.graded.level0" : "ss.graded", { dir: G.bases.join(", "), max: G.maxRung, log: G.logDir, level: G.aiLevel }) : "";
 
 // One record for two folders (#53): the record, the state and the diary are in another folder.
@@ -108,6 +142,7 @@ const ctx = [
   t("ss.overrides", { list: overrides.length ? overrides.map((o) => t("ss.override", { skill: o.skill, until: o.until, reason: o.reason })).join("; ") : t("ss.none") }),
   t("ss.lastDiary", { file: lastDiary ?? t("ss.noneYet") }),
   ...[upsLine, progressText].filter(Boolean),
+  ...(changedLines.length ? ["", t("ss.changed"), ...changedLines] : []),
   "",
   ritual,
   "",
@@ -120,6 +155,8 @@ const msg = t("ss.msg", { n: skills.length }) +
   (offers.length ? t("ss.msg.offers", { list: offers.map((o) => `${o.id} ${o.from} → ${o.to}`).join(", ") }) : "") +
   (overrides.length ? t("ss.msg.overrides", { n: overrides.length }) : "") +
   (G ? "\n" + t("ss.msg.graded", { max: G.maxRung, level: G.aiLevel }) : "") +
+  (catchUp.length ? "\n" + t("ss.msg.catchUp", { sid8: sid8(catchUp[0].sid), day: dayOf(catchUp[0].last) }) : "") +
+  (changedLines.length ? "\n" + t("ss.msg.changed", { n: changedLines.length }) : "") +
   [upsLine, progressText, effortLine].filter(Boolean).map((l) => "\n" + l).join("") +
   // Only after a first export, only when something is new since then, and never with dashboardRepo off.
   (hasNewSinceExport(since) ? "\n" + sinceExportLine(since) : "");

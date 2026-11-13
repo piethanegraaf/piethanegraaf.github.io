@@ -244,7 +244,8 @@ export async function build(project, { previous = null, todo = null } = {}) {
   for (const e of events) {
     if (e.type === "task") {
       const tk = {
-        id: e.tid ?? `legacy-${tasks.length + 1}`, at: e.at, skill: knownSkill(e.skill), source: ["check", "done", "chat"].includes(e.source) ? e.source : null,
+        // "af: <what>" in the chat (review of 13 Nov, night, #57) is the learner's own report, the same as `done`.
+        id: e.tid ?? `legacy-${tasks.length + 1}`, at: e.at, skill: knownSkill(e.skill), source: e.source === "af" ? "done" : ["check", "done", "chat"].includes(e.source) ? e.source : null,
         success: Boolean(e.success), maxRung: Number(e.maxRung ?? 0), minutes: Number.isFinite(e.minutes) ? e.minutes : null,
         // The part of the rung that came from the review of the previous task (setup review of 11 Nov, S3).
         reviewRung: Number(e.reviewRung) > 0 ? Number(e.reviewRung) : null,

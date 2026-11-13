@@ -80,7 +80,8 @@ test("#54: shell writes in graded work are blocked, reading is not", () => {
     const denied = [
       `echo x > "${R}/Domain/Bank.cs"`,
       `cd "${R}" && touch Rekening.cs`,
-      `cd "${R}/Domain" && mkdir Model`,
+      // mkdir moved to the allowed tooling on 13 Nov, night (#55); see test/review-1113.test.mjs.
+      `cd "${R}/Domain" && mkdir Model && touch Model/A.cs`,
       `git -C "${R}" commit -m "x"`,
       `cd "${R}" && git add .`,
       `cd "${R}" && node -e "require('fs').writeFileSync('a.cs','x')"`,
