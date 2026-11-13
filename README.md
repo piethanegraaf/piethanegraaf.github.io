@@ -17,7 +17,8 @@ A learning harness for [Claude Code](https://docs.claude.com/en/docs/claude-code
 - **Tasks count only after your own explanation**, checked by Claude and by a deterministic check.
 - **Explanations right away**: a task you do not explain before the next exercise lapses (skipped).
 - **Reviews only at L4**, at Fibonacci intervals: the next time such a skill comes by in your work, you do it yourself.
-- **Two skill maps**: Object-Oriented Design in C# for students (`--map ood`), and an example map for a junior developer at work in C#/.NET (`--map junior-dotnet`), where code outside the skills you are learning is L4.
+- **Three skill maps**: Object-Oriented Design in C# for students (`--map ood`); an example map for a junior developer at work in C#/.NET (`--map junior-dotnet`), where code outside the skills you are learning is L4; and a practice map for secure coding (`--map security-dotnet`) with eight exercises whose attack tests start red.
+- **A security analyser** (optional): `check.mjs` also runs the security rules of the .NET SDK, offline, and asks you to explain the warnings.
 - **Up is your choice, down follows the evidence** (optional): a read-only agent decides whether one sub-pattern or the whole skill goes down.
 - **Graded work** (optional), such as a final assignment under exam rules that allow AI as an aid: in its paths Claude writes no content at any level (only fixed tooling such as `dotnet new` or the official arc42 template, logged), hints stop at rung 4, and every answer goes into an AI-use log in the repo (`ai-verantwoording/`). With `--learning-dir` that repo uses the record of your practice folder.
 - **A diary** at the end of each session, with the reflection in your own words.

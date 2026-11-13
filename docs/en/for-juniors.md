@@ -33,7 +33,22 @@ That is why secure coding is the first niche we are working out for juniors. Sin
 - **An analyser next to your tests.** `check.mjs` first rebuilds your code with the security rules of the .NET SDK, without network and without changing your project files. You explain the warnings; at L1–L3 Claude does not fix them for you. No warnings does not mean the code is secure: the analyser does not see access control or logic.
 - **Nothing about vulnerabilities online.** The free texts of security tasks, such as your explanation and the names of tests, stay out of the export for the dashboard. Only the numbers go along.
 
-Security flaws are spread through the code, so these skills have no paths: the guard does not stop Claude here, the rules do. Turn the analyser off with `! node .claude/hooks/skill.mjs setting securityAnalyzer false`. Whether this makes juniors code more securely has not been tested. The studies and their limits are in [§2.13 of the research](research.md#213-secure-code-as-a-first-niche-for-juniors).
+Security flaws are spread through the code, so these skills have no paths: the guard does not stop Claude here, the rules do. Turn the analyser off with `! node .claude/hooks/skill.mjs setting securityAnalyzer false`. Whether this makes juniors code more securely has not been tested.
+
+### Practise in a folder of your own
+
+In a team repository the security skills have no paths, so only the rules keep Claude back. For deliberate practice there is a separate map with exercises:
+
+```bash
+node harness/install.mjs ../security-practice --map security-dotnet --lang en --yes
+```
+
+The installer puts eight exercises in `oefeningen/`, two per skill, the second one harder. Each is a small xUnit project with a story in its `README.md`:
+
+- **01–06:** the code has a vulnerability. The attack tests (`' OR '1'='1`, `<script>`, a newline in a log line, a token from `System.Random`) start red; you make them green without breaking the rest.
+- **07–08:** the code was written by an AI and all tests are green. You look for the flaw, first write a test that fails, and then fix it.
+
+This folder works like the OOD practice folder: every exercise belongs to its skill, so the guard protects it and `check.mjs` logs a green test as a task of that skill, and code outside the exercises is L2. The analyser catches four of the eight vulnerabilities (string-built SQL and `System.Random`); the others it does not see, which is part of the lesson. You switch between this folder and your other practice folder by starting Claude Code in the other folder: each folder has its own record. The studies and their limits are in [§2.13 of the research](research.md#213-secure-code-as-a-first-niche-for-juniors).
 
 ## At work
 
@@ -48,4 +63,4 @@ Juniors who let an agent do all the work can stay junior: the [research on the e
 
 ## Next step
 
-[Install the harness](install.md) with `--map junior-dotnet`. Questions? E-mail [hanegraafpiet@gmail.com](mailto:hanegraafpiet@gmail.com). Bugs go in an [issue on GitHub](https://github.com/piethanegraaf/piethanegraaf.github.io/issues/new).
+[Install the harness](install.md) with `--map junior-dotnet` in a team repository, or with `--map security-dotnet` in a practice folder. Questions? E-mail [hanegraafpiet@gmail.com](mailto:hanegraafpiet@gmail.com). Bugs go in an [issue on GitHub](https://github.com/piethanegraaf/piethanegraaf.github.io/issues/new).

@@ -17,7 +17,8 @@ Een leerharnas voor [Claude Code](https://docs.claude.com/en/docs/claude-code/ov
 - **Een taak telt pas na jouw eigen uitleg**, gecontroleerd door Claude en door een vaste check.
 - **Uitleg direct**: een taak die je niet uitlegt voor de volgende opdracht, vervalt (overgeslagen).
 - **Herhalingen alleen op L4**, met Fibonacci-intervallen: de eerstvolgende keer dat zo'n vaardigheid in je werk langskomt, doe je het zelf.
-- **Twee kaarten met vaardigheden**: Object-Oriented Design in C# voor studenten (`--map ood`), en een voorbeeldkaart voor een junior developer op het werk in C#/.NET (`--map junior-dotnet`), waarin code buiten de vaardigheden die je leert op L4 staat.
+- **Drie kaarten met vaardigheden**: Object-Oriented Design in C# voor studenten (`--map ood`); een voorbeeldkaart voor een junior developer op het werk in C#/.NET (`--map junior-dotnet`), waarin code buiten de vaardigheden die je leert op L4 staat; en een oefenkaart voor veilig programmeren (`--map security-dotnet`) met acht oefeningen waarvan de aanvalstests eerst rood zijn.
+- **Een security-analyser** (optioneel): `check.mjs` draait ook de securityregels van de .NET SDK, offline, en vraagt jou de waarschuwingen uit te leggen.
 - **Omhoog kies jij, omlaag volgt het bewijs** (optioneel): een agent die alleen leest, beslist of één deelpatroon of de hele vaardigheid zakt.
 - **Beoordeeld werk** (optioneel), zoals een eindopdracht onder een OER die AI als hulpmiddel toestaat: in die paden schrijft Claude op geen enkel niveau inhoud (alleen vaste tooling zoals `dotnet new` of het officiële arc42-sjabloon, gelogd), stoppen hints bij trede 4, en komt elk antwoord in een AI-logboek in de repo (`ai-verantwoording/`). Met `--learning-dir` gebruikt die repo het register van je oefenmap.
 - **Een dagboek** aan het eind van elke sessie, met de reflectie in je eigen woorden.

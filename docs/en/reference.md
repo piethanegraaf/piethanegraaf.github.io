@@ -173,6 +173,14 @@ And of the review of 13 November 2026, night (the first sessions on the final as
                      last-export.json (moment and totals of the last dashboard export)
 ```
 
+With `--map security-dotnet` (copied once by the installer, then yours):
+
+```text
+oefeningen/
+  README.md          the overview: exercises, skills, how to run them, the explanation
+  01-sql-search/ … 08-ai-review-orders/   one xUnit project each, with README.md
+```
+
 In the repo of graded work (written by the hooks only):
 
 ```text

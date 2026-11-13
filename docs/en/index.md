@@ -91,7 +91,7 @@ Each part follows a principle with empirical support from learning science and f
 ## Who it is for
 
 - **Students** who want to practise with Claude Code without the AI taking over the learning. The included map is for **Object-Oriented Design in C#** (HBO-ICT, the Netherlands).
-- **Junior developers at work** who want to keep growing while they work with an AI agent. There is an example map for C#/.NET (`junior-dotnet`): code that belongs to no skill may be written by the AI, and only what you are learning is protected. You adapt it to your own codebase (see [Your own course](configuration.md#your-own-course) and [In a team repository](install.md#in-a-team-repository)). For now, tasks are logged automatically from tests only with `dotnet test`; otherwise you log them yourself. See [For junior developers](for-juniors.md).
+- **Junior developers at work** who want to keep growing while they work with an AI agent. There is an example map for C#/.NET (`junior-dotnet`): code that belongs to no skill may be written by the AI, and only what you are learning is protected. You adapt it to your own codebase (see [Your own course](configuration.md#your-own-course) and [In a team repository](install.md#in-a-team-repository)). For now, tasks are logged automatically from tests only with `dotnet test`; otherwise you log them yourself. For secure coding there is a practice map with eight exercises (`security-dotnet`). See [For junior developers](for-juniors.md).
 - **Teachers and course coordinators** who want to use it in a course: see [For educators](for-educators.md).
 - **Researchers** who want to test the harness: see [For researchers](researchers.md).
 
@@ -107,7 +107,7 @@ Yes. That is what the guard hook does: per skill, at levels L1–L3, it blocks C
 
 ### Does it work for courses other than C#?
 
-Yes, with a skill map for your course: the skills, keywords and notes in `harness/maps/<id>/`. The included maps are Object-Oriented Design in C# for students, and an example for a junior developer in C#/.NET. For another language you set which files are code and which commands build; the test runner `check.mjs` only supports `dotnet test` for now. See [Configuration](configuration.md#your-own-course).
+Yes, with a skill map for your course: the skills, keywords and notes in `harness/maps/<id>/`. The included maps are Object-Oriented Design in C# for students, an example for a junior developer in C#/.NET, and a practice map for secure coding in C#/.NET with eight exercises. For another language you set which files are code and which commands build; the test runner `check.mjs` only supports `dotnet test` for now. See [Configuration](configuration.md#your-own-course).
 
 ### Will AI make me stay a junior developer?
 
@@ -115,7 +115,7 @@ It can. A junior who hands work to an agent before they can do it themselves get
 
 ### What data does it store, and where?
 
-Everything stays on your computer, in `.learning/` in your project folder, which the installer keeps out of git. The hooks make no network connections. Only if you choose to publish a dashboard does a filtered export leave the folder, with a whitelist of fields and filters for names, paths and e-mail addresses. See [Configuration and privacy](configuration.md#privacy).
+Everything stays on your computer, in `.learning/` in your project folder (or, with `--learning-dir`, in that of your practice folder), which the installer keeps out of git. One exception is intended: in [graded work](how-it-works.md#graded-work) the hooks write a filtered AI-use log into the repo of the assignment, for your teacher. The hooks make no network connections. Only if you choose to publish a dashboard does a filtered export leave the folder, with a whitelist of fields and filters for names, paths and e-mail addresses. See [Configuration and privacy](configuration.md#privacy).
 
 ### Is it free?
 
