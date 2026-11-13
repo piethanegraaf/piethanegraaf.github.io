@@ -30,9 +30,15 @@ Goal: self-regulation (plan → execution → reflection). The learner writes th
      - The transfer task (`/mastery-check`): `transfer-start`, `transfer-passed`, or `transfer-failed` (with `why`: `help` when there was a hint, `claude` when Claude judged it not passed).
      - Done automatically by the harness, mention it separately: `placement` (level of a new skill after its first task), `level` with `auto: true` (automatic demotion; `by` says by whom: harness, demotion analyst or backstop), `micro-add` with `auto: true` and `task-retag` (the analyst linked tasks to a microskill), `demotion-verdict` (the analyst's verdict, with reason). If it says `doubt: true`, note "the analyst was in doubt".
      - `review` with `auto: true`: the outcome of an L4 review, from normal work. `review-due`: the review came by.
-   - The plan and confidence from the start, if there are any.
+   - The plan and confidence from the start: the events `plan` (the first message of the session) and `confidence` (the number after your question "(1–5)"). Without a `confidence` event the confidence before is "unknown".
+   - `graded-tooling`: fixed tooling you ran in graded work (#55). Name the commands.
+   - `check-question`: the outcome of the check questions (`right`, `half`, `open`).
 
-2. **Ask for the reflection in one message** and then wait. Put this line above it, unless `settings.dashboardRepo` in `.learning/skills.json` is `off` (then there is no dashboard):
+2. **Everything in one message** (review of 13 November, #58): open explanations, check questions, reflection and, for graded work, the log question. Send this right away when the learner wants to stop; do not wait for another prompt. Then wait for the answers.
+
+   **Check questions (2 to 3)** about the concepts of this session: what was explained, hinted or made. The learner answers from memory, without scrolling back. Ask for a reason or an application in their own work ("why does the class diagram go in chapter 5?", "when would you use composition instead of aggregation in your own case?"), not for a definition. If the help was a rung-4 example, ask about the learner's own code, not about the example. After the answers, give feedback per question: first what was right, then the principle behind what stayed open. Add `[check-question <id> right|half|open]` per question, with the skill id. An open answer is not a failure: it is what you ask again next time.
+
+   Put this line above it, unless `settings.dashboardRepo` in `.learning/skills.json` is `off` (then there is no dashboard):
    > Note: your answers appear word for word, with a translation, on the public dashboard.
    >
    > 1. What did you learn? Explain it as if you were telling a classmate.
@@ -48,7 +54,9 @@ Goal: self-regulation (plan → execution → reflection). The learner writes th
    **Graded work** (the context of the learning harness says GRADED WORK, or there are `graded-session` events of this session): in the same message, also ask about the AI-use log. For example:
    > 4. In the AI-use log (`log.md` in the folder from the context), fill in the last column for the rows of this session (session `<first 8 characters of the id>`): what did you do with the help, and how did you check that it was right?
 
-   Never write that column yourself: the guard blocks it, and the statement is the learner's. In the facts, say how many rows this session has in the log and what the highest rung was.
+   Never write that column yourself: the guard blocks it, and the statement is the learner's. The hook can take over the learner's words (#59): after the answer, add `[log "<literal part of the answer to question 4>"]`. The Stop hook checks that the learner typed those words and puts them in the empty last column of the rows of this session. If it is not a literal part, the hook refuses it. In the facts, say how many rows this session has in the log and what the highest rung was.
+
+   **Catch-up diary** (the session start names an earlier session that closed without a diary entry, #56): the same questions, short, about THAT session. Take the facts from the events of that session. The entry gets the marker of THAT session (`<!-- session: <id of that session> -->`), under today's date, with "catch-up diary" in the heading. For the log question use `[log <first 8 characters of that id> "<text>"]`.
 
    **Record in another folder** (the context names `learningDir`): read and write the record, the events and the diary in that folder, not in `.learning/` of this project.
 
@@ -75,6 +83,8 @@ Goal: self-regulation (plan → execution → reflection). The learner writes th
 **What went well (independently):** <(micro)skills that worked at rung 0–2, concretely>
 **Promotion signals:** <from `status`, with command, or "none">
 **Suggested microskills:** <add-micro suggestions from this session, or "none">
+
+**Check questions (from memory):** <per question: the question in short, the skill, right / half / open, and in one sentence what was right or what stayed open>
 
 **Reflection (own words):**
 1. *Learned:* <literally>

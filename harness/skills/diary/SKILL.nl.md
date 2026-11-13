@@ -30,9 +30,15 @@ Doel: zelfregulatie (plan → uitvoering → reflectie). De student schrijft de 
      - De transfertaak (`/mastery-check`): `transfer-start`, `transfer-passed`, of `transfer-failed` (met `why`: `help` als er een hint was, `claude` als Claude hem niet gehaald vond).
      - Automatisch gedaan door de harnas, noem het apart: `placement` (niveau van een nieuwe vaardigheid na de eerste taak), `level` met `auto: true` (automatisch omlaag; `by` zegt door wie: harnas, demotie-analist of achtervang), `micro-add` met `auto: true` en `task-retag` (de analist koppelde taken aan een microvaardigheid), `demotion-verdict` (het oordeel van de analist, met reden). Staat daar `doubt: true`, noteer dan "twijfel van de analist".
      - `review` met `auto: true`: de uitkomst van een L4-herhaling, uit gewoon werk. `review-due`: de herhaling kwam langs.
-   - Het plan en zelfvertrouwen van het begin, als die er zijn.
+   - Het plan en zelfvertrouwen van het begin: de events `plan` (het eerste bericht van de sessie) en `confidence` (het getal na jouw vraag "(1–5)"). Staat er geen `confidence`, dan is het zelfvertrouwen vooraf "onbekend".
+   - `graded-tooling`: vaste tooling die je in beoordeeld werk draaide (#55). Noem de commando's.
+   - `check-question`: de uitkomst van de controlevragen (`right`, `half`, `open`).
 
-2. **Vraag de reflectie in één bericht** en wacht dan. Zet er deze regel boven, behalve als `settings.dashboardRepo` in `.learning/skills.json` op `off` staat (dan is er geen dashboard):
+2. **Alles in één bericht** (review van 13 november, #58): open uitleg, controlevragen, reflectie en, bij beoordeeld werk, de logboekvraag. Stuur dit meteen als de student wil stoppen; wacht niet op een extra prompt. Wacht daarna op de antwoorden.
+
+   **Controlevragen (2 tot 3)** over de concepten van deze sessie: wat er uitgelegd, gehint of gemaakt is. De student antwoordt uit het hoofd, zonder terug te scrollen. Vraag naar een reden of een toepassing in het eigen werk ("waarom hoort het klassendiagram in hoofdstuk 5?", "wanneer gebruik je in jouw casus compositie in plaats van aggregatie?"), niet naar een definitie. Was de hulp een voorbeeld op trede 4, vraag dan naar de eigen code, niet naar het voorbeeld. Na de antwoorden geef je per vraag feedback: eerst wat klopte, dan het principe achter wat open bleef. Zet per vraag `[controlevraag <id> goed|half|open]`, met het id van de vaardigheid. Een open antwoord is geen falen: het is wat je de volgende keer weer vraagt.
+
+   Zet er deze regel boven, behalve als `settings.dashboardRepo` in `.learning/skills.json` op `off` staat (dan is er geen dashboard):
    > Let op: je antwoorden komen letterlijk, met een vertaling, op het openbare dashboard.
    >
    > 1. Wat heb je geleerd? Leg het uit alsof je het aan een klasgenoot vertelt.
@@ -48,7 +54,9 @@ Doel: zelfregulatie (plan → uitvoering → reflectie). De student schrijft de 
    **Beoordeeld werk** (de context van de leerharnas zegt BEOORDEELD WERK, of er zijn `graded-session`-events van deze sessie): vraag in hetzelfde bericht ook om het AI-logboek. Bijvoorbeeld:
    > 4. Vul in het AI-logboek (`logboek.md` in de map uit de context) de laatste kolom in voor de regels van deze sessie (sessie `<eerste 8 tekens van het id>`): wat deed je met de hulp, en hoe controleerde je of die klopte?
 
-   Schrijf die kolom nooit zelf: de guard blokkeert het, en de verantwoording is van de student. Noem bij de feiten hoeveel regels er voor deze sessie in het logboek staan en wat de hoogste trede was.
+   Schrijf die kolom nooit zelf: de guard blokkeert het, en de verantwoording is van de student. Wel kan de hook de woorden van de student overnemen (#59): zet na het antwoord `[logboek "<letterlijk deel van het antwoord op vraag 4>"]`. De Stop-hook controleert dat de student die woorden zo typte en zet ze in de lege laatste kolom van de regels van deze sessie. Is het geen letterlijk deel, dan weigert de hook het. Noem bij de feiten hoeveel regels er voor deze sessie in het logboek staan en wat de hoogste trede was.
+
+   **Inhaaldagboek** (de sessiestart meldt een eerdere sessie die zonder dagboek sloot, #56): dezelfde vragen, kort, over díe sessie. Haal de feiten uit de events van die sessie. De entry krijgt de marker van díe sessie (`<!-- sessie: <id van die sessie> -->`), onder de datum van vandaag, met in de kop "inhaaldagboek". Bij de logboekvraag gebruik je `[logboek <eerste 8 tekens van dat id> "<tekst>"]`.
 
    **Register in een andere map** (de context noemt `learningDir`): lees en schrijf het register, de events en het dagboek dan in die map, niet in `.learning/` van dit project.
 
@@ -75,6 +83,8 @@ Doel: zelfregulatie (plan → uitvoering → reflectie). De student schrijft de 
 **Wat ging goed (zelfstandig):** <(micro)vaardigheden die op trede 0–2 lukten, concreet>
 **Doorstroom-signalen:** <uit `status`, met commando, of "geen">
 **Voorgestelde microvaardigheden:** <add-micro-voorstellen van deze sessie, of "geen">
+
+**Controlevragen (uit het hoofd):** <per vraag: de vraag kort, de vaardigheid, goed / half / open, en in één zin wat klopte of wat open bleef>
 
 **Reflectie (eigen woorden):**
 1. *Geleerd:* <letterlijk>
