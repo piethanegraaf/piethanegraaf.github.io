@@ -65,7 +65,7 @@ Does a free text have no translation into the other language yet? Then the expor
 
 When the export writes the data, it also writes `.learning/state/last-export.json` in your practice folder: only the moment and three totals, no texts and no paths. The harness uses it to say what is new since then (see [Since the last export](progress-dashboard.md#since-the-last-export)). The file stays local.
 
-- **A whitelist only.** Levels, tasks (rung, source, explanation, rejections, corrections, skipped), reviews, signals, and from the diary only the plan, what went well, the reflection and the calibration. Never raw events, session ids, test names or paths.
+- **A whitelist only.** Levels, tasks (rung, source, explanation, rejections, corrections, skipped), reviews, signals, and from the diary only the plan, what went well, the reflection and the calibration. With a task goes what it was: the method names of the tests that turned green, without namespace or class, or the text you gave with `done`; for a sensitive skill not even that. Never raw events, session ids, full test names or paths.
 - **Fixed filters** on all free text: e-mail addresses, absolute paths, your user name, session and transcript ids, and HTML comments. The name in `skills.json` (`learner`) is filtered too.
 - **Your own filter** in `.learning/private.json`:
 

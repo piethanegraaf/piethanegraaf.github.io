@@ -246,3 +246,19 @@ test("V8: the user-name filter catches Zoë and André, and leaves longer words 
   // Control: an ASCII name still works as before.
   assert.equal(makeScrubber(fixedFilters({ userNames: ["jdoe"] })).scrub("groeten van jdoe", "f"), "groeten van [gebruiker]");
 });
+
+// ---------- V9 (low): a task logs method names, not full test names ----------
+test("V9: check.mjs logs the method names of the tests, without namespace or class", () => {
+  const c = makeProject({ files: { "opdrachten/02-lijst/Lijst.cs": "class Lijst {}" } });
+  try {
+    const trx = (dir, outcome) => {
+      fs.mkdirSync(dir, { recursive: true });
+      fs.writeFileSync(path.join(dir, "run.trx"), `<?xml version="1.0"?><TestRun><TestDefinitions><UnitTest name="x" id="id0"><TestMethod codeBase="x.dll" className="Contoso.Payments.Tests.RefundTests" name="Refund_works" /></UnitTest></TestDefinitions><Results><UnitTestResult testId="id0" testName="Contoso.Payments.Tests.RefundTests.Refund_works(amount: 5)" outcome="${outcome}" /></Results></TestRun>`);
+      return dir;
+    };
+    c.cli("check.mjs", ["opdrachten/02-lijst"], { LEERHARNAS_TRX_DIR: trx(c.abs("t1"), "Failed") });
+    c.cli("check.mjs", ["opdrachten/02-lijst"], { LEERHARNAS_TRX_DIR: trx(c.abs("t2"), "Passed") });
+    const task = c.events().find((e) => e.type === "task");
+    assert.equal(task.what, "Refund_works(amount: 5)");
+  } finally { c.cleanup(); }
+});

@@ -270,7 +270,10 @@ if (newlyGreen.length) {
   // Where the learning was (#37, #39): the concept of the highest hint. Help about a concept of another
   // family ([trede N #id]) names that concept; otherwise it is this skill.
   const helpConcept = (st?.conceptHelp ?? []).filter((c) => Number(c.rung) >= maxRung).map((c) => c.skill).pop() ?? null;
-  const what = newlyGreen.map((r) => r.name).join(", ");
+  // What the task was: the method names of the tests, without namespace or class (security review V9: xUnit gives
+  // "Contoso.Payments.Tests.RefundTests.Refund_works", and the task text can go to the public dashboard).
+  const methodOf = (n) => { const i = n.indexOf("("); const head = i === -1 ? n : n.slice(0, i); return head.split(".").pop() + (i === -1 ? "" : n.slice(i)); };
+  const what = newlyGreen.map((r) => methodOf(r.name)).join(", ");
   const minutes = st ? activeMinutesSince(st, st.taskStartedActive) : null;
   const task = logTask({ skill: skill.id, success: maxRung < 5, maxRung, minutes, source: "check", what, session: sid, dir: relDir, level: effectiveLevel(data, skill),
     reviewRung: reviewRung > (st?.maxRung ?? 0) ? reviewRung : 0, tid: st?.openTid, familyRung });
