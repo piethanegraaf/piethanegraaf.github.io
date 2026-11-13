@@ -14,6 +14,8 @@ The site is in English (at the root) and Dutch (under /nl/). The code is AGPL-3.
 - [Progress dashboard](https://piethanegraaf.github.io/progress-dashboard/): what the dashboard shows and how to publish your own data
 - [For junior developers](https://piethanegraaf.github.io/for-juniors/): keep learning at work while the AI writes the rest
 - [For educators](https://piethanegraaf.github.io/for-educators/): what the harness enforces in a course, and what it cannot
+- [Claude Code learning mode vs. a learning harness](https://piethanegraaf.github.io/claude-code-learning-mode/): the Learning output style, CLAUDE.md rules and hooks compared; only hooks enforce
+- [Secure coding exercises in C# and .NET](https://piethanegraaf.github.io/secure-coding-exercises/): eight free exercises mapped to the OWASP Top 10:2025, attack tests start red
 
 ## Research
 - [Literature review](https://piethanegraaf.github.io/research/): generative AI and learning to program, with a risk assessment and a learning-preserving Claude Code setup
@@ -21,6 +23,7 @@ The site is in English (at the root) and Dutch (under /nl/). The code is AGPL-3.
 - [The eternal-junior problem](https://piethanegraaf.github.io/notes/eternal_junior/): do juniors stay junior when an AI agent does the work?
 - [Secure code for juniors](https://piethanegraaf.github.io/notes/secure_coding_juniors/): is secure coding a good first niche for juniors who work with an AI agent?
 - [For researchers](https://piethanegraaf.github.io/researchers/): an invitation to test the harness in a randomized trial
+- [Key terms](https://piethanegraaf.github.io/key-terms/): desirable difficulties, never-skilling, the eternal-junior problem and other terms, each defined with its source
 
 ## Tools
 - [C# OOP cheat sheet](https://piethanegraaf.github.io/cheatsheet/): classes, interfaces, UML class diagrams and design patterns, with example code

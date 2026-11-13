@@ -50,6 +50,8 @@ De installer zet acht oefeningen in `oefeningen/`, twee per vaardigheid, de twee
 
 Deze map werkt zoals de OOD-oefenmap: elke oefening hoort bij haar vaardigheid, dus de guard beschermt haar en `check.mjs` logt een groene test als taak van die vaardigheid, en code buiten de oefeningen staat op L2. De analyser vindt vier van de acht kwetsbaarheden (SQL die uit strings wordt gebouwd en `System.Random`); de andere ziet hij niet, en dat hoort bij de les. Je wisselt tussen deze map en je andere oefenmap door Claude Code in de andere map te starten: elke map heeft een eigen register. De studies en hun grenzen staan in [§2.13 van het onderzoek](research.md#213-veilige-code-als-eerste-niche-voor-juniors).
 
+Alle acht oefeningen, met hun categorie in de OWASP Top 10, staan op [Oefeningen veilig programmeren](secure-coding-exercises.md).
+
 ## Op je werk
 
 - **Houd hem buiten de commits van het team.** De harnas is je eigen commitment device. Zet zijn bestanden in `.git/info/exclude`, en commit de wijzigingen aan gedeelde bestanden niet zonder afspraak met je team. Zie [In de repository van een team](install.md#in-de-repository-van-een-team).
