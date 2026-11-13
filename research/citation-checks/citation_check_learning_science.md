@@ -2450,3 +2450,98 @@ Method note: Bibliographic data came from the Crossref API for every DOI (Braz e
 14. **H34 UWV:** replace the source and the numbers. Either "about 18,800 ICT vacancies in Q4 2025 and about 6,200 WW benefits in February 2026 (UWV ICT sector page, July 2026 version)" or, preferably, the current figures: "just over 18,900 ICT vacancies in Q2 2026 and almost 6,400 WW benefits in July 2026 (UWV, read 13 November 2026)". Cite +270% as "demand for software developers rose 270% in the five years up to 2022 (UWV, ICT in beeld, August 2023)". Drop "developers wat makkelijker te vinden" unless a source is found; the closest supported statement is "webdevelopers show the largest drop in labour-market tightness, but it remains 'zeer krap' (UWV, May 2025)".
 15. **H35 NCSC:** date → "mei 2024" (colophon).
 16. **No change needed:** H17 Votipka et al., H20 Nguyen et al., H22 Lam et al., H31 ISO/IEC 27001:2022 control 8.28.
+
+## I. Sources checked on 13 November 2026, night (a task per part, and check questions at the end of a session)
+
+Scope: This check tests two decisions of the review of 13 November (night). #57: work without a test (design, UML, a report) is split into named parts, and each finished part is a task of its own, with an explanation in the learner's own words. #58b: when a session ends, Claude asks 2 to 3 check questions about the concepts of the session, from memory, in the same message as the reflection, and judges the answers (right, half, open). Five sources are covered. A5 (Karpicke & Roediger 2007; Latimier et al. 2021), A4 (Cepeda et al. 2008) and A11 (Dunlosky et al. 2013) earlier in this file already cover retrieval practice and spacing in general.
+
+Method note: Bibliographic data came from the Crossref API for all five DOIs. Abstracts were taken verbatim from Crossref (Roediger & Karpicke; Adesope et al.), from PubMed (Yang et al., PMID 33683913; Pan & Rickard, PMID 29733621) and from the Semantic Scholar API (Bandura & Schunk). No full texts were read: the open PDF of Bandura & Schunk is a scan without a text layer, and the other four are paywalled. Two candidate sources were dropped because no abstract could be reached: Margulieux, Guzdial & Catrambone (2012, ICER, DOI 10.1145/2361276.2361291, subgoal labels in programming instruction) and Schunk (1990, Educational Psychologist, DOI 10.1207/s15326985ep2501_6).
+
+### I1. Bandura & Schunk (1981), "Cultivating competence, self-efficacy, and intrinsic interest through proximal self-motivation"
+
+#### Takeaway
+**Verdict: supports a task per part, with a condition.** Children who worked with proximal subgoals learned more, felt more capable, and judged their own capability more accurately than children with only a distal goal. Distal goals had no effect. A named part of a larger product is a proximal subgoal. The condition: the part must be a real step of the work, not a way to count more tasks.
+
+#### Cited Findings
+- Bibliographic: Journal of Personality and Social Psychology, 41(3), 586-598, DOI 10.1037/0022-3514.41.3.586. Evidence grade B (one experiment). — [Crossref](https://api.crossref.org/works/10.1037/0022-3514.41.3.586)
+- Abstract: "Children who exhibited gross deficits and disinterest in mathematical tasks pursued a program of self-directed learning under conditions involving either proximal subgoals, distal goals, or no goals. Results of the multifaceted assessment provide support for the superiority of proximal self-influence. Under proximal subgoals, children progressed rapidly in self-directed learning, achieved substantial mastery of mathematical operations, and developed a sense of personal efficacy and intrinsic interest in arithmetic activities that initially held little attraction for them. Distal goals had no demonstrable effects. In addition to its other benefits, goal proximity fostered veridical self-knowledge of capabilities as reflected in high congruence between judgments of mathematical self-efficacy and subsequent mathematical performance." — [Semantic Scholar](https://api.semanticscholar.org/graph/v1/paper/DOI:10.1037/0022-3514.41.3.586?fields=abstract)
+
+#### Inferences
+- "Finish the whole class diagram" is a distal goal. "The Device class" and "the inheritance to the devices" are proximal subgoals. Logging each part as a task makes the progress visible at the moment it happens, which is the mechanism the authors name.
+- "Veridical self-knowledge" fits the calibration line of the diary: small parts give more, and earlier, comparisons between the confidence a learner gave and what happened.
+- A task per part also changes the counts behind a promotion (four tasks at rung 2 or lower, setup review of 12 Nov, #33). One exercise split into many tiny parts would reach that count faster than intended. The parts must be steps the learner names and can explain on their own. An explanation per part (the gate) keeps that honest. Whether parts of one exercise should count as fewer tasks for a promotion is not answered by this source.
+
+#### Gaps
+- Children with arithmetic, in 1981; subgoals of a self-directed program, not tasks logged by a tool. No programming, no design work.
+- The subgoals were set in advance. Here the learner names the part after finishing it, which is closer to self-monitoring of progress than to goal setting.
+
+### I2. Roediger & Karpicke (2006), "Test-Enhanced Learning: Taking Memory Tests Improves Long-Term Retention"
+
+#### Takeaway
+**Verdict: supports check questions, but not for the moment they are asked.** Recall tests beat restudying on tests after 2 days and 1 week. After 5 minutes, restudying was better. A check question at the end of a session helps the next sessions, not the same evening.
+
+#### Cited Findings
+- Bibliographic: Psychological Science, 17(3), 249-255, DOI 10.1111/j.1467-9280.2006.01693.x. Evidence grade B (two experiments). — [Crossref](https://api.crossref.org/works/10.1111/j.1467-9280.2006.01693.x)
+- Abstract: "When the final test was given after 5 min, repeated studying improved recall relative to repeated testing. However, on the delayed tests, prior testing produced substantially greater retention than studying, even though repeated studying increased students' confidence in their ability to remember the material. Testing is a powerful means of improving learning, not just assessing it." — [Crossref](https://api.crossref.org/works/10.1111/j.1467-9280.2006.01693.x)
+
+#### Inferences
+- The questions must be answered from memory, without scrolling back. The diary already asks for that.
+- Rereading raised confidence without raising retention. A check question gives the learner a more honest signal for the confidence line (1 to 5) than a summary by Claude would.
+- The benefit is delayed. A wrong or open answer at the end of a session is not a failure: it marks what to ask again.
+
+#### Gaps
+- Prose passages and free recall, not programming concepts or design decisions. No feedback in these experiments.
+
+### I3. Adesope, Trevisan & Sundararajan (2017), "Rethinking the Use of Tests: A Meta-Analysis of Practice Testing"
+
+#### Takeaway
+**Verdict: supports practice tests in general.** Practice tests beat restudying and the other conditions. The size of the effect depends on the format of the test and on the learners.
+
+#### Cited Findings
+- Bibliographic: Review of Educational Research, 87(3), 659-701, DOI 10.3102/0034654316689306. Evidence grade A (meta-analysis). — [Crossref](https://api.crossref.org/works/10.3102/0034654316689306)
+- Abstract: "Results reveal that practice tests are more beneficial for learning than restudying and all other comparison conditions. Mean effect sizes were moderated by the features of practice tests, participant and study characteristics, outcome constructs, and methodological features of the studies." — [Crossref](https://api.crossref.org/works/10.3102/0034654316689306)
+
+#### Inferences
+- The decision to ask questions instead of giving a summary at the end is in line with this review.
+
+#### Gaps
+- The abstract does not say which features help most. The full text was not read.
+
+### I4. Yang, Luo, Vadillo, Yu & Shanks (2021), "Testing (quizzing) boosts classroom learning: A systematic and meta-analytic review"
+
+#### Takeaway
+**Verdict: supports check questions in real courses, with corrective feedback.** Across 222 classroom studies, quizzing raised achievement to a medium extent (g = 0.499). Corrective feedback is one of the moderators.
+
+#### Cited Findings
+- Bibliographic: Psychological Bulletin, 147(4), 399-435, DOI 10.1037/bul0000309. Evidence grade A (meta-analysis, 48,478 students). — [Crossref](https://api.crossref.org/works/10.1037/bul0000309)
+- Abstract: "The results show that overall testing (quizzing) raises student academic achievement to a medium extent (g = 0.499). The magnitude of the effect is modulated by a variety of factors, including learning strategy in the control condition, test format consistency, material matching, provision of corrective feedback, number of test repetitions, test administration location and timepoint, treatment duration, and experimental design." — [PubMed](https://pubmed.ncbi.nlm.nih.gov/33683913/)
+
+#### Inferences
+- Claude judges each answer and says what was right and what is open. That is the corrective feedback the review names as a moderator. Feedback on an open answer should name the principle, not only "wrong".
+- "Number of test repetitions" and "timepoint" matter. One round at the end of a session is the smallest dose. A question about the same concept at the start of the next session would add a spaced repetition (see A4). That is not part of decision #58b.
+
+#### Gaps
+- Classroom quizzes on course content, mostly set by teachers; no AI tutor, no programming focus. The full text was not read, so the direction of each moderator is not checked here.
+
+### I5. Pan & Rickard (2018), "Transfer of test-enhanced learning: Meta-analytic review and synthesis"
+
+#### Takeaway
+**Verdict: sets a condition on the kind of question.** Testing transfers to new questions (d = 0.40), most to application and inference questions, and least when no moderator such as elaborated retrieval is present. A check question should ask for a reason or an application, not for a definition.
+
+#### Cited Findings
+- Bibliographic: Psychological Bulletin, 144(7), 710-756, DOI 10.1037/bul0000151. Evidence grade A (meta-analysis, 192 effect sizes, N = 10,382). — [Crossref](https://api.crossref.org/works/10.1037/bul0000151)
+- Abstract: "That transfer of learning is greatest across test formats, to application and inference questions, to problems involving medical diagnoses, and to mediator and related word cues; it is weakest to rearranged stimulus-response items, to untested materials seen during initial study, and to problems involving worked examples. Moderator analyses further indicated that response congruency and elaborated retrieval practice, as well as initial test performance, strongly influence the likelihood of positive transfer." — [PubMed](https://pubmed.ncbi.nlm.nih.gov/29733621/)
+- Abstract, publication bias: "However, the intercept predictions were substantially reduced, often indicating no positive transfer when none of the aforementioned moderators are present." — [PubMed](https://pubmed.ncbi.nlm.nih.gov/29733621/)
+
+#### Inferences
+- Good check questions for this course look like "in which arc42 chapter does the class diagram go, and why there?" or "when would you use composition instead of aggregation in your own case?". A question that only asks to repeat a term transfers least.
+- Transfer is weakest for "problems involving worked examples". If the help in a session was a rung-4 example, the check question should be about the learner's own code, not about the example.
+
+#### Gaps
+- No programming studies are named in the abstract. The full text was not read.
+
+### I-summary. What the check means for #57 and #58b
+
+**#57 (a task per part):** supported, with a condition. Proximal subgoals beat distal goals for learning, self-efficacy and accurate self-judgement (I1). A named, finished part with its own explanation is such a subgoal. The condition is that a part is a real step the learner can explain on its own; otherwise the promotion criterion (four tasks) is reached by splitting. The explanation gate per part covers most of that risk. This check found no source on how parts of one exercise should count for a promotion; that stays a design choice.
+
+**#58b (check questions at the end):** supported, with three conditions. Retrieval beats restudying for later retention (I2, I3, I4), also in real courses (I4). (1) The questions are answered from memory, without scrolling back. (2) They ask for a reason or an application in the learner's own work, not for a definition (I5). (3) Claude gives corrective feedback per answer: what was right, and the principle behind what was open (I4). The benefit shows in later sessions, not the same evening (I2), so an open answer marks what to ask again; it is not a failure. **Deviation from the decision, as advice only:** asking one of the open questions again at the start of the next session would add the spaced repetition the reviews point to (I4, A4). The decision places all check questions at the end, and that is what is built.
