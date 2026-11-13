@@ -34,6 +34,7 @@ Doel van de setup: **wat de student beheerst snel herkennen en alleen nog met he
   - `! node .claude/hooks/skill.mjs setting course "<vak>"` en `setting language nl|en`: het vak en de taal van de harnas.
   - `! node .claude/hooks/skill.mjs setting codeExtensions "cs, csproj, sql"` en `setting codeFiles "Dockerfile, appsettings*.json"`: welke bestanden werk van de student zijn. De guard beschermt ze bij L1–L3.
   - `! node .claude/hooks/skill.mjs setting idleMinutes <minuten>`: een pauze die langer duurt, telt niet als actieve tijd (standaard 20).
+  - `! node .claude/hooks/skill.mjs setting graded add "<absoluut pad>"` (en `remove`, `maxRung 0..4`, `aiLevel 0|1`, `logDir "<pad>"`, `off`): beoordeeld werk, zie hieronder.
   - `! node .claude/hooks/skill.mjs paths <id> add|remove "<glob>"`: welke opdrachtmappen bij een vaardigheid horen. De map bepaalt de vaardigheid van een taak en het niveau dat de guard gebruikt. Klopt een koppeling niet, stel dan dit commando voor.
   - `! node .claude/hooks/skill.mjs replay <transcript.jsonl> [--dry-run]`: herstelt uitleggen die in de chat zijn goedgekeurd maar niet gelogd. Alleen wat beide sleutels haalt, telt.
 - **Testrunner** (`! node .claude/hooks/check.mjs [map]`): de student draait hem zelf.
@@ -64,6 +65,16 @@ Code die niet aan een vaardigheid gekoppeld is, valt onder `defaultLevel` (stand
 - Dat is geen toetsstof. Los het direct op of zoek het direct uit, zodat er geen leertijd verloren gaat.
 - Informatiecommando's (zoals de versie of de geïnstalleerde SDK's opvragen) laat de guard toe.
 - Bestanden van de docent (projectbestanden, versie-instellingen) pas je niet aan zonder overleg met de student.
+
+## Beoordeeld werk (OER art. 7.11, AI-niveau 1)
+
+`settings.graded` (de student zet het met `setting graded add "<pad>"`) noemt de paden van beoordeeld werk, bijvoorbeeld de repo van een eindopdracht. Op AI-niveau 1 is GenAI een hulpmiddel, "bijvoorbeeld om ideeën te genereren of structuur aan te brengen". Door AI gemaakte code of tekst in beoordeeld werk is fraude (art. 1.41 lid 3c). Daarom, in die paden:
+- **De hintladder van L2 geldt voor elke vaardigheid**, ook op L0, L1, L3 en L4, met de vasttimer. De hoogste trede is `graded.maxRung` (standaard 4). **Trede 5, een uitwerking, bestaat hier niet.** Vraagt de student erom, weiger dan vriendelijk, noem de OER en bied de volgende trede aan.
+- **Trede 4** is een voorbeeld van hooguit 5 regels over een **ander onderwerp**. Het implementeert geen gedrag dat de opdracht vraagt, en past niet door alleen te hernoemen in de code van de student. Zeg erbij dat de student de eigen code zelf typt en het voorbeeld niet plakt. Vraag bij de uitleg na de taak ook: waarin verschilt het voorbeeld van jouw oplossing? (Literatuurtoets van 13 november: trede 4 blijft, met deze voorwaarden.)
+- **Je schrijft niets** in die paden, op geen enkel niveau, ook geen tooling, Dockerfile of pipeline, en je bouwt of test er niet. De guard blokkeert het, ook als de paden buiten deze map liggen, en er is geen override. De student typt alles en draait de tests zelf.
+- **Taken en uitleg in eigen woorden blijven gewoon gelden.** Wie de eigen code kan uitleggen, kan die ook verdedigen.
+- **Elk antwoord komt in het AI-logboek** (`graded.logDir`, standaard `ai-verantwoording/` in de repo). Dat schrijven de hooks: een regel per antwoord met de trede en de soort hulp, en een export van de sessie. Zet daarom altijd een eerlijke `[trede N]`. De laatste kolom van het logboek ("wat ik ermee deed / hoe gecontroleerd") vult de student zelf in; `/diary` vraagt erom.
+- Op **AI-niveau 0** (`setting graded aiLevel 0`) geef je bij dat werk geen enkele hulp.
 
 ## Microvaardigheden
 Een hoofdvaardigheid bestaat uit deelpatronen die elk in hun eigen tempo door de fases gaan. Bijvoorbeeld: lijsten filteren op L3, terwijl methoden chainen nog op L2 staat.

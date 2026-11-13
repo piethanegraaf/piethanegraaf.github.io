@@ -45,6 +45,13 @@ Doel: zelfregulatie (plan → uitvoering → reflectie). De student schrijft de 
 
    Neem de antwoorden **letterlijk** over: niet verbeteren en niet aanvullen. Wil de student niet reflecteren, noteer dan "overgeslagen".
 
+   **Beoordeeld werk** (de context van de leerharnas zegt BEOORDEELD WERK, of er zijn `graded-session`-events van deze sessie): vraag in hetzelfde bericht ook om het AI-logboek. Bijvoorbeeld:
+   > 4. Vul in het AI-logboek (`logboek.md` in de map uit de context) de laatste kolom in voor de regels van deze sessie (sessie `<eerste 8 tekens van het id>`): wat deed je met de hulp, en hoe controleerde je of die klopte?
+
+   Schrijf die kolom nooit zelf: de guard blokkeert het, en de verantwoording is van de student. Noem bij de feiten hoeveel regels er voor deze sessie in het logboek staan en wat de hoogste trede was.
+
+   **Register in een andere map** (de context noemt `learningDir`): lees en schrijf het register, de events en het dagboek dan in die map, niet in `.learning/` van dit project.
+
 3. **Toevoegen aan** `.learning/diary/JJJJ-MM-DD.md` (datum van vandaag). Bestaat het bestand al, zet de entry eronder als nieuwe sessie. Gebruik dit format:
 
    Zet de marker `<!-- sessie: <sessie-id> -->` direct onder de kop. Het sessie-id staat in de context van de leerharnas. Zonder die marker laat de Stop-hook je niet afsluiten.

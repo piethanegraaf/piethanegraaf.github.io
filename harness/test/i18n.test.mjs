@@ -21,7 +21,7 @@ test("each key has the same placeholders in both languages", () => {
 });
 
 test("every key used in the hooks and the installer exists", () => {
-  const PREFIX = "(?:advice|check|cli|explain|guard|install|level|note|pg|progress|review|rg|rung|ss)";
+  const PREFIX = "(?:advice|check|cli|explain|graded|guard|install|level|note|pg|progress|review|rg|rung|ss)";
   const used = new Set();
   const sources = [...fs.readdirSync(path.join(HARNESS, "hooks")).filter((f) => f.endsWith(".mjs")).map((f) => path.join(HARNESS, "hooks", f)),
     path.join(HARNESS, "install.mjs")];
@@ -33,12 +33,12 @@ test("every key used in the hooks and the installer exists", () => {
   }
   // Keys built at run time.
   for (const l of ["L0", "L1", "L2", "L3", "L4"]) used.add(`level.${l}`);
-  for (const n of [0, 1, 2, 3, 4, 5]) used.add(`rung.${n}`);
+  for (const n of [0, 1, 2, 3, 4, 5]) { used.add(`rung.${n}`); used.add(`graded.kind.${n}`); }
   for (const l of ["L1", "L2", "L3"]) used.add(`guard.advice.${l}`);
   for (const r of ["pass", "shaky", "fail"]) used.add(`cli.review.${r}`);
   for (const k of ["examples", "gaps", "tasks", "solved", "low", "solo", "days", "transfer"]) used.add(`progress.${k}`);
   for (const a of ["new", "same", "replace", "delete", "merge", "keep", "mkdir", "append"]) used.add(`install.action.${a}`);
-  for (const n of ["backup", "localBackup", "obsolete", "hooks", "mergeSettings", "map", "data", "claudeNew", "yours", "importAdded", "gitignore", "gitignoreBackup"]) used.add(`install.note.${n}`);
+  for (const n of ["backup", "localBackup", "obsolete", "hooks", "mergeSettings", "map", "data", "claudeNew", "yours", "importAdded", "gitignore", "gitignoreBackup", "learningDir"]) used.add(`install.note.${n}`);
   const missing = [...used].filter((k) => !(k in nl));
   assert.deepEqual(missing, []);
   assert.ok(used.size > 150, `only ${used.size} keys found: is the scan still working?`);

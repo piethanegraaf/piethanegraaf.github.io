@@ -7,7 +7,7 @@ import os from "node:os";
 import path from "node:path";
 import {
   readStdin, loadSkills, levelForPath, isOverrideActive, logEvent, rel, isHarnessPath,
-  codeExtRe, buildRes, PROTECTED, levelName, t, ROOT,
+  codeExtRe, buildRes, PROTECTED, levelName, t, ROOT, isRecordFile, gradedOf, isGradedPath, isGradedDir, mentionsGraded,
 } from "./lib.mjs";
 import { parseCommand, commandName } from "./shell.mjs";
 
@@ -40,6 +40,15 @@ const NOWHERE = /^(\/dev\/null|\$null|nul)$/i;
 // no level, task or event. So it is no build of learner code (also not when settings.buildCommands has
 // node) and no write to the record. Only a script outside this project counts, and never --out into it.
 const EXPORT_SCRIPT = /(^|[\\/])harness[\\/]export\.mjs$/i;
+// Graded work (setup of 13 Nov, #49, #54): in settings.graded.paths Claude writes nothing, at no level and
+// with no override, also outside this project. Besides the programs above, these also change files there.
+const GRADED_WRITE_PROGRAMS = new Set(["mkdir", "md", "rmdir", "rd", "patch", "unlink", "chmod", "attrib", "robocopy", "xcopy", "7z"]);
+// git commands that only read. Every other git command (add, commit, push, switch, init ...) changes the repo.
+const GIT_READ = new Set(["status", "log", "diff", "show", "blame", "grep", "ls-files", "ls-tree", "rev-parse", "describe",
+  "shortlog", "reflog", "cat-file", "help", "version", "--version"]);
+// Programs that run code given inline (node -e, python -c ...): the guard cannot see which files it writes.
+const INLINE_CODE = [["node", /^(-e|--eval|-p|--print)$/], ["deno", /^eval$/], ["python", /^-c$/], ["python3", /^-c$/], ["py", /^-c$/],
+  ["ruby", /^-e$/], ["perl", /^-e$/], ["php", /^-r$/]];
 
 function deny(reason, event) {
   logEvent({ type: "deny", ...event, reason });
@@ -88,19 +97,20 @@ try {
 }
 const CODE_EXT = codeExtRe(data);
 const BUILD_RES = buildRes(data);
+const GRADED = gradedOf(data);
+// A path for the log: project-relative, or with ~ for the home folder (never the full home path).
+const shown = (p) => rel(p) ?? String(p).split(os.homedir()).join("~");
+const gradedDeny = (what, event) => deny(t("guard.graded", { what, max: GRADED.maxRung, level: GRADED.aiLevel }), { ...event, graded: true });
 
-// 1) The skill record and state belong to the learner.
-const isRecordPath = (p) => {
-  const r = rel(p);
-  return r !== null && (/^\.learning\/skills\.json$/i.test(r) || /^\.learning\/state\//i.test(r));
-};
-
+// 1) The skill record and state belong to the learner (also a record in another folder, learningDir #53).
 if (["Edit", "Write", "MultiEdit", "NotebookEdit"].includes(tool)) {
   const file = ti.file_path ?? ti.notebook_path;
-  if (isRecordPath(file)) {
-    deny(t("guard.recordFile"), { tool, file: rel(file) });
+  if (isRecordFile(file)) {
+    deny(t("guard.recordFile"), { tool, file: shown(file) });
   }
   if (isHarnessPath(rel(file))) deny(t("guard.harness"), { tool, file: rel(file) });
+  // 2) Graded work: every file, inside or outside this project (#54), whatever the level.
+  if (file && isGradedPath(data, file, ROOT, GRADED)) gradedDeny(t("guard.what.gradedWrite", { file: shown(file) }), { tool, file: shown(file) });
   if (!file || !CODE_EXT.test(file)) process.exit(0);
 
   const { inProject, level, skill } = levelForPath(data, file);
@@ -162,12 +172,39 @@ if (tool === "Bash" || tool === "PowerShell") {
     }
     // Writes: redirect targets, plus the files named by a command that writes (cp, sed -i, Set-Content ...).
     const targets = redirects.filter((r) => !NOWHERE.test(r)).map((r) => resolvePath(cwd, r));
-    if (argv.length && writesFiles(argv, raw)) for (const a of args) if (!/^-/.test(a) && looksLikePath(a)) targets.push(resolvePath(cwd, a));
+    const writes = argv.length > 0 && writesFiles(argv, raw);
+    if (writes) for (const a of args) if (!/^-/.test(a) && looksLikePath(a)) targets.push(resolvePath(cwd, a));
     for (const p of targets) {
       const r = rel(p);
-      if (r !== null && (/^\.learning\/skills\.json$/i.test(r) || /^\.learning\/state(\/|$)/i.test(r))) deny(t("guard.recordCmd"), { tool, cmd: short });
+      if (isRecordFile(p)) deny(t("guard.recordCmd"), { tool, cmd: short });
       if (isHarnessPath(r)) deny(t("guard.harness"), { tool, cmd: short });
       if (CODE_EXT.test(p)) addPath(p, false);
+    }
+    // Graded work (#49, #54): any write there, by any program, also outside this project.
+    if (GRADED) {
+      const gradedWrite = (() => {
+        if (targets.some((p) => isGradedPath(data, p, ROOT, GRADED))) return true;
+        const wide = writes || GRADED_WRITE_PROGRAMS.has(name);
+        // Every argument of a program that writes, also one without a slash ("touch Bank.cs", "mkdir Domain").
+        if (wide && args.some((a) => !/^-/.test(a) && isGradedPath(data, resolvePath(cwd, a), ROOT, GRADED))) return true;
+        // A write the arguments do not show ([IO.File]::WriteAllText(...), a program without paths): the folder decides.
+        if (wide && (isGradedDir(data, cwd, ROOT, GRADED) || mentionsGraded(GRADED, raw))) return true;
+        // git: a command that changes the repo, in a graded folder (git -C <dir> or the working folder).
+        if (name === "git") {
+          let k = 0, dir = cwd;
+          while (k < args.length && /^-/.test(args[k])) {
+            if (/^-C$/.test(args[k])) dir = resolvePath(cwd, args[k + 1] ?? ".");
+            k += /^-(C|c)$/.test(args[k]) || /^--(git-dir|work-tree)$/.test(args[k]) ? 2 : 1;
+          }
+          const sub = (args[k] ?? "").toLowerCase();
+          if (sub && !GIT_READ.has(sub) && (isGradedDir(data, dir, ROOT, GRADED) || mentionsGraded(GRADED, raw))) return true;
+        }
+        // Inline code (node -e, python -c ...): in a graded folder, or naming one.
+        const inline = INLINE_CODE.find(([prog]) => prog === name);
+        if (inline && args.some((a) => inline[1].test(a)) && (isGradedDir(data, cwd, ROOT, GRADED) || mentionsGraded(GRADED, raw))) return true;
+        return false;
+      })();
+      if (gradedWrite) gradedDeny(t("guard.what.gradedShell"), { tool, cmd: short });
     }
     // The dashboard export (see EXPORT_SCRIPT): allowed, unless --out points into this project.
     const script = name === "node" ? args.find((a) => !/^-/.test(a)) : null;
@@ -181,6 +218,16 @@ if (tool === "Bash" || tool === "PowerShell") {
     const isCheck = name === "node" && args.some((a) => !/^-/.test(a) && commandName(a) === "check.mjs");
     const isBuild = isCheck || BUILD_RES.some((re) => re.exec(line)?.index === 0);
     if (!isBuild) continue;
+    // Graded work: building or testing it is the student's own step too, as at L2 (#49).
+    if (GRADED) {
+      const k = args.findIndex((a) => commandName(a) === "check.mjs");
+      const dirs = isCheck ? [args[k + 1] && !/^-/.test(args[k + 1]) ? args[k + 1] : "."]
+        : args.filter((a) => !/^-/.test(a) && !/^https?:/i.test(a) && looksLikePath(a));
+      const all = dirs.length ? dirs.map((a) => resolvePath(cwd, a)) : [cwd];
+      if (all.some((d) => isGradedPath(data, d, ROOT, GRADED) || isGradedDir(data, d, ROOT, GRADED))) {
+        gradedDeny(t("guard.what.gradedBuild"), { tool, cmd: short, building: true });
+      }
+    }
     if (isCheck) {
       // check.mjs [folder]: the folder after the script, or the working directory.
       const k = args.findIndex((a) => commandName(a) === "check.mjs");

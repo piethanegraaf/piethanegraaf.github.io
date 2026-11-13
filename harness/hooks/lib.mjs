@@ -1,6 +1,7 @@
 // Shared helpers for the learning harness (leerharnas).
 // Data lives in <project>/.learning/. No dependencies, Node >= 18.
 import fs from "node:fs";
+import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { t, setLanguage, language } from "./i18n.mjs";
@@ -13,7 +14,19 @@ export { t, setLanguage, language };
 export const ROOT = process.env.LEERHARNAS_ROOT
   ? path.resolve(process.env.LEERHARNAS_ROOT)
   : path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "..");
-export const LEARN = process.env.LEERHARNAS_DATA ?? path.join(ROOT, ".learning");
+// One record for two folders (setup of 13 Nov, #53): the repo of a graded assignment can use the record of
+// the practice folder, so a task there counts for the same skill. install.mjs --learning-dir writes it
+// in .claude/leerharnas.local.json (not in git: it holds an absolute path). Only an absolute path counts.
+export const LOCAL_CONFIG = path.join(ROOT, ".claude", "leerharnas.local.json");
+function learningDirOf() {
+  try {
+    const dir = JSON.parse(fs.readFileSync(LOCAL_CONFIG, "utf8"))?.learningDir;
+    return typeof dir === "string" && path.isAbsolute(dir) ? path.resolve(dir) : null;
+  } catch { return null; }
+}
+export const LEARN = process.env.LEERHARNAS_DATA ?? learningDirOf() ?? path.join(ROOT, ".learning");
+// The record lives in another folder (learningDir).
+export const LEARN_ELSEWHERE = path.relative(path.join(ROOT, ".learning"), LEARN) !== "";
 export const SKILLS_FILE = path.join(LEARN, "skills.json");
 export const STATE_DIR = path.join(LEARN, "state");
 export const DIARY_DIR = path.join(LEARN, "diary");
@@ -59,6 +72,8 @@ export const DEFAULT_SETTINGS = {
   // The clone of the repo with the dashboard (absolute path), "off" without a dashboard, or null:
   // not known yet. /diary asks to update the dashboard unless it is "off" (see dashboardAfterDiary).
   dashboardRepo: null,
+  // Graded work (setup of 13 Nov, #49/#50/#54): { paths, aiLevel, maxRung, logDir } or null. See gradedOf().
+  graded: null,
   targetSuccess: 0.85,
   // Files whose content belongs to the learner (the guard protects them at L1-L3).
   codeExtensions: ["cs", "csproj", "sln", "slnx"],
@@ -250,6 +265,101 @@ export function levelForPath(data, p) {
   if (rel(p) === null) return { inProject: false, level: null, skill: null };
   const skill = skillForPath(data, p);
   return { inProject: true, level: skill ? effectiveLevel(data, skill) : settingsOf(data).defaultLevel, skill };
+}
+
+// ---- The record, also when it lives in another folder (learningDir, #53) ----
+const inside = (dir, abs) => { const r = path.relative(dir, abs); return !r.startsWith("..") && !path.isAbsolute(r); };
+// The skill record or the state, in this project's .learning/ or in the record of learningDir.
+export function isRecordFile(p, cwd = ROOT) {
+  if (!p) return false;
+  const r = rel(path.resolve(cwd, String(p).replace(/^\/([a-zA-Z])\//, "$1:/")));
+  if (r !== null && (/^\.learning\/skills\.json$/i.test(r) || /^\.learning\/state(\/|$)/i.test(r))) return true;
+  const abs = path.resolve(absPath(p, cwd));
+  if (!inside(LEARN, abs)) return false;
+  const inLearn = path.relative(LEARN, abs).split(path.sep).join("/");
+  return /^skills\.json$/i.test(inLearn) || /^state(\/|$)/i.test(inLearn);
+}
+
+// ---- Graded work (setup of 13 Nov, #49, #50, #54) ----
+// OER art. 7.11, AI level 1: GenAI as an aid ("to generate ideas or bring structure"), never as the maker of
+// the work. settings.graded = { paths, aiLevel, maxRung, logDir }:
+// - paths: absolute paths or globs; a relative one is relative to this project. A path without * or ? is a
+//   folder (or file) with everything under it. The guard tests them always, also outside this project (#54).
+// - aiLevel 1 (default): the hint ladder up to maxRung (default and at most 4, never a worked solution).
+//   aiLevel 0: no help on this work at all.
+// - logDir: where the AI-use log goes (#50). Default: <the first path>/ai-verantwoording (en: ai-use).
+// Claude writes nothing in these paths, at no level, also no tooling. Only the hooks write the log.
+
+// An absolute path with forward slashes, as a shell sees it: ~ and $HOME are the home folder, and on
+// Windows /c/... is C:/...
+export function absPath(p, base = ROOT) {
+  let s = String(p ?? "").trim();
+  if (process.platform === "win32") {
+    const m = s.match(/^\/([a-zA-Z])(\/.*)?$/);
+    if (m) s = `${m[1]}:${m[2] ?? "/"}`;
+  }
+  s = s.replace(/^~(?=$|[\\/])/, os.homedir()).replace(/^\$(HOME|env:USERPROFILE)(?=$|[\\/])/i, os.homedir());
+  return path.resolve(base, s).split(path.sep).join("/");
+}
+
+const GLOB_CHAR = /[*?]/;
+// The folder part of a pattern: everything before the first segment with * or ?.
+const baseOf = (pattern) => {
+  const parts = pattern.split("/");
+  const i = parts.findIndex((x) => GLOB_CHAR.test(x));
+  return i === -1 ? pattern : parts.slice(0, i).join("/") || "/";
+};
+
+// The graded setting, checked: null when it is off or has no paths.
+export function gradedOf(data) {
+  const g = settingsOf(data).graded;
+  if (!g || typeof g !== "object" || Array.isArray(g)) return null;
+  const paths = (Array.isArray(g.paths) ? g.paths : []).filter((x) => typeof x === "string" && x.trim())
+    .map((x) => absPath(x).replace(/(.)\/+$/, "$1"));
+  if (!paths.length) return null;
+  const aiLevel = String(g.aiLevel) === "0" ? 0 : 1;
+  const want = Number(g.maxRung);
+  const maxRung = aiLevel === 0 ? 0 : g.maxRung != null && Number.isInteger(want) && want >= 0 && want <= 4 ? want : 4;
+  const bases = paths.map(baseOf);
+  const logDir = typeof g.logDir === "string" && g.logDir.trim() ? absPath(g.logDir).replace(/(.)\/+$/, "$1") : `${bases[0]}/${t("graded.dirName")}`;
+  const res = paths.map((p) => (GLOB_CHAR.test(p) ? globToRegex(p) : new RegExp(`^${escapeRe(p)}(?:/.*)?$`, "i")));
+  res.push(new RegExp(`^${escapeRe(logDir)}(?:/.*)?$`, "i"));
+  return { paths, bases, aiLevel, maxRung, logDir, res };
+}
+
+// Is p (relative to cwd) graded work, or the AI-use log? The record itself (learningDir, with the diary) is not.
+export function isGradedPath(data, p, cwd = ROOT, G = gradedOf(data)) {
+  if (!G || p === undefined || p === null || p === "") return false;
+  const a = absPath(p, cwd);
+  if (inside(LEARN, path.resolve(a))) return false;
+  return G.res.some((re) => re.test(a));
+}
+// A folder counts when something inside it would (C:/repo for the pattern C:/repo/**).
+export const isGradedDir = (data, dir, cwd = ROOT, G = gradedOf(data)) => isGradedPath(data, `${absPath(dir, cwd)}/__probe__`, ROOT, G);
+
+// Does a text name a graded folder? In a command or tool input: the full folder. In a prompt (names: true)
+// also its last part, when that is at least 5 characters ("eindopdracht").
+export function mentionsGraded(G, text, { names = false } = {}) {
+  if (!G || !text) return false;
+  const home = os.homedir().split(path.sep).join("/").toLowerCase();
+  let s = String(text).toLowerCase().replace(/\\+/g, "/").replace(/(^|[\s"'=(])~\//g, `$1${home}/`);
+  if (process.platform === "win32") s = s.replace(/(^|[\s"'=(])\/([a-z])\//g, "$1$2:/");
+  return G.bases.some((b) => {
+    const base = b.toLowerCase();
+    if (base.length > 3 && s.includes(base)) return true;
+    const name = base.split("/").pop();
+    return names && name.length >= 5 && new RegExp(`(^|[^\\p{L}\\p{N}])${escapeRe(name)}($|[^\\p{L}\\p{N}])`, "u").test(s);
+  });
+}
+
+// Why a session is about graded work, or null: this project is graded work, the working folder is,
+// or the prompt names a graded folder.
+export function gradedWhy(data, { cwd = null, prompt = null } = {}, G = gradedOf(data)) {
+  if (!G) return null;
+  if (isGradedDir(data, ROOT, ROOT, G)) return "project";
+  if (cwd && isGradedDir(data, cwd, ROOT, G)) return "cwd";
+  if (prompt && mentionsGraded(G, prompt, { names: true })) return "prompt";
+  return null;
 }
 
 // Keywords per skill: .learning/keywords.json plus the "keywords" field of the skill itself (microskills).
