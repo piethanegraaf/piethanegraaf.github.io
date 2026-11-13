@@ -16,7 +16,7 @@ It probably has a cost: while a skill is at L1–L3, you finish fewer tasks. Eac
 
 ## The example map for C#/.NET
 
-Install with `--map junior-dotnet`. The map has ten skills: debugging, reading unfamiliar code, unit tests, refactoring safely, ASP.NET Core APIs, EF Core and LINQ, async/await, security basics, reviewing code written by AI, and specifying a task for an agent.
+Install with `--map junior-dotnet`. The map has thirteen skills: debugging, reading unfamiliar code, unit tests, refactoring safely, ASP.NET Core APIs, EF Core and LINQ, async/await, four security skills (see below), reviewing code written by AI, and specifying a task for an agent.
 
 The guard only protects files under the paths of a skill (and the paths of [graded work](how-it-works.md#graded-work), which you will not need at work). A skill without paths, such as debugging, still gets the hint ladder, but nothing is blocked. Adapt the map to your own codebase (see [Your own course](configuration.md#your-own-course)).
 
@@ -26,14 +26,14 @@ You ask Claude Code for a search page that shows the user's search term back. Th
 
 The biggest risk is not the code itself, but your confidence in it. People who work with an AI assistant more often believe their code is secure than is justified, and do not notice where it goes wrong. What does help is attention at the moment of the decision: reviewers who were told to focus on security found the vulnerability much more often, and a checklist added nothing to that. Your employer will ask for it too. Since August 2026 more than 8,000 Dutch organisations fall under the Cyberbeveiligingswet (the Dutch NIS2 law), and from December 2027 products under the EU Cyber Resilience Act may no longer be made available with known exploitable vulnerabilities.
 
-That is why secure coding is the first niche we are working out for juniors. The plan:
+That is why secure coding is the first niche we are working out for juniors. Since 13 November 2026 it is in the `junior-dotnet` map:
 
-- `security.basics` becomes four skills: output encoding and input validation, parameterized queries, secrets and configuration, and reviewing AI code for security.
-- For a security task, you explain what an attacker controls, which measure stops it, and how you check that.
-- A static analyser comes next to `dotnet test`. You explain the warnings; Claude does not fix them for you.
-- Findings about vulnerabilities stay out of the export for the dashboard.
+- **Four security skills:** output encoding and input validation (`security.output-encoding`), parameterized queries (`security.sql-params`), secrets and configuration (`security.secrets-config`), and reviewing AI code for security (`security.ai-review`).
+- **The attacker first.** Rung 1 is always the question: what does an attacker control here? In the explanation of a security task you say what the attacker controls, which measure stops it, how you check that, and how sure you are.
+- **An analyser next to your tests.** `check.mjs` first rebuilds your code with the security rules of the .NET SDK, without network and without changing your project files. You explain the warnings; at L1–L3 Claude does not fix them for you. No warnings does not mean the code is secure: the analyser does not see access control or logic.
+- **Nothing about vulnerabilities online.** The free texts of security tasks, such as your explanation and the names of tests, stay out of the export for the dashboard. Only the numbers go along.
 
-This has not been built yet, and whether it makes juniors code more securely has not been tested. The studies and their limits are in [§2.13 of the research](research.md#213-secure-code-as-a-first-niche-for-juniors).
+Security flaws are spread through the code, so these skills have no paths: the guard does not stop Claude here, the rules do. Turn the analyser off with `! node .claude/hooks/skill.mjs setting securityAnalyzer false`. Whether this makes juniors code more securely has not been tested. The studies and their limits are in [§2.13 of the research](research.md#213-secure-code-as-a-first-niche-for-juniors).
 
 ## At work
 

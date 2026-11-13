@@ -687,7 +687,7 @@ What helps is attention at the moment of the decision. Reviewers who were told t
 
 Angle B fits this phase poorly. SOC analysts check alarms by hand (Alahmadi et al., 2022; C). Security work needs much technical knowledge, but the tasks and skills asked for are largely non-technical (PTvT & Dialogic, 2024; C). The "answer" there is a command or a judgement, and the AI can give it in the chat without writing a file. The shortages are mainly at medior and senior level; according to the same report, the supply of junior graduates matches demand, except for specialist profiles. Of 856 security professionals who use AI, 56% said AI has already reduced the need for entry-level roles (ISC2, 2026; C, industry association). The idea behind the hint ladder does work in security education: on pwn.college, 309 students asked a Socratic tutor that did not know the solutions directly for the solution in only 3.5% of their questions (Tompkins et al., 2026; C).
 
-**The plan, as a hypothesis.** Angle A becomes the first niche, as a deepening of `junior-dotnet` and not as a new product. It fits what the research finds most often: people do not notice that AI code is insecure. The harness already asks for an explanation in your own words of why something works. For security that becomes: what does an attacker control, which measure stops it, and how do you check that? Not built yet:
+**The plan, as a hypothesis.** Angle A becomes the first niche, as a deepening of `junior-dotnet` and not as a new product. It fits what the research finds most often: people do not notice that AI code is insecure. The harness already asks for an explanation in your own words of why something works. For security that becomes: what does an attacker control, which measure stops it, and how do you check that? Built on 13 November 2026 (§10.9):
 
 - splitting `security.basics` into four skills: output encoding and input validation, parameterized queries, secrets and configuration, and reviewing AI code for security;
 - a static analyser next to `dotnet test` whose warnings the learner explains, with the caveat that a clean run does not mean the code is secure;
@@ -2526,11 +2526,60 @@ The guard decides on the path, not on the level: graded work is protected at eve
 - **The three conditions of the literature check** are rules for Claude (CLAUDE.md), not enforced by a hook.
 - **Open:** the form of the APA reference against the guide of the institution's library.
 
+### 10.9 Revision of 13 November 2026 (evening): the security map
+
+The pilot student chose the whole plan of §2.13 at once, with four separate skills instead of one family with microskills.
+
+#### 10.9.1 Decisions
+
+| Decision | Built |
+|---|---|
+| `security.basics` becomes four separate skills | `security.output-encoding`, `security.sql-params`, `security.secrets-config` and `security.ai-review`, at L2, without paths, each with keywords. `review.ai-code` stays separate, for review in general. |
+| The attacker first | In the notes of the map: rung 1 is always "What does an attacker control here?", and the explanation of a security task has three parts (what the attacker controls, which measure stops it, how you check that) plus a confidence from 1 to 5 (Braz et al., 2022; Perry et al., 2023). |
+| An analyser next to `dotnet test` | `check.mjs` with the setting `securityAnalyzer` (on in `junior-dotnet`): first a full build with every security rule of the .NET SDK's analyzers, then the tests. The learner explains the warnings; Claude does not fix them at L1–L3. |
+| Examples teach no insecure pattern | A rule in the rules of every map, also `ood`: the example at rung 4, the worked solution at rung 5 and an example at L0 never contain concatenated SQL, unencoded input in HTML or a log, a secret in the code, `System.Random` for a token, or certificate validation switched off. |
+| Nothing about vulnerabilities online | A skill can be `sensitive`; the four security skills are. The export then keeps the numbers of their tasks, but not the free texts: the test names, the explanation, the reasons of a rejection or correction, free notes on a level change, and the title of a microskill below it. |
+
+#### 10.9.2 A security task, as built
+
+```mermaid
+flowchart TD
+    P["the learner asks about<br/>a query, output or a secret"] --> K{"keywords:<br/>a security skill?"}
+    K -->|"no"| N["the usual rules per level"]
+    K -->|"yes, at L1-L3"| H["hint ladder; rung 1:<br/>what does an attacker control here?"]
+    H --> W["the learner writes the code"]
+    W --> C["check.mjs"]
+    C --> B["dotnet build --no-incremental<br/>with AnalysisModeSecurity=All"]
+    B --> T["dotnet test with the same properties"]
+    T --> R["green or red, and the security<br/>warnings with rule and line"]
+    R --> U["explanation: attacker, measure,<br/>check, confidence 1-5"]
+    U --> E["export: numbers yes,<br/>free texts no"]
+```
+
+The analyser only looks for patterns it knows. A clean run is therefore no proof, and `check.mjs` says so.
+
+#### 10.9.3 Where the build differs from the plan
+
+- **The analyser rebuilds.** The plan was one build. A trial with a real project showed that the analyzers only report while the compiler runs: after a build that was already up to date, not a single warning came, not even for `System.Random`. So `check.mjs` first builds with `--no-incremental`, and runs the tests with the same properties, so they do not compile again. That takes time in a large solution; the setting can be turned off.
+- **A project that treats warnings as errors keeps building.** `CodeAnalysisTreatWarningsAsErrors=false` keeps the security rules at warning level, also with `TreatWarningsAsErrors` in the project. Tested on a real project.
+- **The guard does not protect the security skills.** Security cuts across files, so the skills have no paths. At L1–L3 Claude keeps to the notes of the map; no hook enforces it.
+- **The dashboard shows no separate note** for a task without texts. The export sets `withheld: true`; the task is shown with its rung and outcome.
+- **An existing install keeps `security.basics`.** `--update` leaves your record alone. To get the four skills, add them with `add` or install again.
+- **Not built:** access control and dependencies (§2.13: no analyser finds access-control flaws reliably, and a package check needs a network), and exercises with attack strings as tests.
+
 ---
 
 <a id="11-change-log"></a>
 
 ## 11. Change log {#changelog}
+
+### 13 November 2026 (evening): the security map
+
+The pilot student chose the whole plan of §2.13; it was built the same evening.
+
+- **§10.9 (new):** the decisions, a diagram of a security task as built, and where the build differs from the plan (the analyser rebuilds, the guard does not protect the security skills).
+- **§2.13:** the plan now says what was built.
+- **Not changed:** the conclusions of §2. There are no new sources.
 
 ### 13 November 2026: secure code as a first niche for juniors
 

@@ -12,6 +12,8 @@
 //    so the next prompt gets the right level and hint ladder.
 //  - a compile error is remembered as the starting point of that folder: a test that is green at the
 //    first build that works counts as new green, also when it never ran before (setup review 3.2).
+//  - with the setting securityAnalyzer (junior-dotnet map), it first rebuilds the folder with the security rules
+//    of the .NET SDK's analyzers, and lists the warnings for the learner to explain (research §2.13).
 // Claude may not run this script for L1-L3 code (guard.mjs); it is your test run.
 import fs from "node:fs";
 import os from "node:os";
@@ -21,6 +23,7 @@ import {
   ROOT, TESTS_FILE, STATE_DIR, loadSkills, skillForPath, rel, keywordMap, findSkill, isMicro, familyIds, familyOf,
   pickSession, loadSession, saveSession, touch, activeMinutesSince, logTask, logEvent, levelAdvice, taskStats,
   lapseTasks, afterTask, effectiveLevel, newWorkSignal, beginNewWork, taskRung, taskLogged, changedCodeFiles, progressOf, progressLine, t,
+  settingsOf, SECURITY_ANALYZER_ARGS, securityWarnings,
 } from "./lib.mjs";
 
 let data0 = null;
@@ -108,10 +111,22 @@ let resDir = process.env.LEERHARNAS_TRX_DIR; // testing only: parse existing trx
 let out = process.env.LEERHARNAS_DOTNET_OUT ?? ""; // testing only: the output of dotnet
 const warn = sdkWarning();
 if (warn) console.log(warn + "\n");
+// The security rules of the SDK's analyzers (research §2.13). The analyzers only report while the compiler
+// runs, and an up-to-date build skips the compiler: so first a full build of this folder with the rules on
+// (otherwise "no warnings" could be false), then the tests with the same properties, which need no new compile.
+const analyzer = settingsOf(data0).securityAnalyzer === true;
+let secOut = "";
 if (!resDir) {
   resDir = fs.mkdtempSync(path.join(os.tmpdir(), "leerharnas-trx-"));
+  const opts = { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 };
+  if (analyzer) {
+    console.log(t("check.sec.building", { dir: relDir }));
+    const b = spawnSync("dotnet", ["build", dir, "--no-incremental", "-nologo", ...SECURITY_ANALYZER_ARGS], opts);
+    if (b.error) { console.error(t("check.noDotnet", { error: b.error.message })); process.exit(1); }
+    secOut = (b.stdout ?? "") + (b.stderr ?? "");
+  }
   console.log(t("check.running", { dir: relDir }));
-  const r = spawnSync("dotnet", ["test", dir, "--logger", "trx", "--results-directory", resDir], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
+  const r = spawnSync("dotnet", ["test", dir, "--logger", "trx", "--results-directory", resDir, ...(analyzer ? SECURITY_ANALYZER_ARGS : [])], opts);
   if (r.error) { console.error(t("check.noDotnet", { error: r.error.message })); process.exit(1); }
   out = (r.stdout ?? "") + (r.stderr ?? "");
 }
@@ -205,6 +220,21 @@ if (restored.length) {
 }
 if (baseline.length && baseline.length === results.length) console.log("\n" + t("check.baseline"));
 if (writtenFirst) console.log("\n" + t("check.writtenFirst"));
+
+// ---------- 4b. Security warnings ----------
+// The learner explains them; at L1-L3 of a security skill Claude does not fix them (map notes). A clean
+// run is not proof: the analyser does not see access control or logic.
+if (analyzer) {
+  const sec = securityWarnings(`${secOut}\n${out}`);
+  if (!sec.length) console.log("\n" + t("check.sec.none"));
+  else {
+    console.log("\n" + t("check.sec.found", { n: sec.length }));
+    for (const w of sec.slice(0, 10)) console.log(`  ${w.rule}  ${rel(w.file) ?? path.basename(w.file)}:${w.line}  ${w.message}`);
+    if (sec.length > 10) console.log("  " + t("check.sec.more", { n: sec.length - 10 }));
+    console.log("  " + t("check.sec.explain"));
+  }
+  logEvent({ type: "security-warnings", dir: relDir, n: sec.length, rules: [...new Set(sec.map((w) => w.rule))], session: sid });
+}
 
 // ---------- 5. Log tasks for tests that turned green ----------
 if (newlyGreen.length) {

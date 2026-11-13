@@ -7,7 +7,10 @@
   "web.api": ["controller", "endpoint", "minimal api", "route", "[http", "statuscode", "status code", "model binding", "dto", "asp.net"],
   "data.ef-core": ["ef core", "entity framework", "dbcontext", "linq", "migration", "migratie", "query", "sql", "include(", "n+1", "asnotracking"],
   "cs.async": ["async", "await", "task<", "cancellationtoken", "deadlock", ".result", "configureawait"],
-  "security.basics": ["security", "beveilig", "injection", "injectie", "xss", "csrf", "secret", "api key", "password", "wachtwoord", "authoriz", "authentic"],
+  "security.output-encoding": ["xss", "cross-site", "html.raw", "htmlencode", "htmlencoder", "uitvoer coderen", "output encoding", "sanitiz", "input validation", "invoervalidatie", "validate input", "valideer invoer", "gebruikersinvoer", "user input", "log injection", "log-injectie"],
+  "security.sql-params": ["sql injection", "sql-injectie", "sqlinjection", "parameteriz", "parametris", "fromsqlraw", "executesqlraw", "fromsqlinterpolated", "dapper", "sqlcommand", "string concat"],
+  "security.secrets-config": ["secret", "api key", "apikey", "password", "wachtwoord", "connection string", "connectionstring", "appsettings", "user-secrets", "key vault", "keyvault", "environment variable", "omgevingsvariabele", "randomnumbergenerator", "system.random", "jwt"],
+  "security.ai-review": ["security", "beveilig", "onveilig", "kwetsba", "vulnerab", "owasp", "cwe", "aanvaller", "attacker", "injection", "injectie", "ca2100", "ca3001"],
   "review.ai-code": ["code review", "review this", "review deze", "pull request", "nakijken", "gegenereerde code", "generated code", "ai-code"],
   "spec.task": ["specificatie", "specification", "acceptatiecriteria", "acceptance criteria", "user story", "ticket", "requirements"]
 }

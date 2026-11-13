@@ -28,7 +28,7 @@ description: "The four Claude Code hooks of the learning harness, every skill.mj
 | `correct <task-id> rung <1-5> "reason"` | More help than logged: only raises the rung. |
 | `correct <task-id> void "reason"` | Void one task. |
 | `override <id\|*> <minutes> "reason"` | Temporarily allow Claude to write code (at most 240 minutes, logged). |
-| `setting <key> <value>` | `examDate`, `stuckTimerMinutes`, `idleMinutes`, `defaultLevel`, `course`, `language`, `autoDemote`, `dashboardRepo` (the absolute path of your clone of the repo with the dashboard, or `off`), and `codeExtensions` and `codeFiles` as a comma-separated list. See [Configuration](configuration.md). |
+| `setting <key> <value>` | `examDate`, `stuckTimerMinutes`, `idleMinutes`, `defaultLevel`, `course`, `language`, `autoDemote`, `securityAnalyzer`, `dashboardRepo` (the absolute path of your clone of the repo with the dashboard, or `off`), and `codeExtensions` and `codeFiles` as a comma-separated list. See [Configuration](configuration.md). |
 | `setting graded add\|remove "<path>"` | Graded work: the paths (absolute, or relative to the project) where Claude writes nothing and the hint ladder goes up to rung 4. Also `setting graded maxRung 0..4`, `aiLevel 0\|1`, `logDir "<path>"` and `off`. See [Graded work](how-it-works.md#graded-work). Logged as the event `setting`. |
 | `paths <id> add|remove "<glob>"` | Which exercise folders belong to a skill, for example `paths ood.associaties add "ood-opdrachten-01/09-*/**"`. The folder decides the skill of a task and the level the guard uses. Not for a microskill: it uses the level of its parent. If another skill has the same path, it warns you. Logged as the event `paths`. |
 | `replay <transcript.jsonl> [--dry-run]` | Recovers explanations that were approved in the chat but not logged. It finds the markers `[explain-ok <tid>]` and checks your message with the same check as the Stop hook. Only what passes both keys counts, with source `replay`. |
@@ -48,6 +48,7 @@ Runs `dotnet test` with a trx logger and shows a short summary. A test that goes
 - **A compile error is a starting point.** If the folder does not build (`error CSxxxx`), `check.mjs` remembers that. A test that is green at the first build that works then counts as new green. A tooling error (`NETSDK`, `MSB`) does not count.
 - **The folder decides the skill.** After a run in a folder, a keyword in your prompt can only choose a microskill within that family. You switch to another family with `#id` or the name of the exercise.
 - **`global.json`:** if it asks for an older SDK than the project targets, without `rollForward` to a newer major version, `check.mjs` warns you.
+- **Security analyser.** With `securityAnalyzer`, `check.mjs` first rebuilds the folder (`dotnet build --no-incremental`) with the security rules of the .NET SDK (`AnalysisModeSecurity=All`, never as errors), and then runs the tests with the same properties. It shows each warning with its rule, file and line, and asks you to explain it. The rebuild is needed because the analyzers only report while the compiler actually runs.
 - A folder relative to the project also works when your shell stands in another folder.
 
 ## Markers in Claude's answer
@@ -142,6 +143,7 @@ And of the setup of 13 November 2026 (graded work):
 | `graded-solution-refused` | The student asked for a worked solution in graded work; Claude was told to refuse. |
 | `graded-over-max` | An answer had a rung above the ceiling. The log names it, and the student was told. |
 | `graded-log-error` | The hook could not write the AI-use log (with the error). |
+| `security-warnings` | `check.mjs` with `securityAnalyzer`: the number of warnings and the rules (such as `CA2100`), without file names. |
 
 ## Files
 

@@ -12,7 +12,8 @@
 //   node .claude/hooks/skill.mjs correct <task-id> schrap|void "reason"        (void one specific task)
 //   node .claude/hooks/skill.mjs override <id|*> <minutes> "<reason>"
 //   node .claude/hooks/skill.mjs setting <key> <value>     (examDate, stuckTimerMinutes, idleMinutes, defaultLevel, course, language,
-//                                                           autoDemote, codeExtensions, codeFiles, dashboardRepo <absolute path>|off)
+//                                                           autoDemote, securityAnalyzer, codeExtensions, codeFiles,
+//                                                           dashboardRepo <absolute path>|off)
 //   node .claude/hooks/skill.mjs setting graded add|remove "<path>" | maxRung 0..4 | aiLevel 0|1 | logDir "<path>" | off
 //                                                          (graded work: OER AI level 1, the hint ladder up to rung 4, Claude writes nothing there)
 //   node .claude/hooks/skill.mjs paths <id> add|remove "<glob>"   (which exercise folders belong to a skill)
@@ -370,14 +371,14 @@ switch (cmd) {
     }
     const allowed = {
       examDate: /^\d{4}-\d{2}-\d{2}$/, stuckTimerMinutes: /^\d+$/, idleMinutes: /^[1-9]\d*$/, defaultLevel: /^L[0-4]$/,
-      course: /^[^\r\n<>]{1,80}$/, language: /^(nl|en)$/, autoDemote: /^(true|false)$/,
+      course: /^[^\r\n<>]{1,80}$/, language: /^(nl|en)$/, autoDemote: /^(true|false)$/, securityAnalyzer: /^(true|false)$/,
       // Which files are the learner's code (the guard protects them at L1-L3): comma-separated.
       codeExtensions: /^\.?[a-z0-9]{1,10}(\s*,\s*\.?[a-z0-9]{1,10})*$/i, codeFiles: /^[\w.*-]{1,60}(\s*,\s*[\w.*-]{1,60})*$/,
     };
     if (!allowed[key] || !allowed[key].test(value)) exit("cli.setting.usage");
     data.settings = data.settings ?? {};
     const list = (v) => v.split(",").map((x) => x.trim()).filter(Boolean).map((x) => (key === "codeExtensions" ? x.replace(/^\./, "") : x));
-    data.settings[key] = ["stuckTimerMinutes", "idleMinutes"].includes(key) ? Number(value) : key === "autoDemote" ? value === "true"
+    data.settings[key] = ["stuckTimerMinutes", "idleMinutes"].includes(key) ? Number(value) : ["autoDemote", "securityAnalyzer"].includes(key) ? value === "true"
       : ["codeExtensions", "codeFiles"].includes(key) ? list(value) : value;
     saveSkills(data);
     logEvent({ type: "setting", key, value });

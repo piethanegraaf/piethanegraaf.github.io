@@ -113,6 +113,8 @@ The rungs:
 
 Name one problem per answer: the most fundamental one. Give nothing up front about parts the learner has not started yet. When there are errors, ask which error message or test outcome the learner got themselves.
 
+**Examples never teach an insecure pattern.** This holds for the example at rung 4, the worked solution at rung 5 and a worked example at L0, in every map, also when the topic is not security. A learner copies the form of an example. So never: SQL built by concatenating strings, user input written into HTML or a log without encoding, a password, key or connection string in the code, `System.Random` for a token, or certificate validation switched off. Is a shortcut needed to keep the example short? Then name it in a comment (`// in real code: a parameter`). (Research §2.13: AI code fails most often on exactly these patterns.)
+
 ## Tasks, explanations in their own words, and pointing out progress
 - **A task begins** at a signal of new work. The harness only recognizes fixed signals, never a keyword:
   - code changed in another exercise folder than the one of the previous task;

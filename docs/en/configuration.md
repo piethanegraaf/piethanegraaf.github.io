@@ -18,6 +18,7 @@ The settings live in `.learning/skills.json`, under `settings`. Change them with
 | `idleMinutes` | `20` | A longer break does not count as active time: not for the stuck timer, not for the minutes per task and not for the message after an hour. |
 | `targetSuccess` | `0.85` | The target for moving from L2 to L3. |
 | `autoDemote` | `false` | Automatic demotion on evidence, with the demotion analyst for a main skill. Only turn it on once the logging has been reliable for a few sessions: `setting autoDemote true`. |
+| `securityAnalyzer` | `false` (`true` in `junior-dotnet`) | `check.mjs` first rebuilds the folder with the security rules of the .NET SDK's analyzers (such as CA2100, CA3001 and CA5394), and lists the warnings. Offline, and without changing your project files. See [For junior developers](for-juniors.md#secure-code-next-to-an-ai-agent). |
 | `dashboardRepo` | none | The absolute path of your clone of the repo with the dashboard, so that `/diary` can update the dashboard from your practice folder. `off` when you do not use the dashboard: then `/diary` does not ask about it. See [After the diary](progress-dashboard.md#after-the-diary). |
 | `graded` | none | Graded work: `{ paths, aiLevel, maxRung, logDir }`. Set it with `setting graded add "<path>"`; see [Graded work](how-it-works.md#graded-work). `aiLevel` 1 (default) gives the hint ladder up to `maxRung` (default and at most 4); `aiLevel` 0 gives no help. `logDir` defaults to `ai-verantwoording/` in the first path. |
 | `codeExtensions` | `cs, csproj, sln, slnx` | Which files are the learner's code. The OOD map adds `razor, cshtml, sql, yml, yaml`, for a project with a UI, a database and a pipeline. |
@@ -44,7 +45,7 @@ For a language other than C#, set `codeExtensions` and `buildCommands`. For now 
 There are two maps:
 
 - **`ood`:** Object-Oriented Design in C#, with numbered exercise folders. Code that belongs to no skill is L2.
-- **`junior-dotnet`:** an example map for a junior developer at work, in C#/.NET. Ten skills: debugging, reading unfamiliar code, unit tests, safe refactoring, ASP.NET Core APIs, EF Core, async/await, security basics, reviewing code written by AI, and specifying a task for an agent. Code that belongs to no skill is **L4**: the AI may write it. Only what you are learning is protected. Change the paths to the folders of your own codebase (see also [In a team repository](install.md#in-a-team-repository)).
+- **`junior-dotnet`:** an example map for a junior developer at work, in C#/.NET. Thirteen skills: debugging, reading unfamiliar code, unit tests, safe refactoring, ASP.NET Core APIs, EF Core, async/await, four security skills (output encoding, parameterized queries, secrets and configuration, reviewing AI code for security), reviewing code written by AI, and specifying a task for an agent. The security skills are `sensitive`: the free texts of their tasks stay out of the dashboard export. Code that belongs to no skill is **L4**: the AI may write it. Only what you are learning is protected. Change the paths to the folders of your own codebase (see also [In a team repository](install.md#in-a-team-repository)).
 
 The guard only protects files that fall under the paths of a skill. A skill without paths, such as debugging, gets the hint ladder, but the guard blocks nothing.
 
