@@ -32,7 +32,7 @@ An **illusion of competence** is the belief that you have learned something beca
 
 ## The eternal-junior problem
 
-The **eternal-junior problem** is a junior developer who hands work to an AI agent before they can do it themselves: the work gets done, but the skills that make a mid-level or senior developer do not grow. This review coined the term; it is never-skilling at work. See [§2.12](research.md#212-the-eternal-junior-problem) and [For junior developers](for-juniors.md).
+The **eternal-junior problem** is what happens when a junior developer hands work to an AI agent before they can do it themselves: the work gets done, but the skills that make a mid-level or senior developer do not grow. This review coined the term; it is never-skilling at work. See [§2.12](research.md#212-the-eternal-junior-problem) and [For junior developers](for-juniors.md).
 
 ## Paradox of supervision
 

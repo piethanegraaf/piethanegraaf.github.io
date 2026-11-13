@@ -32,7 +32,7 @@ Een **illusie van competentie** is het idee dat je iets hebt geleerd omdat het o
 
 ## Het eeuwige-juniorprobleem
 
-Het **eeuwige-juniorprobleem** is een junior developer die werk aan een AI-agent geeft voordat hij het zelf kan: het werk komt af, maar de vaardigheden die van een junior een medior of senior maken, groeien niet. Dit onderzoek bedacht de term; het is never-skilling op het werk. Zie [§2.12](research.md#212-het-eeuwige-juniorprobleem) en [Voor junior developers](for-juniors.md).
+Het **eeuwige-juniorprobleem** ontstaat als een junior developer werk aan een AI-agent geeft voordat hij het zelf kan: het werk komt af, maar de vaardigheden die van een junior een medior of senior maken, groeien niet. Dit onderzoek bedacht de term; het is never-skilling op het werk. Zie [§2.12](research.md#212-het-eeuwige-juniorprobleem) en [Voor junior developers](for-juniors.md).
 
 ## Paradox van toezicht
 
