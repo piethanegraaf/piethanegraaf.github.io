@@ -51,3 +51,63 @@ test("V1: bash removes backslash escapes before it runs a word; PowerShell keeps
   assert.deepEqual(argv('bash -c "rm .claud\\e/x"', "powershell"), [["rm", ".claude/x"]]);
   assert.deepEqual(argv('bash -c "rm .claud\\\\e/x"', "powershell"), [["rm", ".claud\\e/x"]], "\\\\ is one backslash in bash");
 });
+
+// ---------- V2 (high): graded work behind a variable, an escape or brace expansion ----------
+import fs from "node:fs";
+import os from "node:os";
+import path from "node:path";
+import { fakeSkills } from "./helpers.mjs";
+
+// A fake home folder (HOME and USERPROFILE for the hook) with the graded repo inside it.
+function gradedHome() {
+  const home = fs.mkdtempSync(path.join(os.tmpdir(), "leerharnas-home-"));
+  const repo = path.join(home, "eindopdracht");
+  fs.mkdirSync(path.join(repo, "src"), { recursive: true });
+  const g = makeProject({ skills: fakeSkills() });
+  const data = g.skills();
+  data.settings.graded = { paths: [repo.split(path.sep).join("/")], aiLevel: 1, maxRung: 4 };
+  fs.writeFileSync(path.join(g.learn, "skills.json"), JSON.stringify(data, null, 2));
+  const env = { HOME: home, USERPROFILE: home };
+  const run = (tool, command, cwd = g.root) => decision(g.hook("guard.mjs", { tool_name: tool, tool_input: { command }, cwd }, env));
+  return { g, home, repo, run, done: () => { g.cleanup(); fs.rmSync(home, { recursive: true, force: true }); } };
+}
+
+test("V2: a graded path behind ${HOME}, $USERPROFILE, an escape or braces is denied", () => {
+  const { run, done } = gradedHome();
+  try {
+    for (const cmd of [
+      "cp /tmp/sol.cs ${HOME}/eindopdracht/src/Bank.cs",
+      "cp x ${HOME}/eindopdracht/ai-verantwoording/logboek.md",
+      "echo hi > ${HOME}/eindopdracht/src/Bank.cs",
+      "cp x $USERPROFILE/eindopdracht/notes.md",
+      String.raw`cp x ~/eindopdrach\t/Bank.cs`,
+      "cp x ~/{eindopdracht,zz}/Bank.cs",
+      "cd ${HOME}/eindopdracht && git add -A && git commit -m x && git push",
+      "git -C ${HOME}/eindopdracht commit -am x",
+    ]) assert.equal(run("Bash", cmd), "deny", cmd);
+    assert.equal(run("PowerShell", "Copy-Item x ${env:USERPROFILE}/eindopdracht/Bank.cs"), "deny");
+    // Controls: the plain forms stay denied, reading stays allowed.
+    assert.equal(run("Bash", "cp x ~/eindopdracht/Bank.cs"), "deny");
+    assert.equal(run("Bash", "cat ${HOME}/eindopdracht/src/Bank.cs"), "allow");
+    assert.equal(run("Bash", "git -C ${HOME}/eindopdracht status"), "allow");
+  } finally { done(); }
+});
+
+test("V2: with graded work set, a write the guard cannot resolve fails closed; a known folder is fine", () => {
+  const { run, done } = gradedHome();
+  try {
+    for (const cmd of ["cp x $NIET_GEZET/Bank.cs", "cd $(mktemp -d) && cp x Bank.cs", "cp x \"$f\"", "echo x > $LOG"]) {
+      assert.equal(run("Bash", cmd), "deny", cmd);
+    }
+    // A variable inside a known folder outside graded work, and an unknown variable that only reads.
+    assert.equal(run("Bash", "cp x notes/$f.txt"), "allow");
+    assert.equal(run("Bash", "cat $NIET_GEZET/x"), "allow");
+  } finally { done(); }
+});
+
+test("V2: braces still separate a block, but not inside a word", () => {
+  const argv = (cmd) => parseCommand(cmd).commands.map((c) => c.argv);
+  assert.deepEqual(argv("cp a ${HOME}/b"), [["cp", "a", "${HOME}/b"]]);
+  assert.deepEqual(argv("{ echo a; echo b; }"), [["echo", "a"], ["echo", "b"]]);
+  assert.deepEqual(argv("cp x ~/{a,b}/c"), [["cp", "x", "~/{a,b}/c"]]);
+});

@@ -206,11 +206,48 @@ if (tool === "Bash" || tool === "PowerShell") {
   // eval, iex, Invoke-Expression, powershell -EncodedCommand: the guard cannot see what runs.
   if (parsed.opaque) deny(t("guard.opaque"), { tool, cmd: short });
 
-  // A path as the shell sees it: ~ and $HOME are the home folder, /c/... is C:/..., relative to cwd.
+  // A path as the shell sees it: ~ and variables expanded, /c/... is C:/..., relative to cwd (security review V2:
+  // `${HOME}/eindopdracht` and `$USERPROFILE/...` hid graded work). HOME and USERPROFILE are the home folder, PWD
+  // the working folder, any other variable its value in this environment.
   const home = os.homedir();
-  const resolvePath = (cwd, p) => path.resolve(cwd, String(p)
-    .replace(/^~(?=$|[\\/])/, home).replace(/^\$(HOME|env:USERPROFILE)(?=$|[\\/])/i, home)
-    .replace(/^\/([a-zA-Z])\//, "$1:/"));
+  const envGet = (n) => {
+    const k = n.toUpperCase();
+    if (k === "HOME" || k === "USERPROFILE") return home;
+    const hit = Object.keys(process.env).find((e) => e.toUpperCase() === k);
+    return hit ? process.env[hit] : undefined;
+  };
+  // { text, unknown }: the word expanded, and the index where something starts that the guard cannot know (an
+  // unknown variable, a command substitution, brace expansion), or -1.
+  const expand = (word, cwd) => {
+    let s = String(word).replace(/^~(?=$|[\\/])/, home);
+    s = s.replace(/\$\{(?:env:)?([A-Za-z_][A-Za-z0-9_]*)\}|\$(?:env:)?([A-Za-z_][A-Za-z0-9_]*)/gi, (m, a, b) => {
+      const n = a ?? b;
+      const v = n.toUpperCase() === "PWD" ? cwd : envGet(n);
+      return v === undefined ? m : v;
+    });
+    const u = s.match(/\$[{(A-Za-z_']|``|\{[^{}]*(,|\.\.)[^{}]*\}/);
+    return { text: s, unknown: u ? u.index : -1 };
+  };
+  const unresolvedWordAt = (cwd, w) => expand(w, cwd).unknown !== -1;
+  const resolvePath = (cwd, p) => path.resolve(cwd, expand(p, cwd).text.replace(/^\/([a-zA-Z])\//, "$1:/"));
+  // Could this word point into graded work? A word the guard cannot resolve counts when its known part (the folder
+  // before the unknown part) is graded, or when nothing of it is known.
+  // Brace expansion {a,b}: every alternative is a path of its own (at most 32).
+  const braces = (s) => {
+    const m = s.match(/\{([^{}]*,[^{}]*)\}/);
+    if (!m) return [s];
+    return m[1].split(",").slice(0, 32).flatMap((alt) => braces(s.slice(0, m.index) + alt + s.slice(m.index + m[0].length))).slice(0, 32);
+  };
+  const mayBeGraded = (cwd, w) => {
+    const variants = braces(String(w));
+    if (variants.length > 1) return variants.some((v) => mayBeGraded(cwd, v));
+    const e = expand(w, cwd);
+    if (e.unknown === -1) return isGradedPath(data, resolvePath(cwd, w), ROOT, GRADED);
+    const prefix = e.text.slice(0, e.unknown);
+    if (!prefix) return true;
+    const dir = /[\\/]/.test(prefix) ? path.resolve(cwd, prefix.replace(/[^\\/]*$/, "").replace(/^\/([a-zA-Z])\//, "$1:/")) : cwd;
+    return isGradedDir(data, dir, ROOT, GRADED) || isGradedPath(data, dir, ROOT, GRADED);
+  };
   const looksLikePath = (w) => /[\\/]/.test(w) || CODE_EXT.test(w) || /^\.\.?$/.test(w);
 
   // Which skills does this command touch? Per simple command: the working directory at that point
@@ -225,6 +262,8 @@ if (tool === "Bash" || tool === "PowerShell") {
     hits.set(key, { level, skill, building: building || hits.get(key)?.building || false });
   };
   let cwd = input.cwd ?? process.cwd();
+  // false after a cd to a folder the guard cannot resolve ($X, $(...)): from then on graded work fails closed (V2).
+  let cwdKnown = true;
   const allowedTooling = [];
   for (const { argv, redirects, raw } of parsed.commands) {
     const name = commandName(argv[0]);
@@ -243,7 +282,12 @@ if (tool === "Bash" || tool === "PowerShell") {
     }
     if (CD.has(name)) {
       const target = args.find((a) => !/^-/.test(a));
-      if (target) cwd = resolvePath(cwd, target);
+      if (target) {
+        const e = expand(target, cwd);
+        if (e.unknown !== -1) cwdKnown = false;
+        else if (path.isAbsolute(e.text) || /^\/[a-zA-Z]\//.test(e.text)) cwdKnown = true;
+        cwd = resolvePath(cwd, target);
+      }
       continue;
     }
     // Graded work: deterministic tooling is allowed and logged (#55). Only when it is about graded work;
@@ -278,29 +322,43 @@ if (tool === "Bash" || tool === "PowerShell") {
     }
     // Graded work (#49, #54): any write there, by any program, also outside this project.
     if (GRADED) {
+      // The words as the shell will see them, for a graded folder named through a variable (V2).
+      const seen = [name, ...args.map((a) => expand(a, cwd).text)].join(" ");
+      const names = mentionsGraded(GRADED, raw) || mentionsGraded(GRADED, seen);
+      // Why: a path the guard could not resolve gets its own message (write the path out in full).
+      const unresolvedWord = (w) => expand(w, cwd).unknown !== -1;
+      let unresolved = false;
       const gradedWrite = (() => {
         if (targets.some((p) => isGradedPath(data, p, ROOT, GRADED))) return true;
+        if (redirects.some((r) => !NOWHERE.test(r) && mayBeGraded(cwd, r))) { unresolved = redirects.some(unresolvedWord); return true; }
         const wide = writes || GRADED_WRITE_PROGRAMS.has(name);
-        // Every argument of a program that writes, also one without a slash ("touch Bank.cs", "mkdir Domain").
-        if (wide && args.some((a) => !/^-/.test(a) && isGradedPath(data, resolvePath(cwd, a), ROOT, GRADED))) return true;
+        // Every argument of a program that writes, also one without a slash ("touch Bank.cs", "mkdir Domain"), and
+        // one the guard cannot resolve.
+        if (wide && args.some((a) => !/^-/.test(a) && mayBeGraded(cwd, a))) { unresolved = args.some((a) => !/^-/.test(a) && unresolvedWord(a)); return true; }
         // A write the arguments do not show ([IO.File]::WriteAllText(...), a program without paths): the folder decides.
-        if (wide && (isGradedDir(data, cwd, ROOT, GRADED) || mentionsGraded(GRADED, raw))) return true;
+        if (wide && (isGradedDir(data, cwd, ROOT, GRADED) || names)) return true;
+        // After a cd the guard could not follow, any write may land in graded work: fail closed (V2).
+        if (!cwdKnown && (wide || redirects.some((r) => !NOWHERE.test(r)))) { unresolved = true; return true; }
         // git: a command that changes the repo, in a graded folder (git -C <dir> or the working folder).
         if (name === "git") {
-          let k = 0, dir = cwd;
+          let k = 0, dir = cwd, dirUnknown = !cwdKnown;
           while (k < args.length && /^-/.test(args[k])) {
-            if (/^-C$/.test(args[k])) dir = resolvePath(cwd, args[k + 1] ?? ".");
+            if (/^-C$/.test(args[k])) {
+              const w = args[k + 1] ?? ".";
+              dirUnknown = expand(w, cwd).unknown !== -1 && mayBeGraded(cwd, w);
+              dir = resolvePath(cwd, w);
+            }
             k += /^-(C|c)$/.test(args[k]) || /^--(git-dir|work-tree)$/.test(args[k]) ? 2 : 1;
           }
           const sub = (args[k] ?? "").toLowerCase();
-          if (sub && !gitReadOnly(sub, args.slice(k + 1)) && (isGradedDir(data, dir, ROOT, GRADED) || mentionsGraded(GRADED, raw))) return true;
+          if (sub && !gitReadOnly(sub, args.slice(k + 1)) && (dirUnknown || isGradedDir(data, dir, ROOT, GRADED) || names)) { unresolved = dirUnknown; return true; }
         }
         // Inline code (node -e, python -c ...): in a graded folder, or naming one.
         const inline = INLINE_CODE.find(([prog]) => prog === name);
-        if (inline && args.some((a) => inline[1].test(a)) && (isGradedDir(data, cwd, ROOT, GRADED) || mentionsGraded(GRADED, raw))) return true;
+        if (inline && args.some((a) => inline[1].test(a)) && (!cwdKnown || isGradedDir(data, cwd, ROOT, GRADED) || names)) return true;
         return false;
       })();
-      if (gradedWrite) gradedDeny(t("guard.what.gradedShell"), { tool, cmd: short });
+      if (gradedWrite) gradedDeny(t(unresolved ? "guard.what.gradedUnresolved" : "guard.what.gradedShell"), { tool, cmd: short });
     }
     // The dashboard export (see EXPORT_SCRIPT): allowed, unless --out points into this project.
     const script = name === "node" ? args.find((a) => !/^-/.test(a)) : null;
@@ -320,7 +378,8 @@ if (tool === "Bash" || tool === "PowerShell") {
       const dirs = isCheck ? [args[k + 1] && !/^-/.test(args[k + 1]) ? args[k + 1] : "."]
         : args.filter((a) => !/^-/.test(a) && !/^https?:/i.test(a) && looksLikePath(a));
       const all = dirs.length ? dirs.map((a) => resolvePath(cwd, a)) : [cwd];
-      if (all.some((d) => isGradedPath(data, d, ROOT, GRADED) || isGradedDir(data, d, ROOT, GRADED))) {
+      const unknown = dirs.length ? dirs.some((a) => unresolvedWordAt(cwd, a) && mayBeGraded(cwd, a)) : !cwdKnown;
+      if (unknown || all.some((d) => isGradedPath(data, d, ROOT, GRADED) || isGradedDir(data, d, ROOT, GRADED))) {
         gradedDeny(t("guard.what.gradedBuild"), { tool, cmd: short, building: true });
       }
     }

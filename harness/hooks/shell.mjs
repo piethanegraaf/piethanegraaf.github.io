@@ -136,8 +136,9 @@ function lex(s, shell = "bash") {
       continue;
     }
     if (c === "<") { pushWord(); raw += c; continue; } // input redirect or heredoc: reading
-    // Separators.
-    if (c === "\n" || c === "\r" || c === ";" || c === "|" || c === "(" || c === ")" || c === "{" || c === "}") {
+    // Separators. A brace only at the start of a word: inside one it is ${VAR} or brace expansion, and the word
+    // stays whole (security review V2: `${HOME}/x` was split into `$`, `HOME` and `/x`).
+    if (c === "\n" || c === "\r" || c === ";" || c === "|" || c === "(" || c === ")" || ((c === "{" || c === "}") && word === null)) {
       endSegment();
       if ((c === "|") && n === "|") i++;
       continue;
