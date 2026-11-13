@@ -30,7 +30,7 @@ description: "Claude Code's Learning output style asks Claude to leave some code
 - **The Learning style** fits when you want the task done and some hands-on practice on the side, for example while you get to know a codebase.
 - **The learning harness** fits when you are learning a skill that you must be able to do without AI later: for an exam, or for the step from junior to mid-level at work. You build the skill yourself first, then delegate it to Claude, and keep it with short reviews. See [How it works](how-it-works.md).
 
-Why enforce it at all? In a randomized trial by Anthropic, developers who learned a new library with an AI assistant scored 50% on a quiz afterwards, against 67% for those who coded by hand. The largest gap was on debugging (Shen & Tamkin, 2026; see [the literature review](research.md#key-findings)). An instruction to hold back is easy to skip when a deadline is close; a hook is not.
+Why enforce it at all? In a randomized trial by Anthropic, developers who learned a new library with an AI assistant scored 50% on a quiz afterwards, against 67% for those who coded by hand. The largest gap was on debugging (Shen & Tamkin, 2026; see [what the study found and what to do with it](ai-coding-skills-study.md)). And instructions alone did not hold: telling a tutor in its system prompt to scaffold changed nothing in a trial with 1,059 students, while gates built into the workflow did better (Barth et al., 2026). A hook is such a gate.
 
 ## Blocking edits yourself with one hook
 
