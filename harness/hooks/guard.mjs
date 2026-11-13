@@ -6,7 +6,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import {
-  readStdin, loadSkills, levelForPath, isOverrideActive, logEvent, rel, isHarnessPath,
+  readStdin, loadSkills, levelForPath, skillForPath, isOverrideActive, logEvent, rel, isHarnessPath,
   codeExtRe, buildRes, PROTECTED, levelName, t, ROOT, isRecordFile, gradedOf, isGradedPath, isGradedDir, mentionsGraded, protectedDirOf, holdsProtected,
   loadSession, saveSession,
 } from "./lib.mjs";
@@ -253,6 +253,12 @@ if (tool === "Bash" || tool === "PowerShell") {
     return isGradedDir(data, dir, ROOT, GRADED) || isGradedPath(data, dir, ROOT, GRADED);
   };
   const looksLikePath = (w) => /[\\/]/.test(w) || CODE_EXT.test(w) || /^\.\.?$/.test(w);
+  // A word that is, or stands for, a folder: it ends in / or is ".", it has a glob, it exists as a folder, or it
+  // does not exist and has no extension (V4).
+  const folderish = (abs, w) => {
+    if (/[\\/]$|(^|[\\/])\.\.?$|[*?]/.test(w)) return true;
+    try { return fs.statSync(abs).isDirectory(); } catch { return !/\.[A-Za-z0-9]{1,8}$/.test(w); }
+  };
 
   // Which skills does this command touch? Per simple command: the working directory at that point
   // (cd, pushd, Set-Location) plus the paths in its arguments. A directory gets a probe file inside it.
@@ -335,6 +341,45 @@ if (tool === "Bash" || tool === "PowerShell") {
       const dir = protectedDirOf(p);
       if (dir) deny(t(dir === "record" ? "guard.recordCmd" : "guard.harness"), { tool, cmd: short });
       if (CODE_EXT.test(p)) addPath(p, false);
+    }
+    // Folders as the target (security review V4): rm -rf <exercise>, cp -r … <exercise>, tar -C, unzip -d and
+    // git checkout -- <folder> reach every code file inside. Only a folder of a skill of the map counts, not
+    // an unmapped one (rm -rf build, bin, obj stay free).
+    if (writes || name === "git") {
+      const words = args.filter((a) => !/^-/.test(a));
+      const folders = [];
+      if (DELETES.has(name)) folders.push(...words.filter((w) => !CODE_EXT.test(w)));
+      if (MOVES.has(name) || ["cp", "copy", "copy-item", "cpi", "rsync", "install", "ln"].includes(name)) {
+        const dest = words.at(-1), sources = words.slice(0, -1);
+        const carriesCode = sources.some((s) => CODE_EXT.test(s) || /[*?]/.test(s) || /\.(zip|tar|tgz|gz|7z)$/i.test(s) || folderish(resolvePath(cwd, s), s));
+        if (dest !== undefined && sources.length && carriesCode && !CODE_EXT.test(dest)) folders.push(dest);
+        if (MOVES.has(name)) folders.push(...sources.filter((w) => !CODE_EXT.test(w)));
+      }
+      if (name === "tar" && args.some((a) => /^-?[a-zA-Z]*x/.test(a) || a === "--extract")) {
+        const k = args.findIndex((a) => a === "-C" || a === "--directory");
+        const eq = args.find((a) => /^--directory=/.test(a));
+        folders.push(k !== -1 && args[k + 1] ? args[k + 1] : eq ? eq.slice(12) : ".");
+      }
+      if (name === "unzip") {
+        const k = args.indexOf("-d");
+        folders.push(k !== -1 && args[k + 1] ? args[k + 1] : ".");
+      }
+      if (name === "git") {
+        const sub = (args[0] ?? "").toLowerCase();
+        const dd = args.indexOf("--");
+        if (sub === "checkout" || sub === "restore") {
+          const paths = dd !== -1 ? args.slice(dd + 1) : sub === "restore" ? words.slice(1) : [];
+          folders.push(...paths.filter((w) => !CODE_EXT.test(w)));
+          for (const w of paths) if (CODE_EXT.test(w)) addPath(resolvePath(cwd, w), false);
+        }
+        if (sub === "clean") folders.push(...(words.length > 1 ? words.slice(1) : ["."]));
+      }
+      for (const w of folders) {
+        const abs = resolvePath(cwd, w);
+        if (!folderish(abs, w)) continue;
+        const probe = path.join(/[*?]/.test(w) ? abs.replace(/[\\/][^\\/]*[*?].*$/, "") : abs, "__probe__.cs");
+        if (skillForPath(data, probe)) addPath(probe, false);
+      }
     }
     // Graded work (#49, #54): any write there, by any program, also outside this project.
     if (GRADED) {

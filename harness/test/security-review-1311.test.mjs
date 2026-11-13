@@ -128,3 +128,21 @@ test("V3: a protected folder as the target, or a bare name after cd, is denied",
     assert.equal(decision(bash(cmd)), "allow", cmd);
   }
 });
+
+// ---------- V4 (medium): a folder of protected code as the target ----------
+test("V4: deleting, replacing or extracting into a folder of an L1-L3 skill is denied", () => {
+  for (const cmd of [
+    "rm -rf opdrachten/02-lijst", "rm -rf opdrachten/02-lijst/*", "cp -r /tmp/solution/. opdrachten/02-lijst",
+    "cp /tmp/sol.cs opdrachten/02-lijst/", "mv /tmp/sol opdrachten/02-lijst", "tar -xf sol.tar -C opdrachten/02-lijst",
+    "unzip sol.zip -d opdrachten/02-lijst", "git checkout solution-branch -- opdrachten/02-lijst",
+    "git restore --source=sol opdrachten/02-lijst", "git clean -fd opdrachten/02-lijst",
+  ]) assert.equal(decision(bash(cmd)), "deny", cmd);
+  assert.equal(decision(bash("rm -rf .", p.abs("opdrachten/02-lijst"))), "deny", "cd into the exercise, then rm -rf .");
+  assert.equal(decision(bash("cp /tmp/sol/* .", p.abs("opdrachten/02-lijst"))), "deny", "a glob into the exercise");
+  assert.equal(decision(ps("Remove-Item -Recurse opdrachten/02-lijst")), "deny", "PowerShell");
+  assert.equal(decision(bash(String.raw`cp /tmp/sol.txt opdrachten/02-lijst/Lijst.c\s`)), "deny", "escaped extension");
+  // Controls: an L4 folder, an unmapped folder (build output), and a plain file into an exercise.
+  for (const cmd of ["rm -rf opdrachten/04-x", "rm -rf build", "rm -rf bin obj", "cp README.md opdrachten/02-lijst/", "tar -tf sol.tar"]) {
+    assert.equal(decision(bash(cmd)), "allow", cmd);
+  }
+});
