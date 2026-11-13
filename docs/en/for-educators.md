@@ -46,6 +46,30 @@ One exception is meant for you: the AI-use log of graded work is in the repo of 
 - **The texts, docs, research and cheat sheet** are licensed under CC BY-NC 4.0: you may use them for non-commercial purposes, with attribution.
 - **Commercial training providers** need a commercial licence. See [Licence](https://github.com/piethanegraaf/piethanegraaf.github.io#license) in the README.
 
+## The AI Assessment Scale and the harness
+
+Many institutions describe how much AI an assessment allows with the [AI Assessment Scale](https://aiassessmentscale.com/) (AIAS) by Perkins, Roe, Furze and MacVaugh. Its five levels fit the settings of the harness as below. The harness only limits what Claude does; it does not make the environment controlled, and whether a rung fits a level is for your institution to decide.
+
+| AIAS level | What the harness can do | Setting |
+|---|---|---|
+| 1 · No AI | Claude gives no help on the graded work | `setting graded aiLevel 0` |
+| 2 · AI Planning | Help with direction only: a question, or where to look and which concept; no content | Graded work with `setting graded maxRung 2` (or 3, if a sketch of the structure counts as planning in your course) |
+| 3 · AI Collaboration | The graded mode is stricter than this level: Claude writes no content there. For practice, the skill levels fit: hints at L1–L3, and Claude may write at L4 | The skill levels, without graded paths |
+| 4 · Full AI | Claude does the work and the student supervises | Every skill at L4 (`set <id> L4`) |
+| 5 · AI Exploration | Outside what the harness is for | — |
+
+## A sample AI-use log
+
+In graded work the hooks write one row per answer of Claude to `ai-use/log.md` in the repo of the assignment. The student fills in the last column. With it come a `README.md` with the AI level and an APA reference, and an export of each session in `ai-use/sessions/`. An example with made-up rows:
+
+| Date and time | Session | Skill | Rung | Kind of help | What I did with it / how I checked it |
+|---|---|---|---|---|---|
+| 2026-11-12 14:05 | 3f9a2c1b | ood.overerving | 1 | question | I saw that Car and Truck share three fields, so I made a base class Vehicle. The tests of the assignment are green. |
+| 2026-11-12 14:21 | 3f9a2c1b | uml.klassendiagram | 3 | sketch | I drew my own diagram from the sketch of the arrows, and compared the arrow types with the cheat sheet. |
+| 2026-11-12 14:40 | 3f9a2c1b | — | — | tooling (no AI content): dotnet new xunit | Test project made by the generator; no changes by AI. |
+
+You can hand students this table as a template for any AI tool. With the harness, the first five columns are written for them, and Claude cannot write in the log.
+
 ## A paragraph for your course guide
 
 Adapt it to your course:
