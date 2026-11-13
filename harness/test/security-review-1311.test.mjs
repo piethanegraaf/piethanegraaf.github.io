@@ -206,3 +206,31 @@ test("V6: the export keeps the reason of an override for a sensitive skill at ho
     assert.equal(json.overrides.find((o) => o.skill === "demo.l2").reason, "tooling");
   } finally { e.cleanup(); }
 });
+
+// ---------- V7 (low): links, junctions and short names ----------
+test("V7: making a link to protected code, the record or graded work is denied", () => {
+  for (const cmd of ["ln -s opdrachten/02-lijst /tmp/x", "ln -s .learning /tmp/l", "ln -s .claude/hooks /tmp/h", "cmd /c mklink /J C:/Temp/jj .claude/hooks"]) {
+    assert.equal(decision(bash(cmd)), "deny", cmd);
+  }
+  assert.equal(decision(bash("ln -s opdrachten/04-x /tmp/y")), "allow", "a link to L4 code");
+  const { repo, run: grun, done } = gradedHome();
+  try {
+    assert.equal(grun("Bash", `cmd /c mklink /J C:/Temp/jj ${repo.split(path.sep).join("/")}`), "deny", "a junction to graded work");
+  } finally { done(); }
+});
+
+test("V7: a write through a link or junction lands where it really goes", () => {
+  const outside = fs.mkdtempSync(path.join(os.tmpdir(), "leerharnas-link-"));
+  const { g, repo, done } = gradedHome();
+  try {
+    const link = (target, name) => { const l = path.join(outside, name); fs.symlinkSync(target, l, "junction"); return l; };
+    const ex = link(p.abs("opdrachten/02-lijst"), "ex");
+    const learn = link(p.learn, "learn");
+    const write = (proj, file) => decision(proj.hook("guard.mjs", { tool_name: "Write", tool_input: { file_path: file, content: "x" }, cwd: proj.root }));
+    assert.equal(write(p, path.join(ex, "Lijst.cs")), "deny", "L2 code through a junction");
+    assert.equal(write(p, path.join(learn, "skills.json")), "deny", "the record through a junction");
+    const gj = link(repo, "graded");
+    assert.equal(write(g, path.join(gj, "Bank.cs")), "deny", "graded work through a junction");
+    assert.equal(write(p, path.join(outside, "free.cs")), "allow", "a real folder outside the project");
+  } finally { done(); fs.rmSync(outside, { recursive: true, force: true }); }
+});

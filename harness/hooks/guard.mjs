@@ -19,7 +19,9 @@ import { parseCommand, commandName } from "./shell.mjs";
 // the program it runs: "msbuild" in a grep pattern is not a build (setup review 3.4).
 const WRITE_PROGRAMS = new Set(["cp", "mv", "rm", "del", "erase", "copy", "move", "ren", "rename", "tee", "touch", "truncate", "dd",
   "set-content", "sc", "add-content", "ac", "out-file", "new-item", "ni", "copy-item", "cpi", "move-item", "mi",
-  "remove-item", "ri", "rename-item", "rni", "clear-content", "clc", "install", "rsync", "ln", "unzip", "tar"]);
+  "remove-item", "ri", "rename-item", "rni", "clear-content", "clc", "install", "rsync", "ln", "unzip", "tar",
+  // A link makes a protected path reachable under another name (security review V7).
+  "mklink"]);
 // A command that writes the files it names (not counting redirects, which have their own targets).
 function writesFiles(argv, raw) {
   const name = commandName(argv[0]);
@@ -357,6 +359,11 @@ if (tool === "Bash" || tool === "PowerShell") {
         const carriesCode = sources.some((s) => CODE_EXT.test(s) || /[*?]/.test(s) || /\.(zip|tar|tgz|gz|7z)$/i.test(s) || folderish(resolvePath(cwd, s), s));
         if (dest !== undefined && sources.length && carriesCode && !CODE_EXT.test(dest)) folders.push(dest);
         if (MOVES.has(name)) folders.push(...sources.filter((w) => !CODE_EXT.test(w)));
+      }
+      // A link to a folder of protected code (ln -s <exercise> /tmp/x, mklink /J C:/Temp/x <exercise>), V7.
+      if (name === "ln" || name === "mklink") {
+        folders.push(...words.filter((w) => !CODE_EXT.test(w) && !/^\/[a-z]$/i.test(w)));
+        for (const w of words) if (CODE_EXT.test(w)) addPath(resolvePath(cwd, w), false);
       }
       if (name === "tar" && args.some((a) => /^-?[a-zA-Z]*x/.test(a) || a === "--extract")) {
         const k = args.findIndex((a) => a === "-C" || a === "--directory");
