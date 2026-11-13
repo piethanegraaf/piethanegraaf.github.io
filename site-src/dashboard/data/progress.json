@@ -1,7 +1,7 @@
 {
   "schema": 1,
-  "generatedAt": "2026-11-12",
-  "exportedAt": "2026-11-12T22:19:48.607Z",
+  "generatedAt": "2026-11-13",
+  "exportedAt": "2026-11-13T20:06:17.930Z",
   "course": null,
   "language": "nl",
   "examDate": "2027-01-20",
@@ -236,6 +236,114 @@
         {
           "at": "2026-11-10",
           "changedAt": "2026-11-10T13:00:04.582Z",
+          "from": null,
+          "to": "L2",
+          "note": "aangemaakt",
+          "notes": {
+            "nl": "aangemaakt",
+            "en": "created"
+          },
+          "auto": false,
+          "placement": false,
+          "kind": "manual",
+          "task": null
+        }
+      ]
+    },
+    {
+      "id": "cs.basis.datum-tijd",
+      "parent": "cs.basis",
+      "kind": null,
+      "title": "DateTime en TimeSpan: overlap en perioden",
+      "titles": null,
+      "level": "L2",
+      "nextReview": null,
+      "intervalIndex": 0,
+      "lastReview": null,
+      "lastSeen": null,
+      "placement": "done",
+      "start": {
+        "at": "2026-11-13T05:49:49.791Z",
+        "open": false
+      },
+      "windowSince": "2026-11-13T05:49:49.789Z",
+      "placementTask": null,
+      "history": [
+        {
+          "at": "2026-11-13",
+          "changedAt": "2026-11-13T05:49:49.789Z",
+          "from": null,
+          "to": "L2",
+          "note": "aangemaakt",
+          "notes": {
+            "nl": "aangemaakt",
+            "en": "created"
+          },
+          "auto": false,
+          "placement": false,
+          "kind": "manual",
+          "task": null
+        }
+      ]
+    },
+    {
+      "id": "cs.basis.decimal-afronden",
+      "parent": "cs.basis",
+      "kind": null,
+      "title": "decimal en afronden: begonnen eenheden, centen",
+      "titles": null,
+      "level": "L2",
+      "nextReview": null,
+      "intervalIndex": 0,
+      "lastReview": null,
+      "lastSeen": null,
+      "placement": "done",
+      "start": {
+        "at": "2026-11-13T05:49:57.180Z",
+        "open": false
+      },
+      "windowSince": "2026-11-13T05:49:57.178Z",
+      "placementTask": null,
+      "history": [
+        {
+          "at": "2026-11-13",
+          "changedAt": "2026-11-13T05:49:57.178Z",
+          "from": null,
+          "to": "L2",
+          "note": "aangemaakt",
+          "notes": {
+            "nl": "aangemaakt",
+            "en": "created"
+          },
+          "auto": false,
+          "placement": false,
+          "kind": "manual",
+          "task": null
+        }
+      ]
+    },
+    {
+      "id": "cs.basis.linq-groupby",
+      "parent": "cs.basis",
+      "kind": null,
+      "title": "LINQ GroupBy en Sum voor rapportages",
+      "titles": null,
+      "level": "L2",
+      "nextReview": null,
+      "intervalIndex": 0,
+      "lastReview": null,
+      "lastSeen": null,
+      "placement": "done",
+      "start": {
+        "at": "2026-11-13T05:50:11.063Z",
+        "open": false
+      },
+      "windowSince": "2026-11-13T05:50:11.061Z",
+      "placementTask": null,
+      "history": [
+        {
+          "at": "2026-11-13",
+          "changedAt": "2026-11-13T05:50:11.061Z",
           "from": null,
           "to": "L2",
           "note": "aangemaakt",
@@ -1092,6 +1200,42 @@
       "history": []
     },
     {
+      "id": "pattern.behavioral.state",
+      "parent": "pattern.behavioral",
+      "kind": null,
+      "title": "State pattern / toestandsmachine",
+      "titles": null,
+      "level": "L2",
+      "nextReview": null,
+      "intervalIndex": 0,
+      "lastReview": null,
+      "lastSeen": null,
+      "placement": "done",
+      "start": {
+        "at": "2026-11-13T05:50:30.135Z",
+        "open": false
+      },
+      "windowSince": "2026-11-13T05:50:30.132Z",
+      "placementTask": null,
+      "history": [
+        {
+          "at": "2026-11-13",
+          "changedAt": "2026-11-13T05:50:30.132Z",
+          "from": null,
+          "to": "L2",
+          "note": "aangemaakt",
+          "notes": {
+            "nl": "aangemaakt",
+            "en": "created"
+          },
+          "auto": false,
+          "placement": false,
+          "kind": "manual",
+          "task": null
+        }
+      ]
+    },
+    {
       "id": "cs.static",
       "parent": null,
       "kind": null,
@@ -1108,6 +1252,146 @@
       "placement": "pending",
       "start": {
         "at": "2026-11-11T22:04:15.560Z",
+        "open": true
+      },
+      "windowSince": null,
+      "placementTask": null,
+      "history": []
+    },
+    {
+      "id": "test.technieken",
+      "parent": null,
+      "kind": null,
+      "title": "Testtechnieken: equivalentieklassen, grenswaarden, beslissingstabel, toestanden",
+      "titles": null,
+      "level": "L2",
+      "nextReview": null,
+      "intervalIndex": 0,
+      "lastReview": null,
+      "lastSeen": null,
+      "placement": "pending",
+      "start": {
+        "at": "2026-11-13T05:46:01.814Z",
+        "open": true
+      },
+      "windowSince": null,
+      "placementTask": null,
+      "history": []
+    },
+    {
+      "id": "test.proces",
+      "parent": null,
+      "kind": null,
+      "title": "Testproces: testbasis, risico's, condities, traceerbaarheid, testrapport",
+      "titles": null,
+      "level": "L2",
+      "nextReview": null,
+      "intervalIndex": 0,
+      "lastReview": null,
+      "lastSeen": null,
+      "placement": "pending",
+      "start": {
+        "at": "2026-11-13T05:46:16.564Z",
+        "open": true
+      },
+      "windowSince": null,
+      "placementTask": null,
+      "history": []
+    },
+    {
+      "id": "uml.toestandsdiagram",
+      "parent": null,
+      "kind": null,
+      "title": "UML-toestandsdiagram",
+      "titles": null,
+      "level": "L2",
+      "nextReview": null,
+      "intervalIndex": 0,
+      "lastReview": null,
+      "lastSeen": null,
+      "placement": "pending",
+      "start": {
+        "at": "2026-11-13T05:46:32.898Z",
+        "open": true
+      },
+      "windowSince": null,
+      "placementTask": null,
+      "history": []
+    },
+    {
+      "id": "web.aspnet-efcore",
+      "parent": null,
+      "kind": null,
+      "title": "ASP.NET Core en EF Core met migrations",
+      "titles": null,
+      "level": "L2",
+      "nextReview": null,
+      "intervalIndex": 0,
+      "lastReview": null,
+      "lastSeen": null,
+      "placement": "pending",
+      "start": {
+        "at": "2026-11-13T05:46:49.237Z",
+        "open": true
+      },
+      "windowSince": null,
+      "placementTask": null,
+      "history": []
+    },
+    {
+      "id": "web.auth",
+      "parent": null,
+      "kind": null,
+      "title": "Authenticatie, rollen, autorisatie per gegeven, wachtwoorden hashen, OWASP",
+      "titles": null,
+      "level": "L2",
+      "nextReview": null,
+      "intervalIndex": 0,
+      "lastReview": null,
+      "lastSeen": null,
+      "placement": "pending",
+      "start": {
+        "at": "2026-11-13T05:47:44.801Z",
+        "open": true
+      },
+      "windowSince": null,
+      "placementTask": null,
+      "history": []
+    },
+    {
+      "id": "cs.csv-import",
+      "parent": null,
+      "kind": null,
+      "title": "CSV importeren: CultureInfo, herhaalbaar, foute regels rapporteren",
+      "titles": null,
+      "level": "L2",
+      "nextReview": null,
+      "intervalIndex": 0,
+      "lastReview": null,
+      "lastSeen": null,
+      "placement": "pending",
+      "start": {
+        "at": "2026-11-13T05:49:15.139Z",
+        "open": true
+      },
+      "windowSince": null,
+      "placementTask": null,
+      "history": []
+    },
+    {
+      "id": "devops.container-cicd",
+      "parent": null,
+      "kind": null,
+      "title": "Docker, CI/CD-pipeline, cloud-deploy, secrets, health check",
+      "titles": null,
+      "level": "L2",
+      "nextReview": null,
+      "intervalIndex": 0,
+      "lastReview": null,
+      "lastSeen": null,
+      "placement": "pending",
+      "start": {
+        "at": "2026-11-13T05:49:39.285Z",
         "open": true
       },
       "windowSince": null,
@@ -2150,6 +2434,16 @@
       "overridesUsed": 0,
       "reviewHelp": 0,
       "helpDropped": 0
+    },
+    {
+      "date": "2026-11-13",
+      "sessions": 2,
+      "hints": 1,
+      "holds": 1,
+      "denials": 3,
+      "overridesUsed": 0,
+      "reviewHelp": 0,
+      "helpDropped": 0
     }
   ],
   "diary": [
@@ -2305,6 +2599,23 @@
         "nextStep": "niet genoemd"
       },
       "calibration": "vooraf onbekend → gelukt met hulp tot trede 2 → niet te bepalen (geen score vooraf). Achteraf 3: dat past bij een taak die meer hulp kostte dan 22 en 23."
+    },
+    {
+      "date": "2026-11-13",
+      "n": 1,
+      "time": "avond (tijden niet gelogd)",
+      "skills": "uml.klassendiagram (L2)",
+      "plan": "niet vooraf genoemd. De vragen gingen over: de gratis security-analyse van Claude in de cloud, de kosten van `/code-review ultra`, waar UML-klassendiagrammen horen in de arc42-bestanden van de eindopdracht (Makerlab), en hoe Mermaid-klassendiagrammen werken",
+      "confidenceBefore": "onbekend",
+      "wentWell": "de plek van het klassendiagram in arc42 en het onderscheid tussen niveau 1 en 2 kon je zelf uitleggen. Je vond zelf dat de diagram niet renderde zonder de `mermaid`-tag, en je controleerde arc42 op de officiële site.",
+      "signals": "geen (sessie buiten de harnas)",
+      "reflection": {
+        "learned": "how to add mermaid diagrams manualy to .md files",
+        "confusing": "I was missing the mermaid tag at first so the diagram would not render.",
+        "confidenceAfter": "4",
+        "nextStep": "overgeslagen (niet genoemd)"
+      },
+      "calibration": "vooraf onbekend → 3 van de 5 controlevragen goed, 1 half, 1 open → zelfvertrouwen 4 is iets hoog voor de Mermaid-relaties"
     }
   ],
   "reviewHelp": [
@@ -2376,11 +2687,22 @@
       "void-methoden en chainen": "void methods and chaining",
       "referentie vs kopie, bijwerkingen": "reference vs copy, side effects",
       "lusgrenzen en off-by-one": "loop bounds and off-by-one",
+      "DateTime en TimeSpan: overlap en perioden": "DateTime and TimeSpan: overlap and periods",
+      "decimal en afronden: begonnen eenheden, centen": "decimal and rounding: started units, cents",
+      "LINQ GroupBy en Sum voor rapportages": "LINQ GroupBy and Sum for reports",
       "veld vs lokale variabele vs property": "field vs local variable vs property",
       "Het deel in de constructor aan de property van het geheel toewijzen": "Assigning the part to the property of the whole in the constructor",
       "teruggedraaid: verouderd bewijs (#32) en ongevraagde hints (#48)": "reverted: outdated evidence (#32) and unsolicited hints (#48)",
       "testuitvoer lezen": "reading test output",
       "wat een test controleert: zichtbaar gedrag": "what a test checks: visible behaviour",
+      "State pattern / toestandsmachine": "State pattern / state machine",
+      "Testtechnieken: equivalentieklassen, grenswaarden, beslissingstabel, toestanden": "Test techniques: equivalence classes, boundary values, decision table, states",
+      "Testproces: testbasis, risico's, condities, traceerbaarheid, testrapport": "Test process: test basis, risks, conditions, traceability, test report",
+      "UML-toestandsdiagram": "UML state diagram",
+      "ASP.NET Core en EF Core met migrations": "ASP.NET Core and EF Core with migrations",
+      "Authenticatie, rollen, autorisatie per gegeven, wachtwoorden hashen, OWASP": "Authentication, roles, authorization per data item, hashing passwords, OWASP",
+      "CSV importeren: CultureInfo, herhaalbaar, foute regels rapporteren": "Importing CSV: CultureInfo, repeatable, reporting bad lines",
+      "Docker, CI/CD-pipeline, cloud-deploy, secrets, health check": "Docker, CI/CD pipeline, cloud deploy, secrets, health check",
       "TestGeefEvenGetallenNegatief, TestGeefEvenGetallenTwee, TestGeefEvenGetallenTien": "TestGeefEvenGetallenNegatief, TestGeefEvenGetallenTwee, TestGeefEvenGetallenTien",
       "als je in de eerste regel voor de functienaam belooft wat terug te geven moet je dat ook datwerkelijk doen dus daarom ging het fout": "if in the first line before the function name you promise to return something you have to actually do that too so that's why it went wrong",
       "Socratische vraag bij CS0161": "Socratic question at CS0161",
@@ -2519,7 +2841,16 @@
       "uit `status`, alleen de transfertaak ontbreekt nog: · `ood.aggregatie-compositie` (5x zelfstandig op 2 dagen): `/mastery-check ood.aggregatie-compositie` · `ood.encapsulatie` (5x op 1 dag), `ood.klassen-properties` (2x op 1 dag), `ood.associaties` (2x op 1 dag): op een andere dag, met `/mastery-check <id>`. De opdrachtmappen van deze drie zijn op. · `cs.basis` L2 → L3: taken 5/5 en met hint 0–1 3/3, gelukt 4/5": "from `status`, only the transfer task is still missing: · `ood.aggregatie-compositie` (5x independently on 2 days): `/mastery-check ood.aggregatie-compositie` · `ood.encapsulatie` (5x on 1 day), `ood.klassen-properties` (2x on 1 day), `ood.associaties` (2x on 1 day): on another day, with `/mastery-check <id>`. The exercise folders of these three are used up. · `cs.basis` L2 → L3: tasks 5/5 and with hint 0–1 3/3, succeeded 4/5",
       "vooraf onbekend → gelukt met hulp tot trede 2 → niet te bepalen (geen score vooraf). Achteraf 3: dat past bij een taak die meer hulp kostte dan 22 en 23.": "before unknown → succeeded with help up to rung 2 → cannot be determined (no score beforehand). Afterwards 3: that fits a task that took more help than 22 and 23.",
       "\"niet if statement en groter dan klijner dan verwarren\"": "\"don't mix up if statement and greater than less than\"",
-      "\"ik had niet door dat ik loggica verkeerd om had toegepast\"": "\"i didn't realize that i had applied the logic the wrong way around\""
+      "\"ik had niet door dat ik loggica verkeerd om had toegepast\"": "\"i didn't realize that i had applied the logic the wrong way around\"",
+      "avond (tijden niet gelogd)": "evening (times not logged)",
+      "uml.klassendiagram (L2)": "uml.klassendiagram (L2)",
+      "niet vooraf genoemd. De vragen gingen over: de gratis security-analyse van Claude in de cloud, de kosten van `/code-review ultra`, waar UML-klassendiagrammen horen in de arc42-bestanden van de eindopdracht (Makerlab), en hoe Mermaid-klassendiagrammen werken": "not named beforehand. The questions were about: Claude's free security analysis in the cloud, the cost of `/code-review ultra`, where UML class diagrams belong in the arc42 files of the final assignment (Makerlab), and how Mermaid class diagrams work",
+      "de plek van het klassendiagram in arc42 en het onderscheid tussen niveau 1 en 2 kon je zelf uitleggen. Je vond zelf dat de diagram niet renderde zonder de `mermaid`-tag, en je controleerde arc42 op de officiële site.": "you could explain yourself where the class diagram goes in arc42 and the difference between level 1 and 2. You found yourself that the diagram did not render without the `mermaid` tag, and you checked arc42 on the official site.",
+      "geen (sessie buiten de harnas)": "none (session outside the harness)",
+      "vooraf onbekend → 3 van de 5 controlevragen goed, 1 half, 1 open → zelfvertrouwen 4 is iets hoog voor de Mermaid-relaties": "unknown beforehand → 3 of the 5 check questions right, 1 half, 1 open → confidence 4 is a bit high for the Mermaid relations",
+      "how to add mermaid diagrams manualy to .md files": "how to add mermaid diagrams manually to .md files",
+      "I was missing the mermaid tag at first so the diagram would not render.": "I was missing the mermaid tag at first so the diagram would not render.",
+      "overgeslagen (niet genoemd)": "skipped (not named)"
     }
   }
 }
