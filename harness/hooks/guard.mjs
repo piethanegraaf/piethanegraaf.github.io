@@ -7,7 +7,7 @@ import os from "node:os";
 import path from "node:path";
 import {
   readStdin, loadSkills, levelForPath, skillForPath, isOverrideActive, logEvent, rel, isHarnessPath,
-  codeExtRe, buildRes, PROTECTED, levelName, t, ROOT, isRecordFile, gradedOf, isGradedPath, isGradedDir, mentionsGraded, protectedDirOf, holdsProtected,
+  codeExtRe, buildRes, PROTECTED, levelName, t, ROOT, isRecordFile, gradedOf, isGradedPath, isGradedDir, mentionsGraded, protectedDirOf, holdsProtected, isUserHarnessPath,
   loadSession, saveSession,
 } from "./lib.mjs";
 import { parseCommand, commandName } from "./shell.mjs";
@@ -175,6 +175,7 @@ if (["Edit", "Write", "MultiEdit", "NotebookEdit"].includes(tool)) {
     deny(t("guard.recordFile"), { tool, file: shown(file) });
   }
   if (isHarnessPath(rel(file))) deny(t("guard.harness"), { tool, file: rel(file) });
+  if (isUserHarnessPath(file)) deny(t("guard.userHarness"), { tool, file: shown(file) });
   // 2) Graded work: every file, inside or outside this project (#54), whatever the level.
   if (file && isGradedPath(data, file, ROOT, GRADED)) gradedDeny(t("guard.what.gradedWrite", { file: shown(file) }), { tool, file: shown(file) });
   if (!file || !CODE_EXT.test(file)) process.exit(0);
@@ -320,6 +321,7 @@ if (tool === "Bash" || tool === "PowerShell") {
       for (const a of gone) {
         const kind = holdsProtected(resolvePath(cwd, a));
         if (kind) deny(t(kind === "record" ? "guard.recordCmd" : "guard.harness"), { tool, cmd: short });
+        if (isUserHarnessPath(resolvePath(cwd, a), { gone: true })) deny(t("guard.userHarness"), { tool, cmd: short });
       }
     }
     // A download names its output with an option, or lands in the working folder (review of 13 Nov, night:
@@ -340,6 +342,7 @@ if (tool === "Bash" || tool === "PowerShell") {
       if (isHarnessPath(r)) deny(t("guard.harness"), { tool, cmd: short });
       const dir = protectedDirOf(p);
       if (dir) deny(t(dir === "record" ? "guard.recordCmd" : "guard.harness"), { tool, cmd: short });
+      if (isUserHarnessPath(p)) deny(t("guard.userHarness"), { tool, cmd: short });
       if (CODE_EXT.test(p)) addPath(p, false);
     }
     // Folders as the target (security review V4): rm -rf <exercise>, cp -r … <exercise>, tar -C, unzip -d and

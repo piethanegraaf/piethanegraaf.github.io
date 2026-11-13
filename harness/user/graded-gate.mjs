@@ -97,6 +97,20 @@ try {
   if (event === "PreToolUse") {
     const ti = input.tool_input ?? {};
     const cwd = input.cwd ?? process.cwd();
+    // The gate's own files and the settings that register it (security review V5): one write there switched the
+    // gate off everywhere. A file tool on them, or a shell command that names them and writes, is denied.
+    const selfText = msg("self", "Leerharnas: Claude verandert de bestanden van de harnas op gebruikersniveau niet (~/.claude/settings.json, ~/.claude/leerharnas/).");
+    const own = (p) => {
+      const a = norm(path.resolve(cwd, String(p).replace(/^~(?=$|[\\/])/, os.homedir()).replace(/^\/([a-zA-Z])\//, "$1:/")));
+      return inside(a, `${home}/.claude/leerharnas`) || a === `${home}/.claude/settings.json` || a === `${home}/.claude/settings.local.json`;
+    };
+    for (const k of ["file_path", "notebook_path"]) if (typeof ti[k] === "string" && ti[k] && own(ti[k])) deny(selfText);
+    if (typeof ti.command === "string") {
+      const c = ti.command.replace(/\\+/g, "/").replace(/\$\{?(home|userprofile|env:userprofile)\}?/gi, "~");
+      const names = /(^|[\s"'=(:])(~|[a-z]:\/users\/[^/\s"']+|\/home\/[^/\s"']+)?\/?\.claude\/+(leerharnas|settings(\.local)?\.json)/i.test(c);
+      const writes = /(>|\b(tee|cp|mv|rm|del|rmdir|rd|sed\s+-i|perl\s+-i|ln|mklink|set-content|add-content|out-file|remove-item|new-item|copy-item|move-item|rename-item|ren|move|copy|truncate|dd)\b)/i.test(c);
+      if (names && writes) deny(selfText);
+    }
     for (const k of ["file_path", "notebook_path", "path"]) {
       if (typeof ti[k] !== "string" || !ti[k]) continue;
       const tail = tailOf(path.resolve(cwd, ti[k].replace(/^\/([a-zA-Z])\//, "$1:/")));

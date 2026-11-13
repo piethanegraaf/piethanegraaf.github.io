@@ -72,6 +72,7 @@
   "explain.copied": "te veel letterlijk overgenomen uit Claude's tekst ({pct}%)",
   "guard.recordFile": "Leerharnas: het vaardighedenregister en de state wijzigt alleen de student, via `! node .claude/hooks/skill.mjs ...`. Stel de wijziging voor in plaats van hem uit te voeren.",
   "guard.harness": "Leerharnas: de bestanden van de harnas zelf (hooks, skills diary, mastery-check en update-dashboard, .claude/settings.json, .claude/leerharnas*) wijzigt alleen de student, met de hand of met `install.mjs --update`. Stel de wijziging voor in plaats van hem uit te voeren.",
+  "guard.userHarness": "Leerharnas: Claude verandert de bestanden van de harnas op gebruikersniveau niet (~/.claude/settings.json, ~/.claude/leerharnas/). Dat doet alleen de lerende, met install.mjs --user-guard.",
   "guard.recordCmd": "Leerharnas: niveaus, taken, herhalingen en overrides zet alleen de student zelf (met `!` voor het commando). Je mag `node .claude/hooks/skill.mjs list`, `status` en `since-export` wel draaien.",
   "guard.unmapped": "niet-gekoppelde code (standaardniveau)",
   "guard.describe": "{name} staat op {level} {levelName}",

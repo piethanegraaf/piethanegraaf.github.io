@@ -146,3 +146,43 @@ test("V4: deleting, replacing or extracting into a folder of an L1-L3 skill is d
     assert.equal(decision(bash(cmd)), "allow", cmd);
   }
 });
+
+// ---------- V5 (medium): the user-level files of the harness ----------
+import { HARNESS, run } from "./helpers.mjs";
+
+test("V5: the project guard denies writes to ~/.claude/settings*.json and ~/.claude/leerharnas/", () => {
+  const home = fs.mkdtempSync(path.join(os.tmpdir(), "leerharnas-home-"));
+  try {
+    const env = { HOME: home, USERPROFILE: home };
+    const guard = (tool, tool_input) => decision(p.hook("guard.mjs", { tool_name: tool, tool_input, cwd: p.root }, env));
+    const f = (rel) => path.join(home, ".claude", rel);
+    assert.equal(guard("Write", { file_path: f("leerharnas/graded.json"), content: '{"paths":[]}' }), "deny");
+    assert.equal(guard("Write", { file_path: f("settings.json"), content: '{"disableAllHooks":true}' }), "deny");
+    assert.equal(guard("Edit", { file_path: f("leerharnas/graded-gate.mjs"), old_string: "a", new_string: "b" }), "deny");
+    for (const cmd of ["echo '{\"paths\":[]}' > ~/.claude/leerharnas/graded.json", "echo x > ${HOME}/.claude/settings.json", "rm -rf ~/.claude/leerharnas", "rm -rf ~/.claude"]) {
+      assert.equal(guard("Bash", { command: cmd }), "deny", cmd);
+    }
+    assert.equal(guard("PowerShell", { command: "Set-Content $HOME/.claude/settings.json '{}'" }), "deny");
+    // Controls: reading, and other files in ~/.claude.
+    assert.equal(guard("Bash", { command: "cat ~/.claude/settings.json" }), "allow");
+    assert.equal(guard("Write", { file_path: f("plans/plan.md"), content: "x" }), "allow");
+  } finally { fs.rmSync(home, { recursive: true, force: true }); }
+});
+
+test("V5: the user-level gate protects its own files from other projects", () => {
+  const home = fs.mkdtempSync(path.join(os.tmpdir(), "leerharnas-home-"));
+  const other = fs.mkdtempSync(path.join(os.tmpdir(), "leerharnas-other-"));
+  try {
+    fs.mkdirSync(path.join(home, ".claude", "leerharnas"), { recursive: true });
+    fs.writeFileSync(path.join(home, ".claude", "leerharnas", "graded.json"), JSON.stringify({ paths: [path.join(home, "eindopdracht").split(path.sep).join("/")] }));
+    const gate = (tool_input) => decision(run(path.join(HARNESS, "user", "graded-gate.mjs"), [], {
+      input: JSON.stringify({ hook_event_name: "PreToolUse", tool_name: tool_input.command ? "Bash" : "Write", tool_input, cwd: other }),
+      env: { ...process.env, HOME: home, USERPROFILE: home }, cwd: other,
+    }));
+    assert.equal(gate({ file_path: path.join(home, ".claude", "leerharnas", "graded.json"), content: "{}" }), "deny");
+    assert.equal(gate({ file_path: path.join(home, ".claude", "settings.json"), content: "{}" }), "deny");
+    assert.equal(gate({ command: "echo '{}' > ~/.claude/leerharnas/graded.json" }), "deny");
+    assert.equal(gate({ command: "cat ~/.claude/settings.json" }), "allow", "reading");
+    assert.equal(gate({ file_path: path.join(other, "x.txt"), content: "x" }), "allow", "another project");
+  } finally { fs.rmSync(home, { recursive: true, force: true }); fs.rmSync(other, { recursive: true, force: true }); }
+});

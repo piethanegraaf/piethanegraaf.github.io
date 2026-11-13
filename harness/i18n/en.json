@@ -72,6 +72,7 @@
   "explain.copied": "too much copied word for word from Claude's text ({pct}%)",
   "guard.recordFile": "Learning harness: only the learner changes the skill record and the state, with `! node .claude/hooks/skill.mjs ...`. Suggest the change instead of making it.",
   "guard.harness": "Learning harness: only the learner changes the files of the harness itself (hooks, diary, mastery-check and update-dashboard skills, .claude/settings.json, .claude/leerharnas*), by hand or with `install.mjs --update`. Suggest the change instead of making it.",
+  "guard.userHarness": "Learning harness: Claude does not change the user-level files of the harness (~/.claude/settings.json, ~/.claude/leerharnas/). Only the learner does, with install.mjs --user-guard.",
   "guard.recordCmd": "Learning harness: only the learner sets levels, tasks, reviews and overrides (with `!` before the command). You may run `node .claude/hooks/skill.mjs list`, `status` and `since-export`.",
   "guard.unmapped": "unmapped code (default level)",
   "guard.describe": "{name} is at {level} {levelName}",

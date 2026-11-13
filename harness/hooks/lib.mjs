@@ -339,6 +339,21 @@ export function holdsProtected(p) {
   return null;
 }
 
+// The user-level files of the harness (security review V5): the gate for graded work and its config in
+// ~/.claude/leerharnas/ (install.mjs --user-guard), and ~/.claude/settings(.local).json that registers it (one
+// "disableAllHooks" there switches every project hook off). Also ~/.claude or the home folder as a whole, when
+// deleted or moved (`gone`).
+export function isUserHarnessPath(p, { gone = false } = {}) {
+  if (!p) return false;
+  const abs = path.resolve(String(p));
+  const claude = path.join(os.homedir(), ".claude");
+  const under = (dir) => { const r = path.relative(dir, abs); return r === "" || (!r.startsWith("..") && !path.isAbsolute(r)); };
+  if (under(path.join(claude, "leerharnas"))) return true;
+  if (["settings.json", "settings.local.json"].some((f) => sameDir(path.join(claude, f), abs))) return true;
+  if (gone) { const r = path.relative(abs, path.join(claude, "leerharnas")); return r === "" || (!r.startsWith("..") && !path.isAbsolute(r)); }
+  return false;
+}
+
 // ---- Graded work (setup of 13 Nov, #49, #50, #54) ----
 // OER art. 7.11, AI level 1: GenAI as an aid ("to generate ideas or bring structure"), never as the maker of
 // the work. settings.graded = { paths, aiLevel, maxRung, logDir }:

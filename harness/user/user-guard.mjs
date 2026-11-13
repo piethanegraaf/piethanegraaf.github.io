@@ -116,7 +116,7 @@ export function planUserGuard({ home = os.homedir(), folder, remove = false, t }
     put(files.gate, fs.readFileSync(path.join(HERE, "graded-gate.mjs"), "utf8"));
     put(files.config, JSON.stringify({
       paths: info.paths, names: info.names,
-      messages: { prompt: t("install.userGuard.msgPrompt", { dir: info.paths.join(", ") }), tool: t("install.userGuard.msgTool", { dir: info.paths.join(", ") }) },
+      messages: { prompt: t("install.userGuard.msgPrompt", { dir: info.paths.join(", ") }), tool: t("install.userGuard.msgTool", { dir: info.paths.join(", ") }), self: t("guard.userHarness") },
     }, null, 2) + "\n");
   } else {
     put(files.gate, null);
