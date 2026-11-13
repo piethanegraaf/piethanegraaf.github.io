@@ -20,7 +20,7 @@ node harness/install.mjs ../my-practice-folder --lang en --course "OOD" --exam 2
 
 - Without `--yes` the script only shows what it would do. Run it again with `--yes`.
 - `--lang nl|en` picks the language of the messages, the rules and the skills.
-- `--map` is the skill map: `ood` (Object-Oriented Design in C#, the default) or `junior-dotnet` (an example map for a junior developer at work in C#/.NET). See [Your own course](configuration.md#your-own-course).
+- `--map` is the skill map: `ood` (Object-Oriented Design in C#, the default), `junior-dotnet` (an example map for a junior developer at work in C#/.NET), or `security-dotnet` (a practice map for secure coding, with eight exercises in `oefeningen/`). See [Your own course](configuration.md#your-own-course).
 - `--course` and `--exam` are optional. You can set them later with `skill.mjs setting`.
 
 What the installer creates:
@@ -30,21 +30,29 @@ What the installer creates:
 | `.claude/hooks/` | the hooks, the CLI and the messages (`i18n/`) | harness |
 | `.claude/skills/diary/SKILL.md` | the diary skill for the end of a session | harness |
 | `.claude/skills/mastery-check/SKILL.md` | the transfer task for the step to L4 (`/mastery-check`) | harness |
+| `.claude/skills/update-dashboard/SKILL.md` | updating the dashboard after `/diary` (`/update-dashboard`) | harness |
+| `.claude/agents/demotie-analist.md` | the read-only agent that decides what goes down (`autoDemote`) | harness |
 | `.claude/leerharnas.md` | the rules for Claude, plus the map's notes | harness |
 | `.claude/settings.json` | the four hooks, with `$CLAUDE_PROJECT_DIR` (no absolute paths) | merged with your settings |
+| `.claude/leerharnas.json` | the manifest: map, language, version and a fingerprint of every harness file, for `--update` | harness |
+| `.claude/leerharnas.local.json` | only with `--learning-dir`: the path of the record in another folder; not in git | harness |
 | `.learning/skills.json`, `keywords.json` | your skill record and keywords, from the map | **you** (data) |
 | `CLAUDE.md` | points to `.claude/leerharnas.md`; your own agreements go here | **you** |
-| `.gitignore` | keeps `.learning/` and the backups out of git | extended |
+| `.gitignore` | keeps `.learning/`, the backups and `.claude/leerharnas.local.json` out of git | extended |
+| `oefeningen/` | only with `--map security-dotnet`: eight exercises, each with a `README.md` | **you** (never replaced) |
 
 When a file already exists and changes, the installer first makes a backup in `.claude/leerharnas-backup/<time>/`.
 
 ## Update
 
+First fetch the new version of the harness in your copy of this repository, then update:
+
 ```bash
+git pull
 node harness/install.mjs ../my-practice-folder --update --yes
 ```
 
-`--update` only replaces the harness files. Your data in `.learning/` and your own `CLAUDE.md` stay as they are. If you changed a hook yourself, the installer says so ("lokaal aangepast") and keeps your version in the backup folder.
+`--update` only replaces the harness files. Exercises in `oefeningen/` are yours: an exercise that is already there stays as it is, and a new exercise does arrive. Your data in `.learning/` and your own `CLAUDE.md` stay as they are. If you changed a hook yourself, the installer says so ("lokaal aangepast") and keeps your version in the backup folder.
 
 **Not during a practice session.** An update replaces the rules and hooks under a running session. So if a session in the practice folder was active in the last `idleMinutes` (default 20), `--update` warns you. In a terminal it asks "Continue anyway?". With `--yes`, or without a terminal (for example when another Claude session runs it), it stops and changes nothing. Add `--force` only when you are sure, for example when that session is already over. The rules tell Claude never to add `--force` without your yes. `--dry-run` only shows the warning.
 
@@ -60,9 +68,11 @@ At work you install the harness in a repository that your team shares. The harne
     .claude/hooks/
     .claude/skills/diary/
     .claude/skills/mastery-check/
+    .claude/skills/update-dashboard/
     .claude/agents/demotie-analist.md
     .claude/leerharnas.md
     .claude/leerharnas.json
+    .claude/leerharnas.local.json
     .claude/leerharnas-backup/
     .learning/
     voorbeelden/
@@ -104,12 +114,13 @@ Turn off AI help outside Claude Code. Otherwise your IDE completes the code you 
 ## After installing
 
 1. Start Claude Code in your project folder. The session-start hook shows your skills.
-2. Set your exam date: `! node .claude/hooks/skill.mjs setting examDate 2027-01-20`
-3. Calibrate your levels with a short baseline test without AI, and set them yourself: `! node .claude/hooks/skill.mjs set ood.overerving L3 "baseline: solved myself"`
+2. No `--exam` yet, and do you have an exam? Set the date: `! node .claude/hooks/skill.mjs setting examDate 2027-01-20`. With `--learning-dir` this setting lives in the record of the other folder, so set it there.
+3. Your first attempt at a skill sets its level (placement). Can you already do something? Set it higher yourself: `! node .claude/hooks/skill.mjs set ood.overerving L3 "baseline: solved myself"`
+4. With `--map security-dotnet`: start at `oefeningen/README.md`, and run the tests of an exercise before you change anything: `! node .claude/hooks/check.mjs oefeningen/01-sql-search`
 
 !!! tip "The `!` sign"
     With `!` before a command you run it yourself in Claude Code. That is the only way to change the record: the guard does not let Claude do it.
 
 ## Uninstall
 
-Remove `.claude/hooks/`, `.claude/skills/diary/`, `.claude/skills/mastery-check/`, `.claude/leerharnas.md`, `.claude/leerharnas.json` and the four hooks from `.claude/settings.json`. Your data in `.learning/` stays yours.
+Remove `.claude/hooks/`, `.claude/skills/diary/`, `.claude/skills/mastery-check/`, `.claude/skills/update-dashboard/`, `.claude/agents/demotie-analist.md`, `.claude/leerharnas.md`, `.claude/leerharnas.json`, `.claude/leerharnas.local.json` (if there is one) and the four hooks from `.claude/settings.json`. Your data in `.learning/` and your exercises in `oefeningen/` stay yours.

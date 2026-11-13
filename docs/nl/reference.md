@@ -173,6 +173,14 @@ En van de review van 13 november 2026, 's avonds (de eerste sessies aan de eindo
                      last-export.json (moment en totalen van de laatste dashboardexport)
 ```
 
+Met `--map security-dotnet` (één keer neergezet door de installer, daarna van jou):
+
+```text
+oefeningen/
+  README.md          het overzicht: oefeningen, vaardigheden, hoe je ze draait, de uitleg
+  01-sql-search/ … 08-ai-review-orders/   elk een xUnit-project, met README.md
+```
+
 In de repo van beoordeeld werk (alleen de hooks schrijven hier):
 
 ```text

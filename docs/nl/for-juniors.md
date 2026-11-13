@@ -33,7 +33,22 @@ Daarom is veilig programmeren de eerste niche die we voor juniors uitwerken. Sin
 - **Een analyser naast je tests.** `check.mjs` bouwt je code eerst opnieuw met de securityregels van de .NET SDK, zonder netwerk en zonder je projectbestanden te wijzigen. Jij legt de waarschuwingen uit; op L1–L3 lost Claude ze niet voor je op. Geen waarschuwingen betekent niet dat de code veilig is: toegangscontrole en logica ziet de analyser niet.
 - **Niets over kwetsbaarheden online.** De vrije teksten van securitytaken, zoals je uitleg en de namen van tests, gaan niet mee in de export voor het dashboard. Alleen de cijfers gaan mee.
 
-Securityfouten zitten verspreid door de code, dus deze vaardigheden hebben geen paden: de guard houdt Claude hier niet tegen, de regels wel. Zet de analyser uit met `! node .claude/hooks/skill.mjs setting securityAnalyzer false`. Of dit juniors veiliger laat programmeren, is niet getest. De studies en hun grenzen staan in [§2.13 van het onderzoek](research.md#213-veilige-code-als-eerste-niche-voor-juniors).
+Securityfouten zitten verspreid door de code, dus deze vaardigheden hebben geen paden: de guard houdt Claude hier niet tegen, de regels wel. Zet de analyser uit met `! node .claude/hooks/skill.mjs setting securityAnalyzer false`. Of dit juniors veiliger laat programmeren, is niet getest.
+
+### Oefenen in een eigen map
+
+In de repository van een team hebben de securityvaardigheden geen paden, dus alleen de regels houden Claude tegen. Voor gericht oefenen is er een aparte kaart met oefeningen:
+
+```bash
+node harness/install.mjs ../security-oefenmap --map security-dotnet --lang nl --yes
+```
+
+De installer zet acht oefeningen in `oefeningen/`, twee per vaardigheid, de tweede moeilijker. Elke oefening is een klein xUnit-project met een verhaal in de `README.md`:
+
+- **01–06:** de code heeft een kwetsbaarheid. De aanvalstests (`' OR '1'='1`, `<script>`, een nieuwe regel in een logregel, een token uit `System.Random`) zijn eerst rood; jij maakt ze groen zonder de rest te breken.
+- **07–08:** de code is door een AI geschreven en alle tests zijn groen. Jij zoekt de fout, schrijft eerst een test die faalt, en repareert dan.
+
+Deze map werkt zoals de OOD-oefenmap: elke oefening hoort bij haar vaardigheid, dus de guard beschermt haar en `check.mjs` logt een groene test als taak van die vaardigheid, en code buiten de oefeningen staat op L2. De analyser vindt vier van de acht kwetsbaarheden (SQL die uit strings wordt gebouwd en `System.Random`); de andere ziet hij niet, en dat hoort bij de les. Je wisselt tussen deze map en je andere oefenmap door Claude Code in de andere map te starten: elke map heeft een eigen register. De studies en hun grenzen staan in [§2.13 van het onderzoek](research.md#213-veilige-code-als-eerste-niche-voor-juniors).
 
 ## Op je werk
 
@@ -48,4 +63,4 @@ Juniors die een agent al het werk laten doen, kunnen junior blijven: het [onderz
 
 ## Volgende stap
 
-[Installeer de harnas](install.md) met `--map junior-dotnet`. Vragen? Mail naar [hanegraafpiet@gmail.com](mailto:hanegraafpiet@gmail.com). Bugs horen in een [issue op GitHub](https://github.com/piethanegraaf/piethanegraaf.github.io/issues/new).
+[Installeer de harnas](install.md) met `--map junior-dotnet` in de repository van een team, of met `--map security-dotnet` in een oefenmap. Vragen? Mail naar [hanegraafpiet@gmail.com](mailto:hanegraafpiet@gmail.com). Bugs horen in een [issue op GitHub](https://github.com/piethanegraaf/piethanegraaf.github.io/issues/new).

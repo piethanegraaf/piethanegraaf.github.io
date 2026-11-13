@@ -91,7 +91,7 @@ Elk onderdeel volgt een principe met empirische steun uit de leerwetenschap en u
 ## Voor wie
 
 - **Studenten** die met Claude Code willen oefenen zonder dat de AI het leren overneemt. De meegeleverde kaart is voor **Object-Oriented Design in C#** (HBO-ICT).
-- **Junior developers op hun werk** die willen blijven groeien terwijl ze met een AI-agent werken. Er is een voorbeeldkaart voor C#/.NET (`junior-dotnet`): code die bij geen vaardigheid hoort, mag de AI schrijven, en alleen wat je leert, is beschermd. Je past die aan op je eigen codebase (zie [Een eigen vak](configuration.md#een-eigen-vak) en [In de repository van een team](install.md#in-de-repository-van-een-team)). Taken worden voorlopig alleen met `dotnet test` automatisch vastgelegd vanuit tests; anders meld je ze zelf af. Zie [Voor junior developers](for-juniors.md).
+- **Junior developers op hun werk** die willen blijven groeien terwijl ze met een AI-agent werken. Er is een voorbeeldkaart voor C#/.NET (`junior-dotnet`): code die bij geen vaardigheid hoort, mag de AI schrijven, en alleen wat je leert, is beschermd. Je past die aan op je eigen codebase (zie [Een eigen vak](configuration.md#een-eigen-vak) en [In de repository van een team](install.md#in-de-repository-van-een-team)). Taken worden voorlopig alleen met `dotnet test` automatisch vastgelegd vanuit tests; anders meld je ze zelf af. Voor veilig programmeren is er een oefenkaart met acht oefeningen (`security-dotnet`). Zie [Voor junior developers](for-juniors.md).
 - **Docenten en vakcoördinatoren** die hem in een vak willen gebruiken: zie [Voor docenten](for-educators.md).
 - **Onderzoekers** die de harnas willen toetsen: zie [Voor onderzoekers](researchers.md).
 
@@ -107,7 +107,7 @@ Ja. Dat doet de guard-hook: per vaardigheid, op niveau L1–L3, blokkeert hij da
 
 ### Werkt het ook voor andere vakken dan C#?
 
-Ja, met een kaart met vaardigheden voor je vak: de vaardigheden, trefwoorden en notities in `harness/maps/<id>/`. De meegeleverde kaarten zijn Object-Oriented Design in C# voor studenten, en een voorbeeld voor een junior developer in C#/.NET. Voor een andere taal stel je in welke bestanden code zijn en welke commando's bouwen; de testrunner `check.mjs` werkt voorlopig alleen met `dotnet test`. Zie [Configuratie](configuration.md#een-eigen-vak).
+Ja, met een kaart met vaardigheden voor je vak: de vaardigheden, trefwoorden en notities in `harness/maps/<id>/`. De meegeleverde kaarten zijn Object-Oriented Design in C# voor studenten, een voorbeeld voor een junior developer in C#/.NET, en een oefenkaart voor veilig programmeren in C#/.NET met acht oefeningen. Voor een andere taal stel je in welke bestanden code zijn en welke commando's bouwen; de testrunner `check.mjs` werkt voorlopig alleen met `dotnet test`. Zie [Configuratie](configuration.md#een-eigen-vak).
 
 ### Blijf ik junior als AI mijn werk doet?
 
@@ -115,7 +115,7 @@ Dat kan. Een junior die werk aan een agent overlaat voordat hij het zelf kan, kr
 
 ### Welke data slaat het op, en waar?
 
-Alles blijft op je eigen computer, in `.learning/` in je projectmap, en de installer houdt die map buiten git. De hooks maken geen netwerkverbindingen. Alleen als je zelf een dashboard publiceert, gaat er een gefilterde export de map uit, met een whitelist van velden en filters voor namen, paden en e-mailadressen. Zie [Configuratie en privacy](configuration.md#privacy).
+Alles blijft op je eigen computer, in `.learning/` in je projectmap (of met `--learning-dir` in die van je oefenmap), en de installer houdt die map buiten git. Eén uitzondering is bedoeld: bij [beoordeeld werk](how-it-works.md#beoordeeld-werk) schrijven de hooks een gefilterd AI-logboek in de repo van de opdracht, voor je docent. De hooks maken geen netwerkverbindingen. Alleen als je zelf een dashboard publiceert, gaat er een gefilterde export de map uit, met een whitelist van velden en filters voor namen, paden en e-mailadressen. Zie [Configuratie en privacy](configuration.md#privacy).
 
 ### Is het gratis?
 

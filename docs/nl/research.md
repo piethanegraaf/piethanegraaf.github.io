@@ -2623,12 +2623,55 @@ De poort en de eigen harnas van het project beoordelen nooit dezelfde prompt: in
 - **Een algemene vraag zonder de naam** van de opdracht ziet een hook niet. Het blok in `~/.claude/CLAUDE.md` vraagt Claude om eerst na te gaan; dat is een regel, geen afdwinging.
 - **Deze sectie is §10.10**, omdat §10.9 dezelfde avond al voor de securitykaart werd gebruikt.
 
+### 10.11 Herziening van 13 november 2026 (nacht): een oefenkaart met oefeningen
+
+De securitykaart van §10.9 werkte, maar niet zoals de OOD-oefenmap: er was geen oefenstof, de guard beschermde niets, `check.mjs` vond de vaardigheid alleen via trefwoorden, en code buiten de vaardigheden stond op L4. De pilotstudent koos voor een aparte oefenkaart met twee oefeningen per vaardigheid, en teksten in het Nederlands en het Engels. `junior-dotnet` blijft de kaart voor de repository van een team.
+
+#### 10.11.1 Wat er is gebouwd
+
+| Gat in §10.9 | Nu, met `--map security-dotnet` |
+|---|---|
+| Geen oefenstof | Acht oefeningen in `oefeningen/`, elk een klein xUnit-project op .NET 10 met een verhaal in de `README.md`. In 01–06 zijn de aanvalstests eerst rood; in 07–08 schreef een AI de code, zijn alle tests groen, en schrijft de leerling eerst zelf een test die faalt. |
+| De guard beschermt niets | Elke vaardigheid heeft paden naar haar twee oefeningen. |
+| `check.mjs` vindt de vaardigheid alleen via trefwoorden | De map van de oefening bepaalt de vaardigheid, zoals bij OOD. |
+| Code buiten de vaardigheden op L4 | `defaultLevel` L2, zoals bij OOD. |
+
+#### 10.11.2 Een oefenmap, zoals gebouwd
+
+```mermaid
+flowchart TD
+    I["install.mjs --map security-dotnet"] --> O["oefeningen/01 tot 08,<br/>van de leerling"]
+    O --> C1["check.mjs oefeningen/01-sql-search"]
+    C1 --> B["basislijn: aanvalstests rood,<br/>analyser: CA2100"]
+    B --> H["hintladder; trede 1:<br/>wat heeft een aanvaller hier in handen?"]
+    H --> F["de leerling repareert de code"]
+    F --> C2["check.mjs"]
+    C2 --> G["rood naar groen: een taak<br/>voor security.sql-params"]
+    G --> U["uitleg: aanvaller, maatregel,<br/>controle, zekerheid 1-5"]
+    U --> P["plaatsing of doorstroom,<br/>zoals bij OOD"]
+```
+
+#### 10.11.3 Wat opviel, en waar het afwijkt
+
+- **De analyser vindt vier van de acht kwetsbaarheden:** SQL die uit strings wordt gebouwd (01, 02, 08) en `System.Random` (06, 08). Ontbrekende HTML-codering, log injection, ontbrekende validatie en een sleutel in de code ziet hij niet. Dat staat in de README's, en hoort bij de les dat een schone run geen bewijs is.
+- **Drie gewone tests zijn ook eerst rood**, omdat ze dezelfde oorzaak hebben als de aanval: een naam met een apostrof (01), een ampersand (03) en een gebruikersnaam met een nieuwe regel aan het eind (04). De README's noemen ze.
+- **Oefening 05 en 06 lezen hun eigen broncode** om een sleutel in de code en `System.Random` te vinden. Dat is een grove controle, en zo staat het er ook.
+- **De referentieoplossingen staan niet in de repository**, zodat Claude en de leerling ze niet kunnen vinden. Elke oefening is ertegen geverifieerd, met SDK 10.0.401 en SDK 11 rc.
+- **Een oefening is van de leerling.** `--update` vervangt nooit een oefening die er al staat; een nieuwe oefening komt erbij.
+- **De securitycheck** van de repository staat C#-bestanden alleen toe in de oefeningen van een kaart, en controleert hun inhoud zoals elk ander tekstbestand.
+- **Niet gebouwd:** het dashboard leest één oefenmap, dus een tweede oefenmap staat er nog niet op. De kaart is nog niet in een echte oefensessie gebruikt.
+
 ---
 
 <a id="11-wijzigingslog"></a>
 
 ## 11. Wijzigingslog {#changelog}
 
+### 13 november 2026 (nacht): een oefenkaart met oefeningen, en de docs weer in sync
+
+- **§10.11 (nieuw):** de oefenkaart `security-dotnet` met acht oefeningen, een diagram van een oefenmap zoals gebouwd, en wat opviel.
+- **De site:** README, Start, Installeren, Configuratie, Naslag, Voor junior developers en Voor onderzoekers beschrijven de drie kaarten. Installeren noemt nu alle bestanden die de installer neerzet, `git pull` voor een update, en dat de plaatsing het startniveau bepaalt.
+- **Niet veranderd:** de conclusies van §2. Er zijn geen nieuwe bronnen.
 ### 13 november 2026 (nacht): de eerste sessies aan de eindopdracht
 
 De pilotstudent besliste punt 55–62 na de eerste sessies aan de eindopdracht; 55–61 zijn dezelfde nacht gebouwd, 62 viel weg.

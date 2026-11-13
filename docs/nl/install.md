@@ -20,7 +20,7 @@ node harness/install.mjs ../mijn-oefenmap --lang nl --course "OOD" --exam 2027-0
 
 - Zonder `--yes` laat het script alleen zien wat het zou doen. Draai het daarna opnieuw met `--yes`.
 - `--lang nl|en` kiest de taal van de meldingen, de regels en de skills.
-- `--map` is de kaart met vaardigheden: `ood` (Object-Oriented Design in C#, de standaard) of `junior-dotnet` (een voorbeeldkaart voor een junior developer op het werk, in C#/.NET). Zie [Een eigen vak](configuration.md#een-eigen-vak).
+- `--map` is de kaart met vaardigheden: `ood` (Object-Oriented Design in C#, de standaard), `junior-dotnet` (een voorbeeldkaart voor een junior developer op het werk, in C#/.NET), of `security-dotnet` (een oefenkaart voor veilig programmeren, met acht oefeningen in `oefeningen/`). Zie [Een eigen vak](configuration.md#een-eigen-vak).
 - `--course` en `--exam` zijn optioneel. Je kunt ze later zetten met `skill.mjs setting`.
 
 Wat de installer aanmaakt:
@@ -30,21 +30,29 @@ Wat de installer aanmaakt:
 | `.claude/hooks/` | de hooks, de CLI en de meldingen (`i18n/`) | harnas |
 | `.claude/skills/diary/SKILL.md` | de diary-skill voor het einde van een sessie | harnas |
 | `.claude/skills/mastery-check/SKILL.md` | de transfertaak voor de stap naar L4 (`/mastery-check`) | harnas |
+| `.claude/skills/update-dashboard/SKILL.md` | het dashboard bijwerken na `/diary` (`/update-dashboard`) | harnas |
+| `.claude/agents/demotie-analist.md` | de agent die alleen leest en beslist wat zakt (`autoDemote`) | harnas |
 | `.claude/leerharnas.md` | de regels voor Claude, plus de notities van de kaart | harnas |
 | `.claude/settings.json` | de vier hooks, met `$CLAUDE_PROJECT_DIR` (geen absolute paden) | samengevoegd met jouw instellingen |
+| `.claude/leerharnas.json` | het manifest: kaart, taal, versie en een vingerafdruk van elk bestand van de harnas, voor `--update` | harnas |
+| `.claude/leerharnas.local.json` | alleen met `--learning-dir`: het pad van het register in een andere map; niet in git | harnas |
 | `.learning/skills.json`, `keywords.json` | je vaardighedenregister en trefwoorden, uit de kaart | **jij** (data) |
 | `CLAUDE.md` | verwijst naar `.claude/leerharnas.md`; eigen afspraken zet je hier | **jij** |
-| `.gitignore` | `.learning/` en de backups niet delen | aangevuld |
+| `.gitignore` | `.learning/`, de backups en `.claude/leerharnas.local.json` niet delen | aangevuld |
+| `oefeningen/` | alleen met `--map security-dotnet`: acht oefeningen, elk met een `README.md` | **jij** (nooit vervangen) |
 
 Bestaat een bestand al en verandert het, dan maakt de installer eerst een backup in `.claude/leerharnas-backup/<tijd>/`.
 
 ## Bijwerken
 
+Haal eerst de nieuwe versie van de harnas op in je kopie van deze repository, en werk dan bij:
+
 ```bash
+git pull
 node harness/install.mjs ../mijn-oefenmap --update --yes
 ```
 
-`--update` vervangt alleen de bestanden van de harnas. Je data in `.learning/` en je eigen `CLAUDE.md` blijven staan. Heb je een hook zelf aangepast, dan zegt de installer dat ("lokaal aangepast") en bewaart hij je versie in de backupmap.
+`--update` vervangt alleen de bestanden van de harnas. Oefeningen in `oefeningen/` zijn van jou: een oefening die er al staat, blijft zoals hij is, en een nieuwe oefening komt erbij. Je data in `.learning/` en je eigen `CLAUDE.md` blijven staan. Heb je een hook zelf aangepast, dan zegt de installer dat ("lokaal aangepast") en bewaart hij je versie in de backupmap.
 
 **Niet tijdens een oefensessie.** Een update vervangt de regels en hooks onder een lopende sessie. Was er in de laatste `idleMinutes` (standaard 20) een sessie actief in de oefenmap, dan waarschuwt `--update` je daarom. In een terminal vraagt hij "Toch doorgaan?". Met `--yes`, of zonder terminal (bijvoorbeeld als een andere Claude-sessie hem draait), stopt hij en verandert hij niets. Zet `--force` erbij als je het zeker weet, bijvoorbeeld als die sessie al klaar is. De regels zeggen dat Claude `--force` nooit zonder jouw ja gebruikt. `--dry-run` toont alleen de waarschuwing.
 
@@ -60,9 +68,11 @@ Op het werk installeer je de harnas in een repository die je met je team deelt. 
     .claude/hooks/
     .claude/skills/diary/
     .claude/skills/mastery-check/
+    .claude/skills/update-dashboard/
     .claude/agents/demotie-analist.md
     .claude/leerharnas.md
     .claude/leerharnas.json
+    .claude/leerharnas.local.json
     .claude/leerharnas-backup/
     .learning/
     voorbeelden/
@@ -104,12 +114,13 @@ Zet de AI-hulp buiten Claude Code uit. Anders vult je IDE de code aan die je zel
 ## Na de installatie
 
 1. Start Claude Code in je projectmap. De hook bij de sessiestart laat je vaardigheden zien.
-2. Zet je toetsdatum: `! node .claude/hooks/skill.mjs setting examDate 2027-01-20`
-3. Kalibreer je niveaus met een korte nulmeting zonder AI, en zet ze zelf: `! node .claude/hooks/skill.mjs set ood.overerving L3 "nulmeting: zelf gelukt"`
+2. Nog geen `--exam`, en heb je een toets? Zet de datum: `! node .claude/hooks/skill.mjs setting examDate 2027-01-20`. Met `--learning-dir` staat deze instelling in het register van de andere map; zet hem daar.
+3. Je eerste poging bij een vaardigheid bepaalt het niveau (plaatsing). Kun je iets al? Zet het dan zelf hoger: `! node .claude/hooks/skill.mjs set ood.overerving L3 "nulmeting: zelf gelukt"`
+4. Met `--map security-dotnet`: begin bij `oefeningen/README.md`, en draai de tests van een oefening voordat je iets verandert: `! node .claude/hooks/check.mjs oefeningen/01-sql-search`
 
 !!! tip "Het `!`-teken"
     Met `!` voor een commando draai je het zelf in Claude Code. Alleen zo mag je het register wijzigen: de guard laat Claude dat niet doen.
 
 ## Verwijderen
 
-Verwijder `.claude/hooks/`, `.claude/skills/diary/`, `.claude/skills/mastery-check/`, `.claude/leerharnas.md`, `.claude/leerharnas.json` en de vier hooks uit `.claude/settings.json`. Je data in `.learning/` blijft van jou.
+Verwijder `.claude/hooks/`, `.claude/skills/diary/`, `.claude/skills/mastery-check/`, `.claude/skills/update-dashboard/`, `.claude/agents/demotie-analist.md`, `.claude/leerharnas.md`, `.claude/leerharnas.json`, `.claude/leerharnas.local.json` (als die er is) en de vier hooks uit `.claude/settings.json`. Je data in `.learning/` en je oefeningen in `oefeningen/` blijven van jou.

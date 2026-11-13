@@ -2623,12 +2623,55 @@ The gate and the project's own harness never judge the same prompt: inside the f
 - **A general question without the name** of the assignment cannot be seen by a hook. The block in `~/.claude/CLAUDE.md` asks Claude to check first; that is a rule, not enforcement.
 - **This section is §10.10**, because §10.9 was taken by the security map the same evening.
 
+### 10.11 Revision of 13 November 2026 (night): a practice map with exercises
+
+The security map of §10.9 worked, but not like the OOD practice folder: there was no practice material, the guard protected nothing, `check.mjs` only found the skill through keywords, and code outside the skills was L4. The pilot student chose a separate practice map with two exercises per skill, and texts in Dutch and English. `junior-dotnet` stays the map for a team repository.
+
+#### 10.11.1 What was built
+
+| Gap in §10.9 | Now, with `--map security-dotnet` |
+|---|---|
+| No practice material | Eight exercises in `oefeningen/`, each a small xUnit project on .NET 10 with a story in its `README.md`. In 01–06 the attack tests start red; in 07–08 an AI wrote the code, all tests are green, and the learner first writes a failing test. |
+| The guard protects nothing | Each skill has paths to its two exercises. |
+| `check.mjs` only finds the skill through keywords | The folder of the exercise decides the skill, as in OOD. |
+| Code outside the skills at L4 | `defaultLevel` L2, as in OOD. |
+
+#### 10.11.2 A practice folder, as built
+
+```mermaid
+flowchart TD
+    I["install.mjs --map security-dotnet"] --> O["oefeningen/01 to 08,<br/>the learner's own"]
+    O --> C1["check.mjs oefeningen/01-sql-search"]
+    C1 --> B["baseline: attack tests red,<br/>analyser: CA2100"]
+    B --> H["hint ladder; rung 1:<br/>what does an attacker control here?"]
+    H --> F["the learner fixes the code"]
+    F --> C2["check.mjs"]
+    C2 --> G["red to green: a task<br/>for security.sql-params"]
+    G --> U["explanation: attacker, measure,<br/>check, confidence 1-5"]
+    U --> P["placement or promotion,<br/>as in OOD"]
+```
+
+#### 10.11.3 What stood out, and where it differs
+
+- **The analyser finds four of the eight vulnerabilities:** SQL built from strings (01, 02, 08) and `System.Random` (06, 08). Missing HTML encoding, log injection, missing validation and a key in the code it does not see. The READMEs say so, and it is part of the lesson that a clean run is no proof.
+- **Three ordinary tests also start red**, because they share the cause of the attack: a name with an apostrophe (01), an ampersand (03) and a username with a newline at the end (04). The READMEs name them.
+- **Exercises 05 and 06 read their own source code** to find a key in the code and `System.Random`. That is a rough check, and they say so.
+- **The reference solutions are not in the repository**, so that neither Claude nor the learner can find them. Every exercise was verified against them, with SDK 10.0.401 and SDK 11 rc.
+- **An exercise belongs to the learner.** `--update` never replaces an exercise that is already there; a new exercise does arrive.
+- **The security check** of the repository allows C# files only in the exercises of a map, and checks their content like any other text file.
+- **Not built:** the dashboard reads one practice folder, so a second one is not on it yet. The map has not been used in a real practice session yet.
+
 ---
 
 <a id="11-change-log"></a>
 
 ## 11. Change log {#changelog}
 
+### 13 November 2026 (night): a practice map with exercises, and the docs in sync again
+
+- **§10.11 (new):** the practice map `security-dotnet` with eight exercises, a diagram of a practice folder as built, and what stood out.
+- **The site:** README, Home, Install, Configuration, Reference, For junior developers and For researchers describe the three maps. Install now names every file the installer writes, `git pull` before an update, and that the placement sets the starting level.
+- **Not changed:** the conclusions of §2. There are no new sources.
 ### 13 November 2026 (night): the first sessions on the final assignment
 
 The pilot student decided points 55–62 after the first sessions on the final assignment; 55–61 were built the same night, 62 fell away.

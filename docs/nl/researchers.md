@@ -51,7 +51,7 @@ Registreer het experiment vooraf, bijvoorbeeld op OSF.
 - **Vastleggen per vaardigheid:** het niveau en de geschiedenis daarvan; taken met de hinttrede, de bron, de uitleg, afwijzingen en correcties; herhalingen; overrides; en de reflecties uit het dagboek. Alles blijft op de eigen computer van de deelnemer, in `.learning/`.
 - **Een export met privacyfilters.** `export.mjs` neemt alleen een whitelist van velden mee. Hij filtert e-mailadressen, paden, gebruikersnamen, sessie-ID's en de eigen termen van de deelnemer ([Configuratie en privacy](configuration.md#privacy)). Ruwe events en transcripts gaan nooit mee.
 - **Twee talen.** Alle meldingen, regels en skills bestaan in het Nederlands en het Engels.
-- **Twee vaardighedenkaarten:** Object-Oriented Design in C# voor studenten, en een voorbeeldkaart voor junior developers op het werk in C#/.NET (`junior-dotnet`), waarin code buiten de vaardigheden van de kaart op L4 staat. Een ander vak, of de stack van een team, heeft een eigen of aangepaste kaart nodig ([Een eigen vak](configuration.md#een-eigen-vak)).
+- **Drie vaardighedenkaarten:** Object-Oriented Design in C# voor studenten, een voorbeeldkaart voor junior developers op het werk in C#/.NET (`junior-dotnet`), waarin code buiten de vaardigheden van de kaart op L4 staat, en een oefenkaart voor veilig programmeren (`security-dotnet`) met acht oefeningen. Die laatste kan een uitkomstmaat leveren: of code veilig is, en of de maker dat terecht denkt (§2.13 van het [onderzoek](research.md)). Een ander vak, of de stack van een team, heeft een eigen of aangepaste kaart nodig ([Een eigen vak](configuration.md#een-eigen-vak)).
 
 ## Wat nog ontbreekt
 
