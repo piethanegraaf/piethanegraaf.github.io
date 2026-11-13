@@ -8,6 +8,7 @@ import path from "node:path";
 import {
   readStdin, loadSkills, levelForPath, isOverrideActive, logEvent, rel, isHarnessPath,
   codeExtRe, buildRes, PROTECTED, levelName, t, ROOT, isRecordFile, gradedOf, isGradedPath, isGradedDir, mentionsGraded,
+  loadSession, saveSession,
 } from "./lib.mjs";
 import { parseCommand, commandName } from "./shell.mjs";
 
@@ -25,6 +26,8 @@ function writesFiles(argv, raw) {
   if (WRITE_PROGRAMS.has(name)) return true;
   if (name === "sed" && argv.some((a) => /^-[a-z]*i/i.test(a) || a === "--in-place")) return true;
   if (name === "perl" && argv.some((a) => /^-[a-z]*i/.test(a))) return true;
+  // "git stash list" and "git stash show" only read (review of 13 Nov, night, #60).
+  if (name === "git" && /^stash$/i.test(argv[1] ?? "") && /^(list|show)$/i.test(argv[2] ?? "")) return false;
   if (name === "git" && /^(checkout|restore|reset|stash|apply|rm|mv|clean)$/i.test(argv[1] ?? "")) return true;
   return /WriteAll(Text|Lines|Bytes)|\bAppendAll(Text|Lines)\b/i.test(raw);
 }
@@ -46,6 +49,60 @@ const GRADED_WRITE_PROGRAMS = new Set(["mkdir", "md", "rmdir", "rd", "patch", "u
 // git commands that only read. Every other git command (add, commit, push, switch, init ...) changes the repo.
 const GIT_READ = new Set(["status", "log", "diff", "show", "blame", "grep", "ls-files", "ls-tree", "rev-parse", "describe",
   "shortlog", "reflog", "cat-file", "help", "version", "--version"]);
+// Subcommands that only read with some arguments (review of 13 Nov, night, #60): "git remote -v" was refused
+// as a write in graded work. `rest` = the arguments after the subcommand.
+function gitReadOnly(sub, rest) {
+  if (GIT_READ.has(sub)) return true;
+  const flagsIn = (allowed) => rest.every((a) => allowed.includes(a));
+  if (sub === "remote") {
+    const r = rest.filter((a) => a !== "-v" && a !== "--verbose");
+    return !r.length || r[0] === "show" || r[0] === "get-url";
+  }
+  if (sub === "branch") {
+    const flags = ["-a", "--all", "-r", "--remotes", "--list", "-l", "--show-current", "-v", "-vv", "--verbose", "--no-color"];
+    // With --list a pattern may follow; without it, a name creates a branch.
+    return flagsIn(flags) || (rest.some((a) => a === "--list" || a === "-l") && rest.every((a) => flags.includes(a) || !/^-/.test(a)));
+  }
+  if (sub === "config") return rest.some((a) => ["--get", "--get-all", "--get-regexp", "--list", "-l"].includes(a));
+  if (sub === "stash") return rest[0] === "list" || rest[0] === "show";
+  if (sub === "tag") return !rest.length || rest[0] === "-l" || rest[0] === "--list";
+  return false;
+}
+// Deterministic tooling that graded work allows (review of 13 Nov, night, #55): a generator or a fixed command
+// makes the content, not the AI. Only these; Write and Edit stay blocked there, and so do git commit and push
+// (version control is graded) and the pipeline or Dockerfile (written by the student). Every allowed command
+// becomes a row "tooling (no AI content)" in the AI-use log. Returns the command for the log, or null.
+const TOOLING_TEMPLATES = new Set(["sln", "console", "classlib", "nunit", "xunit", "gitignore"]);
+function gradedTooling(name, args, redirects, cwd) {
+  if (redirects.length) return null;
+  // --force overwrites files that already exist, so a generator with it is not plain scaffolding.
+  if (args.some((a) => /^--force$/i.test(a))) return null;
+  const words = args.filter((a) => !/^-/.test(a));
+  if (name === "dotnet") {
+    const sub = (args[0] ?? "").toLowerCase();
+    if (sub === "new") return TOOLING_TEMPLATES.has((words[1] ?? "").toLowerCase()) ? "dotnet" : null;
+    if (sub === "sln" && words.map((w) => w.toLowerCase()).includes("add")) return "dotnet";
+    if (sub === "add" && words.some((w) => /^(reference|package)$/i.test(w))) return "dotnet";
+    return null;
+  }
+  if (name === "git") {
+    let k = 0;
+    while (k < args.length && /^-/.test(args[k])) k += /^-(C|c)$/.test(args[k]) || /^--(git-dir|work-tree)$/.test(args[k]) ? 2 : 1;
+    const sub = (args[k] ?? "").toLowerCase(), next = args[k + 1] ?? "";
+    if (sub === "init") return "git";
+    if (sub === "remote" && next === "add") return "git";
+    if (sub === "branch" && ["-m", "-M", "--move"].includes(next)) return "git";
+    return null;
+  }
+  if (name === "mkdir" || name === "md") return name;
+  // The scaffold script of this harness only (.claude/hooks/scaffold.mjs, protected like every hook): a script
+  // with that name elsewhere could be written by Claude itself.
+  if (name === "node") {
+    const script = args.find((a) => !/^-/.test(a));
+    if (script && path.resolve(cwd, script).toLowerCase() === path.join(ROOT, ".claude", "hooks", "scaffold.mjs").toLowerCase()) return "scaffold";
+  }
+  return null;
+}
 // Programs that run code given inline (node -e, python -c ...): the guard cannot see which files it writes.
 const INLINE_CODE = [["node", /^(-e|--eval|-p|--print)$/], ["deno", /^eval$/], ["python", /^-c$/], ["python3", /^-c$/], ["py", /^-c$/],
   ["ruby", /^-e$/], ["perl", /^-e$/], ["php", /^-r$/]];
@@ -162,6 +219,7 @@ if (tool === "Bash" || tool === "PowerShell") {
     hits.set(key, { level, skill, building: building || hits.get(key)?.building || false });
   };
   let cwd = input.cwd ?? process.cwd();
+  const allowedTooling = [];
   for (const { argv, redirects, raw } of parsed.commands) {
     const name = commandName(argv[0]);
     const args = argv.slice(1);
@@ -169,6 +227,14 @@ if (tool === "Bash" || tool === "PowerShell") {
       const target = args.find((a) => !/^-/.test(a));
       if (target) cwd = resolvePath(cwd, target);
       continue;
+    }
+    // Graded work: deterministic tooling is allowed and logged (#55). Only when it is about graded work;
+    // elsewhere the same command is judged as before (dotnet new is a build at L1-L3).
+    if (GRADED) {
+      const kind = gradedTooling(name, args, redirects, cwd);
+      const aboutGraded = kind && (isGradedDir(data, cwd, ROOT, GRADED) || mentionsGraded(GRADED, raw)
+        || args.some((a) => !/^-/.test(a) && isGradedPath(data, resolvePath(cwd, a), ROOT, GRADED)));
+      if (aboutGraded) { allowedTooling.push(raw.trim().replace(/\s+/g, " ").slice(0, 200)); continue; }
     }
     // Writes: redirect targets, plus the files named by a command that writes (cp, sed -i, Set-Content ...).
     const targets = redirects.filter((r) => !NOWHERE.test(r)).map((r) => resolvePath(cwd, r));
@@ -197,7 +263,7 @@ if (tool === "Bash" || tool === "PowerShell") {
             k += /^-(C|c)$/.test(args[k]) || /^--(git-dir|work-tree)$/.test(args[k]) ? 2 : 1;
           }
           const sub = (args[k] ?? "").toLowerCase();
-          if (sub && !GIT_READ.has(sub) && (isGradedDir(data, dir, ROOT, GRADED) || mentionsGraded(GRADED, raw))) return true;
+          if (sub && !gitReadOnly(sub, args.slice(k + 1)) && (isGradedDir(data, dir, ROOT, GRADED) || mentionsGraded(GRADED, raw))) return true;
         }
         // Inline code (node -e, python -c ...): in a graded folder, or naming one.
         const inline = INLINE_CODE.find(([prog]) => prog === name);
@@ -248,6 +314,17 @@ if (tool === "Bash" || tool === "PowerShell") {
     if (isOverrideActive(skill ? skill.id : "*")) { logEvent({ type: "override-used", tool, skill: skill?.id ?? "*", cmd: short }); continue; }
     deny(protectedReason(level, skill, t(building ? "guard.what.build" : "guard.what.shellWrite")) + (building ? " " + t("guard.buildAsk") : ""),
       { tool, cmd: short, skill: skill?.id ?? null, level });
+  }
+  // Allowed tooling in graded work (#55): the Stop hook writes a row per command in the AI-use log.
+  if (allowedTooling.length) {
+    const sid = input.session_id ?? null;
+    const cmds = allowedTooling.map((c) => c.split(os.homedir()).join("~"));
+    for (const c of cmds) logEvent({ type: "graded-tooling", cmd: c, session: sid });
+    if (sid) {
+      const st = loadSession(sid);
+      st.gradedTooling = [...(Array.isArray(st.gradedTooling) ? st.gradedTooling : []), ...cmds].slice(-20);
+      saveSession(sid, st);
+    }
   }
 }
 process.exit(0);

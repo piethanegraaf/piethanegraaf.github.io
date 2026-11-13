@@ -10,11 +10,11 @@ import {
   settingsOf, codeExtRe, toolingRe, touch, activeMinutesSince, startTask, effectiveLevel, isPlacementPending, isReviewDue,
   afterTask, allTasks, readEvents, openOffer, promote, exerciseDirs, newWorkSignal, beginNewWork, noteExplanationWords,
   taskRung, taskLogged, addMicro, recheckDemotion, openOfFamily, familyRungOf, solvedInFamily, needsNextExercise, progressOf, progressLine, t,
-  gradedOf, gradedWhy,
+  gradedOf, gradedWhy, gradedChangedFiles, skillForFile, lapseTasks, familyIds,
 } from "./lib.mjs";
 import {
-  HINT, SOLUTION, SOLVED_STRONG, SOLVED_WEAK, CODE_CONTEXT, NOT_SOLVED, END, RESUME, ATTEMPT, CHECKING,
-  STUCK, DONT_KNOW, MORE_EXPLANATION, errorSignature, promotionAnswer, microAnswer,
+  HINT, SOLUTION, SOLVED_STRONG, SOLVED_WEAK, CODE_CONTEXT, NOT_SOLVED, RESUME, ATTEMPT, CHECKING,
+  STUCK, DONT_KNOW, MORE_EXPLANATION, errorSignature, promotionAnswer, microAnswer, isEnd, DONE_PREFIX, confidenceOf,
 } from "./patterns.mjs";
 
 const rungName = (n) => t(`rung.${n}`);
@@ -50,6 +50,19 @@ st.lastPromptAt = now;
 // together (setup review of 11 Nov, S1). A task logged by this prompt is not open yet, so its own
 // "tests groen" message does not count towards its explanation.
 noteExplanationWords(st, prompt, pendingTasks().map((x) => x.tid));
+
+// The plan and the confidence of the start (review of 13 Nov, night, #56): logged by the harness itself, so the
+// diary does not depend on what Claude remembers. The plan is the learner's first message of the session; the
+// confidence is a number 1-5 in the message right after Claude asked for it (the Stop hook saw "(1–5)").
+if (!st.planLogged) {
+  st.planLogged = true;
+  logEvent({ type: "plan", text: prompt.slice(0, 300), session: sid });
+}
+if (st.awaitConfidence) {
+  const c = confidenceOf(prompt);
+  if (c !== null) logEvent({ type: "confidence", value: c, skill: st.activeSkill ?? null, session: sid });
+  st.awaitConfidence = false;
+}
 
 // New work since the last logged task (setup review of 11 Nov, S3): code changed in another exercise
 // folder, or the full name of another exercise folder or a #id of another family in this prompt.
@@ -291,8 +304,9 @@ const since = st.lastRungAt ?? st.taskStartedAt ?? st.startedAt;
 const weak = SOLVED_WEAK.test(prompt) && !TOOLING_RE.test(prompt) &&
   (CODE_CONTEXT.test(prompt) || changedSince(st.taskStartedAt ?? st.startedAt).length > 0);
 const recentlyLogged = st.lastTaskAt && now - st.lastTaskAt < 10 * 60000; // check.mjs or done just logged it
-const solved = (SOLVED_STRONG.test(prompt) || weak) && !NOT_SOLVED.test(prompt) && !isQuestion && !recentlyLogged;
-const ending = END.test(prompt);
+const doneMatch = DONE_PREFIX.exec(prompt);
+const solved = !doneMatch && (SOLVED_STRONG.test(prompt) || weak) && !NOT_SOLVED.test(prompt) && !isQuestion && !recentlyLogged;
+const ending = isEnd(prompt);
 const changed = wantsHint ? changedSince(since) : [];
 const attempt = textAttempt || changed.length > 0;
 // The stuck timer counts ACTIVE minutes since the last hint: a break does not unlock a rung (setup review 3.5).
@@ -307,6 +321,38 @@ if (errSig) st.lastErrorSig = errSig;
 if (attempt) st.attempted = true;
 
 // ---------- 3. Outcomes ----------
+// "af: <what>" (review of 13 Nov, night, #57): the learner reports a finished part of work without a test,
+// like `skill.mjs done`, without a "!" command. Only the learner's own message counts. The skill is the one of
+// this prompt or session; in graded work a file there must have changed since the last task of that family (the
+// part is in the repo), otherwise Claude asks the learner to save or show it first.
+if (doneMatch) {
+  const what = doneMatch[1].trim().replace(/\s+/g, " ").slice(0, 200);
+  const latest = graded ? gradedChangedFiles(G, now - 14 * 86400000, { limit: 20 }) : [];
+  const byContent = !skill ? latest.map((f) => skillForFile(data, f.file)).find(Boolean)?.skill ?? null : null;
+  const target = skill ?? byContent;
+  const famTasks = target ? allTasks().filter((x) => familyIds(data, familyOf(target)).includes(x.skill)) : [];
+  const lastAt = famTasks.length ? Math.max(...famTasks.map((x) => Date.parse(x.at) || 0)) : 0;
+  const evidence = !graded || latest.some((f) => f.mtime > lastAt);
+  if (!target) ctx.push(t("pg.af.noSkill", { what }));
+  else if (!evidence) {
+    logEvent({ type: "af-refused", skill: target.id, what, why: "no-change", session: sid });
+    ctx.push(t("pg.af.noEvidence", { what, id: target.id }));
+  } else {
+    const { rung: m, reviewRung, familyRung } = taskRung(data, st, target.id);
+    const lapsed = lapseTasks("other-exercise", (x) => familyOf(findSkill(data, x.skill)) === familyOf(target), sid);
+    const tk = logTask({ skill: target.id, success: m < 5, maxRung: m, minutes: activeMinutesSince(st, st.taskStartedActive), source: "af", what, session: sid,
+      level: effectiveLevel(data, target), reviewRung: reviewRung > (st.maxRung ?? 0) ? reviewRung : 0, tid: st.openTid, familyRung });
+    const verdict = t(m >= 5 ? "pg.verdict.fail" : m === 0 ? "pg.verdict.solo" : m <= 2 ? "pg.verdict.ok" : "pg.verdict.help", { rung: m });
+    ctx.push(t("pg.af.logged", { id: target.id, tid: tk.tid, rung: m, verdict, what }));
+    if (lapsed.length) ctx.push(t("pg.af.lapsed", { list: lapsed.map((x) => `${x.skill} [${x.tid}]`).join(", ") }));
+    const after = afterTask(data, target.id, tk);
+    if (after.messages.length) ctx.push(t("pg.notices", { list: after.messages.join("\n") }));
+    if (after.pending) st.demotionPending = after.pending;
+    st.activeSkill = target.id;
+    st.folderSkill = familyOf(target); st.folderSkillAt = now;
+    taskLogged(st, tk, now);
+  }
+}
 if (solved && skill) {
   // All help since the last task, plus review help about this task's concept (S3).
   const { rung: m, reviewRung, familyRung } = taskRung(data, st, skill.id);

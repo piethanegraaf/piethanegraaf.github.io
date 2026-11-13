@@ -43,6 +43,40 @@ export const END = any(
   String.raw`^\s*(done for today|i'?m done|that'?s (it|all) for today|i'?m (finished|stopping)|stop for today|end (of )?(the )?session|see you( tomorrow| later)?|bye)\b`,
 );
 
+// The learner wants to stop, said in other words (review of 13 Nov, night, #58): "ik wil stoppen", "laten we
+// afronden", "I want to finish this session". The phrase must END the message (only "voor vandaag", "voor nu",
+// "hiermee", "ermee" or "(met) deze sessie" may follow), and the message is short (isEnd): "ik wil stoppen met
+// de lus als x > 5" or "hoe laat ik de loop stoppen" are not a stop request.
+const END_PHRASE = any(
+  String.raw`\b(ik wil|ik ga|ik zou (graag )?willen|laten we|we gaan|wil)\s+(nu\s+|maar\s+|even\s+|graag\s+)?(stoppen|afsluiten|afronden|ophouden|eindigen)(\s+(voor vandaag|voor nu|hiermee|ermee|(met\s+)?(deze|de)\s+sessie))?`,
+  String.raw`\b(de|deze)\s+sessie\s+(afsluiten|afronden|beëindigen|stoppen)`,
+  String.raw`\b(i want to|i'?d like to|let'?s|i'?m going to|i will|i'?ll|we can)\s+(stop|finish|wrap up|end|call it a day|close)(\s+(for today|for now|here|this session|the session))?`,
+  String.raw`\b(finish|end|close|wrap up)\s+(this|the)\s+session`,
+);
+const END_TAIL = new RegExp(`(?:${END_PHRASE.source})[\\s.!]*$`, "i");
+export function isEnd(text) {
+  const s = String(text ?? "").trim();
+  if (END.test(s)) return true;
+  return s.split(/\s+/).length <= 12 && END_TAIL.test(s);
+}
+
+// The learner reports a finished part of work without a test (review of 13 Nov, night, #57): a message that
+// starts with "af: <what>" (or "done: <what>"). It is the learner's own key, like `skill.mjs done`.
+export const DONE_PREFIX = /^\s*(?:af|done)\s*:\s*(\S[\s\S]{0,199})/i;
+
+// The learner's confidence (1-5) as an answer to Claude's question (#56): a bare number ("3", "3/5", "een 4"),
+// or a number with "zelfvertrouwen", "zeker", "confidence", "/5", "van de 5" or "out of 5".
+export function confidenceOf(text) {
+  const s = String(text ?? "").trim().toLowerCase();
+  let m = s.match(/^(?:een|a|zo'?n|about|ongeveer|rond)?\s*([1-5])(?:\s*(?:\/|van de|uit|out of|op)\s*5)?\s*[.!]*$/);
+  if (m) return Number(m[1]);
+  m = s.match(/\b([1-5])\s*(?:\/|van de|out of|op)\s*5\b/) ?? s.match(/\b(?:zelfvertrouwen|zeker|confidence|confident)\b[^0-9]{0,20}\b([1-5])\b/)
+    ?? s.match(/\b([1-5])\b[^0-9]{0,12}\b(?:zelfvertrouwen|zeker|confidence|confident)\b/);
+  return m ? Number(m[1]) : null;
+}
+// Claude asked for the confidence: "(1–5)" or "(1-5)" in its answer.
+export const ASKS_CONFIDENCE = /\(\s*1\s*[–-]\s*5\s*\)/;
+
 // The learner takes the stop request back.
 export const RESUME = any(
   String.raw`\b(toch niet|ga (toch )?door|nog niet klaar)\b`,
@@ -149,5 +183,12 @@ export const REVIEW_RUNG_MARK = /\[(?:review-trede|review-rung) ([1-5])(?:\s+#([
 export const EXPLAIN_MARK = /\[(?:uitleg|explain)-(ok|nee|no) ([a-z0-9]+)\]/gi;
 // The transfer task of /mastery-check (§9.4): start, passed or not passed, with the skill id.
 export const TRANSFER_MARK = /\[transfer-(start|ok|nee|no) ([a-z][a-z0-9-]*(?:\.[a-z0-9-]+)*)\]/gi;
+// A check question at the end of a session (review of 13 Nov, night, #58b): [controlevraag <id> goed|half|open]
+// or [check-question <id> right|half|open]. The id is a skill id; the hook logs the result as an event.
+export const CHECK_MARK = /\[(?:controlevraag|check-question)\s+#?([a-z][a-z0-9-]*(?:\.[a-z0-9-]+)+)\s+(goed|right|half|open)\]/gi;
+// The learner's own words for the last column of the AI-use log (#59): [logboek "<text>"] or [log "<text>"],
+// optionally with the first 8 characters of a session id: [logboek abcdef12 "<text>"]. The hook only takes the
+// text when it is, word for word, part of what the learner typed since Claude asked for it.
+export const LOG_MARK = /\[(?:logboek|log)(?:\s+([0-9a-f]{8}))?\s+"([^"\]]{1,800})"\]/gi;
 // The diary marker <!-- sessie: <id> --> (or <!-- session: <id> -->).
 export const sessionMarker = (sid) => new RegExp(`(?:sessie|session):\\s*${String(sid).replace(/[^\w-]/g, "")}(?![\\w-])`, "i");

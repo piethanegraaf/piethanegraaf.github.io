@@ -91,7 +91,8 @@ test("en: ending a session asks for the diary with the English marker", () => {
   const p = enProject();
   try {
     const r = p.hook("prompt-gate.mjs", { session_id: "s9", prompt: "I'm done for today" });
-    assert.match(r.json.hookSpecificOutput.additionalContext, /Run the \/diary skill now\. Put the line <!-- session: s9 -->/);
+    // Review of 13 Nov, night, #58: everything in one message, without waiting for another prompt.
+    assert.match(r.json.hookSpecificOutput.additionalContext, /Run the \/diary skill now, with everything in ONE message[\s\S]*Put the line <!-- session: s9 -->/);
     assert.equal(p.session("s9").endRequested, true);
   } finally { p.cleanup(); }
 });

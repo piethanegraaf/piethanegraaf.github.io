@@ -3,6 +3,7 @@
 //
 //   node harness/install.mjs <doelmap> [--map ood|junior-dotnet] [--lang nl|en] [--course "<vak>"] [--exam JJJJ-MM-DD] [--dry-run] [--yes]
 //   node harness/install.mjs <doelmap> --update [--dry-run] [--yes] [--force]
+//   node harness/install.mjs <doelmap> --user-guard [--remove] [--dry-run] [--yes]   (graded work closed from other folders, #61)
 //
 // - It first shows what will happen. It only changes files with --yes, or after "j" in an interactive terminal.
 // - Every existing file that changes is first copied to .claude/leerharnas-backup/<tijd>/.
@@ -16,6 +17,7 @@
 //   skill. It goes in .claude/leerharnas.local.json, which is not in git (it holds an absolute path). No .learning/
 //   is made here, and the record there is never changed. --update keeps it.
 import fs from "node:fs";
+import os from "node:os";
 import path from "node:path";
 import crypto from "node:crypto";
 import readline from "node:readline/promises";
@@ -34,9 +36,11 @@ const HOOKS = [
   { event: "UserPromptSubmit", script: "prompt-gate.mjs" },
   { event: "Stop", script: "reflect-gate.mjs" },
   { event: "PreToolUse", script: "guard.mjs", matcher: "Edit|Write|MultiEdit|NotebookEdit|Bash|PowerShell" },
+  // The end of a session, for the catch-up diary at the next start (review of 13 Nov, night, #56).
+  { event: "SessionEnd", script: "session-end.mjs" },
 ];
 // A hook command of this harness, also an older one with an absolute path.
-const HARNESS_CMD = /(^|[\s"'\\/])\.claude[\\/]hooks[\\/](session-start|prompt-gate|reflect-gate|guard)\.mjs/i;
+const HARNESS_CMD = /(^|[\s"'\\/])\.claude[\\/]hooks[\\/](session-start|prompt-gate|reflect-gate|guard|session-end)\.mjs/i;
 const hookCommand = (script) => `node "$CLAUDE_PROJECT_DIR/.claude/hooks/${script}"`;
 
 const fail = (key, vars) => { console.error(t("install.error", { msg: t(key, vars) })); process.exit(1); };
@@ -45,7 +49,8 @@ const readText = (p) => { try { return fs.readFileSync(p, "utf8"); } catch { ret
 
 // ---------- 1. Arguments ----------
 function parseArgs(argv) {
-  const o = { target: null, update: false, dryRun: false, yes: false, force: false, map: null, lang: null, course: null, exam: null, learningDir: null };
+  const o = { target: null, update: false, dryRun: false, yes: false, force: false, map: null, lang: null, course: null, exam: null, learningDir: null,
+    userGuard: false, remove: false };
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
     const val = () => { if (i + 1 >= argv.length) fail("install.needsValue", { opt: a }); return argv[++i]; };
@@ -58,6 +63,8 @@ function parseArgs(argv) {
     else if (a === "--course") o.course = val();
     else if (a === "--exam") o.exam = val();
     else if (a === "--learning-dir") o.learningDir = val();
+    else if (a === "--user-guard") o.userGuard = true;
+    else if (a === "--remove") o.remove = true;
     else if (a === "--help" || a === "-h") { usage(); process.exit(0); }
     else if (a.startsWith("-")) fail("install.unknownOption", { opt: a });
     else if (!o.target) o.target = a;
@@ -79,6 +86,34 @@ if (!fs.existsSync(TARGET) || !fs.statSync(TARGET).isDirectory()) fail("install.
 {
   const r = path.relative(HARNESS, TARGET);
   if (!r.startsWith("..") && !path.isAbsolute(r)) fail("install.selfTarget");
+}
+
+// ---------- 1b. The user-level gate for graded work (review of 13 Nov, night, #61) ----------
+// Only with --user-guard: then the installer writes in ~/.claude/ (and nowhere else), after showing the plan.
+if (opts.remove && !opts.userGuard) fail("install.unknownOption", { opt: "--remove" });
+if (opts.userGuard) {
+  const { planUserGuard, applyUserGuard, gradedPathsOf } = await import("./user/user-guard.mjs");
+  setLanguage(opts.lang ?? gradedPathsOf(TARGET).lang);
+  const home = os.homedir();
+  const shownPath = (p) => p.split(home).join("~").split(path.sep).join("/");
+  const r = planUserGuard({ folder: TARGET, remove: opts.remove, t });
+  if (r.error) fail(r.error, { dir: TARGET });
+  console.log(t(opts.remove ? "install.userGuard.headRemove" : "install.userGuard.head", { dir: shownPath(path.join(home, ".claude")) }));
+  if (!opts.remove) console.log(t("install.userGuard.what", { paths: r.info.paths.join(", "), names: r.info.names.join(", ") || "-" }));
+  const width = Math.max(...r.plan.map((p) => t(`install.action.${p.action}`).length));
+  for (const p of r.plan) console.log(`  ${t(`install.action.${p.action}`).padEnd(width)}  ${shownPath(p.file)}`);
+  if (r.plan.every((p) => p.action === "same")) { console.log("\n" + t("install.upToDate")); process.exit(0); }
+  if (opts.dryRun) { console.log("\n" + t("install.dryRun")); process.exit(0); }
+  if (!opts.yes) {
+    if (!process.stdin.isTTY) { console.log("\n" + t("install.needYes")); process.exit(0); }
+    const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
+    const answer = (await rl.question("\n" + t("install.userGuard.confirm") + " ")).trim().toLowerCase();
+    rl.close();
+    if (!["j", "ja", "y", "yes"].includes(answer)) { console.log(t("install.aborted")); process.exit(0); }
+  }
+  const done = applyUserGuard(r);
+  console.log("\n" + t(opts.remove ? "install.userGuard.removed" : "install.userGuard.done", { backup: done.backups ? t("install.doneBackup", { dir: shownPath(done.backup) }) : "" }));
+  process.exit(0);
 }
 
 // Every path this script writes must stay inside the target folder.

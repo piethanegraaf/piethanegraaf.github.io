@@ -112,16 +112,20 @@ const cell = (s) => String(s ?? "-").replace(/\r?\n/g, " ").replace(/\|/g, "\\|"
 // One row per answer. A second Stop for the same prompt (the hook blocked, Claude went on) replaces the
 // row it wrote, while that row is still the last line; otherwise the new row is added.
 // st.gradedRow = { key, line } is kept in the session state.
-export function writeLogRow(G, st, { sid, key, at = new Date(), skill = null, rung = 0, review = false, sessionFile }) {
+// `tooling`: commands the guard allowed in graded work in this turn (review of 13 Nov, night, #55). Each gets a
+// row of its own, before the row of the answer: "tooling (no AI content): <command>".
+export function writeLogRow(G, st, { sid, key, at = new Date(), skill = null, rung = 0, review = false, sessionFile, tooling = [] }) {
   const n = names();
   const file = path.join(G.logDir, n.log);
   fs.mkdirSync(G.logDir, { recursive: true });
   let text = fs.existsSync(file) ? fs.readFileSync(file, "utf8") : t("graded.logHead").trimEnd() + "\n";
   const sessionCell = `[${sid8(sid)}](${n.sessions}/${path.basename(sessionFile)})`;
-  const line = `| ${localDay(at)} ${localTime(at)} | ${sessionCell} | ${cell(skill)} | ${Number(rung) || 0} | ${cell(helpKind(rung, review))} |  |`;
+  const stamp = `${localDay(at)} ${localTime(at)}`;
+  const line = `| ${stamp} | ${sessionCell} | ${cell(skill)} | ${Number(rung) || 0} | ${cell(helpKind(rung, review))} |  |`;
+  const toolRows = tooling.map((c) => `| ${stamp} | ${sessionCell} | - | 0 | ${cell(t("graded.kind.tooling", { cmd: `\`${String(c).replace(/`/g, "'")}\`` }))} |  |`);
   const lines = text.replace(/\s+$/, "").split(/\r?\n/);
-  if (st.gradedRow?.key === key && lines[lines.length - 1] === st.gradedRow.line) lines[lines.length - 1] = line;
-  else lines.push(line);
+  if (st.gradedRow?.key === key && lines[lines.length - 1] === st.gradedRow.line) lines.splice(lines.length - 1, 1, ...toolRows, line);
+  else lines.push(...toolRows, line);
   text = lines.join("\n") + "\n";
   fs.writeFileSync(file, text);
   st.gradedRow = { key, line };
@@ -158,6 +162,24 @@ export function openRows(G, sid) {
   } catch { return 0; }
 }
 
+// The learner's own words in the empty last column of the rows of a session (review of 13 Nov, night, #59).
+// Only the Stop hook calls this, with text it checked is part of what the learner typed. Rows that already
+// have text are left alone. Returns the number of rows filled.
+export function fillLastColumn(G, sid, text) {
+  const file = path.join(G.logDir, names().log);
+  let src;
+  try { src = fs.readFileSync(file, "utf8"); } catch { return 0; }
+  const tag = `[${sid8(sid)}](`;
+  let n = 0;
+  const out = src.split(/(\r?\n)/).map((l) => {
+    if (!l.includes(tag) || !/\|\s*\|\s*$/.test(l)) return l;
+    n++;
+    return l.replace(/\|\s*\|\s*$/, `| ${cell(text)} |`);
+  }).join("");
+  if (n) fs.writeFileSync(file, out);
+  return n;
+}
+
 // Everything at once, for the Stop hook. Never throws: a failing log must not stop the session.
 export function logAnswer(G, st, { sid, transcriptPath, entries = null, lastMessage, key, skill, rung, review }) {
   try {
@@ -165,7 +187,9 @@ export function logAnswer(G, st, { sid, transcriptPath, entries = null, lastMess
     const all = entries ?? readTranscript(transcriptPath);
     const exp = writeSessionExport(G, { sid, entries: all, lastMessage, startedAt: st.startedAt, scrub });
     ensureReadme(G, { model: exp.model });
-    const log = writeLogRow(G, st, { sid, key, skill, rung, review, sessionFile: exp.file });
+    const tooling = (Array.isArray(st.gradedTooling) ? st.gradedTooling : []).map((c) => scrub(c));
+    const log = writeLogRow(G, st, { sid, key, skill, rung, review, sessionFile: exp.file, tooling });
+    st.gradedTooling = [];
     return { ok: true, log, session: exp.file };
   } catch (e) {
     return { ok: false, error: String(e?.message ?? e).slice(0, 200) };

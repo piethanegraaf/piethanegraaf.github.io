@@ -30,8 +30,8 @@ import {
   verdictFromAgent, t, gradedOf, isGradedPath, isGradedDir, mentionsGraded,
 } from "./lib.mjs";
 import path from "node:path";
-import { RUNG_MARK, REVIEW_RUNG_MARK, EXPLAIN_MARK, TRANSFER_MARK, MICRO_MARK, parseMicroMark } from "./patterns.mjs";
-import { logAnswer, openRows } from "./graded.mjs";
+import { RUNG_MARK, REVIEW_RUNG_MARK, EXPLAIN_MARK, TRANSFER_MARK, MICRO_MARK, parseMicroMark, ASKS_CONFIDENCE, CHECK_MARK, LOG_MARK } from "./patterns.mjs";
+import { logAnswer, openRows, fillLastColumn, sid8 } from "./graded.mjs";
 
 let input;
 try { input = JSON.parse(await readStdin()); } catch { process.exit(0); }
@@ -337,6 +337,41 @@ if (G && st.graded) {
   if (r.ok && st.endRequested && openRows(G, sid) > 0 && !st.gradedReminded) {
     st.gradedReminded = true;
     notice(t("rg.graded.fillIn", { n: openRows(G, sid), file: path.basename(r.log) }));
+  }
+}
+
+// ---------- 1f. Start and end of a session (review of 13 Nov, night, #56, #58b, #59) ----------
+// Claude asked for the confidence ("(1–5)"): prompt-gate logs the number in the learner's next message.
+if (ASKS_CONFIDENCE.test(answer)) st.awaitConfidence = true;
+// [controlevraag <id> goed|half|open]: the result of a check question at the end of the session. Evidence for a
+// proposal for a microskill, never for a level.
+for (const m of answer.matchAll(CHECK_MARK)) {
+  const s = data ? findSkill(data, m[1].toLowerCase()) : null;
+  const key = `check:${m[1].toLowerCase()}:${promptKey}`;
+  if (!s || st.explainChecked.includes(key)) continue;
+  st.explainChecked = [...st.explainChecked.slice(-50), key];
+  const result = { goed: "right", right: "right", half: "half", open: "open" }[m[2].toLowerCase()];
+  logEvent({ type: "check-question", skill: s.id, result, session: sid });
+}
+// [logboek "<text>"]: the learner's own words for the last column of the AI-use log. The hook writes them, word
+// for word, in the empty last column of the rows of that session, but only when the text is part of what the
+// learner typed (two keys: Claude picks the part, the hook checks it). Claude never writes there itself.
+if (G) {
+  for (const m of answer.matchAll(LOG_MARK)) {
+    const key = `log:${m[1] ?? ""}:${m[2].length}:${promptKey}`;
+    if (st.explainChecked.includes(key)) continue;
+    st.explainChecked = [...st.explainChecked.slice(-50), key];
+    const norm = (s) => String(s).replace(/[“”„]/g, "\"").replace(/[‘’]/g, "'").replace(/\s+/g, " ").trim();
+    const own = norm(learnerMsg);
+    const text = norm(m[2]);
+    if (text.length < 10 || !own.includes(text)) {
+      logEvent({ type: "log-fill-refused", why: text.length < 10 ? "short" : "not-verbatim", session: sid });
+      if (!input.stop_hook_active) block(t("rg.log.notVerbatim"));
+      continue;
+    }
+    const n = fillLastColumn(G, m[1] ?? sid, text);
+    logEvent({ type: "log-filled", rows: n, of: m[1] ?? sid8(sid), session: sid });
+    notice(t(n ? "rg.log.filled" : "rg.log.none", { n }));
   }
 }
 
