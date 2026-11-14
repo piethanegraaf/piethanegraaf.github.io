@@ -50,7 +50,8 @@ try {
   lastDiary = fs.readdirSync(DIARY_DIR).filter((f) => /^\d{4}-\d{2}-\d{2}\.md$/.test(f)).sort().pop() ?? null;
 } catch { /* no diary yet */ }
 
-const rate = (s) => { const x = taskStats(s.id, 10, isMicro(s) ? null : data); return (x.n ? `${x.ok}/${x.n}` : "-") + (x.pending ? ` (+${x.pending} open)` : ""); };
+// Solved and, separately, independent (#63): "L3 Independent" next to "solved 3/3" hid the help.
+const rate = (s) => { const x = taskStats(s.id, 10, isMicro(s) ? null : data); return (x.n ? t("ss.rate", { ok: x.ok, n: x.n, solo: x.solo }) : "-") + (x.pending ? ` (+${x.pending} open)` : ""); };
 const lvl = (s) => {
   const eff = effectiveLevel(data, s);
   return `${s.level} ${levelName(s.level)}${isPlacementPending(data, s) ? t("ss.placementOpen") : eff !== s.level ? ` (→ ${eff})` : ""}`;
@@ -109,7 +110,9 @@ if (wins.length || advice.length) {
   }));
 }
 if (noFolders.length) steps.push(t("ss.step.nextExercise", { list: noFolders.join(", ") }));
-steps.push(t("ss.step.goal"));
+// With a catch-up diary on offer, the confidence question waits for the answer to that offer (setup review of
+// 14 Nov, #66): a bare "1" meant "point 1, the catch-up" and was logged as confidence 1.
+steps.push(t(catchUp.length ? "ss.step.goalAfterCatchUp" : "ss.step.goal"));
 
 // Once: effort is the goal here, not failure (#39). The harness says it itself, at the first start.
 const effortShown = readEvents().some((e) => e.type === "effort-intro");

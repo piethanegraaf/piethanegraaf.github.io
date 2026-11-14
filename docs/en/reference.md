@@ -206,6 +206,7 @@ With the user-level gate (`install.mjs <folder> --user-guard`):
 |---|---|
 | `harness/install.mjs` | Install and update. With `--user-guard` also the user-level gate for graded work. See [Install](install.md). |
 | `harness/hooks/scaffold.mjs` | `arc42 <folder> --from <zip> [--lang nl\|en] [--with-help]`: the official arc42 template (release 2026.10.19, GitHub Markdown, one file per chapter), from a zip downloaded first (without `--from` it shows the link and the `curl` command), checked against a pinned sha256 and unpacked unchanged into a new or empty folder. It has no network code. Installed as `.claude/hooks/scaffold.mjs`; in graded work the guard allows only that copy. |
+| `harness/hooks/commit-log.mjs` | `[--push] [--dry-run]`: commits the AI-use log (`settings.graded.logDir`) and nothing else, with a fixed message (#64). It refuses when anything else is staged, and pushes only when that commit is the only one not on the remote yet. Claude runs it after `/diary` and a "yes" of the learner; in graded work the guard allows only the copy in `.claude/hooks/`, and it becomes a tooling row in the log. |
 | `harness/user/graded-gate.mjs` | The user-level gate (#61), installed by `install.mjs --user-guard`. |
 | `harness/export.mjs` | Export progress for the dashboard, with privacy filters. Also writes `.learning/state/last-export.json` in the practice folder. From a practice session the guard allows it on purpose. See [Configuration and privacy](configuration.md). |
 | `harness/security-check.mjs` | The check before anything goes online. |

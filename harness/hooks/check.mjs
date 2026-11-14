@@ -23,7 +23,7 @@ import {
   ROOT, TESTS_FILE, STATE_DIR, loadSkills, skillForPath, rel, keywordMap, findSkill, isMicro, familyIds, familyOf,
   pickSession, loadSession, saveSession, touch, activeMinutesSince, logTask, logEvent, levelAdvice, taskStats,
   lapseTasks, afterTask, effectiveLevel, newWorkSignal, beginNewWork, taskRung, taskLogged, changedCodeFiles, progressOf, progressLine, t,
-  settingsOf, SECURITY_ANALYZER_ARGS, securityWarnings,
+  settingsOf, SECURITY_ANALYZER_ARGS, securityWarnings, keywordHits,
 } from "./lib.mjs";
 
 let data0 = null;
@@ -246,10 +246,11 @@ if (newlyGreen.length) {
   if (!skill) {
     const kw = keywordMap(data);
     const hay = newlyGreen.map((r) => `${r.className} ${r.name}`).join(" ").toLowerCase();
+    const hits = keywordHits(hay, kw);
     let best = null;
     for (const s of data.skills) {
       if (s.kind === "zone") continue;
-      const sc = (kw[s.id] ?? []).filter((k) => k && hay.includes(k)).length;
+      const sc = hits.get(s.id) ?? 0;
       if (sc && (!best || sc > best.sc)) best = { s, sc };
     }
     skill = best?.s ?? (st?.activeSkill ? findSkill(data, st.activeSkill) : null);

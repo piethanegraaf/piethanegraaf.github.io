@@ -9,7 +9,7 @@ import {
   taskStats, ROOT, levelName, isMicro, microsOf, keywordMap, logTask, pendingTasks, levelAdvice, learnerText,
   settingsOf, codeExtRe, toolingRe, touch, activeMinutesSince, startTask, effectiveLevel, isPlacementPending, isReviewDue,
   afterTask, allTasks, readEvents, openOffer, promote, exerciseDirs, newWorkSignal, beginNewWork, noteExplanationWords,
-  taskRung, taskLogged, addMicro, recheckDemotion, openOfFamily, familyRungOf, solvedInFamily, needsNextExercise, progressOf, progressLine, t,
+  taskRung, taskLogged, addMicro, recheckDemotion, openOfFamily, familyRungOf, solvedInFamily, keywordHits, isSolved, verdictKey, needsNextExercise, progressOf, progressLine, t,
   gradedOf, gradedWhy, gradedChangedFiles, skillForFile, lapseTasks, familyIds,
 } from "./lib.mjs";
 import {
@@ -177,6 +177,7 @@ function detectSkill() {
   const tag = p.match(/#([a-z]+(?:\.[a-z0-9-]+)+)/);
   if (tag && findSkill(data, tag[1])) { explicit = true; return findSkill(data, tag[1]); }
   const kw = keywordMap(data);
+  const hits = keywordHits(p, kw);
   const scores = new Map();
   let best = null;
   let activeScore = 0;
@@ -196,7 +197,7 @@ function detectSkill() {
     if (lockedTo && familyOf(s) !== lockedTo) continue;
     let score = byExercise.has(s.id) ? 5 : 0;
     // Microskill keywords are more specific: they weigh double.
-    for (const k of kw[s.id] ?? []) if (k && p.includes(k)) score += isMicro(s) ? 2 : 1;
+    score += (hits.get(s.id) ?? 0) * (isMicro(s) ? 2 : 1);
     scores.set(s.id, score);
     if (s.id === st.activeSkill) activeScore = score;
     if (score > 0 && (!best || score > best.score || (score === best.score && s.id === st.activeSkill))) best = { s, score, byExercise: byExercise.has(s.id) };
@@ -342,7 +343,7 @@ if (doneMatch) {
     const lapsed = lapseTasks("other-exercise", (x) => familyOf(findSkill(data, x.skill)) === familyOf(target), sid);
     const tk = logTask({ skill: target.id, success: m < 5, maxRung: m, minutes: activeMinutesSince(st, st.taskStartedActive), source: "af", what, session: sid,
       level: effectiveLevel(data, target), reviewRung: reviewRung > (st.maxRung ?? 0) ? reviewRung : 0, tid: st.openTid, familyRung });
-    const verdict = t(m >= 5 ? "pg.verdict.fail" : m === 0 ? "pg.verdict.solo" : m <= 2 ? "pg.verdict.ok" : "pg.verdict.help", { rung: m });
+    const verdict = t(verdictKey(tk), { rung: m });
     ctx.push(t("pg.af.logged", { id: target.id, tid: tk.tid, rung: m, verdict, what }));
     if (lapsed.length) ctx.push(t("pg.af.lapsed", { list: lapsed.map((x) => `${x.skill} [${x.tid}]`).join(", ") }));
     const after = afterTask(data, target.id, tk);
@@ -360,11 +361,11 @@ if (solved && skill) {
   const mins = activeMinutesSince(st, st.taskStartedActive);
   const tk = logTask({ skill: skill.id, success, maxRung: m, minutes: mins, source: "chat", session: sid, level, reviewRung: reviewRung > (st.maxRung ?? 0) ? reviewRung : 0,
     tid: st.openTid, familyRung });
-  // Honest words (#27): independent only at rung 0; at rung 1-2 solved with help up to that rung.
-  const verdict = t(!success ? "pg.verdict.fail" : m === 0 ? "pg.verdict.solo" : m <= 2 ? "pg.verdict.ok" : "pg.verdict.help", { rung: m });
+  // Honest words (#27, #63): independent only at rung 0; at rung 1-2 solved with help up to that rung.
+  const verdict = t(verdictKey(tk), { rung: m });
   ctx.push(t("pg.taskLogged", { id: skill.id, tid: tk.tid, rung: m, verdict }));
   const after = afterTask(data, skill.id, tk);
-  if (success && m <= 2) {
+  if (isSolved(tk)) {
     // What becomes possible once this task is explained (§9.2); the harness itself makes the proposal.
     const adv = levelAdvice(data, skill, { assume: [tk.tid] });
     ctx.push(t("pg.signal", {
@@ -527,7 +528,7 @@ if (skill || wantsHint || ctx.length) {
     ? t("pg.head", {
       name, level, levelName: levelName(level),
       help: ladderLevel === "L2" ? `${t("pg.head.unlocked", { rung: st.rung, rungName: rungName(st.rung) })} · ${givenText}` : givenText,
-      stats: stats.n ? t("pg.head.stats", { ok: stats.ok, n: stats.n, pct: Math.round(settings.targetSuccess * 100) }) : t("pg.head.noTasks"),
+      stats: stats.n ? t("pg.head.stats", { ok: stats.ok, n: stats.n, solo: stats.solo, pct: Math.round(settings.targetSuccess * 100) }) : t("pg.head.noTasks"),
       pending: stats.pending ? t("pg.head.pending", { n: stats.pending }) : "",
     })
     : t("pg.head.unknown", { level });

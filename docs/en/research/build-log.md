@@ -609,6 +609,17 @@ These parts of the design were replaced. They used to sit on the [design page](d
 
 ## 11. Change log {#changelog}
 
+### 14 November 2026 (evening): solved is not independent, and the AI-use log in one step
+
+The pilot student decided points 63–67 after a session on the class diagram of the final assignment. It worked only thanks to Socratic questions (rung 1), while the level is called "L3 Independent" and the task counted as solved.
+
+- **#63 Solved and independent apart.** Solved stays rung 0–2, independent is rung 0 only, on every level. The task of that session was solved, but not independently, and rightly did not count towards L4. What went wrong were the words: next to "L3 Independent" only "success 3/3" was shown, and the diary heading "What went well (independently)" called rung 0–2 independent. Now the prompt gate, the session start and `status` show both numbers ("solved 3/3, independently 2"), and the diary writes "independent" only at rung 0. Counting help on L3 as not solved was considered first; the learner chose to keep it solved but not call it independent, so nothing goes down retroactively.
+- **#64 Committing the AI-use log.** After `/diary` the harness asks "Commit and push the AI-use log now?"; on a yes Claude runs `commit-log.mjs`, which commits only the log folder, with a fixed message. The work itself and the learner's own commits stay out of reach.
+- **#65 Only the dashboard updated:** no catch-up diary and no diary question when stopping. The guard logs the export, and such a session does not count as work.
+- **#66 First the catch-up diary, then the confidence.** A bare "1" on a start message with numbered points was logged as confidence.
+- **#67 Keywords inside a longer keyword** no longer count: "class diagrammen" picked `ood.klassen-properties` (through "class ") instead of `uml.klassendiagram`.
+- **Not changed:** AI level 1 in graded work. The case asks for an account "in line with the OER (level 0/1)" and an extension on the spot without AI, so on L4 too Claude writes nothing there.
+
 ### 14 November 2026: the review in pages, a link to every source, and a rewrite per page
 
 The review was one page of about 51,000 words, written first for one student and later extended for students and teachers, junior developers at work, and researchers. It is now an overview with six pages under it, each rewritten for its reader.

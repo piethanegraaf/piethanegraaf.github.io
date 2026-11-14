@@ -484,6 +484,27 @@ export function keywordMap(data) {
   return out;
 }
 
+// The keywords of each skill that occur in a (lower-case) text: Map skill id -> number of keywords (setup
+// review of 14 Nov, #67). A keyword that only occurs inside a longer keyword of another skill does not count:
+// "class diagram" is not also the "class " of classes, and "klassendiagram" is not also "klasse". On
+// 14 Nov "class diagrammen" picked ood.klassen-properties over uml.klassendiagram on a tie.
+export function keywordHits(text, kw) {
+  const found = [];
+  for (const [id, list] of Object.entries(kw ?? {})) {
+    for (const k of new Set(list ?? [])) {
+      if (!k) continue;
+      const at = [];
+      for (let i = text.indexOf(k); i !== -1; i = text.indexOf(k, i + 1)) at.push(i);
+      if (at.length) found.push({ id, k, at });
+    }
+  }
+  const inside = (a, i) => found.some((o) => o.id !== a.id && o.k.length > a.k.length &&
+    o.at.some((j) => j <= i && i + a.k.length <= j + o.k.length));
+  const hits = new Map();
+  for (const a of found) if (a.at.some((i) => !inside(a, i))) hits.set(a.id, (hits.get(a.id) ?? 0) + 1);
+  return hits;
+}
+
 export function loadOverrides() {
   try {
     const all = JSON.parse(fs.readFileSync(OVERRIDES_FILE, "utf8"));
@@ -1022,6 +1043,15 @@ export function allTasks() {
 
 export const pendingTasks = () => allTasks().filter((t) => !t.explained && !t.lapsed);
 
+// Two separate words (setup review of 14 Nov, #63): "solved" is rung 0-2 on every level, "independent" is
+// rung 0 only. A task on L3 with a Socratic question (rung 1) is solved, but not independently, so it does not
+// count towards L4; the harness shows both numbers, so "L3 Independent" with "solved 3/3" no longer hides help.
+export const isSolved = (x) => Boolean(x) && Boolean(x.success) && (x.maxRung ?? 0) <= 2;
+export const isIndependent = (x) => Boolean(x) && Boolean(x.success) && (x.maxRung ?? 0) === 0;
+// The i18n key of the honest verdict on a freshly logged task (#27, #63): independent only at rung 0.
+export const verdictKey = (x) => (!x.success ? "pg.verdict.fail" : (x.maxRung ?? 0) === 0 ? "pg.verdict.solo"
+  : isSolved(x) ? "pg.verdict.ok" : "pg.verdict.help");
+
 // The rung that counts for the task's own family (#34), and "solved" by that rung (rung <= 2). A task
 // that failed only because of a worked example about another concept (rung 5 with #id) is solved here.
 export const familyRungOf = (x) => Number(x?.familyRung ?? x?.maxRung ?? 0) || 0;
@@ -1395,16 +1425,17 @@ export function findVerdict(text) {
   return { error: "unbalanced braces" };
 }
 
-// Success rate over the last n explained tasks. Success = solved with hint rung <= 2.
-// A parent skill also counts the tasks of its microskills.
+// Success rate over the last n explained tasks. Success = solved with hint rung <= 2; `solo` = of those,
+// solved independently, at rung 0 (#63). A parent skill also counts the tasks of its microskills.
 export function taskStats(skillId, n = 10, data = null) {
   const ids = new Set(data ? familyIds(data, skillId) : [skillId]);
   const fam = allTasks().filter((t) => ids.has(t.skill));
   const done = fam.filter((t) => t.explained);
   const last = done.slice(-n);
-  const ok = last.filter((t) => t.success && (t.maxRung ?? 0) <= 2).length;
+  const ok = last.filter(isSolved).length;
+  const solo = last.filter(isIndependent).length;
   return {
-    n: last.length, ok, rate: last.length ? ok / last.length : null, tasks: last,
+    n: last.length, ok, solo, rate: last.length ? ok / last.length : null, tasks: last,
     pending: fam.filter((t) => !t.explained && !t.lapsed).length, lapsed: fam.filter((t) => t.lapsed).length,
   };
 }
@@ -1462,7 +1493,7 @@ export function soloEvidence(tasks, transfer) {
 }
 
 const nextLevel = (l) => LEVELS[Math.min(LEVELS.length - 1, LEVELS.indexOf(l) + 1)];
-const solvedTask = (x) => x.success && (x.maxRung ?? 0) <= 2;
+const solvedTask = isSolved;
 
 // The criterion for one step up from `from`, on the tasks of the window. { ok, text, note } or
 // { ok: false, needsTransfer, text } when only the transfer task is missing (L3 -> L4).
@@ -1779,7 +1810,12 @@ const WORK_EVENTS = new Set(["task", "rung-mark", "hint-unlock", "review-help", 
 export function sessionWork(sid, st = null, events = readEvents()) {
   const kinds = [...new Set(events.filter((e) => e.session === sid && WORK_EVENTS.has(e.type)).map((e) => e.type))];
   const minutes = Math.round((Number(st?.activeMs) || 0) / 60000);
-  return { has: kinds.length > 0 || minutes >= 10, kinds, minutes };
+  // A session that only updated the dashboard needs no diary (setup review of 14 Nov, #65): it ran the export
+  // (the guard logs "dashboard-export") and has no learning work, so neither its minutes nor the mere fact
+  // that it ran in graded work ("graded-session") count. Real work (a hint, a task, an explanation) still does.
+  const exported = events.some((e) => e.session === sid && e.type === "dashboard-export");
+  const learning = kinds.filter((k) => k !== "graded-session");
+  return { has: learning.length > 0 || (!exported && (kinds.length > 0 || minutes >= 10)), kinds, minutes };
 }
 
 // Earlier sessions with work but without a diary entry, newest first (#56): of the last `days` days, not the
