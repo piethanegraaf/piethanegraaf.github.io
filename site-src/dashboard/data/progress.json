@@ -1,7 +1,7 @@
 {
   "schema": 1,
-  "generatedAt": "2026-11-13",
-  "exportedAt": "2026-11-13T21:25:10.795Z",
+  "generatedAt": "2026-11-14",
+  "exportedAt": "2026-11-14T13:51:23.824Z",
   "course": null,
   "language": "nl",
   "examDate": "2027-01-20",
@@ -890,7 +890,7 @@
       "nextReview": null,
       "intervalIndex": 0,
       "lastReview": null,
-      "lastSeen": "2026-11-13",
+      "lastSeen": "2026-11-14",
       "placement": "done",
       "start": {
         "at": "2026-11-07T18:59:58.137Z",
@@ -2359,6 +2359,34 @@
       "corrections": [],
       "void": false,
       "voidReason": null
+    },
+    {
+      "id": "mwgdcz2mxnpi",
+      "at": "2026-11-14T13:09:14.929Z",
+      "skill": "uml.klassendiagram",
+      "source": "done",
+      "success": true,
+      "maxRung": 1,
+      "minutes": 0,
+      "reviewRung": null,
+      "what": "overerving rond Device #uml.klassendiagram",
+      "explained": true,
+      "explanation": "Reserveren moet van buiten de klassen kunnen worden aageroepen omdat gebruikers moeten kunnen reserveren daarom moet het in device + hebben, door het sterretje kun je aangeven dat het om een abstracte methode gaat die alleen in de child klassen geimplemeteerd word\nOmdat je dan er alsnog niet bij kan vanuit buiten de parent child klasen",
+      "explainedAt": "2026-11-14T13:13:24.377Z",
+      "explainedBy": null,
+      "lapsed": false,
+      "lapseReason": null,
+      "retaggedFrom": null,
+      "rejections": [
+        {
+          "at": "2026-11-14T13:12:21.230Z",
+          "by": "claude",
+          "reasons": []
+        }
+      ],
+      "corrections": [],
+      "void": false,
+      "voidReason": null
     }
   ],
   "reviews": [],
@@ -2515,7 +2543,17 @@
       "sessions": 4,
       "hints": 1,
       "holds": 1,
-      "denials": 4,
+      "denials": 7,
+      "overridesUsed": 0,
+      "reviewHelp": 0,
+      "helpDropped": 0
+    },
+    {
+      "date": "2026-11-14",
+      "sessions": 1,
+      "hints": 1,
+      "holds": 0,
+      "denials": 5,
       "overridesUsed": 0,
       "reviewHelp": 0,
       "helpDropped": 0
@@ -2691,6 +2729,23 @@
         "nextStep": "overgeslagen (niet genoemd)"
       },
       "calibration": "vooraf onbekend → 3 van de 5 controlevragen goed, 1 half, 1 open → zelfvertrouwen 4 is iets hoog voor de Mermaid-relaties"
+    },
+    {
+      "date": "2026-11-14",
+      "n": 1,
+      "time": "10:52–14:15",
+      "skills": "uml.klassendiagram (L3)",
+      "plan": "klassendiagrammen van de eindopdracht verder uitwerken (overerving rond Device), en daarna misschien de eerste code",
+      "confidenceBefore": "4 (de eerdere \"1\" was bedoeld als keuze voor het inhaaldagboek, niet als zelfvertrouwen)",
+      "wentWell": "gelukt met hulp tot trede 1 (Socratische vragen), dus niet zelfstandig: met die vragen haalde de student het teken (wie mag aanroepen) en het sterretje (waar de logica staat) uit elkaar. Daarna redeneerde de student per methode: de beheerder heeft `ChangeAvailabilityStatus` van buiten nodig, en `EnfoceUseLimit` verschilt per apparaat alleen in een waarde, niet in de werking.",
+      "signals": "uml.klassendiagram L3 → L4: zonder hint 2/3 · dagen 1/2 · transfertaak ○ (`/mastery-check uml.klassendiagram`). Verder ongewijzigd: aggregatie-compositie, encapsulatie, klassen-properties en associaties wachten op hun transfertaak.",
+      "reflection": {
+        "learned": "het verschil tussen # en * in mermaid",
+        "confusing": "dat protected klassen met een public child alsnog niet public zijn op child nivau",
+        "confidenceAfter": "onbekend",
+        "nextStep": "overgeslagen"
+      },
+      "calibration": "vooraf 4 → lukte met trede ≤1, maar kostte veel vragen over zichtbaarheid → klopt ongeveer"
     }
   ],
   "reviewHelp": [
@@ -2751,6 +2806,13 @@
       "rung": 2,
       "taskSkill": "ood.encapsulatie",
       "task": "mwe3frl7kv9u"
+    },
+    {
+      "at": "2026-11-14T12:15:44.014Z",
+      "skill": "uml.klassendiagram",
+      "rung": 1,
+      "taskSkill": "ood.klassen-properties",
+      "task": "mwgdcz2mxnpi"
     }
   ],
   "microProposals": [],
@@ -2845,6 +2907,8 @@
       "omdat de velden ook in alle child klassen voorkoomen\ndan moet elke child klasse die variabele zelf aanmaken en dat is niet effiecient/extra werk": "because the fields also occur in all child classes\nthen every child class has to create that variable itself and that is not efficient/extra work",
       "overerving van Device naar de specifieke apparaten": "inheritance from Device to the specific devices",
       "omdat een 3d printer een soort device is met veel van de zelfde eigenschappen van device": "because a 3d printer is a kind of device with many of the same properties as device",
+      "overerving rond Device #uml.klassendiagram": "inheritance around Device #uml.klassendiagram",
+      "Reserveren moet van buiten de klassen kunnen worden aageroepen omdat gebruikers moeten kunnen reserveren daarom moet het in device + hebben, door het sterretje kun je aangeven dat het om een abstracte methode gaat die alleen in de child klassen geimplemeteerd word\nOmdat je dan er alsnog niet bij kan vanuit buiten de parent child klasen": "Reserving has to be callable from outside the classes because users need to be able to make reservations, so it has to have + in device; with the asterisk you can indicate that it is an abstract method that is only implemented in the child classes\nBecause then you still can't reach it from outside the parent child classes",
       "securitycheck site (tooling)": "security check site (tooling)",
       "cs.basis (L2), cs.basis.lus-grenzen (L2, nieuw), test.unit-tests (L1)": "cs.basis (L2), cs.basis.lus-grenzen (L2, new), test.unit-tests (L1)",
       "opdracht 04-even-getallen afmaken (niet expliciet benoemd)": "finish exercise 04-even-getallen (not stated explicitly)",
@@ -2929,7 +2993,16 @@
       "vooraf onbekend → 3 van de 5 controlevragen goed, 1 half, 1 open → zelfvertrouwen 4 is iets hoog voor de Mermaid-relaties": "unknown beforehand → 3 of the 5 check questions right, 1 half, 1 open → confidence 4 is a bit high for the Mermaid relations",
       "how to add mermaid diagrams manualy to .md files": "how to add mermaid diagrams manually to .md files",
       "I was missing the mermaid tag at first so the diagram would not render.": "I was missing the mermaid tag at first so the diagram would not render.",
-      "overgeslagen (niet genoemd)": "skipped (not named)"
+      "overgeslagen (niet genoemd)": "skipped (not named)",
+      "uml.klassendiagram (L3)": "uml.klassendiagram (L3)",
+      "klassendiagrammen van de eindopdracht verder uitwerken (overerving rond Device), en daarna misschien de eerste code": "work out the class diagrams of the final project further (inheritance around Device), and then maybe the first code",
+      "4 (de eerdere \"1\" was bedoeld als keuze voor het inhaaldagboek, niet als zelfvertrouwen)": "4 (the earlier \"1\" was meant as choosing the catch-up diary, not as confidence)",
+      "gelukt met hulp tot trede 1 (Socratische vragen), dus niet zelfstandig: met die vragen haalde de student het teken (wie mag aanroepen) en het sterretje (waar de logica staat) uit elkaar. Daarna redeneerde de student per methode: de beheerder heeft `ChangeAvailabilityStatus` van buiten nodig, en `EnfoceUseLimit` verschilt per apparaat alleen in een waarde, niet in de werking.": "solved with help up to rung 1 (Socratic questions), so not independently: with those questions the student separated the sign (who may call it) and the asterisk (where the logic lives). Then the student reasoned per method: the administrator needs `ChangeAvailabilityStatus` from outside, and `EnfoceUseLimit` differs per device only in a value, not in how it works.",
+      "uml.klassendiagram L3 → L4: zonder hint 2/3 · dagen 1/2 · transfertaak ○ (`/mastery-check uml.klassendiagram`). Verder ongewijzigd: aggregatie-compositie, encapsulatie, klassen-properties en associaties wachten op hun transfertaak.": "uml.klassendiagram L3 → L4: without hint 2/3 · days 1/2 · transfer task ○ (`/mastery-check uml.klassendiagram`). Otherwise unchanged: aggregatie-compositie, encapsulatie, klassen-properties and associaties are waiting for their transfer task.",
+      "vooraf 4 → lukte met trede ≤1, maar kostte veel vragen over zichtbaarheid → klopt ongeveer": "beforehand 4 → succeeded with rung ≤1, but took many questions about visibility → roughly right",
+      "het verschil tussen # en * in mermaid": "the difference between # and * in mermaid",
+      "dat protected klassen met een public child alsnog niet public zijn op child nivau": "that protected classes with a public child are still not public at child level",
+      "overgeslagen": "skipped"
     }
   }
 }
