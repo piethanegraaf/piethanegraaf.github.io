@@ -1,5 +1,6 @@
 ---
 title: "Begrippen: wenselijke moeilijkheden, never-skilling en de eeuwige junior"
+jsonld: terms
 description: "Korte definities van de begrippen achter leren programmeren met AI: wenselijke moeilijkheden, productief falen, cognitief uitbesteden, vaardigheidsverlies, never-skilling, de eeuwige junior en meer."
 ---
 # Begrippen

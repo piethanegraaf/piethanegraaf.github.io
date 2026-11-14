@@ -1,5 +1,6 @@
 ---
 title: "Key terms: desirable difficulties, never-skilling and the eternal junior"
+jsonld: terms
 description: "Short definitions of the terms behind learning to program with AI: desirable difficulties, productive failure, cognitive offloading, deskilling, never-skilling, the eternal junior and more."
 ---
 # Key terms

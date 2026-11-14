@@ -2,6 +2,9 @@
 title: "Learning to code with AI: literature review (2026)"
 citation_title: "Learning to Code (and OOD) with AI: Literature Review, Risk Assessment & a Learning-Preserving Claude Code Setup"
 citation_date: "2026/11/07"
+jsonld: article
+date_published: "2026-11-07"
+keywords: ["generative AI", "learning to program", "desirable difficulties", "deskilling", "never-skilling", "computing education", "Claude Code", "secure coding"]
 description: "AI that does your thinking while you practise lowers what you can do without it; AI used as a tutor does not. A 2026 review with a Claude Code setup."
 ---
 # Learning to Code (and OOD) with AI: Literature Review, Risk Assessment & a Learning-Preserving Claude Code Setup

@@ -1,4 +1,4 @@
-# Learning harness
+# Learning harness for Claude Code
 
 > A free, open-source Claude Code setup for students and junior developers who want to keep learning to program. Hooks stop the AI from writing practice code, help comes in steps, and a dashboard tracks skill levels.
 

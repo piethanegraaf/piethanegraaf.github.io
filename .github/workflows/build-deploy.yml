@@ -144,6 +144,10 @@ jobs:
       - name: Redirect the old /en/ addresses
         run: node harness/site-redirects.mjs site
 
+      # FAQPage (pages with a FAQ section) and DefinedTermSet (the key terms) in the JSON-LD.
+      - name: Add the FAQ and the key terms to the structured data
+        run: node harness/site-jsonld.mjs site
+
       - name: Add a Content-Security-Policy to every page
         run: node harness/site-csp.mjs site
 

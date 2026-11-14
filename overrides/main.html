@@ -7,7 +7,9 @@
   - htmltitle: no " - <site name>" after a page title that already contains the site name.
   - extrahead: JSON-LD (WebSite and WebPage). Browsers do not run application/ld+json, so the
     CSP needs no hash for it (harness/site-csp.mjs skips it). tojson escapes <, > and &.
-    `jsonld: software` in the front matter adds SoftwareSourceCode (the home and install pages).
+    `jsonld: software` in the front matter adds SoftwareSourceCode (the home and install pages),
+    `jsonld: article` a ScholarlyArticle (the literature review) and `jsonld: terms` a DefinedTermSet
+    (the key terms). The terms and a FAQ section (FAQPage) are added after the build by harness/site-jsonld.mjs.
 -#}
 {% extends "base.html" %}
 
@@ -144,6 +146,41 @@
       } %}
       {% set _ = graph.append(software) %}
       {% set _ = webpage.update({ "mainEntity": { "@id": site_home ~ "#software" } }) %}
+    {% endif %}
+    {#- `jsonld: terms` (the key terms): the page is about a DefinedTermSet. harness/site-jsonld.mjs builds
+        that node after the build, from each h2 and the first paragraph under it. A FAQ section becomes a
+        FAQPage the same way. #}
+    {% if page.meta and page.meta.jsonld == "terms" %}
+      {% set _ = webpage.update({ "mainEntity": { "@id": page.canonical_url ~ "#terms" } }) %}
+    {% endif %}
+    {#- `jsonld: article` (the literature review): a ScholarlyArticle by the author of the site. The Dutch
+        page is a machine translation of the English original, so it points to that as translationOfWork. #}
+    {% if page.meta and page.meta.jsonld == "article" %}
+      {% set article = {
+        "@type": "ScholarlyArticle",
+        "@id": page.canonical_url ~ "#article",
+        "url": page.canonical_url,
+        "headline": (page.meta.citation_title if page.meta.citation_title else page.meta.title),
+        "abstract": (page.meta.description if page.meta.description else config.site_description),
+        "author": { "@id": person_id },
+        "datePublished": page.meta.date_published,
+        "inLanguage": config.theme.language,
+        "isPartOf": { "@id": site_home ~ "#website" },
+        "mainEntityOfPage": { "@id": page.canonical_url ~ "#webpage" },
+        "license": "https://creativecommons.org/licenses/by-nc/4.0/",
+        "isAccessibleForFree": true
+      } %}
+      {% if page.meta.keywords %}
+        {% set _ = article.update({ "keywords": page.meta.keywords }) %}
+      {% endif %}
+      {% if page.meta.git_revision_date_localized_raw_iso_date %}
+        {% set _ = article.update({ "dateModified": page.meta.git_revision_date_localized_raw_iso_date }) %}
+      {% endif %}
+      {% if config.theme.language != "en" %}
+        {% set _ = article.update({ "translationOfWork": { "@id": config.site_url ~ "research/#article" } }) %}
+      {% endif %}
+      {% set _ = graph.append(article) %}
+      {% set _ = webpage.update({ "mainEntity": { "@id": page.canonical_url ~ "#article" } }) %}
     {% endif %}
     <script type="application/ld+json">{{ { "@context": "https://schema.org", "@graph": graph } | tojson }}</script>
   {% endif %}
