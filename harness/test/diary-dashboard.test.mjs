@@ -4,7 +4,8 @@
 //    settings.dashboardRepo is the clone of the repo (`skill.mjs setting dashboardRepo`), or "off"
 //    without a dashboard. The update-dashboard skill comes with the installed harness (one source:
 //    harness/skills/), and the guard allows the export `node <repo>/harness/export.mjs <folder>` on purpose.
-// S9 the diary skill warns, above the three reflection questions, that the answers go onto the public dashboard.
+// S9 the diary skill warns, above the three reflection questions, that the answers go onto the public dashboard
+//    (only with a dashboard; without one it says they stay local).
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import fs from "node:fs";
@@ -234,6 +235,17 @@ test("S9: the diary skill warns above the three reflection questions, in nl and 
   const en = read(HARNESS, "skills", "diary", "SKILL.en.md");
   assert.match(nl, /> Let op: je antwoorden komen letterlijk, met een vertaling, op het openbare dashboard\.\r?\n\s*>\r?\n\s*> 1\. Wat heb je geleerd\?/);
   assert.match(en, /> Note: your answers appear word for word, with a translation, on the public dashboard\.\r?\n\s*>\r?\n\s*> 1\. What did you learn\?/);
-  // Not for a learner without a dashboard.
+  // Not for a learner without a dashboard (not set, or off): that learner reads that the answers stay local.
   for (const s of [nl, en]) assert.match(s.slice(s.indexOf("2. **"), s.indexOf("> 1.")), /`off`/);
+  assert.match(nl, /> Let op: je antwoorden blijven in deze map\. Ze gaan pas online als je zelf een dashboard instelt en publiceert\./);
+  assert.match(en, /> Note: your answers stay in this folder\. They only go online if you set up a dashboard and publish it yourself\./);
+});
+
+test("update-dashboard: every gh command names the repo of origin, so a fork never opens a pull request upstream", () => {
+  for (const lang of ["nl", "en"]) {
+    const s = read(HARNESS, "skills", "update-dashboard", `SKILL.${lang}.md`);
+    const gh = s.match(/gh pr (?:list|create)[^`\r\n]*/g) ?? [];
+    assert.ok(gh.length >= 2, `${lang}: gh pr list and gh pr create`);
+    for (const c of gh) assert.match(c, /--repo <origin-repo>/, `${lang}: ${c}`);
+  }
 });

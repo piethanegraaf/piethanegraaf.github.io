@@ -43,13 +43,13 @@ The **paradox of supervision** is that checking AI output needs the very skills 
 
 **Build, delegate, maintain** is the trade-off this project proposes: build a skill by hand first, delegate it to the AI once you master it, and keep it with short reviews in your own work. Each part follows a principle with empirical support; the combination has not been tested. See [§2.11](research/design.md#211-synthesis-design-principles) and [For researchers](researchers.md).
 
-## Autonomy ladder (L0–L4)
+## Learning phases (L0–L4)
 
-The **autonomy ladder** is a level per skill that sets how much the AI may do: from L0 (the AI demonstrates on another topic) to L4 (the AI does it, you supervise). At L1–L3 a hook stops the AI from writing, building or testing your code. See [How it works](how-it-works.md#levels-per-skill) and [§5.2](research/design.md#52-the-autonomy-ladder-per-skill).
+A **learning phase** is the level of one skill, and it sets how much the AI may do for it: from L0 (the AI demonstrates on another topic) to L4 (the AI does it, you supervise). At L1–L3 a hook stops the AI from writing, deleting, building or testing your code. A phase lasts days to weeks; the research pages called this the *autonomy ladder* before. See [How it works](how-it-works.md#learning-phases-per-skill) and [§5.2](research/design.md#52-learning-phases-per-skill).
 
 ## Hint ladder
 
-A **hint ladder** is help in rungs that each give away a little more: a question, a pointer, a sketch, a small example on another topic, and only then a worked solution. The next rung comes only after a visible attempt. See [How it works](how-it-works.md#the-hint-ladder-l2) and [§5.3](research/design.md#53-friction-calibration-the-hint-ladder).
+A **hint ladder** is help in rungs that each give away a little more: a question, a pointer, a sketch, a small example on another topic, and only then, if you confirm, a worked solution (in graded work the ladder stops at rung 4). The next rung comes only after a visible attempt. The ladder is about one task; the learning phase is about the skill over weeks. The rungs you needed are the evidence for the next phase: see [how they work together](how-it-works.md#learning-phases-and-the-hint-ladder) and [How it works](how-it-works.md#the-hint-ladder-l2) and [§5.3](research/design.md#53-friction-calibration-the-hint-ladder).
 
 ## Spaced reinforcement
 

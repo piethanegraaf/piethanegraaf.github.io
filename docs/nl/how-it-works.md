@@ -1,16 +1,16 @@
 ---
 title: "Hoe het werkt: niveaus L0–L4 en hints in stappen"
-description: "Vijf niveaus per vaardigheid, van L0 (voordoen) tot L4 (geautomatiseerd). Op L1–L3 blokkeert een hook AI-code; op L2 komt hulp als vraag, wijzer en schets."
+description: "Vijf niveaus per vaardigheid, van L0 (voordoen) tot L4 (geautomatiseerd). Op L1–L3 blokkeert een hook AI-code; hulp komt in vijf treden, van een vraag tot een uitgewerkte oplossing."
 ---
 # Hoe het werkt
 
-De harnas bestaat uit vier hooks van Claude Code, een vaardighedenregister en een paar commando's die alleen jij draait.
+De harnas bestaat uit vijf hooks van Claude Code (bij de sessiestart, bij elke prompt, vóór elke tool, als Claude stopt en bij het sessie-einde; zie de [referentie](reference.md#hooks)), een vaardighedenregister en een paar commando's die alleen jij draait.
 
 ```mermaid
 flowchart LR
   P[Jouw prompt] --> G1[prompt-gate<br/>vaardigheid, trede, open uitleg]
   G1 --> C[Claude]
-  C -->|wil code schrijven of testen| G2{guard}
+  C -->|wil code schrijven, verwijderen, bouwen of testen| G2{guard}
   G2 -->|L1-L3: geblokkeerd| C
   G2 -->|L0, L4 of geen code| T[tool]
   C --> S[reflect-gate<br/>markers, dagboek]
@@ -24,17 +24,23 @@ flowchart LR
   J -.->|ja, doorzetten| G1
 ```
 
-In de harnas gaat elke prompt door de prompt-gate, en bij L1–L3 blokkeert de guard dat Claude code schrijft of test. Een niveau gaat nooit vanzelf omhoog: je bevestigt het voorstel van de reflect-gate met "ja, doorzetten", of je zet het zelf.
+In de harnas gaat elke prompt door de prompt-gate, en bij L1–L3 blokkeert de guard dat Claude code schrijft, verwijdert, bouwt of test (op L1 laat hij alleen een skelet met `TODO(human)`-gaten door). Een niveau gaat nooit vanzelf omhoog: je bevestigt het voorstel van de reflect-gate met "ja, doorzetten", of je zet het zelf.
 
-## Niveaus per vaardigheid
+<a id="niveaus-per-vaardigheid"></a>
+
+## Leerfasen per vaardigheid
+
+Elke vaardigheid zit in een van vijf **leerfasen**, L0 tot L4 (haar niveau). De fase bepaalt wat Claude voor die vaardigheid mag doen, en verandert over dagen en weken. Hoeveel hulp je binnen één taak krijgt, is iets anders: de [hintladder](#de-hintladder-l2). Zie [hoe de twee samenwerken](#leerfasen-en-de-hintladder).
 
 | Niveau | Claude | Jij |
 |---|---|---|
 | **L0 Voordoen** | maakt een uitgewerkt voorbeeld met een ander onderwerp; bij een nieuwe vaardigheid pas na jouw poging | legt het uit en voorspelt de uitvoer |
 | **L1 Aanvullen** | schrijft een skelet, de kern blijft `TODO(human)`; bij een nieuwe vaardigheid pas na jouw poging | vult de gaten, bouwt en test |
-| **L2 Begeleid** | geeft geen oplossingscode, alleen hints uit de ladder | schrijft alles zelf |
+| **L2 Begeleid** | geeft geen oplossingscode, alleen hints uit de ladder; trede 5, een uitgewerkte oplossing, alleen na jouw bevestiging | schrijft alles zelf |
 | **L3 Zelfstandig** | niets vooraf; review pas na jouw poging | maakt en verdedigt het |
 | **L4 Geautomatiseerd** | mag het direct doen | superviseert; is de herhaling aan de beurt, dan doe je het zelf |
+
+**Hoe de tabel en de guard samengaan.** Op L1 blokkeert de guard het skelet niet: hij laat een schrijfactie door als die `TODO(human)`-gaten houdt of toevoegt, en weigert er een die ze invult of weghaalt. Op L2 is de uitgewerkte oplossing van trede 5 een uitzondering waar je zelf om vraagt. Claude laat hem in de chat zien, de guard houdt Claude nog steeds uit je bestanden, dus je typt hem zelf over, en de taak telt als niet gelukt.
 
 Een vaardigheid kan **microvaardigheden** hebben: deelpatronen met een eigen niveau. Lijsten filteren kan al op L3 staan, terwijl void-methoden chainen nog op L2 staat.
 
@@ -48,13 +54,42 @@ Een vaardigheid kan **microvaardigheden** hebben: deelpatronen met een eigen niv
 4. Een klein voorbeeld van hooguit 5 regels, met een ander onderwerp.
 5. Een uitwerking, alleen na bevestiging. De taak telt dan als **niet gelukt**.
 
+In [beoordeeld werk](#beoordeeld-werk) stopt de ladder bij trede 4: een uitwerking is daar niet beschikbaar.
+
 De eerste hint mag meteen. Een volgende trede komt pas na een **zichtbare poging**: gewijzigde code, een foutmelding of testuitkomst, of een hypothese. Of na 12 minuten vastzitten. Dat zijn minuten **actieve tijd**: een pauze van meer dan 20 minuten (`idleMinutes`) telt niet mee. Na het eten krijg je dus niet vanzelf een hogere trede.
 
 Bij een **nieuwe vaardigheid** telt de tijd niet. Een trede gaat pas omhoog als je zegt dat je vastzit, twee keer dezelfde foutmelding of testuitkomst deelt, of het concept niet kent. Vraag je na een eigen poging zelf om meer uitleg, dan mag Claude meteen naar een hogere trede, en die trede wordt eerlijk gelogd.
 
+## Leerfasen en de hintladder
+
+Het zijn twee verschillende schalen, en ze meten verschillende dingen:
+
+| | Leerfase (L0–L4) | Hintladder (trede 0–5) |
+|---|---|---|
+| **Wat het zegt** | Wat Claude voor een vaardigheid mag doen | Hoeveel hulp je bij één taak nodig had |
+| **Hoe lang het duurt** | Dagen tot weken, per vaardigheid | Eén taak: de volgende taak begint weer op trede 0 |
+| **Wie het verandert** | Omhoog: alleen jij, na een voorstel van de harnas. Omlaag: de harnas, als `autoDemote` aan staat | Gaat binnen de taak omhoog, na een zichtbare poging of na 12 minuten actieve tijd vastzitten |
+| **Waar je het ziet** | De sessiestart, `status`, de leerfasen op het dashboard | De regel `[harness] … help given: rung N`, en de kleur van de stippen op het dashboard |
+
+Ze werken samen in een kringloop: **de fase bepaalt hoe de hulp komt, en de treden die je nodig had bepalen de volgende fase.**
+
+1. **De fase bepaalt de rol van de ladder.**
+    - Op **L2** *is* de ladder de hulp: Claude begint met een vraag en geeft de volgende trede pas vrij na een poging.
+    - Op **L0** en **L1** komt de hulp vooraf, als uitgewerkt voorbeeld of als skelet. Op **L3** komt er niets vooraf, alleen een review na je poging. Op **L4** mag Claude het doen. In die fasen gaat er geen trede stap voor stap open, maar alle echte hulp wordt nog steeds als trede gelogd. Op L3 telt bijvoorbeeld uitleg van een concept als trede 2 of hoger.
+    - Een **nieuwe vaardigheid** heeft nog geen fase: je probeert het eerst zelf met de ladder van L2.
+    - In **[beoordeeld werk](#beoordeeld-werk)** geldt de ladder voor elke vaardigheid, in elke fase, tot trede 4.
+2. **De treden bepalen de fase.** Elke taak wordt gelogd met de hoogste trede die je nodig had. Dat is het bewijs:
+    - De eerste taak van een nieuwe vaardigheid bepaalt de startfase: trede 0 → L3, 1–2 → L2, 3–4 → L1, 5 → L0.
+    - **Gelukt** betekent hooguit trede 2. **Zelfstandig** betekent trede 0.
+    - Omhoog: L1 → L2 na drie taken op trede 0–1. L2 → L3 na ongeveer 85% gelukt over minstens 5 taken, de helft daarvan op trede 0–1. L3 → L4 na drie keer trede 0 op minstens 2 dagen, waarvan één een transferopdracht. Alleen L0 → L1 gebruikt geen treden: daarvoor leg je twee uitgewerkte voorbeelden goed uit en voorspel je de uitvoer.
+    - Omlaag (met `autoDemote`): minder dan 70% gelukt over minstens 4 uitgelegde taken, of de laatste 2 niet gelukt.
+    - Op L4 bepaalt de trede van de volgende taak in je eigen werk de herhaling: trede 0 is geslaagd, 1–2 is wankel, 3–5 is mislukt.
+
+**Een voorbeeld.** Overerving staat op L2. Bij je eerste taak heb je een vraag en een vindplaats nodig: trede 2, gelukt met hulp. De volgende vier taken kosten trede 1, 0, 1 en 0. Dat is 5 van de 5 gelukt, waarvan 4 op trede 0–1, dus de harnas stelt L3 voor en jij bevestigt. Op L3 krijg je vooraf geen hints. Heb je toch uitleg van een concept nodig? Dan telt die taak als trede 2: gelukt, maar niet zelfstandig, dus hij telt niet mee voor L4.
+
 ## De guard
 
-Bij L1–L3 blokkeert `guard.mjs` dat Claude code schrijft, verwijdert, bouwt of test. Welke bestanden code zijn en welke commando's bouwen, staat in de [instellingen](configuration.md). De guard beschermt ook:
+Bij L1–L3 blokkeert `guard.mjs` dat Claude code schrijft, verwijdert, bouwt of test. Op L1 laat hij een skelet door: een schrijfactie die `TODO(human)`-gaten houdt of toevoegt, niet een die ze invult. Welke bestanden code zijn en welke commando's bouwen, staat in de [instellingen](configuration.md). De guard beschermt ook:
 
 - het register en de state in `.learning/`, ook als het register in een andere map staat (`--learning-dir`);
 - de paden van [beoordeeld werk](#beoordeeld-werk) en het AI-logboek daarvan, op elk niveau, zonder override, ook buiten het project;
@@ -71,7 +106,7 @@ Wil je toch dat Claude iets doet, dan zet je zelf een override: `! node .claude/
 
 ## Beoordeeld werk
 
-Sommig werk wordt beoordeeld, bijvoorbeeld de eindopdracht van een vak. Je instelling bepaalt hoeveel AI daar mag helpen. Bij CHE staat de OER (art. 7.11) bijvoorbeeld AI-niveau 1 toe: AI als hulpmiddel, "bijvoorbeeld om ideeën te genereren of structuur aan te brengen", met een verantwoording van hoe je het gebruikte. Code of tekst die AI maakte in beoordeeld werk geldt als fraude. Je noemt de paden van dat werk zelf, bijvoorbeeld de map van de repo:
+Sommig werk wordt beoordeeld, bijvoorbeeld de eindopdracht van een vak. Je instelling bepaalt hoeveel AI daar mag helpen. Bij CHE staat de OER (art. 7.11) bijvoorbeeld AI-niveau 1 toe: AI als hulpmiddel, "bijvoorbeeld om ideeën te genereren of structuur aan te brengen", met een verantwoording van hoe je het gebruikte. Code of tekst die AI maakte in beoordeeld werk geldt als fraude. De harnas herkent beoordeeld werk niet vanzelf: je noemt de paden van dat werk één keer zelf, bijvoorbeeld de map van de repo:
 
 ```text
 ! node .claude/hooks/skill.mjs setting graded add "C:/Users/<jij>/source/repos/<opdracht>"
@@ -171,7 +206,7 @@ Als je stopt, schrijft `/diary` de feiten van de sessie op, en jij de reflectie:
 
 Sloot je een sessie zonder dagboek, bijvoorbeeld door het venster te sluiten? Dan biedt de volgende start één keer een kort inhaaldagboek aan voor die sessie.
 
-Boven de drie reflectievragen staat een waarschuwing: *"Let op: je antwoorden komen letterlijk, met een vertaling, op het openbare dashboard."* Een privé-optie is er niet. Wat niet online mag, zet je in `.learning/private.json`.
+Met een dashboard (`dashboardRepo` staat op het pad van je clone) staat er boven de drie reflectievragen een waarschuwing: *"Let op: je antwoorden komen letterlijk, met een vertaling, op het openbare dashboard."* Een privé-optie is er dan niet. Wat niet online mag, zet je in `.learning/private.json`. Zonder dashboard (`dashboardRepo` niet ingesteld, of `off`) zegt de regel juist dat je antwoorden in je map blijven: er gaat niets online tot je zelf een dashboard instelt en publiceert.
 
 Daarna vraagt Claude: **Dashboard nu bijwerken?** Bij ja werkt Claude het dashboard in dezelfde sessie bij, tot en met een pull request, en die merge je zelf. Bij later gebeurt er niets. Zie [Na het dagboek](progress-dashboard.md#na-het-dagboek), ook als je geen dashboard gebruikt.
 

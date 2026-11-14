@@ -149,7 +149,7 @@ The economic claim and the learning claim are about different things:
 - **As a way to produce code**, writing by hand is becoming less economical.
 - **As a way to build skill**, it is still the main route to the reading, debugging and design judgement that make AI output safe to accept. The 2026 interview formats test exactly those skills, and delegation erodes them most ([§2.8](literature.md#28-generative-ai-and-learning-to-program-the-evidence-so-far), [§2.10](literature.md#210-automation-offloading-over-reliance-and-deskilling)).
 
-So the shift argues for **adding** deliberate practice of AI-era skills, not for dropping hand practice before a skill is learned. The levels below are those of the harness's [Autonomy Ladder](design.md#52-the-autonomy-ladder-per-skill): at L3 the learner writes the code alone and the AI reviews it afterwards; at L4 the AI writes the code and the learner reviews it.
+So the shift argues for **adding** deliberate practice of AI-era skills, not for dropping hand practice before a skill is learned. The levels below are those of the harness's [learning phases](design.md#52-learning-phases-per-skill): at L3 the learner writes the code alone and the AI reviews it afterwards; at L4 the AI writes the code and the learner reviews it.
 
 1. **Keep practising by hand until a skill reaches L3:** core OOD and C# (classes and state, encapsulation, inheritance and interfaces, the patterns). An exam without AI tests them, and they are the base for judging AI code. AI is also weakest on interfaces, abstract classes and inheritance ([Lepp & Kaimre, 2026](https://arxiv.org/abs/2608.16318)).
 2. **Add a new skill track for supervising AI:**

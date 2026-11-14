@@ -483,7 +483,7 @@ flowchart TD
 
 Deze delen van het ontwerp zijn vervangen. Ze stonden op de [ontwerppagina](design.md), in de sectie die boven elk deel staat.
 
-**Uit [§5.2 De autonomieladder](design.md#52-de-autonomieladder-per-vaardigheid):**
+**Uit [§5.2 De autonomieladder](design.md#52-leerfasen-per-vaardigheid) (nu: leerfasen):**
 
 ??? note "Eerdere versie (7–9 november 2026)"
 

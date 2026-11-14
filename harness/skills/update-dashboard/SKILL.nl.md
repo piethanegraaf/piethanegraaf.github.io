@@ -18,7 +18,8 @@ De shell kan bij elk commando in een andere map beginnen (in een oefensessie: de
    - **In de repo** (dit project heeft `harness/export.mjs`): de repo is deze checkout, en de oefenmap is het argument (bijvoorbeeld `../ood`). Niet gegeven? Vraag erom.
 2. **Rondkijken**, zonder de hoofdcheckout van de repo te wijzigen:
    - `git -C "<repo>" fetch origin` en `git -C "<repo>" worktree list`.
-   - Staat er nog een dashboard-pull-request open? `cd "<repo>" && gh pr list --state open --json number,url,headRefName,files` en zoek die waarvan de bestanden `site-src/dashboard/data/progress.json` bevatten.
+   - **Waar de pull request heen gaat:** `git -C "<repo>" remote get-url origin` geeft `<eigenaar>/<naam>` (noem het `<origin-repo>`). Geef dat aan elk `gh`-commando mee met `--repo <origin-repo>`. In een fork kiest `gh` anders de oorspronkelijke repo, en dan gaat de pull request naar de repository van iemand anders. Staat `origin` niet op GitHub, of mag je er niet naar pushen? Zeg dat en stop.
+   - Staat er nog een dashboard-pull-request open? `cd "<repo>" && gh pr list --repo <origin-repo> --state open --json number,url,headRefName,files` en zoek die waarvan de bestanden `site-src/dashboard/data/progress.json` bevatten.
      - **Eén, op een branch `dashboard-*`:** ga daarop verder (stap 3a). Twee dashboard-pull-requests zouden botsen op `progress.json`, en de vertalingen in de open pull request staan nog niet op `main`.
      - **Meer dan één, of één op een andere branch:** vraag de gebruiker welke je gebruikt, of dat je stopt.
      - **Geen:** een nieuwe branch (stap 3b).
@@ -45,7 +46,7 @@ De shell kan bij elk commando in een andere map beginnen (in een oefensessie: de
    - Commit, bijvoorbeeld "Export the progress of the practice session of 11 November", met een korte body (nieuwe taken, niveauwijzigingen, dagboeksessies, aantal vertalingen) en de attributieregels die je sessie vraagt.
    - `LEERHARNAS_PRIVATE=<oefenmap>/.learning/private.json node harness/security-check.mjs --range origin/main..HEAD`. Bij BLOKKEER of TWIJFEL: stop en laat het zien; push niet.
    - `git push -u origin <branch>`. Weigert een hook de push? Laat het zien en stop; gebruik nooit `--no-verify`.
-   - **Nieuwe branch:** `gh pr create --base main --head <branch>`, met een titel zoals de commit, en een body met wat er veranderde, de controles die je draaide en de vertalingen om naar te kijken. **Open pull request:** zeg dat hij een nieuwe commit kreeg, met de URL.
+   - **Nieuwe branch:** `gh pr create --repo <origin-repo> --base main --head <branch>`, met een titel zoals de commit, en een body met wat er veranderde, de controles die je draaide en de vertalingen om naar te kijken. **Open pull request:** zeg dat hij een nieuwe commit kreeg, met de URL.
    - `git -C "<repo>" worktree remove <pad>`. Weigert git (er zijn nog wijzigingen)? Laat ze zien en vraag het; forceer niets. De branch blijft op GitHub staan.
    - Geef de gebruiker de URL van de pull request. Merge hem nooit.
 

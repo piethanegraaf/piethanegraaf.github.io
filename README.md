@@ -14,7 +14,7 @@ A learning harness for [Claude Code](https://docs.claude.com/en/docs/claude-code
 
 ## What it does
 
-- **Levels per skill** (L0 demonstrate → L4 automated). At L1–L3 a hook blocks the AI from writing, building or testing your code.
+- **Levels per skill** (L0 demonstrate → L4 automated). At L1–L3 a hook blocks the AI from writing, deleting, building or testing your code.
 - **A hint ladder**: a question, then where to look, then a sketch. The next rung only after a visible attempt.
 - **Tasks count only after your own explanation**, checked by Claude and by a deterministic check.
 - **Explanations right away**: a task you do not explain before the next exercise lapses (skipped).

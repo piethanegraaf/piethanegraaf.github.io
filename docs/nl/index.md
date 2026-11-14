@@ -82,7 +82,7 @@ Junior developers lopen in dezelfde val: de agent krijgt het werk af, maar de va
 
 ## Het idee: eerst opbouwen, dan uitbesteden, en onderhouden
 
-1. **Bouw een vaardigheid eerst zelf op.** Bij elke vaardigheid hoort een niveau van L0 (*voordoen*) tot L4 (*geautomatiseerd*). Op L1–L3 blokkeert een hook dat de AI jouw code schrijft, bouwt of test. Hulp komt in kleine treden: eerst een vraag, dan een vindplaats, dan een schets, telkens pas na een zichtbare poging van jou. Een taak telt pas als je in eigen woorden uitlegt *waarom* het werkt.
+1. **Bouw een vaardigheid eerst zelf op.** Bij elke vaardigheid hoort een niveau van L0 (*voordoen*) tot L4 (*geautomatiseerd*). Op L1–L3 blokkeert een hook dat de AI jouw code schrijft, verwijdert, bouwt of test; op L1 mag de AI alleen een skelet met gaten voor jou schrijven. Hulp komt in vijf treden: eerst een vraag, dan een vindplaats, dan een schets, dan een klein voorbeeld over een ander onderwerp, en pas na jouw bevestiging een uitgewerkte oplossing (dan telt de taak als niet gelukt). Elke volgende trede komt pas na een zichtbare poging van jou. In beoordeeld werk stopt de ladder bij trede 4. Een taak telt pas als je in eigen woorden uitlegt *waarom* het werkt.
 2. **Besteed het daarna uit.** Staat een vaardigheid op L4, dan mag de AI het meteen doen, en houd jij toezicht. Je eigen tijd gaat naar wat je nog leert.
 3. **Onderhoud het af en toe.** Met groeiende tussenpozen doe je een L4-vaardigheid de eerstvolgende keer dat die in je werk langskomt weer zelf. Gaat dat mis, dan zakt de vaardigheid een niveau.
 
@@ -99,7 +99,7 @@ Elk onderdeel volgt een principe met empirische steun uit de leerwetenschap en u
 
 ### Is oefenen met Claude Code spieken?
 
-Of je AI mag gebruiken, bepaalt je vak, niet de harnas. De harnas zorgt dat de AI het oefenen niet van je overneemt: op L1–L3 blokkeert een hook dat de AI je code schrijft, bouwt of test, en elke uitzondering die je toestaat wordt gelogd. Kijk in de AI-regels van je vak. Voor beoordeeld werk, zoals een eindopdracht, kun je de repo daarvan instellen als [beoordeeld werk](how-it-works.md#beoordeeld-werk): dan schrijft Claude daar geen inhoud (alleen vaste tooling, zoals `dotnet new` of het officiële arc42-sjabloon), krijg je hints tot trede 4, en komt elk antwoord in een AI-logboek voor je verantwoording.
+Of je AI mag gebruiken, bepaalt je vak, niet de harnas. De harnas zorgt dat de AI het oefenen niet van je overneemt: op L1–L3 blokkeert een hook dat de AI je code schrijft, verwijdert, bouwt of test, en elke uitzondering die je toestaat wordt gelogd. Kijk in de AI-regels van je vak. Voor beoordeeld werk, zoals een eindopdracht, kun je de repo daarvan instellen als [beoordeeld werk](how-it-works.md#beoordeeld-werk): dan schrijft Claude daar geen inhoud (alleen vaste tooling, zoals `dotnet new` of het officiële arc42-sjabloon), krijg je hints tot trede 4 (geen uitgewerkte oplossing), en komt elk antwoord in een AI-logboek voor je verantwoording. De harnas herkent beoordeeld werk niet vanzelf: je stelt het één keer zelf in met `setting graded add`.
 
 ### Kan ik voorkomen dat Claude Code mijn code schrijft?
 

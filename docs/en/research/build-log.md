@@ -480,7 +480,7 @@ flowchart TD
 
 These parts of the design were replaced. They used to sit on the [design page](design.md), in the section named above each one.
 
-**From [§5.2 The Autonomy Ladder](design.md#52-the-autonomy-ladder-per-skill):**
+**From [§5.2 The Autonomy Ladder](design.md#52-learning-phases-per-skill) (now: learning phases):**
 
 ??? note "Earlier version (7–9 November 2026)"
 

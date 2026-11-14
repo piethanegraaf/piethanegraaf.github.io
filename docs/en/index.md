@@ -82,7 +82,7 @@ Junior developers face the same trap: the agent gets the work done, but the skil
 
 ## The idea: build first, then delegate, and maintain
 
-1. **Build a skill yourself first.** Every skill has a level from L0 (*demonstrate*) to L4 (*automated*). At L1–L3 a hook blocks the AI from writing, building or testing your code. Help comes in small rungs: first a question, then where to look, then a sketch, each only after a visible attempt by you. A task only counts once you explain in your own words *why* it works.
+1. **Build a skill yourself first.** Every skill has a level from L0 (*demonstrate*) to L4 (*automated*). At L1–L3 a hook blocks the AI from writing, deleting, building or testing your code; at L1 it may only write a skeleton with gaps for you. Help comes in five rungs: first a question, then where to look, then a sketch, then a small example on another topic, and only if you confirm, a worked solution (the task then counts as not solved). Each next rung comes only after a visible attempt by you. In graded work the ladder stops at rung 4. A task only counts once you explain in your own words *why* it works.
 2. **Then delegate it.** Once a skill is at L4, the AI may do it straight away, and you supervise. Your own time goes to what you are still learning.
 3. **Maintain it now and then.** At growing intervals, the next time an L4 skill comes by in your work, you do that part yourself. If that goes wrong, the skill goes down a level.
 
@@ -99,7 +99,7 @@ Each part follows a principle with empirical support from learning science and f
 
 ### Is using Claude Code for practice cheating?
 
-Whether you may use AI is up to your course, not to the harness. The harness makes sure the AI does not do the practice for you: at L1–L3 a hook blocks it from writing, building or testing your code, and every exception you allow is logged. Check your course's AI policy. For graded work, such as a final assignment, you can name its repo as [graded work](how-it-works.md#graded-work): then Claude writes no content there (only fixed tooling, such as `dotnet new` or the official arc42 template), gives hints up to rung 4, and every answer goes into an AI-use log for your statement of AI use.
+Whether you may use AI is up to your course, not to the harness. The harness makes sure the AI does not do the practice for you: at L1–L3 a hook blocks it from writing, deleting, building or testing your code, and every exception you allow is logged. Check your course's AI policy. For graded work, such as a final assignment, you can name its repo as [graded work](how-it-works.md#graded-work): then Claude writes no content there (only fixed tooling, such as `dotnet new` or the official arc42 template), gives hints up to rung 4 (no worked solution), and every answer goes into an AI-use log for your statement of AI use. The harness does not recognise graded work by itself: you name it once with `setting graded add`.
 
 ### Can I stop Claude Code from writing my code?
 

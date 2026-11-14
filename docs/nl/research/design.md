@@ -114,7 +114,7 @@ flowchart LR
 
 In het voorstel staan vijf deterministische hooks rond de Claude-agent, en staan het vaardighedenregister, het dagboek en de sessietoestand van de lerende in een lokale map `.learning/`. CLAUDE.md, de output style en de skills bepalen het didactische gedrag van de agent, maar alleen de hooks dwingen regels af.
 
-**Zoals gebouwd:** het diagram hieronder toont vier hooks, twee commando's die alleen de lerende draait, drie skills en één agent; de tabel in §5.4 voegt twee kleinere hooks toe. Het voorstel had een vijfde hook (PostToolUse), een vaardighedenkaart in YAML en meer skills. Ik verving de vijfde hook door `check.mjs`, dat de lerende zelf draait, en de kaart door `skills.json`.
+**Zoals gebouwd:** de installer zet vijf hooks in het project. Het diagram hieronder toont de vier die een sessie sturen, twee commando's die alleen de lerende draait, drie skills en één agent. De tabel in §5.4 voegt de vijfde toe (`session-end`, die alleen aantekeningen maakt) en de optionele poort op gebruikersniveau voor beoordeeld werk (`graded-gate.mjs`). Het voorstel had een vijfde hook (PostToolUse), een vaardighedenkaart in YAML en meer skills. Ik verving de vijfde hook door `check.mjs`, dat de lerende zelf draait, en de kaart door `skills.json`.
 
 ```mermaid
 flowchart LR
@@ -165,7 +165,9 @@ Zoals gebouwd zijn de hooks deterministisch. De guard blokkeert code op L1–L3,
 - **Didactisch gedrag hoort in skills, CLAUDE.md en de output style.** Het gaat dan om socratische vragen, uitleg en de toon van de feedback.
 - **De harnas bewaart de toestand in gewone bestanden** die de lerende kan lezen en bewerken (JSON/Markdown). Zo blijft het systeem transparant, en transparantie ondersteunt de autonomie van de lerende (P10).
 
-### 5.2 De autonomieladder (per vaardigheid)
+<a id="52-de-autonomieladder-per-vaardigheid"></a>
+
+### 5.2 Leerfasen (per vaardigheid)
 
 **Label:** Sterk bewijs. Hulp die afneemt naarmate de expertise per vaardigheid groeit, is goed onderbouwd (P2); het aantal niveaus, de plaatsing en de drempels zijn pragmatische keuzes, hieronder aangegeven.
 
@@ -179,7 +181,7 @@ Ik gaf elke vaardigheid een eigen niveau. De vijf niveaus volgen cognitive appre
 | **L3** | *Zelfstandig* | De lerende | Beoordeelt **na** de poging van de lerende: codereview, ontwerpkritiek, ideeën voor tests | Het alleen oplossen en daarna de gemaakte keuzes verdedigen | Doelbewust oefenen (deliberate practice), feedback |
 | **L4** | *Geautomatiseerd* | AI | Schrijft de code. De lerende **controleert** de diff en voorspelt bij steekproeven de aanpak | Toezicht houden, plus af en toe een ophaaloefening om het bij te houden | Autonome fase, automatiseringsniveaus, ironieën van automatisering |
 
-**Zoals gebouwd:** een nieuwe vaardigheid begint met een poging van de lerende, en de eerste taak plaatst haar op een niveau. Omlaag gaat automatisch als het bewijs dat laat zien. Omhoog blijft de beslissing van de lerende. Herhalingen om een vaardigheid bij te houden bestaan alleen op L4.
+**Zoals gebouwd:** een nieuwe vaardigheid begint met een poging van de lerende, en de hoogste hinttrede van de eerste taak bepaalt haar niveau. Daarna kan een vaardigheid automatisch omlaag als `autoDemote` aan staat (standaard staat het uit), maar omhoog blijft altijd de beslissing van de lerende, en herhalingen om haar bij te houden bestaan alleen op L4.
 
 ```mermaid
 stateDiagram-v2
@@ -209,8 +211,6 @@ stateDiagram-v2
 
     L4_Automated --> [*] : skill retired - no longer relevant
 ```
-
-In de autonomieladder zoals gebouwd bepaalt de hoogste hinttrede van de eerste taak het niveau van een nieuwe vaardigheid. Daarna kan een vaardigheid automatisch omlaag, maar omhoog blijft altijd de beslissing van de lerende, en herhalingen om haar bij te houden bestaan alleen op L4.
 
 - **Plaatsing.** Een vaardigheid onder L4 zonder geschiedenis en zonder eigen uitgelegde taken heeft een open plaatsing. Tot dan telt ze als L2, voor de hintladder en voor de guard. Een nieuwe vaardigheid begint dus niet op L0: L0 en L1 zijn vormen van hulp die pas *na* een poging komen (P1). De hoogste trede van de eerste taak bepaalt het niveau (§5.3), bij de goedgekeurde uitleg van die taak; hulp over een ander concept telt niet mee. *Pragmatische keuze:* één taak is een onnauwkeurige meting, dus vangt automatisch omlaag een te hoge plaatsing op, en corrigeert de lerende een te lage plaatsing met `set`.
 - **Drempels om door te stromen.** De criteria in het diagram (2 keer een juiste zelfuitleg, 3 ingevulde gaten, ongeveer 85% gelukt over 5 of meer taken, en 3 keer zonder hint op minstens 2 dagen, waarvan één keer de transfertaak) zijn een *pragmatische keuze*. De 85% is een vuistregel (P4), geen bevinding; de transfertaak volgt P6.
@@ -475,7 +475,7 @@ flowchart LR
         F1["SessionStart:<br/>'What's your goal today?<br/>Which skill? How confident (1–5)?'"]
     end
     subgraph Performance
-        P1[Work on task at<br/>current ladder level]
+        P1[Work on task in<br/>current learning phase]
         P2[Hints / attempts / tests<br/>auto-logged as evidence]
     end
     subgraph Self-reflection

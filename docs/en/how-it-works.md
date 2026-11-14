@@ -1,16 +1,16 @@
 ---
 title: "How it works: skill levels L0–L4 and step-by-step hints"
-description: "Five skill levels from L0 (demonstrate) to L4 (automated). At L1–L3 a hook blocks AI-written code; at L2 help comes as a question, a pointer, then a sketch."
+description: "Five skill levels from L0 (demonstrate) to L4 (automated). At L1–L3 a hook blocks AI-written code; help comes in five rungs, from a question to a worked solution."
 ---
 # How it works
 
-The harness consists of four Claude Code hooks, a skill record, and a few commands that only you run.
+The harness consists of five Claude Code hooks (at the session start, at every prompt, before every tool, when Claude stops and at the session end; see the [reference](reference.md#hooks)), a skill record, and a few commands that only you run.
 
 ```mermaid
 flowchart LR
   P[Your prompt] --> G1[prompt-gate<br/>skill, rung, open explanations]
   G1 --> C[Claude]
-  C -->|wants to write or test code| G2{guard}
+  C -->|wants to write, delete, build or test code| G2{guard}
   G2 -->|L1-L3: blocked| C
   G2 -->|L0, L4 or not code| T[tool]
   C --> S[reflect-gate<br/>markers, diary]
@@ -24,17 +24,23 @@ flowchart LR
   Y -.->|yes, promote| G1
 ```
 
-In the harness, every prompt passes the prompt-gate, and the guard blocks Claude from writing or testing code at levels L1–L3. A level never goes up by itself: you confirm the reflect-gate's proposal with "yes, promote", or set it yourself.
+In the harness, every prompt passes the prompt-gate, and the guard blocks Claude from writing, deleting, building or testing code at levels L1–L3 (at L1 it only lets through a skeleton with `TODO(human)` gaps). A level never goes up by itself: you confirm the reflect-gate's proposal with "yes, promote", or set it yourself.
 
-## Levels per skill
+<a id="levels-per-skill"></a>
+
+## Learning phases per skill
+
+Every skill is in one of five **learning phases**, L0 to L4 (its level). The phase sets what Claude may do for that skill, and it changes over days and weeks. How much help you get within one task is something else: the [hint ladder](#the-hint-ladder-l2). See [how the two work together](#learning-phases-and-the-hint-ladder).
 
 | Level | Claude | You |
 |---|---|---|
 | **L0 Demonstrate** | makes a worked example on a different topic; for a new skill only after your attempt | explain it and predict the output |
 | **L1 Complete** | writes a skeleton, the core stays `TODO(human)`; for a new skill only after your attempt | fill the gaps, build and test |
-| **L2 Guided** | gives no solution code, only hints from the ladder | write everything yourself |
+| **L2 Guided** | gives no solution code, only hints from the ladder; rung 5, a worked solution, only if you confirm | write everything yourself |
 | **L3 Independent** | nothing up front; a review only after your attempt | make it and defend it |
 | **L4 Automated** | may do it directly | supervise; when the review is due, you do it yourself |
+
+**How the table and the guard fit together.** At L1 the guard does not block the skeleton: it lets a write through when it keeps or adds `TODO(human)` gaps, and refuses one that fills or removes them. At L2 the worked solution of rung 5 is an exception you ask for yourself. Claude shows it in the chat, the guard still keeps Claude out of your files, so you type it in yourself, and the task counts as not solved.
 
 A skill can have **microskills**: sub-patterns with their own level. Filtering lists can already be at L3 while chaining void methods is still at L2.
 
@@ -48,13 +54,42 @@ A skill can have **microskills**: sub-patterns with their own level. Filtering l
 4. A small example of at most 5 lines, on a different topic.
 5. A worked solution, only after confirmation. The task then counts as **not solved**.
 
+In [graded work](#graded-work) the ladder stops at rung 4: a worked solution is not available there.
+
 The first hint may come right away. The next rung only comes after a **visible attempt**: changed code, an error or test outcome, or a hypothesis. Or after 12 minutes of being stuck. These are minutes of **active time**: a break of more than 20 minutes (`idleMinutes`) does not count. So after dinner you do not get a higher rung by itself.
 
 For a **new skill** time does not count. A rung only goes up when you say you are stuck, share the same error or test outcome twice, or do not know the concept. If you ask for more explanation after an attempt of your own, Claude may go straight to a higher rung, and that rung is logged honestly.
 
+## Learning phases and the hint ladder
+
+They are two different scales, and they measure different things:
+
+| | Learning phase (L0–L4) | Hint ladder (rung 0–5) |
+|---|---|---|
+| **What it says** | What Claude may do for a skill | How much help you needed in one task |
+| **How long it lasts** | Days to weeks, per skill | One task: the next task starts at rung 0 again |
+| **Who changes it** | Up: only you, after a proposal of the harness. Down: the harness, when `autoDemote` is on | It goes up within the task, after a visible attempt or after 12 minutes of active time stuck |
+| **Where you see it** | The session start, `status`, the learning phases on the dashboard | The line `[harness] … help given: rung N`, and the colour of the dots on the dashboard |
+
+They work together in a loop: **the phase decides how help comes, and the rungs you needed decide the next phase.**
+
+1. **The phase sets the role of the ladder.**
+    - At **L2** the ladder *is* the help: Claude starts with a question and unlocks the next rung only after an attempt.
+    - At **L0** and **L1** help comes up front, as a worked example or a skeleton. At **L3** there is nothing up front, only a review after your attempt. At **L4** Claude may do it. In those phases no rung unlocks step by step, but all real help is still logged as a rung. At L3, for example, an explanation of a concept counts as rung 2 or higher.
+    - A **new skill** has no phase yet: you try it first with the L2 ladder.
+    - In **[graded work](#graded-work)** the ladder holds for every skill, whatever its phase, up to rung 4.
+2. **The rungs decide the phase.** Each task is logged with the highest rung you needed. That is the evidence:
+    - The first task of a new skill sets the starting phase: rung 0 → L3, 1–2 → L2, 3–4 → L1, 5 → L0.
+    - **Solved** means at most rung 2. **Independent** means rung 0.
+    - Up: L1 → L2 after three tasks at rung 0–1. L2 → L3 after about 85% solved over at least 5 tasks, half of them at rung 0–1. L3 → L4 after rung 0 three times on at least 2 days, one of them a transfer task. Only L0 → L1 does not use rungs: it needs two worked examples that you explained and predicted correctly.
+    - Down (with `autoDemote`): under 70% solved over at least 4 explained tasks, or the last 2 not solved.
+    - At L4 the rung of the next task in your own work decides the review: rung 0 is a pass, 1–2 is shaky, 3–5 is a fail.
+
+**An example.** Inheritance is at L2. In your first task you need a question and a pointer: rung 2, solved with help. The next four tasks take rung 1, 0, 1 and 0. That is 5 of 5 solved, 4 of them at rung 0–1, so the harness proposes L3 and you confirm. At L3 you get no hints up front. Do you still need a concept explained? Then that task counts as rung 2: solved, but not independent, so it does not count towards L4.
+
 ## The guard
 
-At L1–L3, `guard.mjs` blocks Claude from writing, deleting, building or testing code. Which files are code and which commands build is set in the [settings](configuration.md). The guard also protects:
+At L1–L3, `guard.mjs` blocks Claude from writing, deleting, building or testing code. At L1 it lets a skeleton through: a write that keeps or adds `TODO(human)` gaps, not one that fills them. Which files are code and which commands build is set in the [settings](configuration.md). The guard also protects:
 
 - the record and the state in `.learning/`, also when the record is in another folder (`--learning-dir`);
 - the paths of [graded work](#graded-work) and its AI-use log, at every level, without override, also outside the project;
@@ -71,7 +106,7 @@ If you still want Claude to do something, you set an override yourself: `! node 
 
 ## Graded work
 
-Some work is graded, for example the final assignment of a course. Your institution decides how much AI may help there. At CHE, for example, the exam rules (OER art. 7.11) allow AI level 1: AI as an aid, "for example to generate ideas or bring structure", with a statement of how you used it. Code or text made by AI in graded work counts as fraud. You name the paths of that work yourself, for example the folder of its repo:
+Some work is graded, for example the final assignment of a course. Your institution decides how much AI may help there. At CHE, for example, the exam rules (OER art. 7.11) allow AI level 1: AI as an aid, "for example to generate ideas or bring structure", with a statement of how you used it. Code or text made by AI in graded work counts as fraud. The harness does not recognise graded work by itself: you name its paths yourself, once, for example the folder of its repo:
 
 ```text
 ! node .claude/hooks/skill.mjs setting graded add "C:/Users/<you>/source/repos/<assignment>"
@@ -171,7 +206,7 @@ When you stop, `/diary` writes down the facts of the session, and you write the 
 
 Closed a session without a diary entry, for example by closing the window? Then the next start offers a short catch-up diary for that session, once.
 
-Above the three reflection questions there is a warning: *"Note: your answers appear word for word, with a translation, on the public dashboard."* There is no private option. Whatever must not go online goes into `.learning/private.json`.
+With a dashboard (`dashboardRepo` set to the path of your clone), there is a warning above the three reflection questions: *"Note: your answers appear word for word, with a translation, on the public dashboard."* There is no private option then. Whatever must not go online goes into `.learning/private.json`. Without a dashboard (`dashboardRepo` not set, or `off`) the line says instead that your answers stay in your folder: nothing goes online until you set up a dashboard and publish it yourself.
 
 Then Claude asks: **Update the dashboard now?** On yes, Claude updates the dashboard in the same session, up to a pull request, which you merge yourself. On later nothing happens. See [After the diary](progress-dashboard.md#after-the-diary), also when you do not use the dashboard.
 

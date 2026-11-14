@@ -8,7 +8,7 @@ Laat je een AI-agent al je werk doen, dan komt het werk af, maar sla je de oefen
 
 ## De afweging
 
-1. **Bouw zelf op wat je leert.** Bij bestanden van een vaardigheid die je leert (niveau L1–L3) voorkomt een hook dat Claude je code schrijft, bouwt of test. Je krijgt hints: eerst een vraag, dan waar het staat, dan een schets.
+1. **Bouw zelf op wat je leert.** Bij bestanden van een vaardigheid die je leert (niveau L1–L3) voorkomt een hook dat Claude je code schrijft, verwijdert, bouwt of test. Je krijgt hints, in vijf treden: eerst een vraag, dan waar het staat, dan een schets, dan een klein voorbeeld over een ander onderwerp, en pas na jouw bevestiging een uitgewerkte oplossing (dan telt de taak als niet gelukt).
 2. **Besteed de rest uit.** Code die bij geen vaardigheid hoort, staat op L4: Claude mag die meteen schrijven, en jij superviseert.
 3. **Onderhoud wat je beheerst.** Met groeiende tussenpozen doe je een L4-vaardigheid weer zelf, de eerstvolgende keer dat die in je werk langskomt.
 

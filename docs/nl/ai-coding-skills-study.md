@@ -42,9 +42,9 @@ De werkwijzen met de hoge scores kiezen vraagt discipline, zeker vlak voor een d
 
 | In het onderzoek | In de leerharnas |
 |---|---|
-| Vragen over concepten stellen scoorde hoog | Zit je vast, dan is de eerste hint een vraag, dan waar je moet kijken, dan een schets: concepten vóór code |
+| Vragen over concepten stellen scoorde hoog | Zit je vast, dan is de eerste hint een vraag, dan waar je moet kijken, dan een schets, en pas daarna een klein voorbeeld: concepten vóór code |
 | Code laten maken en daarna je begrip checken scoorde hoog | Een taak telt pas nadat je hem in je eigen woorden uitlegt, beoordeeld door Claude en gecontroleerd door een hook |
-| De code uitbesteden scoorde laag | Op niveau L1–L3 houdt een hook Claude tegen om je code te schrijven, te bouwen of te testen |
+| De code uitbesteden scoorde laag | Op niveau L1–L3 houdt een hook Claude tegen om je code te schrijven, te verwijderen, te bouwen of te testen |
 | Debuggen had het grootste verschil | Debuggen is een eigen vaardigheid in de kaart voor junior developers: hints, niet de oplossing |
 | AI-gebruikers waren niet sneller tijdens het leren | De kosten van met de hand oefenen zijn misschien het kleinst zolang een vaardigheid nieuw is; je besteedt hem uit zodra je hem beheerst (L4) |
 

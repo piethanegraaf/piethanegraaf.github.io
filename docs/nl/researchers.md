@@ -20,7 +20,7 @@ Deze pagina nodigt onderzoekers uit om de harnas te toetsen in een gerandomiseer
 
 ## De afweging die getest moet worden
 
-1. **Opbouwen:** op L0–L3 schrijft de AI de code van de lerende niet. Hulp komt in kleine treden, en een taak telt pas na een uitleg in eigen woorden.
+1. **Opbouwen:** op L1–L3 houdt een hook de AI tegen om de code van de lerende te schrijven (op L0 doet de AI alleen iets voor op een ander onderwerp, na een poging). Hulp komt in kleine treden, en een taak telt pas na een uitleg in eigen woorden.
 2. **Uitbesteden:** op L4 (beheerst) doet de AI het werk meteen.
 3. **Onderhouden:** met Fibonacci-intervallen doet de lerende een L4-vaardigheid de eerstvolgende keer dat die in echt werk langskomt zelf, zonder AI. Gaat dat mis, dan zakt de vaardigheid.
 
