@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "generatedAt": "2026-11-14",
-  "exportedAt": "2026-11-14T13:16:34.537Z",
+  "exportedAt": "2026-11-14T13:51:23.824Z",
   "course": null,
   "language": "nl",
   "examDate": "2027-01-20",
@@ -2553,7 +2553,7 @@
       "sessions": 1,
       "hints": 1,
       "holds": 0,
-      "denials": 1,
+      "denials": 5,
       "overridesUsed": 0,
       "reviewHelp": 0,
       "helpDropped": 0
@@ -2737,7 +2737,7 @@
       "skills": "uml.klassendiagram (L3)",
       "plan": "klassendiagrammen van de eindopdracht verder uitwerken (overerving rond Device), en daarna misschien de eerste code",
       "confidenceBefore": "4 (de eerdere \"1\" was bedoeld als keuze voor het inhaaldagboek, niet als zelfvertrouwen)",
-      "wentWell": "de student haalde zelf het teken (wie mag aanroepen) en het sterretje (waar de logica staat) uit elkaar. Daarna redeneerde de student per methode: de beheerder heeft `ChangeAvailabilityStatus` van buiten nodig, en `EnfoceUseLimit` verschilt per apparaat alleen in een waarde, niet in de werking.",
+      "wentWell": "gelukt met hulp tot trede 1 (Socratische vragen), dus niet zelfstandig: met die vragen haalde de student het teken (wie mag aanroepen) en het sterretje (waar de logica staat) uit elkaar. Daarna redeneerde de student per methode: de beheerder heeft `ChangeAvailabilityStatus` van buiten nodig, en `EnfoceUseLimit` verschilt per apparaat alleen in een waarde, niet in de werking.",
       "signals": "uml.klassendiagram L3 → L4: zonder hint 2/3 · dagen 1/2 · transfertaak ○ (`/mastery-check uml.klassendiagram`). Verder ongewijzigd: aggregatie-compositie, encapsulatie, klassen-properties en associaties wachten op hun transfertaak.",
       "reflection": {
         "learned": "het verschil tussen # en * in mermaid",
@@ -2997,7 +2997,7 @@
       "uml.klassendiagram (L3)": "uml.klassendiagram (L3)",
       "klassendiagrammen van de eindopdracht verder uitwerken (overerving rond Device), en daarna misschien de eerste code": "work out the class diagrams of the final project further (inheritance around Device), and then maybe the first code",
       "4 (de eerdere \"1\" was bedoeld als keuze voor het inhaaldagboek, niet als zelfvertrouwen)": "4 (the earlier \"1\" was meant as choosing the catch-up diary, not as confidence)",
-      "de student haalde zelf het teken (wie mag aanroepen) en het sterretje (waar de logica staat) uit elkaar. Daarna redeneerde de student per methode: de beheerder heeft `ChangeAvailabilityStatus` van buiten nodig, en `EnfoceUseLimit` verschilt per apparaat alleen in een waarde, niet in de werking.": "the student separated the sign (who may call it) and the asterisk (where the logic lives) on their own. Then the student reasoned per method: the administrator needs `ChangeAvailabilityStatus` from outside, and `EnfoceUseLimit` differs per device only in a value, not in how it works.",
+      "gelukt met hulp tot trede 1 (Socratische vragen), dus niet zelfstandig: met die vragen haalde de student het teken (wie mag aanroepen) en het sterretje (waar de logica staat) uit elkaar. Daarna redeneerde de student per methode: de beheerder heeft `ChangeAvailabilityStatus` van buiten nodig, en `EnfoceUseLimit` verschilt per apparaat alleen in een waarde, niet in de werking.": "solved with help up to rung 1 (Socratic questions), so not independently: with those questions the student separated the sign (who may call it) and the asterisk (where the logic lives). Then the student reasoned per method: the administrator needs `ChangeAvailabilityStatus` from outside, and `EnfoceUseLimit` differs per device only in a value, not in how it works.",
       "uml.klassendiagram L3 → L4: zonder hint 2/3 · dagen 1/2 · transfertaak ○ (`/mastery-check uml.klassendiagram`). Verder ongewijzigd: aggregatie-compositie, encapsulatie, klassen-properties en associaties wachten op hun transfertaak.": "uml.klassendiagram L3 → L4: without hint 2/3 · days 1/2 · transfer task ○ (`/mastery-check uml.klassendiagram`). Otherwise unchanged: aggregatie-compositie, encapsulatie, klassen-properties and associaties are waiting for their transfer task.",
       "vooraf 4 → lukte met trede ≤1, maar kostte veel vragen over zichtbaarheid → klopt ongeveer": "beforehand 4 → succeeded with rung ≤1, but took many questions about visibility → roughly right",
       "het verschil tussen # en * in mermaid": "the difference between # and * in mermaid",
