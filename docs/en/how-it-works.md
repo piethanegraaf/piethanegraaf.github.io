@@ -1,16 +1,16 @@
 ---
 title: "How it works: skill levels L0–L4 and step-by-step hints"
-description: "Five skill levels from L0 (demonstrate) to L4 (automated). At L1–L3 a hook blocks AI-written code; at L2 help comes as a question, a pointer, then a sketch."
+description: "Five skill levels from L0 (demonstrate) to L4 (automated). At L1–L3 a hook blocks AI-written code; help comes in five rungs, from a question to a worked solution."
 ---
 # How it works
 
-The harness consists of four Claude Code hooks, a skill record, and a few commands that only you run.
+The harness consists of five Claude Code hooks (at the session start, at every prompt, before every tool, when Claude stops and at the session end; see the [reference](reference.md#hooks)), a skill record, and a few commands that only you run.
 
 ```mermaid
 flowchart LR
   P[Your prompt] --> G1[prompt-gate<br/>skill, rung, open explanations]
   G1 --> C[Claude]
-  C -->|wants to write or test code| G2{guard}
+  C -->|wants to write, delete, build or test code| G2{guard}
   G2 -->|L1-L3: blocked| C
   G2 -->|L0, L4 or not code| T[tool]
   C --> S[reflect-gate<br/>markers, diary]
@@ -24,7 +24,7 @@ flowchart LR
   Y -.->|yes, promote| G1
 ```
 
-In the harness, every prompt passes the prompt-gate, and the guard blocks Claude from writing or testing code at levels L1–L3. A level never goes up by itself: you confirm the reflect-gate's proposal with "yes, promote", or set it yourself.
+In the harness, every prompt passes the prompt-gate, and the guard blocks Claude from writing, deleting, building or testing code at levels L1–L3 (at L1 it only lets through a skeleton with `TODO(human)` gaps). A level never goes up by itself: you confirm the reflect-gate's proposal with "yes, promote", or set it yourself.
 
 ## Levels per skill
 
@@ -32,9 +32,11 @@ In the harness, every prompt passes the prompt-gate, and the guard blocks Claude
 |---|---|---|
 | **L0 Demonstrate** | makes a worked example on a different topic; for a new skill only after your attempt | explain it and predict the output |
 | **L1 Complete** | writes a skeleton, the core stays `TODO(human)`; for a new skill only after your attempt | fill the gaps, build and test |
-| **L2 Guided** | gives no solution code, only hints from the ladder | write everything yourself |
+| **L2 Guided** | gives no solution code, only hints from the ladder; rung 5, a worked solution, only if you confirm | write everything yourself |
 | **L3 Independent** | nothing up front; a review only after your attempt | make it and defend it |
 | **L4 Automated** | may do it directly | supervise; when the review is due, you do it yourself |
+
+**How the table and the guard fit together.** At L1 the guard does not block the skeleton: it lets a write through when it keeps or adds `TODO(human)` gaps, and refuses one that fills or removes them. At L2 the worked solution of rung 5 is an exception you ask for yourself. Claude shows it in the chat, the guard still keeps Claude out of your files, so you type it in yourself, and the task counts as not solved.
 
 A skill can have **microskills**: sub-patterns with their own level. Filtering lists can already be at L3 while chaining void methods is still at L2.
 
@@ -48,13 +50,15 @@ A skill can have **microskills**: sub-patterns with their own level. Filtering l
 4. A small example of at most 5 lines, on a different topic.
 5. A worked solution, only after confirmation. The task then counts as **not solved**.
 
+In [graded work](#graded-work) the ladder stops at rung 4: a worked solution is not available there.
+
 The first hint may come right away. The next rung only comes after a **visible attempt**: changed code, an error or test outcome, or a hypothesis. Or after 12 minutes of being stuck. These are minutes of **active time**: a break of more than 20 minutes (`idleMinutes`) does not count. So after dinner you do not get a higher rung by itself.
 
 For a **new skill** time does not count. A rung only goes up when you say you are stuck, share the same error or test outcome twice, or do not know the concept. If you ask for more explanation after an attempt of your own, Claude may go straight to a higher rung, and that rung is logged honestly.
 
 ## The guard
 
-At L1–L3, `guard.mjs` blocks Claude from writing, deleting, building or testing code. Which files are code and which commands build is set in the [settings](configuration.md). The guard also protects:
+At L1–L3, `guard.mjs` blocks Claude from writing, deleting, building or testing code. At L1 it lets a skeleton through: a write that keeps or adds `TODO(human)` gaps, not one that fills them. Which files are code and which commands build is set in the [settings](configuration.md). The guard also protects:
 
 - the record and the state in `.learning/`, also when the record is in another folder (`--learning-dir`);
 - the paths of [graded work](#graded-work) and its AI-use log, at every level, without override, also outside the project;
@@ -71,7 +75,7 @@ If you still want Claude to do something, you set an override yourself: `! node 
 
 ## Graded work
 
-Some work is graded, for example the final assignment of a course. Your institution decides how much AI may help there. At CHE, for example, the exam rules (OER art. 7.11) allow AI level 1: AI as an aid, "for example to generate ideas or bring structure", with a statement of how you used it. Code or text made by AI in graded work counts as fraud. You name the paths of that work yourself, for example the folder of its repo:
+Some work is graded, for example the final assignment of a course. Your institution decides how much AI may help there. At CHE, for example, the exam rules (OER art. 7.11) allow AI level 1: AI as an aid, "for example to generate ideas or bring structure", with a statement of how you used it. Code or text made by AI in graded work counts as fraud. The harness does not recognise graded work by itself: you name its paths yourself, once, for example the folder of its repo:
 
 ```text
 ! node .claude/hooks/skill.mjs setting graded add "C:/Users/<you>/source/repos/<assignment>"
@@ -171,7 +175,7 @@ When you stop, `/diary` writes down the facts of the session, and you write the 
 
 Closed a session without a diary entry, for example by closing the window? Then the next start offers a short catch-up diary for that session, once.
 
-Above the three reflection questions there is a warning: *"Note: your answers appear word for word, with a translation, on the public dashboard."* There is no private option. Whatever must not go online goes into `.learning/private.json`.
+With a dashboard (`dashboardRepo` set to the path of your clone), there is a warning above the three reflection questions: *"Note: your answers appear word for word, with a translation, on the public dashboard."* There is no private option then. Whatever must not go online goes into `.learning/private.json`. Without a dashboard (`dashboardRepo` not set, or `off`) the line says instead that your answers stay in your folder: nothing goes online until you set up a dashboard and publish it yourself.
 
 Then Claude asks: **Update the dashboard now?** On yes, Claude updates the dashboard in the same session, up to a pull request, which you merge yourself. On later nothing happens. See [After the diary](progress-dashboard.md#after-the-diary), also when you do not use the dashboard.
 

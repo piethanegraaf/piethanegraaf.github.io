@@ -33,7 +33,7 @@ Wat de installer aanmaakt:
 | `.claude/skills/update-dashboard/SKILL.md` | het dashboard bijwerken na `/diary` (`/update-dashboard`) | harnas |
 | `.claude/agents/demotie-analist.md` | de agent die alleen leest en beslist wat zakt (`autoDemote`) | harnas |
 | `.claude/leerharnas.md` | de regels voor Claude, plus de notities van de kaart | harnas |
-| `.claude/settings.json` | de vier hooks, met `$CLAUDE_PROJECT_DIR` (geen absolute paden) | samengevoegd met jouw instellingen |
+| `.claude/settings.json` | de vijf hooks, met `$CLAUDE_PROJECT_DIR` (geen absolute paden) | samengevoegd met jouw instellingen |
 | `.claude/leerharnas.json` | het manifest: kaart, taal, versie en een vingerafdruk van elk bestand van de harnas, voor `--update` | harnas |
 | `.claude/leerharnas.local.json` | alleen met `--learning-dir`: het pad van het register in een andere map; niet in git | harnas |
 | `.learning/skills.json`, `keywords.json` | je vaardighedenregister en trefwoorden, uit de kaart | **jij** (data) |
@@ -123,4 +123,4 @@ Zet de AI-hulp buiten Claude Code uit. Anders vult je IDE de code aan die je zel
 
 ## Verwijderen
 
-Verwijder `.claude/hooks/`, `.claude/skills/diary/`, `.claude/skills/mastery-check/`, `.claude/skills/update-dashboard/`, `.claude/agents/demotie-analist.md`, `.claude/leerharnas.md`, `.claude/leerharnas.json`, `.claude/leerharnas.local.json` (als die er is) en de vier hooks uit `.claude/settings.json`. Je data in `.learning/` en je oefeningen in `oefeningen/` blijven van jou.
+Verwijder `.claude/hooks/`, `.claude/skills/diary/`, `.claude/skills/mastery-check/`, `.claude/skills/update-dashboard/`, `.claude/agents/demotie-analist.md`, `.claude/leerharnas.md`, `.claude/leerharnas.json`, `.claude/leerharnas.local.json` (als die er is) en de vijf hooks van de harnas uit `.claude/settings.json` (`session-start`, `prompt-gate`, `guard`, `reflect-gate` en `session-end`; laat je eigen hooks staan). Heb je de poort voor beoordeeld werk geïnstalleerd? Haal die weg met `node harness/install.mjs <map> --user-guard --remove`. Je data in `.learning/` en je oefeningen in `oefeningen/` blijven van jou.

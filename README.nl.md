@@ -14,7 +14,7 @@ Een leerharnas voor [Claude Code](https://docs.claude.com/en/docs/claude-code/ov
 
 ## Wat het doet
 
-- **Niveaus per vaardigheid** (L0 voordoen → L4 geautomatiseerd). Op L1–L3 blokkeert een hook dat de AI jouw code schrijft, bouwt of test.
+- **Niveaus per vaardigheid** (L0 voordoen → L4 geautomatiseerd). Op L1–L3 blokkeert een hook dat de AI jouw code schrijft, verwijdert, bouwt of test.
 - **Een hintladder**: een vraag, dan een vindplaats, dan een schets. Een volgende trede pas na een zichtbare poging.
 - **Een taak telt pas na jouw eigen uitleg**, gecontroleerd door Claude en door een vaste check.
 - **Uitleg direct**: een taak die je niet uitlegt voor de volgende opdracht, vervalt (overgeslagen).

@@ -42,9 +42,9 @@ Choosing the high-scoring patterns takes discipline, especially near a deadline.
 
 | In the study | In the learning harness |
 |---|---|
-| Asking conceptual questions scored high | When you are stuck, the first hint is a question, then where to look, then a sketch: concepts before code |
+| Asking conceptual questions scored high | When you are stuck, the first hint is a question, then where to look, then a sketch, and only then a small example: concepts before code |
 | Generating code, then checking your understanding, scored high | A task only counts after you explain it in your own words, judged by Claude and checked by a hook |
-| Delegating the code scored low | At levels L1–L3 a hook stops Claude from writing, building or testing your code |
+| Delegating the code scored low | At levels L1–L3 a hook stops Claude from writing, deleting, building or testing your code |
 | Debugging had the largest gap | Debugging is a skill of its own in the map for junior developers: hints, not the fix |
 | AI users were not faster while learning | The cost of practising by hand may be smallest while a skill is new; you delegate it once you master it (L4) |
 

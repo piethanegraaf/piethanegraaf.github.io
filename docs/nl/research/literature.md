@@ -349,7 +349,7 @@ Hoe de leerharnas deze voorwaarden inbouwt in niveaus per vaardigheid, staat bij
 
 **Bewijs dat het mechanisme echt is.**
 
-- **Experiment.** In een gerandomiseerd experiment met 52 vooral junior engineers die een nieuwe library leerden, scoorde de AI-groep achteraf 50% tegenover 67% op een quiz. Wie het schrijven van code aan de AI overliet, scoorde onder de 40%; wie de AI conceptuele vragen stelde, 65% of meer. De AI-groep was niet significant sneller ([Shen & Tamkin, 2026](https://arxiv.org/abs/2601.20245); bewijsgraad B, korte termijn, leverancier).
+- **Experiment.** In een gerandomiseerd experiment met 52 vooral junior engineers die een nieuwe library leerden, scoorde de AI-groep achteraf 50% tegenover 67% op een quiz. Wie het schrijven van code aan de AI overliet, scoorde onder de 40%; wie de AI conceptuele vragen stelde, 65% of meer. De AI-groep was niet significant sneller ([Shen & Tamkin, 2026](https://arxiv.org/abs/2601.20245); bewijsgraad A voor het hoofdeffect en C voor de patronen, zoals in §2.8; korte termijn, leverancier).
 - **Interviews in softwareteams:**
     - Instapwerk wordt opgeslokt door de AI-workflows van seniors. Juniors verliezen de productieve worsteling waardoor expertise ontstaat, en seniors en juniors zien de situatie verschillend ([Yu & Moon, 2026](https://arxiv.org/abs/2607.17067); 14 interviews; bewijsgraad C).
     - Juniors schommelen "between over-reliance and cautious avoidance". Seniors sturen de AI met vaardigheden die ze opbouwden voordat er AI was. Wat juniors met AI mogen, wordt vooral bepaald door het beleid van hun organisatie ([Feng, Yun & Wang, 2026](https://doi.org/10.1145/3772318.3791642); 10 juniors en 10 seniors; bewijsgraad C).

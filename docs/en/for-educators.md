@@ -8,7 +8,7 @@ The learning harness lets students use Claude Code in a programming course witho
 
 ## What it enforces, and what it cannot
 
-- **No AI-written practice code.** At levels L1–L3 a hook blocks Claude from writing, building or testing the student's code. Help comes as a hint ladder: a question, then where to look, then a sketch.
+- **No AI-written practice code.** At levels L1–L3 a hook blocks Claude from writing, deleting, building or testing the student's code (at L1 it only lets through a skeleton with `TODO(human)` gaps). Help comes as a hint ladder of five rungs: a question, where to look, a sketch, a small example on another topic, and only after the student confirms, a worked solution, after which the task counts as not solved. In graded work (below) the ladder stops at rung 4.
 - **Explanations count, not green tests.** A task only counts after the student explains in their own words why it works.
 - **Exceptions are visible.** When a student allows Claude to write code for a while (an override), that is logged and shows up in the diary.
 - **It cannot prove that a student worked without AI.** Students can switch the hooks off, use another AI tool, or find a way around the rules. The harness works because the student chooses it. Use it for practice, and keep your assessments under your own conditions.
@@ -19,7 +19,7 @@ Does your institution allow AI as an aid in graded work, but not AI-written code
 
 - **Claude writes no content**, at any level and without an override: no code, text or diagrams, no builds or tests, and no commits. Reading is allowed. Fixed tooling is allowed and logged: a generator such as `dotnet new`, the git set-up (`git init`, `git remote add`), new folders, and the official arc42 template unchanged. There the generator or the template makes the content, not the AI.
 - **Closed from other folders**, when the student installs the user-level gate: a question about the assignment asked in another folder is blocked, and Claude cannot read the assignment from there. That keeps help on the assignment inside the session where the log is written.
-- **Help stops at rung 4**: a question, where to look, a sketch, or an example of at most 5 lines on another topic. A worked solution is never available there. At AI level 0 Claude gives no help at all.
+- **Help stops at rung 4**: a question, where to look, a sketch, or an example of at most 5 lines on another topic. A worked solution (rung 5) is never available there. At AI level 0 Claude gives no help at all. The student names these paths once (`setting graded add`); the harness does not recognise graded work by itself.
 - **Every answer goes into an AI-use log** in the repo, in `ai-verantwoording/` (`ai-use/` in English), written by the hooks and not by Claude: one row per answer with the rung and the kind of help, and an export of each session. The last column is for the student: what they did with the help and how they checked it.
 
 This gives you material for the statement of AI use, but it is not proof either: the same limits as above apply. Whether an example at rung 4 still counts as "generating ideas or bringing structure" is for your institution to decide; the log names every one. See [Graded work](how-it-works.md#graded-work) and the reasons in [§10.8 of the research](research/build-log.md#108-revision-of-13-november-2026-graded-work-under-the-exam-rules).

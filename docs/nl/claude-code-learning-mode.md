@@ -17,9 +17,9 @@ description: "De Learning-outputstijl van Claude Code vraagt Claude wat code aan
 | | Standaard | Learning-outputstijl | Regel in `CLAUDE.md` | Leerharnas |
 |---|---|---|---|---|
 | **Wie schrijft de code** | Claude | Claude, op een paar regels bij ontwerpkeuzes na | Jij, zolang Claude de regel volgt | Jij, voor de vaardigheden die je leert (L1–L3); Claude voor de rest (L4) |
-| **Afgedwongen** | — | Nee: een instructie | Nee: een instructie | Ja: een hook blokkeert schrijven, bouwen en testen van jouw code |
+| **Afgedwongen** | — | Nee: een instructie | Nee: een instructie | Ja: een hook blokkeert schrijven, verwijderen, bouwen en testen van jouw code |
 | **Per vaardigheid** | Nee | Nee | Alleen als je het uitschrijft | Een niveau van L0 tot L4 per vaardigheid en microvaardigheid |
-| **Als je vastzit** | De oplossing | Uitleg | Wat de regel zegt | Een hintladder: een vraag, een vindplaats, een schets; de volgende trede pas na een zichtbare poging |
+| **Als je vastzit** | De oplossing | Uitleg | Wat de regel zegt | Een hintladder van vijf treden: een vraag, een vindplaats, een schets, een klein voorbeeld, en een uitgewerkte oplossing alleen na jouw bevestiging; de volgende trede pas na een zichtbare poging |
 | **Controleert of je het snapt** | Nee | Nee | Nee | Je uitleg in je eigen woorden, beoordeeld door Claude en gecontroleerd door een hook (minstens 12 woorden, een reden, niet overgenomen) |
 | **Houdt een beheerste vaardigheid bij** | Nee | Nee | Nee | Korte herhalingen met groeiende tussenpozen, in je eigen werk |
 | **Beoordeeld werk** | Nee | Nee | Nee | In de paden die je noemt, schrijft Claude geen inhoud, en elk antwoord gaat in een AI-logboek |
@@ -75,7 +75,7 @@ Nee. Hij vraagt Claude om bij ontwerpkeuzes een paar regels voor jou over te lat
 
 ### Kan Claude Code hints geven in plaats van code?
 
-Ja. Met de leerharnas geeft Claude voor elke vaardigheid die je leert hints van een ladder: eerst een vraag, dan waar je moet kijken, dan een schets. Een uitgewerkte oplossing komt pas na jouw bevestiging, en dan telt de taak als niet gelukt.
+Ja. Met de leerharnas geeft Claude voor elke vaardigheid die je leert hints van een ladder: eerst een vraag, dan waar je moet kijken, dan een schets, dan een klein voorbeeld over een ander onderwerp. Een uitgewerkte oplossing (trede 5) komt pas na jouw bevestiging, en dan telt de taak als niet gelukt. In beoordeeld werk stopt de ladder bij trede 4.
 
 ### Werkt het ook voor andere talen dan C#?
 

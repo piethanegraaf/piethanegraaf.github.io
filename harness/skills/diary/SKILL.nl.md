@@ -38,12 +38,15 @@ Doel: zelfregulatie (plan → uitvoering → reflectie). De student schrijft de 
 
    **Controlevragen (2 tot 3)** over de concepten van deze sessie: wat er uitgelegd, gehint of gemaakt is. De student antwoordt uit het hoofd, zonder terug te scrollen. Vraag naar een reden of een toepassing in het eigen werk ("waarom hoort het klassendiagram in hoofdstuk 5?", "wanneer gebruik je in jouw casus compositie in plaats van aggregatie?"), niet naar een definitie. Was de hulp een voorbeeld op trede 4, vraag dan naar de eigen code, niet naar het voorbeeld. Na de antwoorden geef je per vraag feedback: eerst wat klopte, dan het principe achter wat open bleef. Zet per vraag `[controlevraag <id> goed|half|open]`, met het id van de vaardigheid. Een open antwoord is geen falen: het is wat je de volgende keer weer vraagt.
 
-   Zet er deze regel boven, behalve als `settings.dashboardRepo` in `.learning/skills.json` op `off` staat (dan is er geen dashboard):
+   Zet er deze regel alleen boven als `settings.dashboardRepo` in `.learning/skills.json` een pad is (er is een dashboard ingesteld). Is het niet ingesteld, of `off`? Gebruik dan de andere regel hieronder:
    > Let op: je antwoorden komen letterlijk, met een vertaling, op het openbare dashboard.
    >
    > 1. Wat heb je geleerd? Leg het uit alsof je het aan een klasgenoot vertelt.
    > 2. Wat was verwarrend, of wat zou je de volgende keer anders doen?
    > 3. Hoe zeker ben je nu (1–5), en wat is je volgende stap?
+
+   Zonder dashboard (`dashboardRepo` niet ingesteld, of `off`) staat er deze regel boven de vragen:
+   > Let op: je antwoorden blijven in deze map. Ze gaan pas online als je zelf een dashboard instelt en publiceert.
 
    Staan er nog taken open voor uitleg? Vraag die uitleg dan ook in dit bericht: het is de laatste kans. Per taak: waarom werkt het nu?
    - Beoordeel die uitleg zoals in CLAUDE.md: zet `[uitleg-ok <tid>]` of `[uitleg-nee <tid>]`.

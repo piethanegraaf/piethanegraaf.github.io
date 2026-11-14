@@ -111,7 +111,7 @@ flowchart LR
 
 In the proposal, five deterministic hooks sit around the Claude agent, and the learner's skill record, diary and session state live in a local `.learning/` folder. CLAUDE.md, the output style and the skills shape how the agent teaches, but only the hooks enforce rules.
 
-**As built:** the diagram below shows four hooks, two commands that only the learner runs, three skills and one agent; the table in §5.4 adds two smaller hooks. The proposal had a fifth hook (PostToolUse), a skill map in YAML and more skills. I replaced the fifth hook with `check.mjs`, which the learner runs, and the map with `skills.json`.
+**As built:** the installer puts five hooks in the project. The diagram below shows the four that steer a session, two commands that only the learner runs, three skills and one agent. The table in §5.4 adds the fifth (`session-end`, which only takes notes) and the optional gate at user level for graded work (`graded-gate.mjs`). The proposal had a fifth hook (PostToolUse), a skill map in YAML and more skills. I replaced the fifth hook with `check.mjs`, which the learner runs, and the map with `skills.json`.
 
 ```mermaid
 flowchart LR
@@ -176,7 +176,7 @@ I gave each skill its own level. The five levels follow cognitive apprenticeship
 | **L3** | *Independent* | The learner | Reviews **after** the learner's attempt: code review, design critique, test ideas | Solve it alone, then defend the choices made | Deliberate practice, feedback |
 | **L4** | *Automated* | AI | Writes the code. The learner **reviews** the diff and predicts the approach on samples | Supervise, plus periodic maintenance retrieval | Autonomous stage, levels of automation, ironies of automation |
 
-**As built:** a new skill starts with the learner's attempt, and its first task places it on a level. Going down is automatic when the evidence shows it. Going up stays the learner's decision. Maintenance reviews exist at L4 only.
+**As built:** a new skill starts with the learner's attempt, and the highest hint rung of its first task sets its level. After that, a skill can go down automatically when `autoDemote` is on (it is off by default), but going up is always the learner's decision, and maintenance reviews happen only at L4.
 
 ```mermaid
 stateDiagram-v2
@@ -206,8 +206,6 @@ stateDiagram-v2
 
     L4_Automated --> [*] : skill retired - no longer relevant
 ```
-
-In the autonomy ladder as built, a new skill's level is set by the highest hint rung of its first task. After that, a skill can go down automatically, but going up is always the learner's decision, and maintenance reviews happen only at L4.
 
 - **Placement.** A skill below L4 with no history and no explained tasks of its own has an open placement. Until then it counts as L2, for the hint ladder and for the guard. So a new skill does not start at L0: L0 and L1 are forms of help that come *after* an attempt (P1). The highest rung of the first task sets the level (§5.3), at the approved explanation of that task; help about another concept does not count. *Pragmatic choice:* one task is a noisy measure, so automatic demotion catches a placement that is too high, and the learner corrects one that is too low with `set`.
 - **Promotion thresholds.** The criteria in the diagram (2 correct self-explanations, 3 gaps filled, about 85% solved over 5 or more tasks, and 3 times without a hint on at least 2 days, one of them the transfer task) are a *pragmatic choice*. The 85% is a rule of thumb (P4), not a finding; the transfer task follows P6.

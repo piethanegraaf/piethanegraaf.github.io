@@ -33,7 +33,7 @@ What the installer creates:
 | `.claude/skills/update-dashboard/SKILL.md` | updating the dashboard after `/diary` (`/update-dashboard`) | harness |
 | `.claude/agents/demotie-analist.md` | the read-only agent that decides what goes down (`autoDemote`) | harness |
 | `.claude/leerharnas.md` | the rules for Claude, plus the map's notes | harness |
-| `.claude/settings.json` | the four hooks, with `$CLAUDE_PROJECT_DIR` (no absolute paths) | merged with your settings |
+| `.claude/settings.json` | the five hooks, with `$CLAUDE_PROJECT_DIR` (no absolute paths) | merged with your settings |
 | `.claude/leerharnas.json` | the manifest: map, language, version and a fingerprint of every harness file, for `--update` | harness |
 | `.claude/leerharnas.local.json` | only with `--learning-dir`: the path of the record in another folder; not in git | harness |
 | `.learning/skills.json`, `keywords.json` | your skill record and keywords, from the map | **you** (data) |
@@ -123,4 +123,4 @@ Turn off AI help outside Claude Code. Otherwise your IDE completes the code you 
 
 ## Uninstall
 
-Remove `.claude/hooks/`, `.claude/skills/diary/`, `.claude/skills/mastery-check/`, `.claude/skills/update-dashboard/`, `.claude/agents/demotie-analist.md`, `.claude/leerharnas.md`, `.claude/leerharnas.json`, `.claude/leerharnas.local.json` (if there is one) and the four hooks from `.claude/settings.json`. Your data in `.learning/` and your exercises in `oefeningen/` stay yours.
+Remove `.claude/hooks/`, `.claude/skills/diary/`, `.claude/skills/mastery-check/`, `.claude/skills/update-dashboard/`, `.claude/agents/demotie-analist.md`, `.claude/leerharnas.md`, `.claude/leerharnas.json`, `.claude/leerharnas.local.json` (if there is one) and the five hooks of the harness from `.claude/settings.json` (`session-start`, `prompt-gate`, `guard`, `reflect-gate` and `session-end`; leave your own hooks). Did you install the gate for graded work? Remove it with `node harness/install.mjs <folder> --user-guard --remove`. Your data in `.learning/` and your exercises in `oefeningen/` stay yours.

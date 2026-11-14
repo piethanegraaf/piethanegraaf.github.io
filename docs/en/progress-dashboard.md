@@ -31,6 +31,8 @@ Every chart has a table view. You can switch between Dutch and English, and betw
 
 ## Publishing your own data
 
+The dashboard is part of this repo, so publishing means a pull request to a repo you can push to. **Is this repo not yours?** Then fork it on GitHub first, clone your fork, and turn on GitHub Pages in the fork (Settings → Pages → Source: GitHub Actions). Your dashboard then appears on your own Pages address. In the steps below, "this repo" is your fork: `/update-dashboard` pushes to `origin` (your fork) and opens the pull request there, never in the original repo. Without a fork, keep the dashboard local and set `dashboardRepo off`.
+
 1. Create `.learning/private.json` with the names and terms that must not go online (see [Configuration and privacy](configuration.md#privacy)).
 2. Did an approved explanation get lost, for example through a harness bug? Recover it first with `replay` (see the [reference](reference.md)). Otherwise the task shows up online as open or skipped.
 3. Look at what will be filtered: `node harness/export.mjs ../my-practice-folder --dry-run`
@@ -40,7 +42,7 @@ Every chart has a table view. You can switch between Dutch and English, and betw
 
 In Claude Code, `/update-dashboard` does steps 3 to 6 for you, up to a pull request. In this repo you give it the practice folder: `/update-dashboard ../my-practice-folder`. In a practice session `/diary` asks for it itself (see [After the diary](#after-the-diary)). The skill works like this:
 
-- **In its own worktree.** It never works in your main checkout. Is a dashboard pull request still open? Then it continues on that branch: the two do not conflict, and the translations in it are kept. Otherwise it starts a new branch `dashboard-YYYY-MM-DD` from `origin/main`.
+- **In its own worktree.** It never works in your main checkout. Is a dashboard pull request still open? Then it continues on that branch: the two do not conflict, and the translations in it are kept. Otherwise it starts a new branch `dashboard-YYYY-MM-DD` from `origin/main`. It gives every `gh` command `--repo` with the repo of `origin`: in a fork, `gh` would otherwise open the pull request in the original repo.
 - **Checked.** After the export and the translations it runs `--check` and the security check, with the private terms of your practice folder. A fresh worktree has no `.learning/private.json` of its own, because that file is never committed.
 - **Only after your approval.** It shows you the diff and the translations it was unsure of, and asks whether it may go on. Only then does it commit `progress.json`, push the branch and open the pull request (or add a commit to the open one). Merging is up to you.
 
@@ -53,7 +55,7 @@ At the end of `/diary` Claude asks: **Update the dashboard now?** (yes / later).
 
 The question comes when something is new since the last export, and also when no export is known yet (no `last-export.json`). When nothing is new, Claude does not ask.
 
-**Where is the repo?** The practice session finds your clone of this repo through the setting `dashboardRepo`:
+**Where is the repo?** The practice session finds your clone of this repo (or of your fork) through the setting `dashboardRepo`:
 
 ```text
 ! node .claude/hooks/skill.mjs setting dashboardRepo "D:\repos\leerharnas"
@@ -61,9 +63,9 @@ The question comes when something is new since the last export, and also when no
 
 Without that setting, Claude asks for the path once and suggests this command. The work always happens in its own worktree of the repo, never in your main checkout. The guard allows the export (`node <repo>/harness/export.mjs <practice folder>`) from the practice session on purpose: in your practice folder that program only writes `last-export.json`.
 
-**No dashboard?** Turn it off with `! node .claude/hooks/skill.mjs setting dashboardRepo off`. Then `/diary` does not ask about it, there is no warning above the reflection questions, and the session start says nothing about exports.
+**No dashboard?** Turn it off with `! node .claude/hooks/skill.mjs setting dashboardRepo off`. Then `/diary` does not ask about it, and the session start says nothing about exports.
 
-**The warning.** Above the reflection questions of `/diary` it says: *"Note: your answers appear word for word, with a translation, on the public dashboard."* There is no private option. Whatever must not go online goes into `.learning/private.json`.
+**The warning.** With a dashboard (`dashboardRepo` set to the path of your clone), there is a warning above the three reflection questions: *"Note: your answers appear word for word, with a translation, on the public dashboard."* There is no private option then. Whatever must not go online goes into `.learning/private.json`. Without a dashboard (`dashboardRepo` not set, or `off`) the line says instead that your answers stay in your folder: nothing goes online until you set up a dashboard and publish it yourself.
 
 ## Since the last export
 

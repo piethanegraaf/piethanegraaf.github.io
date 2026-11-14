@@ -8,7 +8,7 @@ If an AI agent does all your work, the work gets done, but you skip the practice
 
 ## The trade-off
 
-1. **Build what you are learning.** For files of a skill you are learning (levels L1–L3), a hook stops Claude from writing, building or testing your code. You get hints instead: a question, then where to look, then a sketch.
+1. **Build what you are learning.** For files of a skill you are learning (levels L1–L3), a hook stops Claude from writing, deleting, building or testing your code. You get hints instead, in five rungs: a question, then where to look, then a sketch, then a small example on another topic, and only if you confirm, a worked solution (the task then counts as not solved).
 2. **Delegate the rest.** Code that belongs to no skill is at L4: Claude may write it straight away, and you supervise.
 3. **Maintain what you mastered.** At growing intervals, the next time an L4 skill comes by in your work, you do that part yourself.
 

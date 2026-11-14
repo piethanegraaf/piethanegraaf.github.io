@@ -20,7 +20,7 @@ This page invites researchers to test the harness in a randomized controlled tri
 
 ## The trade-off to test
 
-1. **Build:** at L0–L3, the AI does not write the learner's code. Help comes in small rungs, and a task only counts after an explanation in the learner's own words.
+1. **Build:** at L1–L3 a hook stops the AI from writing the learner's code (at L0 the AI only demonstrates on another topic, after an attempt). Help comes in small rungs, and a task only counts after an explanation in the learner's own words.
 2. **Delegate:** at L4 (mastered), the AI does the work straight away.
 3. **Maintain:** at Fibonacci intervals, the next time an L4 skill comes by in real work, the learner does that part without AI. If it goes wrong, the skill moves down.
 

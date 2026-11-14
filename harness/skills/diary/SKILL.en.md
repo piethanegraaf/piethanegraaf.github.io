@@ -38,12 +38,15 @@ Goal: self-regulation (plan → execution → reflection). The learner writes th
 
    **Check questions (2 to 3)** about the concepts of this session: what was explained, hinted or made. The learner answers from memory, without scrolling back. Ask for a reason or an application in their own work ("why does the class diagram go in chapter 5?", "when would you use composition instead of aggregation in your own case?"), not for a definition. If the help was a rung-4 example, ask about the learner's own code, not about the example. After the answers, give feedback per question: first what was right, then the principle behind what stayed open. Add `[check-question <id> right|half|open]` per question, with the skill id. An open answer is not a failure: it is what you ask again next time.
 
-   Put this line above it, unless `settings.dashboardRepo` in `.learning/skills.json` is `off` (then there is no dashboard):
+   Put this line above it only when `settings.dashboardRepo` in `.learning/skills.json` is a path (a dashboard is set up). Is it not set, or `off`? Then use the other line below:
    > Note: your answers appear word for word, with a translation, on the public dashboard.
    >
    > 1. What did you learn? Explain it as if you were telling a classmate.
    > 2. What was confusing, or what would you do differently next time?
    > 3. How confident are you now (1–5), and what is your next step?
+
+   Without a dashboard (`dashboardRepo` not set, or `off`), the line above the questions is:
+   > Note: your answers stay in this folder. They only go online if you set up a dashboard and publish it yourself.
 
    Are there still tasks waiting for an explanation? Then ask for that explanation in this message too: it is the last chance. Per task: why does it work now?
    - Judge that explanation as in CLAUDE.md: write `[explain-ok <tid>]` or `[explain-no <tid>]`.

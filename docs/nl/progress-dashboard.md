@@ -31,6 +31,8 @@ Elke grafiek heeft een tabelweergave. Je kunt wisselen tussen Nederlands en Enge
 
 ## Je eigen data publiceren
 
+Het dashboard hoort bij deze repo, dus publiceren betekent een pull request naar een repo waar je naar mag pushen. **Is deze repo niet van jou?** Fork hem dan eerst op GitHub, clone je fork, en zet GitHub Pages aan in de fork (Settings → Pages → Source: GitHub Actions). Je dashboard komt dan op je eigen Pages-adres. In de stappen hieronder is "deze repo" je fork: `/update-dashboard` pusht naar `origin` (je fork) en opent de pull request daar, nooit in de oorspronkelijke repo. Zonder fork houd je het dashboard lokaal en zet je `dashboardRepo off`.
+
 1. Maak `.learning/private.json` aan met de namen en termen die niet online mogen (zie [Configuratie en privacy](configuration.md#privacy)).
 2. Ging een goedgekeurde uitleg verloren, bijvoorbeeld door een fout van de harnas? Herstel die dan eerst met `replay` (zie de [naslag](reference.md)). Anders staat de taak online als open of overgeslagen.
 3. Bekijk wat er gefilterd wordt: `node harness/export.mjs ../mijn-oefenmap --dry-run`
@@ -40,7 +42,7 @@ Elke grafiek heeft een tabelweergave. Je kunt wisselen tussen Nederlands en Enge
 
 In Claude Code doet `/update-dashboard` stap 3 tot en met 6 voor je, tot en met een pull request. In deze repo geef je de oefenmap mee: `/update-dashboard ../mijn-oefenmap`. In een oefensessie vraagt `/diary` er zelf om (zie [Na het dagboek](#na-het-dagboek)). De skill werkt zo:
 
-- **In een eigen worktree.** Het werkt nooit in je hoofdcheckout. Staat er nog een dashboard-pull-request open? Dan gaat het verder op die branch: de twee botsen niet, en de vertalingen daarin blijven bewaard. Anders begint het een nieuwe branch `dashboard-JJJJ-MM-DD` vanaf `origin/main`.
+- **In een eigen worktree.** Het werkt nooit in je hoofdcheckout. Staat er nog een dashboard-pull-request open? Dan gaat het verder op die branch: de twee botsen niet, en de vertalingen daarin blijven bewaard. Anders begint het een nieuwe branch `dashboard-JJJJ-MM-DD` vanaf `origin/main`. Elk `gh`-commando krijgt `--repo` met de repo van `origin`: in een fork zou `gh` de pull request anders in de oorspronkelijke repo openen.
 - **Gecontroleerd.** Na de export en de vertalingen draait het `--check` en de securitycheck, met de privétermen van je oefenmap. Een nieuwe worktree heeft zelf geen `.learning/private.json`, want dat bestand wordt nooit gecommit.
 - **Pas na je akkoord.** Het laat je de diff zien en de vertalingen waarover het twijfelde, en vraagt of het verder mag. Pas dan commit het `progress.json`, pusht het de branch en opent het de pull request (of zet het een commit op de open pull request). Mergen doe je zelf.
 
@@ -53,7 +55,7 @@ Aan het eind van `/diary` vraagt Claude: **Dashboard nu bijwerken?** (ja / later
 
 De vraag komt als er iets nieuw is sinds de laatste export, en ook als er nog geen export bekend is (geen `last-export.json`). Is er niets nieuw, dan vraagt Claude niets.
 
-**Waar staat de repo?** De oefensessie vindt je clone van deze repo via de instelling `dashboardRepo`:
+**Waar staat de repo?** De oefensessie vindt je clone van deze repo (of van je fork) via de instelling `dashboardRepo`:
 
 ```text
 ! node .claude/hooks/skill.mjs setting dashboardRepo "D:\repos\leerharnas"
@@ -61,9 +63,9 @@ De vraag komt als er iets nieuw is sinds de laatste export, en ook als er nog ge
 
 Zonder die instelling vraagt Claude het pad één keer en stelt het dit commando voor. Het werk gebeurt altijd in een eigen worktree van de repo, nooit in je hoofdcheckout. De guard laat de export (`node <repo>/harness/export.mjs <oefenmap>`) vanuit de oefensessie bewust toe: in je oefenmap schrijft dat programma alleen `last-export.json`.
 
-**Geen dashboard?** Zet het uit met `! node .claude/hooks/skill.mjs setting dashboardRepo off`. Dan vraagt `/diary` er niet naar, staat er geen waarschuwing boven de reflectievragen, en meldt de sessiestart niets over exports.
+**Geen dashboard?** Zet het uit met `! node .claude/hooks/skill.mjs setting dashboardRepo off`. Dan vraagt `/diary` er niet naar, en meldt de sessiestart niets over exports.
 
-**De waarschuwing.** Boven de reflectievragen van `/diary` staat: *"Let op: je antwoorden komen letterlijk, met een vertaling, op het openbare dashboard."* Een privé-optie is er niet. Wat niet online mag, zet je in `.learning/private.json`.
+**De waarschuwing.** Met een dashboard (`dashboardRepo` staat op het pad van je clone) staat er boven de drie reflectievragen een waarschuwing: *"Let op: je antwoorden komen letterlijk, met een vertaling, op het openbare dashboard."* Een privé-optie is er dan niet. Wat niet online mag, zet je in `.learning/private.json`. Zonder dashboard (`dashboardRepo` niet ingesteld, of `off`) zegt de regel juist dat je antwoorden in je map blijven: er gaat niets online tot je zelf een dashboard instelt en publiceert.
 
 ## Sinds de laatste export
 

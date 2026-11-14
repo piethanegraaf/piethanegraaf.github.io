@@ -8,7 +8,7 @@ Met de leerharnas kunnen studenten Claude Code gebruiken in een programmeervak, 
 
 ## Wat hij afdwingt, en wat niet
 
-- **Geen oefencode van de AI.** Op niveau L1–L3 blokkeert een hook dat Claude de code van de student schrijft, bouwt of test. Hulp komt als hintladder: eerst een vraag, dan waar het staat, dan een schets.
+- **Geen oefencode van de AI.** Op niveau L1–L3 blokkeert een hook dat Claude de code van de student schrijft, verwijdert, bouwt of test (op L1 laat hij alleen een skelet met `TODO(human)`-gaten door). Hulp komt als hintladder van vijf treden: een vraag, waar het staat, een schets, een klein voorbeeld over een ander onderwerp, en pas na bevestiging van de student een uitgewerkte oplossing, waarna de taak als niet gelukt telt. In beoordeeld werk (hieronder) stopt de ladder bij trede 4.
 - **Uitleg telt, niet een groene test.** Een taak telt pas als de student in eigen woorden uitlegt waarom het werkt.
 - **Uitzonderingen zijn zichtbaar.** Laat een student Claude een tijdje toch code schrijven (een override), dan wordt dat gelogd en staat het in het dagboek.
 - **Hij kan niet bewijzen dat een student zonder AI werkte.** Studenten kunnen de hooks uitzetten, een andere AI-tool gebruiken of een weg om de regels heen vinden. De harnas werkt omdat de student er zelf voor kiest. Gebruik hem voor het oefenen, en houd je toetsen onder je eigen voorwaarden.
@@ -19,7 +19,7 @@ Staat je instelling AI als hulpmiddel toe bij beoordeeld werk, maar geen code va
 
 - **Claude schrijft geen inhoud**, op geen enkel niveau en zonder override: geen code, tekst of diagrammen, niet bouwen of testen, en geen commits. Lezen mag. Vaste tooling mag wel, en wordt gelogd: een generator zoals `dotnet new`, de git-opzet (`git init`, `git remote add`), nieuwe mappen, en het officiële arc42-sjabloon, ongewijzigd. Daar maakt de generator of het sjabloon de inhoud, niet de AI.
 - **Dicht vanuit andere mappen**, als de student de poort op gebruikersniveau installeert: een vraag over de opdracht in een andere map wordt tegengehouden, en Claude kan de opdracht daarvandaan niet lezen. Zo blijft hulp bij de opdracht in de sessie waar het logboek wordt geschreven.
-- **Hulp stopt bij trede 4**: een vraag, waar het staat, een schets, of een voorbeeld van hoogstens 5 regels over een ander onderwerp. Een uitgewerkte oplossing is daar nooit beschikbaar. Op AI-niveau 0 geeft Claude helemaal geen hulp.
+- **Hulp stopt bij trede 4**: een vraag, waar het staat, een schets, of een voorbeeld van hoogstens 5 regels over een ander onderwerp. Een uitgewerkte oplossing (trede 5) is daar nooit beschikbaar. Op AI-niveau 0 geeft Claude helemaal geen hulp. De student stelt deze paden één keer zelf in (`setting graded add`); de harnas herkent beoordeeld werk niet vanzelf.
 - **Elk antwoord komt in een AI-logboek** in de repo, in `ai-verantwoording/`, geschreven door de hooks en niet door Claude: een regel per antwoord met de trede en het soort hulp, en een export van elke sessie. De laatste kolom is voor de student: wat die met de hulp deed en hoe die het controleerde.
 
 Zo heb je materiaal voor de verantwoording van het AI-gebruik, maar ook dit is geen bewijs: dezelfde grenzen als hierboven gelden. Of een voorbeeld op trede 4 nog telt als "ideeën genereren of structuur aanbrengen", bepaalt je instelling; het logboek noemt elk voorbeeld. Zie [Beoordeeld werk](how-it-works.md#beoordeeld-werk) en de onderbouwing in [§10.8 van het onderzoek](research/build-log.md#108-herziening-van-13-november-2026-beoordeeld-werk-volgens-de-oer).

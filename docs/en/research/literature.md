@@ -346,7 +346,7 @@ For how the harness builds these conditions into levels per skill, see the [desi
 
 **Evidence that the mechanism is real.**
 
-- **Experiment.** In a randomized trial with 52 mostly junior engineers learning a new library, the AI group scored 50% vs. 67% on a quiz afterwards. Those who delegated code generation scored below 40%; those who asked the AI conceptual questions scored 65% or more. The AI group was not significantly faster ([Shen & Tamkin, 2026](https://arxiv.org/abs/2601.20245); grade B, short-term, vendor).
+- **Experiment.** In a randomized trial with 52 mostly junior engineers learning a new library, the AI group scored 50% vs. 67% on a quiz afterwards. Those who delegated code generation scored below 40%; those who asked the AI conceptual questions scored 65% or more. The AI group was not significantly faster ([Shen & Tamkin, 2026](https://arxiv.org/abs/2601.20245); grade A for the main effect and C for the patterns, as in §2.8; short-term, vendor).
 - **Interviews in software teams:**
     - Entry-level work is absorbed into seniors' AI workflows. Juniors lose the productive struggle through which expertise develops, and seniors and juniors see the situation differently ([Yu & Moon, 2026](https://arxiv.org/abs/2607.17067); 14 interviews; grade C).
     - Juniors swing "between over-reliance and cautious avoidance". Seniors steer the AI with skills they built before AI existed. What juniors may do with AI is set mainly by the policy of their organization ([Feng, Yun & Wang, 2026](https://doi.org/10.1145/3772318.3791642); 10 juniors and 10 seniors; grade C).

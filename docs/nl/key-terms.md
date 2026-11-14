@@ -45,11 +45,11 @@ De **paradox van toezicht** is dat het controleren van AI-uitvoer precies de vaa
 
 ## Autonomieladder (L0–L4)
 
-De **autonomieladder** is een niveau per vaardigheid dat bepaalt hoeveel de AI mag doen: van L0 (de AI doet het voor op een ander onderwerp) tot L4 (de AI doet het, jij houdt toezicht). Op L1–L3 houdt een hook de AI tegen om jouw code te schrijven, te bouwen of te testen. Zie [Hoe het werkt](how-it-works.md#niveaus-per-vaardigheid) en [§5.2](research/design.md#52-de-autonomieladder-per-vaardigheid).
+De **autonomieladder** is een niveau per vaardigheid dat bepaalt hoeveel de AI mag doen: van L0 (de AI doet het voor op een ander onderwerp) tot L4 (de AI doet het, jij houdt toezicht). Op L1–L3 houdt een hook de AI tegen om jouw code te schrijven, te verwijderen, te bouwen of te testen. Zie [Hoe het werkt](how-it-works.md#niveaus-per-vaardigheid) en [§5.2](research/design.md#52-de-autonomieladder-per-vaardigheid).
 
 ## Hintladder
 
-Een **hintladder** is hulp in treden die elk iets meer weggeven: een vraag, een vindplaats, een schets, een klein voorbeeld over een ander onderwerp, en pas dan een uitgewerkte oplossing. De volgende trede komt pas na een zichtbare poging. Zie [Hoe het werkt](how-it-works.md#de-hintladder-l2) en [§5.3](research/design.md#53-frictie-afstemmen-en-de-hintladder).
+Een **hintladder** is hulp in treden die elk iets meer weggeven: een vraag, een vindplaats, een schets, een klein voorbeeld over een ander onderwerp, en pas dan, na jouw bevestiging, een uitgewerkte oplossing (in beoordeeld werk stopt de ladder bij trede 4). De volgende trede komt pas na een zichtbare poging. Zie [Hoe het werkt](how-it-works.md#de-hintladder-l2) en [§5.3](research/design.md#53-frictie-afstemmen-en-de-hintladder).
 
 ## Gespreide herhaling
 

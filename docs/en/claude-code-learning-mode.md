@@ -17,9 +17,9 @@ description: "Claude Code's Learning output style asks Claude to leave some code
 | | Default | Learning output style | Rule in `CLAUDE.md` | Learning harness |
 |---|---|---|---|---|
 | **Who writes the code** | Claude | Claude, except a few lines at design decisions | You, as long as Claude follows the rule | You, for the skills you are learning (L1–L3); Claude for the rest (L4) |
-| **Enforced** | — | No: an instruction | No: an instruction | Yes: a hook blocks writing, building and testing your code |
+| **Enforced** | — | No: an instruction | No: an instruction | Yes: a hook blocks writing, deleting, building and testing your code |
 | **Per skill** | No | No | Only if you write it out | A level from L0 to L4 per skill and microskill |
-| **When you are stuck** | The solution | An explanation | What the rule says | A hint ladder: a question, a pointer, a sketch; the next rung only after a visible attempt |
+| **When you are stuck** | The solution | An explanation | What the rule says | A hint ladder of five rungs: a question, a pointer, a sketch, a small example, and a worked solution only if you confirm; the next rung only after a visible attempt |
 | **Checks that you understand** | No | No | No | Your explanation in your own words, judged by Claude and checked by a hook (at least 12 words, a reason, not copied) |
 | **Keeps a mastered skill alive** | No | No | No | Short reviews at growing intervals, in your own work |
 | **Graded work** | No | No | No | In the paths you name, Claude writes no content, and every answer goes into an AI-use log |
@@ -75,7 +75,7 @@ No. It asks Claude to leave a few lines for you at design decisions, and Claude 
 
 ### Can Claude Code give hints instead of code?
 
-Yes. With the learning harness, Claude gives hints from a ladder for every skill you are learning: first a question, then where to look, then a sketch. A worked solution only comes after you confirm, and then the task counts as not solved.
+Yes. With the learning harness, Claude gives hints from a ladder for every skill you are learning: first a question, then where to look, then a sketch, then a small example on another topic. A worked solution (rung 5) only comes after you confirm, and then the task counts as not solved. In graded work the ladder stops at rung 4.
 
 ### Does it work for languages other than C#?
 

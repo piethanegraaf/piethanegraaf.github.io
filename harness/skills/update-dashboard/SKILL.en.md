@@ -18,7 +18,8 @@ The shell may start in another folder at every command (in a practice session: t
    - **In the repo** (this project has `harness/export.mjs`): the repo is this checkout, and the practice folder is the argument (for example `../ood`). Not given? Ask for it.
 2. **Look around**, without changing the main checkout of the repo:
    - `git -C "<repo>" fetch origin` and `git -C "<repo>" worktree list`.
-   - Is a dashboard pull request still open? `cd "<repo>" && gh pr list --state open --json number,url,headRefName,files` and look for the ones whose files include `site-src/dashboard/data/progress.json`.
+   - **Where the pull request goes:** `git -C "<repo>" remote get-url origin` gives `<owner>/<name>` (call it `<origin-repo>`). Give it to every `gh` command with `--repo <origin-repo>`. In a fork, `gh` otherwise picks the original repo, and the pull request would go to someone else's repository. Is `origin` not on GitHub, or can you not push to it? Say so and stop.
+   - Is a dashboard pull request still open? `cd "<repo>" && gh pr list --repo <origin-repo> --state open --json number,url,headRefName,files` and look for the ones whose files include `site-src/dashboard/data/progress.json`.
      - **One, on a `dashboard-*` branch:** continue on it (step 3a). Two dashboard pull requests would conflict on `progress.json`, and the translations in the open one are not on `main` yet.
      - **More than one, or one on another branch:** ask the user which one to use, or whether to stop.
      - **None:** a new branch (step 3b).
@@ -45,7 +46,7 @@ The shell may start in another folder at every command (in a practice session: t
    - Commit, for example "Export the progress of the practice session of 11 November", with a short body (new tasks, level changes, diary sessions, number of translations) and the attribution lines your session asks for.
    - `LEERHARNAS_PRIVATE=<folder>/.learning/private.json node harness/security-check.mjs --range origin/main..HEAD`. With BLOKKEER or TWIJFEL: stop and show it; do not push.
    - `git push -u origin <branch>`. Does a hook refuse the push? Show it and stop; never use `--no-verify`.
-   - **New branch:** `gh pr create --base main --head <branch>` with a title like the commit, and a body with what changed, the checks you ran, and the translations to look at. **Open pull request:** say that it got a new commit, with its URL.
+   - **New branch:** `gh pr create --repo <origin-repo> --base main --head <branch>` with a title like the commit, and a body with what changed, the checks you ran, and the translations to look at. **Open pull request:** say that it got a new commit, with its URL.
    - `git -C "<repo>" worktree remove <path>`. Does git refuse (changes left)? Show them and ask; do not force it. The branch stays on GitHub.
    - Give the user the URL of the pull request. Never merge it.
 
