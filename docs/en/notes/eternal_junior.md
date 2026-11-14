@@ -5,7 +5,7 @@ description: "Do juniors stay junior when an AI agent does the work? Studies, le
 
 # The eternal-junior problem: notes, 11 November 2026
 
-Compiled 11 Nov 2026 for §2.12 of the [research](../research.md). **Labels:** [PEER-REVIEWED] · [PREPRINT] · [BOOK] · [POLICY] · [VENDOR] (conflict of interest) · [TALK] · [PODCAST/INTERVIEW] · [NEWS] · [BLOG] · [SURVEY]. **Grades** as in §2.0 of the research: A–C for studies, D for claims by companies or executives, press reports and opinion. Retrieval status: "primary read" = the primary page or PDF was opened; "abstract only" = only the abstract or publisher page; "via secondary" = details come from a summary. **COI note:** compiled by Claude, an Anthropic model; one key study (Shen & Tamkin) is by Anthropic.
+Compiled 11 Nov 2026 for §2.12 of the [research](../research/index.md). **Labels:** [PEER-REVIEWED] · [PREPRINT] · [BOOK] · [POLICY] · [VENDOR] (conflict of interest) · [TALK] · [PODCAST/INTERVIEW] · [NEWS] · [BLOG] · [SURVEY]. **Grades** as in §2.0 of the research: A–C for studies, D for claims by companies or executives, press reports and opinion. Retrieval status: "primary read" = the primary page or PDF was opened; "abstract only" = only the abstract or publisher page; "via secondary" = details come from a summary. **COI note:** compiled by Claude, an Anthropic model; one key study (Shen & Tamkin) is by Anthropic.
 
 **Question.** Do junior developers who let AI agents do the work stay junior, because they skip the practice through which expertise develops? And what supports a trade-off of building a skill by hand first, delegating it once mastered, and maintaining it with occasional practice by hand?
 

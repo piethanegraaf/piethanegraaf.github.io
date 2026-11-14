@@ -8,14 +8,14 @@ description: "An invitation to test the learning harness for Claude Code in a ra
 The learning harness answers a practical question: how do you keep learning to program when an AI agent can do the work for you? It is for two groups:
 
 - students who practise with Claude Code;
-- junior developers at work who do not want to stay junior because the AI does all the work. This is the "eternal-junior" problem of [§2.12 of the research](research.md#212-the-eternal-junior-problem).
+- junior developers at work who do not want to stay junior because the AI does all the work. This is the "eternal-junior" problem of [§2.12 of the research](research/literature.md#212-the-eternal-junior-problem).
 
 This page invites researchers to test the harness in a randomized controlled trial (RCT).
 
 ## What is known, and what is not
 
-- **Each part has support.** Every rule in the harness follows a design principle with empirical support from learning science and from research on automation ([§2.11](research.md#211-synthesis-design-principles)). The support is strongest for help that fades as expertise grows, and for spaced practice after mastery.
-- **The combination has not been tested.** No study has tested this combination. No controlled study exists yet of how people learn with agentic tools such as Claude Code ([§7](research.md#7-limitations)). So far one student has used the harness.
+- **Each part has support.** Every rule in the harness follows a design principle with empirical support from learning science and from research on automation ([§2.11](research/design.md#211-synthesis-design-principles)). The support is strongest for help that fades as expertise grows, and for spaced practice after mastery.
+- **The combination has not been tested.** No study has tested this combination. No controlled study exists yet of how people learn with agentic tools such as Claude Code ([§7](research/index.md#7-limitations)). So far one student has used the harness.
 - **A literature review cannot settle it.** The review is narrative, not systematic, and no study measures the best mix of practice by hand and delegating to AI. Only a trial can show whether the trade-off works.
 
 ## The trade-off to test
@@ -51,13 +51,13 @@ Pre-register the trial, for example on OSF.
 - **Logging per skill:** the level and its history; tasks with the hint rung, the source, the explanation, rejections and corrections; reviews; overrides; and the reflections from the diary. Everything stays on the participant's own computer, in `.learning/`.
 - **An export with privacy filters.** `export.mjs` takes only a whitelist of fields. It filters e-mail addresses, paths, user names, session ids and the participant's own terms ([Configuration and privacy](configuration.md#privacy)). Raw events and transcripts are never exported.
 - **Two languages.** All messages, rules and skills exist in Dutch and English.
-- **Three skill maps:** Object-Oriented Design in C# for students, an example map for junior developers at work in C#/.NET (`junior-dotnet`), where code outside the mapped skills is L4, and a practice map for secure coding (`security-dotnet`) with eight exercises. The last one can provide an outcome measure: whether code is secure, and whether its author rightly thinks so (§2.13 of the [research](research.md)). Another course, or the stack of a team, needs its own map or an adapted one ([Your own course](configuration.md#your-own-course)).
+- **Three skill maps:** Object-Oriented Design in C# for students, an example map for junior developers at work in C#/.NET (`junior-dotnet`), where code outside the mapped skills is L4, and a practice map for secure coding (`security-dotnet`) with eight exercises. The last one can provide an outcome measure: whether code is secure, and whether its author rightly thinks so (§2.13 of the [research](research/index.md)). Another course, or the stack of a team, needs its own map or an adapted one ([Your own course](configuration.md#your-own-course)).
 
 ## What is still missing
 
 - **A mode that only logs**, for the control arms. Today the logging only runs together with the rules.
 - **Test runners other than `dotnet test`.** Learners can also log a task themselves or in the chat, but automatic logging from tests only works for .NET.
-- **Validated thresholds.** The numbers (85% success, the intervals) are heuristics from the literature ([§7](research.md#7-limitations)).
+- **Validated thresholds.** The numbers (85% success, the intervals) are heuristics from the literature ([§7](research/index.md#7-limitations)).
 
 ## Licence
 

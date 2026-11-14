@@ -22,7 +22,7 @@ Does your institution allow AI as an aid in graded work, but not AI-written code
 - **Help stops at rung 4**: a question, where to look, a sketch, or an example of at most 5 lines on another topic. A worked solution is never available there. At AI level 0 Claude gives no help at all.
 - **Every answer goes into an AI-use log** in the repo, in `ai-verantwoording/` (`ai-use/` in English), written by the hooks and not by Claude: one row per answer with the rung and the kind of help, and an export of each session. The last column is for the student: what they did with the help and how they checked it.
 
-This gives you material for the statement of AI use, but it is not proof either: the same limits as above apply. Whether an example at rung 4 still counts as "generating ideas or bringing structure" is for your institution to decide; the log names every one. See [Graded work](how-it-works.md#graded-work) and the reasons in [§10.8 of the research](research.md#108-revision-of-13-november-2026-graded-work-under-the-exam-rules).
+This gives you material for the statement of AI use, but it is not proof either: the same limits as above apply. Whether an example at rung 4 still counts as "generating ideas or bringing structure" is for your institution to decide; the log names every one. See [Graded work](how-it-works.md#graded-work) and the reasons in [§10.8 of the research](research/build-log.md#108-revision-of-13-november-2026-graded-work-under-the-exam-rules).
 
 ## Fitting it to your course
 
@@ -84,4 +84,4 @@ Or, if AI is allowed as an aid in the final assignment:
 
 - **Write a skill map** for your course, starting from the [OOD map](https://github.com/piethanegraaf/piethanegraaf.github.io/tree/main/harness/maps/ood), and [install](install.md) the harness with it.
 - **Questions, or want to try it in a course?** E-mail [hanegraafpiet@gmail.com](mailto:hanegraafpiet@gmail.com).
-- **Why it is built this way:** the [literature review](research.md) explains the evidence behind each choice.
+- **Why it is built this way:** the [literature review](research/index.md) explains the evidence behind each choice.

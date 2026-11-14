@@ -4,7 +4,7 @@ description: "Gedateerde werknotities achter het literatuuronderzoek, in het Eng
 ---
 # Onderzoeksnotities
 
-Dit zijn de werknotities achter het [onderzoek](../research.md): wat de onderzoeksagents vonden, met de bron en de kwaliteit van het bewijs bij elke claim. Ze zijn in het Engels en niet vertaald, en staan daarom in het Engelse deel van de site.
+Dit zijn de werknotities achter het [onderzoek](../research/index.md): wat de onderzoeksagents vonden, met de bron en de kwaliteit van het bewijs bij elke claim. Ze zijn in het Engels en niet vertaald, en staan daarom in het Engelse deel van de site.
 
 | Notitie (Engels) | Onderwerp |
 |---|---|
@@ -16,6 +16,6 @@ Dit zijn de werknotities achter het [onderzoek](../research.md): wat de onderzoe
 | [Het eeuwige-juniorprobleem](/notes/eternal_junior/){ hreflang="en" } | Junior developers op hun werk die junior blijven als een agent het werk doet: studies, vergelijkingen en praktijkbronnen (talks, interviews, nieuws, blogs). |
 | [Veilige code voor juniors](/notes/secure_coding_juniors/){ hreflang="en" } | Is veilig programmeren een goede eerste niche? AI-code en security, te veel vertrouwen, wat juniors missen, wat wetten en normen vragen, en junior developers tegenover junior securityspecialisten. |
 
-De citatiecontroles, waarin elke bron uit het onderzoek is nagelopen, staan niet op de site maar in de [repository](https://github.com/piethanegraaf/piethanegraaf.github.io/tree/main/research/citation-checks). De correcties die eruit kwamen, staan in §11 van het [onderzoek](../research.md).
+De citatiecontroles, waarin elke bron uit het onderzoek is nagelopen, staan niet op de site maar in de [repository](https://github.com/piethanegraaf/piethanegraaf.github.io/tree/main/research/citation-checks). De correcties die eruit kwamen, staan in §11 van het [onderzoek](../research/index.md).
 
 Citaten uit bronnen zijn kort gehouden. Zie je een passage die te lang is, meld het dan via de [security-pagina](https://github.com/piethanegraaf/piethanegraaf.github.io/security).

@@ -51,7 +51,7 @@ Vóór de tests bouwt `check.mjs` je code opnieuw met de securityregels van de .
 - **Het risico is vertrouwen.** In een gerandomiseerde studie schreven mensen met een AI-assistent minder veilige code en dachten ze vaker dat die veilig was (Perry et al., 2023).
 - **Fouten komen uit onbegrip, niet uit slordigheid.** In een wedstrijd waarin teams software bouwden, aanvielen en repareerden, kwamen de fouten in 78% van de projecten uit verkeerd begrepen securityconcepten (Votipka et al., 2020). Daarom vraagt de harnas om uitleg, niet alleen om een groene test.
 
-De studies, hun bewijsgraden en hun grenzen staan in [§2.13 van het literatuuronderzoek](research.md#213-veilige-code-als-eerste-niche-voor-juniors). Of deze oefeningen juniors veiliger laten programmeren, is niet getest.
+De studies, hun bewijsgraden en hun grenzen staan in [§2.13 van het literatuuronderzoek](research/literature.md#213-veilige-code-als-eerste-niche-voor-juniors). Of deze oefeningen juniors veiliger laten programmeren, is niet getest.
 
 ## Installeren
 

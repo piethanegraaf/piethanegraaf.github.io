@@ -9,17 +9,17 @@ jsonld: software
 
 This free, open-source harness for [Claude Code](https://docs.claude.com/en/docs/claude-code/overview) keeps the learning with you, at school and at work: hints instead of the code you are still learning to write, until you can do it yourself. Then the AI may take over, and you keep the skill up by doing it yourself now and then.
 
-[Install it](install.md){ .md-button .md-button--primary } [How it works](how-it-works.md){ .md-button } [The research](research.md#key-findings){ .md-button }
+[Install it](install.md){ .md-button .md-button--primary } [How it works](how-it-works.md){ .md-button } [The research](research/index.md#key-findings){ .md-button }
 
 ## Why I built it
 
 The practice test of my university course on object-oriented programming went fine. I did most of it without AI, and asked for help when I got stuck. The diagnostic test after it was different: a half-built project with an existing design, design tasks to finish, and unit tests to complete, which were new to me. I just wanted to get through it. I was stressed and upset, and in the end I handed in only the solution file, without the project.
 
-Looking back, I had rarely explained to myself the code I practised with, and my experience with AI agents at work had given me a false sense of security. Research shows the same risk: in a high-school maths trial, unlimited AI raised practice scores by 48% but lowered exam scores by 17% once it was gone ([Bastani et al., 2025](research.md#key-findings)).
+Looking back, I had rarely explained to myself the code I practised with, and my experience with AI agents at work had given me a false sense of security. Research shows the same risk: in a high-school maths trial, unlimited AI raised practice scores by 48% but lowered exam scores by 17% once it was gone ([Bastani et al., 2025](research/index.md#key-findings)).
 
 So I built a harness that keeps the learning with me. I practise with it now; the real exam is still to come, and you can follow my progress on the [dashboard](/dashboard/?lang=en).
 
-Junior developers face the same trap: the agent gets the work done, but the skills that make you a medior do not grow ([§2.12 of the research](research.md#212-the-eternal-junior-problem)).
+Junior developers face the same trap: the agent gets the work done, but the skills that make you a medior do not grow ([§2.12 of the research](research/literature.md#212-the-eternal-junior-problem)).
 
 ## What do you think? {#poll}
 
@@ -64,7 +64,7 @@ Junior developers face the same trap: the agent gets the work done, but the skil
 
     What studies say about learning to program with AI: the key findings, a risk assessment and the sources.
 
-    [Go to the key findings](research.md#key-findings)
+    [Go to the key findings](research/index.md#key-findings)
 
 - **Dashboard**
 
@@ -86,7 +86,7 @@ Junior developers face the same trap: the agent gets the work done, but the skil
 2. **Then delegate it.** Once a skill is at L4, the AI may do it straight away, and you supervise. Your own time goes to what you are still learning.
 3. **Maintain it now and then.** At growing intervals, the next time an L4 skill comes by in your work, you do that part yourself. If that goes wrong, the skill goes down a level.
 
-Each part follows a principle with empirical support from learning science and from research on automation: see the [research](research.md), with the sources in the [research notes](notes/index.md). Whether the combination works has not been tested. That is why researchers are invited to test it in a randomized trial ([For researchers](researchers.md)).
+Each part follows a principle with empirical support from learning science and from research on automation: see the [research](research/index.md), with the sources in the [research notes](notes/index.md). Whether the combination works has not been tested. That is why researchers are invited to test it in a randomized trial ([For researchers](researchers.md)).
 
 ## Who it is for
 
@@ -125,7 +125,7 @@ Yes. The code is open source under AGPL-3.0, and the texts, docs and data are un
 
 Install the harness in your own project, see how it works, or read the research behind it.
 
-[Install it](install.md){ .md-button .md-button--primary } [How it works](how-it-works.md){ .md-button } [The research](research.md#key-findings){ .md-button }
+[Install it](install.md){ .md-button .md-button--primary } [How it works](how-it-works.md){ .md-button } [The research](research/index.md#key-findings){ .md-button }
 
 !!! info "AI statement"
     The learning harness, the dashboard and this documentation were made with help from Claude (Anthropic). The learning data and the reflections in the dashboard are the learner's own. See [AI statement](ai-statement.md).

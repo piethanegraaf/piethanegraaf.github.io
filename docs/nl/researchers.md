@@ -8,14 +8,14 @@ description: Een uitnodiging om de leerharnas voor Claude Code te toetsen in een
 De leerharnas geeft antwoord op een praktische vraag: hoe blijf je leren programmeren als een AI-agent het werk voor je kan doen? Hij is er voor twee groepen:
 
 - studenten die met Claude Code oefenen;
-- junior developers op hun werk die niet junior willen blijven omdat de AI al het werk doet. Dat is het "eeuwige-juniorprobleem" uit [§2.12 van het onderzoek](research.md#212-het-eeuwige-juniorprobleem).
+- junior developers op hun werk die niet junior willen blijven omdat de AI al het werk doet. Dat is het "eeuwige-juniorprobleem" uit [§2.12 van het onderzoek](research/literature.md#212-het-eeuwige-juniorprobleem).
 
 Deze pagina nodigt onderzoekers uit om de harnas te toetsen in een gerandomiseerd gecontroleerd experiment (RCT).
 
 ## Wat bekend is, en wat niet
 
-- **Elk onderdeel is onderbouwd.** Elke regel van de harnas volgt een ontwerpprincipe met empirische steun uit de leerwetenschap en uit onderzoek naar automatisering ([§2.11](research.md#211-synthese-ontwerpprincipes)). De steun is het sterkst voor hulp die afneemt naarmate je meer kunt, en voor gespreid oefenen na beheersing.
-- **De combinatie is niet getest.** Geen enkele studie heeft deze combinatie getest. Er bestaat nog geen gecontroleerde studie naar hoe mensen leren met agentische tools zoals Claude Code ([§7](research.md#7-beperkingen)). Tot nu toe heeft één student de harnas gebruikt.
+- **Elk onderdeel is onderbouwd.** Elke regel van de harnas volgt een ontwerpprincipe met empirische steun uit de leerwetenschap en uit onderzoek naar automatisering ([§2.11](research/design.md#211-synthese-ontwerpprincipes)). De steun is het sterkst voor hulp die afneemt naarmate je meer kunt, en voor gespreid oefenen na beheersing.
+- **De combinatie is niet getest.** Geen enkele studie heeft deze combinatie getest. Er bestaat nog geen gecontroleerde studie naar hoe mensen leren met agentische tools zoals Claude Code ([§7](research/index.md#7-beperkingen)). Tot nu toe heeft één student de harnas gebruikt.
 - **Een literatuuronderzoek kan dit niet beslissen.** Het onderzoek is narratief, niet systematisch, en geen studie meet de beste mix van oefenen met de hand en uitbesteden aan AI. Alleen een experiment kan laten zien of de afweging werkt.
 
 ## De afweging die getest moet worden
@@ -51,13 +51,13 @@ Registreer het experiment vooraf, bijvoorbeeld op OSF.
 - **Vastleggen per vaardigheid:** het niveau en de geschiedenis daarvan; taken met de hinttrede, de bron, de uitleg, afwijzingen en correcties; herhalingen; overrides; en de reflecties uit het dagboek. Alles blijft op de eigen computer van de deelnemer, in `.learning/`.
 - **Een export met privacyfilters.** `export.mjs` neemt alleen een whitelist van velden mee. Hij filtert e-mailadressen, paden, gebruikersnamen, sessie-ID's en de eigen termen van de deelnemer ([Configuratie en privacy](configuration.md#privacy)). Ruwe events en transcripts gaan nooit mee.
 - **Twee talen.** Alle meldingen, regels en skills bestaan in het Nederlands en het Engels.
-- **Drie vaardighedenkaarten:** Object-Oriented Design in C# voor studenten, een voorbeeldkaart voor junior developers op het werk in C#/.NET (`junior-dotnet`), waarin code buiten de vaardigheden van de kaart op L4 staat, en een oefenkaart voor veilig programmeren (`security-dotnet`) met acht oefeningen. Die laatste kan een uitkomstmaat leveren: of code veilig is, en of de maker dat terecht denkt (§2.13 van het [onderzoek](research.md)). Een ander vak, of de stack van een team, heeft een eigen of aangepaste kaart nodig ([Een eigen vak](configuration.md#een-eigen-vak)).
+- **Drie vaardighedenkaarten:** Object-Oriented Design in C# voor studenten, een voorbeeldkaart voor junior developers op het werk in C#/.NET (`junior-dotnet`), waarin code buiten de vaardigheden van de kaart op L4 staat, en een oefenkaart voor veilig programmeren (`security-dotnet`) met acht oefeningen. Die laatste kan een uitkomstmaat leveren: of code veilig is, en of de maker dat terecht denkt (§2.13 van het [onderzoek](research/index.md)). Een ander vak, of de stack van een team, heeft een eigen of aangepaste kaart nodig ([Een eigen vak](configuration.md#een-eigen-vak)).
 
 ## Wat nog ontbreekt
 
 - **Een modus die alleen vastlegt**, voor de controlegroepen. Nu werkt het vastleggen alleen samen met de regels.
 - **Testrunners naast `dotnet test`.** Lerenden kunnen een taak ook zelf of in de chat afmelden, maar automatisch vastleggen vanuit tests werkt alleen voor .NET.
-- **Gevalideerde drempels.** De getallen (85% gelukt, de intervallen) zijn vuistregels uit de literatuur ([§7](research.md#7-beperkingen)).
+- **Gevalideerde drempels.** De getallen (85% gelukt, de intervallen) zijn vuistregels uit de literatuur ([§7](research/index.md#7-beperkingen)).
 
 ## Licentie
 

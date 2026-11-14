@@ -48,7 +48,7 @@ The installer puts eight exercises in `oefeningen/`, two per skill, the second o
 - **01–06:** the code has a vulnerability. The attack tests (`' OR '1'='1`, `<script>`, a newline in a log line, a token from `System.Random`) start red; you make them green without breaking the rest.
 - **07–08:** the code was written by an AI and all tests are green. You look for the flaw, first write a test that fails, and then fix it.
 
-This folder works like the OOD practice folder: every exercise belongs to its skill, so the guard protects it and `check.mjs` logs a green test as a task of that skill, and code outside the exercises is L2. The analyser catches four of the eight vulnerabilities (string-built SQL and `System.Random`); the others it does not see, which is part of the lesson. You switch between this folder and your other practice folder by starting Claude Code in the other folder: each folder has its own record. The studies and their limits are in [§2.13 of the research](research.md#213-secure-code-as-a-first-niche-for-juniors).
+This folder works like the OOD practice folder: every exercise belongs to its skill, so the guard protects it and `check.mjs` logs a green test as a task of that skill, and code outside the exercises is L2. The analyser catches four of the eight vulnerabilities (string-built SQL and `System.Random`); the others it does not see, which is part of the lesson. You switch between this folder and your other practice folder by starting Claude Code in the other folder: each folder has its own record. The studies and their limits are in [§2.13 of the research](research/literature.md#213-secure-code-as-a-first-niche-for-juniors).
 
 All eight exercises, with their OWASP Top 10 category, are on [Secure coding exercises](secure-coding-exercises.md).
 
@@ -61,7 +61,7 @@ All eight exercises, with their OWASP Top 10 category, are on [Secure coding exe
 
 ## Why this matters
 
-Juniors who let an agent do all the work can stay junior: the [research on the eternal-junior problem](research.md#212-the-eternal-junior-problem) covers the studies and the parallels with other professions, and the [research notes](notes/eternal_junior.md) list the sources.
+Juniors who let an agent do all the work can stay junior: the [research on the eternal-junior problem](research/literature.md#212-the-eternal-junior-problem) covers the studies and the parallels with other professions, and the [research notes](notes/eternal_junior.md) list the sources.
 
 ## Next step
 

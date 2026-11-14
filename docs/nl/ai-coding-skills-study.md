@@ -30,11 +30,11 @@ description: "In het gerandomiseerde experiment van Anthropic scoorden ontwikkel
 - **Geen studenten.** De meeste deelnemers werkten al als ontwikkelaar. Voor beginners staat er meer op het spel: zij moeten de vaardigheden nog verwerven die experts alleen hoeven te houden.
 - **Een onderzoek van een leverancier.** Anthropic maakt AI-tools om mee te programmeren, maar deze uitkomst gaat tegen zijn commerciële belang in, en dat maakt hem eerder geloofwaardiger dan minder.
 
-Het [literatuuronderzoek](research.md#28-generatieve-ai-en-leren-programmeren-het-bewijs-tot-nu-toe) geeft het hoofdeffect bewijsgraad A en de werkwijzen graad C.
+Het [literatuuronderzoek](research/literature.md#28-generatieve-ai-en-leren-programmeren-het-bewijs-tot-nu-toe) geeft het hoofdeffect bewijsgraad A en de werkwijzen graad C.
 
 ## Hoe het past bij ander bewijs
 
-Grotere experimenten laten hetzelfde beeld zien. Op een middelbare school met ongeveer 1.000 leerlingen verhoogde onbeperkte GPT-4 de oefenscores met 48%, maar verlaagde hij de examenscores met 17% zodra de toegang wegviel. Een versie die hints gaf en geen antwoorden, vermeed die schade (Bastani et al., 2025). En een tutor in zijn systeemprompt vragen om stap voor stap te helpen, veranderde niets in een experiment met 1.059 studenten; poortjes in de werkwijze zelf werkten beter (Barth et al., 2026). Zie de [belangrijkste bevindingen](research.md#key-findings).
+Grotere experimenten laten hetzelfde beeld zien. Op een middelbare school met ongeveer 1.000 leerlingen verhoogde onbeperkte GPT-4 de oefenscores met 48%, maar verlaagde hij de examenscores met 17% zodra de toegang wegviel. Een versie die hints gaf en geen antwoorden, vermeed die schade (Bastani et al., 2025). En een tutor in zijn systeemprompt vragen om stap voor stap te helpen, veranderde niets in een experiment met 1.059 studenten; poortjes in de werkwijze zelf werkten beter (Barth et al., 2026). Zie de [belangrijkste bevindingen](research/index.md#key-findings).
 
 ## Wat je ermee doet
 

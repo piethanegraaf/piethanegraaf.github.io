@@ -48,7 +48,7 @@ De installer zet acht oefeningen in `oefeningen/`, twee per vaardigheid, de twee
 - **01–06:** de code heeft een kwetsbaarheid. De aanvalstests (`' OR '1'='1`, `<script>`, een nieuwe regel in een logregel, een token uit `System.Random`) zijn eerst rood; jij maakt ze groen zonder de rest te breken.
 - **07–08:** de code is door een AI geschreven en alle tests zijn groen. Jij zoekt de fout, schrijft eerst een test die faalt, en repareert dan.
 
-Deze map werkt zoals de OOD-oefenmap: elke oefening hoort bij haar vaardigheid, dus de guard beschermt haar en `check.mjs` logt een groene test als taak van die vaardigheid, en code buiten de oefeningen staat op L2. De analyser vindt vier van de acht kwetsbaarheden (SQL die uit strings wordt gebouwd en `System.Random`); de andere ziet hij niet, en dat hoort bij de les. Je wisselt tussen deze map en je andere oefenmap door Claude Code in de andere map te starten: elke map heeft een eigen register. De studies en hun grenzen staan in [§2.13 van het onderzoek](research.md#213-veilige-code-als-eerste-niche-voor-juniors).
+Deze map werkt zoals de OOD-oefenmap: elke oefening hoort bij haar vaardigheid, dus de guard beschermt haar en `check.mjs` logt een groene test als taak van die vaardigheid, en code buiten de oefeningen staat op L2. De analyser vindt vier van de acht kwetsbaarheden (SQL die uit strings wordt gebouwd en `System.Random`); de andere ziet hij niet, en dat hoort bij de les. Je wisselt tussen deze map en je andere oefenmap door Claude Code in de andere map te starten: elke map heeft een eigen register. De studies en hun grenzen staan in [§2.13 van het onderzoek](research/literature.md#213-veilige-code-als-eerste-niche-voor-juniors).
 
 Alle acht oefeningen, met hun categorie in de OWASP Top 10, staan op [Oefeningen veilig programmeren](secure-coding-exercises.md).
 
@@ -61,7 +61,7 @@ Alle acht oefeningen, met hun categorie in de OWASP Top 10, staan op [Oefeningen
 
 ## Waarom dit ertoe doet
 
-Juniors die een agent al het werk laten doen, kunnen junior blijven: het [onderzoek naar het eeuwige-juniorprobleem](research.md#212-het-eeuwige-juniorprobleem) behandelt de studies en de parallellen met andere beroepen, en de [onderzoeksnotities](/notes/eternal_junior/) (Engels) geven de bronnen.
+Juniors die een agent al het werk laten doen, kunnen junior blijven: het [onderzoek naar het eeuwige-juniorprobleem](research/literature.md#212-het-eeuwige-juniorprobleem) behandelt de studies en de parallellen met andere beroepen, en de [onderzoeksnotities](/notes/eternal_junior/) (Engels) geven de bronnen.
 
 ## Volgende stap
 
