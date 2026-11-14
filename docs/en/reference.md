@@ -153,6 +153,7 @@ And of the review of 13 November 2026, night (the first sessions on the final as
 | Event | Meaning |
 |---|---|
 | `graded-tooling` | The guard allowed a fixed tooling command in graded work (`cmd`, with `~` for the home folder). It gets a row in the AI-use log. |
+| `dashboard-export` | The guard allowed the dashboard export `node <repo>/harness/export.mjs <practice folder>` (not with `--dry-run` or `--check`). A session with only an export does not count as work: no catch-up diary and no diary question when you stop. |
 | `plan`, `confidence` | Your first message of the session (at most 300 characters), and the number 1–5 you gave after Claude's "(1–5)". Not exported to the dashboard. |
 | `session-end` | The session closed, with `reason`, `diary` and `work`. |
 | `catchup-offered` | The start offered a catch-up diary for the session `of`. |
