@@ -153,6 +153,7 @@ En van de review van 13 november 2026, 's avonds (de eerste sessies aan de eindo
 | Event | Betekenis |
 |---|---|
 | `graded-tooling` | De guard liet een vast tooling-commando toe in beoordeeld werk (`cmd`, met `~` voor de thuismap). Het krijgt een regel in het AI-logboek. |
+| `dashboard-export` | De guard liet de dashboardexport `node <repo>/harness/export.mjs <oefenmap>` toe (niet met `--dry-run` of `--check`). Een sessie met alleen een export telt niet als werk: geen inhaal-dagboek en geen dagboekvraag als je stopt. |
 | `plan`, `confidence` | Je eerste bericht van de sessie (hooguit 300 tekens), en het getal 1–5 dat je gaf na Claude's "(1–5)". Gaat niet naar het dashboard. |
 | `session-end` | De sessie sloot, met `reason`, `diary` en `work`. |
 | `catchup-offered` | De start bood een inhaaldagboek aan voor de sessie `of`. |
