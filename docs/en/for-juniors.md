@@ -50,6 +50,8 @@ The installer puts eight exercises in `oefeningen/`, two per skill, the second o
 
 This folder works like the OOD practice folder: every exercise belongs to its skill, so the guard protects it and `check.mjs` logs a green test as a task of that skill, and code outside the exercises is L2. The analyser catches four of the eight vulnerabilities (string-built SQL and `System.Random`); the others it does not see, which is part of the lesson. You switch between this folder and your other practice folder by starting Claude Code in the other folder: each folder has its own record. The studies and their limits are in [§2.13 of the research](research.md#213-secure-code-as-a-first-niche-for-juniors).
 
+All eight exercises, with their OWASP Top 10 category, are on [Secure coding exercises](secure-coding-exercises.md).
+
 ## At work
 
 - **Keep it out of the team's commits.** The harness is your own commitment device. Add its files to `.git/info/exclude`, and do not commit the changes to shared files without agreeing it with your team. See [In a team repository](install.md#in-a-team-repository).

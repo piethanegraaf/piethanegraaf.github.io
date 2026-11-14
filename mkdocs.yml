@@ -96,12 +96,15 @@ plugins:
                 - Naslag: reference.md
                 - Voor junior developers: for-juniors.md
                 - Voor docenten: for-educators.md
+                - Leermodus van Claude Code vs. harnas: claude-code-learning-mode.md
             - Gebruiken:
                 - Dashboard: /dashboard/?lang=nl
                 - C# OOP-cheat sheet: /nl/cheatsheet/
+                - Oefeningen veilig programmeren: secure-coding-exercises.md
             - Onderzoek:
                 - Literatuuronderzoek: research.md
                 - Voor onderzoekers: researchers.md
+                - Begrippen: key-terms.md
             - Over dit project:
                 - Over mij: about.md
                 - AI-verklaring: ai-statement.md
@@ -123,12 +126,15 @@ nav:
       - Reference: reference.md
       - For junior developers: for-juniors.md
       - For educators: for-educators.md
+      - Claude Code learning mode vs. harness: claude-code-learning-mode.md
   - Tools:
       - Dashboard: /dashboard/?lang=en
       - C# OOP cheat sheet: /cheatsheet/
+      - Secure coding exercises: secure-coding-exercises.md
   - Research:
       - Literature review: research.md
       - For researchers: researchers.md
+      - Key terms: key-terms.md
   - About this project:
       - About me: about.md
       - AI statement: ai-statement.md
