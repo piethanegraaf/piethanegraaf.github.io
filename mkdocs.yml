@@ -105,6 +105,7 @@ plugins:
                 - Literatuuronderzoek: research.md
                 - Voor onderzoekers: researchers.md
                 - Begrippen: key-terms.md
+                - Het onderzoek van Anthropic naar AI en vaardigheden: ai-coding-skills-study.md
             - Over dit project:
                 - Over mij: about.md
                 - AI-verklaring: ai-statement.md
@@ -135,6 +136,7 @@ nav:
       - Literature review: research.md
       - For researchers: researchers.md
       - Key terms: key-terms.md
+      - Anthropic's study on AI and coding skills: ai-coding-skills-study.md
   - About this project:
       - About me: about.md
       - AI statement: ai-statement.md

@@ -46,6 +46,30 @@ Eén uitzondering is juist voor jou bedoeld: het AI-logboek van beoordeeld werk 
 - **De teksten, docs, het onderzoek en de cheat sheet** vallen onder CC BY-NC 4.0: je mag ze gebruiken voor niet-commerciële doelen, met naamsvermelding.
 - **Commerciële opleiders** hebben een commerciële licentie nodig. Zie [Licentie](https://github.com/piethanegraaf/piethanegraaf.github.io/blob/main/README.nl.md#licentie) in de README.
 
+## De AI Assessment Scale en de harnas
+
+Veel instellingen beschrijven hoeveel AI een toets toestaat met de [AI Assessment Scale](https://aiassessmentscale.com/) (AIAS) van Perkins, Roe, Furze en MacVaugh. De vijf niveaus passen zo bij de instellingen van de harnas. De harnas beperkt alleen wat Claude doet; hij maakt de omgeving niet gecontroleerd, en of een trede bij een niveau past, beslist je instelling.
+
+| AIAS-niveau | Wat de harnas kan doen | Instelling |
+|---|---|---|
+| 1 · No AI | Claude geeft geen hulp bij het beoordeelde werk | `setting graded aiLevel 0` |
+| 2 · AI Planning | Alleen hulp bij de richting: een vraag, of waar je moet kijken en welk concept; geen inhoud | Beoordeeld werk met `setting graded maxRung 2` (of 3, als een schets van de structuur in je vak als planning telt) |
+| 3 · AI Collaboration | De modus voor beoordeeld werk is strenger dan dit niveau: Claude schrijft daar geen inhoud. Voor oefenen passen de niveaus per vaardigheid: hints op L1–L3, en Claude mag schrijven op L4 | De niveaus per vaardigheid, zonder paden voor beoordeeld werk |
+| 4 · Full AI | Claude doet het werk en de student houdt toezicht | Elke vaardigheid op L4 (`set <id> L4`) |
+| 5 · AI Exploration | Buiten waar de harnas voor is | — |
+
+## Een voorbeeld van een AI-logboek
+
+Bij beoordeeld werk schrijven de hooks één regel per antwoord van Claude in `ai-verantwoording/logboek.md` in de repo van de opdracht. De student vult de laatste kolom in. Daarbij horen een `README.md` met het AI-niveau en een APA-verwijzing, en een export van elke sessie in `ai-verantwoording/sessies/`. Een voorbeeld met verzonnen regels:
+
+| Datum en tijd | Sessie | Vaardigheid | Trede | Soort hulp | Wat ik ermee deed / hoe gecontroleerd |
+|---|---|---|---|---|---|
+| 2026-11-12 14:05 | 3f9a2c1b | ood.overerving | 1 | vraag | Ik zag dat Auto en Vrachtwagen drie velden delen, dus maakte ik een basisklasse Voertuig. De tests van de opdracht zijn groen. |
+| 2026-11-12 14:21 | 3f9a2c1b | uml.klassendiagram | 3 | schets | Ik tekende mijn eigen diagram met de schets van de pijlen, en vergeleek de soorten pijlen met de cheat sheet. |
+| 2026-11-12 14:40 | 3f9a2c1b | — | — | tooling (geen AI-inhoud): dotnet new xunit | Testproject gemaakt door de generator; geen wijzigingen door AI. |
+
+Je kunt studenten deze tabel als sjabloon geven voor elke AI-tool. Met de harnas worden de eerste vijf kolommen voor ze geschreven, en kan Claude niet in het logboek schrijven.
+
 ## Een alinea voor je studiehandleiding
 
 Pas hem aan op je vak:

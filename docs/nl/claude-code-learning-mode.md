@@ -30,7 +30,7 @@ description: "De Learning-outputstijl van Claude Code vraagt Claude wat code aan
 - **De Learning-stijl** past als je de taak af wilt hebben en er wat praktijk naast wilt, bijvoorbeeld als je een codebase leert kennen.
 - **De leerharnas** past als je een vaardigheid leert die je later zonder AI moet kunnen: voor een tentamen, of voor de stap van junior naar medior op je werk. Je bouwt de vaardigheid eerst zelf op, besteedt die daarna uit aan Claude, en houdt hem bij met korte herhalingen. Zie [Hoe het werkt](how-it-works.md).
 
-Waarom het afdwingen? In een gerandomiseerd experiment van Anthropic scoorden ontwikkelaars die een nieuwe library leerden met een AI-assistent 50% op een toets achteraf, tegen 67% voor wie met de hand codeerde. Het grootste verschil zat bij debuggen (Shen & Tamkin, 2026; zie [het literatuuronderzoek](research.md#key-findings)). Een instructie om je in te houden sla je makkelijk over als een deadline dichtbij is; een hook niet.
+Waarom het afdwingen? In een gerandomiseerd experiment van Anthropic scoorden ontwikkelaars die een nieuwe library leerden met een AI-assistent 50% op een toets achteraf, tegen 67% voor wie met de hand codeerde. Het grootste verschil zat bij debuggen (Shen & Tamkin, 2026; zie [wat het onderzoek vond en wat je ermee doet](ai-coding-skills-study.md)). En instructies alleen hielden geen stand: een tutor in zijn systeemprompt vragen om stap voor stap te helpen, veranderde niets in een experiment met 1.059 studenten, terwijl poortjes in de werkwijze zelf beter werkten (Barth et al., 2026). Een hook is zo'n poortje.
 
 ## Zelf wijzigingen blokkeren met één hook
 
