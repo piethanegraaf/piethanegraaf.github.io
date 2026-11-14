@@ -11,6 +11,6 @@ The learning harness, the dashboard, this documentation and the research were ma
 - **Research:** the literature review and the notes were gathered and written by Claude agents. Important claims were checked against the source, but check them yourself before you build on them. The Dutch version of the research is a machine translation.
 - **Learning data and reflections:** the data in the dashboard and the reflections in the diary are the learner's own. The harness makes sure the AI does not write them.
 
-The harness was made by an AI that limits itself. That is a deliberate choice, but keep it in mind: the research partly relies on Anthropic sources (see §2.0 of the [research](research.md)).
+The harness was made by an AI that limits itself. That is a deliberate choice, but keep it in mind: the research partly relies on Anthropic sources (see §2.0 of the [research](research/index.md)).
 
 Visits to this site, and the votes in the poll on the home page, are counted with [GoatCounter](https://www.goatcounter.com/), without cookies and without collecting personal data. The totals of the poll are public.

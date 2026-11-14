@@ -9,17 +9,17 @@ jsonld: software
 
 Deze gratis, open-source harnas voor [Claude Code](https://docs.claude.com/en/docs/claude-code/overview) houdt het leren bij jou, op school en op je werk: hints in plaats van de code die je nog leert schrijven, tot je het zelf kunt. Daarna mag de AI het overnemen, en houd je de vaardigheid bij door het af en toe weer zelf te doen.
 
-[Installeren](install.md){ .md-button .md-button--primary } [Hoe het werkt](how-it-works.md){ .md-button } [Het onderzoek](research.md#key-findings){ .md-button }
+[Installeren](install.md){ .md-button .md-button--primary } [Hoe het werkt](how-it-works.md){ .md-button } [Het onderzoek](research/index.md#key-findings){ .md-button }
 
 ## Waarom ik hem bouwde
 
 De oefentoets van mijn vak objectgeoriënteerd programmeren op de hogeschool ging goed. Ik deed die grotendeels zonder AI, en vroeg om hulp als ik vastliep. De diagnostische toets daarna was anders: een half gebouwd project met een bestaand ontwerp, ontwerptaken om af te maken, en unit tests om aan te vullen, en die waren nieuw voor me. Ik wilde er gewoon doorheen komen. Ik was gestrest en van slag, en uiteindelijk leverde ik alleen het solution-bestand in, zonder het project.
 
-Achteraf had ik de code waarmee ik oefende zelden aan mezelf uitgelegd, en mijn ervaring met AI-agents op mijn werk had me een vals gevoel van zekerheid gegeven. Onderzoek laat hetzelfde risico zien: in een studie met wiskunde op de middelbare school verhoogde onbeperkte AI de oefenscores met 48%, maar verlaagde die de toetsscores met 17% zodra de AI weg was ([Bastani et al., 2025](research.md#key-findings)).
+Achteraf had ik de code waarmee ik oefende zelden aan mezelf uitgelegd, en mijn ervaring met AI-agents op mijn werk had me een vals gevoel van zekerheid gegeven. Onderzoek laat hetzelfde risico zien: in een studie met wiskunde op de middelbare school verhoogde onbeperkte AI de oefenscores met 48%, maar verlaagde die de toetsscores met 17% zodra de AI weg was ([Bastani et al., 2025](research/index.md#key-findings)).
 
 Daarom bouwde ik een harnas die het leren bij mij houdt. Ik oefen er nu mee; het echte tentamen moet nog komen, en op het [dashboard](/dashboard/?lang=nl) kun je mijn voortgang volgen.
 
-Junior developers lopen in dezelfde val: de agent krijgt het werk af, maar de vaardigheden die je medior maken, groeien niet ([§2.12 van het onderzoek](research.md#212-het-eeuwige-juniorprobleem)).
+Junior developers lopen in dezelfde val: de agent krijgt het werk af, maar de vaardigheden die je medior maken, groeien niet ([§2.12 van het onderzoek](research/literature.md#212-het-eeuwige-juniorprobleem)).
 
 ## Wat denk jij? {#poll}
 
@@ -64,7 +64,7 @@ Junior developers lopen in dezelfde val: de agent krijgt het werk af, maar de va
 
     Wat studies zeggen over leren programmeren met AI: de belangrijkste bevindingen, een risicoanalyse en de bronnen.
 
-    [Naar de bevindingen](research.md#key-findings)
+    [Naar de bevindingen](research/index.md#key-findings)
 
 - **Dashboard**
 
@@ -86,7 +86,7 @@ Junior developers lopen in dezelfde val: de agent krijgt het werk af, maar de va
 2. **Besteed het daarna uit.** Staat een vaardigheid op L4, dan mag de AI het meteen doen, en houd jij toezicht. Je eigen tijd gaat naar wat je nog leert.
 3. **Onderhoud het af en toe.** Met groeiende tussenpozen doe je een L4-vaardigheid de eerstvolgende keer dat die in je werk langskomt weer zelf. Gaat dat mis, dan zakt de vaardigheid een niveau.
 
-Elk onderdeel volgt een principe met empirische steun uit de leerwetenschap en uit onderzoek naar automatisering: zie het [onderzoek](research.md), met de bronnen in de [onderzoeksnotities](notes/index.md). Of de combinatie werkt, is niet getest. Daarom worden onderzoekers uitgenodigd om dat te toetsen in een gerandomiseerd experiment ([Voor onderzoekers](researchers.md)).
+Elk onderdeel volgt een principe met empirische steun uit de leerwetenschap en uit onderzoek naar automatisering: zie het [onderzoek](research/index.md), met de bronnen in de [onderzoeksnotities](notes/index.md). Of de combinatie werkt, is niet getest. Daarom worden onderzoekers uitgenodigd om dat te toetsen in een gerandomiseerd experiment ([Voor onderzoekers](researchers.md)).
 
 ## Voor wie
 
@@ -125,7 +125,7 @@ Ja. De code is open source onder AGPL-3.0, en de teksten, docs en data vallen on
 
 Installeer de harnas in je eigen project, bekijk hoe hij werkt, of lees het onderzoek erachter.
 
-[Installeren](install.md){ .md-button .md-button--primary } [Hoe het werkt](how-it-works.md){ .md-button } [Het onderzoek](research.md#key-findings){ .md-button }
+[Installeren](install.md){ .md-button .md-button--primary } [Hoe het werkt](how-it-works.md){ .md-button } [Het onderzoek](research/index.md#key-findings){ .md-button }
 
 !!! info "AI-verklaring"
     De leerharnas, het dashboard en deze documentatie zijn gemaakt met hulp van Claude (Anthropic). De leerdata en de reflecties in het dashboard zijn van de student zelf. Zie [AI-verklaring](ai-statement.md).

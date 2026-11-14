@@ -4,7 +4,7 @@ description: "Dated working notes behind the literature review: new evidence on 
 ---
 # Research notes
 
-These are the working notes behind the [research](../research.md): what the research agents found, with the source and the strength of the evidence for each claim.
+These are the working notes behind the [research](../research/index.md): what the research agents found, with the source and the strength of the evidence for each claim.
 
 | Note | Topic |
 |---|---|
@@ -16,6 +16,6 @@ These are the working notes behind the [research](../research.md): what the rese
 | [The eternal-junior problem](eternal_junior.md) | Junior developers at work who stay junior when an agent does the work: studies, analogies, and practitioner sources (talks, interviews, news, blogs). |
 | [Secure code for juniors](secure_coding_juniors.md) | Is secure coding a good first niche? AI code and security, over-trust, what juniors lack, what laws and standards ask, and junior developers against junior security specialists. |
 
-The citation checks, in which every source of the review was checked, are not on the site but in the [repository](https://github.com/piethanegraaf/piethanegraaf.github.io/tree/main/research/citation-checks). The corrections that came out of them are in §11 of the [research](../research.md).
+The citation checks, in which every source of the review was checked, are not on the site but in the [repository](https://github.com/piethanegraaf/piethanegraaf.github.io/tree/main/research/citation-checks). The corrections that came out of them are in §11 of the [research](../research/index.md).
 
 Quotes from sources are kept short. If you find a passage that is too long, please report it through the [security page](https://github.com/piethanegraaf/piethanegraaf.github.io/security).

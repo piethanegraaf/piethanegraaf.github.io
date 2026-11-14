@@ -22,7 +22,7 @@ Staat je instelling AI als hulpmiddel toe bij beoordeeld werk, maar geen code va
 - **Hulp stopt bij trede 4**: een vraag, waar het staat, een schets, of een voorbeeld van hoogstens 5 regels over een ander onderwerp. Een uitgewerkte oplossing is daar nooit beschikbaar. Op AI-niveau 0 geeft Claude helemaal geen hulp.
 - **Elk antwoord komt in een AI-logboek** in de repo, in `ai-verantwoording/`, geschreven door de hooks en niet door Claude: een regel per antwoord met de trede en het soort hulp, en een export van elke sessie. De laatste kolom is voor de student: wat die met de hulp deed en hoe die het controleerde.
 
-Zo heb je materiaal voor de verantwoording van het AI-gebruik, maar ook dit is geen bewijs: dezelfde grenzen als hierboven gelden. Of een voorbeeld op trede 4 nog telt als "ideeën genereren of structuur aanbrengen", bepaalt je instelling; het logboek noemt elk voorbeeld. Zie [Beoordeeld werk](how-it-works.md#beoordeeld-werk) en de onderbouwing in [§10.8 van het onderzoek](research.md#108-herziening-van-13-november-2026-beoordeeld-werk-volgens-de-oer).
+Zo heb je materiaal voor de verantwoording van het AI-gebruik, maar ook dit is geen bewijs: dezelfde grenzen als hierboven gelden. Of een voorbeeld op trede 4 nog telt als "ideeën genereren of structuur aanbrengen", bepaalt je instelling; het logboek noemt elk voorbeeld. Zie [Beoordeeld werk](how-it-works.md#beoordeeld-werk) en de onderbouwing in [§10.8 van het onderzoek](research/build-log.md#108-herziening-van-13-november-2026-beoordeeld-werk-volgens-de-oer).
 
 ## Afstemmen op je vak
 
@@ -84,4 +84,4 @@ Of, als AI als hulpmiddel mag bij de eindopdracht:
 
 - **Maak een kaart met vaardigheden** voor je vak, met de [OOD-kaart](https://github.com/piethanegraaf/piethanegraaf.github.io/tree/main/harness/maps/ood) als startpunt, en [installeer](install.md) de harnas ermee.
 - **Vragen, of wil je het in een vak proberen?** Mail naar [hanegraafpiet@gmail.com](mailto:hanegraafpiet@gmail.com).
-- **Waarom hij zo gebouwd is:** het [literatuuronderzoek](research.md) legt het bewijs achter elke keuze uit.
+- **Waarom hij zo gebouwd is:** het [literatuuronderzoek](research/index.md) legt het bewijs achter elke keuze uit.

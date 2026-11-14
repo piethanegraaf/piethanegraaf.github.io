@@ -30,11 +30,11 @@ description: "In Anthropic's randomized trial, developers who learned a new libr
 - **Not students.** Most participants already worked as developers. For beginners the stakes are higher: they still have to acquire the skills that experts only need to keep.
 - **A vendor study.** Anthropic makes AI coding tools, but this result runs against its commercial interest, which makes it more credible rather than less.
 
-The [literature review](research.md#28-generative-ai-and-learning-to-program-the-evidence-so-far) grades it A for the main effect and C for the patterns.
+The [literature review](research/literature.md#28-generative-ai-and-learning-to-program-the-evidence-so-far) grades it A for the main effect and C for the patterns.
 
 ## How it fits the other evidence
 
-The same picture appears in larger trials. In a high school with about 1,000 students, unrestricted GPT-4 raised practice scores by 48% but lowered exam scores by 17% once access was removed. A version that gave hints and no answers avoided the harm (Bastani et al., 2025). And telling a tutor in its system prompt to scaffold changed nothing in a trial with 1,059 students; gates built into the workflow did better (Barth et al., 2026). See the [key findings](research.md#key-findings).
+The same picture appears in larger trials. In a high school with about 1,000 students, unrestricted GPT-4 raised practice scores by 48% but lowered exam scores by 17% once access was removed. A version that gave hints and no answers avoided the harm (Bastani et al., 2025). And telling a tutor in its system prompt to scaffold changed nothing in a trial with 1,059 students; gates built into the workflow did better (Barth et al., 2026). See the [key findings](research/index.md#key-findings).
 
 ## What to do with it
 

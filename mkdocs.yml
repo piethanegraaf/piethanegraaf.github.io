@@ -43,6 +43,8 @@ theme:
         name: Light theme
   features:
     - content.code.copy
+    # A section with an index.md opens that page (the literature review: the overview).
+    - navigation.indexes
     - navigation.sections
     - navigation.top
     - search.highlight
@@ -102,7 +104,14 @@ plugins:
                 - C# OOP-cheat sheet: /nl/cheatsheet/
                 - Oefeningen veilig programmeren: secure-coding-exercises.md
             - Onderzoek:
-                - Literatuuronderzoek: research.md
+                - Literatuuronderzoek:
+                    - research/index.md
+                    - Literatuur: research/literature.md
+                    - Verschuiving in vaardigheden: research/skill-shift.md
+                    - Risico's: research/risks.md
+                    - Ontwerp: research/design.md
+                    - Bouwlog: research/build-log.md
+                    - Literatuurlijst: research/references.md
                 - Voor onderzoekers: researchers.md
                 - Begrippen: key-terms.md
                 - Het onderzoek van Anthropic naar AI en vaardigheden: ai-coding-skills-study.md
@@ -133,7 +142,14 @@ nav:
       - C# OOP cheat sheet: /cheatsheet/
       - Secure coding exercises: secure-coding-exercises.md
   - Research:
-      - Literature review: research.md
+      - Literature review:
+          - research/index.md
+          - Literature: research/literature.md
+          - Shift in skill needs: research/skill-shift.md
+          - Risks: research/risks.md
+          - Design: research/design.md
+          - Build log: research/build-log.md
+          - References: research/references.md
       - For researchers: researchers.md
       - Key terms: key-terms.md
       - Anthropic's study on AI and coding skills: ai-coding-skills-study.md

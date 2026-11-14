@@ -18,7 +18,13 @@ The site is in English (at the root) and Dutch (under /nl/). The code is AGPL-3.
 - [Secure coding exercises in C# and .NET](https://piethanegraaf.github.io/secure-coding-exercises/): eight free exercises mapped to the OWASP Top 10:2025, attack tests start red
 
 ## Research
-- [Literature review](https://piethanegraaf.github.io/research/): generative AI and learning to program, with a risk assessment and a learning-preserving Claude Code setup
+- [Literature review: overview](https://piethanegraaf.github.io/research/): key findings, summary, evaluation, limitations and how to cite
+- [Literature review: the evidence](https://piethanegraaf.github.io/research/literature/): learning to program with and without generative AI, with an evidence grade per study
+- [The shift in skill needs](https://piethanegraaf.github.io/research/skill-shift/): jobs, the economics of hand-written code, and what to practise
+- [Risks and mitigation](https://piethanegraaf.github.io/research/risks/): eighteen risks of practising with an agentic coding assistant, scored, with a mitigation plan
+- [Design of the harness](https://piethanegraaf.github.io/research/design/): the design principles and the Claude Code setup that enforces them
+- [Build log](https://piethanegraaf.github.io/research/build-log/): what the first sessions showed, the revisions and the change log
+- [References](https://piethanegraaf.github.io/research/references/): all sources of the review, by topic
 - [Research notes](https://piethanegraaf.github.io/notes/): dated evidence updates behind the review
 - [The eternal-junior problem](https://piethanegraaf.github.io/notes/eternal_junior/): do juniors stay junior when an AI agent does the work?
 - [Secure code for juniors](https://piethanegraaf.github.io/notes/secure_coding_juniors/): is secure coding a good first niche for juniors who work with an AI agent?

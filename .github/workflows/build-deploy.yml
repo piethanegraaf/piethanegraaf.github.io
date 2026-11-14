@@ -144,6 +144,12 @@ jobs:
       - name: Redirect the old /en/ addresses
         run: node harness/site-redirects.mjs site
 
+      # The literature review was one page until 14 November 2026; its sections now have pages under
+      # /research/. An old link to /research/#<section> goes on to the page that has that section.
+      # After the redirects (an old /en/research/#... arrives here with its anchor), before the CSP step.
+      - name: Send old anchors of the literature review to their new page
+        run: node harness/site-anchors.mjs site
+
       # FAQPage (pages with a FAQ section) and DefinedTermSet (the key terms) in the JSON-LD.
       - name: Add the FAQ and the key terms to the structured data
         run: node harness/site-jsonld.mjs site

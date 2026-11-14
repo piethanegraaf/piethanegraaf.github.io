@@ -51,7 +51,7 @@ Before the tests, `check.mjs` rebuilds your code with the security rules of the 
 - **The risk is confidence.** In a randomized study, people with an AI assistant wrote less secure code and more often believed it was secure (Perry et al., 2023).
 - **Mistakes come from misunderstanding, not carelessness.** In a build-it, break-it, fix-it contest, 78% of the projects had flaws from misunderstood security concepts (Votipka et al., 2020). So the harness asks you to explain, not just to make a test green.
 
-The studies, their evidence grades and their limits are in [§2.13 of the literature review](research.md#213-secure-code-as-a-first-niche-for-juniors). Whether these exercises make juniors code more securely has not been tested.
+The studies, their evidence grades and their limits are in [§2.13 of the literature review](research/literature.md#213-secure-code-as-a-first-niche-for-juniors). Whether these exercises make juniors code more securely has not been tested.
 
 ## Install
 
