@@ -2667,6 +2667,15 @@ flowchart TD
 
 ## 11. Wijzigingslog {#changelog}
 
+### 13 november 2026 (later): securityreview en de oplossingen
+
+Een securityreview van de hele repository, met agents van Claude Code, vond negen bevindingen. Ze staan met hun ernst en hun oplossing in [de securityreview](https://github.com/piethanegraaf/piethanegraaf.github.io/blob/main/research/security-review-2026-11-13.md), en zijn opgelost in volgorde van ernst.
+
+- **Hoog:** een subcommando van `skill.mjs` tussen aanhalingstekens, en beoordeeld werk achter `${HOME}`, een escape of brace-expansie, kwamen door de guard.
+- **Middel:** hele mappen van de harnas en het register, mappen van beschermde code, en de bestanden op gebruikersniveau waren niet beschermd.
+- **Laag:** links en korte Windows-namen, de reden van een override bij een gevoelige vaardigheid in de export, namen met é of ë in het privacyfilter, en volledige testnamen in een taak.
+- **Niet veranderd:** de conclusies van §2, en de grens van §7: de hooks zijn een zelfbindingsmiddel, geen sandbox.
+
 ### 13 november 2026 (nacht): een oefenkaart met oefeningen, en de docs weer in sync
 
 - **§10.11 (nieuw):** de oefenkaart `security-dotnet` met acht oefeningen, een diagram van een oefenmap zoals gebouwd, en wat opviel.

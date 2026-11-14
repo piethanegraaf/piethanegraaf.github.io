@@ -58,7 +58,10 @@ Bij L1–L3 blokkeert `guard.mjs` dat Claude code schrijft, verwijdert, bouwt of
 
 - het register en de state in `.learning/`, ook als het register in een andere map staat (`--learning-dir`);
 - de paden van [beoordeeld werk](#beoordeeld-werk) en het AI-logboek daarvan, op elk niveau, zonder override, ook buiten het project;
-- de harnas zelf: de hooks, `.claude/settings.json`, de skills diary, mastery-check en update-dashboard, en de regels.
+- de harnas zelf: de hooks, `.claude/settings.json`, de skills diary, mastery-check en update-dashboard, en de regels, ook als hele map (`rm -rf .claude/hooks`);
+- de bestanden op gebruikersniveau die de harnas installeert: `~/.claude/settings.json` en `~/.claude/leerharnas/`.
+
+De guard leest een commando zoals de shell het doet: aanhalingstekens en escapes weg, `~` en variabelen als `${HOME}` ingevuld, en het echte pad achter een link of een korte Windows-naam. Kan hij een pad niet oplossen terwijl er beoordeeld werk is ingesteld, dan weigert hij het. Zo kwam het uit de [securityreview van 13 november](https://github.com/piethanegraaf/piethanegraaf.github.io/blob/main/research/security-review-2026-11-13.md).
 
 Een shell-commando splitst de guard eerst in losse commando's. Hij kijkt naar het programma dat draait, niet naar woorden in de argumenten: `grep "msbuild"` is geen build, maar `bash -c "dotnet test"` wel.
 

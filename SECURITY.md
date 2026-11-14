@@ -20,6 +20,8 @@ The learning harness runs Node.js scripts as Claude Code hooks on your own compu
 - **The installer never overwrites without a backup.** It first shows what it will do, only changes files after `--yes`, and copies every file it changes to `.claude/leerharnas-backup/<time>/`. `--update` never touches your data or your own `CLAUDE.md`.
 - **The export is filtered.** `export.mjs` only exports a whitelist of fields, filters e-mail addresses, paths, user names, session ids and your own terms in `.learning/private.json`, and shows what it filtered with `--dry-run`.
 
+- **Reviewed.** A security review of 13 November 2026 found nine issues in the guard, the user-level gate and the export; all are fixed, see [research/security-review-2026-11-13.md](research/security-review-2026-11-13.md). The guard remains a commitment device, not a sandbox: a script that Claude writes elsewhere and runs is still out of its sight.
+
 `harness/security-check.mjs` checks these rules, plus secrets, forbidden files, the web pages and the CI settings, on every push and pull request.
 
 ## Supported versions
@@ -47,6 +49,8 @@ De leerharnas draait Node.js-scripts als hooks van Claude Code op je eigen compu
 - **Het AI-logboek van beoordeeld werk is bedoeld voor git.** In de paden van beoordeeld werk schrijven de hooks `ai-verantwoording/`: je prompts en de antwoorden van Claude, zonder uitvoer van tools. Die map staat niet in `.gitignore`, want je docent leest hem. Dezelfde filters als bij de export halen er e-mailadressen, je thuismap, transcriptpaden en je eigen termen uit. Lees hem, en draai de securitycheck, voordat je hem pusht.
 - **De installer overschrijft nooit zonder backup.** Hij laat eerst zien wat hij gaat doen, wijzigt pas iets na `--yes`, en kopieert elk bestand dat hij wijzigt naar `.claude/leerharnas-backup/<tijd>/`. `--update` laat je data en je eigen `CLAUDE.md` altijd staan.
 - **De export wordt gefilterd.** `export.mjs` exporteert alleen een whitelist van velden, filtert e-mailadressen, paden, gebruikersnamen, sessie-id's en je eigen termen uit `.learning/private.json`, en toont met `--dry-run` wat er is weggefilterd.
+
+- **Gereviewd.** Een securityreview van 13 november 2026 vond negen problemen in de guard, de poort op gebruikersniveau en de export; ze zijn allemaal opgelost, zie [research/security-review-2026-11-13.md](research/security-review-2026-11-13.md). De guard blijft een zelfbindingsmiddel, geen sandbox: een script dat Claude elders schrijft en draait, ziet hij nog steeds niet.
 
 `harness/security-check.mjs` controleert deze regels, en ook geheimen, verboden bestanden, de webpagina's en de CI-instellingen, bij elke push en pull request.
 

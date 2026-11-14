@@ -344,9 +344,15 @@ export async function build(project, { previous = null, todo = null } = {}) {
     }
   }
 
-  const overrides = events.filter((e) => e.type === "override").map((e) => ({
-    at: e.at, skill: e.skill === "*" ? "*" : knownSkill(e.skill), minutes: Number(e.minutes ?? 0), reason: scrub(e.reason ?? null, "override.reason"),
-  }));
+  // The reason of an override for a sensitive skill stays home, like the texts of its tasks (security review V6):
+  // "I need the fix for the SQLi in the refund search" says where an employer's code is vulnerable.
+  const overrides = events.filter((e) => e.type === "override").map((e) => {
+    const withheld = e.skill !== "*" && lib.isSensitive(data, e.skill);
+    return {
+      at: e.at, skill: e.skill === "*" ? "*" : knownSkill(e.skill), minutes: Number(e.minutes ?? 0),
+      reason: withheld ? null : scrub(e.reason ?? null, "override.reason"), ...(withheld ? { withheld: true } : {}),
+    };
+  });
   // The transfer task (/mastery-check): passed or not, per skill. The step L3 -> L4 needs a pass.
   const transfers = events.filter((e) => e.type === "transfer-passed" || e.type === "transfer-failed").map((e) => ({
     at: e.at, skill: knownSkill(e.skill), passed: e.type === "transfer-passed",

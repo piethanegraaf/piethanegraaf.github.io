@@ -2667,6 +2667,15 @@ flowchart TD
 
 ## 11. Change log {#changelog}
 
+### 13 November 2026 (later): security review and its fixes
+
+A security review of the whole repository, with Claude Code agents, found nine issues. They are listed with their severity and fix in [the security review](https://github.com/piethanegraaf/piethanegraaf.github.io/blob/main/research/security-review-2026-11-13.md), and were fixed in order of severity.
+
+- **High:** a quoted subcommand of `skill.mjs`, and graded work behind `${HOME}`, an escape or brace expansion, passed the guard.
+- **Medium:** whole folders of the harness and the record, folders of protected code, and the user-level files were not protected.
+- **Low:** links and Windows short names, the reason of an override for a sensitive skill in the export, names with é or ë in the privacy filter, and full test names in a task.
+- **Not changed:** the conclusions of §2, and the limit of §7: the hooks are a commitment device, not a sandbox.
+
 ### 13 November 2026 (night): a practice map with exercises, and the docs in sync again
 
 - **§10.11 (new):** the practice map `security-dotnet` with eight exercises, a diagram of a practice folder as built, and what stood out.

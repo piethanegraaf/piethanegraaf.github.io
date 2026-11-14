@@ -58,7 +58,10 @@ At L1–L3, `guard.mjs` blocks Claude from writing, deleting, building or testin
 
 - the record and the state in `.learning/`, also when the record is in another folder (`--learning-dir`);
 - the paths of [graded work](#graded-work) and its AI-use log, at every level, without override, also outside the project;
-- the harness itself: the hooks, `.claude/settings.json`, the diary, mastery-check and update-dashboard skills, and the rules.
+- the harness itself: the hooks, `.claude/settings.json`, the diary, mastery-check and update-dashboard skills, and the rules, also as a whole folder (`rm -rf .claude/hooks`);
+- the user-level files the harness installs: `~/.claude/settings.json` and `~/.claude/leerharnas/`.
+
+The guard reads a command as the shell does: quotes and escapes removed, `~` and variables such as `${HOME}` filled in, and the real path behind a link or a Windows short name. When it cannot resolve a path while graded work is set, it refuses. This came out of the [security review of 13 November](https://github.com/piethanegraaf/piethanegraaf.github.io/blob/main/research/security-review-2026-11-13.md).
 
 The guard first splits a shell command into simple commands. It looks at the program that runs, not at words in the arguments: `grep "msbuild"` is not a build, but `bash -c "dotnet test"` is.
 

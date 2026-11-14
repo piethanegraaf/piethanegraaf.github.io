@@ -6,8 +6,8 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import {
-  readStdin, loadSkills, levelForPath, isOverrideActive, logEvent, rel, isHarnessPath,
-  codeExtRe, buildRes, PROTECTED, levelName, t, ROOT, isRecordFile, gradedOf, isGradedPath, isGradedDir, mentionsGraded,
+  readStdin, loadSkills, levelForPath, skillForPath, isOverrideActive, logEvent, rel, isHarnessPath,
+  codeExtRe, buildRes, PROTECTED, levelName, t, ROOT, isRecordFile, gradedOf, isGradedPath, isGradedDir, mentionsGraded, protectedDirOf, holdsProtected, isUserHarnessPath,
   loadSession, saveSession,
 } from "./lib.mjs";
 import { parseCommand, commandName } from "./shell.mjs";
@@ -19,7 +19,9 @@ import { parseCommand, commandName } from "./shell.mjs";
 // the program it runs: "msbuild" in a grep pattern is not a build (setup review 3.4).
 const WRITE_PROGRAMS = new Set(["cp", "mv", "rm", "del", "erase", "copy", "move", "ren", "rename", "tee", "touch", "truncate", "dd",
   "set-content", "sc", "add-content", "ac", "out-file", "new-item", "ni", "copy-item", "cpi", "move-item", "mi",
-  "remove-item", "ri", "rename-item", "rni", "clear-content", "clc", "install", "rsync", "ln", "unzip", "tar"]);
+  "remove-item", "ri", "rename-item", "rni", "clear-content", "clc", "install", "rsync", "ln", "unzip", "tar",
+  // A link makes a protected path reachable under another name (security review V7).
+  "mklink"]);
 // A command that writes the files it names (not counting redirects, which have their own targets).
 function writesFiles(argv, raw) {
   const name = commandName(argv[0]);
@@ -31,8 +33,17 @@ function writesFiles(argv, raw) {
   if (name === "git" && /^(checkout|restore|reset|stash|apply|rm|mv|clean)$/i.test(argv[1] ?? "")) return true;
   return /WriteAll(Text|Lines|Bytes)|\bAppendAll(Text|Lines)\b/i.test(raw);
 }
-// Everything except list/status changes the learner's record.
+// Everything except list/status changes the learner's record. RECORD_CMD is only a first, textual check; the
+// decision is made on the parsed words (security review of 13 Nov, V1: a quoted subcommand passed the regex).
 const RECORD_CMD = /skill\.mjs["']?\s+(set|review|override|untask|correct|add-micro|add|done|setting|paths|replay)\b/i;
+const CLI_READ = new Set(["list", "status", "since-export"]);
+// The scripts in .claude/hooks/ that Claude may run itself: the CLI (read commands only), the test runner (a
+// build, judged below) and the scaffold of graded work. Every other hook script changes state when run by hand.
+const HOOK_SCRIPTS_RUNNABLE = new Set(["skill.mjs", "check.mjs", "scaffold.mjs"]);
+// Programs that delete or move the paths they name (security review V3): a folder that holds the harness or the
+// record may not be one of them. For a move, only the sources count (the last word is where it goes).
+const DELETES = new Set(["rm", "rmdir", "rd", "del", "erase", "remove-item", "ri", "unlink"]);
+const MOVES = new Set(["mv", "move", "move-item", "mi", "ren", "rename", "rename-item", "rni"]);
 const TODO = "TODO(human)";
 const CD = new Set(["cd", "pushd", "set-location", "sl", "chdir", "push-location"]);
 const NOWHERE = /^(\/dev\/null|\$null|nul)$/i;
@@ -166,6 +177,7 @@ if (["Edit", "Write", "MultiEdit", "NotebookEdit"].includes(tool)) {
     deny(t("guard.recordFile"), { tool, file: shown(file) });
   }
   if (isHarnessPath(rel(file))) deny(t("guard.harness"), { tool, file: rel(file) });
+  if (isUserHarnessPath(file)) deny(t("guard.userHarness"), { tool, file: shown(file) });
   // 2) Graded work: every file, inside or outside this project (#54), whatever the level.
   if (file && isGradedPath(data, file, ROOT, GRADED)) gradedDeny(t("guard.what.gradedWrite", { file: shown(file) }), { tool, file: shown(file) });
   if (!file || !CODE_EXT.test(file)) process.exit(0);
@@ -196,16 +208,62 @@ if (tool === "Bash" || tool === "PowerShell") {
   const cmd = String(ti.command ?? "");
   const short = cmd.slice(0, 200);
   if (RECORD_CMD.test(cmd)) deny(t("guard.recordCmd"), { tool, cmd: short });
-  const parsed = parseCommand(cmd);
+  // Bash removes quotes and backslash escapes before it runs a word; PowerShell does not (V1, V2, V3).
+  const parsed = parseCommand(cmd, { shell: tool === "PowerShell" ? "powershell" : "bash" });
   // eval, iex, Invoke-Expression, powershell -EncodedCommand: the guard cannot see what runs.
   if (parsed.opaque) deny(t("guard.opaque"), { tool, cmd: short });
 
-  // A path as the shell sees it: ~ and $HOME are the home folder, /c/... is C:/..., relative to cwd.
+  // A path as the shell sees it: ~ and variables expanded, /c/... is C:/..., relative to cwd (security review V2:
+  // `${HOME}/eindopdracht` and `$USERPROFILE/...` hid graded work). HOME and USERPROFILE are the home folder, PWD
+  // the working folder, any other variable its value in this environment.
   const home = os.homedir();
-  const resolvePath = (cwd, p) => path.resolve(cwd, String(p)
-    .replace(/^~(?=$|[\\/])/, home).replace(/^\$(HOME|env:USERPROFILE)(?=$|[\\/])/i, home)
-    .replace(/^\/([a-zA-Z])\//, "$1:/"));
+  const envGet = (n) => {
+    const k = n.toUpperCase();
+    if (k === "HOME" || k === "USERPROFILE") return home;
+    const hit = Object.keys(process.env).find((e) => e.toUpperCase() === k);
+    return hit ? process.env[hit] : undefined;
+  };
+  // { text, unknown }: the word expanded, and the index where something starts that the guard cannot know (an
+  // unknown variable, a command substitution, brace expansion), or -1.
+  const expand = (word, cwd) => {
+    let s = String(word).replace(/^~(?=$|[\\/])/, home);
+    s = s.replace(/\$\{(?:env:)?([A-Za-z_][A-Za-z0-9_]*)\}|\$(?:env:)?([A-Za-z_][A-Za-z0-9_]*)/gi, (m, a, b) => {
+      const n = a ?? b;
+      const v = n.toUpperCase() === "PWD" ? cwd : envGet(n);
+      return v === undefined ? m : v;
+    });
+    const u = s.match(/\$[{(A-Za-z_']|``|\{[^{}]*(,|\.\.)[^{}]*\}/);
+    return { text: s, unknown: u ? u.index : -1 };
+  };
+  const unresolvedWordAt = (cwd, w) => expand(w, cwd).unknown !== -1;
+  // PowerShell takes \ as a folder separator on every platform (Remove-Item .claude\hooks on Linux too).
+  const sep = (s) => (tool === "PowerShell" ? s.replace(/\\/g, "/") : s);
+  const resolvePath = (cwd, p) => path.resolve(cwd, sep(expand(p, cwd).text).replace(/^\/([a-zA-Z])\//, "$1:/"));
+  // Could this word point into graded work? A word the guard cannot resolve counts when its known part (the folder
+  // before the unknown part) is graded, or when nothing of it is known.
+  // Brace expansion {a,b}: every alternative is a path of its own (at most 32).
+  const braces = (s) => {
+    const m = s.match(/\{([^{}]*,[^{}]*)\}/);
+    if (!m) return [s];
+    return m[1].split(",").slice(0, 32).flatMap((alt) => braces(s.slice(0, m.index) + alt + s.slice(m.index + m[0].length))).slice(0, 32);
+  };
+  const mayBeGraded = (cwd, w) => {
+    const variants = braces(String(w));
+    if (variants.length > 1) return variants.some((v) => mayBeGraded(cwd, v));
+    const e = expand(w, cwd);
+    if (e.unknown === -1) return isGradedPath(data, resolvePath(cwd, w), ROOT, GRADED);
+    const prefix = e.text.slice(0, e.unknown);
+    if (!prefix) return true;
+    const dir = /[\\/]/.test(prefix) ? path.resolve(cwd, prefix.replace(/[^\\/]*$/, "").replace(/^\/([a-zA-Z])\//, "$1:/")) : cwd;
+    return isGradedDir(data, dir, ROOT, GRADED) || isGradedPath(data, dir, ROOT, GRADED);
+  };
   const looksLikePath = (w) => /[\\/]/.test(w) || CODE_EXT.test(w) || /^\.\.?$/.test(w);
+  // A word that is, or stands for, a folder: it ends in / or is ".", it has a glob, it exists as a folder, or it
+  // does not exist and has no extension (V4).
+  const folderish = (abs, w) => {
+    if (/[\\/]$|(^|[\\/])\.\.?$|[*?]/.test(w)) return true;
+    try { return fs.statSync(abs).isDirectory(); } catch { return !/\.[A-Za-z0-9]{1,8}$/.test(w); }
+  };
 
   // Which skills does this command touch? Per simple command: the working directory at that point
   // (cd, pushd, Set-Location) plus the paths in its arguments. A directory gets a probe file inside it.
@@ -219,13 +277,32 @@ if (tool === "Bash" || tool === "PowerShell") {
     hits.set(key, { level, skill, building: building || hits.get(key)?.building || false });
   };
   let cwd = input.cwd ?? process.cwd();
+  // false after a cd to a folder the guard cannot resolve ($X, $(...)): from then on graded work fails closed (V2).
+  let cwdKnown = true;
   const allowedTooling = [];
   for (const { argv, redirects, raw } of parsed.commands) {
     const name = commandName(argv[0]);
     const args = argv.slice(1);
+    // The learner's CLI and the other hook scripts, decided on the parsed words (V1): skill.mjs only with a
+    // read command, and no hook script that changes state when run by hand (prompt-gate, reflect-gate ...).
+    {
+      const k = argv.findIndex((w) => /\.mjs$/i.test(w) && rel(resolvePath(cwd, w))?.toLowerCase().startsWith(".claude/hooks/"));
+      if (k !== -1 && !HOOK_SCRIPTS_RUNNABLE.has(commandName(argv[k]))) deny(t("guard.harness"), { tool, cmd: short });
+      // skill.mjs by name, wherever it is (a copy outside .claude/hooks/ writes the same record).
+      const s = argv.findIndex((w) => commandName(w) === "skill.mjs");
+      if (s !== -1) {
+        const sub = argv.slice(s + 1).find((a) => !/^-/.test(a));
+        if (sub !== undefined && !CLI_READ.has(sub.toLowerCase())) deny(t("guard.recordCmd"), { tool, cmd: short });
+      }
+    }
     if (CD.has(name)) {
       const target = args.find((a) => !/^-/.test(a));
-      if (target) cwd = resolvePath(cwd, target);
+      if (target) {
+        const e = expand(target, cwd);
+        if (e.unknown !== -1) cwdKnown = false;
+        else if (path.isAbsolute(e.text) || /^\/[a-zA-Z]\//.test(e.text)) cwdKnown = true;
+        cwd = resolvePath(cwd, target);
+      }
       continue;
     }
     // Graded work: deterministic tooling is allowed and logged (#55). Only when it is about graded work;
@@ -239,7 +316,18 @@ if (tool === "Bash" || tool === "PowerShell") {
     // Writes: redirect targets, plus the files named by a command that writes (cp, sed -i, Set-Content ...).
     const targets = redirects.filter((r) => !NOWHERE.test(r)).map((r) => resolvePath(cwd, r));
     const writes = argv.length > 0 && writesFiles(argv, raw);
-    if (writes) for (const a of args) if (!/^-/.test(a) && looksLikePath(a)) targets.push(resolvePath(cwd, a));
+    // Every word of a program that writes, also a bare name after cd ("cd .learning && tee skills.json", V3).
+    if (writes) for (const a of args) if (!/^-/.test(a)) targets.push(resolvePath(cwd, a));
+    // Deleting or moving a folder that holds the harness or the record (rm -rf ., mv <project> x), V3.
+    {
+      const words = args.filter((a) => !/^-/.test(a));
+      const gone = DELETES.has(name) ? words : MOVES.has(name) ? words.slice(0, -1) : [];
+      for (const a of gone) {
+        const kind = holdsProtected(resolvePath(cwd, a));
+        if (kind) deny(t(kind === "record" ? "guard.recordCmd" : "guard.harness"), { tool, cmd: short });
+        if (isUserHarnessPath(resolvePath(cwd, a), { gone: true })) deny(t("guard.userHarness"), { tool, cmd: short });
+      }
+    }
     // A download names its output with an option, or lands in the working folder (review of 13 Nov, night:
     // the arc42 zip is fetched with curl, and must never land in graded work this way).
     if (name === "curl" || name === "wget") {
@@ -256,33 +344,94 @@ if (tool === "Bash" || tool === "PowerShell") {
       const r = rel(p);
       if (isRecordFile(p)) deny(t("guard.recordCmd"), { tool, cmd: short });
       if (isHarnessPath(r)) deny(t("guard.harness"), { tool, cmd: short });
+      const dir = protectedDirOf(p);
+      if (dir) deny(t(dir === "record" ? "guard.recordCmd" : "guard.harness"), { tool, cmd: short });
+      if (isUserHarnessPath(p)) deny(t("guard.userHarness"), { tool, cmd: short });
       if (CODE_EXT.test(p)) addPath(p, false);
+    }
+    // Folders as the target (security review V4): rm -rf <exercise>, cp -r … <exercise>, tar -C, unzip -d and
+    // git checkout -- <folder> reach every code file inside. Only a folder of a skill of the map counts, not
+    // an unmapped one (rm -rf build, bin, obj stay free).
+    if (writes || name === "git") {
+      const words = args.filter((a) => !/^-/.test(a));
+      const folders = [];
+      if (DELETES.has(name)) folders.push(...words.filter((w) => !CODE_EXT.test(w)));
+      if (MOVES.has(name) || ["cp", "copy", "copy-item", "cpi", "rsync", "install", "ln"].includes(name)) {
+        const dest = words.at(-1), sources = words.slice(0, -1);
+        const carriesCode = sources.some((s) => CODE_EXT.test(s) || /[*?]/.test(s) || /\.(zip|tar|tgz|gz|7z)$/i.test(s) || folderish(resolvePath(cwd, s), s));
+        if (dest !== undefined && sources.length && carriesCode && !CODE_EXT.test(dest)) folders.push(dest);
+        if (MOVES.has(name)) folders.push(...sources.filter((w) => !CODE_EXT.test(w)));
+      }
+      // A link to a folder of protected code (ln -s <exercise> /tmp/x, mklink /J C:/Temp/x <exercise>), V7.
+      if (name === "ln" || name === "mklink") {
+        folders.push(...words.filter((w) => !CODE_EXT.test(w) && !/^\/[a-z]$/i.test(w)));
+        for (const w of words) if (CODE_EXT.test(w)) addPath(resolvePath(cwd, w), false);
+      }
+      if (name === "tar" && args.some((a) => /^-?[a-zA-Z]*x/.test(a) || a === "--extract")) {
+        const k = args.findIndex((a) => a === "-C" || a === "--directory");
+        const eq = args.find((a) => /^--directory=/.test(a));
+        folders.push(k !== -1 && args[k + 1] ? args[k + 1] : eq ? eq.slice(12) : ".");
+      }
+      if (name === "unzip") {
+        const k = args.indexOf("-d");
+        folders.push(k !== -1 && args[k + 1] ? args[k + 1] : ".");
+      }
+      if (name === "git") {
+        const sub = (args[0] ?? "").toLowerCase();
+        const dd = args.indexOf("--");
+        if (sub === "checkout" || sub === "restore") {
+          const paths = dd !== -1 ? args.slice(dd + 1) : sub === "restore" ? words.slice(1) : [];
+          folders.push(...paths.filter((w) => !CODE_EXT.test(w)));
+          for (const w of paths) if (CODE_EXT.test(w)) addPath(resolvePath(cwd, w), false);
+        }
+        if (sub === "clean") folders.push(...(words.length > 1 ? words.slice(1) : ["."]));
+      }
+      for (const w of folders) {
+        const abs = resolvePath(cwd, w);
+        if (!folderish(abs, w)) continue;
+        const probe = path.join(/[*?]/.test(w) ? abs.replace(/[\\/][^\\/]*[*?].*$/, "") : abs, "__probe__.cs");
+        if (skillForPath(data, probe)) addPath(probe, false);
+      }
     }
     // Graded work (#49, #54): any write there, by any program, also outside this project.
     if (GRADED) {
+      // The words as the shell will see them, for a graded folder named through a variable (V2).
+      const seen = [name, ...args.map((a) => expand(a, cwd).text)].join(" ");
+      const names = mentionsGraded(GRADED, raw) || mentionsGraded(GRADED, seen);
+      // Why: a path the guard could not resolve gets its own message (write the path out in full).
+      const unresolvedWord = (w) => expand(w, cwd).unknown !== -1;
+      let unresolved = false;
       const gradedWrite = (() => {
         if (targets.some((p) => isGradedPath(data, p, ROOT, GRADED))) return true;
+        if (redirects.some((r) => !NOWHERE.test(r) && mayBeGraded(cwd, r))) { unresolved = redirects.some(unresolvedWord); return true; }
         const wide = writes || GRADED_WRITE_PROGRAMS.has(name);
-        // Every argument of a program that writes, also one without a slash ("touch Bank.cs", "mkdir Domain").
-        if (wide && args.some((a) => !/^-/.test(a) && isGradedPath(data, resolvePath(cwd, a), ROOT, GRADED))) return true;
+        // Every argument of a program that writes, also one without a slash ("touch Bank.cs", "mkdir Domain"), and
+        // one the guard cannot resolve.
+        if (wide && args.some((a) => !/^-/.test(a) && mayBeGraded(cwd, a))) { unresolved = args.some((a) => !/^-/.test(a) && unresolvedWord(a)); return true; }
         // A write the arguments do not show ([IO.File]::WriteAllText(...), a program without paths): the folder decides.
-        if (wide && (isGradedDir(data, cwd, ROOT, GRADED) || mentionsGraded(GRADED, raw))) return true;
+        if (wide && (isGradedDir(data, cwd, ROOT, GRADED) || names)) return true;
+        // After a cd the guard could not follow, any write may land in graded work: fail closed (V2).
+        if (!cwdKnown && (wide || redirects.some((r) => !NOWHERE.test(r)))) { unresolved = true; return true; }
         // git: a command that changes the repo, in a graded folder (git -C <dir> or the working folder).
         if (name === "git") {
-          let k = 0, dir = cwd;
+          let k = 0, dir = cwd, dirUnknown = !cwdKnown;
           while (k < args.length && /^-/.test(args[k])) {
-            if (/^-C$/.test(args[k])) dir = resolvePath(cwd, args[k + 1] ?? ".");
+            if (/^-C$/.test(args[k])) {
+              const w = args[k + 1] ?? ".";
+              dirUnknown = expand(w, cwd).unknown !== -1 && mayBeGraded(cwd, w);
+              dir = resolvePath(cwd, w);
+            }
             k += /^-(C|c)$/.test(args[k]) || /^--(git-dir|work-tree)$/.test(args[k]) ? 2 : 1;
           }
           const sub = (args[k] ?? "").toLowerCase();
-          if (sub && !gitReadOnly(sub, args.slice(k + 1)) && (isGradedDir(data, dir, ROOT, GRADED) || mentionsGraded(GRADED, raw))) return true;
+          if (sub && !gitReadOnly(sub, args.slice(k + 1)) && (dirUnknown || isGradedDir(data, dir, ROOT, GRADED) || names)) { unresolved = dirUnknown; return true; }
         }
         // Inline code (node -e, python -c ...): in a graded folder, or naming one.
         const inline = INLINE_CODE.find(([prog]) => prog === name);
-        if (inline && args.some((a) => inline[1].test(a)) && (isGradedDir(data, cwd, ROOT, GRADED) || mentionsGraded(GRADED, raw))) return true;
+        if (inline && args.some((a) => inline[1].test(a)) && (!cwdKnown || isGradedDir(data, cwd, ROOT, GRADED) || names)) return true;
         return false;
       })();
-      if (gradedWrite) gradedDeny(t("guard.what.gradedShell"), { tool, cmd: short });
+      if (gradedWrite) gradedDeny(t(unresolved ? "guard.what.gradedUnresolved" : "guard.what.gradedShell"), { tool, cmd: short });
     }
     // The dashboard export (see EXPORT_SCRIPT): allowed, unless --out points into this project.
     const script = name === "node" ? args.find((a) => !/^-/.test(a)) : null;
@@ -302,7 +451,8 @@ if (tool === "Bash" || tool === "PowerShell") {
       const dirs = isCheck ? [args[k + 1] && !/^-/.test(args[k + 1]) ? args[k + 1] : "."]
         : args.filter((a) => !/^-/.test(a) && !/^https?:/i.test(a) && looksLikePath(a));
       const all = dirs.length ? dirs.map((a) => resolvePath(cwd, a)) : [cwd];
-      if (all.some((d) => isGradedPath(data, d, ROOT, GRADED) || isGradedDir(data, d, ROOT, GRADED))) {
+      const unknown = dirs.length ? dirs.some((a) => unresolvedWordAt(cwd, a) && mayBeGraded(cwd, a)) : !cwdKnown;
+      if (unknown || all.some((d) => isGradedPath(data, d, ROOT, GRADED) || isGradedDir(data, d, ROOT, GRADED))) {
         gradedDeny(t("guard.what.gradedBuild"), { tool, cmd: short, building: true });
       }
     }

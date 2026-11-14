@@ -264,14 +264,38 @@ export function globToRegex(glob) {
   return new RegExp("^" + re + "$", "i");
 }
 
-// Project-relative path with forward slashes, or null if outside the project.
+// The real path: links, junctions and Windows short (8.3) names resolved, for the part that exists (security
+// review V7: `C:/Temp/jj` as a junction to the exercise, or `PIETHA~1.IO/...`, named a protected file by another
+// name). The part that does not exist yet is kept as it is.
+export function realPath(p) {
+  const start = path.resolve(String(p));
+  let cur = start;
+  const rest = [];
+  for (let i = 0; i < 64; i++) {
+    try { const r = fs.realpathSync.native(cur); return rest.length ? path.join(r, ...rest.reverse()) : r; } catch { /* go up */ }
+    const parent = path.dirname(cur);
+    if (parent === cur) return start;
+    rest.push(path.basename(cur));
+    cur = parent;
+  }
+  return start;
+}
+let rootReal = null;
+const ROOT_REAL = () => (rootReal ??= realPath(ROOT));
+
+// Project-relative path with forward slashes, or null if outside the project. A path outside the project that
+// really is inside it (through a link or a short name) counts as inside (V7).
 export function rel(p) {
   if (!p) return null;
   let s = String(p);
   const m = s.match(/^\/([a-zA-Z])\/(.*)$/); // Git Bash style /c/path/to/...
   if (m) s = `${m[1]}:/${m[2]}`;
-  const r = path.relative(ROOT, path.resolve(ROOT, s));
-  if (r.startsWith("..") || path.isAbsolute(r)) return null;
+  const abs = path.resolve(ROOT, s);
+  let r = path.relative(ROOT, abs);
+  if (r.startsWith("..") || path.isAbsolute(r)) {
+    r = path.relative(ROOT_REAL(), realPath(abs));
+    if (r.startsWith("..") || path.isAbsolute(r)) return null;
+  }
   return r.split(path.sep).join("/");
 }
 
@@ -308,10 +332,56 @@ export function isRecordFile(p, cwd = ROOT) {
   if (!p) return false;
   const r = rel(path.resolve(cwd, String(p).replace(/^\/([a-zA-Z])\//, "$1:/")));
   if (r !== null && (/^\.learning\/skills\.json$/i.test(r) || /^\.learning\/state(\/|$)/i.test(r))) return true;
-  const abs = path.resolve(absPath(p, cwd));
-  if (!inside(LEARN, abs)) return false;
-  const inLearn = path.relative(LEARN, abs).split(path.sep).join("/");
+  let abs = path.resolve(absPath(p, cwd));
+  let learn = LEARN;
+  if (!inside(learn, abs)) {
+    // The record reached through a link or a short name (V7).
+    abs = realPath(abs); learn = realPath(LEARN);
+    if (!inside(learn, abs)) return false;
+  }
+  const inLearn = path.relative(learn, abs).split(path.sep).join("/");
   return /^skills\.json$/i.test(inLearn) || /^state(\/|$)/i.test(inLearn);
+}
+
+// ---- Whole folders of the harness and the record (security review of 13 Nov, V3) ----
+// A write with one of these folders as its target (rm -rf .claude/hooks, mv .learning x, cp -r … .claude) reaches
+// every file inside: the guard treats the folder like its files.
+const PROTECTED_DIRS = new Set([".claude", ".claude/hooks", ".claude/skills", ".claude/skills/diary", ".claude/skills/mastery-check",
+  ".claude/skills/update-dashboard", ".claude/agents", ".learning", ".learning/state"]);
+const sameDir = (a, b) => path.relative(path.resolve(a), path.resolve(b)) === "";
+export function protectedDirOf(p) {
+  if (!p) return null;
+  const abs = path.resolve(String(p));
+  const r = rel(abs);
+  if (r !== null && PROTECTED_DIRS.has(r.replace(/\/+$/, "").toLowerCase())) return r.startsWith(".learning") ? "record" : "harness";
+  if (sameDir(LEARN, abs) || sameDir(path.join(LEARN, "state"), abs)) return "record";
+  return null;
+}
+// A folder that holds the harness or the record (the project itself, or a folder above it): deleting or moving it
+// takes them along. "harness", "record" or null.
+export function holdsProtected(p) {
+  if (!p) return null;
+  const abs = path.resolve(String(p));
+  const holds = (t) => { const r = path.relative(abs, t); return r === "" || (!r.startsWith("..") && !path.isAbsolute(r)); };
+  if (holds(path.join(ROOT, ".claude", "hooks"))) return "harness";
+  if (holds(LEARN)) return "record";
+  return null;
+}
+
+// The user-level files of the harness (security review V5): the gate for graded work and its config in
+// ~/.claude/leerharnas/ (install.mjs --user-guard), and ~/.claude/settings(.local).json that registers it (one
+// "disableAllHooks" there switches every project hook off). Also ~/.claude or the home folder as a whole, when
+// deleted or moved (`gone`).
+export function isUserHarnessPath(p, { gone = false } = {}) {
+  if (!p) return false;
+  if (!gone && path.resolve(String(p)) !== realPath(p) && isUserHarnessPath(realPath(p))) return true;
+  const abs = path.resolve(String(p));
+  const claude = path.join(os.homedir(), ".claude");
+  const under = (dir) => { const r = path.relative(dir, abs); return r === "" || (!r.startsWith("..") && !path.isAbsolute(r)); };
+  if (under(path.join(claude, "leerharnas"))) return true;
+  if (["settings.json", "settings.local.json"].some((f) => sameDir(path.join(claude, f), abs))) return true;
+  if (gone) { const r = path.relative(abs, path.join(claude, "leerharnas")); return r === "" || (!r.startsWith("..") && !path.isAbsolute(r)); }
+  return false;
 }
 
 // ---- Graded work (setup of 13 Nov, #49, #50, #54) ----
@@ -358,6 +428,12 @@ export function gradedOf(data) {
   const logDir = typeof g.logDir === "string" && g.logDir.trim() ? absPath(g.logDir).replace(/(.)\/+$/, "$1") : `${bases[0]}/${t("graded.dirName")}`;
   const res = paths.map((p) => (GLOB_CHAR.test(p) ? globToRegex(p) : new RegExp(`^${escapeRe(p)}(?:/.*)?$`, "i")));
   res.push(new RegExp(`^${escapeRe(logDir)}(?:/.*)?$`, "i"));
+  // The same folders by their real path, when the setting names them by a link or a short 8.3 name (security
+  // review V7: a short home folder in the setting, the long one behind a junction).
+  for (const p of [...paths.filter((x) => !GLOB_CHAR.test(x)), logDir]) {
+    const real = realPath(p).split(path.sep).join("/");
+    if (real.toLowerCase() !== p.toLowerCase()) res.push(new RegExp(`^${escapeRe(real)}(?:/.*)?$`, "i"));
+  }
   return { paths, bases, aiLevel, maxRung, logDir, res };
 }
 
@@ -366,7 +442,10 @@ export function isGradedPath(data, p, cwd = ROOT, G = gradedOf(data)) {
   if (!G || p === undefined || p === null || p === "") return false;
   const a = absPath(p, cwd);
   if (inside(LEARN, path.resolve(a))) return false;
-  return G.res.some((re) => re.test(a));
+  if (G.res.some((re) => re.test(a))) return true;
+  // Graded work reached through a link, a junction or a short name (V7).
+  const real = realPath(a).split(path.sep).join("/");
+  return real !== a && !inside(LEARN, path.resolve(real)) && G.res.some((re) => re.test(real));
 }
 // A folder counts when something inside it would (C:/repo for the pattern C:/repo/**).
 export const isGradedDir = (data, dir, cwd = ROOT, G = gradedOf(data)) => isGradedPath(data, `${absPath(dir, cwd)}/__probe__`, ROOT, G);
