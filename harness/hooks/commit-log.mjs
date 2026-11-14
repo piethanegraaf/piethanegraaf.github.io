@@ -33,10 +33,13 @@ export function commitLog(G, { push = false, dryRun = false, now = new Date() } 
   const logDir = G.logDir;
   if (!fs.existsSync(logDir)) { say.push(t("cl.noLog", { dir: logDir })); return out(1); }
   const top = git(logDir, ["rev-parse", "--show-toplevel"]);
-  if (!top.ok) { say.push(t("cl.noRepo", { dir: logDir })); return out(1); }
+  // The folder relative to the repo, as git sees it: a short 8.3 name (RUNNER~1) or a link in the setting
+  // would make path.relative() leave the repo, while git resolves both.
+  const prefix = git(logDir, ["rev-parse", "--show-prefix"]);
+  if (!top.ok || !prefix.ok) { say.push(t("cl.noRepo", { dir: logDir })); return out(1); }
   const repo = top.out;
-  const rel = path.relative(path.resolve(repo), path.resolve(logDir)).split(path.sep).join("/");
-  if (!rel || rel.startsWith("..")) { say.push(t("cl.noRepo", { dir: logDir })); return out(1); }
+  const rel = prefix.out.replace(/\/+$/, "");
+  if (!rel) { say.push(t("cl.noRepo", { dir: logDir })); return out(1); }
   const staged = git(repo, ["diff", "--cached", "--name-only"]);
   if (!staged.ok) { say.push(staged.err); return out(1); }
   if (lines(staged.out).length) { say.push(t("cl.staged", { list: lines(staged.out).slice(0, 5).join(", ") })); return out(1); }
