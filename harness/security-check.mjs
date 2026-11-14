@@ -124,8 +124,11 @@ function contentRules(file, text) {
 }
 
 // Long literal quotes in research notes: copyright doubt.
+// Not the pages of the literature review itself (docs/<lang>/research/): that was one page outside any
+// research folder (docs/<lang>/research.md) until 14 November 2026, and the split kept the rule's reach the same.
 function copyrightRules(file, text) {
   if (!/(^|\/)(research[_-]?notes|research|notes|onderzoek)\//i.test(file) || !/\.md$/i.test(file)) return [];
+  if (/(^|\/)docs\/[a-z]{2}\/research\/[^/]+\.md$/i.test(file)) return [];
   const out = [];
   const lines = text.split(/\r?\n/);
   let start = -1, words = 0;

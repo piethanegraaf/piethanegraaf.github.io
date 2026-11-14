@@ -114,4 +114,10 @@ test("copyright: long quotes in research notes are TWIJFEL", () => {
   assert.ok(has(copyrightRules("docs/nl/research_notes/artikel.md", quote), "TWIJFEL", "copyright.quote"));
   assert.deepEqual(copyrightRules("docs/nl/index.md", quote), []);
   assert.deepEqual(copyrightRules("docs/nl/research_notes/artikel.md", "> kort citaat"), []);
+  // The pages of the literature review (one page, docs/<lang>/research.md, until 14 November 2026) stay out
+  // of the rule, as before; the research notes and other research folders stay in.
+  assert.deepEqual(copyrightRules("docs/en/research/literature.md", quote), []);
+  assert.ok(has(copyrightRules("docs/en/notes/labour_market.md", quote), "TWIJFEL", "copyright.quote"));
+  assert.ok(has(copyrightRules("research/citation-checks/check.md", quote), "TWIJFEL", "copyright.quote"));
+  assert.ok(has(copyrightRules("docs/en/research/notes/x.md", quote), "TWIJFEL", "copyright.quote"));
 });
