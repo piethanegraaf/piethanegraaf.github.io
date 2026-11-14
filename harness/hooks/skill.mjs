@@ -49,7 +49,7 @@ function need(id) {
 
 function row(s, indent = "") {
   const st = taskStats(s.id, 10, isMicro(s) ? null : data);
-  const rate = st.n ? t("cli.row.rate", { ok: st.ok, n: st.n }) : "";
+  const rate = st.n ? t("cli.row.rate", { ok: st.ok, n: st.n, solo: st.solo }) : "";
   const pend = st.pending ? t("cli.row.pending", { n: st.pending }) : "";
   // Neutral: a due review is not "late", it waits until the skill comes by in real work (S2).
   const due = isReviewDue(s) ? t("cli.row.due") : "";

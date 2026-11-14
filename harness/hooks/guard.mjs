@@ -39,7 +39,7 @@ const RECORD_CMD = /skill\.mjs["']?\s+(set|review|override|untask|correct|add-mi
 const CLI_READ = new Set(["list", "status", "since-export"]);
 // The scripts in .claude/hooks/ that Claude may run itself: the CLI (read commands only), the test runner (a
 // build, judged below) and the scaffold of graded work. Every other hook script changes state when run by hand.
-const HOOK_SCRIPTS_RUNNABLE = new Set(["skill.mjs", "check.mjs", "scaffold.mjs"]);
+const HOOK_SCRIPTS_RUNNABLE = new Set(["skill.mjs", "check.mjs", "scaffold.mjs", "commit-log.mjs"]);
 // Programs that delete or move the paths they name (security review V3): a folder that holds the harness or the
 // record may not be one of them. For a move, only the sources count (the last word is where it goes).
 const DELETES = new Set(["rm", "rmdir", "rd", "del", "erase", "remove-item", "ri", "unlink"]);
@@ -111,6 +111,8 @@ function gradedTooling(name, args, redirects, cwd) {
   if (name === "node") {
     const script = args.find((a) => !/^-/.test(a));
     if (script && path.resolve(cwd, script).toLowerCase() === path.join(ROOT, ".claude", "hooks", "scaffold.mjs").toLowerCase()) return "scaffold";
+    // The commit of the AI-use log (#64): only the log folder, with a fixed message, never the student's work.
+    if (script && path.resolve(cwd, script).toLowerCase() === path.join(ROOT, ".claude", "hooks", "commit-log.mjs").toLowerCase()) return "commit-log";
   }
   return null;
 }
@@ -309,7 +311,7 @@ if (tool === "Bash" || tool === "PowerShell") {
     // elsewhere the same command is judged as before (dotnet new is a build at L1-L3).
     if (GRADED) {
       const kind = gradedTooling(name, args, redirects, cwd);
-      const aboutGraded = kind && (isGradedDir(data, cwd, ROOT, GRADED) || mentionsGraded(GRADED, raw)
+      const aboutGraded = kind && (kind === "commit-log" || isGradedDir(data, cwd, ROOT, GRADED) || mentionsGraded(GRADED, raw)
         || args.some((a) => !/^-/.test(a) && isGradedPath(data, resolvePath(cwd, a), ROOT, GRADED)));
       if (aboutGraded) { allowedTooling.push(raw.trim().replace(/\s+/g, " ").slice(0, 200)); continue; }
     }
@@ -438,6 +440,8 @@ if (tool === "Bash" || tool === "PowerShell") {
     if (script && EXPORT_SCRIPT.test(script) && rel(resolvePath(cwd, script)) === null) {
       const k = args.indexOf("--out");
       if (k !== -1 && args[k + 1] !== undefined && rel(resolvePath(cwd, args[k + 1])) !== null) deny(t("guard.exportOut"), { tool, cmd: short });
+      // A session that only updated the dashboard needs no catch-up diary (#65): sessionWork reads this event.
+      if (!args.includes("--dry-run") && !args.includes("--check")) logEvent({ type: "dashboard-export", session: input.session_id ?? null });
       continue;
     }
     // Builds: a build pattern that matches at the START of the command (the program itself), or check.mjs run by node.

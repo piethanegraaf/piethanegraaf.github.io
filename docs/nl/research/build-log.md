@@ -612,6 +612,17 @@ Deze delen van het ontwerp zijn vervangen. Ze stonden op de [ontwerppagina](desi
 
 ## 11. Wijzigingslog {#changelog}
 
+### 14 november 2026 (avond): gelukt is niet zelfstandig, en de AI-verantwoording in één stap
+
+De pilotstudent besliste punt 63–67 na een sessie aan het klassendiagram van de eindopdracht. Die lukte alleen dankzij Socratische vragen (trede 1), terwijl het niveau "L3 Zelfstandig" heet en de taak meetelde als gelukt.
+
+- **#63 Gelukt en zelfstandig apart.** Gelukt blijft trede 0–2, zelfstandig is alleen trede 0, op elk niveau. De taak van die sessie was dus gelukt, maar niet zelfstandig, en telde terecht niet mee voor L4. Wat misging waren de woorden: naast "L3 Zelfstandig" stond alleen "succes 3/3", en het kopje "Wat ging goed (zelfstandig)" van het dagboek noemde trede 0–2 zelfstandig. Nu tonen de prompt-gate, de sessiestart en `status` beide getallen ("gelukt 3/3, waarvan zelfstandig 2"), en het dagboek schrijft "zelfstandig" alleen bij trede 0. Eerst is overwogen om hulp op L3 als niet gelukt te tellen; de student koos ervoor dat het gelukt blijft maar niet zelfstandig heet, zodat er met terugwerkende kracht niets zakt.
+- **#64 De AI-verantwoording committen.** Na `/diary` vraagt de harnas "AI-verantwoording nu committen en pushen?"; bij ja draait Claude `commit-log.mjs`, dat alleen de map van het logboek commit, met een vaste tekst. Het werk zelf en eigen commits van de student blijven buiten bereik.
+- **#65 Alleen het dashboard bijgewerkt:** geen inhaaldagboek en geen dagboekvraag bij het stoppen. De guard logt de export, en zo'n sessie telt niet als werk.
+- **#66 Eerst het inhaaldagboek, dan de zekerheid.** Een los "1" op een startbericht met genummerde punten werd als zelfvertrouwen gelogd.
+- **#67 Trefwoorden binnen een langer trefwoord** tellen niet meer: "class diagrammen" koos `ood.klassen-properties` (via "class ") in plaats van `uml.klassendiagram`.
+- **Niet veranderd:** AI-niveau 1 in beoordeeld werk. De casus vraagt een verantwoording "conform de OER (niveau 0/1)" en een uitbreiding ter plekke zonder AI, dus ook op L4 schrijft Claude daar niets.
+
 ### 14 november 2026: het onderzoek in pagina's, een link naar elke bron, en een herschrijving per pagina
 
 Het onderzoek was één pagina van ongeveer 51.000 woorden, eerst geschreven voor één student en later uitgebreid voor studenten en docenten, junior developers op hun werk, en onderzoekers. Het is nu een overzicht met zes pagina's eronder, elk herschreven voor de eigen lezer.

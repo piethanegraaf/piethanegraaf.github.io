@@ -30,7 +30,7 @@ Goal: self-regulation (plan → execution → reflection). The learner writes th
      - The transfer task (`/mastery-check`): `transfer-start`, `transfer-passed`, or `transfer-failed` (with `why`: `help` when there was a hint, `claude` when Claude judged it not passed).
      - Done automatically by the harness, mention it separately: `placement` (level of a new skill after its first task), `level` with `auto: true` (automatic demotion; `by` says by whom: harness, demotion analyst or backstop), `micro-add` with `auto: true` and `task-retag` (the analyst linked tasks to a microskill), `demotion-verdict` (the analyst's verdict, with reason). If it says `doubt: true`, note "the analyst was in doubt".
      - `review` with `auto: true`: the outcome of an L4 review, from normal work. `review-due`: the review came by.
-   - The plan and confidence from the start: the events `plan` (the first message of the session) and `confidence` (the number after your question "(1–5)"). Without a `confidence` event the confidence before is "unknown".
+   - The plan and confidence from the start: the events `plan` (the first message of the session) and `confidence` (the number after your question "(1–5)"). Without a `confidence` event the confidence before is "unknown". With more than one, the last one counts (#66).
    - `graded-tooling`: fixed tooling you ran in graded work (#55). Name the commands.
    - `check-question`: the outcome of the check questions (`right`, `half`, `open`).
 
@@ -80,7 +80,7 @@ Goal: self-regulation (plan → execution → reflection). The learner writes th
 - Reviews (L4, from normal work): <id: pass/shaky/fail → next date, or "none">
 - Automatic: <placements, automatic demotions, microskills from the analyst, doubt of the analyst, or "nothing">
 
-**What went well (independently):** <(micro)skills that worked at rung 0–2, concretely>
+**What went well:** <what worked, concretely, with the (micro)skill and the rung. Write "on your own" or "independently" only at rung 0; otherwise "with help up to rung N" (e.g. "with Socratic questions"). Also on L3 and L4 that is "solved with help", not independent>
 **Promotion signals:** <from `status`, with command, or "none">
 **Suggested microskills:** <add-micro suggestions from this session, or "none">
 
@@ -104,3 +104,7 @@ Goal: self-regulation (plan → execution → reflection). The learner writes th
    - **Followed by "Update the dashboard now? (yes / later)":** ask that question with AskUserQuestion, with the answers **yes** and **later**. It comes when something is new since the last export, and also when no export is known yet. When nothing is new, there is no question.
      - **Yes:** follow the skill update-dashboard (`.claude/skills/update-dashboard/SKILL.md`) in this session, with this folder as the practice folder, up to the pull request. The approval before the commit and the push (step 8 of that skill) stays. Never merge yourself.
      - **Later:** do nothing. The reminder at the next session start stays.
+
+6. **The AI-use log** (graded work only, #64). End your last message with the question, as plain text: "Commit and push the AI-use log now? (yes / later)". Plain text on purpose: the Stop hook fills the last column (`[log "…"]`) only after this answer, and the commit has to include it.
+   - **Yes** (the learner's next message): run `node .claude/hooks/commit-log.mjs --push` and pass its lines on. The script commits only the log folder, with a fixed message, refuses when anything else is staged, and pushes only when that commit is the only one not on the remote yet. The guard allows this script, and it becomes a tooling row in the log. Never commit the log folder any other way: no `git add`, `git commit` or `git push` of your own in graded work.
+   - **Later:** do nothing; the next commit takes the changes along.

@@ -27,7 +27,7 @@ import {
   isLearnerEntry, learnerEntryText, entryText, readTranscript, loadSkills, findSkill, familyIds, autoDemote,
   applyVerdict, findVerdict, lapseTasks, promotionAdvice, offerIsNew, offerText, newWorkSignal, beginNewWork, explanationText,
   noteConceptHelp, checkMicroProposal, microOfferText, readEvents, isOtherFamily, familyOf, placeAfterExplanation, recheckDemotion,
-  verdictFromAgent, t, gradedOf, isGradedPath, isGradedDir, mentionsGraded,
+  verdictFromAgent, t, gradedOf, isGradedPath, isGradedDir, mentionsGraded, sessionWork,
 } from "./lib.mjs";
 import path from "node:path";
 import { RUNG_MARK, REVIEW_RUNG_MARK, EXPLAIN_MARK, TRANSFER_MARK, MICRO_MARK, parseMicroMark, ASKS_CONFIDENCE, CHECK_MARK, LOG_MARK } from "./patterns.mjs";
@@ -377,6 +377,11 @@ if (G) {
 
 // ---------- 2. End of session: diary ----------
 if (input.stop_hook_active || !st.endRequested) done();
+// A session that only updated the dashboard needs no diary (setup review of 14 Nov, #65).
+if (!sessionWork(sid, st).has && readEvents().some((e) => e.session === sid && e.type === "dashboard-export")) {
+  st.endRequested = false;
+  done();
+}
 
 if (diaryHasSession(sid)) {
   // The session ends: explanations are only asked right away, so open tasks lapse now (S1). A

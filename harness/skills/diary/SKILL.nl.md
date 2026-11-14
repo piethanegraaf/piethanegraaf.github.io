@@ -30,7 +30,7 @@ Doel: zelfregulatie (plan → uitvoering → reflectie). De student schrijft de 
      - De transfertaak (`/mastery-check`): `transfer-start`, `transfer-passed`, of `transfer-failed` (met `why`: `help` als er een hint was, `claude` als Claude hem niet gehaald vond).
      - Automatisch gedaan door de harnas, noem het apart: `placement` (niveau van een nieuwe vaardigheid na de eerste taak), `level` met `auto: true` (automatisch omlaag; `by` zegt door wie: harnas, demotie-analist of achtervang), `micro-add` met `auto: true` en `task-retag` (de analist koppelde taken aan een microvaardigheid), `demotion-verdict` (het oordeel van de analist, met reden). Staat daar `doubt: true`, noteer dan "twijfel van de analist".
      - `review` met `auto: true`: de uitkomst van een L4-herhaling, uit gewoon werk. `review-due`: de herhaling kwam langs.
-   - Het plan en zelfvertrouwen van het begin: de events `plan` (het eerste bericht van de sessie) en `confidence` (het getal na jouw vraag "(1–5)"). Staat er geen `confidence`, dan is het zelfvertrouwen vooraf "onbekend".
+   - Het plan en zelfvertrouwen van het begin: de events `plan` (het eerste bericht van de sessie) en `confidence` (het getal na jouw vraag "(1–5)"). Staat er geen `confidence`, dan is het zelfvertrouwen vooraf "onbekend". Staan er meer, dan telt de laatste (#66).
    - `graded-tooling`: vaste tooling die je in beoordeeld werk draaide (#55). Noem de commando's.
    - `check-question`: de uitkomst van de controlevragen (`right`, `half`, `open`).
 
@@ -80,7 +80,7 @@ Doel: zelfregulatie (plan → uitvoering → reflectie). De student schrijft de 
 - Herhalingen (L4, uit gewoon werk): <id: pass/shaky/fail → volgende datum, of "geen">
 - Automatisch: <plaatsingen, automatische verlagingen, microvaardigheden van de analist, twijfel van de analist, of "niets">
 
-**Wat ging goed (zelfstandig):** <(micro)vaardigheden die op trede 0–2 lukten, concreet>
+**Wat ging goed:** <wat lukte, concreet, met de (micro)vaardigheid en de trede. Schrijf "zelf" of "zelfstandig" alleen bij trede 0; anders "met hulp tot trede N" (bijv. "met Socratische vragen"). Ook op L3 en L4 is dat "gelukt met hulp", niet zelfstandig>
 **Doorstroom-signalen:** <uit `status`, met commando, of "geen">
 **Voorgestelde microvaardigheden:** <add-micro-voorstellen van deze sessie, of "geen">
 
@@ -104,3 +104,7 @@ Doel: zelfregulatie (plan → uitvoering → reflectie). De student schrijft de 
    - **Volgt "Dashboard nu bijwerken? (ja / later)":** stel die vraag met AskUserQuestion, met de antwoorden **ja** en **later**. Hij komt als er iets nieuw is sinds de laatste export, en ook als er nog geen export bekend is. Is er niets nieuw, dan komt er geen vraag.
      - **Ja:** volg in deze sessie de skill update-dashboard (`.claude/skills/update-dashboard/SKILL.md`), met deze map als oefenmap, tot en met de pull request. Het akkoord vóór de commit en de push (stap 8 van die skill) blijft staan. Merge nooit zelf.
      - **Later:** doe niets. De herinnering bij de volgende sessiestart blijft.
+
+6. **De AI-verantwoording** (alleen bij beoordeeld werk, #64). Sluit je laatste bericht af met de vraag, als gewone tekst: "AI-verantwoording nu committen en pushen? (ja / later)". Bewust als gewone tekst: de Stop-hook vult de laatste kolom (`[logboek "…"]`) pas na dit antwoord in, en die moet mee in de commit.
+   - **Ja** (het volgende bericht van de student): draai `node .claude/hooks/commit-log.mjs --push` en geef de regels door. Het script commit alleen de map van het logboek, met een vaste tekst, weigert als er al iets anders klaarstaat, en pusht alleen als die commit de enige is die nog niet op de remote staat. De guard laat dit script toe, en het komt als tooling in het logboek. Commit de map nooit op een andere manier: geen eigen `git add`, `git commit` of `git push` in beoordeeld werk.
+   - **Later:** doe niets; de volgende commit neemt de wijzigingen mee.
