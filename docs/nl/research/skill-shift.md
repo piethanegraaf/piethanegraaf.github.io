@@ -19,20 +19,20 @@ Het meeste bewijs komt uit de VS. Waar Nederlandse gegevens bestaan, zijn die to
 | Anthropic (mei 2026) | Meer dan 80% van de gemergede code | Regels die naar productie zijn gemerged en die aan Claude zijn toe te schrijven | D (leverancier) |
 | Snap (april 2026) | 65% | Niet bekendgemaakt. Het geplande aantal medewerkers werd direct daarna verlaagd | D |
 | GitHub Octoverse (oktober 2026) | Agents startten 17% van de pull requests in maart 2026 en meer dan 40% in september | Pull requests waarvan de eerste versie kwam van een agent die GitHub kan herkennen. Een ondergrens, en pull requests, geen regels | C (telemetrie van leverancier) |
-| Daniotti et al. (2026), *Science* | Ongeveer 29% van de Python-functies van Amerikaanse ontwikkelaars, eind 2024 | Een classifier op meer dan 30 miljoen openbare GitHub-commits | C (peer-reviewed, onafhankelijk) |
+| [Daniotti et al. (2026)](https://doi.org/10.1126/science.adz9311), *Science* | Ongeveer 29% van de Python-functies van Amerikaanse ontwikkelaars, eind 2024 | Een classifier op meer dan 30 miljoen openbare GitHub-commits | C (peer-reviewed, onafhankelijk) |
 | Sonar-enquête (januari 2026) | Ontwikkelaars schatten het op 42% van hun gecommitte code en verwachten 65% in 2027 | Eigen schatting | C (leverancier) |
 
 De richting is bij elke maatstaf duidelijk: sterke groei van 2024 tot 2026, met in 2026 een stap van autocomplete naar pull requests die agents opstellen. "Bij AI-gerichte bedrijven stelt AI de meeste nieuwe code op" is aannemelijk. "Overal schrijft AI de meeste code" is niet aangetoond. Elke bedrijfsclaim voegt eraan toe dat engineers de code goedkeuren. Voor elke gemergede regel blijft dus een mens verantwoordelijk.
 
 **Productiviteit: wie wint er, en waarheen verschoof het knelpunt?**
 
-- **Veldexperimenten met codeaanvulling uit 2022–23** (Cui et al., 2025): 4,867 ontwikkelaars bij Microsoft, Accenture en een Fortune-100-bedrijf voltooiden ongeveer 26% meer taken (SE 10.3%). Minder ervaren ontwikkelaars gebruikten het vaker en wonnen meer. Twee co-auteurs werken bij Microsoft. *Grade A, werkpaper.*
-- **Interne proef van Google** (Paradis et al., 2024): ongeveer 21% minder tijd voor één bedrijfstaak, met 96 Google-engineers. *Grade B, leverancier.*
+- **Veldexperimenten met codeaanvulling uit 2022–23** ([Cui et al., 2025](https://www.mertdemirer.com/Papers/Demirer_AI_productivity.pdf)): 4,867 ontwikkelaars bij Microsoft, Accenture en een Fortune-100-bedrijf voltooiden ongeveer 26% meer taken (SE 10.3%). Minder ervaren ontwikkelaars gebruikten het vaker en wonnen meer. Twee co-auteurs werken bij Microsoft. *Grade A, werkpaper.*
+- **Interne proef van Google** ([Paradis et al., 2024](https://arxiv.org/abs/2410.12944)): ongeveer 21% minder tijd voor één bedrijfstaak, met 96 Google-engineers. *Grade B, leverancier.*
 - **METR:** ervaren ontwikkelaars waren 19% *trager* in hun eigen volwassen repositories, en het vervolgonderzoek uit 2026 was onbetrouwbaar (§2.8). *Grade A/B.*
-- **Gebruik van Cursor** (He et al., 2026; difference-in-differences op GitHub-projecten): een grote maar **tijdelijke** versnelling, alleen significant in de eerste twee maanden. Die ging samen met een **blijvende** stijging van waarschuwingen uit statische analyse (ongeveer +30%) en van codecomplexiteit (ongeveer +41%). Dat vertraagde de projecten later. *Grade B.*
+- **Gebruik van Cursor** ([He et al., 2026](https://doi.org/10.1145/3793302.3793349); difference-in-differences op GitHub-projecten): een grote maar **tijdelijke** versnelling, alleen significant in de eerste twee maanden. Die ging samen met een **blijvende** stijging van waarschuwingen uit statische analyse (ongeveer +30%) en van codecomplexiteit (ongeveer +41%). Dat vertraagde de projecten later. *Grade B.*
 - **Soort taak:** winst van ongeveer 35–40% bij eenvoudige greenfield-taken en 10% of minder bij complexe legacy code (Stanford-onderzoek, aangehaald in het ROI-rapport van DORA). *Grade C.*
-- **Telemetrie van bedrijven over agents** (Chen & Stratton, 2026; werkpaper van Harvard, versie van 9 november 2026). *Grade B, quasi-experimenteel (moment van invoering).* Gegevens van Jellyfish, een analyseplatform voor softwareteams: 720,542 medewerkers bij 655 bedrijven, januari 2021 – augustus 2026. Twaalf maanden na de invoering van AI-agents stegen de regels code met 44.0% en de pull requests met 35.7%, maar het aantal afgehandelde Jira-issues steeg maar met 13.7% (op de grens van significantie). De tijd van het indienen van een review tot de goedkeuring steeg met **56.1%**. Er was geen meetbaar effect op de werkgelegenheid. Een versie uit augustus met 718 bedrijven gaf andere cijfers; citeer deze versie.
-- **Code schrijven tegenover software opleveren** (Demirer, Musolff & Yang, 2026; NBER-werkpaper, herzien in september 2026). *Grade B.* Meer dan 500,000 GitHub-ontwikkelaars met telemetrie van hun AI-gebruik: autonome agents verhoogden het aantal commits met 240%, maar het aantal projecten met maar 80% en het aantal releases met 30%.
+- **Telemetrie van bedrijven over agents** ([Chen & Stratton, 2026](https://fion.ac/jellyfish.pdf); werkpaper van Harvard, versie van 9 november 2026). *Grade B, quasi-experimenteel (moment van invoering).* Gegevens van Jellyfish, een analyseplatform voor softwareteams: 720,542 medewerkers bij 655 bedrijven, januari 2021 – augustus 2026. Twaalf maanden na de invoering van AI-agents stegen de regels code met 44.0% en de pull requests met 35.7%, maar het aantal afgehandelde Jira-issues steeg maar met 13.7% (op de grens van significantie). De tijd van het indienen van een review tot de goedkeuring steeg met **56.1%**. Er was geen meetbaar effect op de werkgelegenheid. Een versie uit augustus met 718 bedrijven gaf andere cijfers; citeer deze versie.
+- **Code schrijven tegenover software opleveren** ([Demirer, Musolff & Yang, 2026](https://doi.org/10.3386/w35275); NBER-werkpaper, herzien in september 2026). *Grade B.* Meer dan 500,000 GitHub-ontwikkelaars met telemetrie van hun AI-gebruik: autonome agents verhoogden het aantal commits met 240%, maar het aantal projecten met maar 80% en het aantal releases met 30%.
 - **Het knelpunt is verschoven naar review, testen en goedkeuring van wijzigingen.** Chen & Stratton meten dit nu onafhankelijk (hierboven). De bronnen hieronder hebben verschillende commerciële belangen en zijn het toch eens:
     - Anthropic: "menselijke code review is een nieuw knelpunt geworden".
     - DORA: modelleert een "verificatiebelasting".
@@ -62,12 +62,12 @@ De tool kost dus ongeveer 1–2% van de arbeidskosten (eigen berekening). De eco
 
 **Gebruik en vertrouwen.**
 
-- **Stack Overflow 2026** (meer dan 30,000 respondenten):
+- **[Stack Overflow 2026](https://survey.stackoverflow.co/2026/ai)** (meer dan 30,000 respondenten):
     - 66% gebruikt codeerassistenten of agents; het meest voor het genereren van code in bekende gebieden (69.3%).
     - 48% vertrouwt AI alleen als ze de antwoorden makkelijk kunnen controleren, en slechts 6.6% vertrouwt AI met belangrijke beslissingen.
     - Ontwerp (49%) en communicatie (35%) worden het minst nuttig gevonden voor AI.
     - 17.1% vermijdt AI omdat ze bang zijn vaardigheden voor hun werk te verliezen.
-- **JetBrains 2026:** 90% gebruikt minstens wekelijks agents (leverancier).
+- **[JetBrains 2026](https://blog.jetbrains.com/research/2026/08/ai-coding-agent-adoption-2026/):** 90% gebruikt minstens wekelijks agents (leverancier).
 
 *Grade C.*
 
@@ -99,10 +99,10 @@ De tool kost dus ongeveer 1–2% van de arbeidskosten (eigen berekening). De eco
     - **UWV:** de werkgelegenheid in de ICT stijgt nog (589,000 mensen). Maar het aantal ICT-vacatures daalt sinds 2023 (ongeveer 18,900 in Q2 2026), en het aantal WW-uitkeringen in de ICT steeg tot bijna 6,400 in juli 2026, deels door reorganisaties bij banken.
     - **ROA** (november 2025): de banengroei in de ICT vertraagt van 2.5% per jaar (2019–2024) naar 0.3% (2025–2030). Voor softwareontwikkelaars zijn er in 2030 "vrijwel geen knelpunten", maar ICT-afgestudeerden met een bachelor hebben "goede" vooruitzichten. ROA zegt dat de prognoses het effect van AI niet meenemen.
     - **Meest directe bewijs voor HBO-ICT:** de werkgelegenheid van ICT-afgestudeerden van hbo en wo was tot en met het cohort van 2024 "nauwelijks" negatief (Cnossen, juli 2026; microdata van het CBS; correlationeel).
-    - **Omstreden:** de −13% van RaboResearch voor jonge werknemers in banen met veel AI-blootstelling wordt betwist door economen die wijzen op monetaire verkrapping (Salomons & van den Berge, 2026).
+    - **Omstreden:** de −13% van RaboResearch voor jonge werknemers in banen met veel AI-blootstelling wordt betwist door economen die wijzen op monetaire verkrapping ([Salomons & van den Berge, 2026](https://esb.nu/niet-zeker-dat-werkgelegenheid-onder-nederlandse-jongeren-daalt-door-genai/)).
 - **Loonpremies.** *Grade C.*
-    - **Cijfers van verkopers:** PwC (2026) meldt een premie van 62% voor AI-vaardigheden en Lightcast 28%. Beide verkopen AI- of arbeidsmarktdiensten, en beide cijfers zijn correlationeel.
-    - **Onafhankelijke loongegevens:** die wijzen op ervaring en oordeelsvermogen als wat het loon beschermt. Blootstelling aan AI remt de loongroei alleen waar de ervaringspremie laag is (Dallas Fed, 2026).
+    - **Cijfers van verkopers:** [PwC (2026)](references.md#ref-pwc-2026) meldt een premie van 62% voor AI-vaardigheden en Lightcast 28%. Beide verkopen AI- of arbeidsmarktdiensten, en beide cijfers zijn correlationeel.
+    - **Onafhankelijke loongegevens:** die wijzen op ervaring en oordeelsvermogen als wat het loon beschermt. Blootstelling aan AI remt de loongroei alleen waar de ervaringspremie laag is ([Dallas Fed, 2026](https://www.dallasfed.org/research/economics/2026/0224)).
     - **De eigen bevinding van PwC:** instapfuncties met AI-blootstelling vragen zeven keer zo vaak om senior "mensintensieve" vaardigheden.
 
 **Wat werkgevers nu van junioren vragen.** *Grade D, persberichten over interne memo's.*
@@ -120,7 +120,7 @@ De tool kost dus ongeveer 1–2% van de arbeidskosten (eigen berekening). De eco
     - "Spoor 2" staat AI toe of vereist het zelfs, en vraagt studenten te laten zien hoe ze het gebruikten.
     - "Studenten moeten uiteindelijk hun beroep zonder AI kunnen uitoefenen waar dat nodig is."
 - **De Green Paper van de University of Sydney** (augustus 2026) vereist basisvaardigheden vóór taken met AI-ondersteuning en "mogelijkheden om te presteren onafhankelijk van AI".
-- **Regels van instellingen** vertalen dit naar AI-niveaus. De regels van CHE (OER 2026–27, ICT, art. 7.11) zijn een voorbeeld, en dit overzicht gebruikt hun drie niveaus:
+- **Regels van instellingen** vertalen dit naar AI-niveaus. De regels van CHE ([OER 2026](https://che.nl/algemeen/oer)–27, ICT, art. 7.11) zijn een voorbeeld, en dit overzicht gebruikt hun drie niveaus:
     - **AI-niveau 0:** geen AI, in een gecontroleerde omgeving.
     - **AI-niveau 1:** AI als hulpmiddel voor ideeën of structuur.
     - **AI-niveau 2:** AI ingebouwd in de taak.
@@ -144,7 +144,7 @@ De tool kost dus ongeveer 1–2% van de arbeidskosten (eigen berekening). De eco
 
 De verschuiving pleit dus voor het **toevoegen** van bewuste oefening in vaardigheden voor het AI-tijdperk. Ze pleit niet voor stoppen met oefenen met de hand voordat je een vaardigheid hebt geleerd:
 
-1. **Behouden, met de hand, tot L3:** de kern van OOD en C# (klassen en toestand, inkapseling, overerving en interfaces, de ontwerppatronen). Dat is wat een toets zonder AI test, en het is de basis om AI-code te beoordelen. AI is ook het zwakst in interfaces, abstracte klassen en overerving (Lepp & Kaimre, 2026).
+1. **Behouden, met de hand, tot L3:** de kern van OOD en C# (klassen en toestand, inkapseling, overerving en interfaces, de ontwerppatronen). Dat is wat een toets zonder AI test, en het is de basis om AI-code te beoordelen. AI is ook het zwakst in interfaces, abstracte klassen en overerving ([Lepp & Kaimre, 2026](https://arxiv.org/abs/2608.16318)).
 2. **Toevoegen, als nieuwe leerlijn voor vaardigheden:**
             - door AI gegenereerde code lezen en reviewen;
             - een geplante bug vinden;

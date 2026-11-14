@@ -16,20 +16,20 @@ Most of the evidence is from the US, and Dutch data are added where they exist. 
 | Anthropic (May 2026) | More than 80% of merged code | Lines merged to production that can be attributed to Claude | D (vendor) |
 | Snap (April 2026) | 65% | Not disclosed. Planned headcount was cut right after | D |
 | GitHub Octoverse (October 2026) | Agents started 17% of pull requests in March 2026 and over 40% in September | Pull requests whose first draft came from an agent GitHub can detect. A floor, and pull requests, not lines | C (vendor telemetry) |
-| Daniotti et al. (2026), *Science* | About 29% of Python functions by US developers, end of 2024 | A classifier on more than 30 million public GitHub commits | C (peer reviewed, independent) |
+| [Daniotti et al. (2026)](https://doi.org/10.1126/science.adz9311), *Science* | About 29% of Python functions by US developers, end of 2024 | A classifier on more than 30 million public GitHub commits | C (peer reviewed, independent) |
 | Sonar survey (January 2026) | Developers estimate 42% of their committed code, and expect 65% by 2027 | Self-estimate | C (vendor) |
 
 The direction is clear on every measure: steep growth from 2024 to 2026, with a step from autocomplete to agent-drafted pull requests in 2026. "Most new code at AI-forward companies is drafted by AI" is plausible. "Most code everywhere is written by AI" is not established. Every company claim adds that engineers approve the code, so a human is still accountable for every merged line.
 
 **Productivity: who gains, and where the bottleneck went.**
 
-- **Field experiments with 2022–23 code completion** (Cui et al., 2025): 4,867 developers at Microsoft, Accenture and a Fortune-100 firm completed about 26% more tasks (SE 10.3%). Less experienced developers adopted more and gained more. Two co-authors work at Microsoft. *Grade A, working paper.*
-- **Google's internal trial** (Paradis et al., 2024): about 21% less time on one enterprise task, with 96 Google engineers. *Grade B, vendor.*
+- **Field experiments with 2022–23 code completion** ([Cui et al., 2025](https://www.mertdemirer.com/Papers/Demirer_AI_productivity.pdf)): 4,867 developers at Microsoft, Accenture and a Fortune-100 firm completed about 26% more tasks (SE 10.3%). Less experienced developers adopted more and gained more. Two co-authors work at Microsoft. *Grade A, working paper.*
+- **Google's internal trial** ([Paradis et al., 2024](https://arxiv.org/abs/2410.12944)): about 21% less time on one enterprise task, with 96 Google engineers. *Grade B, vendor.*
 - **METR:** experienced developers were 19% *slower* on their own mature repositories, and the 2026 follow-up was unreliable (§2.8). *Grade A/B.*
-- **Cursor adoption** (He et al., 2026; difference-in-differences on GitHub projects): a large but **transient** speed-up, significant only in the first two months. It came with a **persistent** rise in static-analysis warnings (about +30%) and code complexity (about +41%), which later slowed the projects down. *Grade B.*
+- **Cursor adoption** ([He et al., 2026](https://doi.org/10.1145/3793302.3793349); difference-in-differences on GitHub projects): a large but **transient** speed-up, significant only in the first two months. It came with a **persistent** rise in static-analysis warnings (about +30%) and code complexity (about +41%), which later slowed the projects down. *Grade B.*
 - **Task type:** gains of about 35–40% on simple greenfield tasks and 10% or less on complex legacy code (Stanford research cited in DORA's ROI report). *Grade C.*
-- **Firm telemetry on agents** (Chen & Stratton, 2026; Harvard working paper, version of 9 November 2026). *Grade B, quasi-experimental (timing of adoption).* Data from the engineering-analytics platform Jellyfish: 720,542 workers at 655 firms, January 2021 – August 2026. Twelve months after adopting AI agents, lines of code rose 44.0% and pull requests 35.7%, but resolved Jira issues rose only 13.7% (borderline significant). The time from review submission to approval rose **56.1%**. There was no detectable effect on employment. An August version with 718 firms reported different figures, so cite this one.
-- **Writing code vs. shipping code** (Demirer, Musolff & Yang, 2026; NBER working paper, revised September 2026). *Grade B.* Over 500,000 GitHub developers with AI-usage telemetry: autonomous agents raised commits by 240%, but projects by only 80% and releases by 30%.
+- **Firm telemetry on agents** ([Chen & Stratton, 2026](https://fion.ac/jellyfish.pdf); Harvard working paper, version of 9 November 2026). *Grade B, quasi-experimental (timing of adoption).* Data from the engineering-analytics platform Jellyfish: 720,542 workers at 655 firms, January 2021 – August 2026. Twelve months after adopting AI agents, lines of code rose 44.0% and pull requests 35.7%, but resolved Jira issues rose only 13.7% (borderline significant). The time from review submission to approval rose **56.1%**. There was no detectable effect on employment. An August version with 718 firms reported different figures, so cite this one.
+- **Writing code vs. shipping code** ([Demirer, Musolff & Yang, 2026](https://doi.org/10.3386/w35275); NBER working paper, revised September 2026). *Grade B.* Over 500,000 GitHub developers with AI-usage telemetry: autonomous agents raised commits by 240%, but projects by only 80% and releases by 30%.
 - **The bottleneck has moved to review, testing and change approval.** Chen & Stratton now measure this independently (above). The sources below have different commercial interests and still agree:
     - Anthropic: "human code review has become a new bottleneck".
     - DORA: models a "verification tax".
@@ -59,12 +59,12 @@ So the tool costs about 1–2% of labour (own arithmetic). The economics turn on
 
 **Adoption and trust.**
 
-- **Stack Overflow 2026** (over 30,000 respondents):
+- **[Stack Overflow 2026](https://survey.stackoverflow.co/2026/ai)** (over 30,000 respondents):
     - 66% use coding assistants or agents; the top use is generating code in familiar areas (69.3%).
     - 48% trust AI only when they can easily check its answers, and only 6.6% trust it with important decisions.
     - Design (49%) and communication (35%) are rated least useful for AI.
     - 17.1% avoid AI because they worry about losing job skills.
-- **JetBrains 2026:** 90% use agents at least weekly (vendor).
+- **[JetBrains 2026](https://blog.jetbrains.com/research/2026/08/ai-coding-agent-adoption-2026/):** 90% use agents at least weekly (vendor).
 
 *Grade C.*
 
@@ -73,7 +73,7 @@ So the tool costs about 1–2% of labour (own arithmetic). The economics turn on
 - **Young workers in the US: evidence for an AI effect.** *Grade B, quasi-experimental working papers.*
     - **Stanford "Canaries"** (revised August 2026; ADP payroll data to June 2026): employment of 22–25-year-olds in the most AI-exposed occupations is 19% below where it would be had it kept pace with less-exposed peers, up from 15% a year earlier. The gap comes through less hiring, not layoffs, and older workers show none. The authors call the result descriptive.
     - **Fed Board** (Crane & Soto, March 2026): coder employment growth is about 3 percentage points a year lower since ChatGPT, after controlling for industry shocks.
-    - **Census** (Tucker, April 2026): early-career employment in the most exposed industries fell 12% over 10 quarters, and monetary policy explains at most a quarter of that.
+    - **Census** ([Tucker, April 2026](https://www.census.gov/library/working-papers/2026/adrm/CES-WP-26-27.html)): early-career employment in the most exposed industries fell 12% over 10 quarters, and monetary policy explains at most a quarter of that.
 - **Evidence against an AI cause.** *Grade B/C.*
     - In the national ACS survey the Stanford gap shrinks to about −2%, with a confidence interval that includes zero, and controlling for education halves it.
     - The NY Fed attributes 64% of the rise in young-graduate unemployment to remote work (June 2026).
@@ -95,11 +95,11 @@ So the tool costs about 1–2% of labour (own arithmetic). The economics turn on
 - **Netherlands.** *Grade C.*
     - **UWV:** ICT employment is still rising (589,000 people). But ICT vacancies have been falling since 2023 (about 18,900 in Q2 2026), and ICT unemployment-benefit claims rose to nearly 6,400 in July 2026, partly from bank reorganisations.
     - **ROA** (November 2025): ICT job growth slows from 2.5% a year (2019–2024) to 0.3% (2025–2030), with "virtually no bottlenecks" for software developers by 2030 but "good" prospects for bachelor ICT graduates. ROA says its forecasts do not capture the effect of AI.
-    - **Most direct evidence for HBO-ICT:** employment of hbo and wo ICT graduates was "barely" negative through the 2024 cohort (Cnossen, July 2026; CBS microdata; correlational).
-    - **Disputed:** RaboResearch's −13% for young workers in AI-exposed jobs is contested by economists who point to monetary tightening (Salomons & van den Berge, 2026).
+    - **Most direct evidence for HBO-ICT:** employment of hbo and wo ICT graduates was "barely" negative through the 2024 cohort ([Cnossen, July 2026](https://esb.nu/voor-de-meeste-starters-verandert-ai-de-arbeidsmarkt-nog-niet/); CBS microdata; correlational).
+    - **Disputed:** RaboResearch's −13% for young workers in AI-exposed jobs is contested by economists who point to monetary tightening ([Salomons & van den Berge, 2026](https://esb.nu/niet-zeker-dat-werkgelegenheid-onder-nederlandse-jongeren-daalt-door-genai/)).
 - **Wage premia.** *Grade C.*
-    - **Sellers' figures:** PwC (2026) reports a 62% premium for AI skills and Lightcast 28%. Both sell AI or labour-market services, and both figures are correlational.
-    - **Independent wage data:** they point to experience and judgement as what protects pay. AI exposure hurts wage growth only where the experience premium is low (Dallas Fed, 2026).
+    - **Sellers' figures:** [PwC (2026)](references.md#ref-pwc-2026) reports a 62% premium for AI skills and Lightcast 28%. Both sell AI or labour-market services, and both figures are correlational.
+    - **Independent wage data:** they point to experience and judgement as what protects pay. AI exposure hurts wage growth only where the experience premium is low ([Dallas Fed, 2026](https://www.dallasfed.org/research/economics/2026/0224)).
     - **PwC's own finding:** AI-exposed entry-level roles are seven times more likely to require senior "human-intensive" skills.
 
 **What employers ask of juniors now.** *Grade D, press accounts of memos.*
@@ -117,7 +117,7 @@ So the tool costs about 1–2% of labour (own arithmetic). The economics turn on
     - "Lane 2" allows or even requires AI, and asks students to show how they used it.
     - "Students must ultimately be able to practise their profession without AI where needed."
 - **The University of Sydney's Green Paper** (August 2026) requires foundational skills before AI-supported tasks and "opportunities for performance independent of AI".
-- **Institutional rules** turn this into AI levels. CHE's rules (OER 2026–27, ICT, art. 7.11) are an example, and this review uses their three levels:
+- **Institutional rules** turn this into AI levels. CHE's rules ([OER 2026](https://che.nl/algemeen/oer)–27, ICT, art. 7.11) are an example, and this review uses their three levels:
     - **Level 0:** no AI, in a controlled setting.
     - **Level 1:** AI as an aid for ideas or structure.
     - **Level 2:** AI built into the task.
@@ -141,7 +141,7 @@ So the tool costs about 1–2% of labour (own arithmetic). The economics turn on
 
 So the shift argues for **adding** deliberate practice of AI-era skills, not for dropping hand practice before a skill is learned:
 
-1. **Keep, by hand, until L3:** core OOD and C# (classes and state, encapsulation, inheritance and interfaces, the patterns). They are what an exam without AI tests, and the base for judging AI code. AI is also weakest on interfaces, abstract classes and inheritance (Lepp & Kaimre, 2026).
+1. **Keep, by hand, until L3:** core OOD and C# (classes and state, encapsulation, inheritance and interfaces, the patterns). They are what an exam without AI tests, and the base for judging AI code. AI is also weakest on interfaces, abstract classes and inheritance ([Lepp & Kaimre, 2026](https://arxiv.org/abs/2608.16318)).
 2. **Add, as a new skill track:**
             - reading and reviewing AI-generated code;
             - finding a planted bug;
