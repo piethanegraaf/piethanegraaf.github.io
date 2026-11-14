@@ -7,6 +7,12 @@ description: "Wat de eerste oefensessies met de leerharnas lieten zien, elke her
 !!! warning "Machinevertaling"
     Dit is een machinevertaling door Claude (Anthropic) van het [Engelse origineel](/research/build-log/). Een mens heeft de vertaling niet nagekeken. Bij twijfel geldt de Engelse tekst.
 
+Deze pagina bewaart de geschiedenis van de leerharnas en van dit onderzoek. De andere pagina's beschrijven hoe het er nu voor staat; de datums, de besluiten en de redenen voor elke wijziging staan hier.
+
+- **§10** beschrijft wat de eerste oefensessies lieten zien, en elke herziening van het ontwerp die daarop volgde: de besluiten, hoe ze zijn gebouwd, en waar de bouw afwijkt van het plan.
+- **[Eerdere versies van het ontwerp](#earlier-versions)** bewaart de delen van het ontwerp die zijn vervangen.
+- **[§11](#changelog)** is het wijzigingslog van het onderzoek zelf, het nieuwste eerst.
+
 <a id="10-wat-we-leerden-van-de-eerste-sessies"></a>
 
 ## 10. Wat we leerden van de eerste sessies {#first-sessions}
@@ -35,18 +41,18 @@ In de eerste sessies van de pilot gebruikte één student de harnas in drie leer
 2. **Strenger loggen op trefwoorden, plus het commando `done`.** "het werkt" telt alleen mee met code- of testcontext, en nooit samen met toolingwoorden. Claude stelt het commando `done` voor bij successen zonder tests, zoals ontwerp of UML.
 3. **Microvaardigheden.** Items met een `parent`, een eigen niveau, eigen trefwoorden en eigen herhalingen. Ze sturen de hintladder. De guard blijft werken op basis van paden, met het niveau van de bovenliggende vaardigheid. Claude stelt nieuwe voor (`add-micro`) en de student maakt ze aan. De statistieken van de bovenliggende vaardigheid tellen ook de taken van haar microvaardigheden mee. *Gewijzigd op 10 november 2026 (§10.4.2): met `autoDemote` aan kan ook de demotie-analist er een aanmaken.*
 4. **Harde controle op uitleg in eigen woorden (twee sleutels).** Een taak blijft open, ook over sessies heen, tot hij is uitgelegd. *Gewijzigd op 10 november 2026 (§10.4.1, D4): de uitleg wordt direct gevraagd, en een open taak vervalt als de sessie eindigt of de student aan een andere opdracht begint.*
-            - Sleutel 1: Claude beoordeelt de inhoud en schrijft `[uitleg-ok <tid>]`.
-            - Sleutel 2: `reflect-gate.mjs` controleert het eigen bericht van de student deterministisch: minstens 12 woorden buiten code, een causaal verbindingswoord, en hoogstens 40% van de reeksen van 5 woorden overgenomen uit eerdere tekst van Claude.
-            - Er is geen CLI-commando om een taak als uitgelegd te markeren. Promotie via `set` wordt geweigerd zolang er taken van die vaardigheid open staan. Claude kan niet schrijven in `.learning/state/`.
-            - *Onderbouwing:* zelfuitleg en ophalen uit het geheugen ([Chi et al., 1989](https://doi.org/10.1207/s15516709cog1302_1); [Roediger & Karpicke, 2006](https://doi.org/10.1111/j.1467-9280.2006.01693.x)), en het vermijden van de illusie van competentie ([Prather et al., 2024](https://arxiv.org/abs/2405.17739)).
+    - Sleutel 1: Claude beoordeelt de inhoud en schrijft `[uitleg-ok <tid>]`.
+    - Sleutel 2: `reflect-gate.mjs` controleert het eigen bericht van de student deterministisch: minstens 12 woorden buiten code, een causaal verbindingswoord, en hoogstens 40% van de reeksen van 5 woorden overgenomen uit eerdere tekst van Claude.
+    - Er is geen CLI-commando om een taak als uitgelegd te markeren. Promotie via `set` wordt geweigerd zolang er taken van die vaardigheid open staan. Claude kan niet schrijven in `.learning/state/`.
+    - *Onderbouwing:* zelfuitleg en ophalen uit het geheugen ([Chi et al., 1989](https://doi.org/10.1207/s15516709cog1302_1); [Roediger & Karpicke, 2006](https://doi.org/10.1111/j.1467-9280.2006.01693.x)), en het vermijden van de illusie van competentie ([Prather et al., 2024](https://arxiv.org/abs/2405.17739)).
 5. **Eerlijk loggen van treden op elk niveau.** Claude markeert inhoudelijke hulp met `[trede N]`. De Stop-hook verhoogt op basis daarvan de hoogste trede van de taak.
 6. **Actief positieve signalen geven.** Dat gebeurt direct na een taak op trede 0–2, bij de start van een sessie (recente successen op trede 0 en kandidaten voor promotie, met het precieze commando) en in het dagboek. De promotiecriteria zijn *niet* versoepeld. De student koos er bewust voor om geen versnelde route via een uitdaging te nemen.
 7. **Fibonacci-herhalingen vanaf L3,** begrensd door de toetsdatum (§5.7). *Gewijzigd op 10 november 2026 (§10.4.1, D3): herhalingen alleen op L4, via echt werk.*
 8. **Tooling als L4-zone, plus reparaties aan de guard.**
-            - Alleen `dotnet build|test|run|new|add|…` en `check.mjs` tellen als bouwen of testen.
-            - Omleidingen naar `/dev/null` of `$null`, en `=>` / `->`, tellen niet meer als schrijven.
-            - Een `cd <dir> &&` aan het begin bepaalt de werkelijke werkmap.
-            - Paden binnen `.claude/` en `.learning/` zijn geen code van de student.
+    - Alleen `dotnet build|test|run|new|add|…` en `check.mjs` tellen als bouwen of testen.
+    - Omleidingen naar `/dev/null` of `$null`, en `=>` / `->`, tellen niet meer als schrijven.
+    - Een `cd <dir> &&` aan het begin bepaalt de werkelijke werkmap.
+    - Paden binnen `.claude/` en `.learning/` zijn geen code van de student.
 9. **Discipline bij degraderen.** Eén worsteling leidt tot een microvaardigheid op een lager niveau of tot een korte override, niet tot degradatie van de bovenliggende vaardigheid.
 10. **Agentberichten zijn niet de woorden van de student (een latere reparatie).**
                 - **Het probleem:** in een sessie met onderzoeksagents op de achtergrond kwam elk agentrapport en elke taakmelding bij `UserPromptSubmit` binnen alsof de student het had getypt.
@@ -470,11 +476,152 @@ flowchart TD
 - **De securitycheck** van de repository staat C#-bestanden alleen toe in de oefeningen van een kaart, en controleert hun inhoud zoals elk ander tekstbestand.
 - **Niet gebouwd:** het dashboard leest één oefenmap, dus een tweede oefenmap staat er nog niet op. De kaart is nog niet in een echte oefensessie gebruikt.
 
+
+---
+
+## Eerdere versies van het ontwerp {#earlier-versions}
+
+Deze delen van het ontwerp zijn vervangen. Ze stonden op de [ontwerppagina](design.md), in de sectie die boven elk deel staat.
+
+**Uit [§5.2 De autonomieladder](design.md#52-de-autonomieladder-per-vaardigheid):**
+
+??? note "Eerdere versie (7–9 november 2026)"
+
+    ```mermaid
+    stateDiagram-v2
+        direction LR
+        [*] --> L0_Demonstrate : new skill encountered
+
+        L0_Demonstrate --> L1_Complete : 2 correct self-explanations + predicted output right
+        L1_Complete --> L2_Guided : 3 gaps filled, tests pass, ≤1 hint per gap
+        L2_Guided --> L3_Independent : success rate ≥85% over ≥5 tasks, avg hint rung ≤1
+        L3_Independent --> MasteryCheck : 3 independent successes on ≥2 different days
+        MasteryCheck --> L4_Automated : novel transfer task passed + explanation correct
+        MasteryCheck --> L3_Independent : failed → targeted practice
+
+        L1_Complete --> L0_Demonstrate : stuck twice / under 50% success
+        L2_Guided --> L1_Complete : success rate under 70%
+        L3_Independent --> L2_Guided : 2 failures in a row
+
+        L4_Automated --> Maintenance : spaced review due
+        L3_Independent --> Maintenance : spaced review due (revised: reviews start at L3)
+        Maintenance --> L4_Automated : retrieval passed → interval grows
+        Maintenance --> L3_Independent : 2 failed reviews in a row → advice to demote (learner decides)
+
+        L4_Automated --> [*] : skill retired - no longer relevant
+    ```
+
+    In de eerdere autonomieladder (7–9 november 2026) begon elke nieuwe vaardigheid op L0 en ging ze omhoog op vaste criteria. Herhalingen begonnen op L3, en twee mislukte herhalingen op rij gaven je alleen het advies om omlaag te gaan; de beslissing bleef bij jou.
+
+**Uit [§5.7 Gespreide herhaling na beheersing](design.md#57-gespreide-herhaling-na-beheersing):**
+
+??? note "Eerdere versie zoals gebouwd (§10, 7 november 2026)"
+
+    De harnas verving het schema 3 → 7 → 21 → 60 → 120 hierboven.
+
+    - **Fibonacci-intervallen:** 1, 2, 3, 5, 8, 13, 21, 34 … dagen.
+    - **Startpunt:** herhalingen beginnen zodra een vaardigheid of microvaardigheid **L3** bereikt, niet pas bij L4. Dat past bij het doel "beheerst → alleen af en toe versterken".
+    - **Na een herhaling:** `pass` gaat één stap omhoog in de reeks, `shaky` herhaalt het interval en `fail` gaat **twee stappen terug**.
+    - **Na twee keer `fail` op rij:** de harnas *adviseert* je om één niveau omlaag te gaan. De harnas zet een vaardigheid nooit automatisch lager.
+    - **Voor je toets:** als je je toetsdatum instelt in `settings.examDate`, kort de harnas elk interval zo in dat de herhaling uiterlijk 3 dagen voor de toets valt.
+
+    ```mermaid
+    flowchart LR
+        S[Skill or microskill reaches L3] --> I["Interval i = 0 → 1 day"]
+        I --> Q{Retrieval review<br/>~5 min, no help}
+        Q -- pass --> UP["i + 1<br/>1, 2, 3, 5, 8, 13, 21 …"]
+        Q -- shaky --> SAME[same interval]
+        Q -- fail --> BACK["i − 2"]
+        BACK --> F{2nd fail<br/>in a row?}
+        F -- yes --> ADV[Advice: one level down<br/>learner decides]
+        UP & SAME & BACK --> C["clamp: ≤ examDate − 3 days"] --> Q
+    ```
+
+    In de eerdere versie zoals gebouwd (7 november 2026) waren herhalingen korte ophaaltaken zonder hulp, op Fibonacci-intervallen vanaf L3. Na twee keer `fail` op rij kreeg je het advies om één niveau omlaag te gaan; de harnas zette een vaardigheid nooit automatisch lager.
+
+**Uit [§5.8 OOD-vaardighedenkaart](design.md#58-ood-vaardighedenkaart):**
+
+??? note "Oorspronkelijk ontwerp (7 november 2026): een graaf met voorkennis"
+
+    `skill-map.yaml` legt het curriculum vast als graaf: welke vaardigheden welke andere vrijspelen, en met welke trefwoorden de harnas vaardigheden in je prompts herkent. Een vaardigheid komt beschikbaar op L0 zodra de vereiste vaardigheden op L2 of hoger staan. Een vaardigheid kan alleen geautomatiseerd worden (L4) als de vereiste vaardigheden ook op L4 staan. Zo automatiseert de AI nooit iets waarvan je de basis niet kunt controleren.
+
+    ```mermaid
+    flowchart TD
+        subgraph Foundations
+            A1[Classes & objects<br/>state, identity, behaviour]
+            A2[Encapsulation<br/>& access modifiers]
+            A3[Constructors &<br/>object lifecycle]
+        end
+        subgraph Relationships
+            B1[Association /<br/>aggregation / composition]
+            B2[Inheritance]
+            B3[Interfaces &<br/>abstract classes]
+            B4[Polymorphism<br/>dynamic dispatch]
+        end
+        subgraph Modelling
+            C1[UML class diagrams]
+            C2[UML sequence diagrams]
+            C3[Responsibility assignment<br/>GRASP / CRC]
+        end
+        subgraph Principles
+            D1[SRP]
+            D2[Open/Closed]
+            D3[Liskov Substitution]
+            D4[Interface Segregation]
+            D5[Dependency Inversion]
+            D6[Composition over<br/>inheritance]
+        end
+        subgraph Patterns
+            E1[Strategy]
+            E2[Observer]
+            E3[Factory Method /<br/>Abstract Factory]
+            E4[Decorator]
+            E5[Adapter]
+            E6[State]
+        end
+        subgraph Practice
+            F1[Unit testing / TDD]
+            F2[Code smells &<br/>refactoring]
+            F3[Dependency injection]
+        end
+        A1 --> A2 --> A3
+        A1 --> B1 & B2
+        B2 --> B3 --> B4
+        A1 --> C1
+        B1 & B2 --> C1
+        C1 --> C2
+        C1 --> C3 --> D1
+        B4 --> D2 & D3
+        B3 --> D4 & D5
+        B1 & B2 --> D6
+        D2 & B4 --> E1
+        D5 --> E2
+        D5 --> E3
+        D6 --> E4 & E5
+        E1 --> E6
+        D1 --> F2
+        F1 --> F2
+        D5 --> F3
+    ```
+
+    De OOD-vaardighedenkaart laat zien welke vaardigheden welke andere vrijspelen: van klassen en objecten, via relaties en modelleren, naar principes en daarna patronen. Een vaardigheid kan pas naar L4, het niveau waarop de AI haar automatiseert, als de vereiste vaardigheden ook op L4 staan.
+
 ---
 
 <a id="11-wijzigingslog"></a>
 
 ## 11. Wijzigingslog {#changelog}
+
+### 14 november 2026: het onderzoek in pagina's, een link naar elke bron, en een herschrijving per pagina
+
+Het onderzoek was één pagina van ongeveer 51.000 woorden, eerst geschreven voor één student en later uitgebreid voor studenten en docenten, junior developers op hun werk, en onderzoekers. Het is nu een overzicht met zes pagina's eronder, elk herschreven voor de eigen lezer.
+
+- **In pagina's.** Het [overzicht](index.md) (belangrijkste bevindingen, samenvatting, evaluatie, beperkingen, zo citeer je dit) is voor studenten en junior developers, en vraagt docenten en onderzoekers om de harnas te helpen testen. De [literatuur](literature.md), [de verschuiving in gevraagde vaardigheden](skill-shift.md) en de [risico's](risks.md) zijn neutraal geschreven, voor lezers die het bewijs willen controleren. Het [ontwerp](design.md) is in de ik-vorm geschreven, door de ontwerper. De §-nummers blijven, en oude links naar secties van het onderzoek leiden naar de pagina waar die secties nu staan.
+- **Een link naar elke bron.** Verwijzingen in de tekst linken direct naar de studie: de DOI, het arXiv-record of de URL. Een zoekactie in Crossref voegde de DOI van 95 bronnen toe; elke DOI is alleen overgenomen als titel, eerste auteur en jaar overeenkwamen, en de onzekere gevallen zijn met de hand nagekeken. Bronnen zonder DOI, vooral boeken, linken naar hun vermelding in de [literatuurlijst](references.md), die nu één alfabetische lijst is.
+- **Een label per ontwerpkeuze.** Elk ontwerpprincipe en elk onderdeel van de opzet zegt of het rust op sterk bewijs of op beperkt bewijs, of dat het een pragmatische keuze is.
+- **Herzieningsnotities hierheen verplaatst.** De notities over eerdere versies staan nu bij [eerdere versies van het ontwerp](#earlier-versions); de datums van wijzigingen zijn uit de tekst gehaald en staan nu in dit log.
+- **Een ingetrokken bron.** Ariely & Wertenbroch (2002), over deadlines als zelfbindingsmiddel, is op 2 september 2026 ingetrokken door *Psychological Science*. Het onderzoek citeert die studie niet meer. Principe P10 rust op [Ryan & Deci (2000)](https://doi.org/10.1037/0003-066x.55.1.68), en de hooks als zelfbindingsmiddel dat de lerende zelf kiest, hebben nu het label pragmatische keuze.
+- **Niet veranderd:** de bevindingen, de getallen en de bewijsgraden.
 
 ### 13 november 2026 (later): securityreview en de oplossingen
 

@@ -4,6 +4,12 @@ description: "What the first practice sessions with the learning harness showed,
 ---
 # Build log: the first sessions and the change log
 
+This page keeps the history of the harness and of this review. The other pages describe how things stand now; the dates, the decisions and the reasons for each change are here.
+
+- **§10** reports what the first practice sessions showed, and each revision of the design that followed: the decisions, how they were built, and where the build differs from the plan.
+- **[Earlier versions of the design](#earlier-versions)** keeps the parts of the design that were replaced.
+- **[§11](#changelog)** is the change log of the review itself, newest first.
+
 <a id="10-what-we-learned-from-the-first-sessions"></a>
 
 ## 10. What we learned from the first sessions {#first-sessions}
@@ -32,18 +38,18 @@ In the first sessions of the pilot, one student used the harness for three learn
 2. **Stricter keyword logging, plus the `done` command.** "het werkt" counts only with code or test context and never with tooling words. Claude proposes the `done` command for successes without tests, such as design or UML.
 3. **Microskills.** Entries with a `parent`, their own level, keywords and reviews. They drive the hint ladder. The guard stays path-based on the parent's level. Claude proposes new ones (`add-micro`) and the student creates them. Parent statistics include microskill tasks. *Changed on 10 November 2026 (§10.4.2): with `autoDemote` on, the demotion analyst can also create one.*
 4. **Hard own-words explanation check (two keys).** A task stays open, also across sessions, until it is explained. *Changed on 10 November 2026 (§10.4.1, D4): the explanation is asked right away, and an open task lapses when the session ends or the student starts another exercise.*
-            - Key 1: Claude judges the content and writes `[uitleg-ok <tid>]`.
-            - Key 2: `reflect-gate.mjs` checks the student's own message deterministically: at least 12 words outside code, a causal connective, and at most 40% of its 5-word sequences copied from Claude's earlier text.
-            - There is no CLI command to mark a task explained. Promotion via `set` is refused while tasks of that skill are open. Claude cannot write `.learning/state/`.
-            - *Rationale:* self-explanation and retrieval ([Chi et al., 1989](https://doi.org/10.1207/s15516709cog1302_1); [Roediger & Karpicke, 2006](https://doi.org/10.1111/j.1467-9280.2006.01693.x)), and avoiding the illusion of competence ([Prather et al., 2024](https://arxiv.org/abs/2405.17739)).
+    - Key 1: Claude judges the content and writes `[uitleg-ok <tid>]`.
+    - Key 2: `reflect-gate.mjs` checks the student's own message deterministically: at least 12 words outside code, a causal connective, and at most 40% of its 5-word sequences copied from Claude's earlier text.
+    - There is no CLI command to mark a task explained. Promotion via `set` is refused while tasks of that skill are open. Claude cannot write `.learning/state/`.
+    - *Rationale:* self-explanation and retrieval ([Chi et al., 1989](https://doi.org/10.1207/s15516709cog1302_1); [Roediger & Karpicke, 2006](https://doi.org/10.1111/j.1467-9280.2006.01693.x)), and avoiding the illusion of competence ([Prather et al., 2024](https://arxiv.org/abs/2405.17739)).
 5. **Honest rung logging at every level.** Claude marks substantive help with `[trede N]`, and the Stop hook raises the task's maximum rung from it.
 6. **Active positive signalling.** This happens right after a task at rung 0–2, at session start (recent rung-0 wins and promotion candidates with the exact command) and in the diary. Promotion criteria were *not* loosened. The student explicitly chose against a fast-track challenge route.
 7. **Fibonacci reviews from L3,** clamped to the exam date (§5.7). *Changed on 10 November 2026 (§10.4.1, D3): reviews at L4 only, through real work.*
 8. **Tooling as an L4 zone, plus guard fixes.**
-            - Only `dotnet build|test|run|new|add|…` and `check.mjs` count as building or testing.
-            - Redirects to `/dev/null` or `$null`, and `=>` / `->`, no longer count as writes.
-            - A leading `cd <dir> &&` sets the effective working directory.
-            - Paths inside `.claude/` and `.learning/` are not the student's code.
+    - Only `dotnet build|test|run|new|add|…` and `check.mjs` count as building or testing.
+    - Redirects to `/dev/null` or `$null`, and `=>` / `->`, no longer count as writes.
+    - A leading `cd <dir> &&` sets the effective working directory.
+    - Paths inside `.claude/` and `.learning/` are not the student's code.
 9. **Demotion discipline.** A single struggle leads to a microskill at a lower level or a short override, not a demotion of the parent skill.
 10. **Agent messages are not the student's words (a later fix).**
                 - **The problem:** in a session that used background research agents, every agent report and task notification reached `UserPromptSubmit` as if the student had typed it.
@@ -467,11 +473,152 @@ flowchart TD
 - **The security check** of the repository allows C# files only in the exercises of a map, and checks their content like any other text file.
 - **Not built:** the dashboard reads one practice folder, so a second one is not on it yet. The map has not been used in a real practice session yet.
 
+
+---
+
+## Earlier versions of the design {#earlier-versions}
+
+These parts of the design were replaced. They used to sit on the [design page](design.md), in the section named above each one.
+
+**From [§5.2 The Autonomy Ladder](design.md#52-the-autonomy-ladder-per-skill):**
+
+??? note "Earlier version (7–9 November 2026)"
+
+    ```mermaid
+    stateDiagram-v2
+        direction LR
+        [*] --> L0_Demonstrate : new skill encountered
+
+        L0_Demonstrate --> L1_Complete : 2 correct self-explanations + predicted output right
+        L1_Complete --> L2_Guided : 3 gaps filled, tests pass, ≤1 hint per gap
+        L2_Guided --> L3_Independent : success rate ≥85% over ≥5 tasks, avg hint rung ≤1
+        L3_Independent --> MasteryCheck : 3 independent successes on ≥2 different days
+        MasteryCheck --> L4_Automated : novel transfer task passed + explanation correct
+        MasteryCheck --> L3_Independent : failed → targeted practice
+
+        L1_Complete --> L0_Demonstrate : stuck twice / under 50% success
+        L2_Guided --> L1_Complete : success rate under 70%
+        L3_Independent --> L2_Guided : 2 failures in a row
+
+        L4_Automated --> Maintenance : spaced review due
+        L3_Independent --> Maintenance : spaced review due (revised: reviews start at L3)
+        Maintenance --> L4_Automated : retrieval passed → interval grows
+        Maintenance --> L3_Independent : 2 failed reviews in a row → advice to demote (learner decides)
+
+        L4_Automated --> [*] : skill retired - no longer relevant
+    ```
+
+    In the earlier autonomy ladder (7–9 November 2026), every new skill started at L0 and moved up on fixed criteria. Reviews started at L3, and two failed reviews in a row only gave you advice to demote; the decision stayed yours.
+
+**From [§5.7 Spaced reinforcement after mastery](design.md#57-spaced-reinforcement-after-mastery):**
+
+??? note "Earlier version as built (§10, 7 November 2026)"
+
+    The harness replaced the 3 → 7 → 21 → 60 → 120 schedule above.
+
+    - **Fibonacci intervals:** 1, 2, 3, 5, 8, 13, 21, 34 … days.
+    - **Starting point:** reviews start as soon as a skill or microskill reaches **L3**, not L4. That fits the goal "mastered → only occasional reinforcement".
+    - **After a review:** `pass` moves one step up the sequence, `shaky` repeats the interval, and `fail` moves **two steps back**.
+    - **After two fails in a row:** the harness *advises* you to go down one level. It never demotes a skill automatically.
+    - **Before your exam:** if you set your exam date in `settings.examDate`, the harness shortens every interval so that the review falls no later than 3 days before the exam.
+
+    ```mermaid
+    flowchart LR
+        S[Skill or microskill reaches L3] --> I["Interval i = 0 → 1 day"]
+        I --> Q{Retrieval review<br/>~5 min, no help}
+        Q -- pass --> UP["i + 1<br/>1, 2, 3, 5, 8, 13, 21 …"]
+        Q -- shaky --> SAME[same interval]
+        Q -- fail --> BACK["i − 2"]
+        BACK --> F{2nd fail<br/>in a row?}
+        F -- yes --> ADV[Advice: one level down<br/>learner decides]
+        UP & SAME & BACK --> C["clamp: ≤ examDate − 3 days"] --> Q
+    ```
+
+    In the earlier version as built (7 November 2026), reviews were short retrieval tasks without help, on Fibonacci intervals from L3 onwards. After two fails in a row, the harness only advised you to go down one level and never demoted a skill automatically.
+
+**From [§5.8 OOD skill map](design.md#58-ood-skill-map):**
+
+??? note "Original design (7 November 2026): a graph with prerequisites"
+
+    `skill-map.yaml` defines the curriculum as a graph: which skills unlock which, and which keywords the harness uses to detect skills in your prompts. A skill becomes available at L0 once its prerequisites are at L2 or higher. A skill can only be automated (L4) when its prerequisites are at L4 as well. That way the AI never automates something whose foundations you cannot supervise.
+
+    ```mermaid
+    flowchart TD
+        subgraph Foundations
+            A1[Classes & objects<br/>state, identity, behaviour]
+            A2[Encapsulation<br/>& access modifiers]
+            A3[Constructors &<br/>object lifecycle]
+        end
+        subgraph Relationships
+            B1[Association /<br/>aggregation / composition]
+            B2[Inheritance]
+            B3[Interfaces &<br/>abstract classes]
+            B4[Polymorphism<br/>dynamic dispatch]
+        end
+        subgraph Modelling
+            C1[UML class diagrams]
+            C2[UML sequence diagrams]
+            C3[Responsibility assignment<br/>GRASP / CRC]
+        end
+        subgraph Principles
+            D1[SRP]
+            D2[Open/Closed]
+            D3[Liskov Substitution]
+            D4[Interface Segregation]
+            D5[Dependency Inversion]
+            D6[Composition over<br/>inheritance]
+        end
+        subgraph Patterns
+            E1[Strategy]
+            E2[Observer]
+            E3[Factory Method /<br/>Abstract Factory]
+            E4[Decorator]
+            E5[Adapter]
+            E6[State]
+        end
+        subgraph Practice
+            F1[Unit testing / TDD]
+            F2[Code smells &<br/>refactoring]
+            F3[Dependency injection]
+        end
+        A1 --> A2 --> A3
+        A1 --> B1 & B2
+        B2 --> B3 --> B4
+        A1 --> C1
+        B1 & B2 --> C1
+        C1 --> C2
+        C1 --> C3 --> D1
+        B4 --> D2 & D3
+        B3 --> D4 & D5
+        B1 & B2 --> D6
+        D2 & B4 --> E1
+        D5 --> E2
+        D5 --> E3
+        D6 --> E4 & E5
+        E1 --> E6
+        D1 --> F2
+        F1 --> F2
+        D5 --> F3
+    ```
+
+    The OOD skill map shows which skills unlock which: from classes and objects, through relationships and modelling, to principles and then patterns. A skill can only reach L4, the level where the AI automates it, once its prerequisites are at L4 too.
+
 ---
 
 <a id="11-change-log"></a>
 
 ## 11. Change log {#changelog}
+
+### 14 November 2026: the review in pages, a link to every source, and a rewrite per page
+
+The review was one page of about 51,000 words, written first for one student and later extended for students and teachers, junior developers at work, and researchers. It is now an overview with six pages under it, each rewritten for its reader.
+
+- **In pages.** The [overview](index.md) (key findings, summary, evaluation, limitations, how to cite) is for students and junior developers, and asks teachers and researchers to help test the harness. The [literature](literature.md), [the shift in skill needs](skill-shift.md) and the [risks](risks.md) are written neutrally, for readers who want to check the evidence. The [design](design.md) is written in the first person by the designer. The § numbers stay, and old links to sections of the review lead to the page that has them now.
+- **A link to every source.** Citations in the text link straight to the study: its DOI, arXiv record or URL. A Crossref lookup added the DOI of 95 sources; each was accepted only when title, first author and year matched, and the uncertain ones were checked by hand. Sources without a DOI, mostly books, are linked to their entry in the [references](references.md), which are now one alphabetical list.
+- **A label per design choice.** Each design principle and each part of the setup says whether it rests on strong evidence, limited evidence, or is a pragmatic choice.
+- **Revision notes moved here.** The notes on earlier versions moved to [earlier versions of the design](#earlier-versions); dates of changes moved out of the text into this log.
+- **A retracted source.** Ariely & Wertenbroch (2002), on deadlines as a commitment device, was retracted by *Psychological Science* on 2 September 2026. The review no longer cites it. Principle P10 rests on [Ryan & Deci (2000)](https://doi.org/10.1037/0003-066x.55.1.68), and the hooks as a commitment device the learner chooses are now labelled a pragmatic choice.
+- **Not changed:** the findings, the numbers and the evidence grades.
 
 ### 13 November 2026 (later): security review and its fixes
 
