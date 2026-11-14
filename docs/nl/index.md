@@ -17,7 +17,7 @@ De oefentoets van mijn vak objectgeoriënteerd programmeren op de hogeschool gin
 
 Achteraf had ik de code waarmee ik oefende zelden aan mezelf uitgelegd, en mijn ervaring met AI-agents op mijn werk had me een vals gevoel van zekerheid gegeven. Onderzoek laat hetzelfde risico zien: in een studie met wiskunde op de middelbare school verhoogde onbeperkte AI de oefenscores met 48%, maar verlaagde die de toetsscores met 17% zodra de AI weg was ([Bastani et al., 2025](research.md#key-findings)).
 
-Daarom bouwde ik een harnas die het leren bij mij houdt. Ik oefen er nu mee; het echte tentamen moet nog komen, en op het [dashboard](/dashboard/) kun je mijn voortgang volgen.
+Daarom bouwde ik een harnas die het leren bij mij houdt. Ik oefen er nu mee; het echte tentamen moet nog komen, en op het [dashboard](/dashboard/?lang=nl) kun je mijn voortgang volgen.
 
 Junior developers lopen in dezelfde val: de agent krijgt het werk af, maar de vaardigheden die je medior maken, groeien niet ([§2.12 van het onderzoek](research.md#212-het-eeuwige-juniorprobleem)).
 
@@ -70,13 +70,13 @@ Junior developers lopen in dezelfde val: de agent krijgt het werk af, maar de va
 
     Voortgang per (micro)vaardigheid, met echte data en een demo.
 
-    [Naar het dashboard](/dashboard/)
+    [Naar het dashboard](/dashboard/?lang=nl)
 
 - **C# OOP-cheat sheet**
 
     Het naslagwerk bij het vak: klassen, overerving, UML, patronen.
 
-    [Naar de cheat sheet](/cheatsheet/)
+    [Naar de cheat sheet](/nl/cheatsheet/)
 
 </div>
 

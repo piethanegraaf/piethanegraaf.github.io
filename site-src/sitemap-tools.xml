@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- The pages outside MkDocs. MkDocs makes /sitemap.xml for its own pages. The dashboard is left
-     out on purpose: it has noindex (its content is drawn by a script from the data). -->
+     out on purpose: it has noindex (its content is drawn by a script from the data).
+     English lives at the root, Dutch under /nl/. -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://piethanegraaf.github.io/en/cheatsheet/</loc>
-    <xhtml:link rel="alternate" hreflang="en" href="https://piethanegraaf.github.io/en/cheatsheet/"/>
-    <xhtml:link rel="alternate" hreflang="nl" href="https://piethanegraaf.github.io/cheatsheet/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://piethanegraaf.github.io/en/cheatsheet/"/>
+    <loc>https://piethanegraaf.github.io/cheatsheet/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://piethanegraaf.github.io/cheatsheet/"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://piethanegraaf.github.io/nl/cheatsheet/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://piethanegraaf.github.io/cheatsheet/"/>
   </url>
   <url>
-    <loc>https://piethanegraaf.github.io/cheatsheet/</loc>
-    <xhtml:link rel="alternate" hreflang="en" href="https://piethanegraaf.github.io/en/cheatsheet/"/>
-    <xhtml:link rel="alternate" hreflang="nl" href="https://piethanegraaf.github.io/cheatsheet/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://piethanegraaf.github.io/en/cheatsheet/"/>
+    <loc>https://piethanegraaf.github.io/nl/cheatsheet/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://piethanegraaf.github.io/cheatsheet/"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://piethanegraaf.github.io/nl/cheatsheet/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://piethanegraaf.github.io/cheatsheet/"/>
   </url>
 </urlset>

@@ -96,7 +96,7 @@ jobs:
 
       - name: Add static pages from site-src/
         run: |
-          # Every file lands at the same path under site/, so site-src/en/cheatsheet/ becomes /en/cheatsheet/.
+          # Every file lands at the same path under site/, so site-src/nl/cheatsheet/ becomes /nl/cheatsheet/.
           # A file may never replace a page that MkDocs built.
           while IFS= read -r -d '' f; do
             rel="${f#site-src/}"
@@ -138,6 +138,11 @@ jobs:
           if [ -f site-src/dashboard/data/progress.json ]; then
             node harness/export.mjs --check site-src/dashboard/data/progress.json
           fi
+
+      # English moved from /en/ to the root on 13 November 2026 (Dutch to /nl/). The old addresses
+      # get a small page that sends the visitor on, with the #anchor. Before the CSP step: it hashes their script.
+      - name: Redirect the old /en/ addresses
+        run: node harness/site-redirects.mjs site
 
       - name: Add a Content-Security-Policy to every page
         run: node harness/site-csp.mjs site

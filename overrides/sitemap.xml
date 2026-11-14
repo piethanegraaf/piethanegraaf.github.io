@@ -19,9 +19,17 @@
 
 {%- for locale, i18n_files in i18n_alternates.items() %}
 {%- for file in i18n_files %}
-    {%- if not file.page or file.page.is_link %}
+    {#- Skip a fallback copy: a page of another language built into this one (an English research note
+        under /nl/). Its canonical is the original page (overrides/main.html). #}
+    {%- if not file.page or file.page.is_link or (file.locale and file.locale != locale) %}
         {%- continue %}
     {%- endif %}
+    {%- set alternates = [] %}
+    {%- for i18n_locale, i18n_file in file.alternates.items() %}
+        {%- if not i18n_file.locale or i18n_file.locale == i18n_locale %}
+            {%- set _ = alternates.append((i18n_locale, i18n_file)) %}
+        {%- endif %}
+    {%- endfor %}
     <url>
         <loc>{{ href(file) }}</loc>
     {%- if file.page.meta and file.page.meta.git_revision_date_localized_raw_iso_date %}
@@ -29,8 +37,8 @@
     {%- elif file.page.update_date %}
         <lastmod>{{ file.page.update_date }}</lastmod>
     {%- endif %}
-    {%- if file.alternates | length > 1 %}
-    {%- for i18n_locale, i18n_file in file.alternates.items() %}
+    {%- if alternates | length > 1 %}
+    {%- for i18n_locale, i18n_file in alternates %}
         <xhtml:link rel="alternate" hreflang="{{ i18n_locale }}" href="{{ href(i18n_file) }}"/>
     {%- endfor %}
     {%- if "en" in file.alternates %}
