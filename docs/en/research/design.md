@@ -162,7 +162,9 @@ As built, the hooks are deterministic. The guard blocks code at L1–L3, and eve
 - **Teaching behaviour goes in skills, CLAUDE.md and the output style.** This covers Socratic questions, explanations and the tone of feedback.
 - **The harness keeps its state in plain files** that the learner can read and edit (JSON/Markdown). That keeps the system transparent, and transparency supports the learner's autonomy (P10).
 
-### 5.2 The Autonomy Ladder (per skill)
+<a id="52-the-autonomy-ladder-per-skill"></a>
+
+### 5.2 Learning phases (per skill)
 
 **Label:** Strong evidence. Help that fades as expertise in each skill grows is well supported (P2); the number of levels, the placement and the thresholds are pragmatic choices, marked below.
 
@@ -470,7 +472,7 @@ flowchart LR
         F1["SessionStart:<br/>'What's your goal today?<br/>Which skill? How confident (1–5)?'"]
     end
     subgraph Performance
-        P1[Work on task at<br/>current ladder level]
+        P1[Work on task in<br/>current learning phase]
         P2[Hints / attempts / tests<br/>auto-logged as evidence]
     end
     subgraph Self-reflection

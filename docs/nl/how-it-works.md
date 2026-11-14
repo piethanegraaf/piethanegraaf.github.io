@@ -26,7 +26,11 @@ flowchart LR
 
 In de harnas gaat elke prompt door de prompt-gate, en bij L1–L3 blokkeert de guard dat Claude code schrijft, verwijdert, bouwt of test (op L1 laat hij alleen een skelet met `TODO(human)`-gaten door). Een niveau gaat nooit vanzelf omhoog: je bevestigt het voorstel van de reflect-gate met "ja, doorzetten", of je zet het zelf.
 
-## Niveaus per vaardigheid
+<a id="niveaus-per-vaardigheid"></a>
+
+## Leerfasen per vaardigheid
+
+Elke vaardigheid zit in een van vijf **leerfasen**, L0 tot L4 (haar niveau). De fase bepaalt wat Claude voor die vaardigheid mag doen, en verandert over dagen en weken. Hoeveel hulp je binnen één taak krijgt, is iets anders: de [hintladder](#de-hintladder-l2). Zie [hoe de twee samenwerken](#leerfasen-en-de-hintladder).
 
 | Niveau | Claude | Jij |
 |---|---|---|
@@ -55,6 +59,33 @@ In [beoordeeld werk](#beoordeeld-werk) stopt de ladder bij trede 4: een uitwerki
 De eerste hint mag meteen. Een volgende trede komt pas na een **zichtbare poging**: gewijzigde code, een foutmelding of testuitkomst, of een hypothese. Of na 12 minuten vastzitten. Dat zijn minuten **actieve tijd**: een pauze van meer dan 20 minuten (`idleMinutes`) telt niet mee. Na het eten krijg je dus niet vanzelf een hogere trede.
 
 Bij een **nieuwe vaardigheid** telt de tijd niet. Een trede gaat pas omhoog als je zegt dat je vastzit, twee keer dezelfde foutmelding of testuitkomst deelt, of het concept niet kent. Vraag je na een eigen poging zelf om meer uitleg, dan mag Claude meteen naar een hogere trede, en die trede wordt eerlijk gelogd.
+
+## Leerfasen en de hintladder
+
+Het zijn twee verschillende schalen, en ze meten verschillende dingen:
+
+| | Leerfase (L0–L4) | Hintladder (trede 0–5) |
+|---|---|---|
+| **Wat het zegt** | Wat Claude voor een vaardigheid mag doen | Hoeveel hulp je bij één taak nodig had |
+| **Hoe lang het duurt** | Dagen tot weken, per vaardigheid | Eén taak: de volgende taak begint weer op trede 0 |
+| **Wie het verandert** | Omhoog: alleen jij, na een voorstel van de harnas. Omlaag: de harnas, als `autoDemote` aan staat | Gaat binnen de taak omhoog, na een zichtbare poging of na 12 minuten actieve tijd vastzitten |
+| **Waar je het ziet** | De sessiestart, `status`, de leerfasen op het dashboard | De regel `[harness] … help given: rung N`, en de kleur van de stippen op het dashboard |
+
+Ze werken samen in een kringloop: **de fase bepaalt hoe de hulp komt, en de treden die je nodig had bepalen de volgende fase.**
+
+1. **De fase bepaalt de rol van de ladder.**
+    - Op **L2** *is* de ladder de hulp: Claude begint met een vraag en geeft de volgende trede pas vrij na een poging.
+    - Op **L0** en **L1** komt de hulp vooraf, als uitgewerkt voorbeeld of als skelet. Op **L3** komt er niets vooraf, alleen een review na je poging. Op **L4** mag Claude het doen. In die fasen gaat er geen trede stap voor stap open, maar alle echte hulp wordt nog steeds als trede gelogd. Op L3 telt bijvoorbeeld uitleg van een concept als trede 2 of hoger.
+    - Een **nieuwe vaardigheid** heeft nog geen fase: je probeert het eerst zelf met de ladder van L2.
+    - In **[beoordeeld werk](#beoordeeld-werk)** geldt de ladder voor elke vaardigheid, in elke fase, tot trede 4.
+2. **De treden bepalen de fase.** Elke taak wordt gelogd met de hoogste trede die je nodig had. Dat is het bewijs:
+    - De eerste taak van een nieuwe vaardigheid bepaalt de startfase: trede 0 → L3, 1–2 → L2, 3–4 → L1, 5 → L0.
+    - **Gelukt** betekent hooguit trede 2. **Zelfstandig** betekent trede 0.
+    - Omhoog: L1 → L2 na drie taken op trede 0–1. L2 → L3 na ongeveer 85% gelukt over minstens 5 taken, de helft daarvan op trede 0–1. L3 → L4 na drie keer trede 0 op minstens 2 dagen, waarvan één een transferopdracht. Alleen L0 → L1 gebruikt geen treden: daarvoor leg je twee uitgewerkte voorbeelden goed uit en voorspel je de uitvoer.
+    - Omlaag (met `autoDemote`): minder dan 70% gelukt over minstens 4 uitgelegde taken, of de laatste 2 niet gelukt.
+    - Op L4 bepaalt de trede van de volgende taak in je eigen werk de herhaling: trede 0 is geslaagd, 1–2 is wankel, 3–5 is mislukt.
+
+**Een voorbeeld.** Overerving staat op L2. Bij je eerste taak heb je een vraag en een vindplaats nodig: trede 2, gelukt met hulp. De volgende vier taken kosten trede 1, 0, 1 en 0. Dat is 5 van de 5 gelukt, waarvan 4 op trede 0–1, dus de harnas stelt L3 voor en jij bevestigt. Op L3 krijg je vooraf geen hints. Heb je toch uitleg van een concept nodig? Dan telt die taak als trede 2: gelukt, maar niet zelfstandig, dus hij telt niet mee voor L4.
 
 ## De guard
 

@@ -43,13 +43,13 @@ De **paradox van toezicht** is dat het controleren van AI-uitvoer precies de vaa
 
 **Opbouwen, uitbesteden, onderhouden** is de afweging die dit project voorstelt: bouw een vaardigheid eerst met de hand op, besteed die uit aan de AI zodra je hem beheerst, en houd hem bij met korte herhalingen in je eigen werk. Elk onderdeel volgt een principe met empirische steun; de combinatie is niet getest. Zie [§2.11](research/design.md#211-synthese-ontwerpprincipes) en [Voor onderzoekers](researchers.md).
 
-## Autonomieladder (L0–L4)
+## Leerfasen (L0–L4)
 
-De **autonomieladder** is een niveau per vaardigheid dat bepaalt hoeveel de AI mag doen: van L0 (de AI doet het voor op een ander onderwerp) tot L4 (de AI doet het, jij houdt toezicht). Op L1–L3 houdt een hook de AI tegen om jouw code te schrijven, te verwijderen, te bouwen of te testen. Zie [Hoe het werkt](how-it-works.md#niveaus-per-vaardigheid) en [§5.2](research/design.md#52-de-autonomieladder-per-vaardigheid).
+Een **leerfase** is het niveau van één vaardigheid, en bepaalt hoeveel de AI daarvoor mag doen: van L0 (de AI doet het voor op een ander onderwerp) tot L4 (de AI doet het, jij houdt toezicht). Op L1–L3 houdt een hook de AI tegen om jouw code te schrijven, te verwijderen, te bouwen of te testen. Zie [Hoe het werkt](how-it-works.md#leerfasen-per-vaardigheid) en [§5.2](research/design.md#52-leerfasen-per-vaardigheid). Een fase duurt dagen tot weken; de onderzoekspagina's noemden dit eerder de *autonomieladder*.
 
 ## Hintladder
 
-Een **hintladder** is hulp in treden die elk iets meer weggeven: een vraag, een vindplaats, een schets, een klein voorbeeld over een ander onderwerp, en pas dan, na jouw bevestiging, een uitgewerkte oplossing (in beoordeeld werk stopt de ladder bij trede 4). De volgende trede komt pas na een zichtbare poging. Zie [Hoe het werkt](how-it-works.md#de-hintladder-l2) en [§5.3](research/design.md#53-frictie-afstemmen-en-de-hintladder).
+Een **hintladder** is hulp in treden die elk iets meer weggeven: een vraag, een vindplaats, een schets, een klein voorbeeld over een ander onderwerp, en pas dan, na jouw bevestiging, een uitgewerkte oplossing (in beoordeeld werk stopt de ladder bij trede 4). De volgende trede komt pas na een zichtbare poging. De ladder gaat over één taak; de leerfase over de vaardigheid over weken. De treden die je nodig had zijn het bewijs voor de volgende fase: zie [hoe ze samenwerken](how-it-works.md#leerfasen-en-de-hintladder) en [Hoe het werkt](how-it-works.md#de-hintladder-l2) en [§5.3](research/design.md#53-frictie-afstemmen-en-de-hintladder).
 
 ## Gespreide herhaling
 

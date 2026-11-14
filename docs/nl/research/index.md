@@ -119,7 +119,7 @@ De fundamenten uit de leerwetenschap sluiten hierop aan:
 - **Verval:** vaardigheden die je beheerst, **zakken weg**, tenzij ze met gespreide tussenpozen worden versterkt ([Arthur et al., 1998](https://doi.org/10.1207/s15327043hup1101_3); [Cepeda et al., 2006](https://doi.org/10.1037/0033-2909.132.3.354)).
 - **Transfer:** oefenen leidt tot de beste transfer als het past bij de omstandigheden van de toets ([Morris, Bransford & Franks, 1977](https://doi.org/10.1016/S0022-5371%2877%2980016-9)).
 
-**De opzet:** een Claude Code-opzet waarin elke vaardigheid een **Autonomieladder** opklimt ([§5.2](design.md#52-de-autonomieladder-per-vaardigheid)). De ladder loopt van *AI doet voor*, via *ik vul aan*, *ik schrijf met hints* en *ik schrijf zelfstandig*, naar *beheerst → AI automatiseert*. Hij eindigt met gespreide controles voor "onderhoud", die de vaardigheid weer kunnen terugzetten. Drie onderdelen van de infrastructuur dwingen dit af:
+**De opzet:** een Claude Code-opzet waarin elke vaardigheid vijf **leerfasen** doorloopt ([§5.2](design.md#52-leerfasen-per-vaardigheid)). De fasen lopen van *AI doet voor*, via *ik vul aan*, *ik schrijf met hints* en *ik schrijf zelfstandig*, naar *beheerst → AI automatiseert*. Ze eindigen met gespreide controles voor "onderhoud", die de vaardigheid weer kunnen terugzetten. Drie onderdelen van de infrastructuur dwingen dit af:
 
 1. Een **vaardighedenregister** (`skills.json`) dat per vaardigheid het niveau, het bewijs en de volgende herhalingsdatum bijhoudt.
 2. Een **AI-dagboek**: één notitie per sessie, met feiten die de AI vastlegt en reflectie die jij schrijft.

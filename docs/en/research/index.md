@@ -118,7 +118,7 @@ The learning-science foundations line up with this:
 - **Decay:** mastered skills **decay** unless they are reinforced at spaced intervals ([Arthur et al., 1998](https://doi.org/10.1207/s15327043hup1101_3); [Cepeda et al., 2006](https://doi.org/10.1037/0033-2909.132.3.354)).
 - **Transfer:** practice transfers best when it matches the conditions of the test ([Morris, Bransford & Franks, 1977](https://doi.org/10.1016/S0022-5371%2877%2980016-9)).
 
-**The setup:** a Claude Code setup in which every skill moves up an **Autonomy Ladder** ([§5.2](design.md#52-the-autonomy-ladder-per-skill)). The ladder goes from *AI demonstrates*, to *I complete*, to *I write with hints*, to *I write alone*, to *mastered → AI automates*, and ends with spaced "maintenance" checks that can demote the skill again. Three pieces of infrastructure enforce it:
+**The setup:** a Claude Code setup in which every skill moves through five **learning phases** ([§5.2](design.md#52-learning-phases-per-skill)). The phases go from *AI demonstrates*, to *I complete*, to *I write with hints*, to *I write alone*, to *mastered → AI automates*, and end with spaced "maintenance" checks that can demote the skill again. Three pieces of infrastructure enforce it:
 
 1. A **skill record** (`skills.json`) that tracks the level, evidence and next review date for each skill.
 2. An **AI diary**: one entry per session, with facts logged by the AI and reflection written by you.

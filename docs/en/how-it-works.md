@@ -26,7 +26,11 @@ flowchart LR
 
 In the harness, every prompt passes the prompt-gate, and the guard blocks Claude from writing, deleting, building or testing code at levels L1–L3 (at L1 it only lets through a skeleton with `TODO(human)` gaps). A level never goes up by itself: you confirm the reflect-gate's proposal with "yes, promote", or set it yourself.
 
-## Levels per skill
+<a id="levels-per-skill"></a>
+
+## Learning phases per skill
+
+Every skill is in one of five **learning phases**, L0 to L4 (its level). The phase sets what Claude may do for that skill, and it changes over days and weeks. How much help you get within one task is something else: the [hint ladder](#the-hint-ladder-l2). See [how the two work together](#learning-phases-and-the-hint-ladder).
 
 | Level | Claude | You |
 |---|---|---|
@@ -55,6 +59,33 @@ In [graded work](#graded-work) the ladder stops at rung 4: a worked solution is 
 The first hint may come right away. The next rung only comes after a **visible attempt**: changed code, an error or test outcome, or a hypothesis. Or after 12 minutes of being stuck. These are minutes of **active time**: a break of more than 20 minutes (`idleMinutes`) does not count. So after dinner you do not get a higher rung by itself.
 
 For a **new skill** time does not count. A rung only goes up when you say you are stuck, share the same error or test outcome twice, or do not know the concept. If you ask for more explanation after an attempt of your own, Claude may go straight to a higher rung, and that rung is logged honestly.
+
+## Learning phases and the hint ladder
+
+They are two different scales, and they measure different things:
+
+| | Learning phase (L0–L4) | Hint ladder (rung 0–5) |
+|---|---|---|
+| **What it says** | What Claude may do for a skill | How much help you needed in one task |
+| **How long it lasts** | Days to weeks, per skill | One task: the next task starts at rung 0 again |
+| **Who changes it** | Up: only you, after a proposal of the harness. Down: the harness, when `autoDemote` is on | It goes up within the task, after a visible attempt or after 12 minutes of active time stuck |
+| **Where you see it** | The session start, `status`, the learning phases on the dashboard | The line `[harness] … help given: rung N`, and the colour of the dots on the dashboard |
+
+They work together in a loop: **the phase decides how help comes, and the rungs you needed decide the next phase.**
+
+1. **The phase sets the role of the ladder.**
+    - At **L2** the ladder *is* the help: Claude starts with a question and unlocks the next rung only after an attempt.
+    - At **L0** and **L1** help comes up front, as a worked example or a skeleton. At **L3** there is nothing up front, only a review after your attempt. At **L4** Claude may do it. In those phases no rung unlocks step by step, but all real help is still logged as a rung. At L3, for example, an explanation of a concept counts as rung 2 or higher.
+    - A **new skill** has no phase yet: you try it first with the L2 ladder.
+    - In **[graded work](#graded-work)** the ladder holds for every skill, whatever its phase, up to rung 4.
+2. **The rungs decide the phase.** Each task is logged with the highest rung you needed. That is the evidence:
+    - The first task of a new skill sets the starting phase: rung 0 → L3, 1–2 → L2, 3–4 → L1, 5 → L0.
+    - **Solved** means at most rung 2. **Independent** means rung 0.
+    - Up: L1 → L2 after three tasks at rung 0–1. L2 → L3 after about 85% solved over at least 5 tasks, half of them at rung 0–1. L3 → L4 after rung 0 three times on at least 2 days, one of them a transfer task. Only L0 → L1 does not use rungs: it needs two worked examples that you explained and predicted correctly.
+    - Down (with `autoDemote`): under 70% solved over at least 4 explained tasks, or the last 2 not solved.
+    - At L4 the rung of the next task in your own work decides the review: rung 0 is a pass, 1–2 is shaky, 3–5 is a fail.
+
+**An example.** Inheritance is at L2. In your first task you need a question and a pointer: rung 2, solved with help. The next four tasks take rung 1, 0, 1 and 0. That is 5 of 5 solved, 4 of them at rung 0–1, so the harness proposes L3 and you confirm. At L3 you get no hints up front. Do you still need a concept explained? Then that task counts as rung 2: solved, but not independent, so it does not count towards L4.
 
 ## The guard
 

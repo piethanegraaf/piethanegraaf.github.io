@@ -17,7 +17,7 @@ Kans (K) en Impact (I) krijgen een score van 1–5, en Score = K × I. Alle scor
 
 - **Oordelen, geen metingen:** de scores zijn oordelen. De bewijsgraad tussen haken (A–D, [§2.0](literature.md#20-afbakening-methode-en-bewijsgraden)) laat zien hoe goed elk mechanisme is onderbouwd. Een hoge score met zwak bewijs is een reden om het risico goed in de gaten te houden, geen feit.
 - **Horizon:** *Toets* is de toetsing zonder AI aan het einde van een cursus. *Loopbaan* is werk na de studie, ook voor junior developers op het werk. *Beide* betekent dat het risico op beide horizonnen speelt. R8 en R15–R18 hangen samen met [de verschuiving in gevraagde vaardigheden](skill-shift.md) (§2.9): welke vaardigheden nog lonen nu AI meer code schrijft.
-- **Niveaus:** L0–L4 in de tekst zijn de niveaus van de [autonomieladder](design.md#52-de-autonomieladder-per-vaardigheid) van de leerharnas, van L0 (Voordoen) tot L4 (Geautomatiseerd). Ze zijn iets anders dan de kolom K, die voor de kans staat.
+- **Niveaus:** L0–L4 in de tekst zijn de niveaus van de [leerfasen](design.md#52-leerfasen-per-vaardigheid) van de leerharnas, van L0 (Voordoen) tot L4 (Geautomatiseerd). Ze zijn iets anders dan de kolom K, die voor de kans staat.
 
 | ID | Risico | Mechanisme | Bewijs [bewijsgraad] | K | I | Score | Horizon |
 |---|---|---|---|---|---|---|---|
@@ -74,7 +74,7 @@ Deze sectie maakt van de risico's een plan. De tabel geeft voor elk risico één
 
 | Risico | Maatregel | Uitgevoerd met | Restrisico |
 |---|---|---|---|
-| R1 | [Autonomieladder](design.md#52-de-autonomieladder-per-vaardigheid): de AI mag alleen code voor een vaardigheid schrijven op L0 (Voordoen) en L4 (Geautomatiseerd). Op L1–L3 blokkeert een `PreToolUse`-hook bewerkingen door de AI in code die van de lerende is. | Vaardighedenregister + `PreToolUse`-hook + beleid in CLAUDE.md | Laag |
+| R1 | [Leerfasen](design.md#52-leerfasen-per-vaardigheid): de AI mag alleen code voor een vaardigheid schrijven op L0 (Voordoen) en L4 (Geautomatiseerd). Op L1–L3 blokkeert een `PreToolUse`-hook bewerkingen door de AI in code die van de lerende is. | Vaardighedenregister + `PreToolUse`-hook + beleid in CLAUDE.md | Laag |
 | R2 | De beheersingspoort vraagt (a) zelfstandig succes op een **nieuwe transfertaak**, (b) een juiste **uitleg** in de eigen woorden van de lerende, (c) succes verspreid over ≥ 2 verschillende dagen. Het dagboek zet de gebruikte hints naast het zelfstandige werk. | `/mastery-check`-skill; dagboekstatistieken | Laag–gemiddeld |
 | R3 | `SessionStart` vraagt om een plan ("wat ga je vandaag proberen?"). De `Stop`-hook start een reflectie die *de lerende* schrijft. Hints zijn eerst socratische vragen. | Hooks + dagboek | Gemiddeld |
 | R4 | OOD-vaardigheden beginnen bij **"de lerende stelt voor, de AI geeft kritiek"**. De lerende tekent het klassendiagram of benoemt de verantwoordelijkheden *voordat* de AI reageert. Vragen over afwegingen zijn verplicht ("waarom hier compositie?"). | Protocol van de `/learn`-skill voor de categorie ontwerp | Gemiddeld |
@@ -98,7 +98,7 @@ Deze sectie maakt van de risico's een plan. De tabel geeft voor elk risico één
 | Fase | Wanneer (ten opzichte van de toets) | Wat |
 |---|---|---|
 | Opzetten | Bij de start, het liefst ongeveer tien weken voor de toets. Het kost ongeveer negen dagen. | Didactisch beleid in CLAUDE.md en de vaardighedenkaart; vaardighedenregister en sjablonen voor het dagboek; hooks (`SessionStart`, `UserPromptSubmit`, `Stop`); `PreToolUse`-guard die de code van de student beschermt, en `PostToolUse`-tests |
-| Leren | Vanaf het einde van het opzetten tot de toets | De student leert de OOD-vaardigheden op de ladder en kijkt één keer per week terug in het dagboek (15 minuten). |
+| Leren | Vanaf het einde van het opzetten tot de toets | De student leert de OOD-vaardigheden via de leerfasen en kijkt één keer per week terug in het dagboek (15 minuten). |
 | Check na een maand | Ongeveer een maand na de start, zo'n vijf weken voor de toets | Een check van het slagingspercentage en de overrides ([§6](index.md#evaluation)). |
 | Toetsomstandigheden (R14) | De laatste twee weken voor de toets | Proeftoetsen op tijd, zonder AI, in de IDE van de toets. Eerst korte, daarna volledige proeftoetsen. |
 | Transfertoets | Vlak voor de toets | Een minitoets of transfertoets zonder hulp (§6). |

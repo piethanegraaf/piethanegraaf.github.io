@@ -165,7 +165,9 @@ Zoals gebouwd zijn de hooks deterministisch. De guard blokkeert code op L1–L3,
 - **Didactisch gedrag hoort in skills, CLAUDE.md en de output style.** Het gaat dan om socratische vragen, uitleg en de toon van de feedback.
 - **De harnas bewaart de toestand in gewone bestanden** die de lerende kan lezen en bewerken (JSON/Markdown). Zo blijft het systeem transparant, en transparantie ondersteunt de autonomie van de lerende (P10).
 
-### 5.2 De autonomieladder (per vaardigheid)
+<a id="52-de-autonomieladder-per-vaardigheid"></a>
+
+### 5.2 Leerfasen (per vaardigheid)
 
 **Label:** Sterk bewijs. Hulp die afneemt naarmate de expertise per vaardigheid groeit, is goed onderbouwd (P2); het aantal niveaus, de plaatsing en de drempels zijn pragmatische keuzes, hieronder aangegeven.
 
@@ -473,7 +475,7 @@ flowchart LR
         F1["SessionStart:<br/>'What's your goal today?<br/>Which skill? How confident (1–5)?'"]
     end
     subgraph Performance
-        P1[Work on task at<br/>current ladder level]
+        P1[Work on task in<br/>current learning phase]
         P2[Hints / attempts / tests<br/>auto-logged as evidence]
     end
     subgraph Self-reflection

@@ -14,7 +14,7 @@ Likelihood (L) and Impact (I) are scored 1–5, and Score = L × I. All scores w
 
 - **Judgements, not measurements:** the scores are judgements. The evidence grade in brackets (A–D, [§2.0](literature.md#20-scope-method-and-evidence-grades)) shows how well each mechanism is supported. A high score with weak evidence is a reason to watch closely, not a fact.
 - **Horizon:** *Exam* is the assessment without AI at the end of a course. *Career* is work after studies, including junior developers at work. *Both* means the risk applies on both horizons. R8 and R15–R18 relate to [the shift in skill needs](skill-shift.md) (§2.9): which skills still pay off as AI writes more code.
-- **Levels:** L0–L4 in the text are the levels of the harness's [Autonomy Ladder](design.md#52-the-autonomy-ladder-per-skill), from L0 (demonstration) to L4 (automated). They are not the L column, which is likelihood.
+- **Levels:** L0–L4 in the text are the levels of the harness's [learning phases](design.md#52-learning-phases-per-skill), from L0 (demonstration) to L4 (automated). They are not the L column, which is likelihood.
 
 | ID | Risk | Mechanism | Evidence [grade] | L | I | Score | Horizon |
 |---|---|---|---|---|---|---|---|
@@ -71,7 +71,7 @@ This section turns the risks into a plan. The table gives one mitigation for eac
 
 | Risk | Mitigation | Implemented by | Residual risk |
 |---|---|---|---|
-| R1 | [Autonomy Ladder](design.md#52-the-autonomy-ladder-per-skill): the AI may write code for a skill only at L0 (demonstration) and L4 (automated). At L1–L3 a `PreToolUse` hook blocks AI edits to code the learner owns. | Skill record + `PreToolUse` hook + CLAUDE.md policy | Low |
+| R1 | [learning phases](design.md#52-learning-phases-per-skill): the AI may write code for a skill only at L0 (demonstration) and L4 (automated). At L1–L3 a `PreToolUse` hook blocks AI edits to code the learner owns. | Skill record + `PreToolUse` hook + CLAUDE.md policy | Low |
 | R2 | The mastery gate needs (a) independent success on a **novel transfer task**, (b) a correct **explanation** in the learner's own words, (c) success spread over ≥ 2 separate days. The diary shows hints used vs. independent work. | `/mastery-check` skill; diary statistics | Low–medium |
 | R3 | `SessionStart` asks for a plan ("what will you try today?"). The `Stop` hook triggers a reflection that *the learner* writes. Hints are Socratic questions first. | Hooks + diary | Medium |
 | R4 | OOD skills start at **"learner proposes, AI critiques"**. The learner draws the class diagram or names the responsibilities *before* the AI comments. Trade-off questions are required ("why composition here?"). | `/learn` skill protocol for the design category | Medium |
@@ -95,7 +95,7 @@ This section turns the risks into a plan. The table gives one mitigation for eac
 | Phase | When (relative to the exam) | What |
 |---|---|---|
 | Setup | At the start, ideally about ten weeks before the exam. It takes about nine days. | CLAUDE.md pedagogy policy and skill map; skill record and diary templates; hooks (`SessionStart`, `UserPromptSubmit`, `Stop`); `PreToolUse` ownership guard and `PostToolUse` tests |
-| Learning | From the end of setup until the exam | The student learns the OOD skills on the ladder and reviews the diary once a week (15 minutes). |
+| Learning | From the end of setup until the exam | The student learns the OOD skills through the learning phases and reviews the diary once a week (15 minutes). |
 | Month-1 check | About a month after the start, roughly five weeks before the exam | A check of the success rate and the overrides ([§6](index.md#evaluation)). |
 | Exam conditions (R14) | The last two weeks before the exam | Timed mock exams without AI, in the IDE of the exam. Short ones first, then full mock exams. |
 | Transfer test | Just before the exam | An unassisted mini-exam or transfer test (§6). |
