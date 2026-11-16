@@ -15,8 +15,9 @@ Thank you for helping. Issues and pull requests are welcome, in English or Dutch
 
 - No dependencies, no network, no `eval`, no shell. Start programs with an argument list (`spawnSync("dotnet", [...])`).
 - Every message goes through `t()` with a key in **both** `harness/i18n/nl.json` and `en.json`. The tests check that the keys and placeholders match.
-- Recognition patterns go in `harness/hooks/patterns.mjs`, with Dutch and English both active.
+- Recognition patterns go in `harness/core/patterns.mjs`, with Dutch and English both active.
 - A change in behaviour comes with a test.
+- Decisions belong in `harness/core/`; `harness/hooks/` (Claude Code) and `harness/hosts/opencode/` only translate. A change in behaviour must hold on both hosts: `test/opencode-plugin.test.mjs` drives the opencode plugin with the same cases.
 
 ## Licence of contributions (CLA)
 
@@ -51,8 +52,9 @@ Bedankt voor je hulp. Issues en pull requests zijn welkom, in het Nederlands of 
 
 - Geen afhankelijkheden, geen netwerk, geen `eval`, geen shell. Start programma's met een lijst van argumenten.
 - Elke melding gaat via `t()`, met een sleutel in **beide** bestanden: `harness/i18n/nl.json` en `en.json`.
-- Herkenningspatronen staan in `harness/hooks/patterns.mjs`, met Nederlands en Engels allebei actief.
+- Herkenningspatronen staan in `harness/core/patterns.mjs`, met Nederlands en Engels allebei actief.
 - Een wijziging in gedrag komt met een test.
+- Beslissingen horen in `harness/core/`; `harness/hooks/` (Claude Code) en `harness/hosts/opencode/` vertalen alleen. Een wijziging in gedrag moet op beide tools gelden: `test/opencode-plugin.test.mjs` stuurt de opencode-plugin met dezelfde gevallen aan.
 
 ### Licentie van bijdragen (CLA)
 

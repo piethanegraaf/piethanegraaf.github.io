@@ -36,8 +36,8 @@ export const SCHEMA = 1;
 const fail = (msg) => { console.error(`Fout: ${msg}`); process.exit(1); };
 
 // ---------- Privacy filters ----------
-// They live in hooks/privacy.mjs, so the AI-use log of graded work uses the same ones (#50).
-import { fixedFilters, privateFilters, makeScrubber } from "./hooks/privacy.mjs";
+// They live in core/privacy.mjs, so the AI-use log of graded work uses the same ones (#50).
+import { fixedFilters, privateFilters, makeScrubber } from "./core/privacy.mjs";
 export { fixedFilters, privateFilters, makeScrubber };
 
 // ---------- Diary: only whitelisted, labelled fields ----------
@@ -220,7 +220,7 @@ export async function build(project, { previous = null, todo = null } = {}) {
   // Reuse the harness's own logic (stats, promotion signals) on this project's data.
   process.env.LEERHARNAS_ROOT = project;
   process.env.LEERHARNAS_DATA = learn;
-  const lib = await import("./hooks/lib.mjs");
+  const lib = await import("./core/lib.mjs");
   const data = lib.loadSkills();
   const settings = lib.settingsOf(data);
 
@@ -561,7 +561,7 @@ async function main() {
   console.log(`\nGeschreven: ${out}\nControleer de diff zelf, ook de vertalingen, voordat je commit of pusht.`);
   // The mark in the practice folder: from now on the session start counts from this export.
   try {
-    const lib = await import("./hooks/lib.mjs");
+    const lib = await import("./core/lib.mjs");
     lib.writeLastExport(totals, json.exportedAt);
     console.log(`Bijgewerkt: ${lib.LAST_EXPORT_FILE} (${totals.tasks} taken, ${totals.diarySessions} dagboeksessies, ${totals.levelChanges} niveauwijzigingen). De melding "sinds de laatste export" telt vanaf nu.`);
   } catch (e) {

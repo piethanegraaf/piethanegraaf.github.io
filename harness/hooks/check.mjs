@@ -24,7 +24,7 @@ import {
   pickSession, loadSession, saveSession, touch, activeMinutesSince, logTask, logEvent, levelAdvice, taskStats,
   lapseTasks, afterTask, effectiveLevel, newWorkSignal, beginNewWork, taskRung, taskLogged, changedCodeFiles, progressOf, progressLine, t,
   settingsOf, SECURITY_ANALYZER_ARGS, securityWarnings, keywordHits,
-} from "./lib.mjs";
+} from "../core/lib.mjs";
 
 let data0 = null;
 try { data0 = loadSkills(); } catch { /* messages stay in the default language */ }

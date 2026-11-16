@@ -27,11 +27,14 @@ import {
   isLearnerEntry, learnerEntryText, entryText, readTranscript, loadSkills, findSkill, familyIds, autoDemote,
   applyVerdict, findVerdict, lapseTasks, promotionAdvice, offerIsNew, offerText, newWorkSignal, beginNewWork, explanationText,
   noteConceptHelp, checkMicroProposal, microOfferText, readEvents, isOtherFamily, familyOf, placeAfterExplanation, recheckDemotion,
-  verdictFromAgent, t, gradedOf, isGradedPath, isGradedDir, mentionsGraded, sessionWork,
-} from "./lib.mjs";
+  verdictFromAgent, t, gradedOf, isGradedPath, isGradedDir, mentionsGraded, sessionWork, effectiveLevel,
+} from "../core/lib.mjs";
 import path from "node:path";
-import { RUNG_MARK, GIVEN_MARK, REVIEW_RUNG_MARK, EXPLAIN_MARK, TRANSFER_MARK, MICRO_MARK, parseMicroMark, ASKS_CONFIDENCE, CHECK_MARK, LOG_MARK } from "./patterns.mjs";
-import { logAnswer, openRows, fillLastColumn, sid8 } from "./graded.mjs";
+import { RUNG_MARK, GIVEN_MARK, REVIEW_RUNG_MARK, EXPLAIN_MARK, TRANSFER_MARK, MICRO_MARK, parseMicroMark, ASKS_CONFIDENCE, CHECK_MARK, LOG_MARK } from "../core/patterns.mjs";
+import { logAnswer, openRows, fillLastColumn, sid8 } from "../core/graded.mjs";
+import { turnOf } from "../core/transcript.mjs";
+import { codeFloor } from "../core/floor.mjs";
+import { fromClaudeCode } from "./cc-transcript.mjs";
 
 let input;
 try { input = JSON.parse(await readStdin()); } catch { process.exit(0); }
@@ -69,11 +72,9 @@ let entries = readTranscript(input.transcript_path);
 if (lastMessage === null) for (let k = 0; k < 3; k++) { sleep(150); entries = readTranscript(input.transcript_path); }
 
 // Only messages the learner typed mark the start of "the last answer"; agent reports, task
-// notifications and reminders in between do not (see isLearnerEntry in lib.mjs).
-let lastPromptIdx = -1;
-for (let i = entries.length - 1; i >= 0; i--) if (isLearnerEntry(entries[i])) { lastPromptIdx = i; break; }
-const answer = [...entries.slice(lastPromptIdx + 1).filter((e) => e.type === "assistant").map(entryText), lastMessage ?? ""].join("\n");
-const earlierClaude = entries.slice(0, Math.max(0, lastPromptIdx)).filter((e) => e.type === "assistant").map(entryText);
+// notifications and reminders in between do not (see isLearnerEntry in lib.mjs). The turn is read from the
+// shared message shape (core/transcript.mjs), one message per entry, so lastPromptIdx is also an entry index.
+const { idx: lastPromptIdx, answer, earlier: earlierClaude } = turnOf(fromClaudeCode(entries), lastMessage);
 // The explanation is checked against the learner's message in the transcript, not against
 // st.lastPrompt: "!" commands skip prompt-gate, so that can be an older prompt (setup review 3.6).
 const learner = lastPromptIdx >= 0 ? entries[lastPromptIdx] : null;
@@ -123,6 +124,17 @@ if (st.unlocked) {
     }
   }
   delete st.unlocked;
+}
+
+// The rung floor (opencode plan): at L2 and L3 a code block in the learner's language is rung 4 or 5, whatever the
+// marker says (core/floor.mjs). It only ever raises the rung.
+{
+  const s = data && rungSkill ? findSkill(data, rungSkill) : null;
+  const lv = s ? effectiveLevel(data, s) : null;
+  if (lv === "L2" || lv === "L3") {
+    const f = codeFloor(answer, data);
+    if (f.rung > (st.maxRung ?? 0)) rungMark(f.rung, { floor: true, lines: f.lines });
+  }
 }
 
 // Help in a review after a task: [review-trede N #id] (setup review of 11 Nov, S3/S16). It counts as

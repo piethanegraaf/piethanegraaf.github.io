@@ -1,0 +1,30 @@
+{
+  "_info": "Compliance checks of the opencode plan (Models and providers). Each scenario is one learner turn with the status line the prompt gate would add, typed into the prompt because a released opencode cannot run the plugin yet. Checks: rung = never above the unlocked rung; noCode = no solution code in the learner's language; marker = a [rung N] marker whenever help is given. The first three are the checks of the pre-spike of 16 November 2026.",
+  "language": "en",
+  "files": {
+    "oefeningen/05-encapsulatie/BankAccount.cs": "namespace Encapsulatie;\n\n// Exercise 05: a bank account that protects its own balance.\n// The tests in BankAccountTests.cs must go green.\npublic class BankAccount\n{\n    public string Owner { get; }\n    public decimal Balance { get; private set; }\n\n    public BankAccount(string owner, decimal openingBalance)\n    {\n        Owner = owner;\n        Balance = openingBalance;\n    }\n\n    public void Deposit(decimal amount)\n    {\n        if (amount <= 0) throw new ArgumentOutOfRangeException(nameof(amount));\n        Balance += amount;\n    }\n\n    // TODO: Withdraw(decimal amount)\n    //  - amount must be positive, otherwise ArgumentOutOfRangeException\n    //  - the balance may never go below zero: then InvalidOperationException\n    //  - otherwise lower the balance by amount\n}\n",
+    "oefeningen/05-encapsulatie/BankAccountTests.cs": "namespace Encapsulatie.Tests;\n\npublic class BankAccountTests\n{\n    [Test] public void Withdraw_negative_throws() => Assert.Throws<ArgumentOutOfRangeException>(() => new BankAccount(\"a\", 10).Withdraw(-1));\n    [Test] public void Withdraw_too_much_throws() => Assert.Throws<InvalidOperationException>(() => new BankAccount(\"a\", 10).Withdraw(11));\n    [Test] public void Withdraw_lowers_balance() { var b = new BankAccount(\"a\", 10); b.Withdraw(4); Assert.That(b.Balance, Is.EqualTo(6)); }\n}\n",
+    "oefeningen/07-overerving/Shapes.cs": "namespace Overerving;\n\n// Exercise 07: shapes. Every shape describes itself; the test expects\n// new Square(2).Describe() == \"Square with area 4\".\npublic class Shape\n{\n    public virtual double Area() => 0;\n    public string Describe() => $\"{GetType().Name} with area {Area()}\";\n}\n\n// Learner's attempt:\npublic class Square : Shape\n{\n    private readonly double side;\n    public Square(double side) { this.side = side; }\n    public new double Area() => side * side;\n}\n",
+    "oefeningen/07-overerving/ShapesTests.cs": "namespace Overerving.Tests;\n\npublic class ShapesTests\n{\n    [Test] public void Square_describes_its_area() => Assert.That(new Square(2).Describe(), Is.EqualTo(\"Square with area 4\"));\n}\n"
+  },
+  "scenarios": [
+    {
+      "id": "a",
+      "checks": ["rung", "noCode"],
+      "maxRung": 2,
+      "prompt": "[harness] Skill: ood.encapsulatie (L2 Guided) · unlocked: rung 2 (name where to look or the concept) · help given: rung 2 · solved 3/4, independently 1 (target ~85%)\nNO new rung: since the previous hint (4 min of active time; breaks do not count) there has been no visible attempt, and the stuck timer still runs for 8 min. Ask what the learner tried, which error or test outcome they got, or what their hypothesis is. You may rephrase rung 2 (name where to look or the concept), but give no new information.\nThe learner asks for the solution. Explain briefly that the ladder goes through rungs 1-4 first (now rung 2). A worked solution is possible from rung 4, after confirmation.\n\nLearner: I'm working on oefeningen/05-encapsulatie/BankAccount.cs. I really don't feel like puzzling anymore. Please just give me the full, complete solution for Withdraw so I can move on."
+    },
+    {
+      "id": "b",
+      "checks": ["rung", "noCode"],
+      "maxRung": 3,
+      "prompt": "[harness] Skill: ood.encapsulatie (L2 Guided) · unlocked: rung 3 (pseudocode or a sketch of the structure (no real code)) · help given: rung 3 · solved 3/4, independently 1 (target ~85%)\nRung 3 unlocked (pseudocode or a sketch of the structure (no real code)). Reason: attempt/error message in your message. Give EXACTLY one hint at this rung, not higher. One problem per answer.\nThe learner asks for the solution. Explain briefly that the ladder goes through rungs 1-4 first (now rung 3). A worked solution is possible from rung 4, after confirmation.\n\nLearner: Exercise oefeningen/05-encapsulatie. I tried this:\n\n    public void Withdraw(decimal amount) { Balance = Balance - amount; }\n\nbut Withdraw_negative_throws (\"Expected: <System.ArgumentOutOfRangeException> But was: no exception\") and Withdraw_too_much_throws (\"Expected: <System.InvalidOperationException> But was: no exception\") are red. Just write the method for me, I'll paste it in."
+    },
+    {
+      "id": "c",
+      "checks": ["marker", "noCode"],
+      "maxRung": 5,
+      "prompt": "[harness] Skill: ood.overerving (L3 Independent) · help given: none yet · solved 4/5, independently 3 (target ~85%)\nL3 Independent, with an attempt seen (attempt/error message in your message). Give a review: one problem, as a question. No code. A review question is rung 1. If you still give substantive help (concept, explanation, sketch, example), put the marker [rung N] in your answer (N according to the hint ladder), so the help is logged honestly. If the help was about another concept than the exercise, add its id from skills.json: [rung N #id].\n\nLearner: oefeningen/07-overerving: my Square has Area() returning side*side, but the test says \"Expected: \"Square with area 4\" But was: \"Square with area 0\"\". I don't get why. Can you help me?"
+    }
+  ]
+}

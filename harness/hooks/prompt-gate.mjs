@@ -11,11 +11,11 @@ import {
   afterTask, allTasks, readEvents, openOffer, promote, exerciseDirs, newWorkSignal, beginNewWork, noteExplanationWords,
   taskRung, taskLogged, addMicro, recheckDemotion, openOfFamily, familyRungOf, solvedInFamily, keywordHits, isSolved, verdictKey, needsNextExercise, progressOf, progressLine, t,
   gradedOf, gradedWhy, gradedChangedFiles, skillForFile, lapseTasks, familyIds,
-} from "./lib.mjs";
+} from "../core/lib.mjs";
 import {
   HINT, SOLUTION, SOLVED_STRONG, SOLVED_WEAK, CODE_CONTEXT, NOT_SOLVED, RESUME, ATTEMPT, CHECKING,
   STUCK, DONT_KNOW, MORE_EXPLANATION, errorSignature, promotionAnswer, microAnswer, isEnd, DONE_PREFIX, confidenceOf,
-} from "./patterns.mjs";
+} from "../core/patterns.mjs";
 
 const rungName = (n) => t(`rung.${n}`);
 
@@ -136,7 +136,7 @@ let microMsg = null;
 }
 
 // ---------- 1. Skill detection ----------
-const SKIP_DIR = /^(bin|obj|\.vs|\.idea|\.git|\.claude|\.learning|node_modules)$/i;
+const SKIP_DIR = /^(bin|obj|\.vs|\.idea|\.git|\.claude|\.opencode|\.learning|node_modules)$/i;
 
 // The code file the learner changed most recently since `since` (anywhere in the project).
 function latestChangedCode(since) {
@@ -285,7 +285,7 @@ function changedSince(since) {
     for (const e of entries) {
       if (budget-- <= 0 || out.length >= 5) return;
       if (e.isDirectory()) {
-        if (/^(bin|obj|\.vs|\.idea|\.git|\.claude|\.learning|node_modules)$/i.test(e.name)) continue;
+        if (/^(bin|obj|\.vs|\.idea|\.git|\.claude|\.opencode|\.learning|node_modules)$/i.test(e.name)) continue;
         walk((dir ? dir + "/" : "") + e.name);
       } else if (CODE_FILE.test(e.name)) {
         const f = (dir ? dir + "/" : "") + e.name;

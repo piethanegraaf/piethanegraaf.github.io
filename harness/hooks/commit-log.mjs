@@ -17,7 +17,7 @@ import path from "node:path";
 import fs from "node:fs";
 import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
-import { t, loadSkills, gradedOf } from "./lib.mjs";
+import { t, loadSkills, gradedOf } from "../core/lib.mjs";
 
 const git = (repo, args) => {
   const r = spawnSync("git", ["-C", repo, ...args], { encoding: "utf8", windowsHide: true });

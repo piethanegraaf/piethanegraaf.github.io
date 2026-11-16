@@ -26,6 +26,7 @@
 // change that: it runs the same two keys again on a saved transcript.
 import fs from "node:fs";
 import path from "node:path";
+import { fileURLToPath, pathToFileURL } from "node:url";
 import {
   loadSkills, saveSkills, findSkill, settingsOf, addOverride, loadOverrides, logEvent, today, taskStats,
   LEVELS, levelName, isMicro, microsOf, familyIds, familyOf, scheduleOnLevel, scheduleOnReview, dueReviews,
@@ -34,8 +35,8 @@ import {
   activeMinutesSince, readTranscript, isLearnerEntry, learnerEntryText, entryText, checkExplanation, t, language,
   sinceExportLine, dashboardAfterDiary, parseDashboardRepo, addMicro, conceptHelpOf, readEvents,
   recentUps, progressAll, progressLine, needsNextExercise, placeAfterExplanation, gradedOf,
-} from "./lib.mjs";
-import { EXPLAIN_MARK } from "./patterns.mjs";
+} from "../core/lib.mjs";
+import { EXPLAIN_MARK } from "../core/patterns.mjs";
 
 const [cmd, ...args] = process.argv.slice(2);
 const data = loadSkills();
@@ -217,12 +218,13 @@ switch (cmd) {
     // Recover explanations that were approved in the chat but never logged (setup review §5): read a
     // saved transcript, find Claude's [uitleg-ok <tid>] markers and check the learner's message they
     // answer with the same checkExplanation(). Only what passes both keys is logged, with source "replay".
-    const [file, ...flags] = args;
+    const [file, ...flags] = args.filter((a) => a !== "--opencode");
     if (!file) exit("cli.replay.usage");
     const dry = flags.includes("--dry-run");
     if (!fs.existsSync(path.resolve(file))) exit("cli.replay.noFile", { file });
-    const entries = readTranscript(path.resolve(file));
-    const session = path.basename(file).replace(/\.jsonl$/i, "");
+    // --opencode: the output of `opencode session export` (opencode plan, parity row 23), mapped to the same entries.
+    const entries = args.includes("--opencode") ? await opencodeEntries(path.resolve(file)) : readTranscript(path.resolve(file));
+    const session = path.basename(file).replace(/\.(jsonl|json)$/i, "");
     // Open and lapsed tasks: a lapsed task whose marker a bug lost was not really skipped (S1).
     const open = new Map(allTasks().filter((x) => !x.explained).map((x) => [x.tid, x]));
     const results = new Map(); // tid -> { ok, reasons, text }
@@ -374,12 +376,15 @@ switch (cmd) {
       course: /^[^\r\n<>]{1,80}$/, language: /^(nl|en)$/, autoDemote: /^(true|false)$/, securityAnalyzer: /^(true|false)$/,
       // Which files are the learner's code (the guard protects them at L1-L3): comma-separated.
       codeExtensions: /^\.?[a-z0-9]{1,10}(\s*,\s*\.?[a-z0-9]{1,10})*$/i, codeFiles: /^[\w.*-]{1,60}(\s*,\s*[\w.*-]{1,60})*$/,
+      // opencode (opencode plan): MCP tools the guard lets through (comma-separated action names, or *), and the quiet
+      // spell after which an open session counts as closed for the catch-up diary.
+      allowedMcp: /^(\*|[\w-]{1,80}(\s*,\s*[\w-]{1,80})*)$/, sessionGapMinutes: /^[1-9]\d*$/,
     };
     if (!allowed[key] || !allowed[key].test(value)) exit("cli.setting.usage");
     data.settings = data.settings ?? {};
     const list = (v) => v.split(",").map((x) => x.trim()).filter(Boolean).map((x) => (key === "codeExtensions" ? x.replace(/^\./, "") : x));
-    data.settings[key] = ["stuckTimerMinutes", "idleMinutes"].includes(key) ? Number(value) : ["autoDemote", "securityAnalyzer"].includes(key) ? value === "true"
-      : ["codeExtensions", "codeFiles"].includes(key) ? list(value) : value;
+    data.settings[key] = ["stuckTimerMinutes", "idleMinutes", "sessionGapMinutes"].includes(key) ? Number(value) : ["autoDemote", "securityAnalyzer"].includes(key) ? value === "true"
+      : ["codeExtensions", "codeFiles", "allowedMcp"].includes(key) ? list(value) : value;
     saveSkills(data);
     logEvent({ type: "setting", key, value });
     console.log(`${key} = ${value}`);
@@ -387,4 +392,23 @@ switch (cmd) {
   }
   default:
     exit("cli.usage");
+}
+
+// A session exported from opencode: a JSON array of messages, an object with `messages`, or JSON lines. The mapping
+// lives with the opencode plugin: .opencode/plugins/leerharnas/messages.mjs when installed, hosts/opencode/ in the repo.
+async function opencodeEntries(file) {
+  const text = fs.readFileSync(file, "utf8");
+  let messages;
+  try {
+    const v = JSON.parse(text);
+    messages = Array.isArray(v) ? v : Array.isArray(v?.messages) ? v.messages : [];
+  } catch {
+    messages = text.split(/\r?\n/).filter(Boolean).map((l) => { try { return JSON.parse(l); } catch { return null; } }).filter(Boolean);
+  }
+  const here = path.dirname(fileURLToPath(import.meta.url));
+  for (const rel of ["../plugins/leerharnas/messages.mjs", "../hosts/opencode/messages.mjs"]) {
+    const p = path.resolve(here, rel);
+    if (fs.existsSync(p)) return (await import(pathToFileURL(p).href)).toClaudeEntries(messages);
+  }
+  exit("cli.replay.noOpencode");
 }

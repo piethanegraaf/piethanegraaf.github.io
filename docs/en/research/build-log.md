@@ -609,6 +609,17 @@ These parts of the design were replaced. They used to sit on the [design page](d
 
 ## 11. Change log {#changelog}
 
+### 16 November 2026: an opencode version, tested before building, built as an experiment
+
+The pilot student planned a second version of the harness for [opencode](../opencode.md), an open-source coding agent that also runs free models. The plan put a cheap test before any port work, with a rule for when to stop.
+
+- **The test (pre-spike).** Three rules from the compliance checks, without a plugin, on two free models with zero data retention (GLM-5.3-Flash Free and DeepSeek V4.1 Flash Free), three runs each, in opencode 1.19.5. Both models stayed at or below the unlocked rung (6/6) and gave no solution code at L2 (6/6). Neither wrote the rung marker reliably at L3: GLM 0/3, DeepSeek 1/3 (the other two runs used the review marker). The status line at L3 ("Give a review…") seems to push models towards the review marker, so part of this is the wording of the rules. One exercise of the test contradicted its own prompt (which exception a test expects); the compliance suite in the repo fixes that.
+- **The plugin API was not released.** The plan was based on the source of opencode 2 on its development branch. The released version (1.19.5), and the newest development build on npm (9 November), have none of the hooks the design needs. The source of 15 November (commit `b75b158`) has them, and matches the plan: an idle hook, a permission hook with the diff of an edit, prompt and context hooks, session rules, and policies that can deny one action on one path.
+- **Decision.** By the stop rule of the plan the free models fail, and the stop was first accepted. The learner then asked to build the whole plan anyway, as an experiment: the opencode version ships as experimental and not for real practice, until a released opencode has the API and a model passes the compliance suite.
+- **Built: one core, two adapters.** The shared logic moved to `harness/core/` (installed in `.claude/core/` or `.opencode/core/`). The guard is a function that takes a host-neutral request and returns allow or deny. The opencode plugin (`harness/hosts/opencode/`) maps opencode's hooks onto the same gate scripts as Claude Code, with opencode's messages written as a transcript in their format, so both write the same `.learning/`. A test drives the plugin through a stand-in of opencode's API and compares its guard decisions with Claude Code's. `install.mjs --host opencode|both`, `replay --opencode`, the settings `allowedMcp` and `sessionGapMinutes`, a list of tested models (still empty) and the compliance suite came with it.
+- **Changed behaviour on both hosts:** an edit at L1 without the text before and after is denied (Claude Code always sends that text). At L2 and L3 a code block in the learner's language now counts as rung 4 or 5, whatever marker the model wrote.
+- **Not changed:** the hooks Claude Code installs. MCP tools are now judged by the core guard, but registering the guard for them in Claude Code changes every installed folder, so that is left for the next review. Graded work on opencode (the AI-use log, the export, the user-level gate) is for a later release.
+
 ### 16 November 2026: help is what Claude gave, and nothing lost at the end
 
 The pilot student decided points 68–71 after a session on the Device scaffolding of the final assignment. The task was logged at rung 2, while the only help was one Socratic question (rung 1).

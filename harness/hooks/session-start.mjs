@@ -7,7 +7,7 @@ import {
   isMicro, pendingTasks, recentWins, levelAdvice, settingsOf, isPlacementPending, effectiveLevel, adviceCommand, openOffer, t,
   dashboardAfterDiary, hasNewSinceExport, sinceExportLine, recentUps, progressAll, progressLine, needsNextExercise, logEvent,
   gradedOf, LEARN, LEARN_ELSEWHERE, catchUpSessions, gradedChangedFiles, skillForFile, isGradedDir, ROOT, STATE_DIR,
-} from "./lib.mjs";
+} from "../core/lib.mjs";
 import path from "node:path";
 
 let input = {};

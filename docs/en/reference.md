@@ -14,6 +14,18 @@ description: "The five Claude Code hooks of the learning harness, every skill.mj
 | `Stop` | `reflect-gate.mjs` | Processes the markers in Claude's answer, checks your explanation, the transfer task and the verdict of the demotion analyst, and asks for the diary when you want to stop. When an explanation meets a promotion criterion, it shows you the proposal right away. It also shows a proposal for a microskill when Claude asks for one and this session has the evidence. After the diary, what is still open lapses. In graded work it writes the AI-use log, with a row per allowed tooling command, and puts your own words in the last column (`[log "…"]`). |
 | `SessionEnd` | `session-end.mjs` | Notes when the session ended and whether there was work without a diary entry, for the catch-up diary at the next start. Asks and blocks nothing. |
 
+### In opencode
+
+In [opencode](opencode.md) (experimental) the same scripts run through a plugin, `.opencode/plugins/leerharnas/`, and your commands are in `.opencode/hooks/`:
+
+| Claude Code | opencode |
+|---|---|
+| `SessionStart` | the event `session.created`; the context becomes the instruction entry `leerharnas-start` |
+| `UserPromptSubmit` | the `prompt` hook; the status line goes into every model request through the `context` hook |
+| `PreToolUse` | the `permission` hook `evaluate`, with session rules and policies in front of it |
+| `Stop` | the `experimental.idle` hook; a block becomes one follow-up message |
+| `SessionEnd` | the event `session.deleted`, or a quiet spell of `sessionGapMinutes` |
+
 ## `skill.mjs` (you run it yourself, with `!`)
 
 | Command | What |
@@ -29,10 +41,10 @@ description: "The five Claude Code hooks of the learning harness, every skill.mj
 | `correct <task-id> rung <1-5> "reason"` | More help than logged: only raises the rung. |
 | `correct <task-id> void "reason"` | Void one task. |
 | `override <id\|*> <minutes> "reason"` | Temporarily allow Claude to write code (at most 240 minutes, logged). |
-| `setting <key> <value>` | `examDate`, `stuckTimerMinutes`, `idleMinutes`, `defaultLevel`, `course`, `language`, `autoDemote`, `securityAnalyzer`, `dashboardRepo` (the absolute path of your clone of the repo with the dashboard, or `off`), and `codeExtensions` and `codeFiles` as a comma-separated list. See [Configuration](configuration.md). |
+| `setting <key> <value>` | `examDate`, `stuckTimerMinutes`, `idleMinutes`, `defaultLevel`, `course`, `language`, `autoDemote`, `securityAnalyzer`, `dashboardRepo` (the absolute path of your clone of the repo with the dashboard, or `off`), and `codeExtensions` and `codeFiles` as a comma-separated list. For opencode also `allowedMcp` (MCP tools the guard lets through: names, a server or `*`) and `sessionGapMinutes` (after how long a quiet session counts as closed for the catch-up diary; default `idleMinutes`). See [Configuration](configuration.md). |
 | `setting graded add\|remove "<path>"` | Graded work: the paths (absolute, or relative to the project) where Claude writes nothing and the hint ladder goes up to rung 4. Also `setting graded maxRung 0..4`, `aiLevel 0\|1`, `logDir "<path>"` and `off`. See [Graded work](how-it-works.md#graded-work). Logged as the event `setting`. |
 | `paths <id> add|remove "<glob>"` | Which exercise folders belong to a skill, for example `paths ood.associaties add "ood-opdrachten-01/09-*/**"`. The folder decides the skill of a task and the level the guard uses. Not for a microskill: it uses the level of its parent. If another skill has the same path, it warns you. Logged as the event `paths`. |
-| `replay <transcript.jsonl> [--dry-run]` | Recovers explanations that were approved in the chat but not logged. It finds the markers `[explain-ok <tid>]` and checks your message with the same check as the Stop hook. Only what passes both keys counts, with source `replay`. |
+| `replay <transcript.jsonl> [--dry-run]`, `replay --opencode <export.json>` | Recovers explanations that were approved in the chat but not logged. For opencode, save the session first with `opencode session export <id>`. It finds the markers `[explain-ok <tid>]` and checks your message with the same check as the Stop hook. Only what passes both keys counts, with source `replay`. |
 
 The Dutch forms `correct <task-id> trede …` and `correct <task-id> schrap …` work too.
 
