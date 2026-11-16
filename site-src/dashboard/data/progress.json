@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "generatedAt": "2026-11-16",
-  "exportedAt": "2026-11-16T06:22:39.634Z",
+  "exportedAt": "2026-11-16T20:56:38.563Z",
   "course": null,
   "language": "nl",
   "examDate": "2027-01-20",
@@ -890,7 +890,7 @@
       "nextReview": null,
       "intervalIndex": 0,
       "lastReview": null,
-      "lastSeen": "2026-11-14",
+      "lastSeen": "2026-11-16",
       "placement": "done",
       "start": {
         "at": "2026-11-07T18:59:58.137Z",
@@ -2409,6 +2409,41 @@
       "corrections": [],
       "void": false,
       "voidReason": null
+    },
+    {
+      "id": "mwjqehjodeth",
+      "at": "2026-11-16T20:44:08.149Z",
+      "skill": "uml.klassendiagram",
+      "source": "done",
+      "success": true,
+      "maxRung": 1,
+      "minutes": 32,
+      "reviewRung": null,
+      "what": "Costs VRSet",
+      "explained": true,
+      "explanation": "every subclass needs to calculate the price in its own specific way and a generic device does not need a implemented costs function\nit forces the subclasses to make a implementation of the methode, a normal method in the parrent class would not force that\nit forces the subclasses to make a implementation of the methode because a normal method in the parrent class would not force that but a abstract class will",
+      "explainedAt": "2026-11-16T20:49:54.492Z",
+      "explainedBy": null,
+      "lapsed": false,
+      "lapseReason": null,
+      "retaggedFrom": null,
+      "rejections": [
+        {
+          "at": "2026-11-16T20:46:58.109Z",
+          "by": "claude",
+          "reasons": []
+        },
+        {
+          "at": "2026-11-16T20:48:07.486Z",
+          "by": "hook",
+          "reasons": [
+            "geen waarom (gebruik bv. 'omdat', 'doordat', 'zodat', 'anders', of 'als …, dan …')"
+          ]
+        }
+      ],
+      "corrections": [],
+      "void": false,
+      "voidReason": null
     }
   ],
   "reviews": [],
@@ -2582,10 +2617,10 @@
     },
     {
       "date": "2026-11-16",
-      "sessions": 1,
-      "hints": 2,
+      "sessions": 2,
+      "hints": 3,
       "holds": 0,
-      "denials": 1,
+      "denials": 4,
       "overridesUsed": 0,
       "reviewHelp": 0,
       "helpDropped": 0
@@ -2812,6 +2847,23 @@
         "nextStep": "onbekend"
       },
       "calibration": "vooraf 4 → lukte met trede ≤1, maar twee leden uit het diagram vergeten → licht overschat"
+    },
+    {
+      "date": "2026-11-16",
+      "n": 3,
+      "time": "20:12–20:55",
+      "skills": "uml.klassendiagram (L3) (inhoudelijk: overerving / abstracte methode)",
+      "plan": "\"I want to implement all the functions in device classes and child classes\", daarna aangescherpt tot: Costs() van VRSet zelf implementeren",
+      "confidenceBefore": "4",
+      "wentWell": "Costs() in VrSet als override van de abstracte methode van Device gemaakt, met hulp tot trede 1 (één Socratische vraag die vooral over de andere methoden ging). De uitleg over waarom een abstracte methode (afdwingen per subklasse) kwam na een vervolgvraag goed op gang.",
+      "signals": "transfertaak mogelijk voor ood.aggregatie-compositie (`/mastery-check ood.aggregatie-compositie`); voor ood.klassen-properties, ood.associaties, ood.encapsulatie en uml.klassendiagram de transfertaak op een andere dag.",
+      "reflection": {
+        "learned": "how to work with DateTime objects.",
+        "confusing": "how the datetime works if you only want to create a time",
+        "confidenceAfter": "3",
+        "nextStep": "implementing other cost functions of other child classes of device"
+      },
+      "calibration": "vooraf 4 → lukte met trede ≤1, uitleg pas na twee vervolgvragen → licht overschat"
     }
   ],
   "reviewHelp": [
@@ -2984,6 +3036,9 @@
       "Reserveren moet van buiten de klassen kunnen worden aageroepen omdat gebruikers moeten kunnen reserveren daarom moet het in device + hebben, door het sterretje kun je aangeven dat het om een abstracte methode gaat die alleen in de child klassen geimplemeteerd word\nOmdat je dan er alsnog niet bij kan vanuit buiten de parent child klasen": "Reserving has to be callable from outside the classes because users need to be able to make reservations, so it has to have + in device; with the asterisk you can indicate that it is an abstract method that is only implemented in the child classes\nBecause then you still can't reach it from outside the parent child classes",
       "scaffolding Device and subclasses #ood.overerving": "scaffolding Device and subclasses #ood.overerving",
       "because these methodes and properties are specific for that specific device, if they were declared at the device level, every child would need to implemnt the and that would not be relevant for most of the device subclasses": "because these methodes and properties are specific for that specific device, if they were declared at the device level, every child would need to implemnt the and that would not be relevant for most of the device subclasses",
+      "Costs VRSet": "Costs VRSet",
+      "every subclass needs to calculate the price in its own specific way and a generic device does not need a implemented costs function\nit forces the subclasses to make a implementation of the methode, a normal method in the parrent class would not force that\nit forces the subclasses to make a implementation of the methode because a normal method in the parrent class would not force that but a abstract class will": "every subclass needs to calculate the price in its own specific way and a generic device does not need a implemented costs function\nit forces the subclasses to make a implementation of the methode, a normal method in the parrent class would not force that\nit forces the subclasses to make a implementation of the methode because a normal method in the parrent class would not force that but a abstract class will",
+      "geen waarom (gebruik bv. 'omdat', 'doordat', 'zodat', 'anders', of 'als …, dan …')": "no reason given (use e.g. 'because', 'since', 'so that', 'otherwise', or 'if …, then …')",
       "securitycheck site (tooling)": "security check site (tooling)",
       "cs.basis (L2), cs.basis.lus-grenzen (L2, nieuw), test.unit-tests (L1)": "cs.basis (L2), cs.basis.lus-grenzen (L2, new), test.unit-tests (L1)",
       "opdracht 04-even-getallen afmaken (niet expliciet benoemd)": "finish exercise 04-even-getallen (not stated explicitly)",
@@ -3091,7 +3146,15 @@
       "de scaffolding van de overerving (abstracte basisklasse, overrides in alle vier de subklassen, protected methode) lukte met hulp tot trede 1, een Socratische vraag. Het leren zat in het vergelijken van het diagram met de code: de leden die bij één subklasse horen.": "the inheritance scaffolding (abstract base class, overrides in all four subclasses, protected method) succeeded with help up to rung 1, a Socratic question. The learning was in comparing the diagram with the code: the members that belong to one subclass.",
       "vooraf 4 → lukte met trede ≤1, maar twee leden uit het diagram vergeten → licht overschat": "beforehand 4 → succeeded with rung ≤1, but forgot two members from the diagram → slightly overestimated",
       "create scafholding of classes and parrent classes, i got reminded that if a class has absract methodes it should be an abstract class": "create scafholding of classes and parrent classes, i got reminded that if a class has absract methodes it should be an abstract class",
-      "nothing": "nothing"
+      "nothing": "nothing",
+      "uml.klassendiagram (L3) (inhoudelijk: overerving / abstracte methode)": "uml.klassendiagram (L3) (content: inheritance / abstract method)",
+      "\"I want to implement all the functions in device classes and child classes\", daarna aangescherpt tot: Costs() van VRSet zelf implementeren": "\"I want to implement all the functions in device classes and child classes\", then narrowed down to: implementing Costs() of VRSet myself",
+      "Costs() in VrSet als override van de abstracte methode van Device gemaakt, met hulp tot trede 1 (één Socratische vraag die vooral over de andere methoden ging). De uitleg over waarom een abstracte methode (afdwingen per subklasse) kwam na een vervolgvraag goed op gang.": "Made Costs() in VrSet as an override of the abstract method of Device, with help up to rung 1 (one Socratic question that was mostly about the other methods). The explanation of why an abstract method (enforcing it per subclass) got going well after a follow-up question.",
+      "transfertaak mogelijk voor ood.aggregatie-compositie (`/mastery-check ood.aggregatie-compositie`); voor ood.klassen-properties, ood.associaties, ood.encapsulatie en uml.klassendiagram de transfertaak op een andere dag.": "transfer task possible for ood.aggregatie-compositie (`/mastery-check ood.aggregatie-compositie`); for ood.klassen-properties, ood.associaties, ood.encapsulatie and uml.klassendiagram the transfer task on another day.",
+      "vooraf 4 → lukte met trede ≤1, uitleg pas na twee vervolgvragen → licht overschat": "beforehand 4 → succeeded with rung ≤1, explanation only after two follow-up questions → slightly overestimated",
+      "how to work with DateTime objects.": "how to work with DateTime objects.",
+      "how the datetime works if you only want to create a time": "how the datetime works if you only want to create a time",
+      "implementing other cost functions of other child classes of device": "implementing other cost functions of other child classes of device"
     }
   }
 }
