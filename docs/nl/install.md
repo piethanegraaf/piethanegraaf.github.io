@@ -28,6 +28,7 @@ Wat de installer aanmaakt:
 | Pad | Wat | Van wie |
 |---|---|---|
 | `.claude/hooks/` | de hooks, de CLI en de meldingen (`i18n/`) | harnas |
+| `.claude/core/` | de gedeelde kern van de harnas (de regels die de hooks toepassen) | harnas |
 | `.claude/skills/diary/SKILL.md` | de diary-skill voor het einde van een sessie | harnas |
 | `.claude/skills/mastery-check/SKILL.md` | de transfertaak voor de stap naar L4 (`/mastery-check`) | harnas |
 | `.claude/skills/update-dashboard/SKILL.md` | het dashboard bijwerken na `/diary` (`/update-dashboard`) | harnas |
@@ -123,4 +124,4 @@ Zet de AI-hulp buiten Claude Code uit. Anders vult je IDE de code aan die je zel
 
 ## Verwijderen
 
-Verwijder `.claude/hooks/`, `.claude/skills/diary/`, `.claude/skills/mastery-check/`, `.claude/skills/update-dashboard/`, `.claude/agents/demotie-analist.md`, `.claude/leerharnas.md`, `.claude/leerharnas.json`, `.claude/leerharnas.local.json` (als die er is) en de vijf hooks van de harnas uit `.claude/settings.json` (`session-start`, `prompt-gate`, `guard`, `reflect-gate` en `session-end`; laat je eigen hooks staan). Heb je de poort voor beoordeeld werk geïnstalleerd? Haal die weg met `node harness/install.mjs <map> --user-guard --remove`. Je data in `.learning/` en je oefeningen in `oefeningen/` blijven van jou.
+Verwijder `.claude/hooks/`, `.claude/core/`, `.claude/skills/diary/`, `.claude/skills/mastery-check/`, `.claude/skills/update-dashboard/`, `.claude/agents/demotie-analist.md`, `.claude/leerharnas.md`, `.claude/leerharnas.json`, `.claude/leerharnas.local.json` (als die er is) en de vijf hooks van de harnas uit `.claude/settings.json` (`session-start`, `prompt-gate`, `guard`, `reflect-gate` en `session-end`; laat je eigen hooks staan). Heb je de poort voor beoordeeld werk geïnstalleerd? Haal die weg met `node harness/install.mjs <map> --user-guard --remove`. Je data in `.learning/` en je oefeningen in `oefeningen/` blijven van jou.

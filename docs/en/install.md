@@ -28,6 +28,7 @@ What the installer creates:
 | Path | What | Owned by |
 |---|---|---|
 | `.claude/hooks/` | the hooks, the CLI and the messages (`i18n/`) | harness |
+| `.claude/core/` | the shared core of the harness (the rules the hooks apply) | harness |
 | `.claude/skills/diary/SKILL.md` | the diary skill for the end of a session | harness |
 | `.claude/skills/mastery-check/SKILL.md` | the transfer task for the step to L4 (`/mastery-check`) | harness |
 | `.claude/skills/update-dashboard/SKILL.md` | updating the dashboard after `/diary` (`/update-dashboard`) | harness |
@@ -123,4 +124,4 @@ Turn off AI help outside Claude Code. Otherwise your IDE completes the code you 
 
 ## Uninstall
 
-Remove `.claude/hooks/`, `.claude/skills/diary/`, `.claude/skills/mastery-check/`, `.claude/skills/update-dashboard/`, `.claude/agents/demotie-analist.md`, `.claude/leerharnas.md`, `.claude/leerharnas.json`, `.claude/leerharnas.local.json` (if there is one) and the five hooks of the harness from `.claude/settings.json` (`session-start`, `prompt-gate`, `guard`, `reflect-gate` and `session-end`; leave your own hooks). Did you install the gate for graded work? Remove it with `node harness/install.mjs <folder> --user-guard --remove`. Your data in `.learning/` and your exercises in `oefeningen/` stay yours.
+Remove `.claude/hooks/`, `.claude/core/`, `.claude/skills/diary/`, `.claude/skills/mastery-check/`, `.claude/skills/update-dashboard/`, `.claude/agents/demotie-analist.md`, `.claude/leerharnas.md`, `.claude/leerharnas.json`, `.claude/leerharnas.local.json` (if there is one) and the five hooks of the harness from `.claude/settings.json` (`session-start`, `prompt-gate`, `guard`, `reflect-gate` and `session-end`; leave your own hooks). Did you install the gate for graded work? Remove it with `node harness/install.mjs <folder> --user-guard --remove`. Your data in `.learning/` and your exercises in `oefeningen/` stay yours.
