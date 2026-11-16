@@ -14,6 +14,18 @@ description: "De vijf Claude Code-hooks van de leerharnas, elk commando van skil
 | `Stop` | `reflect-gate.mjs` | Verwerkt de markers in Claude's antwoord, controleert je uitleg, de transfertaak en het oordeel van de demotie-analist, en vraagt om het dagboek als je wilt stoppen. Haalt een uitleg een doorstroomcriterium, dan laat hij je meteen het voorstel zien. Hij toont ook een voorstel voor een microvaardigheid, als Claude erom vraagt en deze sessie het bewijs heeft. Na het dagboek vervalt wat nog open staat. Bij beoordeeld werk schrijft hij het AI-logboek, met een regel per toegestaan tooling-commando, en zet hij jouw eigen woorden in de laatste kolom (`[logboek "…"]`). |
 | `SessionEnd` | `session-end.mjs` | Noteert wanneer de sessie eindigde en of er werk was zonder dagboek, voor het inhaaldagboek bij de volgende start. Vraagt en blokkeert niets. |
 
+### In opencode
+
+In [opencode](opencode.md) (experimenteel) draaien dezelfde scripts via een plugin, `.opencode/plugins/leerharnas/`, en staan je commando's in `.opencode/hooks/`:
+
+| Claude Code | opencode |
+|---|---|
+| `SessionStart` | de gebeurtenis `session.created`; de context wordt de instructie `leerharnas-start` |
+| `UserPromptSubmit` | de `prompt`-hook; de statusregel gaat via de `context`-hook mee in elk verzoek aan het model |
+| `PreToolUse` | de `permission`-hook `evaluate`, met sessieregels en policies ervoor |
+| `Stop` | de hook `experimental.idle`; een blokkade wordt één vervolgbericht |
+| `SessionEnd` | de gebeurtenis `session.deleted`, of een stille periode van `sessionGapMinutes` |
+
 ## `skill.mjs` (je draait het zelf, met `!`)
 
 | Commando | Wat |
@@ -29,10 +41,10 @@ description: "De vijf Claude Code-hooks van de leerharnas, elk commando van skil
 | `correct <taak-id> trede <1-5> "reden"` | Meer hulp dan gelogd: de trede alleen **omhoog** zetten. |
 | `correct <taak-id> schrap "reden"` | Eén taak schrappen. |
 | `override <id\|*> <minuten> "reden"` | Tijdelijk toestaan dat Claude code schrijft (hooguit 240 minuten, gelogd). |
-| `setting <sleutel> <waarde>` | `examDate`, `stuckTimerMinutes`, `idleMinutes`, `defaultLevel`, `course`, `language`, `autoDemote`, `securityAnalyzer`, `dashboardRepo` (het absolute pad van je clone van de repo met het dashboard, of `off`), en `codeExtensions` en `codeFiles` als lijst met komma's. Zie [Configuratie](configuration.md). |
+| `setting <sleutel> <waarde>` | `examDate`, `stuckTimerMinutes`, `idleMinutes`, `defaultLevel`, `course`, `language`, `autoDemote`, `securityAnalyzer`, `dashboardRepo` (het absolute pad van je clone van de repo met het dashboard, of `off`), en `codeExtensions` en `codeFiles` als lijst met komma's. Voor opencode ook `allowedMcp` (MCP-tools die de guard doorlaat: namen, een server of `*`) en `sessionGapMinutes` (na hoe lang een stille sessie als gesloten telt voor het inhaaldagboek; standaard `idleMinutes`). Zie [Configuratie](configuration.md). |
 | `setting graded add\|remove "<pad>"` | Beoordeeld werk: de paden (absoluut, of relatief aan het project) waar Claude niets schrijft en de hintladder tot trede 4 gaat. Ook `setting graded maxRung 0..4`, `aiLevel 0\|1`, `logDir "<pad>"` en `off`. Zie [Beoordeeld werk](how-it-works.md#beoordeeld-werk). Gelogd als het event `setting`. |
 | `paths <id> add|remove "<glob>"` | Welke opdrachtmappen bij een vaardigheid horen, bijvoorbeeld `paths ood.associaties add "ood-opdrachten-01/09-*/**"`. De map bepaalt de vaardigheid van een taak en het niveau dat de guard gebruikt. Niet voor een microvaardigheid: die gebruikt het niveau van de hoofdvaardigheid. Heeft een andere vaardigheid hetzelfde pad, dan waarschuwt hij. Gelogd als event `paths`. |
-| `replay <transcript.jsonl> [--dry-run]` | Herstelt uitleggen die in de chat zijn goedgekeurd maar niet gelogd. Hij zoekt de markers `[uitleg-ok <tid>]` en controleert jouw bericht met dezelfde check als de Stop-hook. Alleen wat beide sleutels haalt, telt, met bron `replay`. |
+| `replay <transcript.jsonl> [--dry-run]`, `replay --opencode <export.json>` | Herstelt uitleggen die in de chat zijn goedgekeurd maar niet gelogd. Bewaar voor opencode de sessie eerst met `opencode session export <id>`. Hij zoekt de markers `[uitleg-ok <tid>]` en controleert jouw bericht met dezelfde check als de Stop-hook. Alleen wat beide sleutels haalt, telt, met bron `replay`. |
 
 In het Engels kan ook `correct <taak-id> rung …` en `correct <taak-id> void …`.
 

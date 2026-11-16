@@ -33,6 +33,7 @@ git clone https://github.com/piethanegraaf/piethanegraaf.github.io.git
 cd piethanegraaf.github.io
 node harness/install.mjs ../my-practice-folder --lang en          # shows the plan
 node harness/install.mjs ../my-practice-folder --lang en --yes    # installs
+node harness/install.mjs ../my-practice-folder --host opencode --yes   # experimental: the same harness for opencode
 ```
 
 Requirements: Claude Code, Node.js 18+ (22 or 24 recommended), and the .NET SDK for the test runner. See the [installation guide](https://piethanegraaf.github.io/install/).
@@ -41,7 +42,7 @@ Requirements: Claude Code, Node.js 18+ (22 or 24 recommended), and the .NET SDK 
 
 | Folder | What |
 |---|---|
-| `harness/` | the installable harness: hooks, skills (diary, mastery-check), messages (`i18n/`), skill maps, templates, `install.mjs`, `export.mjs`, `security-check.mjs`, tests |
+| `harness/` | the installable harness: the shared core (`core/`), the Claude Code hooks (`hooks/`), the opencode plugin (`hosts/opencode/`, experimental), skills (diary, mastery-check), messages (`i18n/`), skill maps, templates, `install.mjs`, `export.mjs`, `security-check.mjs`, tests |
 | `docs/` | the documentation site (MkDocs Material, Dutch and English), including the research and the research notes |
 | `site-src/` | static pages: the dashboard and the cheat sheet |
 | `.github/workflows/` | tests, security check, build and deploy |

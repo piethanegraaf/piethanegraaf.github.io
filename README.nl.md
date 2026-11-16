@@ -33,6 +33,7 @@ git clone https://github.com/piethanegraaf/piethanegraaf.github.io.git
 cd piethanegraaf.github.io
 node harness/install.mjs ../mijn-oefenmap --lang nl          # laat het plan zien
 node harness/install.mjs ../mijn-oefenmap --lang nl --yes    # installeert
+node harness/install.mjs ../mijn-oefenmap --host opencode --yes   # experimenteel: dezelfde harnas voor opencode
 ```
 
 Nodig: Claude Code, Node.js 18+ (22 of 24 aangeraden), en de .NET SDK voor de testrunner. Zie de [installatie](https://piethanegraaf.github.io/nl/install/).
@@ -41,7 +42,7 @@ Nodig: Claude Code, Node.js 18+ (22 of 24 aangeraden), en de .NET SDK voor de te
 
 | Map | Wat |
 |---|---|
-| `harness/` | de installeerbare harnas: hooks, skills (diary, mastery-check), meldingen (`i18n/`), kaarten, sjablonen, `install.mjs`, `export.mjs`, `security-check.mjs`, tests |
+| `harness/` | de installeerbare harnas: de gedeelde kern (`core/`), de hooks voor Claude Code (`hooks/`), de opencode-plugin (`hosts/opencode/`, experimenteel), skills (diary, mastery-check), meldingen (`i18n/`), kaarten, sjablonen, `install.mjs`, `export.mjs`, `security-check.mjs`, tests |
 | `docs/` | de documentatiesite (MkDocs Material, Nederlands en Engels), met het onderzoek en de onderzoeksnotities |
 | `site-src/` | statische pagina's: het dashboard en de cheat sheet |
 | `.github/workflows/` | tests, security check, bouwen en publiceren |

@@ -93,6 +93,7 @@ plugins:
             - Aan de slag:
                 - Hoe het werkt: how-it-works.md
                 - Installeren: install.md
+                - opencode (experimenteel): opencode.md
                 - Configuratie en privacy: configuration.md
                 - Dashboard bijwerken: progress-dashboard.md
                 - Naslag: reference.md
@@ -131,6 +132,7 @@ nav:
   - Get started:
       - How it works: how-it-works.md
       - Install: install.md
+      - opencode (experimental): opencode.md
       - Configuration and privacy: configuration.md
       - Updating the dashboard: progress-dashboard.md
       - Reference: reference.md
