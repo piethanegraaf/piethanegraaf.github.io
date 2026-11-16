@@ -101,6 +101,7 @@ With every prompt the hook puts a line `[harness] Skill: … · unlocked: rung N
 - **The skill is recognised** through exercise folder names, `.learning/keywords.json`, the keywords of microskills or an explicit `#id` in the prompt.
   - **The folder decides the family.** After `check.mjs` or `done`, or when the learner changes code in a folder, a keyword can only choose a microskill within that family. Switching to another family takes `#id` or the name of the exercise.
 - **Log honestly at every level:** do you still give substantive help at L1 or L3, or above the unlocked rung? Then put `[rung N]` in your answer. At L3 a conceptual explanation counts as rung 2 or higher. The Stop hook reads this marker and logs it as the highest rung.
+  - **Did you give less than the unlocked rung**, or no hint at all? Then put the rung you really gave, also `[rung 0]`. An unlocked rung is the maximum, not proof: with a lower marker the Stop hook takes the unlock back (#68). Without a marker the unlocked rung counts as given.
 - **Was the help about another concept than the exercise?** For example the syntax of a loop, during an exercise on inheritance. Then add the id from `.learning/skills.json`: `[rung N #id]`.
   - The task keeps that rung: it was made with that help.
   - The concept also gets its own event (`concept-help`). It does not count as a task of that concept, but it is evidence for a proposal for a microskill.

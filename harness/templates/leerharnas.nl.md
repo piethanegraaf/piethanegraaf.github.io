@@ -101,6 +101,7 @@ Bij elke prompt zet de hook een regel `[leerharnas] Vaardigheid: … · ontgrend
 - **Herkenning van de vaardigheid** gaat via mapnamen van opdrachten, `.learning/keywords.json`, de trefwoorden van microvaardigheden of een expliciete `#id` in de prompt.
   - **De map bepaalt de familie.** Na `check.mjs` of `done`, of als de student code in een map wijzigt, kiest een trefwoord alleen nog een microvaardigheid binnen die familie. Wisselen naar een andere familie kan met `#id` of de naam van de opdracht.
 - **Eerlijk loggen op elk niveau:** geef je op L1 of L3, of boven de ontgrendelde trede, toch inhoudelijke hulp? Zet dan `[trede N]` in je antwoord. Op L3 telt een conceptuele uitleg als trede 2 of hoger. De Stop-hook leest deze marker en logt hem als hoogste trede.
+  - **Gaf je minder dan de ontgrendelde trede**, of geen hint? Zet dan de trede die je echt gaf, ook `[trede 0]`. Een ontgrendelde trede is het maximum, geen bewijs: met een lagere marker neemt de Stop-hook de ontgrendeling terug (#68). Zonder marker telt de ontgrendelde trede als gegeven.
 - **Ging de hulp over een ander concept dan de opdracht?** Bijvoorbeeld de syntax van een lus, tijdens een opdracht over overerving. Zet dan het id uit `.learning/skills.json` erbij: `[trede N #id]`.
   - De taak houdt die trede: hij is met die hulp gemaakt.
   - Het concept krijgt daarnaast een eigen event (`concept-help`). Dat telt niet als taak van dat concept, maar wel als bewijs voor een voorstel voor een microvaardigheid.
