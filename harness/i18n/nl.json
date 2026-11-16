@@ -481,7 +481,6 @@
   "oc.version": "Leerharnas voor opencode: dit is opencode {version}; de plugin is gebouwd tegen {tested}. Werkt iets niet zoals beschreven, zeg het dan tegen de student.",
   "oc.gateFailed": "[harnas] De promptpoort van de leerharnas liep vast ({error}). Behandel elke vaardigheid als L2: geef hints en vragen, schrijf en draai geen code van de student, en vraag de student om .learning/skills.json na te kijken.",
   "oc.deny.codemode": "Leerharnas: Code Mode (execute) staat uit in een oefenmap, omdat de tools daarin buiten de guard om zouden draaien. Gebruik de tools een voor een.",
-  "oc.deny.mcp": "Leerharnas: de MCP-tool {action} is geblokkeerd, omdat de guard niet ziet welke bestanden hij raakt. De student kan hem toestaan met `! node .claude/hooks/skill.mjs setting allowedMcp {action}`.",
   "install.badHost": "--host moet claude-code, opencode of both zijn (niet '{host}')",
   "install.ocUserGuard": "--user-guard is voorlopig alleen voor Claude Code: beoordeeld werk in opencode komt in een latere versie.",
   "install.ocGraded": "deze oefenmap heeft beoordeeld werk (settings.graded). De opencode-versie is voorlopig alleen voor oefenmappen: houd beoordeeld werk in Claude Code.",
@@ -491,5 +490,6 @@
   "install.note.agentsBlock": "blok van de harnas tussen zijn markeringen, de rest is van jou, back-up",
   "install.hostLine": " · host: {host}",
   "oc.model.untested": "Leerharnas: het model {model} staat niet op de lijst van geteste modellen (bijgewerkt {updated}). De guard houdt stand, maar de hintladder en de markeringen hangen af van het model: let zelf op de trede van elke hint, en zie opencode.md op de site voor de geteste modellen.",
-  "oc.model.mayTrain": "Leerharnas: volgens opencode mag {model} je gegevens gebruiken om het model te verbeteren. Gebruik het niet voor beoordeeld werk, tenzij je opleiding dat toestaat."
+  "oc.model.mayTrain": "Leerharnas: volgens opencode mag {model} je gegevens gebruiken om het model te verbeteren. Gebruik het niet voor beoordeeld werk, tenzij je opleiding dat toestaat.",
+  "guard.mcp": "Leerharnas: de MCP-tool {tool} is geblokkeerd in een oefenmap, omdat de guard niet ziet welke bestanden hij raakt. De student kan hem toestaan met `! node .claude/hooks/skill.mjs setting allowedMcp {tool}` (of de naam van de server, of *)."
 }

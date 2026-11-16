@@ -162,6 +162,16 @@ function judge(req) {
   const shown = (p) => rel(p) ?? String(p).split(os.homedir()).join("~");
   const gradedDeny = (what, event) => deny(t("guard.graded", { what, max: GRADED.maxRung, level: GRADED.aiLevel }), { ...event, graded: true });
 
+  // MCP tools (opencode plan, Security model): the guard cannot see which files they touch, so they are denied unless
+  // settings.allowedMcp names the tool, its server (Claude Code: mcp__<server>__*) or "*".
+  if (req.kind === "mcp") {
+    const name = String(req.name ?? tool);
+    const allowed = (Array.isArray(data.settings?.allowedMcp) ? data.settings.allowedMcp : []).map(String);
+    const server = (name.match(/^mcp__([^_]+(?:_[^_]+)*?)__/) ?? [])[1];
+    if (allowed.includes("*") || allowed.includes(name) || (server && (allowed.includes(server) || allowed.includes(`mcp__${server}__*`)))) return ALLOW;
+    deny(t("guard.mcp", { tool: name }), { tool, mcp: name });
+  }
+
   // 1) The skill record and state belong to the learner (also a record in another folder, learningDir #53).
   if (req.kind === "write") {
     const file = req.file;

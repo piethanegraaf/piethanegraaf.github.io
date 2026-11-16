@@ -481,7 +481,6 @@
   "oc.version": "Learning harness for opencode: this is opencode {version}; the plugin was built against {tested}. If something does not work as described, tell the learner.",
   "oc.gateFailed": "[harness] The prompt gate of the learning harness failed ({error}). Treat every skill as L2: give hints and questions, write and run no code of the learner, and ask the learner to check .learning/skills.json.",
   "oc.deny.codemode": "Learning harness: Code Mode (execute) is switched off in a practice folder, because the tools inside it would run outside the guard. Use the tools one by one.",
-  "oc.deny.mcp": "Learning harness: the MCP tool {action} is blocked, because the guard cannot see which files it touches. The learner can allow it with `! node .claude/hooks/skill.mjs setting allowedMcp {action}`.",
   "install.badHost": "--host must be claude-code, opencode or both (not '{host}')",
   "install.ocUserGuard": "--user-guard is for Claude Code only for now: graded work on opencode comes in a later release.",
   "install.ocGraded": "this practice folder has graded work (settings.graded). The opencode version covers practice folders only for now: keep graded work on Claude Code.",
@@ -491,5 +490,6 @@
   "install.note.agentsBlock": "block of the harness between its markers, the rest is yours, backup",
   "install.hostLine": " · host: {host}",
   "oc.model.untested": "Learning harness: the model {model} is not on the list of tested models (updated {updated}). The guard still holds, but the hint ladder and the markers depend on the model: check the rung of each hint yourself, and see opencode.md on the site for the tested models.",
-  "oc.model.mayTrain": "Learning harness: according to opencode, {model} may use your data to improve the model. Do not use it for graded work unless your course allows it."
+  "oc.model.mayTrain": "Learning harness: according to opencode, {model} may use your data to improve the model. Do not use it for graded work unless your course allows it.",
+  "guard.mcp": "Learning harness: the MCP tool {tool} is blocked in a practice folder, because the guard cannot see which files it touches. The learner can allow it with `! node .claude/hooks/skill.mjs setting allowedMcp {tool}` (or the server's name, or *)."
 }

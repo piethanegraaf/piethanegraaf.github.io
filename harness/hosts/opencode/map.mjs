@@ -7,7 +7,7 @@
 //             and its cwd come from the shell hook create.before (see recentShell), which runs just before.
 //   read-like actions are not judged here (reads are allowed, as on Claude Code).
 //   execute   (Code Mode) is denied: nested tools would run outside this mapping.
-//   any other action is an MCP tool (<server>_<tool>, resource "*"): denied, unless settings.allowedMcp names it.
+//   any other action is an MCP tool (<server>_<tool>, resource "*"): the core guard denies it unless settings.allowedMcp names it.
 //
 // Shapes from opencode's source (packages/plugin/src/promise/permission.ts, packages/core/src/file-write.ts,
 // packages/core/src/tool/plugin/shell.ts; dev branch, commit b75b158).
@@ -32,7 +32,7 @@ const shellKind = (shell) => (/pwsh|powershell/i.test(String(shell ?? "")) ? "po
 
 // { requests, deny } for one evaluation. requests go to core guard() in order; deny is a reason to deny without
 // asking the core (Code Mode, an MCP tool). `shell` is the recorded invocation for a shell evaluation, or null.
-export function toRequests(ev, { root, rootSid, shell = null, allowedMcp = [] }) {
+export function toRequests(ev, { root, rootSid, shell = null }) {
   const tool = `opencode:${ev.action}`;
   const base = { tool, sessionId: rootSid ?? ev.sessionID ?? null };
   if (ev.action === "edit") {
@@ -53,9 +53,8 @@ export function toRequests(ev, { root, rootSid, shell = null, allowedMcp = [] })
   }
   if (READ_ACTIONS.has(ev.action)) return { requests: [] };
   if (ev.action === "execute") return { requests: [], deny: "codemode" };
-  const allowed = Array.isArray(allowedMcp) ? allowedMcp.map(String) : [];
-  if (allowed.includes("*") || allowed.includes(ev.action)) return { requests: [] };
-  return { requests: [], deny: "mcp" };
+  // An MCP tool: the core guard decides with settings.allowedMcp, as on Claude Code.
+  return { requests: [{ ...base, kind: "mcp", name: ev.action }] };
 }
 
 // The invocations of the shell hook, newest last: a shell evaluation is matched to the newest one whose command holds

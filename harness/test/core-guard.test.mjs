@@ -43,3 +43,20 @@ test("core guard: deny events land in the shared event log", () => {
   write("opdrachten/03-x/B.cs");
   assert.ok(p.events().some((e) => e.type === "deny" && e.tool === "test-edit" && e.level === "L3"));
 });
+
+test("core guard: an MCP tool is denied unless settings.allowedMcp names it, its server or *", async () => {
+  const fs = await import("node:fs");
+  const mcp = (name) => guard({ kind: "mcp", tool: name, name }).decision;
+  assert.equal(mcp("mcp__files__write_file"), "deny");
+  const data = p.skills();
+  for (const allowed of [["mcp__files__write_file"], ["files"], ["mcp__files__*"], ["*"]]) {
+    data.settings.allowedMcp = allowed;
+    fs.writeFileSync(p.abs(".learning/skills.json"), JSON.stringify(data));
+    assert.equal(mcp("mcp__files__write_file"), "allow", JSON.stringify(allowed));
+  }
+  data.settings.allowedMcp = ["other"];
+  fs.writeFileSync(p.abs(".learning/skills.json"), JSON.stringify(data));
+  assert.equal(mcp("mcp__files__write_file"), "deny");
+  delete data.settings.allowedMcp;
+  fs.writeFileSync(p.abs(".learning/skills.json"), JSON.stringify(data));
+});

@@ -23,7 +23,7 @@ const denyOut = (reason) => process.stdout.write(JSON.stringify({
 const GUARDED = new Set(["Edit", "Write", "MultiEdit", "NotebookEdit", "Bash", "PowerShell"]);
 const failClosed = (e) => {
   try {
-    if (GUARDED.has(tool)) denyOut(t("guard.crash", { error: String(e?.message ?? e).slice(0, 200) }));
+    if (GUARDED.has(tool) || /^mcp__/.test(tool)) denyOut(t("guard.crash", { error: String(e?.message ?? e).slice(0, 200) }));
   } finally { process.exit(0); }
 };
 process.on("uncaughtException", failClosed);
@@ -47,6 +47,8 @@ if (["Edit", "Write", "MultiEdit", "NotebookEdit"].includes(tool)) {
 } else if (tool === "Bash" || tool === "PowerShell") {
   req = { kind: "shell", tool, command: String(ti.command ?? ""), shell: tool === "PowerShell" ? "powershell" : "bash",
     cwd: input.cwd ?? process.cwd(), sessionId: input.session_id ?? null };
+} else if (/^mcp__/.test(tool)) {
+  req = { kind: "mcp", tool, name: tool, sessionId: input.session_id ?? null };
 } else {
   req = { kind: "other", tool };
 }

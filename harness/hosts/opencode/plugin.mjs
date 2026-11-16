@@ -25,7 +25,7 @@ import { spawn } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import { guard } from "../../core/guard.mjs";
 import { staticDenyRules } from "../../core/rules.mjs";
-import { loadSkills, settingsOf, ROOT, LEARN, STATE_DIR, t, logEvent } from "../../core/lib.mjs";
+import { loadSkills, ROOT, LEARN, STATE_DIR, t, logEvent } from "../../core/lib.mjs";
 import { toClaudeEntries, lastAssistantText, toJsonl } from "./messages.mjs";
 import { toRequests, shellLog, toOpencodeRule } from "./map.mjs";
 
@@ -232,13 +232,11 @@ export function createPlugin({ node = "node", hooksDir = HOOKS } = {}) {
         if (event.effect === "deny") return;
         try {
           const rootSid = await rootOf(event.sessionID);
-          let allowedMcp = [];
-          try { allowedMcp = settingsOf(loadSkills()).allowedMcp ?? []; } catch { allowedMcp = []; }
           const shell = event.action === "shell" ? shells.match(event.resources) : null;
-          const { requests, deny } = toRequests(event, { root: ROOT, rootSid, shell, allowedMcp });
+          const { requests, deny } = toRequests(event, { root: ROOT, rootSid, shell });
           if (deny) {
             event.effect = "deny";
-            event.message = t(deny === "codemode" ? "oc.deny.codemode" : "oc.deny.mcp", { action: event.action });
+            event.message = t("oc.deny.codemode", { action: event.action });
             logEvent({ type: "deny", tool: `opencode:${event.action}`, reason: event.message, session: rootSid });
             return;
           }
