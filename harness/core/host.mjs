@@ -24,6 +24,9 @@ const OPENCODE_WORDS = [
   [/\.claude([\\/])leerharnas\.md/g, ".opencode$1leerharnas.md"],
   [/\.claude([\\/])(skills|agents|core)\1/g, ".opencode$1$2$1"],
   [/\bCLAUDE\.md\b/g, "AGENTS.md"],
+  // opencode has no Stop hook: the same check runs in its idle hook, at the end of every turn.
+  [/\bStop hook\b/g, "end-of-turn hook"],
+  [/\bStop-hook\b/g, "eind-van-de-beurt-hook"],
   [/\bClaude Code\b/g, "opencode"],
 ];
 

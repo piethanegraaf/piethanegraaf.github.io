@@ -313,7 +313,7 @@
   "install.needsValue": "{opt} needs a value",
   "install.unknownOption": "unknown option {opt}",
   "install.unexpectedArg": "unexpected argument {arg}",
-  "install.usage": "Usage:\n  node harness/install.mjs <target-folder> [--map ood|junior-dotnet|security-dotnet] [--lang nl|en] [--course \"<course>\"] [--exam YYYY-MM-DD] [--dry-run] [--yes] [--learning-dir <absolute path to the .learning/ of your practice folder>]\n  node harness/install.mjs <target-folder> --update [--dry-run] [--yes] [--force]\n  node harness/install.mjs <target-folder> --user-guard [--remove] [--dry-run] [--yes]   (graded work closed from other folders; writes in ~/.claude/)\n\nWithout --yes the script only shows what would happen. While a practice session runs in the target folder, --update stops; --force goes on anyway.\nWith --learning-dir, the target folder (for example the repo of a graded assignment) uses the record of your practice folder.",
+  "install.usage": "Usage:\n  node harness/install.mjs <target-folder> [--map ood|junior-dotnet|security-dotnet] [--lang nl|en] [--course \"<course>\"] [--exam YYYY-MM-DD] [--dry-run] [--yes] [--learning-dir <absolute path to the .learning/ of your practice folder>]\n  node harness/install.mjs <target-folder> --update [--dry-run] [--yes] [--force]\n  node harness/install.mjs <target-folder> --user-guard [--remove] [--dry-run] [--yes]   (graded work closed from other folders; writes in ~/.claude/)\n\nWithout --yes the script only shows what would happen. While a practice session runs in the target folder, --update stops; --force goes on anyway.\nWith --learning-dir, the target folder (for example the repo of a graded assignment) uses the record of your practice folder.\n  node harness/install.mjs <target-folder> --host opencode|both [...]   (the same harness for opencode, or for both tools on one record)",
   "install.noTarget": "the target folder does not exist: {dir}",
   "install.selfTarget": "do not install into the harness folder itself",
   "install.badPath": "invalid path {path}",
@@ -481,5 +481,13 @@
   "oc.version": "Learning harness for opencode: this is opencode {version}; the plugin was built against {tested}. If something does not work as described, tell the learner.",
   "oc.gateFailed": "[harness] The prompt gate of the learning harness failed ({error}). Treat every skill as L2: give hints and questions, write and run no code of the learner, and ask the learner to check .learning/skills.json.",
   "oc.deny.codemode": "Learning harness: Code Mode (execute) is switched off in a practice folder, because the tools inside it would run outside the guard. Use the tools one by one.",
-  "oc.deny.mcp": "Learning harness: the MCP tool {action} is blocked, because the guard cannot see which files it touches. The learner can allow it with `! node .claude/hooks/skill.mjs setting allowedMcp {action}`."
+  "oc.deny.mcp": "Learning harness: the MCP tool {action} is blocked, because the guard cannot see which files it touches. The learner can allow it with `! node .claude/hooks/skill.mjs setting allowedMcp {action}`.",
+  "install.badHost": "--host must be claude-code, opencode or both (not '{host}')",
+  "install.ocUserGuard": "--user-guard is for Claude Code only for now: graded work on opencode comes in a later release.",
+  "install.ocGraded": "this practice folder has graded work (settings.graded). The opencode version covers practice folders only for now: keep graded work on Claude Code.",
+  "install.ocConfigComment": "Learning harness (leerharnas): this file belongs to the harness and `install.mjs --update` replaces it. Put your own settings in opencode.jsonc in the project root.",
+  "install.agentsOwn": "## Own agreements\n<!-- For example: your programme and year, your own learning goal, or how you want to get feedback. This part is yours. -->",
+  "install.note.agentsNew": "yours, with the block of the harness",
+  "install.note.agentsBlock": "block of the harness between its markers, the rest is yours, backup",
+  "install.hostLine": " · host: {host}"
 }
