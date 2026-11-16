@@ -251,7 +251,7 @@ if (withOC) {
   hostCode(".opencode");
   // The plugin: opencode loads .opencode/plugins/<id>/ through its index; package.json makes .js an ES module.
   code.set(".opencode/plugins/leerharnas/index.js", fs.readFileSync(path.join(HARNESS, "hosts", "opencode", "plugin.mjs"), "utf8"));
-  for (const f of ["messages.mjs", "map.mjs"]) code.set(`.opencode/plugins/leerharnas/${f}`, fs.readFileSync(path.join(HARNESS, "hosts", "opencode", f), "utf8"));
+  for (const f of ["messages.mjs", "map.mjs", "models.json"]) code.set(`.opencode/plugins/leerharnas/${f}`, fs.readFileSync(path.join(HARNESS, "hosts", "opencode", f), "utf8"));
   code.set(".opencode/plugins/leerharnas/package.json", JSON.stringify({ private: true, type: "module" }, null, 2) + "\n");
   for (const [name, skill] of skillTexts) code.set(`.opencode/skills/${name}/SKILL.md`, hostText(skill, "opencode"));
   for (const [name, text] of agentTexts) code.set(`.opencode/agents/${name}.md`, opencodeAgent(text));

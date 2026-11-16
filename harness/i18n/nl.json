@@ -489,5 +489,7 @@
   "install.agentsOwn": "## Eigen afspraken\n<!-- Bijvoorbeeld: je opleiding en jaar, je eigen leerdoel, of hoe je feedback wilt. Dit deel is van jou. -->",
   "install.note.agentsNew": "van jou, met het blok van de harnas",
   "install.note.agentsBlock": "blok van de harnas tussen zijn markeringen, de rest is van jou, back-up",
-  "install.hostLine": " · host: {host}"
+  "install.hostLine": " · host: {host}",
+  "oc.model.untested": "Leerharnas: het model {model} staat niet op de lijst van geteste modellen (bijgewerkt {updated}). De guard houdt stand, maar de hintladder en de markeringen hangen af van het model: let zelf op de trede van elke hint, en zie opencode.md op de site voor de geteste modellen.",
+  "oc.model.mayTrain": "Leerharnas: volgens opencode mag {model} je gegevens gebruiken om het model te verbeteren. Gebruik het niet voor beoordeeld werk, tenzij je opleiding dat toestaat."
 }

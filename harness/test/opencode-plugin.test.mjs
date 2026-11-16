@@ -12,7 +12,7 @@ const skills = fakeSkills();
 const p = makeProject({ skills, files: { "opdrachten/01-a/A.cs": "class A { // TODO(human)\n}\n", "opdrachten/02-b/B.cs": "class B {}\n" } });
 process.env.LEERHARNAS_ROOT = p.root;
 process.env.LEERHARNAS_DATA = p.learn;
-const { createPlugin } = await import("../hosts/opencode/plugin.mjs");
+const { createPlugin, modelNotice, loadModels } = await import("../hosts/opencode/plugin.mjs");
 const { diffText, toOpencodeRule } = await import("../hosts/opencode/map.mjs");
 const { toClaudeEntries, lastAssistantText } = await import("../hosts/opencode/messages.mjs");
 
@@ -172,6 +172,20 @@ test("opencode: the same guard decisions as the Claude Code adapter", async () =
     const r = await evaluate({ sessionID: "ses_root", action: "edit", resources: [file], metadata: { files: [{ file, patch: `@@\n+${content}\n`, status: "added" }] } });
     assert.equal(r.effect === "deny" ? "deny" : "allow", cc, file);
   }
+});
+
+test("opencode: the model is named once per session, with a warning when it is untested or may train on the data", async () => {
+  const models = { updated: "2026-11-16", supported: ["anthropic/tested"], dataUse: { "opencode/big-pickle": "may-train" } };
+  assert.equal(modelNotice("anthropic/tested", models), "");
+  assert.match(modelNotice("opencode/glm-5.3-flash-free", models), /glm-5\.3-flash-free/);
+  assert.equal(modelNotice("opencode/big-pickle", models).split("\n").length, 2);
+  assert.ok(Array.isArray(loadModels().supported), "models.json ships with the plugin");
+  const before = oc.log.synthetic.length;
+  const req = () => ({ sessionID: "ses_root", model: { providerID: "opencode", id: "glm-5.3-flash-free" }, system: [], messages: [], tools: {} });
+  await oc.hooks.session.context(req());
+  await oc.hooks.session.context(req());
+  await settle();
+  assert.equal(oc.log.synthetic.slice(before).filter((s) => /glm-5\.3/.test(s.text)).length, 1, "once, not per request");
 });
 
 test("opencode helpers: diff text, rule conversion, message mapping", () => {

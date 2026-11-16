@@ -60,6 +60,19 @@ export function runGate(script, input, { node = "node", hooksDir = HOOKS, env = 
   });
 }
 
+// The tested models (models.json next to this file): { supported, graded, dataUse }.
+export function loadModels(file = path.join(HERE, "models.json")) {
+  try { return JSON.parse(fs.readFileSync(file, "utf8")); } catch { return { supported: [], graded: [], dataUse: {} }; }
+}
+
+// The notice for a model: a warning when it is not on the supported list, and one when it may train on the data.
+export function modelNotice(model, models = loadModels()) {
+  const lines = [];
+  if (!(models.supported ?? []).includes(model)) lines.push(t("oc.model.untested", { model, updated: models.updated ?? "?" }));
+  if (models.dataUse?.[model] === "may-train") lines.push(t("oc.model.mayTrain", { model }));
+  return lines.join("\n");
+}
+
 export function createPlugin({ node = "node", hooksDir = HOOKS } = {}) {
   return {
     id: "leerharnas",
@@ -200,8 +213,15 @@ export function createPlugin({ node = "node", hooksDir = HOOKS } = {}) {
       // ---- Every agent-loop request: the status line (root sessions only; the analyst gets nothing extra) ----
       await ctx.session.hook("context", (event) => {
         const st = sessions.get(event.sessionID);
-        if (!st?.root || !st.status) return;
-        event.system.push({ type: "text", text: st.status });
+        if (!st?.root) return;
+        // The model is known here: name it once, with a warning when it is not on the tested list.
+        const model = event.model ? `${event.model.providerID}/${event.model.id ?? event.model.modelID ?? ""}` : null;
+        if (model && st.model !== model) {
+          st.model = model;
+          const text = modelNotice(model);
+          if (text) void notice(event.sessionID, text);
+        }
+        if (st.status) event.system.push({ type: "text", text: st.status });
       });
 
       // ---- Shell: remember the full command and its folder for the evaluation that follows ----

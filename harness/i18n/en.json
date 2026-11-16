@@ -489,5 +489,7 @@
   "install.agentsOwn": "## Own agreements\n<!-- For example: your programme and year, your own learning goal, or how you want to get feedback. This part is yours. -->",
   "install.note.agentsNew": "yours, with the block of the harness",
   "install.note.agentsBlock": "block of the harness between its markers, the rest is yours, backup",
-  "install.hostLine": " · host: {host}"
+  "install.hostLine": " · host: {host}",
+  "oc.model.untested": "Learning harness: the model {model} is not on the list of tested models (updated {updated}). The guard still holds, but the hint ladder and the markers depend on the model: check the rung of each hint yourself, and see opencode.md on the site for the tested models.",
+  "oc.model.mayTrain": "Learning harness: according to opencode, {model} may use your data to improve the model. Do not use it for graded work unless your course allows it."
 }
