@@ -612,6 +612,16 @@ Deze delen van het ontwerp zijn vervangen. Ze stonden op de [ontwerppagina](desi
 
 ## 11. Wijzigingslog {#changelog}
 
+### 16 november 2026: hulp is wat Claude gaf, en niets kwijt aan het eind
+
+De pilotstudent besliste punt 68–71 na een sessie aan de scaffolding van Device in de eindopdracht. De taak stond op trede 2, terwijl de enige hulp één Socratische vraag was (trede 1).
+
+- **#68 Een ontgrendelde trede is geen gegeven hulp.** De prompt-gate telde een trede als gegeven zodra hij ontgrendelde. In beoordeeld werk geldt de L2-ladder ook op L3, dus berichten die alleen op een hintvraag leken, maakten de taak zwaarder: "I think i finished my task" is een poging ("i think"), die trede 2 ontgrendelde, en "git was not working" in een inhaaldagboek ontgrendelde trede 1. Nu neemt de Stop-hook de ontgrendeling terug als het antwoord van Claude op die prompt een lagere `[trede N]` heeft, ook `[trede 0]`: de ladder, de trede van de taak en die van de familie gaan terug naar wat er gegeven is (event `hint-unused`). Zonder marker verandert er niets, dus een hint op L2 zonder marker wordt nog steeds gelogd.
+- **#69 Elke controlevraag telt.** Drie `[controlevraag <id> …]` over dezelfde vaardigheid in één antwoord werden één keer gelogd (alleen de eerste, "half"); de andere twee ("goed") gingen verloren.
+- **#70 Zelfvertrouwen met een tikfout.** "i am convidence level 4" werd niet herkend. Woorden die beginnen met "conf"/"conv", "zeker" of "vertrouw", en "level"/"niveau", tellen nu mee; een los "opdracht 3" nog steeds niet.
+- **#71 Een hookscript lezen is het niet draaien.** De guard weigerde elk commando met een woord op `.mjs` in `.claude/hooks/`, ook `grep`. Een programma dat alleen leest (grep, cat, head, Select-String …) mag nu, tenzij er in dezelfde regel een programma staat dat code draait (`cat … | node`). sed en awk blijven erbuiten: die kunnen allebei commando's draaien.
+- **Niet veranderd:** een taak telt voor één familie. Andere vaardigheden die erin geoefend werden (hier een property in `VRSet`) krijgen geen taak; alleen `[trede N #id]` geeft ze een `concept-help`-event. Een functie voor een latere review.
+
 ### 14 november 2026 (avond): gelukt is niet zelfstandig, en de AI-verantwoording in één stap
 
 De pilotstudent besliste punt 63–67 na een sessie aan het klassendiagram van de eindopdracht. Die lukte alleen dankzij Socratische vragen (trede 1), terwijl het niveau "L3 Zelfstandig" heet en de taak meetelde als gelukt.

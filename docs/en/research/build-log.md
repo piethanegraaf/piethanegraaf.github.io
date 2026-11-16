@@ -609,6 +609,16 @@ These parts of the design were replaced. They used to sit on the [design page](d
 
 ## 11. Change log {#changelog}
 
+### 16 November 2026: help is what Claude gave, and nothing lost at the end
+
+The pilot student decided points 68–71 after a session on the Device scaffolding of the final assignment. The task was logged at rung 2, while the only help was one Socratic question (rung 1).
+
+- **#68 An unlocked rung is not given help.** The prompt gate counted a rung as given as soon as it unlocked. In graded work the L2 ladder also runs on L3 skills, so messages that only looked like a hint request raised the task: "I think i finished my task" is an attempt ("i think"), which unlocked rung 2, and "git was not working" in a catch-up diary unlocked rung 1. Now the Stop hook takes the unlock back when Claude's answer to that prompt has a lower `[rung N]`, also `[rung 0]`: the ladder, the task's rung and the family rung go back to what was given (event `hint-unused`). Without a marker nothing changes, so an unmarked hint on L2 is still logged.
+- **#69 Every check question counts.** Three `[check-question <id> …]` about the same skill in one answer were logged once (only the first, "half"); the other two ("right") were lost.
+- **#70 Confidence with a typo.** "i am convidence level 4" was not recognised. Words that start with "conf"/"conv", "zeker" or "vertrouw", and "level"/"niveau", now count; a bare "opdracht 3" still does not.
+- **#71 Reading a hook script is not running it.** The guard refused every command with a word ending in `.mjs` in `.claude/hooks/`, also `grep`. A program that only reads (grep, cat, head, Select-String …) is now allowed, unless the line also has a program that runs code (`cat … | node`). sed and awk stay out: both can run commands.
+- **Not changed:** a task counts for one family. Other skills practised in it (here a property in `VRSet`) get no task; only `[rung N #id]` gives them a `concept-help` event. A feature for a later review.
+
 ### 14 November 2026 (evening): solved is not independent, and the AI-use log in one step
 
 The pilot student decided points 63–67 after a session on the class diagram of the final assignment. It worked only thanks to Socratic questions (rung 1), while the level is called "L3 Independent" and the task counted as solved.

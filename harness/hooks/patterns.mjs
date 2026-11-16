@@ -66,12 +66,15 @@ export const DONE_PREFIX = /^\s*(?:af|done)\s*:\s*(\S[\s\S]{0,199})/i;
 
 // The learner's confidence (1-5) as an answer to Claude's question (#56): a bare number ("3", "3/5", "een 4"),
 // or a number with "zelfvertrouwen", "zeker", "confidence", "/5", "van de 5" or "out of 5".
+// The words are matched loosely (#70): "i am convidence level 4" (a typo) was not logged. Any word that starts
+// with "conf"/"conv", "zeker" or "vertrouw", and "level"/"niveau", count; a bare "opdracht 3" still does not.
+const CONF_WORD = String.raw`(?:zelfvertrouwen|vertrouw\w*|zeker\w*|con[fv]\w*|level|niveau)`;
 export function confidenceOf(text) {
   const s = String(text ?? "").trim().toLowerCase();
   let m = s.match(/^(?:een|a|zo'?n|about|ongeveer|rond)?\s*([1-5])(?:\s*(?:\/|van de|uit|out of|op)\s*5)?\s*[.!]*$/);
   if (m) return Number(m[1]);
-  m = s.match(/\b([1-5])\s*(?:\/|van de|out of|op)\s*5\b/) ?? s.match(/\b(?:zelfvertrouwen|zeker|confidence|confident)\b[^0-9]{0,20}\b([1-5])\b/)
-    ?? s.match(/\b([1-5])\b[^0-9]{0,12}\b(?:zelfvertrouwen|zeker|confidence|confident)\b/);
+  m = s.match(/\b([1-5])\s*(?:\/|van de|out of|op)\s*5\b/) ?? s.match(new RegExp(String.raw`\b${CONF_WORD}\b[^0-9]{0,20}\b([1-5])\b`))
+    ?? s.match(new RegExp(String.raw`\b([1-5])\b[^0-9]{0,12}\b${CONF_WORD}\b`));
   return m ? Number(m[1]) : null;
 }
 // Claude asked for the confidence: "(1–5)" or "(1-5)" in its answer.
@@ -168,6 +171,8 @@ export function microAnswer(text) {
 // review of 11 Nov, afternoon, #26): the task keeps the rung, and help about a concept of another
 // family is also logged for that concept. The same shape as the review marker below.
 export const RUNG_MARK = /\[(?:trede|rung) ([1-5])(?:\s+#([\w.-]+))?\]/gi;
+// The same mark with 0 (#68): only to take back an unlocked rung that Claude did not give.
+export const GIVEN_MARK = /\[(?:trede|rung) ([0-5])(?:\s+#([\w.-]+))?\]/gi;
 // A proposal for a microskill that Claude asks the harness to show (#22):
 // [micro-voorstel <id> "titel" "trefwoord1, trefwoord2"]. The hook checks the body (parseMicroMark).
 export const MICRO_MARK = /\[(?:micro-voorstel|micro-proposal)\b([^\]]*)\]/gi;
