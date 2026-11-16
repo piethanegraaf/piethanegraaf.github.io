@@ -27,12 +27,13 @@ import {
   isLearnerEntry, learnerEntryText, entryText, readTranscript, loadSkills, findSkill, familyIds, autoDemote,
   applyVerdict, findVerdict, lapseTasks, promotionAdvice, offerIsNew, offerText, newWorkSignal, beginNewWork, explanationText,
   noteConceptHelp, checkMicroProposal, microOfferText, readEvents, isOtherFamily, familyOf, placeAfterExplanation, recheckDemotion,
-  verdictFromAgent, t, gradedOf, isGradedPath, isGradedDir, mentionsGraded, sessionWork,
+  verdictFromAgent, t, gradedOf, isGradedPath, isGradedDir, mentionsGraded, sessionWork, effectiveLevel,
 } from "../core/lib.mjs";
 import path from "node:path";
 import { RUNG_MARK, REVIEW_RUNG_MARK, EXPLAIN_MARK, TRANSFER_MARK, MICRO_MARK, parseMicroMark, ASKS_CONFIDENCE, CHECK_MARK, LOG_MARK } from "../core/patterns.mjs";
 import { logAnswer, openRows, fillLastColumn, sid8 } from "../core/graded.mjs";
 import { turnOf } from "../core/transcript.mjs";
+import { codeFloor } from "../core/floor.mjs";
 import { fromClaudeCode } from "./cc-transcript.mjs";
 
 let input;
@@ -102,6 +103,17 @@ for (const m of answer.matchAll(RUNG_MARK)) {
   const other = m[2] && data && isOtherFamily(data, m[2], rungSkill) ? findSkill(data, m[2]).id : false;
   rungMark(n, {}, other);
   if (m[2] && data) noteConceptHelp(data, st, m[2], n, { taskSkill: rungSkill, session: sid });
+}
+
+// The rung floor (opencode plan): at L2 and L3 a code block in the learner's language is rung 4 or 5, whatever the
+// marker says (core/floor.mjs). It only ever raises the rung.
+{
+  const s = data && rungSkill ? findSkill(data, rungSkill) : null;
+  const lv = s ? effectiveLevel(data, s) : null;
+  if (lv === "L2" || lv === "L3") {
+    const f = codeFloor(answer, data);
+    if (f.rung > (st.maxRung ?? 0)) rungMark(f.rung, { floor: true, lines: f.lines });
+  }
 }
 
 // Help in a review after a task: [review-trede N #id] (setup review of 11 Nov, S3/S16). It counts as
