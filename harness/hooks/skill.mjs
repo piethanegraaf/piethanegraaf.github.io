@@ -374,12 +374,15 @@ switch (cmd) {
       course: /^[^\r\n<>]{1,80}$/, language: /^(nl|en)$/, autoDemote: /^(true|false)$/, securityAnalyzer: /^(true|false)$/,
       // Which files are the learner's code (the guard protects them at L1-L3): comma-separated.
       codeExtensions: /^\.?[a-z0-9]{1,10}(\s*,\s*\.?[a-z0-9]{1,10})*$/i, codeFiles: /^[\w.*-]{1,60}(\s*,\s*[\w.*-]{1,60})*$/,
+      // opencode (opencode plan): MCP tools the guard lets through (comma-separated action names, or *), and the quiet
+      // spell after which an open session counts as closed for the catch-up diary.
+      allowedMcp: /^(\*|[\w-]{1,80}(\s*,\s*[\w-]{1,80})*)$/, sessionGapMinutes: /^[1-9]\d*$/,
     };
     if (!allowed[key] || !allowed[key].test(value)) exit("cli.setting.usage");
     data.settings = data.settings ?? {};
     const list = (v) => v.split(",").map((x) => x.trim()).filter(Boolean).map((x) => (key === "codeExtensions" ? x.replace(/^\./, "") : x));
-    data.settings[key] = ["stuckTimerMinutes", "idleMinutes"].includes(key) ? Number(value) : ["autoDemote", "securityAnalyzer"].includes(key) ? value === "true"
-      : ["codeExtensions", "codeFiles"].includes(key) ? list(value) : value;
+    data.settings[key] = ["stuckTimerMinutes", "idleMinutes", "sessionGapMinutes"].includes(key) ? Number(value) : ["autoDemote", "securityAnalyzer"].includes(key) ? value === "true"
+      : ["codeExtensions", "codeFiles", "allowedMcp"].includes(key) ? list(value) : value;
     saveSkills(data);
     logEvent({ type: "setting", key, value });
     console.log(`${key} = ${value}`);

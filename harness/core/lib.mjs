@@ -1829,7 +1829,10 @@ export function sessionWork(sid, st = null, events = readEvents()) {
 // current session, not one that is still active in parallel (within idleMinutes), and not one whose catch-up
 // was offered before. [{ sid, last, minutes, kinds }]
 export function catchUpSessions(data, currentSid, { days = 7, limit = 1, now = Date.now() } = {}) {
-  const idle = Math.max(1, Number(settingsOf(data).idleMinutes) || DEFAULT_SETTINGS.idleMinutes) * 60000;
+  // A session without an end (opencode has no end event for a live session) counts as closed after this quiet spell:
+  // settings.sessionGapMinutes, or else idleMinutes as before (opencode plan, revision 2).
+  const gap = Number(settingsOf(data).sessionGapMinutes) || Number(settingsOf(data).idleMinutes) || DEFAULT_SETTINGS.idleMinutes;
+  const idle = Math.max(1, gap) * 60000;
   const events = readEvents();
   const offered = new Set(events.filter((e) => e.type === "catchup-offered").map((e) => e.of));
   let files = [];
