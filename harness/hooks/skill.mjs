@@ -26,6 +26,7 @@
 // change that: it runs the same two keys again on a saved transcript.
 import fs from "node:fs";
 import path from "node:path";
+import { fileURLToPath, pathToFileURL } from "node:url";
 import {
   loadSkills, saveSkills, findSkill, settingsOf, addOverride, loadOverrides, logEvent, today, taskStats,
   LEVELS, levelName, isMicro, microsOf, familyIds, familyOf, scheduleOnLevel, scheduleOnReview, dueReviews,
@@ -217,12 +218,13 @@ switch (cmd) {
     // Recover explanations that were approved in the chat but never logged (setup review §5): read a
     // saved transcript, find Claude's [uitleg-ok <tid>] markers and check the learner's message they
     // answer with the same checkExplanation(). Only what passes both keys is logged, with source "replay".
-    const [file, ...flags] = args;
+    const [file, ...flags] = args.filter((a) => a !== "--opencode");
     if (!file) exit("cli.replay.usage");
     const dry = flags.includes("--dry-run");
     if (!fs.existsSync(path.resolve(file))) exit("cli.replay.noFile", { file });
-    const entries = readTranscript(path.resolve(file));
-    const session = path.basename(file).replace(/\.jsonl$/i, "");
+    // --opencode: the output of `opencode session export` (opencode plan, parity row 23), mapped to the same entries.
+    const entries = args.includes("--opencode") ? await opencodeEntries(path.resolve(file)) : readTranscript(path.resolve(file));
+    const session = path.basename(file).replace(/\.(jsonl|json)$/i, "");
     // Open and lapsed tasks: a lapsed task whose marker a bug lost was not really skipped (S1).
     const open = new Map(allTasks().filter((x) => !x.explained).map((x) => [x.tid, x]));
     const results = new Map(); // tid -> { ok, reasons, text }
@@ -390,4 +392,23 @@ switch (cmd) {
   }
   default:
     exit("cli.usage");
+}
+
+// A session exported from opencode: a JSON array of messages, an object with `messages`, or JSON lines. The mapping
+// lives with the opencode plugin: .opencode/plugins/leerharnas/messages.mjs when installed, hosts/opencode/ in the repo.
+async function opencodeEntries(file) {
+  const text = fs.readFileSync(file, "utf8");
+  let messages;
+  try {
+    const v = JSON.parse(text);
+    messages = Array.isArray(v) ? v : Array.isArray(v?.messages) ? v.messages : [];
+  } catch {
+    messages = text.split(/\r?\n/).filter(Boolean).map((l) => { try { return JSON.parse(l); } catch { return null; } }).filter(Boolean);
+  }
+  const here = path.dirname(fileURLToPath(import.meta.url));
+  for (const rel of ["../plugins/leerharnas/messages.mjs", "../hosts/opencode/messages.mjs"]) {
+    const p = path.resolve(here, rel);
+    if (fs.existsSync(p)) return (await import(pathToFileURL(p).href)).toClaudeEntries(messages);
+  }
+  exit("cli.replay.noOpencode");
 }

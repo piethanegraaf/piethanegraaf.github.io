@@ -255,7 +255,7 @@
   "cli.correct.rung": "{id} [{tid}]: trede {from} -> {to}{failed}. Nu {ok}/{n} gelukt. (Wordt in het dagboek vermeld.)",
   "cli.correct.nowFailed": " (telt nu als niet gelukt)",
   "cli.correct.void": "{id} [{tid}] geschrapt. Nu {ok}/{n} gelukt. (Wordt in het dagboek vermeld.)",
-  "cli.replay.usage": "Gebruik: replay <transcript.jsonl> [--dry-run]. Het transcript van een sessie is <sessie-id>.jsonl: in de submap projects van ~/.claude, of in je back-up.",
+  "cli.replay.usage": "Gebruik: replay <transcript.jsonl> [--dry-run], of replay --opencode <export.json> [--dry-run]. Het transcript van een Claude Code-sessie is <sessie-id>.jsonl: in de submap projects van ~/.claude, of in je back-up. Voor opencode: bewaar het eerst met `opencode session export <sessie-id>`.",
   "cli.replay.noFile": "Transcript niet gevonden: {file}",
   "cli.replay.none": "Geen [uitleg-ok]-markers gevonden in {file}.",
   "cli.replay.notOpen": "[{tid}] niet nodig: deze taak bestaat niet of telt al.",
@@ -491,5 +491,6 @@
   "install.hostLine": " · host: {host}",
   "oc.model.untested": "Leerharnas: het model {model} staat niet op de lijst van geteste modellen (bijgewerkt {updated}). De guard houdt stand, maar de hintladder en de markeringen hangen af van het model: let zelf op de trede van elke hint, en zie opencode.md op de site voor de geteste modellen.",
   "oc.model.mayTrain": "Leerharnas: volgens opencode mag {model} je gegevens gebruiken om het model te verbeteren. Gebruik het niet voor beoordeeld werk, tenzij je opleiding dat toestaat.",
-  "guard.mcp": "Leerharnas: de MCP-tool {tool} is geblokkeerd in een oefenmap, omdat de guard niet ziet welke bestanden hij raakt. De student kan hem toestaan met `! node .claude/hooks/skill.mjs setting allowedMcp {tool}` (of de naam van de server, of *)."
+  "guard.mcp": "Leerharnas: de MCP-tool {tool} is geblokkeerd in een oefenmap, omdat de guard niet ziet welke bestanden hij raakt. De student kan hem toestaan met `! node .claude/hooks/skill.mjs setting allowedMcp {tool}` (of de naam van de server, of *).",
+  "cli.replay.noOpencode": "replay --opencode heeft de opencode-plugin van de harnas nodig (.opencode/plugins/leerharnas/). Installeer die met install.mjs --host opencode."
 }

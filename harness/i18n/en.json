@@ -255,7 +255,7 @@
   "cli.correct.rung": "{id} [{tid}]: rung {from} -> {to}{failed}. Now {ok}/{n} solved. (Shown in the diary.)",
   "cli.correct.nowFailed": " (now counts as not solved)",
   "cli.correct.void": "{id} [{tid}] voided. Now {ok}/{n} solved. (Shown in the diary.)",
-  "cli.replay.usage": "Usage: replay <transcript.jsonl> [--dry-run]. The transcript of a session is <session-id>.jsonl: in the subfolder projects of ~/.claude, or in your backup.",
+  "cli.replay.usage": "Usage: replay <transcript.jsonl> [--dry-run], or replay --opencode <export.json> [--dry-run]. The transcript of a Claude Code session is <session-id>.jsonl: in the subfolder projects of ~/.claude, or in your backup. For opencode: save it first with `opencode session export <session-id>`.",
   "cli.replay.noFile": "Transcript not found: {file}",
   "cli.replay.none": "No [explain-ok] markers found in {file}.",
   "cli.replay.notOpen": "[{tid}] not needed: this task does not exist or already counts.",
@@ -491,5 +491,6 @@
   "install.hostLine": " · host: {host}",
   "oc.model.untested": "Learning harness: the model {model} is not on the list of tested models (updated {updated}). The guard still holds, but the hint ladder and the markers depend on the model: check the rung of each hint yourself, and see opencode.md on the site for the tested models.",
   "oc.model.mayTrain": "Learning harness: according to opencode, {model} may use your data to improve the model. Do not use it for graded work unless your course allows it.",
-  "guard.mcp": "Learning harness: the MCP tool {tool} is blocked in a practice folder, because the guard cannot see which files it touches. The learner can allow it with `! node .claude/hooks/skill.mjs setting allowedMcp {tool}` (or the server's name, or *)."
+  "guard.mcp": "Learning harness: the MCP tool {tool} is blocked in a practice folder, because the guard cannot see which files it touches. The learner can allow it with `! node .claude/hooks/skill.mjs setting allowedMcp {tool}` (or the server's name, or *).",
+  "cli.replay.noOpencode": "replay --opencode needs the opencode plugin of the harness (.opencode/plugins/leerharnas/). Install it with install.mjs --host opencode."
 }
