@@ -17,7 +17,9 @@ test("host: the harness files of both hosts are protected, whichever host runs",
   for (const r of [".claude/hooks/guard.mjs", ".claude/core/lib.mjs", ".opencode/hooks/skill.mjs", ".opencode/core/guard.mjs",
     ".opencode/plugins/leerharnas/index.mjs", ".opencode/skills/diary/SKILL.md", ".opencode/agents/demotie-analist.md",
     ".opencode/opencode.jsonc", "opencode.json", "opencode.jsonc", ".opencode/leerharnas.md"]) assert.ok(isHarnessPath(r), r);
-  for (const r of [".opencode/plugins/other/index.mjs", ".opencode/skills/mine/SKILL.md", "src/opencode.json.cs"]) assert.equal(isHarnessPath(r), false, r);
+  // Every plugin and custom tool: opencode runs them as code, so one the AI wrote could undo the guard.
+  for (const r of [".opencode/plugins/other/index.mjs", ".opencode/plugins/x.js", ".opencode/plugin/x.ts", ".opencode/tools/x.ts", ".opencode/tool/x.js"]) assert.ok(isHarnessPath(r), r);
+  for (const r of [".opencode/skills/mine/SKILL.md", ".opencode/agents/mine.md", "src/opencode.json.cs", "src/plugins/x.js"]) assert.equal(isHarnessPath(r), false, r);
 });
 
 test("host: LEERHARNAS_HOST=opencode puts the CLI path of opencode in the messages", () => {

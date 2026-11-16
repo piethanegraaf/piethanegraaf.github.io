@@ -186,3 +186,14 @@ function writeFile(q, rel, content) {
   fs.mkdirSync(path.dirname(q.abs(rel)), { recursive: true });
   fs.writeFileSync(q.abs(rel), content);
 }
+
+test("an opencode plugin or custom tool is closed to the AI, also through the shell: opencode would run it as code", () => {
+  const p = makeProject();
+  try {
+    for (const rel of [".opencode/plugins/x.js", ".opencode/plugins/other/index.mjs", ".opencode/tools/x.ts"]) {
+      assert.equal(decision(p.hook("guard.mjs", { tool_name: "Write", tool_input: { file_path: p.abs(rel), content: "export default {}" } })), "deny", rel);
+    }
+    assert.equal(decision(p.hook("guard.mjs", { tool_name: "Bash", tool_input: { command: "echo x > .opencode/plugins/x.js" } })), "deny");
+    assert.equal(decision(p.hook("guard.mjs", { tool_name: "Write", tool_input: { file_path: p.abs(".opencode/agents/mine.md"), content: "x" } })), "allow");
+  } finally { p.cleanup(); }
+});

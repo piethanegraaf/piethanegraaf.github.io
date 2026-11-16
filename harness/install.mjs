@@ -24,6 +24,7 @@ import os from "node:os";
 import path from "node:path";
 import crypto from "node:crypto";
 import readline from "node:readline/promises";
+import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import { t, setLanguage } from "./core/i18n.mjs";
 import { hostText } from "./core/host.mjs";
@@ -209,8 +210,29 @@ function localized(dir, base) {
   return null;
 }
 
-// ---------- 3. What the files should look like ----------
+// ---------- 2b. Which opencode is installed ----------
 const notes = [];
+// The released opencode 1.x rejects the V2 "permissions" and "policies" in .opencode/opencode.jsonc and then does
+// not start at all, not even without the harness ("V2 permissions are not supported by OpenCode V1"; live test of
+// 16 Nov with 1.19.5). So with only a 1.x on the PATH the installer stops before it writes anything. opencode2, or a
+// build that is not a 1.x release (a dev build is 0.0.0-...), goes on. --force goes on anyway, for example to
+// prepare a folder for opencode 2. Not found (on Windows the npm shim is a .cmd, which is not started without a
+// shell): a notice. The check starts the program with an argument list and only reads its version.
+function opencodeRelease(bin) {
+  const r = spawnSync(bin, ["--version"], { encoding: "utf8", timeout: 10000, windowsHide: true });
+  if (r.error || r.status !== 0) return null;
+  return String(r.stdout).trim().split(/\s+/).find((w) => /^\d+\.\d+\.\d+/.test(w)) ?? "?";
+}
+if (withOC) {
+  const v2 = opencodeRelease("opencode2");
+  const v = v2 === null ? opencodeRelease("opencode") : null;
+  if (v !== null && /^1\.\d+\.\d+$/.test(v)) {
+    if (!opts.force) fail("install.ocV1", { version: v });
+    notes.push(t("install.ocV1Forced", { version: v }));
+  } else if (v2 === null && v === null) notes.push(t("install.ocVersionUnknown"));
+}
+
+// ---------- 3. What the files should look like ----------
 const code = new Map(); // rel -> content (owned by the harness, replaced on update)
 // The hooks (Claude Code) or the gates and the CLI (opencode), the core next to them, and the messages.
 function hostCode(dir) {
@@ -277,7 +299,7 @@ function opencodeConfig() {
   const protectedEdits = [".learning/skills.json", ".learning/state/*",
     ".claude/hooks/*", ".claude/core/*", ".claude/settings.json", ".claude/settings.local.json", ".claude/leerharnas*",
     ".claude/skills/diary/*", ".claude/skills/mastery-check/*", ".claude/skills/update-dashboard/*", ".claude/agents/demotie-analist.md",
-    ".opencode/hooks/*", ".opencode/core/*", ".opencode/plugins/leerharnas/*", ".opencode/leerharnas*", ".opencode/opencode.json*",
+    ".opencode/hooks/*", ".opencode/core/*", ".opencode/plugin/*", ".opencode/plugins/*", ".opencode/tool/*", ".opencode/tools/*", ".opencode/leerharnas*", ".opencode/opencode.json*",
     ".opencode/skills/diary/*", ".opencode/skills/mastery-check/*", ".opencode/skills/update-dashboard/*", ".opencode/agents/demotie-analist.md",
     "opencode.json*", "*/.config/opencode/*"];
   const cfg = {

@@ -144,7 +144,10 @@ export function toolingRe(data) {
 export function isHarnessPath(r) {
   // Both hosts' harness files (opencode plan), whichever host runs: a folder can have both installed.
   return r !== null && (/^\.claude\/(hooks\/|core\/|skills\/(diary|mastery-check|update-dashboard)\/|agents\/demotie-analist\.md$|settings(\.local)?\.json$|leerharnas[^/]*\.(md|json)$)/i.test(r)
-    || /^\.opencode\/(hooks\/|core\/|plugins\/leerharnas(\/|\.m?js$)|skills\/(diary|mastery-check|update-dashboard)\/|agents\/demotie-analist\.md$|opencode\.jsonc?$|leerharnas[^/]*\.(md|json)$)/i.test(r)
+    // Every plugin and custom tool, not only the harness's own: opencode runs them as code at its next start, with
+    // the same hooks as the harness, so a plugin the AI wrote could allow what the guard denies. It is opencode's
+    // equivalent of the hooks in .claude/settings.json, which are closed as a whole.
+    || /^\.opencode\/(hooks\/|core\/|plugins?\/|tools?\/|skills\/(diary|mastery-check|update-dashboard)\/|agents\/demotie-analist\.md$|opencode\.jsonc?$|leerharnas[^/]*\.(md|json)$)/i.test(r)
     || /^opencode\.jsonc?$/i.test(r));
 }
 

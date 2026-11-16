@@ -7,7 +7,7 @@ description: "Dezelfde niveaus, hintladder, guard en hetzelfde dagboek in openco
 [opencode](https://opencode.ai) is een open-source codeeragent die ook gratis modellen draait. De leerharnas kan daarin draaien als plugin, op dezelfde kern als de Claude Code-versie: dezelfde niveaus, hintladder, guard, uitlegcheck, hetzelfde dagboek en dashboard, en dezelfde map `.learning/`. Een oefenmap kan zelfs allebei hebben en per sessie van tool wisselen.
 
 !!! warning "Experimenteel: nog niet om echt mee te oefenen"
-    De plugin is gebouwd tegen de plugin-API van opencode 2 zoals die op 15 november 2026 op de ontwikkeltak stond (commit `b75b158`). Geen uitgebrachte opencode had die API nog: de versie van die dag (1.19.5) mist de hooks die de guard en het dagboek nodig hebben. De plugin is getest tegen een nabootsing van die API, niet tegen een draaiende opencode. Oefen voorlopig in Claude Code, tot er een opencode-versie met de API is en deze pagina die als getest noemt.
+    De plugin is gebouwd tegen de plugin-API van opencode 2 zoals die op 15 november 2026 op de ontwikkeltak stond (commit `b75b158`). Geen uitgebrachte opencode had die API nog. Met de versie van die dag (1.19.5) start opencode in de oefenmap zelfs helemaal niet: hij weigert `.opencode/opencode.jsonc` met "V2 permissions are not supported by OpenCode V1". De installer stopt daarom als hij alleen een opencode 1.x vindt (met `--force` gaat hij toch door, bijvoorbeeld om de map klaar te zetten voor opencode 2). De plugin is getest tegen een nabootsing van die API, niet tegen een draaiende opencode. Oefen voorlopig in Claude Code, tot er een opencode-versie met de API is en deze pagina die als getest noemt.
 
 ## Voor wie
 
@@ -76,7 +76,7 @@ Beide bleven binnen de ladder, maar geen van beide logde zijn hulp op L3 betrouw
 
 De guard werkt in drie lagen, zodat niet één hook alleen beslist:
 
-1. **Policies** in `.opencode/opencode.jsonc`: het model schrijft nooit in je record (`.learning/skills.json`, `.learning/state/`) of in de harnas van een van beide tools. Je dagboek blijft schrijfbaar, want `/diary` vult het aan.
+1. **Policies** in `.opencode/opencode.jsonc`: het model schrijft nooit in je record (`.learning/skills.json`, `.learning/state/`), in de harnas van een van beide tools, of in een plugin of eigen tool in `.opencode/plugins/` en `.opencode/tools/`: opencode draait die als code bij de volgende start, dus een plugin van het model zou de guard kunnen omzeilen. Je eigen plugins schrijf je zelf. Je dagboek blijft schrijfbaar, want `/diary` vult het aan.
 2. **Sessieregels**: de code van vaardigheden op L2 en L3 krijgt per sessie een vaste weigerregel, die wordt vernieuwd als je niveaus veranderen (ook na je eigen `!`-commando's).
 3. **De controle van de plugin** voor alles wat een regel niet kan uitdrukken: het `TODO(human)`-skelet op L1, bouwen en testen in shellcommando's, subagents, MCP-tools, en een crash, die blokkeert.
 
