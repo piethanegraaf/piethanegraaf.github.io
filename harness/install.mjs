@@ -25,7 +25,7 @@ import path from "node:path";
 import crypto from "node:crypto";
 import readline from "node:readline/promises";
 import { fileURLToPath } from "node:url";
-import { t, setLanguage } from "./hooks/i18n.mjs";
+import { t, setLanguage } from "./core/i18n.mjs";
 
 const HARNESS = path.dirname(fileURLToPath(import.meta.url));
 const VERSION = JSON.parse(fs.readFileSync(path.join(HARNESS, "package.json"), "utf8")).version;
@@ -182,6 +182,10 @@ const notes = [];
 const code = new Map(); // rel -> content (owned by the harness, replaced on update)
 for (const f of fs.readdirSync(path.join(HARNESS, "hooks")).filter((f) => f.endsWith(".mjs")).sort()) {
   code.set(`.claude/hooks/${f}`, fs.readFileSync(path.join(HARNESS, "hooks", f), "utf8"));
+}
+// The host-neutral core (opencode plan): the hooks import it from ../core/, so it sits next to .claude/hooks/.
+for (const f of fs.readdirSync(path.join(HARNESS, "core")).filter((f) => f.endsWith(".mjs")).sort()) {
+  code.set(`.claude/core/${f}`, fs.readFileSync(path.join(HARNESS, "core", f), "utf8"));
 }
 // Messages for all languages, so `skill.mjs setting language` works without reinstalling.
 for (const f of fs.readdirSync(path.join(HARNESS, "i18n")).filter((f) => /^[a-z]{2}\.json$/.test(f)).sort()) {

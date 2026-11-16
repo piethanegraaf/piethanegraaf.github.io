@@ -11,11 +11,11 @@ import {
   afterTask, allTasks, readEvents, openOffer, promote, exerciseDirs, newWorkSignal, beginNewWork, noteExplanationWords,
   taskRung, taskLogged, addMicro, recheckDemotion, openOfFamily, familyRungOf, solvedInFamily, keywordHits, isSolved, verdictKey, needsNextExercise, progressOf, progressLine, t,
   gradedOf, gradedWhy, gradedChangedFiles, skillForFile, lapseTasks, familyIds,
-} from "./lib.mjs";
+} from "../core/lib.mjs";
 import {
   HINT, SOLUTION, SOLVED_STRONG, SOLVED_WEAK, CODE_CONTEXT, NOT_SOLVED, RESUME, ATTEMPT, CHECKING,
   STUCK, DONT_KNOW, MORE_EXPLANATION, errorSignature, promotionAnswer, microAnswer, isEnd, DONE_PREFIX, confidenceOf,
-} from "./patterns.mjs";
+} from "../core/patterns.mjs";
 
 const rungName = (n) => t(`rung.${n}`);
 

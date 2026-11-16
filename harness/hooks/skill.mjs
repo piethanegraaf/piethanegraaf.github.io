@@ -34,8 +34,8 @@ import {
   activeMinutesSince, readTranscript, isLearnerEntry, learnerEntryText, entryText, checkExplanation, t, language,
   sinceExportLine, dashboardAfterDiary, parseDashboardRepo, addMicro, conceptHelpOf, readEvents,
   recentUps, progressAll, progressLine, needsNextExercise, placeAfterExplanation, gradedOf,
-} from "./lib.mjs";
-import { EXPLAIN_MARK } from "./patterns.mjs";
+} from "../core/lib.mjs";
+import { EXPLAIN_MARK } from "../core/patterns.mjs";
 
 const [cmd, ...args] = process.argv.slice(2);
 const data = loadSkills();

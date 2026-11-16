@@ -1,7 +1,7 @@
 // SessionEnd (review of 13 Nov, night, #56): when a session closes (exit, /clear, logout), the harness notes
 // when, and whether there was work without a diary entry. The next start offers a short catch-up diary for
 // such a session (session-start.mjs). This hook asks nothing and blocks nothing: the session is already over.
-import { readStdin, sessionExists, loadSession, saveSession, logEvent, diaryHasSession, sessionWork } from "./lib.mjs";
+import { readStdin, sessionExists, loadSession, saveSession, logEvent, diaryHasSession, sessionWork } from "../core/lib.mjs";
 
 let input = {};
 try { input = JSON.parse(await readStdin()); } catch { process.exit(0); }

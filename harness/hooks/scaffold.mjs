@@ -19,7 +19,7 @@ import path from "node:path";
 import zlib from "node:zlib";
 import crypto from "node:crypto";
 import { fileURLToPath } from "node:url";
-import { t, loadSkills, settingsOf } from "./lib.mjs";
+import { t, loadSkills, settingsOf } from "../core/lib.mjs";
 
 export const ARC42_RELEASE = "2026.10.19";
 // sha256 of the release assets (GitHub API, "digest"), checked on 13 November 2026.

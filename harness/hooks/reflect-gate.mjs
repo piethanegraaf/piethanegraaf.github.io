@@ -28,10 +28,10 @@ import {
   applyVerdict, findVerdict, lapseTasks, promotionAdvice, offerIsNew, offerText, newWorkSignal, beginNewWork, explanationText,
   noteConceptHelp, checkMicroProposal, microOfferText, readEvents, isOtherFamily, familyOf, placeAfterExplanation, recheckDemotion,
   verdictFromAgent, t, gradedOf, isGradedPath, isGradedDir, mentionsGraded, sessionWork,
-} from "./lib.mjs";
+} from "../core/lib.mjs";
 import path from "node:path";
-import { RUNG_MARK, REVIEW_RUNG_MARK, EXPLAIN_MARK, TRANSFER_MARK, MICRO_MARK, parseMicroMark, ASKS_CONFIDENCE, CHECK_MARK, LOG_MARK } from "./patterns.mjs";
-import { logAnswer, openRows, fillLastColumn, sid8 } from "./graded.mjs";
+import { RUNG_MARK, REVIEW_RUNG_MARK, EXPLAIN_MARK, TRANSFER_MARK, MICRO_MARK, parseMicroMark, ASKS_CONFIDENCE, CHECK_MARK, LOG_MARK } from "../core/patterns.mjs";
+import { logAnswer, openRows, fillLastColumn, sid8 } from "../core/graded.mjs";
 
 let input;
 try { input = JSON.parse(await readStdin()); } catch { process.exit(0); }

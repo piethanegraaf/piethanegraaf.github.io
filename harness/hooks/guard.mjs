@@ -9,8 +9,8 @@ import {
   readStdin, loadSkills, levelForPath, skillForPath, isOverrideActive, logEvent, rel, isHarnessPath,
   codeExtRe, buildRes, PROTECTED, levelName, t, ROOT, isRecordFile, gradedOf, isGradedPath, isGradedDir, mentionsGraded, protectedDirOf, holdsProtected, isUserHarnessPath,
   loadSession, saveSession,
-} from "./lib.mjs";
-import { parseCommand, commandName } from "./shell.mjs";
+} from "../core/lib.mjs";
+import { parseCommand, commandName } from "../core/shell.mjs";
 
 // Learner code (settings.codeExtensions) and build commands (settings.buildCommands): see lib.mjs.
 // Only commands that build, run or test code (or change the project) are blocked.
