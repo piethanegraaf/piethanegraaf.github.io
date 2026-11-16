@@ -136,7 +136,7 @@ let microMsg = null;
 }
 
 // ---------- 1. Skill detection ----------
-const SKIP_DIR = /^(bin|obj|\.vs|\.idea|\.git|\.claude|\.learning|node_modules)$/i;
+const SKIP_DIR = /^(bin|obj|\.vs|\.idea|\.git|\.claude|\.opencode|\.learning|node_modules)$/i;
 
 // The code file the learner changed most recently since `since` (anywhere in the project).
 function latestChangedCode(since) {
@@ -285,7 +285,7 @@ function changedSince(since) {
     for (const e of entries) {
       if (budget-- <= 0 || out.length >= 5) return;
       if (e.isDirectory()) {
-        if (/^(bin|obj|\.vs|\.idea|\.git|\.claude|\.learning|node_modules)$/i.test(e.name)) continue;
+        if (/^(bin|obj|\.vs|\.idea|\.git|\.claude|\.opencode|\.learning|node_modules)$/i.test(e.name)) continue;
         walk((dir ? dir + "/" : "") + e.name);
       } else if (CODE_FILE.test(e.name)) {
         const f = (dir ? dir + "/" : "") + e.name;

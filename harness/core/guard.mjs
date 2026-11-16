@@ -14,7 +14,7 @@ import path from "node:path";
 import {
   loadSkills, levelForPath, skillForPath, isOverrideActive, logEvent, rel, isHarnessPath,
   codeExtRe, buildRes, PROTECTED, levelName, t, ROOT, isRecordFile, gradedOf, isGradedPath, isGradedDir, mentionsGraded, protectedDirOf, holdsProtected, isUserHarnessPath,
-  loadSession, saveSession,
+  loadSession, saveSession, HOST_DIR,
 } from "./lib.mjs";
 import { parseCommand, commandName } from "./shell.mjs";
 
@@ -118,9 +118,9 @@ function gradedTooling(name, args, redirects, cwd) {
   // with that name elsewhere could be written by Claude itself.
   if (name === "node") {
     const script = args.find((a) => !/^-/.test(a));
-    if (script && path.resolve(cwd, script).toLowerCase() === path.join(ROOT, ".claude", "hooks", "scaffold.mjs").toLowerCase()) return "scaffold";
+    if (script && path.resolve(cwd, script).toLowerCase() === path.join(ROOT, HOST_DIR, "hooks", "scaffold.mjs").toLowerCase()) return "scaffold";
     // The commit of the AI-use log (#64): only the log folder, with a fixed message, never the student's work.
-    if (script && path.resolve(cwd, script).toLowerCase() === path.join(ROOT, ".claude", "hooks", "commit-log.mjs").toLowerCase()) return "commit-log";
+    if (script && path.resolve(cwd, script).toLowerCase() === path.join(ROOT, HOST_DIR, "hooks", "commit-log.mjs").toLowerCase()) return "commit-log";
   }
   return null;
 }
@@ -255,7 +255,7 @@ function judge(req) {
     const hits = new Map(); // skill id -> { level, skill, building }
     const addPath = (p, building) => {
       const r = rel(p);
-      if (r !== null && /^\.(claude|learning)\//i.test(r)) return; // harness scripts/data are not learner code
+      if (r !== null && /^\.(claude|opencode|learning)\//i.test(r)) return; // harness scripts/data are not learner code
       const { inProject, level, skill } = levelForPath(data, p);
       if (!inProject) return;
       const key = skill?.id ?? "(standaard)";
@@ -271,7 +271,7 @@ function judge(req) {
       // The learner's CLI and the other hook scripts, decided on the parsed words (V1): skill.mjs only with a
       // read command, and no hook script that changes state when run by hand (prompt-gate, reflect-gate ...).
       {
-        const k = argv.findIndex((w) => /\.mjs$/i.test(w) && rel(resolvePath(cwd, w))?.toLowerCase().startsWith(".claude/hooks/"));
+        const k = argv.findIndex((w) => /\.mjs$/i.test(w) && /^\.(claude|opencode)\/hooks\//.test(rel(resolvePath(cwd, w))?.toLowerCase() ?? ""));
         if (k !== -1 && !HOOK_SCRIPTS_RUNNABLE.has(commandName(argv[k]))) deny(t("guard.harness"), { tool, cmd: short });
         // skill.mjs by name, wherever it is (a copy outside .claude/hooks/ writes the same record).
         const s = argv.findIndex((w) => commandName(w) === "skill.mjs");

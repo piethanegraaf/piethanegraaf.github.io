@@ -6,8 +6,10 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { t, setLanguage, language } from "./i18n.mjs";
 import { CAUSAL, sessionMarker } from "./patterns.mjs";
+import { HOST, HOST_DIR, hostText, cliPath } from "./host.mjs";
 
 export { t, setLanguage, language };
+export { HOST, HOST_DIR, hostText, cliPath };
 
 // The core lives in <project>/.claude/core/ (next to .claude/hooks/), so the project is two levels up.
 // LEERHARNAS_ROOT and LEERHARNAS_DATA only exist for testing (a temporary project and data).
@@ -17,7 +19,7 @@ export const ROOT = process.env.LEERHARNAS_ROOT
 // One record for two folders (setup of 13 Nov, #53): the repo of a graded assignment can use the record of
 // the practice folder, so a task there counts for the same skill. install.mjs --learning-dir writes it
 // in .claude/leerharnas.local.json (not in git: it holds an absolute path). Only an absolute path counts.
-export const LOCAL_CONFIG = path.join(ROOT, ".claude", "leerharnas.local.json");
+export const LOCAL_CONFIG = path.join(ROOT, HOST_DIR, "leerharnas.local.json");
 function learningDirOf() {
   try {
     const dir = JSON.parse(fs.readFileSync(LOCAL_CONFIG, "utf8"))?.learningDir;
@@ -140,7 +142,10 @@ export function toolingRe(data) {
 // otherwise the AI could switch off its own guard. Only the real harness files of this project:
 // .claude/leerharnas-backup/ or a "leerharnas" folder elsewhere are not (setup review 3.6).
 export function isHarnessPath(r) {
-  return r !== null && /^\.claude\/(hooks\/|core\/|skills\/(diary|mastery-check|update-dashboard)\/|agents\/demotie-analist\.md$|settings(\.local)?\.json$|leerharnas[^/]*\.(md|json)$)/i.test(r);
+  // Both hosts' harness files (opencode plan), whichever host runs: a folder can have both installed.
+  return r !== null && (/^\.claude\/(hooks\/|core\/|skills\/(diary|mastery-check|update-dashboard)\/|agents\/demotie-analist\.md$|settings(\.local)?\.json$|leerharnas[^/]*\.(md|json)$)/i.test(r)
+    || /^\.opencode\/(hooks\/|core\/|plugins\/leerharnas(\/|\.m?js$)|skills\/(diary|mastery-check|update-dashboard)\/|agents\/demotie-analist\.md$|opencode\.jsonc?$|leerharnas[^/]*\.(md|json)$)/i.test(r)
+    || /^opencode\.jsonc?$/i.test(r));
 }
 
 // Reading the record also sets the language of all messages (settings.language).
@@ -241,7 +246,7 @@ export function scheduleOnReview(data, s, result) {
   s.nextReview = reviewDate(data, i);
   if (result === "fail" && s.failStreak >= 2) {
     const lower = LEVELS[Math.max(0, LEVELS.indexOf(s.level) - 1)];
-    return t("review.twoFails", { cmd: `node .claude/hooks/skill.mjs set ${s.id} ${lower} "${t("note.twoReviewFails")}"` });
+    return t("review.twoFails", { cmd: `node ${cliPath()} set ${s.id} ${lower} "${t("note.twoReviewFails")}"` });
   }
   return null;
 }
@@ -347,7 +352,9 @@ export function isRecordFile(p, cwd = ROOT) {
 // A write with one of these folders as its target (rm -rf .claude/hooks or .claude/core, mv .learning x, cp -r … .claude) reaches
 // every file inside: the guard treats the folder like its files.
 const PROTECTED_DIRS = new Set([".claude", ".claude/hooks", ".claude/core", ".claude/skills", ".claude/skills/diary", ".claude/skills/mastery-check",
-  ".claude/skills/update-dashboard", ".claude/agents", ".learning", ".learning/state"]);
+  ".claude/skills/update-dashboard", ".claude/agents", ".learning", ".learning/state",
+  ".opencode", ".opencode/hooks", ".opencode/core", ".opencode/plugins", ".opencode/plugins/leerharnas", ".opencode/skills", ".opencode/skills/diary",
+  ".opencode/skills/mastery-check", ".opencode/skills/update-dashboard", ".opencode/agents"]);
 const sameDir = (a, b) => path.relative(path.resolve(a), path.resolve(b)) === "";
 export function protectedDirOf(p) {
   if (!p) return null;
@@ -363,7 +370,7 @@ export function holdsProtected(p) {
   if (!p) return null;
   const abs = path.resolve(String(p));
   const holds = (t) => { const r = path.relative(abs, t); return r === "" || (!r.startsWith("..") && !path.isAbsolute(r)); };
-  if (holds(path.join(ROOT, ".claude", "hooks"))) return "harness";
+  if (holds(path.join(ROOT, ".claude", "hooks")) || holds(path.join(ROOT, ".opencode", "hooks"))) return "harness";
   if (holds(LEARN)) return "record";
   return null;
 }
@@ -797,7 +804,7 @@ export function conceptHelpOf(data, s, events = readEvents()) {
 }
 
 const sameFolder = (a, b) => a === b || a.startsWith(b + "/") || b.startsWith(a + "/");
-const SKIP_DIR = /^(bin|obj|\.vs|\.idea|\.git|\.claude|\.learning|node_modules)$/i;
+const SKIP_DIR = /^(bin|obj|\.vs|\.idea|\.git|\.claude|\.opencode|\.learning|node_modules)$/i;
 
 // Code files (settings.codeExtensions) changed after `since` (ms), without bin/obj. Relative paths.
 export function changedCodeFiles(data, since, { under = "", limit = 50 } = {}) {
@@ -823,7 +830,7 @@ export function changedCodeFiles(data, since, { under = "", limit = 50 } = {}) {
 // Files in the graded folders changed after `since` (ms): every kind of file, not only code (a class
 // diagram is Markdown), without build output, IDE folders, git, the harness and the AI-use log.
 // Absolute paths with forward slashes, newest first.
-const GRADED_SKIP = /^(bin|obj|\.vs|\.idea|\.vscode|\.git|\.claude|\.learning|node_modules|TestResults)$/i;
+const GRADED_SKIP = /^(bin|obj|\.vs|\.idea|\.vscode|\.git|\.claude|\.opencode|\.learning|node_modules|TestResults)$/i;
 export function gradedChangedFiles(G, since, { limit = 20 } = {}) {
   if (!G) return [];
   const out = [];
@@ -1253,7 +1260,7 @@ export function demote(data, s, reason, by = "harnas") {
   return t("advice.auto.demoted", {
     id: s.id, from, to, name: levelName(to), reason,
     parent: parent ? t("advice.auto.parentStays", { parent: parent.id, level: parent.level }) : "",
-    cmd: `! node .claude/hooks/skill.mjs set ${s.id} ${from} "${t("note.revert")}"`,
+    cmd: `! node ${cliPath()} set ${s.id} ${from} "${t("note.revert")}"`,
   });
 }
 
@@ -1343,7 +1350,7 @@ export function applyVerdict(data, pending, v) {
   if (v.oordeel === "ouder") msgs.push(demote(data, parent, now.reason, "demotie-analist"));
   else if (freshIds.has(v.doel)) {
     msgs.push(t("advice.auto.newMicro", { id: v.doel, level: below, name: levelName(below), reason: now.reason, parent: parent.id, plevel: parent.level,
-      cmd: `! node .claude/hooks/skill.mjs set ${v.doel} ${parent.level} "${t("note.revert")}"` }));
+      cmd: `! node ${cliPath()} set ${v.doel} ${parent.level} "${t("note.revert")}"` }));
   } else msgs.push(demote(data, findSkill(data, v.doel), now.reason, "demotie-analist"));
   if (v.oordeel === "micro") { const b = backstop(data, familyOf(findSkill(data, v.doel)) ?? parent.id); if (b) msgs.push(b); }
   const out = msgs.filter(Boolean);
@@ -1564,7 +1571,7 @@ export function promotionAdvice(data, s, { assume = [] } = {}) {
 }
 
 // How a piece of advice is shown: a skill.mjs command, or the transfer task.
-export const adviceCommand = (a) => (a.dir === "transfer" ? a.show : `! node .claude/hooks/skill.mjs ${a.cmd}`);
+export const adviceCommand = (a) => (a.dir === "transfer" ? a.show : `! node ${cliPath()} ${a.cmd}`);
 
 // The promotion events of one skill since its last level change.
 function offerEvents(s) {

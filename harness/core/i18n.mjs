@@ -3,6 +3,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { hostText } from "./host.mjs";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 // Installed: .claude/hooks/i18n/ (this file in .claude/core/). In the source repository: harness/i18n/.
@@ -31,5 +32,6 @@ export const language = () => current;
 // null shows as "-"; a variable that was not passed at all stays visible as {name}, so tests catch it.
 export function t(key, vars = {}) {
   const s = loadStrings(current)[key] ?? loadStrings("nl")[key] ?? key;
-  return String(s).replace(/\{(\w+)\}/g, (m, k) => (vars[k] === undefined ? m : vars[k] === null ? "-" : String(vars[k])));
+  // In the words of the host that runs the harness (core/host.mjs): unchanged for Claude Code.
+  return hostText(String(s).replace(/\{(\w+)\}/g, (m, k) => (vars[k] === undefined ? m : vars[k] === null ? "-" : String(vars[k]))));
 }

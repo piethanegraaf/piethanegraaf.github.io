@@ -612,6 +612,16 @@ Deze delen van het ontwerp zijn vervangen. Ze stonden op de [ontwerppagina](desi
 
 ## 11. Wijzigingslog {#changelog}
 
+### 16 november 2026: een opencode-versie, getest vóór het bouwen, en de kern apart
+
+De pilotstudent plande een tweede versie van de harnas voor [opencode](https://opencode.ai), een open-source codeeragent die ook gratis modellen draait. Het plan zette een goedkope test vóór elk portwerk, met een regel voor wanneer te stoppen.
+
+- **De test (pre-spike).** Drie regels uit de nalevingscontroles, zonder plugin, op twee gratis modellen zonder dataopslag (GLM-5.3-Flash Free en DeepSeek V4.1 Flash Free), elk drie keer, in opencode 1.19.5. Beide modellen bleven op of onder de vrijgegeven trede (6/6) en gaven op L2 geen oplossingscode (6/6). Geen van beide schreef op L3 betrouwbaar de tredemarker: GLM 0/3, DeepSeek 1/3 (de andere twee keer de marker van een herhaling). De statusregel op L3 ("Geef een review…") lijkt modellen naar die herhalingsmarker te duwen, dus een deel ligt aan de tekst van de regels.
+- **De plugin-API was niet uitgebracht.** Het plan ging uit van de broncode van opencode 2 op de ontwikkeltak. De uitgebrachte versie (1.19.5) heeft geen van de hooks die het ontwerp nodig heeft: geen idle-hook (voor de dagboekregel en de AI-verantwoording), geen permissiehook die met de diff kan weigeren, en geen hooks voor prompts en context.
+- **Besluit: de opencode-adapter stopt, de kern blijft.** Volgens de stopregel van het plan vallen beide gratis modellen af. De adapter wacht op een opencode-versie met die hooks en op een gratis model dat de controles haalt; de tekst van de statusregel op L3 kan dan opnieuw getest worden.
+- **Gebouwd: één kern, nog één adapter.** De gedeelde logica staat nu in `harness/core/` (geïnstalleerd in `.claude/core/`). De guard is een functie die een verzoek zonder toolnamen krijgt (een schrijfactie met de tekst ervoor en erna, of een shellcommando) en toestaan of weigeren teruggeeft; `hooks/guard.mjs` vertaalt alleen de invoer en uitvoer van Claude Code. Nieuw in de kern: één vorm voor transcripten, de vaste weigerregels die een tweede tool per sessie zou zetten, en de vijf kerngebeurtenissen. De 37 bestaande testbestanden slagen ongewijzigd.
+- **Ander gedrag:** een wijziging op L1 zonder de tekst ervoor en erna wordt geweigerd. Claude Code stuurt die tekst altijd mee, dus voor de student verandert er niets.
+
 ### 14 november 2026 (avond): gelukt is niet zelfstandig, en de AI-verantwoording in één stap
 
 De pilotstudent besliste punt 63–67 na een sessie aan het klassendiagram van de eindopdracht. Die lukte alleen dankzij Socratische vragen (trede 1), terwijl het niveau "L3 Zelfstandig" heet en de taak meetelde als gelukt.

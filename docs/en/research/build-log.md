@@ -609,6 +609,16 @@ These parts of the design were replaced. They used to sit on the [design page](d
 
 ## 11. Change log {#changelog}
 
+### 16 November 2026: an opencode version, tested before building, and the core refactor
+
+The pilot student planned a second version of the harness for [opencode](https://opencode.ai), an open-source coding agent that also runs free models. The plan put a cheap test before any port work, with a rule for when to stop.
+
+- **The test (pre-spike).** Three rules from the compliance checks, without a plugin, on two free models with zero data retention (GLM-5.3-Flash Free and DeepSeek V4.1 Flash Free), three runs each, in opencode 1.19.5. Both models stayed at or below the unlocked rung (6/6) and gave no solution code at L2 (6/6). Neither wrote the rung marker reliably at L3: GLM 0/3, DeepSeek 1/3 (the other two runs used the review marker). The status line at L3 ("Give a review…") seems to push models towards the review marker, so part of this is the wording of the rules.
+- **The plugin API was not released.** The plan was based on the source of opencode 2 on its development branch. The released version (1.19.5) has none of the hooks the design needs: no idle hook (for the diary rule and the AI-use log), no permission hook that can deny with the diff, and no hooks for prompts and context.
+- **Decision: stop the opencode adapter, keep the core refactor.** By the stop rule of the plan, both free models fail. The adapter waits for an opencode release with those hooks and for a free model that passes the checks; the wording of the L3 status line can be tested again then.
+- **Built: one core, still one adapter.** The shared logic moved to `harness/core/` (installed in `.claude/core/`). The guard is now a function that takes a host-neutral request (a write with the text before and after, or a shell command) and returns allow or deny; `hooks/guard.mjs` only translates Claude Code's input and output. New in the core: one message shape for transcripts, the final deny rules a second tool would set per session, and the five core events. The 37 existing test files pass unchanged.
+- **Changed behaviour:** an edit at L1 without the text before and after is denied. Claude Code always sends that text, so nothing changes for the learner.
+
 ### 14 November 2026 (evening): solved is not independent, and the AI-use log in one step
 
 The pilot student decided points 63–67 after a session on the class diagram of the final assignment. It worked only thanks to Socratic questions (rung 1), while the level is called "L3 Independent" and the task counted as solved.
