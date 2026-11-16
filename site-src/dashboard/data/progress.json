@@ -1,7 +1,7 @@
 {
   "schema": 1,
-  "generatedAt": "2026-11-14",
-  "exportedAt": "2026-11-14T13:51:23.824Z",
+  "generatedAt": "2026-11-16",
+  "exportedAt": "2026-11-16T06:22:39.634Z",
   "course": null,
   "language": "nl",
   "examDate": "2027-01-20",
@@ -446,7 +446,7 @@
       "nextReview": null,
       "intervalIndex": 0,
       "lastReview": null,
-      "lastSeen": null,
+      "lastSeen": "2026-11-16",
       "placement": "done",
       "start": {
         "at": "2026-11-07T18:59:58.137Z",
@@ -2387,6 +2387,28 @@
       "corrections": [],
       "void": false,
       "voidReason": null
+    },
+    {
+      "id": "mwiuzbulg7q4",
+      "at": "2026-11-16T06:11:50.303Z",
+      "skill": "ood.overerving",
+      "source": "done",
+      "success": true,
+      "maxRung": 2,
+      "minutes": 0,
+      "reviewRung": null,
+      "what": "scaffolding Device and subclasses #ood.overerving",
+      "explained": true,
+      "explanation": "because these methodes and properties are specific for that specific device, if they were declared at the device level, every child would need to implemnt the and that would not be relevant for most of the device subclasses",
+      "explainedAt": "2026-11-16T06:14:24.467Z",
+      "explainedBy": null,
+      "lapsed": false,
+      "lapseReason": null,
+      "retaggedFrom": null,
+      "rejections": [],
+      "corrections": [],
+      "void": false,
+      "voidReason": null
     }
   ],
   "reviews": [],
@@ -2550,10 +2572,20 @@
     },
     {
       "date": "2026-11-14",
-      "sessions": 1,
+      "sessions": 2,
       "hints": 1,
       "holds": 0,
-      "denials": 5,
+      "denials": 8,
+      "overridesUsed": 0,
+      "reviewHelp": 0,
+      "helpDropped": 0
+    },
+    {
+      "date": "2026-11-16",
+      "sessions": 1,
+      "hints": 2,
+      "holds": 0,
+      "denials": 1,
       "overridesUsed": 0,
       "reviewHelp": 0,
       "helpDropped": 0
@@ -2746,6 +2778,40 @@
         "nextStep": "overgeslagen"
       },
       "calibration": "vooraf 4 → lukte met trede ≤1, maar kostte veel vragen over zichtbaarheid → klopt ongeveer"
+    },
+    {
+      "date": "2026-11-16",
+      "n": 1,
+      "time": "inhaaldagboek voor de sessie van 2026-11-14, 15:04–15:54",
+      "skills": "tooling (L4)",
+      "plan": "controleren of het dashboard correct online stond, en git en Rider op orde brengen",
+      "confidenceBefore": "onbekend",
+      "wentWell": "de gesplitste geschiedenis van `master` heeft de student zelf opgelost (reset naar origin, opnieuw gecommit), zonder dat er werk verloren ging. Het Arc42-werk is gecommit.",
+      "signals": "transfertaak open voor ood.klassen-properties, ood.associaties, ood.aggregatie-compositie, ood.encapsulatie en uml.klassendiagram (`/mastery-check <id>`)",
+      "reflection": {
+        "learned": "did not view it as a learning session but a setup session",
+        "confusing": "why git was not working s expected",
+        "confidenceAfter": "2",
+        "nextStep": "onbekend"
+      },
+      "calibration": "vooraf onbekend → geen taken (tooling) → niet te bepalen"
+    },
+    {
+      "date": "2026-11-16",
+      "n": 2,
+      "time": "06:25–07:21",
+      "skills": "ood.overerving (L3), ood.klassen-properties (L3)",
+      "plan": "\"implement the scafholding for the device and child classes\"",
+      "confidenceBefore": "4",
+      "wentWell": "de scaffolding van de overerving (abstracte basisklasse, overrides in alle vier de subklassen, protected methode) lukte met hulp tot trede 1, een Socratische vraag. Het leren zat in het vergelijken van het diagram met de code: de leden die bij één subklasse horen.",
+      "signals": "transfertaak open voor ood.klassen-properties, ood.associaties, ood.aggregatie-compositie, ood.encapsulatie en uml.klassendiagram (`/mastery-check <id>`)",
+      "reflection": {
+        "learned": "create scafholding of classes and parrent classes, i got reminded that if a class has absract methodes it should be an abstract class",
+        "confusing": "nothing",
+        "confidenceAfter": "3",
+        "nextStep": "onbekend"
+      },
+      "calibration": "vooraf 4 → lukte met trede ≤1, maar twee leden uit het diagram vergeten → licht overschat"
     }
   ],
   "reviewHelp": [
@@ -2813,6 +2879,13 @@
       "rung": 1,
       "taskSkill": "ood.klassen-properties",
       "task": "mwgdcz2mxnpi"
+    },
+    {
+      "at": "2026-11-16T06:04:32.829Z",
+      "skill": "ood.overerving",
+      "rung": 1,
+      "taskSkill": "ood.klassen-properties",
+      "task": "mwiuzbulg7q4"
     }
   ],
   "microProposals": [],
@@ -2909,6 +2982,8 @@
       "omdat een 3d printer een soort device is met veel van de zelfde eigenschappen van device": "because a 3d printer is a kind of device with many of the same properties as device",
       "overerving rond Device #uml.klassendiagram": "inheritance around Device #uml.klassendiagram",
       "Reserveren moet van buiten de klassen kunnen worden aageroepen omdat gebruikers moeten kunnen reserveren daarom moet het in device + hebben, door het sterretje kun je aangeven dat het om een abstracte methode gaat die alleen in de child klassen geimplemeteerd word\nOmdat je dan er alsnog niet bij kan vanuit buiten de parent child klasen": "Reserving has to be callable from outside the classes because users need to be able to make reservations, so it has to have + in device; with the asterisk you can indicate that it is an abstract method that is only implemented in the child classes\nBecause then you still can't reach it from outside the parent child classes",
+      "scaffolding Device and subclasses #ood.overerving": "scaffolding Device and subclasses #ood.overerving",
+      "because these methodes and properties are specific for that specific device, if they were declared at the device level, every child would need to implemnt the and that would not be relevant for most of the device subclasses": "because these methodes and properties are specific for that specific device, if they were declared at the device level, every child would need to implemnt the and that would not be relevant for most of the device subclasses",
       "securitycheck site (tooling)": "security check site (tooling)",
       "cs.basis (L2), cs.basis.lus-grenzen (L2, nieuw), test.unit-tests (L1)": "cs.basis (L2), cs.basis.lus-grenzen (L2, new), test.unit-tests (L1)",
       "opdracht 04-even-getallen afmaken (niet expliciet benoemd)": "finish exercise 04-even-getallen (not stated explicitly)",
@@ -3002,7 +3077,21 @@
       "vooraf 4 → lukte met trede ≤1, maar kostte veel vragen over zichtbaarheid → klopt ongeveer": "beforehand 4 → succeeded with rung ≤1, but took many questions about visibility → roughly right",
       "het verschil tussen # en * in mermaid": "the difference between # and * in mermaid",
       "dat protected klassen met een public child alsnog niet public zijn op child nivau": "that protected classes with a public child are still not public at child level",
-      "overgeslagen": "skipped"
+      "overgeslagen": "skipped",
+      "inhaaldagboek voor de sessie van 2026-11-14, 15:04–15:54": "catch-up diary for the session of 2026-11-14, 15:04–15:54",
+      "tooling (L4)": "tooling (L4)",
+      "controleren of het dashboard correct online stond, en git en Rider op orde brengen": "check whether the dashboard was correctly online, and get git and Rider in order",
+      "de gesplitste geschiedenis van `master` heeft de student zelf opgelost (reset naar origin, opnieuw gecommit), zonder dat er werk verloren ging. Het Arc42-werk is gecommit.": "the learner fixed the diverged history of `master` themselves (reset to origin, committed again), without losing any work. The Arc42 work is committed.",
+      "transfertaak open voor ood.klassen-properties, ood.associaties, ood.aggregatie-compositie, ood.encapsulatie en uml.klassendiagram (`/mastery-check <id>`)": "transfer task open for ood.klassen-properties, ood.associaties, ood.aggregatie-compositie, ood.encapsulatie and uml.klassendiagram (`/mastery-check <id>`)",
+      "vooraf onbekend → geen taken (tooling) → niet te bepalen": "beforehand unknown → no tasks (tooling) → cannot be determined",
+      "did not view it as a learning session but a setup session": "did not view it as a learning session but a setup session",
+      "why git was not working s expected": "why git was not working as expected",
+      "ood.overerving (L3), ood.klassen-properties (L3)": "ood.overerving (L3), ood.klassen-properties (L3)",
+      "\"implement the scafholding for the device and child classes\"": "\"implement the scafholding for the device and child classes\"",
+      "de scaffolding van de overerving (abstracte basisklasse, overrides in alle vier de subklassen, protected methode) lukte met hulp tot trede 1, een Socratische vraag. Het leren zat in het vergelijken van het diagram met de code: de leden die bij één subklasse horen.": "the inheritance scaffolding (abstract base class, overrides in all four subclasses, protected method) succeeded with help up to rung 1, a Socratic question. The learning was in comparing the diagram with the code: the members that belong to one subclass.",
+      "vooraf 4 → lukte met trede ≤1, maar twee leden uit het diagram vergeten → licht overschat": "beforehand 4 → succeeded with rung ≤1, but forgot two members from the diagram → slightly overestimated",
+      "create scafholding of classes and parrent classes, i got reminded that if a class has absract methodes it should be an abstract class": "create scafholding of classes and parrent classes, i got reminded that if a class has absract methodes it should be an abstract class",
+      "nothing": "nothing"
     }
   }
 }

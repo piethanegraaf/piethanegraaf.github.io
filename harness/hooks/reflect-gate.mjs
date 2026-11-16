@@ -30,7 +30,7 @@ import {
   verdictFromAgent, t, gradedOf, isGradedPath, isGradedDir, mentionsGraded, sessionWork, effectiveLevel,
 } from "../core/lib.mjs";
 import path from "node:path";
-import { RUNG_MARK, REVIEW_RUNG_MARK, EXPLAIN_MARK, TRANSFER_MARK, MICRO_MARK, parseMicroMark, ASKS_CONFIDENCE, CHECK_MARK, LOG_MARK } from "../core/patterns.mjs";
+import { RUNG_MARK, GIVEN_MARK, REVIEW_RUNG_MARK, EXPLAIN_MARK, TRANSFER_MARK, MICRO_MARK, parseMicroMark, ASKS_CONFIDENCE, CHECK_MARK, LOG_MARK } from "../core/patterns.mjs";
 import { logAnswer, openRows, fillLastColumn, sid8 } from "../core/graded.mjs";
 import { turnOf } from "../core/transcript.mjs";
 import { codeFloor } from "../core/floor.mjs";
@@ -103,6 +103,27 @@ for (const m of answer.matchAll(RUNG_MARK)) {
   const other = m[2] && data && isOtherFamily(data, m[2], rungSkill) ? findSkill(data, m[2]).id : false;
   rungMark(n, {}, other);
   if (m[2] && data) noteConceptHelp(data, st, m[2], n, { taskSkill: rungSkill, session: sid });
+}
+
+// An unlock that was not used (#68). prompt-gate counts an unlocked rung as given help, so that an unmarked
+// hint on L2 is still logged. But when Claude's answer to that prompt says honestly that it gave less
+// ([trede N] lower than the unlocked rung, also [trede 0]), the unlock is taken back: the ladder, the task's
+// rung and the family rung go back to what was really given. Without a mark the unlock stays given.
+if (st.unlocked) {
+  const marks = [...answer.matchAll(GIVEN_MARK)].map((m) => ({ n: Number(m[1]), other: m[2] && data && isOtherFamily(data, m[2], rungSkill) }));
+  if (marks.length) {
+    const given = Math.max(...marks.map((m) => m.n));
+    const { rung, before } = st.unlocked;
+    if (given < rung) {
+      st.rung = Math.max(before.rung, given);
+      st.maxRung = Math.max(before.maxRung, given);
+      const fam = marks.filter((m) => !m.other).map((m) => m.n);
+      st.famRung = typeof before.famRung === "number" || fam.length ? Math.max(typeof before.famRung === "number" ? before.famRung : before.maxRung, ...fam) : before.famRung;
+      if (st.transfer) st.transfer.maxRung = Math.max(st.transfer.maxRung ?? 0, given);
+      logEvent({ type: "hint-unused", skill: rungSkill, rung, given, session: sid });
+    }
+  }
+  delete st.unlocked;
 }
 
 // The rung floor (opencode plan): at L2 and L3 a code block in the learner's language is rung 4 or 5, whatever the
@@ -359,7 +380,9 @@ if (ASKS_CONFIDENCE.test(answer)) st.awaitConfidence = true;
 // proposal for a microskill, never for a level.
 for (const m of answer.matchAll(CHECK_MARK)) {
   const s = data ? findSkill(data, m[1].toLowerCase()) : null;
-  const key = `check:${m[1].toLowerCase()}:${promptKey}`;
+  // One key per mark, not per skill (#69): three check questions about the same skill in one answer are three
+  // results. The position in the answer stays the same when the Stop hook judges the same answer again.
+  const key = `check:${m[1].toLowerCase()}:${promptKey}:${m.index}`;
   if (!s || st.explainChecked.includes(key)) continue;
   st.explainChecked = [...st.explainChecked.slice(-50), key];
   const result = { goed: "right", right: "right", half: "half", open: "open" }[m[2].toLowerCase()];

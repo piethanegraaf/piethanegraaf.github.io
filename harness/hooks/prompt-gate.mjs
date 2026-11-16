@@ -445,6 +445,8 @@ if (placementOpen && (wantsHint || asksMore) && !solved && level === "L2" && !st
   st.placementNoticed.push(skill.id);
   ctx.push(t("pg.placement", { id: skill.id }));
 }
+// An unlock belongs to one prompt (#68): the Stop hook judges it against the answer to that prompt only.
+delete st.unlocked;
 if ((wantsHint || asksMore) && !solved && st.transfer?.skill) {
   // During the transfer task no rung unlocks: help ends the transfer task instead (§9.4).
   logEvent({ type: "hint-hold", skill: skill?.id ?? null, rung: st.rung, session: sid, transfer: true });
@@ -459,6 +461,8 @@ if ((wantsHint || asksMore) && !solved && st.transfer?.skill) {
     // At the ceiling of graded work nothing new unlocks; outside graded work the old behaviour stays.
     if (graded && st.rung > cap) st.rung = cap;
     const below = !graded || st.rung < cap;
+    // Before the unlock (#68): the Stop hook takes the unlock back when Claude gives less ([trede N] lower).
+    const before = { rung: st.rung, maxRung: st.maxRung ?? 0, famRung: st.famRung };
     if (wantsSolution && st.rung >= 4 && !graded) { st.rung = 5; why = t("pg.why.solutionAfter4"); }
     else if (asksMore && st.rung < cap) { st.rung = cap; why = t("pg.why.asksMore"); ceilingOnly = true; }
     else if (placementOpen) { const w = placementWhy(); if (w && below) { st.rung = Math.min(st.rung + 1, cap); why = w; } }
@@ -471,6 +475,9 @@ if ((wantsHint || asksMore) && !solved && st.transfer?.skill) {
         st.maxRung = Math.max(st.maxRung ?? 0, st.rung);
         // The ladder of the task's own skill: help within the family (#34).
         st.famRung = Math.max(typeof st.famRung === "number" ? st.famRung : st.maxRung, st.rung);
+        // An unlocked rung is the most Claude may give, not proof that it was given (#68): a message that only
+        // looks like a hint request ("I think I'm done", "git was not working" in a diary answer) unlocked it.
+        st.unlocked = { rung: st.rung, before, promptAt: now };
       }
       st.lastRungAt = now;
       st.lastRungActive = st.activeMs;

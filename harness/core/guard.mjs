@@ -48,6 +48,14 @@ const CLI_READ = new Set(["list", "status", "since-export"]);
 // The scripts in .claude/hooks/ that Claude may run itself: the CLI (read commands only), the test runner (a
 // build, judged below) and the scaffold of graded work. Every other hook script changes state when run by hand.
 const HOOK_SCRIPTS_RUNNABLE = new Set(["skill.mjs", "check.mjs", "scaffold.mjs", "commit-log.mjs"]);
+// Programs that only read the files they name (#71): "grep -c export .claude/hooks/patterns.mjs" was refused
+// as running a hook script. No sed or awk: both can run commands. Writes are still judged below.
+const HOOK_READERS = new Set(["grep", "egrep", "fgrep", "rg", "cat", "head", "tail", "less", "more", "wc", "diff", "cmp",
+  "ls", "dir", "stat", "file", "sha256sum", "md5sum", "findstr", "type", "get-content", "gc", "select-string", "sls",
+  "get-item", "gi", "get-childitem", "gci", "test-path", "get-filehash"]);
+// Programs that run code; with one of these anywhere in the line, a reader may be feeding it a hook script.
+const CODE_RUNNERS = new Set(["node", "bun", "deno", "npx", "tsx", "sh", "bash", "zsh", "dash", "pwsh", "powershell", "cmd",
+  "python", "python3", "py", "perl", "ruby", "xargs", "env", "invoke-expression", "iex", "start-process", "saps"]);
 // Programs that delete or move the paths they name (security review V3): a folder that holds the harness or the
 // record may not be one of them. For a move, only the sources count (the last word is where it goes).
 const DELETES = new Set(["rm", "rmdir", "rd", "del", "erase", "remove-item", "ri", "unlink"]);
@@ -275,6 +283,7 @@ function judge(req) {
     // false after a cd to a folder the guard cannot resolve ($X, $(...)): from then on graded work fails closed (V2).
     let cwdKnown = true;
     const allowedTooling = [];
+    const runsCode = parsed.commands.some(({ argv }) => CODE_RUNNERS.has(commandName(argv[0])));
     for (const { argv, redirects, raw } of parsed.commands) {
       const name = commandName(argv[0]);
       const args = argv.slice(1);
@@ -282,7 +291,10 @@ function judge(req) {
       // read command, and no hook script that changes state when run by hand (prompt-gate, reflect-gate ...).
       {
         const k = argv.findIndex((w) => /\.mjs$/i.test(w) && /^\.(claude|opencode)\/hooks\//.test(rel(resolvePath(cwd, w))?.toLowerCase() ?? ""));
-        if (k !== -1 && !HOOK_SCRIPTS_RUNNABLE.has(commandName(argv[k]))) deny(t("guard.harness"), { tool, cmd: short });
+        // A program that only reads (grep, cat ...) does not run the script (#71), unless the line also has a
+        // program that runs code: "cat .claude/hooks/x.mjs | node" still runs it.
+        const readsOnly = HOOK_READERS.has(name) && !runsCode;
+        if (k !== -1 && !readsOnly && !HOOK_SCRIPTS_RUNNABLE.has(commandName(argv[k]))) deny(t("guard.harness"), { tool, cmd: short });
         // skill.mjs by name, wherever it is (a copy outside .claude/hooks/ writes the same record).
         const s = argv.findIndex((w) => commandName(w) === "skill.mjs");
         if (s !== -1) {
