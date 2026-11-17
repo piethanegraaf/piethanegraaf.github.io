@@ -71,6 +71,8 @@ Op 16 november vielen GLM en DeepSeek nog door de controle op L3 (0/3 en 1/3), e
 
 Big Pickle mag je gegevens in de gratis periode gebruiken (zie hieronder); GLM-5.3-Flash Free bewaart je gegevens niet.
 
+**Modellen uit China.** GLM komt van Zhipu AI (Beijing), DeepSeek van DeepSeek (Hangzhou). Zhipu staat sinds januari 2025 op de exportzwarte lijst van de VS omdat het volgens de VS helpt bij de militaire modernisering van China; Zhipu ontkent dat. De Chinese wet verplicht AI-modellen de "socialistische kernwaarden" van de Chinese staat en Communistische Partij te volgen, dus bij politieke of gevoelige onderwerpen kunnen hun antwoorden de officiële Chinese lijn volgen. Voor programmeeroefeningen maakt dat weinig uit, maar het is een reden om het beleid van je school na te gaan. Via opencode draaien beide op servers in de VS en de EU zonder je gegevens te bewaren, dus er gaat niets naar de makers in China; LongCat 2.5 Free is de uitzondering en draait in China (niet op de lijst).
+
 **Zelf een model testen.** Vanuit de repository, met opencode geïnstalleerd:
 
 ```bash
