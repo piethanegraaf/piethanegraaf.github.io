@@ -37,7 +37,7 @@ Elke vaardigheid zit in een van vijf **leerfasen**, L0 tot L4 (haar niveau). De 
 | **L0 Voordoen** | maakt een uitgewerkt voorbeeld met een ander onderwerp; bij een nieuwe vaardigheid pas na jouw poging | legt het uit en voorspelt de uitvoer |
 | **L1 Aanvullen** | schrijft een skelet, de kern blijft `TODO(human)`; bij een nieuwe vaardigheid pas na jouw poging | vult de gaten, bouwt en test |
 | **L2 Begeleid** | geeft geen oplossingscode, alleen hints uit de ladder; trede 5, een uitgewerkte oplossing, alleen na jouw bevestiging | schrijft alles zelf |
-| **L3 Zelfstandig** | niets vooraf; review pas na jouw poging | maakt en verdedigt het |
+| **L3 Zelfstandig** | niets vooraf; feedback pas na jouw poging | maakt en verdedigt het |
 | **L4 Geautomatiseerd** | mag het direct doen | superviseert; is de herhaling aan de beurt, dan doe je het zelf |
 
 **Hoe de tabel en de guard samengaan.** Op L1 blokkeert de guard het skelet niet: hij laat een schrijfactie door als die `TODO(human)`-gaten houdt of toevoegt, en weigert er een die ze invult of weghaalt. Op L2 is de uitgewerkte oplossing van trede 5 een uitzondering waar je zelf om vraagt. Claude laat hem in de chat zien, de guard houdt Claude nog steeds uit je bestanden, dus je typt hem zelf over, en de taak telt als niet gelukt.
@@ -75,7 +75,7 @@ Ze werken samen in een kringloop: **de fase bepaalt hoe de hulp komt, en de tred
 
 1. **De fase bepaalt de rol van de ladder.**
     - Op **L2** *is* de ladder de hulp: Claude begint met een vraag en geeft de volgende trede pas vrij na een poging.
-    - Op **L0** en **L1** komt de hulp vooraf, als uitgewerkt voorbeeld of als skelet. Op **L3** komt er niets vooraf, alleen een review na je poging. Op **L4** mag Claude het doen. In die fasen gaat er geen trede stap voor stap open, maar alle echte hulp wordt nog steeds als trede gelogd. Op L3 telt bijvoorbeeld uitleg van een concept als trede 2 of hoger.
+    - Op **L0** en **L1** komt de hulp vooraf, als uitgewerkt voorbeeld of als skelet. Op **L3** komt er niets vooraf, alleen feedback na je poging. Op **L4** mag Claude het doen. In die fasen gaat er geen trede stap voor stap open, maar alle echte hulp wordt nog steeds als trede gelogd. Op L3 telt bijvoorbeeld een vraag die je verder helpt terwijl je nog vastzit als trede 1, en uitleg van een concept als trede 2 of hoger. Feedback op werk dat al slaagt telt als trede 0.
     - Een **nieuwe vaardigheid** heeft nog geen fase: je probeert het eerst zelf met de ladder van L2.
     - In **[beoordeeld werk](#beoordeeld-werk)** geldt de ladder voor elke vaardigheid, in elke fase, tot trede 4.
 2. **De treden bepalen de fase.** Elke taak wordt gelogd met de hoogste trede die je nodig had. Dat is het bewijs:
@@ -261,7 +261,7 @@ Alleen jouw eigen "ja, toevoegen" (of "yes, add") voegt hem toe, op het niveau v
   ```
   [leerharnas] Doorzetten? ood.klassen-properties L2 → L3
     bewijs: 5 van 5 gelukt (trede 1, 1, 2, 1, 1), op 1 dag(en), in 05-de-auto, 06-studenten
-    wat verandert: geen hintladder meer: Claude geeft niets vooraf en reviewt pas na je poging
+    wat verandert: geen hintladder meer: Claude geeft niets vooraf en geeft pas feedback na je poging
     ja: typ "ja, doorzetten" · nee: typ "nee" · terugdraaien kan altijd met set
   ```
 

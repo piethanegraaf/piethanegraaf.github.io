@@ -37,7 +37,7 @@ Every skill is in one of five **learning phases**, L0 to L4 (its level). The pha
 | **L0 Demonstrate** | makes a worked example on a different topic; for a new skill only after your attempt | explain it and predict the output |
 | **L1 Complete** | writes a skeleton, the core stays `TODO(human)`; for a new skill only after your attempt | fill the gaps, build and test |
 | **L2 Guided** | gives no solution code, only hints from the ladder; rung 5, a worked solution, only if you confirm | write everything yourself |
-| **L3 Independent** | nothing up front; a review only after your attempt | make it and defend it |
+| **L3 Independent** | nothing up front; feedback only after your attempt | make it and defend it |
 | **L4 Automated** | may do it directly | supervise; when the review is due, you do it yourself |
 
 **How the table and the guard fit together.** At L1 the guard does not block the skeleton: it lets a write through when it keeps or adds `TODO(human)` gaps, and refuses one that fills or removes them. At L2 the worked solution of rung 5 is an exception you ask for yourself. Claude shows it in the chat, the guard still keeps Claude out of your files, so you type it in yourself, and the task counts as not solved.
@@ -75,7 +75,7 @@ They work together in a loop: **the phase decides how help comes, and the rungs 
 
 1. **The phase sets the role of the ladder.**
     - At **L2** the ladder *is* the help: Claude starts with a question and unlocks the next rung only after an attempt.
-    - At **L0** and **L1** help comes up front, as a worked example or a skeleton. At **L3** there is nothing up front, only a review after your attempt. At **L4** Claude may do it. In those phases no rung unlocks step by step, but all real help is still logged as a rung. At L3, for example, an explanation of a concept counts as rung 2 or higher.
+    - At **L0** and **L1** help comes up front, as a worked example or a skeleton. At **L3** there is nothing up front, only feedback after your attempt. At **L4** Claude may do it. In those phases no rung unlocks step by step, but all real help is still logged as a rung. At L3, for example, a question that helps you on while you are still stuck counts as rung 1, and an explanation of a concept as rung 2 or higher. Feedback on work that already passes counts as rung 0.
     - A **new skill** has no phase yet: you try it first with the L2 ladder.
     - In **[graded work](#graded-work)** the ladder holds for every skill, whatever its phase, up to rung 4.
 2. **The rungs decide the phase.** Each task is logged with the highest rung you needed. That is the evidence:
@@ -261,7 +261,7 @@ Only your own "yes, add" (or "ja, toevoegen") adds it, at the main skill's level
   ```
   [learning harness] Promote? ood.klassen-properties L2 → L3
     evidence: 5 of 5 solved (rung 1, 1, 2, 1, 1), on 1 day(s), in 05-de-auto, 06-studenten
-    what changes: no hint ladder any more: Claude gives nothing up front and only reviews after your attempt
+    what changes: no hint ladder any more: Claude gives nothing up front and only gives feedback after your attempt
     yes: type "yes, promote" · no: type "no" · you can always undo it with set
   ```
 
