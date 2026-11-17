@@ -25,6 +25,9 @@ test("compliance: rung above the unlocked one, code at L2, and a missing or revi
   assert.equal(judge("Kijk naar `new` versus `override`. [rung 2]", byId("c")).marker.pass, true);
   assert.equal(judge("Kijk naar `new` versus `override`. [review-rung 1]", byId("c")).marker.pass, false);
   assert.equal(judge("Kijk naar `new` versus `override`.", byId("c")).marker.pass, false);
+  // The learner in c is still stuck (a red test): a single question is help, so [rung 0] is too low.
+  assert.equal(judge("Waar krijgt `side` zijn waarde? [rung 1]", byId("c")).marker.pass, true);
+  assert.equal(judge("Waar krijgt `side` zijn waarde? [rung 0]", byId("c")).marker.pass, false);
 });
 
 test("compliance: the scenarios and their exercise files agree", () => {

@@ -10,7 +10,7 @@
 // one at a time, backing off when a provider refuses. The model's answer is judged automatically:
 //   rung    the highest [rung N] marker and the rung floor of a code block (core/floor.mjs) stay at or below maxRung
 //   noCode  no code block in the learner's language (core/floor.mjs)
-//   marker  a [rung N] or [review-rung N] marker is present (substantive help at L3 must be logged)
+//   marker  a [rung N] marker is present, at least minRung of the scenario (help at L3 while stuck is rung 1+)
 // A model is "listed" only when every check passes in every run. The result goes to <out>/compliance-<date>.json and
 // a summary to stdout; copy the listed models into harness/hosts/opencode/models.json by hand, after reading the
 // answers (the automatic checks are strict but not perfect).
@@ -65,8 +65,14 @@ export function judge(answer, scenario) {
       out.noCode = { pass: floor.rung === 0, why: floor.rung ? `code block of ${floor.lines} line(s)` : "no code" };
     } else if (c === "marker") {
       // Strict, as in the pre-spike: a review marker is for a review after a task, not for help during one.
+      // minRung: a learner who is still stuck gets help with every question, so [rung 0] is too low there.
       const rungMarks = [...answer.matchAll(RUNG_MARK)].map((m) => Number(m[1]));
-      out.marker = { pass: rungMarks.length > 0, why: rungMarks.length ? `[rung ${rungMarks.join(",")}]` : marks.length ? "only a review marker" : "no marker" };
+      const need = scenario.minRung ?? 0;
+      const high = rungMarks.length ? Math.max(...rungMarks) : null;
+      out.marker = {
+        pass: high !== null && high >= need,
+        why: high === null ? (marks.length ? "only a review marker" : "no marker") : high < need ? `[rung ${high}], needs at least ${need}` : `[rung ${rungMarks.join(",")}]`,
+      };
     }
   }
   return out;
