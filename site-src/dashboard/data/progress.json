@@ -1,7 +1,7 @@
 {
   "schema": 1,
-  "generatedAt": "2026-11-16",
-  "exportedAt": "2026-11-16T20:56:38.563Z",
+  "generatedAt": "2026-11-17",
+  "exportedAt": "2026-11-17T21:37:03.893Z",
   "course": null,
   "language": "nl",
   "examDate": "2027-01-20",
@@ -890,7 +890,7 @@
       "nextReview": null,
       "intervalIndex": 0,
       "lastReview": null,
-      "lastSeen": "2026-11-16",
+      "lastSeen": "2026-11-17",
       "placement": "done",
       "start": {
         "at": "2026-11-07T18:59:58.137Z",
@@ -2444,6 +2444,34 @@
       "corrections": [],
       "void": false,
       "voidReason": null
+    },
+    {
+      "id": "mwl75lucbl7y",
+      "at": "2026-11-17T21:20:53.460Z",
+      "skill": "uml.klassendiagram",
+      "source": "done",
+      "success": true,
+      "maxRung": 3,
+      "minutes": 36,
+      "reviewRung": null,
+      "what": "lasersnijder kostenfunctie",
+      "explained": true,
+      "explanation": "because int 1 / int 10 the result is also a rouded int so 0.1 is rounded to 0. when you cast MinutesUsed and 10 as doubles the problem is solved and an double is the resulting aswer\nbecause it cast the resuting 0 from the int/int devision to a double so the 0 became a double. double divded by a double gives a double so 0.1 and that nuber becomes 1 when we use the Math.Ceiling methode on it",
+      "explainedAt": "2026-11-17T21:25:29.055Z",
+      "explainedBy": null,
+      "lapsed": false,
+      "lapseReason": null,
+      "retaggedFrom": null,
+      "rejections": [
+        {
+          "at": "2026-11-17T21:23:25.018Z",
+          "by": "claude",
+          "reasons": []
+        }
+      ],
+      "corrections": [],
+      "void": false,
+      "voidReason": null
     }
   ],
   "reviews": [],
@@ -2621,6 +2649,16 @@
       "hints": 3,
       "holds": 0,
       "denials": 4,
+      "overridesUsed": 0,
+      "reviewHelp": 0,
+      "helpDropped": 0
+    },
+    {
+      "date": "2026-11-17",
+      "sessions": 3,
+      "hints": 3,
+      "holds": 0,
+      "denials": 1,
       "overridesUsed": 0,
       "reviewHelp": 0,
       "helpDropped": 0
@@ -2864,6 +2902,40 @@
         "nextStep": "implementing other cost functions of other child classes of device"
       },
       "calibration": "vooraf 4 → lukte met trede ≤1, uitleg pas na twee vervolgvragen → licht overschat"
+    },
+    {
+      "date": "2026-11-17",
+      "n": 1,
+      "time": "sessie van 2026-11-11 (05:53–07:50 UTC, 30 actieve minuten)",
+      "skills": "ood.klassen-properties (L2 → L3)",
+      "plan": "onbekend",
+      "confidenceBefore": "onbekend",
+      "wentWell": "de doorstroom van ood.klassen-properties naar L3, op basis van 5/5 gelukte taken.",
+      "signals": "zie de sessiestart van 2026-11-17 (ood.klassen-properties L3 → L4: nog de transfertaak, `/mastery-check ood.klassen-properties`).",
+      "reflection": {
+        "learned": "overgeslagen",
+        "confusing": "overgeslagen",
+        "confidenceAfter": "overgeslagen",
+        "nextStep": "overgeslagen"
+      },
+      "calibration": "onbekend"
+    },
+    {
+      "date": "2026-11-17",
+      "n": 2,
+      "time": "08:52–21:26 UTC (36 actieve minuten voor de taak)",
+      "skills": "uml.klassendiagram (L3, taak verkeerd gekoppeld: inhoudelijk C#-code / cs.basis)",
+      "plan": "\"ik wil zelfstandig een costfuctie gaan implementeren\" (de kostenfunctie van de lasersnijder)",
+      "confidenceBefore": "4 (in de chat genoemd, niet als event gelogd)",
+      "wentWell": "de kostenfunctie van de lasersnijder werkt (afronden per begonnen blok van 10 minuten met `Math.Ceiling`), gelukt met hulp tot trede 3. Het leren zat in de integer-deling en in het moment waarop een cast werkt. De student debugde zelf met tussenuitvoer en koos zelf het ontwerp (`MinutesUsed` in `Device`).",
+      "signals": "zie `status`: transfertaken klaar voor ood.aggregatie-compositie (`/mastery-check ood.aggregatie-compositie`), en op een andere dag voor ood.encapsulatie, ood.klassen-properties, ood.associaties en uml.klassendiagram.",
+      "reflection": {
+        "learned": "if you devide an int wih and int the answer is souded to an int",
+        "confusing": "why 1/10 was 0",
+        "confidenceAfter": "level 2",
+        "nextStep": "niet ingevuld"
+      },
+      "calibration": "vooraf 4 → lukte met hulp tot trede 3 → overschat (nu: \"level 2\")"
     }
   ],
   "reviewHelp": [
@@ -3039,6 +3111,8 @@
       "Costs VRSet": "Costs VRSet",
       "every subclass needs to calculate the price in its own specific way and a generic device does not need a implemented costs function\nit forces the subclasses to make a implementation of the methode, a normal method in the parrent class would not force that\nit forces the subclasses to make a implementation of the methode because a normal method in the parrent class would not force that but a abstract class will": "every subclass needs to calculate the price in its own specific way and a generic device does not need a implemented costs function\nit forces the subclasses to make a implementation of the methode, a normal method in the parrent class would not force that\nit forces the subclasses to make a implementation of the methode because a normal method in the parrent class would not force that but a abstract class will",
       "geen waarom (gebruik bv. 'omdat', 'doordat', 'zodat', 'anders', of 'als …, dan …')": "no reason given (use e.g. 'because', 'since', 'so that', 'otherwise', or 'if …, then …')",
+      "lasersnijder kostenfunctie": "laser cutter cost function",
+      "because int 1 / int 10 the result is also a rouded int so 0.1 is rounded to 0. when you cast MinutesUsed and 10 as doubles the problem is solved and an double is the resulting aswer\nbecause it cast the resuting 0 from the int/int devision to a double so the 0 became a double. double divded by a double gives a double so 0.1 and that nuber becomes 1 when we use the Math.Ceiling methode on it": "because int 1 / int 10 the result is also a rouded int so 0.1 is rounded to 0. when you cast MinutesUsed and 10 as doubles the problem is solved and an double is the resulting aswer\nbecause it cast the resuting 0 from the int/int devision to a double so the 0 became a double. double divded by a double gives a double so 0.1 and that nuber becomes 1 when we use the Math.Ceiling methode on it",
       "securitycheck site (tooling)": "security check site (tooling)",
       "cs.basis (L2), cs.basis.lus-grenzen (L2, nieuw), test.unit-tests (L1)": "cs.basis (L2), cs.basis.lus-grenzen (L2, new), test.unit-tests (L1)",
       "opdracht 04-even-getallen afmaken (niet expliciet benoemd)": "finish exercise 04-even-getallen (not stated explicitly)",
@@ -3154,7 +3228,22 @@
       "vooraf 4 → lukte met trede ≤1, uitleg pas na twee vervolgvragen → licht overschat": "beforehand 4 → succeeded with rung ≤1, explanation only after two follow-up questions → slightly overestimated",
       "how to work with DateTime objects.": "how to work with DateTime objects.",
       "how the datetime works if you only want to create a time": "how the datetime works if you only want to create a time",
-      "implementing other cost functions of other child classes of device": "implementing other cost functions of other child classes of device"
+      "implementing other cost functions of other child classes of device": "implementing other cost functions of other child classes of device",
+      "sessie van 2026-11-11 (05:53–07:50 UTC, 30 actieve minuten)": "session of 2026-11-11 (05:53–07:50 UTC, 30 active minutes)",
+      "ood.klassen-properties (L2 → L3)": "ood.klassen-properties (L2 → L3)",
+      "de doorstroom van ood.klassen-properties naar L3, op basis van 5/5 gelukte taken.": "the promotion of ood.klassen-properties to L3, based on 5/5 successful tasks.",
+      "zie de sessiestart van 2026-11-17 (ood.klassen-properties L3 → L4: nog de transfertaak, `/mastery-check ood.klassen-properties`).": "see the session start of 2026-11-17 (ood.klassen-properties L3 → L4: still the transfer task, `/mastery-check ood.klassen-properties`).",
+      "08:52–21:26 UTC (36 actieve minuten voor de taak)": "08:52–21:26 UTC (36 active minutes for the task)",
+      "uml.klassendiagram (L3, taak verkeerd gekoppeld: inhoudelijk C#-code / cs.basis)": "uml.klassendiagram (L3, task linked incorrectly: content was C# code / cs.basis)",
+      "\"ik wil zelfstandig een costfuctie gaan implementeren\" (de kostenfunctie van de lasersnijder)": "\"I want to implement a cost function on my own\" (the cost function of the laser cutter)",
+      "4 (in de chat genoemd, niet als event gelogd)": "4 (mentioned in the chat, not logged as an event)",
+      "de kostenfunctie van de lasersnijder werkt (afronden per begonnen blok van 10 minuten met `Math.Ceiling`), gelukt met hulp tot trede 3. Het leren zat in de integer-deling en in het moment waarop een cast werkt. De student debugde zelf met tussenuitvoer en koos zelf het ontwerp (`MinutesUsed` in `Device`).": "the cost function of the laser cutter works (rounding up per started block of 10 minutes with `Math.Ceiling`), succeeded with help up to rung 3. The learning was in integer division and in the moment a cast takes effect. The student debugged on their own with intermediate output and chose the design themselves (`MinutesUsed` in `Device`).",
+      "zie `status`: transfertaken klaar voor ood.aggregatie-compositie (`/mastery-check ood.aggregatie-compositie`), en op een andere dag voor ood.encapsulatie, ood.klassen-properties, ood.associaties en uml.klassendiagram.": "see `status`: transfer tasks ready for ood.aggregatie-compositie (`/mastery-check ood.aggregatie-compositie`), and on another day for ood.encapsulatie, ood.klassen-properties, ood.associaties and uml.klassendiagram.",
+      "vooraf 4 → lukte met hulp tot trede 3 → overschat (nu: \"level 2\")": "before 4 → succeeded with help up to rung 3 → overestimated (now: \"level 2\")",
+      "if you devide an int wih and int the answer is souded to an int": "if you devide an int wih and int the answer is souded to an int",
+      "why 1/10 was 0": "why 1/10 was 0",
+      "level 2": "level 2",
+      "niet ingevuld": "not filled in"
     }
   }
 }
