@@ -82,7 +82,7 @@ Junior developers face the same trap: the agent gets the work done, but the skil
 
 ## The idea: build first, then delegate, and maintain
 
-1. **Build a skill yourself first.** Every skill has a level from L0 (*demonstrate*) to L4 (*automated*). At L1–L3 a hook blocks the AI from writing, deleting, building or testing your code; at L1 it may only write a skeleton with gaps for you. Help comes in five rungs: first a question, then where to look, then a sketch, then a small example on another topic, and only if you confirm, a worked solution (the task then counts as not solved). Each next rung comes only after a visible attempt by you. In graded work the ladder stops at rung 4. A task only counts once you explain in your own words *why* it works.
+1. **Build a skill yourself first.** Every skill has a level from L0 (*demonstrate*) to L4 (*automated*). At L1–L3 a hook blocks the AI from writing, deleting, building or testing your code; at L1 it may only write a skeleton with gaps for you. Help comes in five rungs: first a question, then where to look, then a sketch, then a small example on another topic, and only if you confirm, a worked solution (the task then counts as not succeeded). Each next rung comes only after a visible attempt by you. In graded work the ladder stops at rung 4. A task only counts once you explain in your own words *why* it works.
 2. **Then delegate it.** Once a skill is at L4, the AI may do it straight away, and you supervise. Your own time goes to what you are still learning.
 3. **Maintain it now and then.** At growing intervals, the next time an L4 skill comes by in your work, you do that part yourself. If that goes wrong, the skill goes down a level.
 

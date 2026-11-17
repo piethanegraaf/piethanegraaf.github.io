@@ -609,6 +609,22 @@ These parts of the design were replaced. They used to sit on the [design page](d
 
 ## 11. Change log {#changelog}
 
+### 17 November 2026: the learner confirms, the harness offers, and clear words
+
+The pilot student reviewed the sessions of 16 November (evening) and 17 November on the cost functions of the final assignment, and decided points 72–82.
+
+- **#72 af: asks before it logs.** A C# part ("laser cutter cost function") was logged for `uml.klassendiagram` twice: `Program.cs` belongs to no skill, so the search skipped it and took an older Markdown file with a class diagram. Now the harness guesses from the words after `af:` (keywords), then from the newest changed file only, and always asks the learner to confirm: "yes", another skill with `#id`, or "no". With `#id` in the `af:` message it logs right away.
+- **#73 Confidence before and after.** The question "(1–5)" of the diary was read as the confidence at the start ("3 level 2" in a reflection). After a stop request it is now logged as `confidence-after`. The start asks for one number, on its own line.
+- **#74 The Stop hook waits for the diary answers.** It blocked right after the diary questions, so Claude wrote an entry with "waiting for an answer" first. The answer that asks the questions now passes; the next one still needs the entry.
+- **#75, #77 The catch-up offer.** A session that was opened and closed without a prompt used up the offer. An offer now only counts in a session where the learner wrote something. The harness shows the offer itself ("yes, catch up" / "no"), once more with the first answer, so Claude cannot forget it.
+- **#76 Because.** The start tells the learner to give the reason with "because" (or "omdat"); the explanation check stays the same.
+- **#78 Not the compiler.** After five times "check again" without build output, Claude pointed at each error itself. The rules now ask for the build or test output first.
+- **#79 Check questions are logged.** On 16 November the answers to the check questions got no marks. The Stop hook now warns once when the learner answered and the feedback has none.
+- **#80 Help about a concept gets its id.** `private` on a local variable was hinted as `[rung 2]` without `#id`, so the microskill for fields and local variables got no evidence. The Stop hook warns when a hint of rung 2 or higher seems to be about a microskill of another family; the end prompt lists the concepts the learner slipped on, and the first check question is about one of them.
+- **#81 Finished, succeeded, independent.** "Solved" meant rung 0–2 in one place and rung 1–4 in another. Now: every logged task is finished; succeeded is rung 0–2; independent is rung 0. Rung 3–4 is "finished with help up to rung N", which counts as not succeeded. The same words are in the messages, the rules, the docs and the dashboard.
+- **#82 The decision tree.** The L4 branch also shows the general demotion rule, and two lines under the tree explain the jump (L2 → L4) and that rung 5 does not exist in graded work.
+- **Not changed:** a question before the learner names a goal still counts for the task (#8 of the review; the learner chose to leave it). The width of the tree on a phone is for later.
+
 ### 16 November 2026: an opencode version, tested before building, built as an experiment
 
 The pilot student planned a second version of the harness for [opencode](../opencode.md), an open-source coding agent that also runs free models. The plan put a cheap test before any port work, with a rule for when to stop.

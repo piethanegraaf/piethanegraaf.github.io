@@ -30,13 +30,13 @@ Goal: self-regulation (plan → execution → reflection). The learner writes th
      - The transfer task (`/mastery-check`): `transfer-start`, `transfer-passed`, or `transfer-failed` (with `why`: `help` when there was a hint, `claude` when Claude judged it not passed).
      - Done automatically by the harness, mention it separately: `placement` (level of a new skill after its first task), `level` with `auto: true` (automatic demotion; `by` says by whom: harness, demotion analyst or backstop), `micro-add` with `auto: true` and `task-retag` (the analyst linked tasks to a microskill), `demotion-verdict` (the analyst's verdict, with reason). If it says `doubt: true`, note "the analyst was in doubt".
      - `review` with `auto: true`: the outcome of an L4 review, from normal work. `review-due`: the review came by.
-   - The plan and confidence from the start: the events `plan` (the first message of the session) and `confidence` (the number after your question "(1–5)"). Without a `confidence` event the confidence before is "unknown". With more than one, the last one counts (#66).
+   - The plan and confidence from the start: the events `plan` (the first message of the session) and `confidence` (the number after your question "(1–5)"). Without a `confidence` event the confidence before is "unknown". With more than one, the last one counts (#66). The answer to question 3 of the diary is logged as `confidence-after`: never use it as the confidence before (#73).
    - `graded-tooling`: fixed tooling you ran in graded work (#55). Name the commands.
    - `check-question`: the outcome of the check questions (`right`, `half`, `open`).
 
 2. **Everything in one message** (review of 13 November, #58): open explanations, check questions, reflection and, for graded work, the log question. Send this right away when the learner wants to stop; do not wait for another prompt. Then wait for the answers.
 
-   **Check questions (2 to 3)** about the concepts of this session: what was explained, hinted or made. The learner answers from memory, without scrolling back. Ask for a reason or an application in their own work ("why does the class diagram go in chapter 5?", "when would you use composition instead of aggregation in your own case?"), not for a definition. If the help was a rung-4 example, ask about the learner's own code, not about the example. After the answers, give feedback per question: first what was right, then the principle behind what stayed open. Add `[check-question <id> right|half|open]` per question, with the skill id. An open answer is not a failure: it is what you ask again next time.
+   **Check questions (2 to 3)** about the concepts of this session: what was explained, hinted or made. Start with a concept the learner slipped on and fixed after a hint (`concept-help` events of this session, #80): recalling it later helps more than an extra explanation right after the fix. The learner answers from memory, without scrolling back. Ask for a reason or an application in their own work ("why does the class diagram go in chapter 5?", "when would you use composition instead of aggregation in your own case?"), not for a definition. If the help was a rung-4 example, ask about the learner's own code, not about the example. After the answers, give feedback per question: first what was right, then the principle behind what stayed open. Add `[check-question <id> right|half|open]` per question, with the skill id. An open answer is not a failure: it is what you ask again next time.
 
    Put this line above it only when `settings.dashboardRepo` in `.learning/skills.json` is a path (a dashboard is set up). Is it not set, or `off`? Then use the other line below:
    > Note: your answers appear word for word, with a translation, on the public dashboard.
@@ -76,7 +76,7 @@ Goal: self-regulation (plan → execution → reflection). The learner writes th
 **Facts (logged):**
 - Hint rungs: <e.g. 1, 2> · marked help: <[rung N] ...> · refused without an attempt: <n> · worked solution given: <yes/no>
 - Review help: <[review-rung N #id] at task [tid], or "none"> · dropped help (help-dropped): <rung, or "none">
-- Tasks: <id [tid]: solved/not, highest rung, source (check/done/chat), explanation approved/rejected/skipped>
+- Tasks: <id [tid]: succeeded/not, highest rung, source (check/done/chat), explanation approved/rejected/skipped>
 - Written by the learner: <...> · written by the AI: <...>
 - Tests (by the learner, check.mjs): <green/red, new green>
 - Guard denials: <n> · overrides: <n, with reason> · voided tasks: <n>
@@ -94,11 +94,11 @@ Goal: self-regulation (plan → execution → reflection). The learner writes th
 2. *Confusing / different:* <literally>
 3. *Confidence now:* <1-5> · *Next step:* <literally>
 
-**Calibration:** before <x> → <what really happened, e.g. "solved with rung ≤1"> → <underestimated / right / overestimated>
+**Calibration:** before <x> → <what really happened, e.g. "succeeded with rung ≤1"> → <underestimated / right / overestimated>
 ```
 
 4. **Up: suggest, do not run.** If a promotion criterion from CLAUDE.md seems to be met, name the command the learner can run themselves. The harness goes down by itself when `autoDemote` is on: then say what happened and how to revert it. When it is off, name the command for a relapse too. For example:
-   `! node .claude/hooks/skill.mjs set ood.encapsulatie L3 "5/5 solved, mostly rung 0-1"`.
+   `! node .claude/hooks/skill.mjs set ood.encapsulatie L3 "5/5 succeeded, mostly rung 0-1"`.
    The decision is the learner's. Raising a level is only possible when no tasks of that skill wait for an explanation anymore.
 
 5. **The dashboard.** Last, after writing the entry, run `node .claude/hooks/skill.mjs since-export` (allowed).

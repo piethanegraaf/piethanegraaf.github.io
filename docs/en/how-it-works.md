@@ -40,7 +40,7 @@ Every skill is in one of five **learning phases**, L0 to L4 (its level). The pha
 | **L3 Independent** | nothing up front; feedback only after your attempt | make it and defend it |
 | **L4 Automated** | may do it directly | supervise; when the review is due, you do it yourself |
 
-**How the table and the guard fit together.** At L1 the guard does not block the skeleton: it lets a write through when it keeps or adds `TODO(human)` gaps, and refuses one that fills or removes them. At L2 the worked solution of rung 5 is an exception you ask for yourself. Claude shows it in the chat, the guard still keeps Claude out of your files, so you type it in yourself, and the task counts as not solved.
+**How the table and the guard fit together.** At L1 the guard does not block the skeleton: it lets a write through when it keeps or adds `TODO(human)` gaps, and refuses one that fills or removes them. At L2 the worked solution of rung 5 is an exception you ask for yourself. Claude shows it in the chat, the guard still keeps Claude out of your files, so you type it in yourself, and the task is finished, but counts as not succeeded.
 
 A skill can have **microskills**: sub-patterns with their own level. Filtering lists can already be at L3 while chaining void methods is still at L2.
 
@@ -52,7 +52,9 @@ A skill can have **microskills**: sub-patterns with their own level. Filtering l
 2. Where to find it, or which concept it is.
 3. Pseudocode or a sketch of the structure.
 4. A small example of at most 5 lines, on a different topic.
-5. A worked solution, only after confirmation. The task then counts as **not solved**.
+5. A worked solution, only after confirmation. The task is then finished, but counts as **not succeeded**.
+
+The highest rung of a task decides how it counts. Every logged task is **finished**, at any rung. Rung 0 is **independent**. Rung 1–2 is **succeeded** with help up to rung N. Rung 3–4 is finished with help up to rung N, but counts as **not succeeded**. Rung 5 is finished with a worked solution: not succeeded.
 
 In [graded work](#graded-work) the ladder stops at rung 4: a worked solution is not available there.
 
@@ -80,12 +82,12 @@ They work together in a loop: **the phase decides how help comes, and the rungs 
     - In **[graded work](#graded-work)** the ladder holds for every skill, whatever its phase, up to rung 4.
 2. **The rungs decide the phase.** Each task is logged with the highest rung you needed. That is the evidence:
     - The first task of a new skill sets the starting phase: rung 0 → L3, 1–2 → L2, 3–4 → L1, 5 → L0.
-    - **Solved** means at most rung 2. **Independent** means rung 0.
-    - Up: L1 → L2 after three tasks at rung 0–1. L2 → L3 after about 85% solved over at least 5 tasks, half of them at rung 0–1. L3 → L4 after rung 0 three times on at least 2 days, one of them a transfer task. Only L0 → L1 does not use rungs: it needs two worked examples that you explained and predicted correctly.
-    - Down (with `autoDemote`): under 70% solved over at least 4 explained tasks, or the last 2 not solved.
+    - **Finished** means every logged task, at any rung. **Succeeded** means at most rung 2. **Independent** means rung 0.
+    - Up: L1 → L2 after three tasks at rung 0–1. L2 → L3 after about 85% succeeded over at least 5 tasks, half of them at rung 0–1. L3 → L4 after rung 0 three times on at least 2 days, one of them a transfer task. Only L0 → L1 does not use rungs: it needs two worked examples that you explained and predicted correctly.
+    - Down (with `autoDemote`): under 70% succeeded over at least 4 explained tasks, or the last 2 not succeeded. This also holds at L4.
     - At L4 the rung of the next task in your own work decides the review: rung 0 is a pass, 1–2 is shaky, 3–5 is a fail.
 
-**An example.** Inheritance is at L2. In your first task you need a question and a pointer: rung 2, solved with help. The next four tasks take rung 1, 0, 1 and 0. That is 5 of 5 solved, 4 of them at rung 0–1, so the harness proposes L3 and you confirm. At L3 you get no hints up front. Do you still need a concept explained? Then that task counts as rung 2: solved, but not independent, so it does not count towards L4.
+**An example.** Inheritance is at L2. In your first task you need a question and a pointer: rung 2, succeeded with help. The next four tasks take rung 1, 0, 1 and 0. That is 5 of 5 succeeded, 4 of them at rung 0–1, so the harness proposes L3 and you confirm. At L3 you get no hints up front. Do you still need a concept explained? Then that task counts as rung 2: succeeded, but not independent, so it does not count towards L4.
 
 ### Promoted or demoted? A decision tree
 
@@ -105,24 +107,26 @@ flowchart LR
   A0 -->|" no "| S0((" stay "))
   QF -->|" L1 "| A1["3 tasks at<br/>rung 0-1?"]
   A1 -->|" yes "| U2((" ↑ L2 "))
-  A1 -->|" no "| D1["Struggling? Under 70%<br/>solved over 4+ tasks,<br/>or last 2 not solved?"]
+  A1 -->|" no "| D1["Struggling? Under 70%<br/>succeeded over 4+ tasks,<br/>or last 2 not succeeded?"]
   D1 -->|" yes "| DN0((" ↓ L0 "))
   D1 -->|" no "| S1((" stay "))
-  QF -->|" L2 "| A2["5+ tasks, about 85%<br/>solved, half of them<br/>at rung 0-1?"]
+  QF -->|" L2 "| A2["5+ tasks, about 85%<br/>succeeded, half of them<br/>at rung 0-1?"]
   A2 -->|" yes "| U3((" ↑ L3 "))
-  A2 -->|" no "| D2["Struggling? Under 70%<br/>solved over 4+ tasks,<br/>or last 2 not solved?"]
+  A2 -->|" no "| D2["Struggling? Under 70%<br/>succeeded over 4+ tasks,<br/>or last 2 not succeeded?"]
   D2 -->|" yes "| DN1((" ↓ L1 "))
   D2 -->|" no "| S2((" stay "))
   QF -->|" L3 "| A3["Rung 0 three times,<br/>on 2+ days, with<br/>a transfer task?"]
   A3 -->|" yes "| U4((" ↑ L4 "))
-  A3 -->|" no "| D3["Struggling? Under 70%<br/>solved over 4+ tasks,<br/>or last 2 not solved?"]
+  A3 -->|" no "| D3["Struggling? Under 70%<br/>succeeded over 4+ tasks,<br/>or last 2 not succeeded?"]
   D3 -->|" yes "| DN2((" ↓ L2 "))
   D3 -->|" no "| S3((" stay "))
-  QF -->|" L4 "| A4["Review due: how much<br/>help did your next<br/>task need?"]
+  QF -->|" L4 "| D4["Struggling? Under 70%<br/>succeeded over 4+ tasks,<br/>or last 2 not succeeded?"]
+  D4 -->|" yes "| DN3((" ↓ L3 "))
+  D4 -->|" no "| A4["Review due: how much<br/>help did your next<br/>task need?"]
   A4 -->|" rung 0 "| PASS((" pass "))
   A4 -->|" rung 1-2 "| SHAKY((" shaky "))
   A4 -->|" rung 3-5 "| F["Second failed<br/>review in a row?"]
-  F -->|" yes "| DN3((" ↓ L3 "))
+  F -->|" yes "| DN3
   F -->|" no "| S4([" stay, review sooner "])
   classDef q fill:transparent,stroke:transparent
   classDef place fill:#EEEDFE,stroke:#534AB7,color:#26215C
@@ -130,7 +134,7 @@ flowchart LR
   classDef down fill:#FCEBEB,stroke:#A32D2D,color:#501313
   classDef stay fill:#F1EFE8,stroke:#888780,color:#444441
   classDef shaky fill:#FAEEDA,stroke:#854F0B,color:#412402
-  class Q0,QP,QF,A0,A1,A2,A3,A4,D1,D2,D3,F q
+  class Q0,QP,QF,A0,A1,A2,A3,A4,D1,D2,D3,D4,F q
   class START,P0,P1,P2,P3 place
   class U1,U2,U3,U4,PASS up
   class DN0,DN1,DN2,DN3 down
@@ -145,24 +149,26 @@ flowchart LR
   subgraph G0["independent"]
     R0["rung 0<br/>no hint"]
   end
-  subgraph G1["solved with help"]
+  subgraph G1["succeeded with help"]
     R1["rung 1<br/>a Socratic question"] --> R2["rung 2<br/>where to look,<br/>which concept"]
   end
-  subgraph G2["not solved"]
+  subgraph G2["not succeeded"]
     R3["rung 3<br/>pseudocode<br/>or a sketch"] --> R4["rung 4<br/>small example,<br/>other topic"] --> R5["rung 5<br/>worked solution"]
   end
   R0 --> R1
   R2 --> R3
   classDef indep fill:#EAF3DE,stroke:#3B6D11,color:#173404
-  classDef solved fill:#FAEEDA,stroke:#854F0B,color:#412402
-  classDef notsolved fill:#FCEBEB,stroke:#A32D2D,color:#501313
+  classDef succeeded fill:#FAEEDA,stroke:#854F0B,color:#412402
+  classDef notsucceeded fill:#FCEBEB,stroke:#A32D2D,color:#501313
   class R0 indep
-  class R1,R2 solved
-  class R3,R4,R5 notsolved
+  class R1,R2 succeeded
+  class R3,R4,R5 notsucceeded
 ```
 
 - **Purple:** the starting phase of a new skill. **Green ↑:** promotion. **Red ↓:** demotion. **Grey:** you stay where you are.
 - **Every ↑ is a proposal:** it only happens when you type "yes, promote". **Every ↓** only happens when `autoDemote` is on.
+- **A jump:** from L2 up the evidence may carry a jump, for example L2 → L4, when the next criterion also holds on the same tasks (for L4 with the transfer task). From L0 and L1 it goes one step at a time.
+- **In [graded work](#graded-work)** the hint ladder holds at every level and stops at rung 4 (`graded.maxRung`). So "rung 5 → L0" cannot happen there.
 
 ## The guard
 
@@ -219,7 +225,7 @@ At AI level 0 (`setting graded aiLevel 0`) Claude gives no help at all on that w
 
 **Run `check.mjs` first.** When you pick an exercise, Claude gives you `! node .claude/hooks/check.mjs <folder>`. Run it before you write code: that first run is the start. Did you write the code first, and is the first run all green at once? Then it still counts as a task, as long as you changed the code in this session.
 
-A task is logged when a test goes from red to green (`check.mjs`), when you log it yourself (`done`, or a message that starts with `done: <part>`, without a command), or when you say in the chat that the tests pass. Work without a test, such as a class diagram, is split into **parts with a name**: "the Product class", "the inheritance to the product types". Each finished part is a task of its own, with its own explanation. Small, named steps help learning and an honest view of what you can do; splitting only to get more tasks does not ([research §10.10](research/build-log.md#1010-revision-of-13-november-2026-night-the-first-sessions-on-the-final-assignment)). In graded work `done:` only counts when a file of the assignment changed since the last task of that skill. It only counts after an explanation **in your own words**, with two keys:
+A task is logged when a test goes from red to green (`check.mjs`), when you log it yourself (`done`, or a message that starts with `done: <part>`, without a command), or when you say in the chat that the tests pass. Work without a test, such as a class diagram, is split into **parts with a name**: "the Product class", "the inheritance to the product types". Each finished part is a task of its own, with its own explanation. Small, named steps help learning and an honest view of what you can do; splitting only to get more tasks does not ([research §10.10](research/build-log.md#1010-revision-of-13-november-2026-night-the-first-sessions-on-the-final-assignment)). Without `#id` in that message the harness guesses the skill (from your words, then from the newest changed file) and asks you to confirm it first: "yes", another skill with `#id`, or "no". In graded work `done:` only counts when a file of the assignment changed since the last task of that skill. It only counts after an explanation **in your own words**, with two keys:
 
 1. Claude judges the content and writes `[explain-ok <tid>]` or `[explain-no <tid>]`. With `explain-no` Claude first names what is already right, and then asks one follow-up question that points to the gap: a follow-up question, not a rejection. The requirement stays just as strict. The question depends on what happened. After help (rung 1 or higher): about the concept of the highest hint, because that is where you were stuck. After a failed attempt without a hint (red or a compile error): why does it work now, and why did the first attempt not? Green at once: one question about the principle of the exercise. Claude keeps asking until the principle is right.
 2. The Stop hook checks your own words: **all your messages since the task was logged, together**. An answer in three short messages counts as one. Together they need at least 12 words outside code, a *why* (because, so that, otherwise …, or a reasoning "if …, then/would …" in one sentence), and they must not be copied from Claude's text. A message from before the task was logged does not count.
@@ -228,7 +234,7 @@ The explanation belongs **right after** the green. A next task in the same folde
 
 A test that was green once, turned red and is green again is a **repaired regression** and does not count as a new task.
 
-**Praise first, in honest words.** After a green, `check.mjs` first says what worked and which skill, and then invites the explanation. "Independently" only means rung 0. At rung 1–4 the harness says "solved with help up to rung N", and where the learning was: the concept of the highest hint. Effort is the goal here, not failure; the harness says so once, at your first session start. A worked example (rung 5) counts as not solved: then you explain the worked example back.
+**Praise first, in honest words.** After a green, `check.mjs` first says what worked and which skill, and then invites the explanation. "Independently" only means rung 0. At rung 1–2 the harness says "succeeded with help up to rung N"; at rung 3–4 "finished with help up to rung N", which counts as not succeeded. In both cases it says where the learning was: the concept of the highest hint. Effort is the goal here, not failure; the harness says so once, at your first session start. A worked example (rung 5) is finished, but counts as not succeeded: then you explain the worked example back.
 
 **Help about another concept** is logged for that concept too. Suppose Claude helps you with the syntax of a loop during an exercise on inheritance. Then Claude writes `[rung N #id]`, with the id of the loop skill. The task keeps that rung, because you made it with that help. The concept gets its own event, `concept-help`. That is not a task of that concept: `status` shows it, and it counts as evidence for a proposal for a microskill. The status line Claude sees with every prompt shows the help given for this task, also at L3 (`help given: rung N`); at L2 also the unlocked rung.
 
@@ -251,7 +257,7 @@ Only your own "yes, add" (or "ja, toevoegen") adds it, at the main skill's level
 - **Up** is your decision, on evidence. The evidence is the last 10 explained tasks **since the previous level change**, plus the task that placed the skill, so the same tasks never carry two promotions.
   - **L0 → L1:** two examples explained and predicted correctly.
   - **L1 → L2:** three tasks at rung 1 at most (gaps filled).
-  - **L2 → L3:** about 85% solved (at most rung 2) over at least 5 tasks, and at least half with hint 0–1.
+  - **L2 → L3:** about 85% succeeded (at most rung 2) over at least 5 tasks, and at least half with hint 0–1.
   - **L3 → L4:** rung 0 three times on at least 2 days, and a **transfer task** is one of them: with `/mastery-check <id>` you solve a new exercise in another domain, without any hint, and then defend the design. Its day counts as a day. So after two tasks without a hint, the transfer task can be the third; were those two on one day, then do it on another day. A hint during the transfer task makes it not count.
   - **The design goal:** whoever practises daily and masters the skill reaches L4 in about 3 sessions on 2 days. A test guards that.
   - **When the exercise folders of a skill at L3 run out,** Claude points to an existing next exercise: another exercise of the course, or a question from a practice test. A practice-test question counts when you do it without help, check it with the answer key, explain it and log it with `done`. Claude never makes up an exercise.
@@ -260,7 +266,7 @@ Only your own "yes, add" (or "ja, toevoegen") adds it, at the main skill's level
 
   ```
   [learning harness] Promote? ood.klassen-properties L2 → L3
-    evidence: 5 of 5 solved (rung 1, 1, 2, 1, 1), on 1 day(s), in 05-de-auto, 06-studenten
+    evidence: 5 of 5 succeeded (rung 1, 1, 2, 1, 1), on 1 day(s), in 05-de-auto, 06-studenten
     what changes: no hint ladder any more: Claude gives nothing up front and only gives feedback after your attempt
     yes: type "yes, promote" · no: type "no" · you can always undo it with set
   ```
@@ -272,7 +278,7 @@ Only your own "yes, add" (or "ja, toevoegen") adds it, at the main skill's level
   ↗ ood.encapsulatie L3 → L4: without a hint 3/3 ✓ · days 1/2 · transfer task ○
   ```
 
-- **Down** follows the evidence, when `autoDemote` is on: with at least 4 explained tasks and under 70% solved, or the last 2 not solved. "Solved" counts the help within the skill's own family: help about another concept (`[rung N #id]`) is no failure of this skill. Down waits until no explanation of that family is open, and it is checked again on the evidence of that moment. A microskill goes down one level right away. For a main skill the **demotion analyst** decides first: an agent that only reads, looks at the test output, your code and the transcript, and decides whether the problem is one sub-pattern (then only that microskill goes down or is created) or broad (then the main skill goes down). When the help was really about an existing microskill of another family, the analyst may choose that one. The harness reads the verdict from the analyst's report itself: no JSON in the chat. If two microskills of the same parent go down within 14 days, the parent goes down too. You get one quiet line, "extra support for …", and can revert it with `set`.
+- **Down** follows the evidence, when `autoDemote` is on: with at least 4 explained tasks and under 70% succeeded, or the last 2 not succeeded. "Succeeded" counts the help within the skill's own family: help about another concept (`[rung N #id]`) is no failure of this skill. Down waits until no explanation of that family is open, and it is checked again on the evidence of that moment. A microskill goes down one level right away. For a main skill the **demotion analyst** decides first: an agent that only reads, looks at the test output, your code and the transcript, and decides whether the problem is one sub-pattern (then only that microskill goes down or is created) or broad (then the main skill goes down). When the help was really about an existing microskill of another family, the analyst may choose that one. The harness reads the verdict from the analyst's report itself: no JSON in the chat. If two microskills of the same parent go down within 14 days, the parent goes down too. You get one quiet line, "extra support for …", and can revert it with `set`.
 - **Reviews** only exist at L4, at Fibonacci intervals: 1, 2, 3, 5, 8, 13 … days. There are no separate review exercises. When such a skill comes by in your work while its review is due, you do that part yourself, without AI. Your next task decides the outcome: rung 0 is a pass (one step on), rung 1–2 shaky (the same), more help a fail (two steps back). If it does not come by, nothing happens; the practice exams are the safety net.
 
 ## The diary
@@ -281,7 +287,7 @@ Only your own "yes, add" (or "ja, toevoegen") adds it, at the main skill's level
 
 When you stop, `/diary` writes down the facts of the session, and you write the reflection: what you learned, what was confusing, and how confident you are. You do not have to ask for anything: "done", "I want to stop" or "let's wrap up" is enough. Claude then asks everything in **one message**: open explanations, 2 to 3 **check questions** about the concepts of this session, the three reflection questions, and for graded work the log question. Check questions are answered from memory and ask for a reason or an application in your own work. You get feedback per answer; an open answer is not a failure, it is what comes back next time. Without a diary entry the Stop hook does not let the session close (at most twice per stop request).
 
-Closed a session without a diary entry, for example by closing the window? Then the next start offers a short catch-up diary for that session, once.
+Closed a session without a diary entry, for example by closing the window? Then the next start offers a short catch-up diary for that session: the harness shows the offer itself ("yes, catch up" or "no"). It only counts as offered in a session where you wrote something; after your answer it does not come back.
 
 With a dashboard (`dashboardRepo` set to the path of your clone), there is a warning above the three reflection questions: *"Note: your answers appear word for word, with a translation, on the public dashboard."* There is no private option then. Whatever must not go online goes into `.learning/private.json`. Without a dashboard (`dashboardRepo` not set, or `off`) the line says instead that your answers stay in your folder: nothing goes online until you set up a dashboard and publish it yourself.
 

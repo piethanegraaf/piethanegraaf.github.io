@@ -51,10 +51,14 @@ A **learning phase** is the level of one skill, and it sets how much the AI may 
 
 A **hint ladder** is help in rungs that each give away a little more: a question, a pointer, a sketch, a small example on another topic, and only then, if you confirm, a worked solution (in graded work the ladder stops at rung 4). The next rung comes only after a visible attempt. The ladder is about one task; the learning phase is about the skill over weeks. The rungs you needed are the evidence for the next phase: see [how they work together](how-it-works.md#learning-phases-and-the-hint-ladder) and [How it works](how-it-works.md#the-hint-ladder-l2) and [§5.3](research/design.md#53-friction-calibration-the-hint-ladder).
 
+## Finished, succeeded and independent
+
+The highest rung of help in a task decides how it counts. A task is **finished** once it is logged, at any rung. It **succeeded** at rung 0–2: that is what the percentages for promotion and demotion count. It is **independent** only at rung 0. So rung 1–2 is "succeeded with help up to rung N", rung 3–4 is "finished with help up to rung N" and counts as not succeeded, and rung 5 (a worked solution) is finished but not succeeded. See [How it works](how-it-works.md#the-hint-ladder-l2).
+
 ## Spaced reinforcement
 
 **Spaced reinforcement** is reviewing a mastered skill at growing intervals, so it does not decay. Spaced practice beats massed practice (Cepeda et al., 2006), and cognitive skills such as writing correct code from memory decay faster than physical ones (Arthur et al., 1998). In the harness, a review at L4 is the next time the skill comes by in your own work. See [§2.5](research/literature.md#25-retention-after-mastery-spacing-retrieval-and-skill-decay) and [§5.7](research/design.md#57-spaced-reinforcement-after-mastery).
 
 ## Transfer task
 
-A **transfer task** is a new exercise in another domain, solved without any hint, that shows a skill works outside the exercises you practised on. In the harness it is needed before a skill goes from L3 to L4. See [How it works](how-it-works.md#promotion-and-reviews).
+A **transfer task** is a new exercise in another domain, done independently (without any hint), that shows a skill works outside the exercises you practised on. In the harness it is needed before a skill goes from L3 to L4. See [How it works](how-it-works.md#promotion-and-reviews).

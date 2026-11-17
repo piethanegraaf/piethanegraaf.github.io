@@ -119,7 +119,7 @@ Turn off AI help outside Claude Code. Otherwise your IDE completes the code you 
 
 1. Start Claude Code in your project folder. The session-start hook shows your skills.
 2. No `--exam` yet, and do you have an exam? Set the date: `! node .claude/hooks/skill.mjs setting examDate 2027-01-20`. With `--learning-dir` this setting lives in the record of the other folder, so set it there.
-3. Your first attempt at a skill sets its level (placement). Can you already do something? Set it higher yourself: `! node .claude/hooks/skill.mjs set ood.overerving L3 "baseline: solved myself"`
+3. Your first attempt at a skill sets its level (placement). Can you already do something? Set it higher yourself: `! node .claude/hooks/skill.mjs set ood.overerving L3 "baseline: did it myself"`
 4. With `--map security-dotnet`: start at `oefeningen/README.md`, and run the tests of an exercise before you change anything: `! node .claude/hooks/check.mjs oefeningen/01-sql-search`
 
 !!! tip "The `!` sign"

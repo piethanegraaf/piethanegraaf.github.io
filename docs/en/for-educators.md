@@ -8,7 +8,7 @@ The learning harness lets students use Claude Code in a programming course witho
 
 ## What it enforces, and what it cannot
 
-- **No AI-written practice code.** At levels L1–L3 a hook blocks Claude from writing, deleting, building or testing the student's code (at L1 it only lets through a skeleton with `TODO(human)` gaps). Help comes as a hint ladder of five rungs: a question, where to look, a sketch, a small example on another topic, and only after the student confirms, a worked solution, after which the task counts as not solved. In graded work (below) the ladder stops at rung 4.
+- **No AI-written practice code.** At levels L1–L3 a hook blocks Claude from writing, deleting, building or testing the student's code (at L1 it only lets through a skeleton with `TODO(human)` gaps). Help comes as a hint ladder of five rungs: a question, where to look, a sketch, a small example on another topic, and only after the student confirms, a worked solution, after which the task counts as not succeeded. In graded work (below) the ladder stops at rung 4.
 - **Explanations count, not green tests.** A task only counts after the student explains in their own words why it works.
 - **Exceptions are visible.** When a student allows Claude to write code for a while (an override), that is logged and shows up in the diary.
 - **It cannot prove that a student worked without AI.** Students can switch the hooks off, use another AI tool, or find a way around the rules. The harness works because the student chooses it. Use it for practice, and keep your assessments under your own conditions.

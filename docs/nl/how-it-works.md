@@ -52,7 +52,9 @@ Een vaardigheid kan **microvaardigheden** hebben: deelpatronen met een eigen niv
 2. Waar het staat, of welk concept het is.
 3. Pseudocode of een schets van de structuur.
 4. Een klein voorbeeld van hooguit 5 regels, met een ander onderwerp.
-5. Een uitwerking, alleen na bevestiging. De taak telt dan als **niet gelukt**.
+5. Een uitwerking, alleen na bevestiging. De taak is dan afgerond, maar telt als **niet gelukt**.
+
+De hoogste trede van een taak bepaalt hoe hij telt. Elke gelogde taak is **afgerond**, op elke trede. Trede 0 is **zelfstandig**. Trede 1–2 is **gelukt** met hulp tot trede N. Trede 3–4 is afgerond met hulp tot trede N, maar telt als **niet gelukt**. Trede 5 is afgerond met een uitwerking: niet gelukt.
 
 In [beoordeeld werk](#beoordeeld-werk) stopt de ladder bij trede 4: een uitwerking is daar niet beschikbaar.
 
@@ -80,9 +82,9 @@ Ze werken samen in een kringloop: **de fase bepaalt hoe de hulp komt, en de tred
     - In **[beoordeeld werk](#beoordeeld-werk)** geldt de ladder voor elke vaardigheid, in elke fase, tot trede 4.
 2. **De treden bepalen de fase.** Elke taak wordt gelogd met de hoogste trede die je nodig had. Dat is het bewijs:
     - De eerste taak van een nieuwe vaardigheid bepaalt de startfase: trede 0 → L3, 1–2 → L2, 3–4 → L1, 5 → L0.
-    - **Gelukt** betekent hooguit trede 2. **Zelfstandig** betekent trede 0.
+    - **Afgerond** is elke gelogde taak, op elke trede. **Gelukt** betekent hooguit trede 2. **Zelfstandig** betekent trede 0.
     - Omhoog: L1 → L2 na drie taken op trede 0–1. L2 → L3 na ongeveer 85% gelukt over minstens 5 taken, de helft daarvan op trede 0–1. L3 → L4 na drie keer trede 0 op minstens 2 dagen, waarvan één een transferopdracht. Alleen L0 → L1 gebruikt geen treden: daarvoor leg je twee uitgewerkte voorbeelden goed uit en voorspel je de uitvoer.
-    - Omlaag (met `autoDemote`): minder dan 70% gelukt over minstens 4 uitgelegde taken, of de laatste 2 niet gelukt.
+    - Omlaag (met `autoDemote`): minder dan 70% gelukt over minstens 4 uitgelegde taken, of de laatste 2 niet gelukt. Dat geldt ook op L4.
     - Op L4 bepaalt de trede van de volgende taak in je eigen werk de herhaling: trede 0 is geslaagd, 1–2 is wankel, 3–5 is mislukt.
 
 **Een voorbeeld.** Overerving staat op L2. Bij je eerste taak heb je een vraag en een vindplaats nodig: trede 2, gelukt met hulp. De volgende vier taken kosten trede 1, 0, 1 en 0. Dat is 5 van de 5 gelukt, waarvan 4 op trede 0–1, dus de harnas stelt L3 voor en jij bevestigt. Op L3 krijg je vooraf geen hints. Heb je toch uitleg van een concept nodig? Dan telt die taak als trede 2: gelukt, maar niet zelfstandig, dus hij telt niet mee voor L4.
@@ -105,24 +107,26 @@ flowchart LR
   A0 -->|" nee "| S0((" blijft "))
   QF -->|" L1 "| A1["3 taken op<br/>trede 0-1?"]
   A1 -->|" ja "| U2((" ↑ L2 "))
-  A1 -->|" nee "| D1["Gaat het moeizaam? Onder 70%<br/>opgelost over 4+ taken, of de<br/>laatste 2 niet opgelost?"]
+  A1 -->|" nee "| D1["Gaat het moeizaam? Onder 70%<br/>gelukt over 4+ taken, of de<br/>laatste 2 niet gelukt?"]
   D1 -->|" ja "| DN0((" ↓ L0 "))
   D1 -->|" nee "| S1((" blijft "))
-  QF -->|" L2 "| A2["5+ taken, ongeveer 85%<br/>opgelost, de helft<br/>op trede 0-1?"]
+  QF -->|" L2 "| A2["5+ taken, ongeveer 85%<br/>gelukt, de helft<br/>op trede 0-1?"]
   A2 -->|" ja "| U3((" ↑ L3 "))
-  A2 -->|" nee "| D2["Gaat het moeizaam? Onder 70%<br/>opgelost over 4+ taken, of de<br/>laatste 2 niet opgelost?"]
+  A2 -->|" nee "| D2["Gaat het moeizaam? Onder 70%<br/>gelukt over 4+ taken, of de<br/>laatste 2 niet gelukt?"]
   D2 -->|" ja "| DN1((" ↓ L1 "))
   D2 -->|" nee "| S2((" blijft "))
   QF -->|" L3 "| A3["3 keer trede 0,<br/>op 2+ dagen, met<br/>een transfertaak?"]
   A3 -->|" ja "| U4((" ↑ L4 "))
-  A3 -->|" nee "| D3["Gaat het moeizaam? Onder 70%<br/>opgelost over 4+ taken, of de<br/>laatste 2 niet opgelost?"]
+  A3 -->|" nee "| D3["Gaat het moeizaam? Onder 70%<br/>gelukt over 4+ taken, of de<br/>laatste 2 niet gelukt?"]
   D3 -->|" ja "| DN2((" ↓ L2 "))
   D3 -->|" nee "| S3((" blijft "))
-  QF -->|" L4 "| A4["Herhaling aan de beurt:<br/>hoeveel hulp had je<br/>volgende taak nodig?"]
+  QF -->|" L4 "| D4["Gaat het moeizaam? Onder 70%<br/>gelukt over 4+ taken, of de<br/>laatste 2 niet gelukt?"]
+  D4 -->|" ja "| DN3((" ↓ L3 "))
+  D4 -->|" nee "| A4["Herhaling aan de beurt:<br/>hoeveel hulp had je<br/>volgende taak nodig?"]
   A4 -->|" trede 0 "| PASS((" geslaagd "))
   A4 -->|" trede 1-2 "| SHAKY((" wankel "))
   A4 -->|" trede 3-5 "| F["Tweede keer op rij<br/>mislukt?"]
-  F -->|" ja "| DN3((" ↓ L3 "))
+  F -->|" ja "| DN3
   F -->|" nee "| S4([" blijft, herhaling eerder "])
   classDef q fill:transparent,stroke:transparent
   classDef place fill:#EEEDFE,stroke:#534AB7,color:#26215C
@@ -130,7 +134,7 @@ flowchart LR
   classDef down fill:#FCEBEB,stroke:#A32D2D,color:#501313
   classDef stay fill:#F1EFE8,stroke:#888780,color:#444441
   classDef shaky fill:#FAEEDA,stroke:#854F0B,color:#412402
-  class Q0,QP,QF,A0,A1,A2,A3,A4,D1,D2,D3,F q
+  class Q0,QP,QF,A0,A1,A2,A3,A4,D1,D2,D3,D4,F q
   class START,P0,P1,P2,P3 place
   class U1,U2,U3,U4,PASS up
   class DN0,DN1,DN2,DN3 down
@@ -145,24 +149,26 @@ flowchart LR
   subgraph G0["zelfstandig"]
     R0["trede 0<br/>geen hint"]
   end
-  subgraph G1["opgelost met hulp"]
+  subgraph G1["gelukt met hulp"]
     R1["trede 1<br/>een Socratische vraag"] --> R2["trede 2<br/>waar je moet kijken,<br/>welk concept"]
   end
-  subgraph G2["niet opgelost"]
+  subgraph G2["niet gelukt"]
     R3["trede 3<br/>pseudocode<br/>of een schets"] --> R4["trede 4<br/>klein voorbeeld,<br/>ander onderwerp"] --> R5["trede 5<br/>uitgewerkte oplossing"]
   end
   R0 --> R1
   R2 --> R3
   classDef indep fill:#EAF3DE,stroke:#3B6D11,color:#173404
-  classDef solved fill:#FAEEDA,stroke:#854F0B,color:#412402
-  classDef notsolved fill:#FCEBEB,stroke:#A32D2D,color:#501313
+  classDef succeeded fill:#FAEEDA,stroke:#854F0B,color:#412402
+  classDef notsucceeded fill:#FCEBEB,stroke:#A32D2D,color:#501313
   class R0 indep
-  class R1,R2 solved
-  class R3,R4,R5 notsolved
+  class R1,R2 succeeded
+  class R3,R4,R5 notsucceeded
 ```
 
 - **Paars:** de startfase van een nieuwe vaardigheid. **Groen ↑:** omhoog. **Rood ↓:** omlaag. **Grijs:** je blijft waar je bent.
 - **Elke ↑ is een voorstel:** hij gebeurt pas als jij "ja, doorzetten" typt. **Elke ↓** gebeurt alleen als `autoDemote` aanstaat.
+- **Een sprong:** vanaf L2 mag het bewijs een sprong dragen, bijvoorbeeld L2 → L4, als ook het volgende criterium op dezelfde taken klopt (voor L4 met de transfertaak). Vanaf L0 en L1 gaat het per stap.
+- **In [beoordeeld werk](#beoordeeld-werk)** geldt de hintladder op elk niveau en stopt hij bij trede 4 (`graded.maxRung`). "Trede 5 → L0" kan daar dus niet.
 
 ## De guard
 
@@ -219,7 +225,7 @@ Op AI-niveau 0 (`setting graded aiLevel 0`) geeft Claude bij dat werk geen enkel
 
 **Draai eerst `check.mjs`.** Kies je een opdracht, dan geeft Claude je `! node .claude/hooks/check.mjs <map>`. Draai hem vóór je code schrijft: die eerste run is het begin. Schreef je de code toch eerst, en is de eerste run meteen helemaal groen? Dan telt het toch als taak, zolang je de code in deze sessie hebt gewijzigd.
 
-Een taak wordt gelogd als een test van rood naar groen gaat (`check.mjs`), als je hem zelf afmeldt (`done`, of een bericht dat begint met `af: <onderdeel>`, zonder commando), of als je in de chat zegt dat de tests groen zijn. Werk zonder test, zoals een klassendiagram, knip je op in **onderdelen met een naam**: "de klasse Product", "de overerving naar de producttypes". Elk afgerond onderdeel is een eigen taak, met een eigen uitleg. Kleine stappen met een naam helpen het leren en een eerlijk beeld van wat je kunt; opknippen om meer taken te krijgen niet ([onderzoek §10.10](research/build-log.md#1010-herziening-van-13-november-2026-nacht-de-eerste-sessies-aan-de-eindopdracht)). Bij beoordeeld werk telt `af:` alleen als er sinds de vorige taak van die vaardigheid een bestand in de opdracht is gewijzigd. Hij telt pas mee na een uitleg **in je eigen woorden**, met twee sleutels:
+Een taak wordt gelogd als een test van rood naar groen gaat (`check.mjs`), als je hem zelf afmeldt (`done`, of een bericht dat begint met `af: <onderdeel>`, zonder commando), of als je in de chat zegt dat de tests groen zijn. Werk zonder test, zoals een klassendiagram, knip je op in **onderdelen met een naam**: "de klasse Product", "de overerving naar de producttypes". Elk afgerond onderdeel is een eigen taak, met een eigen uitleg. Kleine stappen met een naam helpen het leren en een eerlijk beeld van wat je kunt; opknippen om meer taken te krijgen niet ([onderzoek §10.10](research/build-log.md#1010-herziening-van-13-november-2026-nacht-de-eerste-sessies-aan-de-eindopdracht)). Zonder `#id` in dat bericht gokt de harnas de vaardigheid (uit je woorden, daarna uit het nieuwste gewijzigde bestand) en vraagt hij je eerst om te bevestigen: "ja", een andere vaardigheid met `#id`, of "nee". Bij beoordeeld werk telt `af:` alleen als er sinds de vorige taak van die vaardigheid een bestand in de opdracht is gewijzigd. Hij telt pas mee na een uitleg **in je eigen woorden**, met twee sleutels:
 
 1. Claude beoordeelt de inhoud en zet `[uitleg-ok <tid>]` of `[uitleg-nee <tid>]`. Bij `uitleg-nee` noemt Claude eerst wat al klopt, en stelt dan één vervolgvraag die naar het gat wijst: een vervolgvraag, geen afwijzing. De eis blijft even streng. De vraag hangt af van wat er gebeurde. Na hulp (trede 1 of hoger): over het concept van de hoogste hint, want daar zat je vast. Na een mislukte poging zonder hint (rood of een compileerfout): waarom werkt het nu, en waarom de eerste poging niet? Meteen groen: één vraag naar het principe van de opdracht. Claude vraagt door tot het principe klopt.
 2. De Stop-hook controleert je eigen woorden: **al je berichten sinds de taak is gelogd, samen**. Een antwoord in drie korte berichten telt als één. Samen moeten ze minstens 12 woorden buiten code hebben, een *waarom* (omdat, doordat, zodat …, of een redenering "als …, dan/zou …" in één zin), en ze mogen niet uit Claude's tekst zijn overgenomen. Een bericht van vóór het loggen telt niet mee.
@@ -228,7 +234,7 @@ De uitleg hoort **direct** na het groen worden. Een volgende taak in dezelfde ma
 
 Een test die al eens groen was, rood werd en weer groen is, is **herstel van een regressie** en telt niet als nieuwe taak.
 
-**Eerst lof, in eerlijke woorden.** Na een groen zegt `check.mjs` eerst wat lukte en welke vaardigheid, en nodigt daarna uit tot de uitleg. "Zelfstandig" betekent alleen trede 0. Op trede 1–4 zegt de harnas "gelukt met hulp tot trede N", en waar het leren zat: het concept van de hoogste hint. Moeite is hier het doel, geen falen; dat zegt de harnas één keer, bij je eerste sessiestart. Een uitwerking (trede 5) telt als niet gelukt: dan leg je de uitwerking terug uit.
+**Eerst lof, in eerlijke woorden.** Na een groen zegt `check.mjs` eerst wat lukte en welke vaardigheid, en nodigt daarna uit tot de uitleg. "Zelfstandig" betekent alleen trede 0. Op trede 1–2 zegt de harnas "gelukt met hulp tot trede N"; op trede 3–4 "afgerond met hulp tot trede N", en dat telt als niet gelukt. In beide gevallen zegt hij waar het leren zat: het concept van de hoogste hint. Moeite is hier het doel, geen falen; dat zegt de harnas één keer, bij je eerste sessiestart. Een uitwerking (trede 5) is afgerond, maar telt als niet gelukt: dan leg je de uitwerking terug uit.
 
 **Hulp over een ander concept** wordt ook bij dat concept gelogd. Stel dat Claude je helpt met de syntax van een lus, tijdens een opdracht over overerving. Dan zet Claude `[trede N #id]`, met het id van de vaardigheid van de lus. De taak houdt die trede, want je maakte hem met die hulp. Het concept krijgt een eigen event, `concept-help`. Dat is geen taak van dat concept: `status` laat het zien, en het telt als bewijs voor een voorstel voor een microvaardigheid. De statusregel die Claude bij elke prompt ziet, toont de gegeven hulp voor deze taak, ook op L3 (`gegeven hulp: trede N`); op L2 ook de ontgrendelde trede.
 
@@ -281,7 +287,7 @@ Alleen jouw eigen "ja, toevoegen" (of "yes, add") voegt hem toe, op het niveau v
 
 Als je stopt, schrijft `/diary` de feiten van de sessie op, en jij de reflectie: wat je leerde, wat verwarrend was, en hoe zeker je bent. Je hoeft nergens om te vragen: "klaar", "ik wil stoppen" of "laten we afronden" is genoeg. Claude vraagt dan alles in **één bericht**: open uitleg, 2 tot 3 **controlevragen** over de concepten van deze sessie, de drie reflectievragen, en bij beoordeeld werk de logboekvraag. Controlevragen beantwoord je uit het hoofd, en ze vragen naar een reden of een toepassing in je eigen werk. Je krijgt per antwoord feedback; een open antwoord is geen falen, maar wat de volgende keer terugkomt. Zonder dagboekentry laat de Stop-hook de sessie niet sluiten (hooguit twee keer per stopverzoek).
 
-Sloot je een sessie zonder dagboek, bijvoorbeeld door het venster te sluiten? Dan biedt de volgende start één keer een kort inhaaldagboek aan voor die sessie.
+Sloot je een sessie zonder dagboek, bijvoorbeeld door het venster te sluiten? Dan biedt de volgende start een kort inhaaldagboek aan voor die sessie: de harnas toont het aanbod zelf ("ja, inhalen" of "nee"). Het telt alleen als aangeboden in een sessie waarin je iets schreef; na je antwoord komt het niet terug.
 
 Met een dashboard (`dashboardRepo` staat op het pad van je clone) staat er boven de drie reflectievragen een waarschuwing: *"Let op: je antwoorden komen letterlijk, met een vertaling, op het openbare dashboard."* Een privé-optie is er dan niet. Wat niet online mag, zet je in `.learning/private.json`. Zonder dashboard (`dashboardRepo` niet ingesteld, of `off`) zegt de regel juist dat je antwoorden in je map blijven: er gaat niets online tot je zelf een dashboard instelt en publiceert.
 
