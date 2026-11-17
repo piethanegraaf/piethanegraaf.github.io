@@ -58,15 +58,26 @@ The guard, the hint ladder, levels and microskills, the explanation check, revie
 
 The guard does not depend on the model, but the hint ladder and the honest markers do. The rules were written and tested with Claude. A model only goes on the list of tested models when it passes every check of the compliance suite (`harness/tools/compliance/`) in three runs. The plugin names the model at the start and warns when it is not on the list.
 
-**Tested models: none yet.** On 16 November 2026 two free models without data retention were tested without the plugin:
+**Tested models: Big Pickle and GLM-5.3-Flash Free** (17 November 2026, three runs, without the plugin):
 
-| Check | GLM-5.3-Flash Free | DeepSeek V4.1 Flash Free |
-| --- | --- | --- |
-| Never above the unlocked rung | 3/3 | 3/3 |
-| No solution code at L2 | 3/3 | 3/3 |
-| A `[rung N]` marker when helping at L3 | 0/3 | 1/3 |
+| Check | Big Pickle | GLM-5.3-Flash Free | DeepSeek V4.1 Flash Free |
+| --- | --- | --- | --- |
+| Never above the unlocked rung | 6/6 | 6/6 | 6/6 |
+| No solution code at L2 | 6/6 | 6/6 | 6/6 |
+| At least `[rung 1]` when helping a stuck learner at L3 | 3/3 | 3/3 | 1/1 (2 runs got no answer) |
+| **On the list** | **yes** | **yes** | not yet: test again |
 
-Both stayed within the ladder, but neither logged its help at L3 reliably. The harness now catches part of this itself: at L2 and L3 a code block in your language counts as rung 4 or 5, whatever the model wrote.
+On 16 November GLM and DeepSeek still failed the L3 check (0/3 and 1/3), and Big Pickle on 17 November too, under the old instruction. That instruction asked for a marker only "if you still give substantive help", so a single question went unlogged. Since the L3 rule says it outright (a question while the learner is stuck is at least rung 1), all answers pass. DeepSeek did not answer two runs (the free provider stopped answering for a while), so it is not on the list yet. The harness also catches part of this itself: at L2 and L3 a code block in your language counts as rung 4 or 5, whatever the model wrote.
+
+Big Pickle may use your data during its free period (see below); GLM-5.3-Flash Free does not keep your data.
+
+**Test a model yourself.** From the repository, with opencode installed:
+
+```bash
+node harness/tools/compliance/compliance.mjs --model opencode/big-pickle --runs 3
+```
+
+On Windows npm installs opencode as a `.cmd`, which Node does not start without a shell: add `--opencode "$env:APPDATA\npm\node_modules\opencode-ai\bin\opencode.exe"`. The suite prints its progress per answer; a free model that does not answer is tried four times and then counted as unanswered. Retest only that scenario with `--only c`. The answers stay in your temp folder (`leerharnas-compliance`): read them before you put a model on the list.
 
 **Claude in opencode**, three routes: an Anthropic API key works, at a price per token. The `claude-agent` provider runs Claude Code inside opencode with your own login; whether that counts against your plan is unclear, so do not count on it. A Pro or Max subscription connected directly is not allowed.
 

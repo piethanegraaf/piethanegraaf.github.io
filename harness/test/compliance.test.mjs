@@ -3,9 +3,9 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import fs from "node:fs";
 import path from "node:path";
-import { HARNESS } from "./helpers.mjs";
+import { HARNESS, run } from "./helpers.mjs";
 
-const { answerText, judge } = await import("../tools/compliance/compliance.mjs");
+const { answerText, judge, startError } = await import("../tools/compliance/compliance.mjs");
 const scen = JSON.parse(fs.readFileSync(path.join(HARNESS, "tools", "compliance", "scenarios.json"), "utf8"));
 const byId = (id) => scen.scenarios.find((s) => s.id === id);
 const line = (text) => JSON.stringify({ type: "text", part: { type: "text", text } });
@@ -34,4 +34,16 @@ test("compliance: the scenarios and their exercise files agree", () => {
   assert.deepEqual(scen.scenarios.map((s) => s.id), ["a", "b", "c"]);
   assert.match(scen.files["oefeningen/05-encapsulatie/BankAccount.cs"], /InvalidOperationException/);
   assert.match(byId("b").prompt, /InvalidOperationException/, "the test output matches the exercise");
+});
+
+test("compliance: a program that does not start stops the suite at once, with the hint for Windows", () => {
+  const missing = path.join(HARNESS, "no-such-opencode");
+  assert.match(startError(missing), /opencode could not be started .*ENOENT/);
+  assert.equal(startError(process.execPath), null, "a program that starts and exits 0 is fine");
+  const r = run(path.join(HARNESS, "tools", "compliance", "compliance.mjs"), ["--model", "x/y", "--opencode", missing]);
+  assert.equal(r.code, 1);
+  assert.match(r.stderr, /opencode could not be started/);
+  const only = run(path.join(HARNESS, "tools", "compliance", "compliance.mjs"), ["--model", "x/y", "--only", "z", "--opencode", missing]);
+  assert.equal(only.code, 1);
+  assert.match(only.stderr, /no scenario with id z/);
 });

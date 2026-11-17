@@ -180,12 +180,17 @@ test("opencode: the model is named once per session, with a warning when it is u
   assert.match(modelNotice("opencode/glm-5.3-flash-free", models), /glm-5\.3-flash-free/);
   assert.equal(modelNotice("opencode/big-pickle", models).split("\n").length, 2);
   assert.ok(Array.isArray(loadModels().supported), "models.json ships with the plugin");
+  // The shipped list: the models that passed the compliance suite on 17 Nov.
+  assert.equal(modelNotice("opencode/glm-5.3-flash-free"), "");
+  assert.equal(modelNotice("opencode/big-pickle").split("\n").length, 1, "Big Pickle: tested, but it may train on the data");
   const before = oc.log.synthetic.length;
-  const req = () => ({ sessionID: "ses_root", model: { providerID: "opencode", id: "glm-5.3-flash-free" }, system: [], messages: [], tools: {} });
+  // A model that is not on the shipped list (models.json), so the plugin warns about it.
+  assert.ok(!loadModels().supported.includes("opencode/minimax-m3.1-flash-free"));
+  const req = () => ({ sessionID: "ses_root", model: { providerID: "opencode", id: "minimax-m3.1-flash-free" }, system: [], messages: [], tools: {} });
   await oc.hooks.session.context(req());
   await oc.hooks.session.context(req());
   await settle();
-  assert.equal(oc.log.synthetic.slice(before).filter((s) => /glm-5\.3/.test(s.text)).length, 1, "once, not per request");
+  assert.equal(oc.log.synthetic.slice(before).filter((s) => /minimax-m3\.1/.test(s.text)).length, 1, "once, not per request");
 });
 
 test("opencode helpers: diff text, rule conversion, message mapping", () => {
