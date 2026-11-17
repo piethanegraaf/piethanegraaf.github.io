@@ -75,7 +75,7 @@ No. It asks Claude to leave a few lines for you at design decisions, and Claude 
 
 ### Can Claude Code give hints instead of code?
 
-Yes. With the learning harness, Claude gives hints from a ladder for every skill you are learning: first a question, then where to look, then a sketch, then a small example on another topic. A worked solution (rung 5) only comes after you confirm, and then the task counts as not solved. In graded work the ladder stops at rung 4.
+Yes. With the learning harness, Claude gives hints from a ladder for every skill you are learning: first a question, then where to look, then a sketch, then a small example on another topic. A worked solution (rung 5) only comes after you confirm, and then the task counts as not succeeded. In graded work the ladder stops at rung 4.
 
 ### Does it work for languages other than C#?
 

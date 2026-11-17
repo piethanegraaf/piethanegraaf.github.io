@@ -264,7 +264,7 @@ test("export: generatedAt stays a date, exportedAt is the moment; both languages
     assert.deepEqual(sk.history.map((h) => h.kind), ["manual", "manual"]);
     const sig = j.signals.find((x) => x.skill === "ood.interfaces");
     assert.match(sig.texts.nl, /5\/5 gelukt/);
-    assert.match(sig.texts.en, /5\/5 solved/);
+    assert.match(sig.texts.en, /5\/5 succeeded/);
     assert.equal(sig.text, sig.texts.nl, "the old field stays, in the record's language");
   } finally { p.cleanup(); }
 });

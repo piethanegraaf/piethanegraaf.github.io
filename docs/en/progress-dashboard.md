@@ -6,18 +6,18 @@ description: "What the progress dashboard shows per skill, from levels and tasks
 
 ## What the dashboard shows
 
-![The learning dashboard with made-up demo data: 86% solved and 29% independent, the learning phases per skill over the days, and the number of skills per level](../assets/images/dashboard-demo-en.png)
+![The learning dashboard with made-up demo data: 86% succeeded and 29% independent, the learning phases per skill over the days, and the number of skills per level](../assets/images/dashboard-demo-en.png)
 
 *The dashboard with made-up demo data.*
 
 The [dashboard](/dashboard/?lang=en) shows progress per skill and microskill:
 
-- two tiles: **solved** (at most rung 2) and **independent** (rung 0), counted as the harness counts them;
+- two tiles: **succeeded** (at most rung 2) and **independent** (rung 0), counted as the harness counts them;
 - the **learning phases**: per skill one band over the days, in the colour of the level, with "start" dashed while the placement was open. Microskills are thinner, under their parent. Your tasks are dots above the band, in the colour of the rung: the help that one task took. The phase and the rung are [two different scales](how-it-works.md#learning-phases-and-the-hint-ladder). Each change has a mark (▲ a phase up, ▼ extra support, ● a start or a new microskill); point at it to see how it was decided: a proposal you confirmed, a placement, by hand, a reverted demotion, or the analyst. One sentence on top compares you only with yourself, never with others;
 - your **level** and its history;
 - what each **level means**: point at a level in the legend or the bar (or Tab to it) for what it is and the step to the next level. Esc closes the explanation. Why, the evidence and the route from the start (placement open) to L4 are under *What do the levels mean?*: the criteria per step, and how you go up and down;
 - what you still need **for the next level**, in the shape of that criterion. At L2 that is a bar with the 85% target and the three conditions. At L0, L1 and L3 it is pips, and at L3 also the days and the transfer task. At L4 you see the maintenance. One line says what still has to happen. This only counts the tasks since your last level change, just like the harness, so after a step up you start again;
-- how the **last 10** explained tasks went: solved means with at most rung 2;
+- how the **last 10** explained tasks went: succeeded means with at most rung 2;
 - per task: the rung, the source (test, logged yourself, chat), your **explanation**, and when it was **rejected** or **corrected**;
 - the **reviews** (only L4, Fibonacci), neutral: when the next one is ready, and when you **last** saw the skill in your work. Nothing is "overdue": a review waits until the skill comes by;
 - **skipped** tasks: the explanation did not come right away, so they do not count. They are shown apart from failed and from waiting for an explanation, and hatched in the chart;

@@ -14,7 +14,7 @@ import {
 } from "../core/lib.mjs";
 import {
   HINT, SOLUTION, SOLVED_STRONG, SOLVED_WEAK, CODE_CONTEXT, NOT_SOLVED, RESUME, ATTEMPT, CHECKING,
-  STUCK, DONT_KNOW, MORE_EXPLANATION, errorSignature, promotionAnswer, microAnswer, isEnd, DONE_PREFIX, confidenceOf,
+  STUCK, DONT_KNOW, MORE_EXPLANATION, errorSignature, promotionAnswer, microAnswer, isEnd, DONE_PREFIX, confidenceOf, catchUpAnswer,
 } from "../core/patterns.mjs";
 
 const rungName = (n) => t(`rung.${n}`);
@@ -54,13 +54,15 @@ noteExplanationWords(st, prompt, pendingTasks().map((x) => x.tid));
 // The plan and the confidence of the start (review of 13 Nov, night, #56): logged by the harness itself, so the
 // diary does not depend on what Claude remembers. The plan is the learner's first message of the session; the
 // confidence is a number 1-5 in the message right after Claude asked for it (the Stop hook saw "(1–5)").
+const firstPrompt = !st.planLogged;
 if (!st.planLogged) {
   st.planLogged = true;
   logEvent({ type: "plan", text: prompt.slice(0, 300), session: sid });
 }
 if (st.awaitConfidence) {
   const c = confidenceOf(prompt);
-  if (c !== null) logEvent({ type: "confidence", value: c, skill: st.activeSkill ?? null, session: sid });
+  // After a stop request it is the answer to /diary question 3: the confidence after the session (#73).
+  if (c !== null) logEvent({ type: st.awaitConfidence === "after" ? "confidence-after" : "confidence", value: c, skill: st.activeSkill ?? null, session: sid });
   st.awaitConfidence = false;
 }
 
@@ -132,6 +134,29 @@ let microMsg = null;
     for (const o of offers.filter((x) => fresh.has(x.id))) logEvent({ type: "micro-declined", skill: o.id, parent: o.parent, session: sid });
     st.microOffers = offers.filter((o) => !fresh.has(o.id));
     ctx.push(t("pg.micro.declined", { ids: [...fresh].join(", ") }));
+  }
+}
+
+// ---------- 0c. The catch-up diary offer (review of 17 Nov, #77) ----------
+// The harness shows the offer to the learner itself (session start, and once more with the first answer when the
+// learner did not react), like a promotion proposal: Claude cannot forget it. The learner's answer decides.
+let catchUpMsg = null;
+{
+  const offer = readEvents().filter((e) => e.type === "catchup-offered" && e.session === sid).pop();
+  if (offer && !st.catchUpAnswered) {
+    const of8 = String(offer.of).slice(0, 8);
+    const ans = catchUpAnswer(prompt, { first: firstPrompt });
+    if (ans) {
+      st.catchUpAnswered = ans.answer;
+      logEvent({ type: ans.answer === "yes" ? "catchup-accepted" : "catchup-declined", of: offer.of, session: sid });
+      ctx.push(t(ans.answer === "yes" ? "pg.catchUp.yes" : "pg.catchUp.no", { sid: offer.of, sid8: of8 }));
+    } else if (!st.catchUpShown) {
+      st.catchUpShown = true;
+      const o = loadSession(offer.of);
+      const day = new Date(Number(o.endedAt) || Number(o.lastActiveAt) || now).toLocaleDateString("sv-SE");
+      catchUpMsg = t("pg.catchUp.offer", { sid8: of8, day });
+      ctx.push(t("pg.catchUp.shown", { sid8: of8 }));
+    }
   }
 }
 
@@ -326,16 +351,33 @@ if (attempt) st.attempted = true;
 // like `skill.mjs done`, without a "!" command. Only the learner's own message counts. The skill is the one of
 // this prompt or session; in graded work a file there must have changed since the last task of that family (the
 // part is in the repo), otherwise Claude asks the learner to save or show it first.
-if (doneMatch) {
-  const what = doneMatch[1].trim().replace(/\s+/g, " ").slice(0, 200);
+// Review of 17 Nov (#72): the harness guesses the skill from the words after "af:" (keywords) and from the newest
+// changed file of the assignment, and always asks the learner to confirm, unless the message names it with #id. On 16
+// and 17 Nov a C# part was logged for uml.klassendiagram: Program.cs belongs to no skill, so the search skipped it and
+// took an older Markdown file with a class diagram.
+const TAG = /#([a-z][a-z0-9-]*(?:\.[a-z0-9-]+)+)/i;
+const tagged = (() => { const id = prompt.match(TAG)?.[1]; const s = id ? findSkill(data, id.toLowerCase()) : null; return s && s.kind !== "zone" ? s : null; })();
+let afMsg = null;
+function guessAfSkill(what) {
+  let best = null;
+  for (const [id, n] of keywordHits(what.toLowerCase(), keywordMap(data))) {
+    const s = findSkill(data, id);
+    if (!s || s.kind === "zone") continue;
+    const score = n * (isMicro(s) ? 2 : 1);
+    if (!best || score > best.score) best = { s, score };
+  }
+  if (best) return best.s;
+  // The newest changed file only: a file without a skill is an answer too ("unknown"), not a reason to look further.
+  const newest = graded ? gradedChangedFiles(G, now - 14 * 86400000, { limit: 1 })[0] : null;
+  if (newest) return skillForFile(data, newest.file)?.skill ?? null;
+  return skill;
+}
+function logAfTask(target, what) {
   const latest = graded ? gradedChangedFiles(G, now - 14 * 86400000, { limit: 20 }) : [];
-  const byContent = !skill ? latest.map((f) => skillForFile(data, f.file)).find(Boolean)?.skill ?? null : null;
-  const target = skill ?? byContent;
-  const famTasks = target ? allTasks().filter((x) => familyIds(data, familyOf(target)).includes(x.skill)) : [];
+  const famTasks = allTasks().filter((x) => familyIds(data, familyOf(target)).includes(x.skill));
   const lastAt = famTasks.length ? Math.max(...famTasks.map((x) => Date.parse(x.at) || 0)) : 0;
   const evidence = !graded || latest.some((f) => f.mtime > lastAt);
-  if (!target) ctx.push(t("pg.af.noSkill", { what }));
-  else if (!evidence) {
+  if (!evidence) {
     logEvent({ type: "af-refused", skill: target.id, what, why: "no-change", session: sid });
     ctx.push(t("pg.af.noEvidence", { what, id: target.id }));
   } else {
@@ -353,6 +395,29 @@ if (doneMatch) {
     st.folderSkill = familyOf(target); st.folderSkillAt = now;
     taskLogged(st, tk, now);
   }
+}
+if (doneMatch) {
+  const what = doneMatch[1].replace(new RegExp(TAG.source, "gi"), "").trim().replace(/\s+/g, " ").slice(0, 200);
+  delete st.afPending;
+  if (tagged) logAfTask(tagged, what);
+  else {
+    const guess = guessAfSkill(what);
+    if (!guess) ctx.push(t("pg.af.noSkill", { what }));
+    else {
+      st.afPending = { what, guess: guess.id, at: now };
+      afMsg = t("pg.af.confirm", { what, id: guess.id, title: guess.title ?? guess.id });
+      logEvent({ type: "af-asked", skill: guess.id, what, session: sid });
+      ctx.push(t("pg.af.asked", { what, id: guess.id }));
+    }
+  }
+} else if (st.afPending) {
+  // The answer to the question of the harness: yes, or another skill with #id. Anything else drops it.
+  const p = st.afPending;
+  delete st.afPending;
+  const pick = tagged ?? (catchUpAnswer(prompt, { first: true })?.answer === "yes" || /^\s*(klopt|correct|right|that'?s right)\b/i.test(prompt)
+    ? findSkill(data, p.guess) : null);
+  if (pick) logAfTask(pick, p.what);
+  else { logEvent({ type: "af-dropped", skill: p.guess, what: p.what, session: sid }); ctx.push(t("pg.af.dropped", { what: p.what })); }
 }
 if (solved && skill) {
   // All help since the last task, plus review help about this task's concept (S3).
@@ -512,12 +577,15 @@ if ((wantsHint || asksMore) && !solved && st.transfer?.skill) {
 
 // ---------- 5. End of session & reflection nudge ----------
 if (RESUME.test(prompt) && st.endRequested) {
-  st.endRequested = false; st.reflectBlocks = 0;
+  st.endRequested = false; st.reflectBlocks = 0; delete st.diaryAsked;
 }
 if (ending) {
   st.endRequested = true; st.reflectBlocks = 0;
   logEvent({ type: "end-request", session: sid });
   ctx.push(t("pg.end", { sid, pending: pending.length ? t("pg.end.pending", { n: pending.length }) : "" }));
+  // The concepts the learner slipped on in this session come first in the check questions (review of 17 Nov, #80).
+  const slips = [...new Set(readEvents().filter((e) => e.type === "concept-help" && e.session === sid).map((e) => e.skill))];
+  if (slips.length) ctx.push(t("pg.end.concepts", { list: slips.join(", ") }));
 } else if (!st.nudged && (st.activeMs ?? 0) > 60 * 60000) {
   st.nudged = true;
   ctx.push(t("pg.hour"));
@@ -539,7 +607,7 @@ if (skill || wantsHint || ctx.length) {
       pending: stats.pending ? t("pg.head.pending", { n: stats.pending }) : "",
     })
     : t("pg.head.unknown", { level });
-  const systemMessage = [promotedMsg, microMsg].filter(Boolean).join("\n\n");
+  const systemMessage = [catchUpMsg, afMsg, promotedMsg, microMsg].filter(Boolean).join("\n\n");
   process.stdout.write(JSON.stringify({
     ...(systemMessage ? { systemMessage } : {}),
     hookSpecificOutput: { hookEventName: "UserPromptSubmit", additionalContext: [head, ...ctx].join("\n") },

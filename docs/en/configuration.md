@@ -24,7 +24,7 @@ The settings live in `.learning/skills.json`, under `settings`. Change them with
 | `codeExtensions` | `cs, csproj, sln, slnx` | Which files are the learner's code. The OOD map adds `razor, cshtml, sql, yml, yaml`, for a project with a UI, a database and a pipeline. |
 | `codeFiles` | (empty) | Files without a telling extension that are also the learner's work, by name. `*` stands for anything but `/`. The OOD map sets `Dockerfile, appsettings*.json`. |
 | `buildCommands` | `dotnet build/test/run …`, `msbuild` | Regular expressions for commands that build or test. `check.mjs` always counts. |
-| `toolingTerms` | `rider, sdk, nuget …` | Tooling words: "it works" about these is not a solved task. |
+| `toolingTerms` | `rider, sdk, nuget …` | Tooling words: "it works" about these is not a finished task. |
 
 An invalid value falls back to the default, so the guard never lets everything through.
 

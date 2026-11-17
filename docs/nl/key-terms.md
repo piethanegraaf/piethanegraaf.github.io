@@ -51,10 +51,14 @@ Een **leerfase** is het niveau van één vaardigheid, en bepaalt hoeveel de AI d
 
 Een **hintladder** is hulp in treden die elk iets meer weggeven: een vraag, een vindplaats, een schets, een klein voorbeeld over een ander onderwerp, en pas dan, na jouw bevestiging, een uitgewerkte oplossing (in beoordeeld werk stopt de ladder bij trede 4). De volgende trede komt pas na een zichtbare poging. De ladder gaat over één taak; de leerfase over de vaardigheid over weken. De treden die je nodig had zijn het bewijs voor de volgende fase: zie [hoe ze samenwerken](how-it-works.md#leerfasen-en-de-hintladder) en [Hoe het werkt](how-it-works.md#de-hintladder-l2) en [§5.3](research/design.md#53-frictie-afstemmen-en-de-hintladder).
 
+## Afgerond, gelukt en zelfstandig
+
+De hoogste trede van hulp bij een taak bepaalt hoe hij telt. Een taak is **afgerond** zodra hij gelogd is, op elke trede. Hij is **gelukt** op trede 0–2: dat tellen de percentages voor omhoog en omlaag. Hij is **zelfstandig** alleen op trede 0. Trede 1–2 is dus "gelukt met hulp tot trede N", trede 3–4 is "afgerond met hulp tot trede N" en telt als niet gelukt, en trede 5 (een uitwerking) is afgerond, maar niet gelukt. Zie [Hoe het werkt](how-it-works.md#de-hintladder-l2).
+
 ## Gespreide herhaling
 
 **Gespreide herhaling** is een beheerste vaardigheid herhalen met groeiende tussenpozen, zodat hij niet wegzakt. Gespreid oefenen werkt beter dan alles in één keer (Cepeda et al., 2006), en cognitieve vaardigheden zoals correcte code uit je hoofd schrijven zakken sneller weg dan fysieke (Arthur et al., 1998). In de harnas is een herhaling op L4 het volgende moment dat de vaardigheid in je eigen werk langskomt. Zie [§2.5](research/literature.md#25-onthouden-na-beheersing-gespreid-oefenen-ophalen-en-verval-van-vaardigheden) en [§5.7](research/design.md#57-gespreide-herhaling-na-beheersing).
 
 ## Transfertaak
 
-Een **transfertaak** is een nieuwe oefening in een ander domein, zonder enige hint opgelost, die laat zien dat een vaardigheid ook buiten de oefeningen werkt waarop je oefende. In de harnas is die nodig voordat een vaardigheid van L3 naar L4 gaat. Zie [Hoe het werkt](how-it-works.md#doorstromen-en-herhalingen).
+Een **transfertaak** is een nieuwe oefening in een ander domein, zelfstandig gemaakt (zonder enige hint), die laat zien dat een vaardigheid ook buiten de oefeningen werkt waarop je oefende. In de harnas is die nodig voordat een vaardigheid van L3 naar L4 gaat. Zie [Hoe het werkt](how-it-works.md#doorstromen-en-herhalingen).

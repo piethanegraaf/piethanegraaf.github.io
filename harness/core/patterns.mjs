@@ -166,6 +166,20 @@ export function microAnswer(text) {
   return null;
 }
 
+// The learner's answer to the catch-up diary offer that the harness shows itself (review of 17 Nov, #77): "ja, inhalen"
+// or "yes, catch up"; a bare "ja"/"yes" only counts as the very first message of the session (prompt-gate decides).
+const CATCHUP_YES = any(
+  String.raw`^\s*ja,?\s+(inhalen|haal\s+(het\s+|maar\s+)?in)\b`,
+  String.raw`^\s*yes,?\s+catch\s*(it\s+)?up\b`,
+);
+const BARE_YES = /^\s*(ja|yes|ok[eé]?|graag|sure)[\s.!]*$/i;
+export function catchUpAnswer(text, { first = false } = {}) {
+  const s = String(text ?? "");
+  if (CATCHUP_YES.test(s) || (first && BARE_YES.test(s))) return { answer: "yes" };
+  if (PROMOTE_NO.test(s)) return { answer: "no" };
+  return null;
+}
+
 // Markers Claude puts in an answer. Both languages are accepted.
 // [trede N] for help given. With a concept id, [trede N #id], the help was about that concept (setup
 // review of 11 Nov, afternoon, #26): the task keeps the rung, and help about a concept of another

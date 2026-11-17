@@ -27,7 +27,7 @@ import {
   isLearnerEntry, learnerEntryText, entryText, readTranscript, loadSkills, findSkill, familyIds, autoDemote,
   applyVerdict, findVerdict, lapseTasks, promotionAdvice, offerIsNew, offerText, newWorkSignal, beginNewWork, explanationText,
   noteConceptHelp, checkMicroProposal, microOfferText, readEvents, isOtherFamily, familyOf, placeAfterExplanation, recheckDemotion,
-  verdictFromAgent, t, gradedOf, isGradedPath, isGradedDir, mentionsGraded, sessionWork, effectiveLevel,
+  verdictFromAgent, t, gradedOf, isGradedPath, isGradedDir, mentionsGraded, sessionWork, effectiveLevel, keywordHits, keywordMap, isMicro,
 } from "../core/lib.mjs";
 import path from "node:path";
 import { RUNG_MARK, GIVEN_MARK, REVIEW_RUNG_MARK, EXPLAIN_MARK, TRANSFER_MARK, MICRO_MARK, parseMicroMark, ASKS_CONFIDENCE, CHECK_MARK, LOG_MARK } from "../core/patterns.mjs";
@@ -103,6 +103,26 @@ for (const m of answer.matchAll(RUNG_MARK)) {
   const other = m[2] && data && isOtherFamily(data, m[2], rungSkill) ? findSkill(data, m[2]).id : false;
   rungMark(n, {}, other);
   if (m[2] && data) noteConceptHelp(data, st, m[2], n, { taskSkill: rungSkill, session: sid });
+}
+// A hint of rung 2 or higher without an id that seems to be about a microskill of another family (review of 17 Nov, #80:
+// "private" on a local variable was hinted as [trede 2], so the microskill ood.klassen.veld-vs-lokaal got no evidence).
+// At least 2 of its keywords in the answer; once per microskill per session. The block only asks Claude to add the id.
+let conceptBlock = null;
+if (data && !input.stop_hook_active) {
+  const bare = [...answer.matchAll(RUNG_MARK)].filter((m) => Number(m[1]) >= 2 && !m[2]);
+  if (bare.length) {
+    st.conceptWarned = Array.isArray(st.conceptWarned) ? st.conceptWarned : [];
+    const hit = [...keywordHits(answer.toLowerCase(), keywordMap(data))]
+      .map(([id, n]) => ({ s: findSkill(data, id), n }))
+      .filter((x) => x.s && isMicro(x.s) && x.n >= 2 && !st.conceptWarned.includes(x.s.id) && (!rungSkill || isOtherFamily(data, x.s.id, rungSkill)))
+      .sort((a, b) => b.n - a.n)[0];
+    if (hit) {
+      st.conceptWarned.push(hit.s.id);
+      const rung = Math.max(...bare.map((m) => Number(m[1])));
+      logEvent({ type: "concept-id-missing", skill: hit.s.id, rung, session: sid });
+      conceptBlock = t("rg.conceptId", { id: hit.s.id, title: hit.s.title ?? hit.s.id, rung });
+    }
+  }
 }
 
 // An unlock that was not used (#68). prompt-gate counts an unlocked rung as given help, so that an unmarked
@@ -300,6 +320,7 @@ if (data) {
   }
 }
 if (transferBlock && !input.stop_hook_active) block(transferBlock);
+if (conceptBlock && !input.stop_hook_active) block(conceptBlock);
 if (microBlock && !input.stop_hook_active) block(microBlock);
 
 // ---------- 1c. Verdict of the demotion analyst (S3a) ----------
@@ -374,8 +395,10 @@ if (G && st.graded) {
 }
 
 // ---------- 1f. Start and end of a session (review of 13 Nov, night, #56, #58b, #59) ----------
-// Claude asked for the confidence ("(1–5)"): prompt-gate logs the number in the learner's next message.
-if (ASKS_CONFIDENCE.test(answer)) st.awaitConfidence = true;
+// Claude asked for the confidence ("(1–5)"): prompt-gate logs the number in the learner's next message. Asked after a
+// stop request it is the confidence AFTER the session (/diary, question 3), never the one of the start (review of 17 Nov,
+// #73: "3 level 2" in a diary answer was logged as the confidence beforehand).
+if (ASKS_CONFIDENCE.test(answer)) st.awaitConfidence = st.endRequested ? "after" : true;
 // [controlevraag <id> goed|half|open]: the result of a check question at the end of the session. Evidence for a
 // proposal for a microskill, never for a level.
 for (const m of answer.matchAll(CHECK_MARK)) {
@@ -387,6 +410,14 @@ for (const m of answer.matchAll(CHECK_MARK)) {
   st.explainChecked = [...st.explainChecked.slice(-50), key];
   const result = { goed: "right", right: "right", half: "half", open: "open" }[m[2].toLowerCase()];
   logEvent({ type: "check-question", skill: s.id, result, session: sid });
+}
+// The learner answered the diary questions, but Claude's feedback has no [controlevraag] marks (review of 17 Nov, #79:
+// on 16 Nov the check questions were asked and answered, and no result was logged). Once per session.
+if (st.diaryAsked && st.diaryAsked !== String(promptKey) && !st.checkWarned && !input.stop_hook_active
+  && ![...answer.matchAll(CHECK_MARK)].length && !readEvents().some((e) => e.session === sid && e.type === "check-question")) {
+  st.checkWarned = true;
+  logEvent({ type: "check-marks-missing", session: sid });
+  block(t("rg.checkMarks"));
 }
 // [logboek "<text>"]: the learner's own words for the last column of the AI-use log. The hook writes them, word
 // for word, in the empty last column of the rows of that session, but only when the text is part of what the
@@ -424,6 +455,16 @@ if (diaryHasSession(sid)) {
   lapseTasks("session-end", (x) => x.session && x.session !== sid, sid);
   st.demotionPending = null;
   st.endRequested = false;
+  delete st.diaryAsked;
+  done();
+}
+
+// The diary questions are asked in this answer (/diary: everything in one message, with "(1–5)" in question 3): the
+// session waits for the learner's answers, so no block now (review of 17 Nov, #74: the block made Claude write a
+// diary entry with "waiting for an answer" before the learner had answered). The next answer is judged as before.
+if (ASKS_CONFIDENCE.test(answer) && st.diaryAsked !== String(promptKey)) {
+  st.diaryAsked = String(promptKey);
+  logEvent({ type: "diary-asked", session: sid });
   done();
 }
 

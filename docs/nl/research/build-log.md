@@ -612,6 +612,22 @@ Deze delen van het ontwerp zijn vervangen. Ze stonden op de [ontwerppagina](desi
 
 ## 11. Wijzigingslog {#changelog}
 
+### 17 november 2026: de student bevestigt, de harnas biedt aan, en heldere woorden
+
+De pilotstudent bekeek de sessies van 16 november ('s avonds) en 17 november over de kostenfuncties van de eindopdracht, en besloot over de punten 72–82.
+
+- **#72 af: vraagt voordat het logt.** Een C#-onderdeel ("lasersnijder kostenfunctie") werd twee keer gelogd voor `uml.klassendiagram`: `Program.cs` hoort bij geen vaardigheid, dus de zoektocht sloeg het over en nam een ouder Markdown-bestand met een klassendiagram. Nu gokt de harnas uit de woorden na `af:` (trefwoorden), daarna alleen uit het nieuwste gewijzigde bestand, en vraagt hij de student altijd om te bevestigen: "ja", een andere vaardigheid met `#id`, of "nee". Met `#id` in het `af:`-bericht logt hij meteen.
+- **#73 Zelfvertrouwen vooraf en achteraf.** De vraag "(1–5)" van het dagboek werd gelezen als het zelfvertrouwen van het begin ("3 level 2" in een reflectie). Na een stopverzoek wordt het nu gelogd als `confidence-after`. De start vraagt om één getal, op een eigen regel.
+- **#74 De Stop-hook wacht op de antwoorden van het dagboek.** Hij blokkeerde direct na de dagboekvragen, dus Claude schreef eerst een entry met "wacht op antwoord". Het antwoord met de vragen gaat nu door; het volgende vraagt nog steeds de entry.
+- **#75, #77 Het aanbod van het inhaaldagboek.** Een sessie die zonder prompt werd geopend en gesloten, verbruikte het aanbod. Een aanbod telt nu alleen in een sessie waarin de student iets schreef. De harnas toont het aanbod zelf ("ja, inhalen" / "nee"), en met het eerste antwoord nog een keer, zodat Claude het niet kan vergeten.
+- **#76 Omdat.** De start zegt de student de reden te geven met "omdat" (of "because"); de check van de uitleg blijft gelijk.
+- **#78 Niet de compiler.** Na vijf keer "check again" zonder uitvoer van een build wees Claude zelf elke fout aan. De regels vragen nu eerst om de uitvoer van de build of de test.
+- **#79 Controlevragen worden gelogd.** Op 16 november kregen de antwoorden op de controlevragen geen markers. De Stop-hook waarschuwt nu één keer als de student antwoordde en de feedback er geen heeft.
+- **#80 Hulp over een concept krijgt het id.** `private` op een lokale variabele werd gehint als `[trede 2]` zonder `#id`, dus de microvaardigheid voor velden en lokale variabelen kreeg geen bewijs. De Stop-hook waarschuwt als een hint van trede 2 of hoger over een microvaardigheid van een andere familie lijkt te gaan; de eindprompt noemt de concepten waarop de student uitgleed, en de eerste controlevraag gaat over één daarvan.
+- **#81 Afgerond, gelukt, zelfstandig.** "Opgelost" of "gelukt" betekende op de ene plek trede 0–2 en op de andere trede 1–4. Nu: elke gelogde taak is afgerond; gelukt is trede 0–2; zelfstandig is trede 0. Trede 3–4 is "afgerond met hulp tot trede N", en dat telt als niet gelukt. Dezelfde woorden staan in de meldingen, de regels, de docs en het dashboard.
+- **#82 De beslisboom.** De tak van L4 toont ook de gewone regel voor omlaag, en twee regels onder de boom leggen de sprong uit (L2 → L4) en dat trede 5 in beoordeeld werk niet bestaat.
+- **Niet gewijzigd:** een vraag voordat de student een doel noemt, telt nog steeds voor de taak (punt 8 van de review; de student liet het zo). De breedte van de boom op een telefoon komt later.
+
 ### 17 november 2026: opencode 2 was er al; de harnas werkt erin
 
 In het verslag van 16 november stond dat geen uitgebrachte opencode de plugin-API had. Dat klopte niet. Opencode 2 kwam uit op 12 oktober 2026, als apart npm-pakket (`@opencode/cli`, nu 2.3.0). De controle keek alleen naar het oude pakket (`opencode-ai`), dat op 1.x blijft.

@@ -259,6 +259,8 @@ test("#56: SessionEnd notes the end; the next start offers a catch-up diary once
     const r = p.hook("session-start.mjs", { source: "startup", session_id: "nieuw-1" });
     assert.match(ctxOf(r), /sessie 11111111 van \d{4}-\d{2}-\d{2} \(25 actieve minuten\) sloot zonder dagboek[\s\S]*<!-- sessie: 11111111-2222-3333-4444-555555555555 -->/);
     assert.match(r.json.systemMessage, /Sessie 11111111 .* sloot zonder dagboek/);
+    // The learner answers in that session (#75: an offer only counts as made when the learner wrote something).
+    p.hook("prompt-gate.mjs", { session_id: "nieuw-1", prompt: "nee" });
     const again = p.hook("session-start.mjs", { source: "startup", session_id: "nieuw-2" });
     assert.doesNotMatch(ctxOf(again), /sloot zonder dagboek/, "offered once");
   } finally { p.cleanup(); }
@@ -283,7 +285,10 @@ test("#56: no catch-up for a session with a diary entry, without work, or still 
 test("#57: 'af: <what>' logs a task for the active skill, like done, and asks for the explanation", () => {
   const p = makeProject({ sessions: { [SID]: { activeSkill: "demo.l2", startedAt: Date.now(), rung: 0, maxRung: 0 } } });
   try {
-    const r = p.hook("prompt-gate.mjs", { session_id: SID, prompt: "af: de methode Toevoegen" });
+    // Review of 17 Nov (#72): the harness guesses the skill and the learner confirms it first.
+    p.hook("prompt-gate.mjs", { session_id: SID, prompt: "af: de methode Toevoegen" });
+    assert.equal(p.events().some((e) => e.type === "task"), false);
+    const r = p.hook("prompt-gate.mjs", { session_id: SID, prompt: "ja" });
     const task = p.events().find((e) => e.type === "task");
     assert.equal(task.source, "af");
     assert.equal(task.skill, "demo.l2");
@@ -309,6 +314,8 @@ test("#57: in graded work 'af:' needs a changed file there; a Mermaid class diag
     fs.writeFileSync(path.join(target, "Arc42", "05_building_block_view.md"), "# 5\n\n```mermaid\nclassDiagram\n  Product <|-- Boek\n```\n");
     fs.utimesSync(path.join(target, "Arc42", "05_building_block_view.md"), later, later);
     r = p.hook("prompt-gate.mjs", { session_id: S2, prompt: "af: overerving naar de producttypes" });
+    assert.match(r.json.systemMessage, /uml.klassendiagram/, "the newest changed file is the guess (#72)");
+    p.hook("prompt-gate.mjs", { session_id: S2, prompt: "ja" });
     const task = p.events().filter((e) => e.type === "task").pop();
     assert.deepEqual([task.skill, task.source, task.what], ["uml.klassendiagram", "af", "overerving naar de producttypes"]);
   } finally { done(); }

@@ -288,7 +288,7 @@ if (newlyGreen.length) {
   const named = `${skill.title} (${skill.id})`;
   console.log("  " + (maxRung === 0 ? t("check.praise.solo", { skill: named })
     : maxRung >= 5 ? t("check.praise.fail")
-      : t("check.praise.help", { rung: maxRung, skill: named, concept: helpConcept ?? skill.id })));
+      : t(maxRung >= 3 ? "check.praise.finished" : "check.praise.help", { rung: maxRung, skill: named, concept: helpConcept ?? skill.id })));
   console.log("  " + t("check.logged", { id: skill.id, tid: task.tid, rung: maxRung }));
   for (const m of after.messages) console.log("  " + m);
   // The explanation as an invitation, not as a condition (#37). With help, it is about the point where

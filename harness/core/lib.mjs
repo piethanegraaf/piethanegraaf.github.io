@@ -1837,7 +1837,10 @@ export function catchUpSessions(data, currentSid, { days = 7, limit = 1, now = D
   const gap = Number(settingsOf(data).sessionGapMinutes) || Number(settingsOf(data).idleMinutes) || DEFAULT_SETTINGS.idleMinutes;
   const idle = Math.max(1, gap) * 60000;
   const events = readEvents();
-  const offered = new Set(events.filter((e) => e.type === "catchup-offered").map((e) => e.of));
+  // An offer only counts as made in a session where the learner wrote something (review of 17 Nov, #75: a session that
+  // was opened and closed without a prompt used up the offer, and the learner never saw it).
+  const replied = new Set(events.filter((e) => e.type === "plan").map((e) => e.session));
+  const offered = new Set(events.filter((e) => e.type === "catchup-offered" && (replied.has(e.session) || e.session === currentSid)).map((e) => e.of));
   let files = [];
   try { files = fs.readdirSync(STATE_DIR).filter((f) => /^session-.+\.json$/.test(f)); } catch { return []; }
   const out = [];

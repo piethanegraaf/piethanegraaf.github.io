@@ -160,7 +160,8 @@ const msg = t("ss.msg", { n: skills.length }) +
   (G ? "\n" + t("ss.msg.graded", { max: G.maxRung, level: G.aiLevel }) : "") +
   (catchUp.length ? "\n" + t("ss.msg.catchUp", { sid8: sid8(catchUp[0].sid), day: dayOf(catchUp[0].last) }) : "") +
   (changedLines.length ? "\n" + t("ss.msg.changed", { n: changedLines.length }) : "") +
-  [upsLine, progressText, effortLine].filter(Boolean).map((l) => "\n" + l).join("") +
+  // The explanation check wants a reason word; the learner hears it at every start (review of 17 Nov, #76).
+  [upsLine, progressText, effortLine, fresh ? t("ss.because") : ""].filter(Boolean).map((l) => "\n" + l).join("") +
   // Only after a first export, only when something is new since then, and never with dashboardRepo off.
   (hasNewSinceExport(since) ? "\n" + sinceExportLine(since) : "");
 
