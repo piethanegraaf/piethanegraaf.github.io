@@ -87,6 +87,61 @@ They work together in a loop: **the phase decides how help comes, and the rungs 
 
 **An example.** Inheritance is at L2. In your first task you need a question and a pointer: rung 2, solved with help. The next four tasks take rung 1, 0, 1 and 0. That is 5 of 5 solved, 4 of them at rung 0–1, so the harness proposes L3 and you confirm. At L3 you get no hints up front. Do you still need a concept explained? Then that task counts as rung 2: solved, but not independent, so it does not count towards L4.
 
+### Promoted or demoted? A decision tree
+
+Start at **START** and answer the questions; the circle where you end up is the outcome. Every question is about the highest rung you needed per task.
+
+```mermaid
+flowchart LR
+  START(["START"]) --> Q0["Is the skill new?<br/>(no tasks yet)"]
+  Q0 -->|" yes "| QP["How much help did<br/>your first task need?"]
+  QP -->|" rung 0 "| P3((" L3 "))
+  QP -->|" rung 1-2 "| P2((" L2 "))
+  QP -->|" rung 3-4 "| P1((" L1 "))
+  QP -->|" rung 5 "| P0((" L0 "))
+  Q0 -->|" no "| QF["Which phase is<br/>it in now?"]
+  QF -->|" L0 "| A0["Did you explain 2 worked<br/>examples and predict<br/>the output?"]
+  A0 -->|" yes "| U1((" ↑ L1 "))
+  A0 -->|" no "| S0((" stay "))
+  QF -->|" L1 "| A1["3 tasks at<br/>rung 0-1?"]
+  A1 -->|" yes "| U2((" ↑ L2 "))
+  A1 -->|" no "| D1["Struggling? Under 70%<br/>solved over 4+ tasks,<br/>or last 2 not solved?"]
+  D1 -->|" yes "| DN0((" ↓ L0 "))
+  D1 -->|" no "| S1((" stay "))
+  QF -->|" L2 "| A2["5+ tasks, about 85%<br/>solved, half of them<br/>at rung 0-1?"]
+  A2 -->|" yes "| U3((" ↑ L3 "))
+  A2 -->|" no "| D2["Struggling? Under 70%<br/>solved over 4+ tasks,<br/>or last 2 not solved?"]
+  D2 -->|" yes "| DN1((" ↓ L1 "))
+  D2 -->|" no "| S2((" stay "))
+  QF -->|" L3 "| A3["Rung 0 three times,<br/>on 2+ days, with<br/>a transfer task?"]
+  A3 -->|" yes "| U4((" ↑ L4 "))
+  A3 -->|" no "| D3["Struggling? Under 70%<br/>solved over 4+ tasks,<br/>or last 2 not solved?"]
+  D3 -->|" yes "| DN2((" ↓ L2 "))
+  D3 -->|" no "| S3((" stay "))
+  QF -->|" L4 "| A4["Review due: how much<br/>help did your next<br/>task need?"]
+  A4 -->|" rung 0 "| PASS((" pass "))
+  A4 -->|" rung 1-2 "| SHAKY((" shaky "))
+  A4 -->|" rung 3-5 "| F["Second failed<br/>review in a row?"]
+  F -->|" yes "| DN3((" ↓ L3 "))
+  F -->|" no "| S4((" stay,<br/>review<br/>sooner "))
+  classDef q fill:transparent,stroke:transparent
+  classDef place fill:#EEEDFE,stroke:#534AB7,color:#26215C
+  classDef up fill:#EAF3DE,stroke:#3B6D11,color:#173404
+  classDef down fill:#FCEBEB,stroke:#A32D2D,color:#501313
+  classDef stay fill:#F1EFE8,stroke:#888780,color:#444441
+  classDef shaky fill:#FAEEDA,stroke:#854F0B,color:#412402
+  class Q0,QP,QF,A0,A1,A2,A3,A4,D1,D2,D3,F q
+  class START,P0,P1,P2,P3 place
+  class U1,U2,U3,U4,PASS up
+  class DN0,DN1,DN2,DN3 down
+  class S0,S1,S2,S3,S4 stay
+  class SHAKY shaky
+```
+
+- **Purple:** the starting phase of a new skill. **Green ↑:** promotion. **Red ↓:** demotion. **Grey:** you stay where you are.
+- **The rungs:** rung 0 (no hint) is independent; rung 1–2 is solved with help; rung 3–5 is not solved.
+- **Every ↑ is a proposal:** it only happens when you type "yes, promote". **Every ↓** only happens when `autoDemote` is on.
+
 ## The guard
 
 At L1–L3, `guard.mjs` blocks Claude from writing, deleting, building or testing code. At L1 it lets a skeleton through: a write that keeps or adds `TODO(human)` gaps, not one that fills them. Which files are code and which commands build is set in the [settings](configuration.md). The guard also protects:

@@ -87,6 +87,61 @@ Ze werken samen in een kringloop: **de fase bepaalt hoe de hulp komt, en de tred
 
 **Een voorbeeld.** Overerving staat op L2. Bij je eerste taak heb je een vraag en een vindplaats nodig: trede 2, gelukt met hulp. De volgende vier taken kosten trede 1, 0, 1 en 0. Dat is 5 van de 5 gelukt, waarvan 4 op trede 0–1, dus de harnas stelt L3 voor en jij bevestigt. Op L3 krijg je vooraf geen hints. Heb je toch uitleg van een concept nodig? Dan telt die taak als trede 2: gelukt, maar niet zelfstandig, dus hij telt niet mee voor L4.
 
+### Omhoog of omlaag? Een beslisboom
+
+Begin bij **START** en beantwoord de vragen; de cirkel waar je uitkomt is de uitkomst. Elke vraag gaat over de hoogste trede die je per taak nodig had.
+
+```mermaid
+flowchart LR
+  START(["START"]) --> Q0["Is de vaardigheid nieuw?<br/>(nog geen taken)"]
+  Q0 -->|" ja "| QP["Hoeveel hulp had je<br/>eerste taak nodig?"]
+  QP -->|" trede 0 "| P3((" L3 "))
+  QP -->|" trede 1-2 "| P2((" L2 "))
+  QP -->|" trede 3-4 "| P1((" L1 "))
+  QP -->|" trede 5 "| P0((" L0 "))
+  Q0 -->|" nee "| QF["In welke fase<br/>zit hij nu?"]
+  QF -->|" L0 "| A0["Heb je 2 uitgewerkte<br/>voorbeelden uitgelegd en<br/>de uitvoer voorspeld?"]
+  A0 -->|" ja "| U1((" ↑ L1 "))
+  A0 -->|" nee "| S0((" blijft "))
+  QF -->|" L1 "| A1["3 taken op<br/>trede 0-1?"]
+  A1 -->|" ja "| U2((" ↑ L2 "))
+  A1 -->|" nee "| D1["Gaat het moeizaam? Onder 70%<br/>opgelost over 4+ taken, of de<br/>laatste 2 niet opgelost?"]
+  D1 -->|" ja "| DN0((" ↓ L0 "))
+  D1 -->|" nee "| S1((" blijft "))
+  QF -->|" L2 "| A2["5+ taken, ongeveer 85%<br/>opgelost, de helft<br/>op trede 0-1?"]
+  A2 -->|" ja "| U3((" ↑ L3 "))
+  A2 -->|" nee "| D2["Gaat het moeizaam? Onder 70%<br/>opgelost over 4+ taken, of de<br/>laatste 2 niet opgelost?"]
+  D2 -->|" ja "| DN1((" ↓ L1 "))
+  D2 -->|" nee "| S2((" blijft "))
+  QF -->|" L3 "| A3["3 keer trede 0,<br/>op 2+ dagen, met<br/>een transfertaak?"]
+  A3 -->|" ja "| U4((" ↑ L4 "))
+  A3 -->|" nee "| D3["Gaat het moeizaam? Onder 70%<br/>opgelost over 4+ taken, of de<br/>laatste 2 niet opgelost?"]
+  D3 -->|" ja "| DN2((" ↓ L2 "))
+  D3 -->|" nee "| S3((" blijft "))
+  QF -->|" L4 "| A4["Herhaling aan de beurt:<br/>hoeveel hulp had je<br/>volgende taak nodig?"]
+  A4 -->|" trede 0 "| PASS((" geslaagd "))
+  A4 -->|" trede 1-2 "| SHAKY((" wankel "))
+  A4 -->|" trede 3-5 "| F["Tweede keer op rij<br/>mislukt?"]
+  F -->|" ja "| DN3((" ↓ L3 "))
+  F -->|" nee "| S4((" blijft,<br/>herhaling<br/>eerder "))
+  classDef q fill:transparent,stroke:transparent
+  classDef place fill:#EEEDFE,stroke:#534AB7,color:#26215C
+  classDef up fill:#EAF3DE,stroke:#3B6D11,color:#173404
+  classDef down fill:#FCEBEB,stroke:#A32D2D,color:#501313
+  classDef stay fill:#F1EFE8,stroke:#888780,color:#444441
+  classDef shaky fill:#FAEEDA,stroke:#854F0B,color:#412402
+  class Q0,QP,QF,A0,A1,A2,A3,A4,D1,D2,D3,F q
+  class START,P0,P1,P2,P3 place
+  class U1,U2,U3,U4,PASS up
+  class DN0,DN1,DN2,DN3 down
+  class S0,S1,S2,S3,S4 stay
+  class SHAKY shaky
+```
+
+- **Paars:** de startfase van een nieuwe vaardigheid. **Groen ↑:** omhoog. **Rood ↓:** omlaag. **Grijs:** je blijft waar je bent.
+- **De treden:** trede 0 (geen hint) is zelfstandig; trede 1–2 is opgelost met hulp; trede 3–5 is niet opgelost.
+- **Elke ↑ is een voorstel:** hij gebeurt pas als jij "ja, doorzetten" typt. **Elke ↓** gebeurt alleen als `autoDemote` aanstaat.
+
 ## De guard
 
 Bij L1–L3 blokkeert `guard.mjs` dat Claude code schrijft, verwijdert, bouwt of test. Op L1 laat hij een skelet door: een schrijfactie die `TODO(human)`-gaten houdt of toevoegt, niet een die ze invult. Welke bestanden code zijn en welke commando's bouwen, staat in de [instellingen](configuration.md). De guard beschermt ook:
