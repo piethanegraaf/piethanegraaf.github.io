@@ -215,13 +215,16 @@ const notes = [];
 // The released opencode 1.x rejects the V2 "permissions" and "policies" in .opencode/opencode.jsonc and then does
 // not start at all, not even without the harness ("V2 permissions are not supported by OpenCode V1"; live test of
 // 16 Nov with 1.19.5). So with only a 1.x on the PATH the installer stops before it writes anything. opencode2, or a
-// build that is not a 1.x release (a dev build is 0.0.0-...), goes on. --force goes on anyway, for example to
+// build that is not a 1.x release (a dev build is 0.0.0-...), goes on. opencode 2 is the npm package @opencode/cli
+// (commands opencode and opencode2); opencode 1 is opencode-ai. Tested: 2.3.0 starts with the config, loads the
+// plugin and blocks with the guard (17 Nov 2026). --force goes on anyway, for example to
 // prepare a folder for opencode 2. Not found (on Windows the npm shim is a .cmd, which is not started without a
 // shell): a notice. The check starts the program with an argument list and only reads its version.
 function opencodeRelease(bin) {
   const r = spawnSync(bin, ["--version"], { encoding: "utf8", timeout: 10000, windowsHide: true });
   if (r.error || r.status !== 0) return null;
-  return String(r.stdout).trim().split(/\s+/).find((w) => /^\d+\.\d+\.\d+/.test(w)) ?? "?";
+  // opencode 1 prints "1.19.6", opencode 2 "opencode v2.3.0".
+  return String(r.stdout).trim().split(/\s+/).map((w) => w.replace(/^v/, "")).find((w) => /^\d+\.\d+\.\d+/.test(w)) ?? "?";
 }
 if (withOC) {
   const v2 = opencodeRelease("opencode2");

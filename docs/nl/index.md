@@ -123,7 +123,7 @@ Ja. De code is open source onder AGPL-3.0, en de teksten, docs en data vallen on
 
 Er komt een gratis route aan: de harnas draait ook in [opencode](opencode.md), met gratis modellen. Twee daarvan halen elke controle van de nalevingssuite: Big Pickle en GLM-5.3-Flash Free. Die route is nog **experimenteel**:
 
-- hij heeft **opencode 2** nodig; met de uitgebrachte opencode 1.x start hij niet;
+- hij heeft **opencode 2** nodig (`npm i -g @opencode/cli`); opencode 1 werkt niet;
 - hij is **alleen om te oefenen**, niet voor beoordeeld werk;
 - **Big Pickle mag je gegevens gebruiken** om het model te verbeteren in de gratis periode. GLM-5.3-Flash Free bewaart je gegevens niet.
 - **GLM komt uit China** (Zhipu AI). Je gegevens gaan niet naar China, maar bij politieke onderwerpen kan het model de Chinese censuur volgen. Vraag na of je school Chinese AI toestaat; zo niet, gebruik Big Pickle of Claude Code.

@@ -20,8 +20,8 @@
 // a summary to stdout; copy the listed models into harness/hosts/opencode/models.json by hand, after reading the
 // answers (the automatic checks are strict but not perfect).
 //
-// The plugin is not used: no released opencode had its API yet (see models.json). The status line is typed into the
-// prompt, as the prompt gate would add it. Free models are rate-limited per IP address, so keep --runs small.
+// The plugin is not used, so the suite measures the model alone; the status line is typed into the prompt, as the
+// prompt gate would add it. Works with opencode 1 (opencode-ai) and opencode 2 (@opencode/cli); both have run --format json. Free models are rate-limited per IP address, so keep --runs small.
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";

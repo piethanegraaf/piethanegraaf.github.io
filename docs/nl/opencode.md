@@ -6,8 +6,12 @@ description: "Dezelfde niveaus, hintladder, guard en hetzelfde dagboek in openco
 
 [opencode](https://opencode.ai) is een open-source codeeragent die ook gratis modellen draait. De leerharnas kan daarin draaien als plugin, op dezelfde kern als de Claude Code-versie: dezelfde niveaus, hintladder, guard, uitlegcheck, hetzelfde dagboek en dashboard, en dezelfde map `.learning/`. Een oefenmap kan zelfs allebei hebben en per sessie van tool wisselen.
 
-!!! warning "Experimenteel: nog niet om echt mee te oefenen"
-    De plugin is gebouwd tegen de plugin-API van opencode 2 zoals die op 15 november 2026 op de ontwikkeltak stond (commit `b75b158`). Geen uitgebrachte opencode heeft die API nog. Met de versies tot nu toe (getest met 1.19.5 en 1.19.6, 17 november) start opencode in de oefenmap zelfs helemaal niet: hij weigert `.opencode/opencode.jsonc` met "V2 permissions are not supported by OpenCode V1". De installer stopt daarom als hij alleen een opencode 1.x vindt (met `--force` gaat hij toch door, bijvoorbeeld om de map klaar te zetten voor opencode 2). De plugin is getest tegen een nabootsing van die API, niet tegen een draaiende opencode. Oefen voorlopig in Claude Code, tot er een opencode-versie met de API is en deze pagina die als getest noemt.
+!!! warning "Experimenteel: je hebt opencode 2 nodig"
+    De harnas heeft **opencode 2** nodig. Installeer het met `npm i -g @opencode/cli`. Heb je opencode 1? Typ dan `opencode upgrade --major`.
+
+    Opencode 1 werkt niet: het stopt met "V2 permissions are not supported by OpenCode V1". De installer controleert dat en stopt dan ook.
+
+    **Wat we getest hebben** (17 november 2026, opencode 2.3.0): opencode start, de plugin laadt en de guard werkt. Hij blokkeerde code op L2, `dotnet test` en een nieuwe plugin. Een notitiebestand mocht wel. **Nog niet getest:** een hele oefensessie met een echt model, en Windows. Voor beoordeeld werk gebruik je Claude Code.
 
 ## Voor wie
 
@@ -98,5 +102,5 @@ Je eigen `!`-commando's worden nooit gecontroleerd, zoals in Claude Code. En net
 ## Wat er nog niet is
 
 - Beoordeeld werk: de AI-verantwoording, de sessie-export en de poort op gebruikersniveau voor opencode komen in een latere versie.
-- Een run tegen een uitgebrachte opencode.
+- Een hele oefensessie met een echt model in opencode 2, en een test op Windows.
 - Kosten per sessie in het dagboek.
