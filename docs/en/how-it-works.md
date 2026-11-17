@@ -123,7 +123,7 @@ flowchart LR
   A4 -->|" rung 1-2 "| SHAKY((" shaky "))
   A4 -->|" rung 3-5 "| F["Second failed<br/>review in a row?"]
   F -->|" yes "| DN3((" ↓ L3 "))
-  F -->|" no "| S4((" stay,<br/>review<br/>sooner "))
+  F -->|" no "| S4([" stay, review sooner "])
   classDef q fill:transparent,stroke:transparent
   classDef place fill:#EEEDFE,stroke:#534AB7,color:#26215C
   classDef up fill:#EAF3DE,stroke:#3B6D11,color:#173404
@@ -138,8 +138,30 @@ flowchart LR
   class SHAKY shaky
 ```
 
+The hint ladder: how much help you needed in one task. Your highest rung is what the questions above ask about.
+
+```mermaid
+flowchart LR
+  subgraph G0["independent"]
+    R0["rung 0<br/>no hint"]
+  end
+  subgraph G1["solved with help"]
+    R1["rung 1<br/>a Socratic question"] --> R2["rung 2<br/>where to look,<br/>which concept"]
+  end
+  subgraph G2["not solved"]
+    R3["rung 3<br/>pseudocode<br/>or a sketch"] --> R4["rung 4<br/>small example,<br/>other topic"] --> R5["rung 5<br/>worked solution"]
+  end
+  R0 --> R1
+  R2 --> R3
+  classDef indep fill:#EAF3DE,stroke:#3B6D11,color:#173404
+  classDef solved fill:#FAEEDA,stroke:#854F0B,color:#412402
+  classDef notsolved fill:#FCEBEB,stroke:#A32D2D,color:#501313
+  class R0 indep
+  class R1,R2 solved
+  class R3,R4,R5 notsolved
+```
+
 - **Purple:** the starting phase of a new skill. **Green ↑:** promotion. **Red ↓:** demotion. **Grey:** you stay where you are.
-- **The rungs:** rung 0 (no hint) is independent; rung 1–2 is solved with help; rung 3–5 is not solved.
 - **Every ↑ is a proposal:** it only happens when you type "yes, promote". **Every ↓** only happens when `autoDemote` is on.
 
 ## The guard
