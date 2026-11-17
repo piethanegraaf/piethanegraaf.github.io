@@ -123,7 +123,7 @@ flowchart LR
   A4 -->|" trede 1-2 "| SHAKY((" wankel "))
   A4 -->|" trede 3-5 "| F["Tweede keer op rij<br/>mislukt?"]
   F -->|" ja "| DN3((" ↓ L3 "))
-  F -->|" nee "| S4((" blijft,<br/>herhaling<br/>eerder "))
+  F -->|" nee "| S4([" blijft, herhaling eerder "])
   classDef q fill:transparent,stroke:transparent
   classDef place fill:#EEEDFE,stroke:#534AB7,color:#26215C
   classDef up fill:#EAF3DE,stroke:#3B6D11,color:#173404
@@ -138,8 +138,30 @@ flowchart LR
   class SHAKY shaky
 ```
 
+De hintladder: hoeveel hulp je in één taak nodig had. Je hoogste trede is waar de vragen hierboven over gaan.
+
+```mermaid
+flowchart LR
+  subgraph G0["zelfstandig"]
+    R0["trede 0<br/>geen hint"]
+  end
+  subgraph G1["opgelost met hulp"]
+    R1["trede 1<br/>een Socratische vraag"] --> R2["trede 2<br/>waar je moet kijken,<br/>welk concept"]
+  end
+  subgraph G2["niet opgelost"]
+    R3["trede 3<br/>pseudocode<br/>of een schets"] --> R4["trede 4<br/>klein voorbeeld,<br/>ander onderwerp"] --> R5["trede 5<br/>uitgewerkte oplossing"]
+  end
+  R0 --> R1
+  R2 --> R3
+  classDef indep fill:#EAF3DE,stroke:#3B6D11,color:#173404
+  classDef solved fill:#FAEEDA,stroke:#854F0B,color:#412402
+  classDef notsolved fill:#FCEBEB,stroke:#A32D2D,color:#501313
+  class R0 indep
+  class R1,R2 solved
+  class R3,R4,R5 notsolved
+```
+
 - **Paars:** de startfase van een nieuwe vaardigheid. **Groen ↑:** omhoog. **Rood ↓:** omlaag. **Grijs:** je blijft waar je bent.
-- **De treden:** trede 0 (geen hint) is zelfstandig; trede 1–2 is opgelost met hulp; trede 3–5 is niet opgelost.
 - **Elke ↑ is een voorstel:** hij gebeurt pas als jij "ja, doorzetten" typt. **Elke ↓** gebeurt alleen als `autoDemote` aanstaat.
 
 ## De guard
