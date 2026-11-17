@@ -71,6 +71,8 @@ On 16 November GLM and DeepSeek still failed the L3 check (0/3 and 1/3), and Big
 
 Big Pickle may use your data during its free period (see below); GLM-5.3-Flash Free does not keep your data.
 
+**Models from China.** GLM and DeepSeek come from China. Through opencode your data does not go to China, but on political topics they may follow Chinese censorship. The Dutch data protection authority warns about the DeepSeek app; follow your school's policy. LongCat 2.5 Free does run in China and is not on the list.
+
 **Test a model yourself.** From the repository, with opencode installed:
 
 ```bash

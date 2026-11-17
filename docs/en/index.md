@@ -126,6 +126,7 @@ A free route is on its way: the harness also runs in [opencode](opencode.md), wi
 - it needs **opencode 2**; with the released opencode 1.x it does not start;
 - it is for **practice only**, not for graded work;
 - **Big Pickle may use your data** to improve the model during its free period. GLM-5.3-Flash Free does not keep your data.
+- **GLM comes from China** (Zhipu AI). Your data does not go to China, but on political topics the model may follow Chinese censorship. Check whether your school allows Chinese AI; if not, use Big Pickle or Claude Code.
 
 ## Get started
 
