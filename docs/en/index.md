@@ -126,7 +126,7 @@ A free route is on its way: the harness also runs in [opencode](opencode.md), wi
 - it needs **opencode 2**; with the released opencode 1.x it does not start;
 - it is for **practice only**, not for graded work;
 - **Big Pickle may use your data** to improve the model during its free period. GLM-5.3-Flash Free does not keep your data.
-- **GLM comes from China.** Its maker, Zhipu AI in Beijing, has been on the US export blacklist since January 2025: according to the US it helps China's military modernisation, which Zhipu denies. Chinese law requires AI models to follow the "core socialist values" of the Chinese state and Communist Party, so on political or sensitive topics GLM may follow the official Chinese line. Through opencode the model runs on servers in the US and the EU, so your code and questions do not go to Zhipu or China. Check whether your school allows Chinese AI models; if not, use Big Pickle or Claude Code.
+- **GLM comes from China** (Zhipu AI). Through opencode it runs in the US and the EU and your data is not kept, but the model is made to follow Chinese censorship rules, so on political topics it may follow the official Chinese line. Dutch central government staff may not use apps from China; check whether your school allows Chinese AI. If not, use Big Pickle or Claude Code.
 
 ## Get started
 

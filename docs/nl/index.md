@@ -126,7 +126,7 @@ Er komt een gratis route aan: de harnas draait ook in [opencode](opencode.md), m
 - hij heeft **opencode 2** nodig; met de uitgebrachte opencode 1.x start hij niet;
 - hij is **alleen om te oefenen**, niet voor beoordeeld werk;
 - **Big Pickle mag je gegevens gebruiken** om het model te verbeteren in de gratis periode. GLM-5.3-Flash Free bewaart je gegevens niet.
-- **GLM komt uit China.** De maker, Zhipu AI in Beijing, staat sinds januari 2025 op de exportzwarte lijst van de VS: volgens de VS helpt het bedrijf bij de militaire modernisering van China, wat Zhipu ontkent. De Chinese wet verplicht AI-modellen de "socialistische kernwaarden" van de Chinese staat en Communistische Partij te volgen, dus bij politieke of gevoelige onderwerpen kan GLM de officiële Chinese lijn volgen. Via opencode draait het model op servers in de VS en de EU, dus je code en vragen gaan niet naar Zhipu of China. Kijk of je school Chinese AI-modellen toestaat; zo niet, gebruik dan Big Pickle of Claude Code.
+- **GLM komt uit China** (Zhipu AI). Via opencode draait het in de VS en de EU en worden je gegevens niet bewaard, maar het model is gemaakt om de Chinese censuurregels te volgen, dus bij politieke onderwerpen kan het de officiële Chinese lijn volgen. Ambtenaren van de Rijksoverheid mogen geen apps uit China gebruiken; vraag na of je school Chinese AI toestaat. Zo niet, gebruik dan Big Pickle of Claude Code.
 
 ## Aan de slag
 

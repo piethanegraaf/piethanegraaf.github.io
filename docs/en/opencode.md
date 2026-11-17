@@ -71,7 +71,7 @@ On 16 November GLM and DeepSeek still failed the L3 check (0/3 and 1/3), and Big
 
 Big Pickle may use your data during its free period (see below); GLM-5.3-Flash Free does not keep your data.
 
-**Models from China.** GLM comes from Zhipu AI (Beijing), and DeepSeek from DeepSeek (Hangzhou). Zhipu has been on the US export blacklist since January 2025 for, according to the US, helping China's military modernisation; Zhipu denies this. Chinese law requires AI models to follow the "core socialist values" of the Chinese state and Communist Party, so on political or sensitive topics their answers may follow the official Chinese line. For programming exercises that matters little, but it is a reason to check your school's policy. Through opencode both run on servers in the US and the EU without keeping your data, so nothing goes to the makers in China; LongCat 2.5 Free is the exception and is hosted in China (not on the list).
+**Models from China.** GLM (Zhipu AI) and DeepSeek come from China. Through opencode they run in the US and the EU without keeping your data, but they are made to follow Chinese censorship rules; on political topics they may follow the official Chinese line. The Dutch data protection authority (Autoriteit Persoonsgegevens) warns about the DeepSeek app, and Dutch central government staff may not use apps from China. Follow your school's policy. LongCat 2.5 Free runs in China itself and is not on the list.
 
 **Test a model yourself.** From the repository, with opencode installed:
 
