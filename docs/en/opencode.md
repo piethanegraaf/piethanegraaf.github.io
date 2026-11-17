@@ -7,7 +7,7 @@ description: "The same levels, hint ladder, guard and diary in opencode, through
 [opencode](https://opencode.ai) is an open-source coding agent that also runs free models. The learning harness can run in it as a plugin, on the same core as the Claude Code version: the same levels, hint ladder, guard, explanation check, diary and dashboard, and the same `.learning/` folder. A practice folder can even have both installed and switch tools between sessions.
 
 !!! warning "Experimental: not for real practice yet"
-    The plugin is built against the plugin API of opencode 2 as it stood on the development branch on 15 November 2026 (commit `b75b158`). No released opencode had that API yet: the release of that day (1.19.5) lacks the hooks the guard and the diary need. The plugin is tested against a stand-in of that API, not against a running opencode. Use Claude Code for real practice until an opencode release with the API is out and this page lists it as tested.
+    The plugin is built against the plugin API of opencode 2 as it stood on the development branch on 15 November 2026 (commit `b75b158`). No released opencode had that API yet. With the release of that day (1.19.5) opencode does not even start in the practice folder: it rejects `.opencode/opencode.jsonc` with "V2 permissions are not supported by OpenCode V1". So the installer stops when it only finds an opencode 1.x (with `--force` it goes on anyway, for example to prepare the folder for opencode 2). The plugin is tested against a stand-in of that API, not against a running opencode. Use Claude Code for real practice until an opencode release with the API is out and this page lists it as tested.
 
 ## Who it is for
 
@@ -87,7 +87,7 @@ On Windows npm installs opencode as a `.cmd`, which Node does not start without 
 
 The guard works in three layers, so no single hook decides alone:
 
-1. **Policies** in `.opencode/opencode.jsonc`: the model never writes your record (`.learning/skills.json`, `.learning/state/`) or the harness of either tool. Your diary stays writable, because `/diary` adds to it.
+1. **Policies** in `.opencode/opencode.jsonc`: the model never writes your record (`.learning/skills.json`, `.learning/state/`), the harness of either tool, or a plugin or custom tool in `.opencode/plugins/` and `.opencode/tools/`: opencode runs those as code at its next start, so a plugin from the model could get around the guard. You write your own plugins yourself. Your diary stays writable, because `/diary` adds to it.
 2. **Session rules**: the code of skills at L2 and L3 gets a fixed deny rule per session, renewed when your levels change (also after your own `!` commands).
 3. **The plugin's check** for everything a rule cannot express: the `TODO(human)` skeleton at L1, builds and tests in shell commands, subagents, MCP tools, and a crash, which blocks.
 
