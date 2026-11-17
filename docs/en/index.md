@@ -119,7 +119,13 @@ Everything stays on your computer, in `.learning/` in your project folder (or, w
 
 ### Is it free?
 
-Yes. The code is open source under AGPL-3.0, and the texts, docs and data are under CC BY-NC 4.0. You do need access to Claude Code itself, through a Claude plan or the API.
+Yes. The code is open source under AGPL-3.0, and the texts, docs and data are under CC BY-NC 4.0. For practice in Claude Code you need access to Claude Code itself, through a Claude plan or the API.
+
+A free route is on its way: the harness also runs in [opencode](opencode.md), with free models. Two of them pass every check of the compliance suite: Big Pickle and GLM-5.3-Flash Free. That route is still **experimental**:
+
+- it needs **opencode 2**; with the released opencode 1.x it does not start;
+- it is for **practice only**, not for graded work;
+- **Big Pickle may use your data** to improve the model during its free period. GLM-5.3-Flash Free does not keep your data.
 
 ## Get started
 

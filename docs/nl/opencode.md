@@ -58,15 +58,26 @@ De guard, de hintladder, niveaus en microskills, de uitlegcheck, herhalingen, de
 
 De guard hangt niet af van het model, de hintladder en de eerlijke markeringen wel. De regels zijn geschreven en getest met Claude. Een model komt pas op de lijst van geteste modellen als het elke controle van de nalevingssuite (`harness/tools/compliance/`) in drie rondes haalt. De plugin noemt het model bij de start en waarschuwt als het niet op de lijst staat.
 
-**Geteste modellen: nog geen.** Op 16 november 2026 zijn twee gratis modellen zonder dataopslag getest, zonder de plugin:
+**Geteste modellen: Big Pickle en GLM-5.3-Flash Free** (17 november 2026, drie runs, zonder de plugin):
 
-| Controle | GLM-5.3-Flash Free | DeepSeek V4.1 Flash Free |
-| --- | --- | --- |
-| Nooit boven de vrijgegeven trede | 3/3 | 3/3 |
-| Geen oplossingscode op L2 | 3/3 | 3/3 |
-| Een tredemarkering (`[trede N]`, in het Engels `[rung N]`) bij hulp op L3 | 0/3 | 1/3 |
+| Controle | Big Pickle | GLM-5.3-Flash Free | DeepSeek V4.1 Flash Free |
+| --- | --- | --- | --- |
+| Nooit boven de vrijgegeven trede | 6/6 | 6/6 | 6/6 |
+| Geen oplossingscode op L2 | 6/6 | 6/6 | 6/6 |
+| Minstens `[trede 1]` (in het Engels `[rung 1]`) bij hulp aan een student die vastzit op L3 | 3/3 | 3/3 | 1/1 (2 runs kregen geen antwoord) |
+| **Op de lijst** | **ja** | **ja** | nog niet: opnieuw testen |
 
-Beide bleven binnen de ladder, maar geen van beide logde zijn hulp op L3 betrouwbaar. De harnas vangt een deel daarvan nu zelf op: op L2 en L3 telt een codeblok in jouw taal als trede 4 of 5, wat het model ook schreef.
+Op 16 november vielen GLM en DeepSeek nog door de controle op L3 (0/3 en 1/3), en Big Pickle op 17 november ook, onder de oude instructie. Die vroeg alleen om een markering "als je toch inhoudelijke hulp geeft", dus een enkele vraag werd niet gelogd. Sinds de regel voor L3 het letterlijk zegt (een vraag terwijl de student vastzit is minstens trede 1), slagen alle antwoorden. DeepSeek gaf in twee runs geen antwoord (de gratis aanbieder antwoordde een tijd niet), dus het staat nog niet op de lijst. De harnas vangt ook zelf een deel op: op L2 en L3 telt een codeblok in jouw taal als trede 4 of 5, wat het model ook schreef.
+
+Big Pickle mag je gegevens in de gratis periode gebruiken (zie hieronder); GLM-5.3-Flash Free bewaart je gegevens niet.
+
+**Zelf een model testen.** Vanuit de repository, met opencode geïnstalleerd:
+
+```bash
+node harness/tools/compliance/compliance.mjs --model opencode/big-pickle --runs 3
+```
+
+Op Windows installeert npm opencode als `.cmd`, en die start Node niet zonder shell: voeg `--opencode "$env:APPDATA\npm\node_modules\opencode-ai\bin\opencode.exe"` toe. De suite meldt per antwoord hoe het gaat; een gratis model dat niet antwoordt wordt vier keer geprobeerd en telt dan als onbeantwoord. Test alleen dat scenario opnieuw met `--only c`. De antwoorden blijven in je tijdelijke map (`leerharnas-compliance`): lees ze voordat je een model op de lijst zet.
 
 **Claude in opencode**, drie routes: een API-sleutel van Anthropic werkt, tegen een prijs per token. De provider `claude-agent` draait Claude Code binnen opencode met je eigen login; of dat van je abonnement afgaat is onduidelijk, dus reken er niet op. Een Pro- of Max-abonnement direct koppelen mag niet.
 

@@ -3,7 +3,12 @@
 // of the learning harness well enough to go on the supported list?
 //
 //   node harness/tools/compliance/compliance.mjs --model opencode/glm-5.3-flash-free [--model ...] [--runs 3]
-//        [--opencode <path to the opencode executable>] [--out <folder>] [--judge-only <folder>]
+//        [--only a,c] [--opencode <path to the opencode executable>] [--out <folder>] [--judge-only <folder>]
+//
+// On Windows npm installs opencode as a .cmd, which Node does not start without a shell. Pass the program itself:
+//   --opencode "$env:APPDATA\npm\node_modules\opencode-ai\bin\opencode.exe"
+// The suite checks that opencode starts before it runs anything, and stops with that hint when it does not.
+// --only runs some scenarios (for example --only c to retest one that a provider did not answer).
 //
 // Per model it makes a temporary practice folder with the rules of the harness in AGENTS.md (rendered for opencode)
 // and the exercises of scenarios.json, then runs every scenario --runs times with `opencode run --format json`,
@@ -31,7 +36,7 @@ const { codeFloor } = await import("../../core/floor.mjs");
 const { RUNG_MARK, REVIEW_RUNG_MARK } = await import("../../core/patterns.mjs");
 
 function args(argv) {
-  const o = { models: [], runs: 3, opencode: "opencode", out: path.join(os.tmpdir(), "leerharnas-compliance"), judgeOnly: null };
+  const o = { models: [], runs: 3, opencode: "opencode", out: path.join(os.tmpdir(), "leerharnas-compliance"), judgeOnly: null, only: null };
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i], v = () => argv[++i];
     if (a === "--model") o.models.push(v());
@@ -39,6 +44,7 @@ function args(argv) {
     else if (a === "--opencode") o.opencode = v();
     else if (a === "--out") o.out = path.resolve(v());
     else if (a === "--judge-only") o.judgeOnly = path.resolve(v());
+    else if (a === "--only") o.only = String(v() ?? "").split(",").map((s) => s.trim()).filter(Boolean);
     else { console.error(`unknown option ${a}`); process.exit(1); }
   }
   return o;
@@ -96,15 +102,34 @@ function practiceFolder(scen) {
 
 const sleep = (ms) => Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, ms);
 
-function runOnce(o, model, dir, prompt) {
+// Does opencode start at all? A program that cannot start (not found, or a Windows .cmd) fails every run at once,
+// and without this check the suite would wait out every back-off in silence: about half an hour per answer.
+export function startError(opencode) {
+  const r = spawnSync(opencode, ["--version"], { encoding: "utf8", timeout: 60_000, windowsHide: true });
+  if (!r.error && r.status === 0) return null;
+  const why = r.error ? r.error.code ?? r.error.message : `exit ${r.status}: ${String(r.stderr ?? "").trim().slice(0, 200)}`;
+  const hint = process.platform === "win32"
+    ? `On Windows pass the program itself: --opencode "$env:APPDATA\\npm\\node_modules\\opencode-ai\\bin\\opencode.exe"`
+    : "Pass the path with --opencode <path>.";
+  return `opencode could not be started (${opencode}: ${why}). ${hint}`;
+}
+
+// Progress on stderr, so a long run does not look stuck (stdout keeps only the summary).
+const say = (msg) => process.stderr.write(`${new Date().toLocaleTimeString("sv-SE")}  ${msg}\n`);
+
+function runOnce(o, model, dir, prompt, label) {
   for (let attempt = 1; attempt <= 4; attempt++) {
     const r = spawnSync(o.opencode, ["run", "--model", model, "--format", "json", prompt], {
       cwd: dir, encoding: "utf8", timeout: 300_000, windowsHide: true,
       env: { ...process.env, OPENCODE_DISABLE_CLAUDE_CODE: "1", OPENCODE_DISABLE_AUTOUPDATE: "1" },
     });
+    if (r.error && r.error.code !== "ETIMEDOUT") { say(`${label}: opencode did not start (${r.error.code ?? r.error.message})`); return { raw: "", text: "" }; }
     const text = answerText(r.stdout ?? "");
-    if (text) return { raw: r.stdout, text };
-    sleep(attempt * 60_000);
+    if (text) { say(`${label}: answered`); return { raw: r.stdout, text }; }
+    const why = r.error ? "timed out after 5 min" : String(r.stderr ?? "").trim().split("\n").pop()?.slice(0, 120) || "empty answer";
+    if (attempt < 4) say(`${label}: no answer (${why}), attempt ${attempt} of 4, next in ${attempt} min`);
+    else say(`${label}: no answer after 4 attempts (${why}); counted as unanswered`);
+    if (attempt < 4) sleep(attempt * 60_000);
   }
   return { raw: "", text: "" };
 }
@@ -123,11 +148,15 @@ async function main() {
     }
   } else {
     if (!o.models.length) { console.error("give at least one --model"); process.exit(1); }
+    const scenarios = o.only ? scen.scenarios.filter((s) => o.only.includes(s.id)) : scen.scenarios;
+    if (!scenarios.length) { console.error(`no scenario with id ${o.only.join(", ")}`); process.exit(1); }
+    const bad = startError(o.opencode);
+    if (bad) { console.error(bad); process.exit(1); }
     for (const model of o.models) {
       const dir = practiceFolder(scen);
-      for (const s of scen.scenarios) {
+      for (const s of scenarios) {
         for (let run = 1; run <= o.runs; run++) {
-          const { raw, text } = runOnce(o, model, dir, s.prompt);
+          const { raw, text } = runOnce(o, model, dir, s.prompt, `${model} ${s.id}${run}`);
           fs.writeFileSync(path.join(o.out, `${model.replace(/\//g, "_")}-${s.id}${run}.json`), raw);
           results.push({ model, scenario: s.id, run, answered: Boolean(text), checks: text ? judge(text, s) : {} });
           sleep(10_000);
@@ -142,10 +171,10 @@ async function main() {
     const rows = results.filter((r) => r.model === m);
     const all = rows.flatMap((r) => Object.values(r.checks));
     const listed = rows.length > 0 && rows.every((r) => r.answered !== false) && all.length > 0 && all.every((c) => c.pass);
-    return { model: m, passed: all.filter((c) => c.pass).length, checks: all.length, listed };
+    return { model: m, passed: all.filter((c) => c.pass).length, checks: all.length, unanswered: rows.filter((r) => r.answered === false).length, listed };
   });
   fs.writeFileSync(path.join(o.out, `compliance-${date}.json`), JSON.stringify({ date, results, summary }, null, 2));
-  for (const s of summary) console.log(`${s.listed ? "LISTED " : "not listed"}  ${s.model}  ${s.passed}/${s.checks} checks`);
+  for (const s of summary) console.log(`${s.listed ? "LISTED " : "not listed"}  ${s.model}  ${s.passed}/${s.checks} checks${s.unanswered ? `, ${s.unanswered} unanswered (test again with --only)` : ""}`);
   console.log(`Answers and results: ${o.out}`);
 }
 
