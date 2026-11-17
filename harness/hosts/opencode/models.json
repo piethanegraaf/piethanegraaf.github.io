@@ -1,7 +1,7 @@
 {
   "_info": "Models that passed every check of the compliance suite (harness/tools/compliance.mjs) in all three runs. Only a full pass puts a model here; the plugin warns once per session for any other model. Data use per model: from opencode's model list (console/models.mdx), checked on the date below. From 2026-11-17 scenario c uses the L3 rule of #80 (a question while the learner is stuck is at least [rung 1]).",
   "updated": "2026-11-17",
-  "opencode": "1.19.5 (checks without the plugin); plugin built against dev b75b158",
+  "opencode": "compliance checks without the plugin with opencode 1.19.5; plugin built against dev b75b158, and it starts, loads and guards in the released opencode 2.3.0 (@opencode/cli, 17 Nov 2026)",
   "plugin": "0.1.0",
   "supported": [
     "opencode/big-pickle",

@@ -612,6 +612,15 @@ Deze delen van het ontwerp zijn vervangen. Ze stonden op de [ontwerppagina](desi
 
 ## 11. Wijzigingslog {#changelog}
 
+### 17 november 2026: opencode 2 was er al; de harnas werkt erin
+
+In het verslag van 16 november stond dat geen uitgebrachte opencode de plugin-API had. Dat klopte niet. Opencode 2 kwam uit op 12 oktober 2026, als apart npm-pakket (`@opencode/cli`, nu 2.3.0). De controle keek alleen naar het oude pakket (`opencode-ai`), dat op 1.x blijft.
+
+- **Getest met opencode 2.3.0** (Linux, een nepmodel op de eigen computer dat de acties probeert): opencode start met de config van de harnas, de plugin laadt, en de start van de sessie en de promptcontrole draaien. De guard blokkeerde code schrijven op L2, `dotnet test` in de shell en een nieuwe plugin in `.opencode/plugins/`; een notitiebestand mocht wel.
+- **Nog niet getest:** een hele oefensessie met een echt model, en Windows.
+- **Veranderd:** de installer zegt hoe je opencode 2 krijgt (`npm i -g @opencode/cli`, of `opencode upgrade --major`) en leest de versie die opencode 2 laat zien (`opencode v2.3.0`). De opencode-pagina zegt hetzelfde, in eenvoudige woorden.
+- **Ook op 17 november:** de regel voor L3 (een vraag terwijl de student vastzit is minstens trede 1), Big Pickle en GLM-5.3-Flash Free op de geteste lijst, en een opmerking over modellen uit China.
+
 ### 16 november 2026: een opencode-versie, getest vóór het bouwen, gebouwd als experiment
 
 De pilotstudent plande een tweede versie van de harnas voor [opencode](../opencode.md), een open-source codeeragent die ook gratis modellen draait. Het plan zette een goedkope test vóór elk portwerk, met een regel voor wanneer te stoppen.

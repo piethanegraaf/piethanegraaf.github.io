@@ -6,8 +6,12 @@ description: "The same levels, hint ladder, guard and diary in opencode, through
 
 [opencode](https://opencode.ai) is an open-source coding agent that also runs free models. The learning harness can run in it as a plugin, on the same core as the Claude Code version: the same levels, hint ladder, guard, explanation check, diary and dashboard, and the same `.learning/` folder. A practice folder can even have both installed and switch tools between sessions.
 
-!!! warning "Experimental: not for real practice yet"
-    The plugin is built against the plugin API of opencode 2 as it stood on the development branch on 15 November 2026 (commit `b75b158`). No released opencode has that API yet. With the releases up to now (checked with 1.19.5 and 1.19.6, 17 November) opencode does not even start in the practice folder: it rejects `.opencode/opencode.jsonc` with "V2 permissions are not supported by OpenCode V1". So the installer stops when it only finds an opencode 1.x (with `--force` it goes on anyway, for example to prepare the folder for opencode 2). The plugin is tested against a stand-in of that API, not against a running opencode. Use Claude Code for real practice until an opencode release with the API is out and this page lists it as tested.
+!!! warning "Experimental: you need opencode 2"
+    The harness needs **opencode 2**. Install it with `npm i -g @opencode/cli`. Do you have opencode 1? Then run `opencode upgrade --major`.
+
+    Opencode 1 does not work: it stops with "V2 permissions are not supported by OpenCode V1". The installer checks this and stops too.
+
+    **What we tested** (17 November 2026, opencode 2.3.0): opencode starts, the plugin loads, and the guard works. It blocked code at L2, `dotnet test`, and a new plugin. It allowed a notes file. **Not tested yet:** a whole practice session with a real model, and Windows. For graded work, use Claude Code.
 
 ## Who it is for
 
@@ -98,5 +102,5 @@ Your own `!` commands are never checked, as in Claude Code. And as in Claude Cod
 ## What is not there yet
 
 - Graded work: the AI-use log, the session export and the user-level gate for opencode come in a later version.
-- A run against a released opencode.
+- A whole practice session with a real model in opencode 2, and a test on Windows.
 - Per-session cost in the diary.

@@ -123,7 +123,7 @@ test("opencode 1.x on the PATH: the installer stops before it writes anything; -
   try {
     const r = run(INSTALL, [d, "--host", "opencode", "--lang", "en", "--yes"], { env: cleanEnv(bin) });
     assert.equal(r.code, 1);
-    assert.match(r.stderr, /opencode 1\.19\.5[\s\S]*V2 permissions are not supported by OpenCode V1[\s\S]*Nothing was changed/);
+    assert.match(r.stderr, /opencode 1\.19\.5[\s\S]*V2 permissions are not supported by OpenCode V1[\s\S]*Nothing was changed[\s\S]*npm i -g @opencode\/cli/);
     assert.deepEqual(fs.readdirSync(d), []);
     const f = run(INSTALL, [d, "--host", "opencode", "--lang", "en", "--yes", "--force"], { env: cleanEnv(bin) });
     assert.equal(f.code, 0, f.stderr);
@@ -133,7 +133,7 @@ test("opencode 1.x on the PATH: the installer stops before it writes anything; -
 });
 
 test("opencode2, a dev build or opencode 2 goes on; Claude Code alone never checks", posix, () => {
-  for (const versions of [{ opencode: "1.19.5", opencode2: "2.0.0" }, { opencode: "0.0.0-dev-202611092046" }, { opencode: "2.1.0" }]) {
+  for (const versions of [{ opencode: "1.19.5", opencode2: "2.0.0" }, { opencode: "0.0.0-dev-202611092046" }, { opencode: "2.1.0" }, { opencode: "opencode v2.3.0" }]) {
     const d = tmp();
     const bin = fakeBin(versions);
     try {
