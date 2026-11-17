@@ -609,6 +609,15 @@ These parts of the design were replaced. They used to sit on the [design page](d
 
 ## 11. Change log {#changelog}
 
+### 17 November 2026: opencode 2 was already out; the harness works in it
+
+The entry of 16 November said that no released opencode had the plugin API. That was wrong. Opencode 2 came out on 12 October 2026, as a separate npm package (`@opencode/cli`, now 2.3.0). The check only looked at the old package (`opencode-ai`), which stays on 1.x.
+
+- **Tested with opencode 2.3.0** (Linux, a fake local model that tries the actions): opencode starts with the harness config, the plugin loads, and the session start and the prompt check run. The guard blocked a write of code at L2, `dotnet test` in the shell, and a new plugin in `.opencode/plugins/`; a notes file was allowed.
+- **Not tested yet:** a whole practice session with a real model, and Windows.
+- **Changed:** the installer tells you how to get opencode 2 (`npm i -g @opencode/cli`, or `opencode upgrade --major`), and reads the version that opencode 2 prints (`opencode v2.3.0`). The opencode page says the same, in simple words.
+- **Also on 17 November:** the L3 rule (a question while the learner is stuck is at least rung 1), Big Pickle and GLM-5.3-Flash Free on the tested list, and a note on models from China.
+
 ### 16 November 2026: an opencode version, tested before building, built as an experiment
 
 The pilot student planned a second version of the harness for [opencode](../opencode.md), an open-source coding agent that also runs free models. The plan put a cheap test before any port work, with a rule for when to stop.
