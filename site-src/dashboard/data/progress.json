@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "generatedAt": "2026-11-18",
-  "exportedAt": "2026-11-18T14:39:55.696Z",
+  "exportedAt": "2026-11-18T16:02:29.918Z",
   "course": null,
   "language": "nl",
   "examDate": "2027-01-20",
@@ -407,7 +407,7 @@
       "nextReview": null,
       "intervalIndex": 0,
       "lastReview": null,
-      "lastSeen": "2026-11-10",
+      "lastSeen": "2026-11-18",
       "placement": "done",
       "start": {
         "at": "2026-11-07T21:24:09.634Z",
@@ -2494,6 +2494,34 @@
       "corrections": [],
       "void": false,
       "voidReason": null
+    },
+    {
+      "id": "mwm9llhenmnl",
+      "at": "2026-11-18T15:48:38.537Z",
+      "skill": "ood.klassen.veld-vs-lokaal",
+      "source": "done",
+      "success": true,
+      "maxRung": 1,
+      "minutes": 1,
+      "reviewRung": null,
+      "what": "Printer3D cost function",
+      "explained": true,
+      "explanation": "var Weight created a local field instead of referencing the class field\nnothing happens to the local variable and Costs() still sees 0 for weight because it is not updated afther the local variable is created",
+      "explainedAt": "2026-11-18T15:52:39.479Z",
+      "explainedBy": null,
+      "lapsed": false,
+      "lapseReason": null,
+      "retaggedFrom": null,
+      "rejections": [
+        {
+          "at": "2026-11-18T15:50:29.849Z",
+          "by": "claude",
+          "reasons": []
+        }
+      ],
+      "corrections": [],
+      "void": false,
+      "voidReason": null
     }
   ],
   "reviews": [],
@@ -2687,10 +2715,10 @@
     },
     {
       "date": "2026-11-18",
-      "sessions": 2,
-      "hints": 2,
+      "sessions": 4,
+      "hints": 3,
       "holds": 1,
-      "denials": 3,
+      "denials": 7,
       "overridesUsed": 0,
       "reviewHelp": 0,
       "helpDropped": 0
@@ -3002,6 +3030,23 @@
         "nextStep": "(niet genoemd)"
       },
       "calibration": "vooraf onbekend → lukte met hulp tot trede 4 → niet te bepalen"
+    },
+    {
+      "date": "2026-11-18",
+      "n": 3,
+      "time": "16:06–17:01",
+      "skills": "ood.klassen.veld-vs-lokaal (L2), cs.basis.decimal-afronden (L2), ood.overerving (L3), beoordeeld werk Makerlab",
+      "plan": "today i want to implement the cost function of the 3d printer",
+      "confidenceBefore": "1",
+      "wentWell": "de cost function van Printer3D gelukt met hulp tot trede 1 (Socratische vragen): de student loste zelf de override-signatuur (ood.overerving), de integerdeling vóór Math.Ceiling (cs.basis.decimal-afronden) en de lokale var in Addweight (ood.klassen.veld-vs-lokaal) op, en voegde zelf een debug-WriteLine toe om de fout te vinden.",
+      "signals": "transfertaak op een andere dag: /mastery-check ood.klassen-properties, /mastery-check ood.associaties, /mastery-check ood.aggregatie-compositie, /mastery-check ood.encapsulatie, /mastery-check uml.klassendiagram",
+      "reflection": {
+        "learned": "if you put var before a class property it becomes a local variable",
+        "confusing": "if i had to put var or this. before the property name",
+        "confidenceAfter": "level 2",
+        "nextStep": "(niet genoemd)"
+      },
+      "calibration": "vooraf 1 → lukte met hulp tot trede 1 → onderschat"
     }
   ],
   "reviewHelp": [
@@ -3083,6 +3128,34 @@
       "rung": 2,
       "taskSkill": "uml.klassendiagram",
       "task": "mwl93zonivmb"
+    },
+    {
+      "at": "2026-11-18T15:17:04.899Z",
+      "skill": "ood.overerving",
+      "rung": 1,
+      "taskSkill": null,
+      "task": "mwm9llhenmnl"
+    },
+    {
+      "at": "2026-11-18T15:31:28.130Z",
+      "skill": "cs.basis.decimal-afronden",
+      "rung": 1,
+      "taskSkill": null,
+      "task": "mwm9llhenmnl"
+    },
+    {
+      "at": "2026-11-18T15:43:12.073Z",
+      "skill": "ood.klassen.veld-vs-lokaal",
+      "rung": 1,
+      "taskSkill": null,
+      "task": "mwm9llhenmnl"
+    },
+    {
+      "at": "2026-11-18T15:57:37.290Z",
+      "skill": "cs.basis.decimal-afronden",
+      "rung": 2,
+      "taskSkill": "ood.klassen-properties",
+      "task": "mwmb1qbt48t1"
     }
   ],
   "microProposals": [],
@@ -3188,6 +3261,8 @@
       "because int 1 / int 10 the result is also a rouded int so 0.1 is rounded to 0. when you cast MinutesUsed and 10 as doubles the problem is solved and an double is the resulting aswer\nbecause it cast the resuting 0 from the int/int devision to a double so the 0 became a double. double divded by a double gives a double so 0.1 and that nuber becomes 1 when we use the Math.Ceiling methode on it": "because int 1 / int 10 the result is also a rouded int so 0.1 is rounded to 0. when you cast MinutesUsed and 10 as doubles the problem is solved and an double is the resulting aswer\nbecause it cast the resuting 0 from the int/int devision to a double so the 0 became a double. double divded by a double gives a double so 0.1 and that nuber becomes 1 when we use the Math.Ceiling methode on it",
       "SolderingIron.Costs()": "SolderingIron.Costs()",
       "because the Costs() function is an abstract methode in the parent class, a Costs() function needs to be implemented for each child class. if i would have left it with the trow new NotImplementedExeption() it would stop the program.": "because the Costs() function is an abstract methode in the parent class, a Costs() function needs to be implemented for each child class. if i would have left it with the trow new NotImplementedExeption() it would stop the program.",
+      "Printer3D cost function": "Printer3D cost function",
+      "var Weight created a local field instead of referencing the class field\nnothing happens to the local variable and Costs() still sees 0 for weight because it is not updated afther the local variable is created": "var Weight created a local field instead of referencing the class field\nnothing happens to the local variable and Costs() still sees 0 for weight because it is not updated afther the local variable is created",
       "securitycheck site (tooling)": "security check site (tooling)",
       "cs.basis (L2), cs.basis.lus-grenzen (L2, nieuw), test.unit-tests (L1)": "cs.basis (L2), cs.basis.lus-grenzen (L2, new), test.unit-tests (L1)",
       "opdracht 04-even-getallen afmaken (niet expliciet benoemd)": "finish exercise 04-even-getallen (not stated explicitly)",
@@ -3333,7 +3408,14 @@
       "/mastery-check ood.aggregatie-compositie (alleen de transfertaak ontbreekt); verder zie status": "/mastery-check ood.aggregatie-compositie (only the transfer task is missing); otherwise see status",
       "vooraf onbekend → lukte met hulp tot trede 4 → niet te bepalen": "beforehand unknown → succeeded with help up to rung 4 → cannot be determined",
       "I learned the git add, git commit and git push command and how to add a message with -m \"the text\"": "I learned the git add, git commit and git push command and how to add a message with -m \"the text\"",
-      "the planceholders<> were confusing because in actuality i need to use \"..\" instead of <...>": "the placeholders<> were confusing because in actuality i need to use \"..\" instead of <...>"
+      "the planceholders<> were confusing because in actuality i need to use \"..\" instead of <...>": "the placeholders<> were confusing because in actuality i need to use \"..\" instead of <...>",
+      "ood.klassen.veld-vs-lokaal (L2), cs.basis.decimal-afronden (L2), ood.overerving (L3), beoordeeld werk Makerlab": "ood.klassen.veld-vs-lokaal (L2), cs.basis.decimal-afronden (L2), ood.overerving (L3), graded work Makerlab",
+      "today i want to implement the cost function of the 3d printer": "today i want to implement the cost function of the 3d printer",
+      "de cost function van Printer3D gelukt met hulp tot trede 1 (Socratische vragen): de student loste zelf de override-signatuur (ood.overerving), de integerdeling vóór Math.Ceiling (cs.basis.decimal-afronden) en de lokale var in Addweight (ood.klassen.veld-vs-lokaal) op, en voegde zelf een debug-WriteLine toe om de fout te vinden.": "the Printer3D cost function succeeded with help up to rung 1 (Socratic questions): the student fixed the override signature (ood.overerving), the integer division before Math.Ceiling (cs.basis.decimal-afronden) and the local var in Addweight (ood.klassen.veld-vs-lokaal) themselves, and added a debug WriteLine on their own to find the bug.",
+      "transfertaak op een andere dag: /mastery-check ood.klassen-properties, /mastery-check ood.associaties, /mastery-check ood.aggregatie-compositie, /mastery-check ood.encapsulatie, /mastery-check uml.klassendiagram": "transfer task on another day: /mastery-check ood.klassen-properties, /mastery-check ood.associaties, /mastery-check ood.aggregatie-compositie, /mastery-check ood.encapsulatie, /mastery-check uml.klassendiagram",
+      "vooraf 1 → lukte met hulp tot trede 1 → onderschat": "before 1 → succeeded with help up to rung 1 → underestimated",
+      "if you put var before a class property it becomes a local variable": "if you put var before a class property it becomes a local variable",
+      "if i had to put var or this. before the property name": "if i had to put var or this. before the property name"
     }
   }
 }
