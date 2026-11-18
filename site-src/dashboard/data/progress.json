@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "generatedAt": "2026-11-18",
-  "exportedAt": "2026-11-18T16:02:29.918Z",
+  "exportedAt": "2026-11-18T21:01:08.223Z",
   "course": null,
   "language": "nl",
   "examDate": "2027-01-20",
@@ -260,7 +260,7 @@
       "nextReview": null,
       "intervalIndex": 0,
       "lastReview": null,
-      "lastSeen": null,
+      "lastSeen": "2026-11-18",
       "placement": "done",
       "start": {
         "at": "2026-11-13T05:49:49.791Z",
@@ -2522,6 +2522,44 @@
       "corrections": [],
       "void": false,
       "voidReason": null
+    },
+    {
+      "id": "mwmkin2iauts",
+      "at": "2026-11-18T20:22:42.762Z",
+      "skill": "cs.basis.datum-tijd",
+      "source": "done",
+      "success": true,
+      "maxRung": 1,
+      "minutes": 0,
+      "reviewRung": null,
+      "what": "Reserve overlap check",
+      "explained": true,
+      "explanation": "als de nieuwe startijd gelijk of groter is dan de bestaande startijd en kleiner of gelijk is dan de eindtijd aan een bestaande reserverings start en eindtijd, of het zelfde maar dan voor de eindtijd, dus als die er ook op of tussen valt\ndan zegt de code dat er geen agendaconfilit is maar dat zou eigenlijk wel moeten...\nik heb als voorwaarde gesteld dat de nieuwe begintijd kleiner of gelijk is dan de oude eindtijd en dat de nieuwe eindtijd kleiner is dan de nieuwe begintijd, hierdoor wordt alle (deelse) overlap opgemerkt en herkent als overlap. binnen de forloop word zo elke reservering in het systeem langsgelopen\nik heb als voorwaarde gesteld dat de nieuwe begintijd kleiner of gelijk is dan de oude eindtijd en dat de nieuwe eindtijd kleiner is dan de oude begintijd, hierdoor wordt alle (deelse) overlap opgemerkt en herkent als overlap. als de nieuwe sessie start voor de eindtijd wordt dat herkent en als als de nieuwe sessie stop na de begintijd word dit herkend, hierdoor heb je alle sc",
+      "explainedAt": "2026-11-18T20:46:55.353Z",
+      "explainedBy": null,
+      "lapsed": false,
+      "lapseReason": null,
+      "retaggedFrom": null,
+      "rejections": [
+        {
+          "at": "2026-11-18T20:26:09.282Z",
+          "by": "claude",
+          "reasons": []
+        },
+        {
+          "at": "2026-11-18T20:27:35.063Z",
+          "by": "claude",
+          "reasons": []
+        },
+        {
+          "at": "2026-11-18T20:43:45.207Z",
+          "by": "claude",
+          "reasons": []
+        }
+      ],
+      "corrections": [],
+      "void": false,
+      "voidReason": null
     }
   ],
   "reviews": [],
@@ -2715,10 +2753,10 @@
     },
     {
       "date": "2026-11-18",
-      "sessions": 4,
-      "hints": 3,
+      "sessions": 6,
+      "hints": 7,
       "holds": 1,
-      "denials": 7,
+      "denials": 10,
       "overridesUsed": 0,
       "reviewHelp": 0,
       "helpDropped": 0
@@ -3047,6 +3085,23 @@
         "nextStep": "(niet genoemd)"
       },
       "calibration": "vooraf 1 → lukte met hulp tot trede 1 → onderschat"
+    },
+    {
+      "date": "2026-11-18",
+      "n": 4,
+      "time": "18:34–22:00",
+      "skills": "cs.basis.datum-tijd (L2), ood.klassen-properties (L3), ood.overerving (L3), beoordeeld werk Makerlab",
+      "plan": "\"i want to implement reserve\"",
+      "confidenceBefore": "onbekend",
+      "wentWell": "de NullReferenceException zelf opgelost vanuit de stack trace (ood.klassen-properties, gelukt met hulp tot trede 1). De overlapcontrole gebouwd en, na een Socratische vraag, zelf de gemiste \"eromheen\"-situatie gevonden en verholpen (cs.basis.datum-tijd, gelukt met hulp tot trede 1). De keuze \"aansluitende reserveringen tellen als overlap\" bewust gemaakt en verdedigd.",
+      "signals": "geen",
+      "reflection": {
+        "learned": "waarom je new moet gebruiken als je een nieuwe lijst aanmaakt en hoe je checkt of een object niet null is",
+        "confusing": "of ik alle gevallen had afgehandeld van overlap, de volgende keer zou ik eerst de relevante test scenarios toevoegen om te checken of dit wel goed gaat.",
+        "confidenceAfter": "3",
+        "nextStep": "eerst verder met de reserve functie bij andere devices, daarna de rollen/personen implementeren en daarna de noshow check ook toe voegen."
+      },
+      "calibration": "vooraf onbekend → lukte met hulp tot trede 1 → niet te bepalen"
     }
   ],
   "reviewHelp": [
@@ -3263,6 +3318,8 @@
       "because the Costs() function is an abstract methode in the parent class, a Costs() function needs to be implemented for each child class. if i would have left it with the trow new NotImplementedExeption() it would stop the program.": "because the Costs() function is an abstract methode in the parent class, a Costs() function needs to be implemented for each child class. if i would have left it with the trow new NotImplementedExeption() it would stop the program.",
       "Printer3D cost function": "Printer3D cost function",
       "var Weight created a local field instead of referencing the class field\nnothing happens to the local variable and Costs() still sees 0 for weight because it is not updated afther the local variable is created": "var Weight created a local field instead of referencing the class field\nnothing happens to the local variable and Costs() still sees 0 for weight because it is not updated afther the local variable is created",
+      "Reserve overlap check": "Reserve overlap check",
+      "als de nieuwe startijd gelijk of groter is dan de bestaande startijd en kleiner of gelijk is dan de eindtijd aan een bestaande reserverings start en eindtijd, of het zelfde maar dan voor de eindtijd, dus als die er ook op of tussen valt\ndan zegt de code dat er geen agendaconfilit is maar dat zou eigenlijk wel moeten...\nik heb als voorwaarde gesteld dat de nieuwe begintijd kleiner of gelijk is dan de oude eindtijd en dat de nieuwe eindtijd kleiner is dan de nieuwe begintijd, hierdoor wordt alle (deelse) overlap opgemerkt en herkent als overlap. binnen de forloop word zo elke reservering in het systeem langsgelopen\nik heb als voorwaarde gesteld dat de nieuwe begintijd kleiner of gelijk is dan de oude eindtijd en dat de nieuwe eindtijd kleiner is dan de oude begintijd, hierdoor wordt alle (deelse) overlap opgemerkt en herkent als overlap. als de nieuwe sessie start voor de eindtijd wordt dat herkent en als als de nieuwe sessie stop na de begintijd word dit herkend, hierdoor heb je alle sc": "if the new start time is equal to or greater than the existing start time and less than or equal to the end time of an existing reservation's start and end time, or the same but for the end time, so if that also falls on or between them\nthen the code says there is no calendar conflict but there actually should be...\ni set as the condition that the new start time is less than or equal to the old end time and that the new end time is less than the new start time, this way all (partial) overlap is noticed and recognized as overlap. inside the for loop every reservation in the system is gone through this way\ni set as the condition that the new start time is less than or equal to the old end time and that the new end time is less than the old start time, this way all (partial) overlap is noticed and recognized as overlap. if the new session starts before the end time that is recognized and if the new session stops after the start time this is recognized, this way you have covered all sc",
       "securitycheck site (tooling)": "security check site (tooling)",
       "cs.basis (L2), cs.basis.lus-grenzen (L2, nieuw), test.unit-tests (L1)": "cs.basis (L2), cs.basis.lus-grenzen (L2, new), test.unit-tests (L1)",
       "opdracht 04-even-getallen afmaken (niet expliciet benoemd)": "finish exercise 04-even-getallen (not stated explicitly)",
@@ -3415,7 +3472,14 @@
       "transfertaak op een andere dag: /mastery-check ood.klassen-properties, /mastery-check ood.associaties, /mastery-check ood.aggregatie-compositie, /mastery-check ood.encapsulatie, /mastery-check uml.klassendiagram": "transfer task on another day: /mastery-check ood.klassen-properties, /mastery-check ood.associaties, /mastery-check ood.aggregatie-compositie, /mastery-check ood.encapsulatie, /mastery-check uml.klassendiagram",
       "vooraf 1 → lukte met hulp tot trede 1 → onderschat": "before 1 → succeeded with help up to rung 1 → underestimated",
       "if you put var before a class property it becomes a local variable": "if you put var before a class property it becomes a local variable",
-      "if i had to put var or this. before the property name": "if i had to put var or this. before the property name"
+      "if i had to put var or this. before the property name": "if i had to put var or this. before the property name",
+      "cs.basis.datum-tijd (L2), ood.klassen-properties (L3), ood.overerving (L3), beoordeeld werk Makerlab": "cs.basis.datum-tijd (L2), ood.klassen-properties (L3), ood.overerving (L3), graded work Makerlab",
+      "\"i want to implement reserve\"": "\"i want to implement reserve\"",
+      "de NullReferenceException zelf opgelost vanuit de stack trace (ood.klassen-properties, gelukt met hulp tot trede 1). De overlapcontrole gebouwd en, na een Socratische vraag, zelf de gemiste \"eromheen\"-situatie gevonden en verholpen (cs.basis.datum-tijd, gelukt met hulp tot trede 1). De keuze \"aansluitende reserveringen tellen als overlap\" bewust gemaakt en verdedigd.": "fixed the NullReferenceException themselves from the stack trace (ood.klassen-properties, succeeded with help up to rung 1). Built the overlap check and, after a Socratic question, found and fixed the missed \"surrounding\" case themselves (cs.basis.datum-tijd, succeeded with help up to rung 1). Made and defended the deliberate choice \"adjacent reservations count as overlap\".",
+      "vooraf onbekend → lukte met hulp tot trede 1 → niet te bepalen": "unknown beforehand → succeeded with help up to rung 1 → cannot be determined",
+      "waarom je new moet gebruiken als je een nieuwe lijst aanmaakt en hoe je checkt of een object niet null is": "why you have to use new when you create a new list and how you check that an object is not null",
+      "of ik alle gevallen had afgehandeld van overlap, de volgende keer zou ik eerst de relevante test scenarios toevoegen om te checken of dit wel goed gaat.": "whether i had handled all cases of overlap, next time i would first add the relevant test scenarios to check whether this actually works.",
+      "eerst verder met de reserve functie bij andere devices, daarna de rollen/personen implementeren en daarna de noshow check ook toe voegen.": "first continue with the reserve function for the other devices, then implement the roles/people and then also add the no-show check."
     }
   }
 }
