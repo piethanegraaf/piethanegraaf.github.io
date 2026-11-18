@@ -1,7 +1,7 @@
 {
   "schema": 1,
-  "generatedAt": "2026-11-17",
-  "exportedAt": "2026-11-17T21:37:03.893Z",
+  "generatedAt": "2026-11-18",
+  "exportedAt": "2026-11-18T10:52:45.298Z",
   "course": null,
   "language": "nl",
   "examDate": "2027-01-20",
@@ -388,7 +388,7 @@
           "note": "5/5 gelukt",
           "notes": {
             "nl": "5/5 gelukt",
-            "en": "5/5 solved"
+            "en": "5/5 succeeded"
           },
           "auto": false,
           "placement": false,
@@ -446,7 +446,7 @@
       "nextReview": null,
       "intervalIndex": 0,
       "lastReview": null,
-      "lastSeen": "2026-11-16",
+      "lastSeen": "2026-11-18",
       "placement": "done",
       "start": {
         "at": "2026-11-07T18:59:58.137Z",
@@ -2472,6 +2472,28 @@
       "corrections": [],
       "void": false,
       "voidReason": null
+    },
+    {
+      "id": "mwlxw8m74cfz",
+      "at": "2026-11-18T09:49:26.047Z",
+      "skill": "ood.overerving",
+      "source": "done",
+      "success": true,
+      "maxRung": 0,
+      "minutes": 0,
+      "reviewRung": null,
+      "what": "SolderingIron.Costs()",
+      "explained": true,
+      "explanation": "because the Costs() function is an abstract methode in the parent class, a Costs() function needs to be implemented for each child class. if i would have left it with the trow new NotImplementedExeption() it would stop the program.",
+      "explainedAt": "2026-11-18T10:00:42.773Z",
+      "explainedBy": null,
+      "lapsed": false,
+      "lapseReason": null,
+      "retaggedFrom": null,
+      "rejections": [],
+      "corrections": [],
+      "void": false,
+      "voidReason": null
     }
   ],
   "reviews": [],
@@ -2655,8 +2677,18 @@
     },
     {
       "date": "2026-11-17",
-      "sessions": 3,
-      "hints": 3,
+      "sessions": 4,
+      "hints": 5,
+      "holds": 0,
+      "denials": 1,
+      "overridesUsed": 0,
+      "reviewHelp": 0,
+      "helpDropped": 0
+    },
+    {
+      "date": "2026-11-18",
+      "sessions": 1,
+      "hints": 1,
       "holds": 0,
       "denials": 1,
       "overridesUsed": 0,
@@ -2936,6 +2968,23 @@
         "nextStep": "niet ingevuld"
       },
       "calibration": "vooraf 4 → lukte met hulp tot trede 3 → overschat (nu: \"level 2\")"
+    },
+    {
+      "date": "2026-11-18",
+      "n": 1,
+      "time": "09:03–11:51",
+      "skills": "ood.overerving (L3)",
+      "plan": "i want to start working on the implementation of the soldering iron cost function",
+      "confidenceBefore": "5",
+      "wentWell": "ood.overerving: de override van de abstracte `Costs()` voor SolderingIron zelfstandig gemaakt (trede 0), zelf gecontroleerd met `dotnet run`, en uitgelegd waarom de override nodig is (compileerfout als hij ontbreekt, crash bij de `throw`).",
+      "signals": "ood.overerving L3 → L4: zonder hint 1/3 · dagen 1/2 · transfertaak ○. Openstaand: /mastery-check voor ood.klassen-properties, ood.associaties, ood.aggregatie-compositie, ood.encapsulatie en uml.klassendiagram.",
+      "reflection": {
+        "learned": "I got to practise implementing a methode overwrite",
+        "confusing": "the task was clear",
+        "confidenceAfter": "5",
+        "nextStep": "(niet genoemd)"
+      },
+      "calibration": "vooraf 5 → lukte met trede 0, controlevragen half → klopt voor de taak, het waarom bij de controlevragen kan dieper"
     }
   ],
   "reviewHelp": [
@@ -3010,6 +3059,13 @@
       "rung": 1,
       "taskSkill": "ood.klassen-properties",
       "task": "mwiuzbulg7q4"
+    },
+    {
+      "at": "2026-11-17T22:15:37.319Z",
+      "skill": "ood.klassen.veld-vs-lokaal",
+      "rung": 2,
+      "taskSkill": "uml.klassendiagram",
+      "task": "mwl93zonivmb"
     }
   ],
   "microProposals": [],
@@ -3113,6 +3169,8 @@
       "geen waarom (gebruik bv. 'omdat', 'doordat', 'zodat', 'anders', of 'als …, dan …')": "no reason given (use e.g. 'because', 'since', 'so that', 'otherwise', or 'if …, then …')",
       "lasersnijder kostenfunctie": "laser cutter cost function",
       "because int 1 / int 10 the result is also a rouded int so 0.1 is rounded to 0. when you cast MinutesUsed and 10 as doubles the problem is solved and an double is the resulting aswer\nbecause it cast the resuting 0 from the int/int devision to a double so the 0 became a double. double divded by a double gives a double so 0.1 and that nuber becomes 1 when we use the Math.Ceiling methode on it": "because int 1 / int 10 the result is also a rouded int so 0.1 is rounded to 0. when you cast MinutesUsed and 10 as doubles the problem is solved and an double is the resulting aswer\nbecause it cast the resuting 0 from the int/int devision to a double so the 0 became a double. double divded by a double gives a double so 0.1 and that nuber becomes 1 when we use the Math.Ceiling methode on it",
+      "SolderingIron.Costs()": "SolderingIron.Costs()",
+      "because the Costs() function is an abstract methode in the parent class, a Costs() function needs to be implemented for each child class. if i would have left it with the trow new NotImplementedExeption() it would stop the program.": "because the Costs() function is an abstract methode in the parent class, a Costs() function needs to be implemented for each child class. if i would have left it with the trow new NotImplementedExeption() it would stop the program.",
       "securitycheck site (tooling)": "security check site (tooling)",
       "cs.basis (L2), cs.basis.lus-grenzen (L2, nieuw), test.unit-tests (L1)": "cs.basis (L2), cs.basis.lus-grenzen (L2, new), test.unit-tests (L1)",
       "opdracht 04-even-getallen afmaken (niet expliciet benoemd)": "finish exercise 04-even-getallen (not stated explicitly)",
@@ -3243,7 +3301,15 @@
       "if you devide an int wih and int the answer is souded to an int": "if you devide an int wih and int the answer is souded to an int",
       "why 1/10 was 0": "why 1/10 was 0",
       "level 2": "level 2",
-      "niet ingevuld": "not filled in"
+      "niet ingevuld": "not filled in",
+      "ood.overerving (L3)": "ood.overerving (L3)",
+      "i want to start working on the implementation of the soldering iron cost function": "i want to start working on the implementation of the soldering iron cost function",
+      "ood.overerving: de override van de abstracte `Costs()` voor SolderingIron zelfstandig gemaakt (trede 0), zelf gecontroleerd met `dotnet run`, en uitgelegd waarom de override nodig is (compileerfout als hij ontbreekt, crash bij de `throw`).": "ood.overerving: wrote the override of the abstract `Costs()` for SolderingIron independently (rung 0), checked it with `dotnet run`, and explained why the override is needed (compile error if it is missing, crash at the `throw`).",
+      "ood.overerving L3 → L4: zonder hint 1/3 · dagen 1/2 · transfertaak ○. Openstaand: /mastery-check voor ood.klassen-properties, ood.associaties, ood.aggregatie-compositie, ood.encapsulatie en uml.klassendiagram.": "ood.overerving L3 → L4: without hint 1/3 · days 1/2 · transfer task ○. Open: /mastery-check for ood.klassen-properties, ood.associaties, ood.aggregatie-compositie, ood.encapsulatie and uml.klassendiagram.",
+      "vooraf 5 → lukte met trede 0, controlevragen half → klopt voor de taak, het waarom bij de controlevragen kan dieper": "beforehand 5 → succeeded at rung 0, review questions half → accurate for the task, the why in the review questions can go deeper",
+      "I got to practise implementing a methode overwrite": "I got to practise implementing a methode overwrite",
+      "the task was clear": "the task was clear",
+      "(niet genoemd)": "(not mentioned)"
     }
   }
 }
