@@ -45,7 +45,7 @@ Wat de installer aanmaakt:
 Bestaat een bestand al en verandert het, dan maakt de installer eerst een backup in `.claude/leerharnas-backup/<tijd>/`.
 
 !!! note "opencode (experimenteel)"
-    `--host opencode` installeert dezelfde harnas voor opencode, en `--host both` voor beide tools op één record. Zie [De leerharnas in opencode](opencode.md) voor wat hetzelfde werkt en waarom het nog niet klaar is om echt mee te oefenen.
+    `--host opencode` installeert dezelfde harnas voor opencode, en `--host both` voor beide tools op één record. Zie [De leerharnas in opencode](opencode.md) voor wat hetzelfde werkt en wat er nog experimenteel aan is.
 
 ## Bijwerken
 

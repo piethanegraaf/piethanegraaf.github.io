@@ -45,7 +45,7 @@ What the installer creates:
 When a file already exists and changes, the installer first makes a backup in `.claude/leerharnas-backup/<time>/`.
 
 !!! note "opencode (experimental)"
-    `--host opencode` installs the same harness for opencode, and `--host both` for both tools on one record. See [The learning harness in opencode](opencode.md) for what works the same and why it is not ready for real practice yet.
+    `--host opencode` installs the same harness for opencode, and `--host both` for both tools on one record. See [The learning harness in opencode](opencode.md) for what works the same and what is still experimental about it.
 
 ## Update
 

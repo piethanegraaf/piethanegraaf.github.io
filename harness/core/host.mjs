@@ -3,7 +3,7 @@
 // (harness/core/) it is Claude Code. LEERHARNAS_HOST (claude-code | opencode) overrides it, for tests.
 //
 // The rules, messages and commands are written for Claude Code. hostText() turns them into the other host's
-// words: script paths (.claude/hooks/ -> .opencode/hooks/), the rules file and the tool's name. It changes
+// words: script paths (.claude/hooks/ -> .opencode/hooks/), the rules file, the tool's name and the agent's. It changes
 // nothing for Claude Code.
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -28,6 +28,9 @@ const OPENCODE_WORDS = [
   [/\bStop hook\b/g, "end-of-turn hook"],
   [/\bStop-hook\b/g, "eind-van-de-beurt-hook"],
   [/\bClaude Code\b/g, "opencode"],
+  // The agent the learner talks to (real session of 18 Nov: "(Claude beoordeelt, de hook controleert.)" next to GLM).
+  // opencode is the agent there, whatever the model; the user-level files keep their own name (~/.claude/ is lowercase).
+  [/\bClaude\b/g, "opencode"],
 ];
 
 export function hostText(s, host = HOST) {

@@ -7,11 +7,17 @@ description: "The same levels, hint ladder, guard and diary in opencode, through
 [opencode](https://opencode.ai) is an open-source coding agent that also runs free models. The learning harness can run in it as a plugin, on the same core as the Claude Code version: the same levels, hint ladder, guard, explanation check, diary and dashboard, and the same `.learning/` folder. A practice folder can even have both installed and switch tools between sessions.
 
 !!! warning "Experimental: you need opencode 2"
-    The harness needs **opencode 2**. Install it with `npm i -g @opencode/cli`. Do you have opencode 1? Then run `opencode upgrade --major`.
+    The harness needs **opencode 2**. Install it with `npm i -g @opencode/cli`. Do you have opencode 1? Then run `opencode upgrade --major`. Or remove it first with `npm uninstall -g opencode-ai`: as long as it is there, installing opencode 2 stops with `EEXIST`.
 
     Opencode 1 does not work: it stops with "V2 permissions are not supported by OpenCode V1". The installer checks this and stops too.
 
-    **What we tested** (17 November 2026, opencode 2.3.0): opencode starts, the plugin loads, and the guard works. It blocked code at L2, `dotnet test`, and a new plugin. It allowed a notes file. **Not tested yet:** a whole practice session with a real model, and Windows. For graded work, use Claude Code.
+    **What we tested** (opencode 2.3.0):
+
+    - **17 November:** opencode starts, the plugin loads, and the guard works. It blocked code at L2, `dotnet test`, and a new plugin. It allowed a notes file.
+    - **18 November, on Windows, with GLM-5.3-Flash Free:** a whole practice task. The model did not write the code, asked for the test run first, gave hints, and asked for an explanation. Two weak explanations were rejected, the third was approved. The task was logged as "succeeded with help up to rung 2", and the new skill was placed at L2.
+    - **What fell short:** GLM sometimes wrote the rung in a sentence ("a question (rung 1)") instead of as a marker, so that hint was not logged. The harness now counts that form as well (see [Models](#models)).
+
+    For graded work, use Claude Code.
 
 ## Who it is for
 
@@ -39,7 +45,7 @@ What lands in the folder:
 | `.opencode/opencode.jsonc` | The rules as instructions, Code Mode off, and policies that keep the model out of your record and the harness |
 | `AGENTS.md` | Yours; the harness only owns the block between its markers |
 
-Your commands start with `! node .opencode/hooks/` instead of `! node .claude/hooks/`, for example `! node .opencode/hooks/skill.mjs list`.
+Your commands start with `! node .opencode/hooks/` instead of `! node .claude/hooks/`, for example `! node .opencode/hooks/skill.mjs list`. **Type the `!` yourself** at the start of the input box. A pasted command did not become a command in the Windows test: it went to the model as a message.
 
 ## What works the same
 
@@ -71,6 +77,8 @@ The guard does not depend on the model, but the hint ladder and the honest marke
 | At least `[rung 1]` when helping a stuck learner at L3 | 3/3 | 3/3 | 1/1 (2 runs got no answer) |
 | **On the list** | **yes** | **yes** | not yet: test again |
 
+**In a real session** (18 November, GLM, see the box at the top) GLM put a marker on most of its help, but twice it wrote the rung in a sentence: "a question (rung 1)". Since then the harness also counts that exact form, as long as the answer has no marker at all. A hint without any rung still counts as independent; that is why the rules ask for a marker on every hint, also at L2.
+
 On 16 November GLM and DeepSeek still failed the L3 check (0/3 and 1/3), and Big Pickle on 17 November too, under the old instruction. That instruction asked for a marker only "if you still give substantive help", so a single question went unlogged. Since the L3 rule says it outright (a question while the learner is stuck is at least rung 1), all answers pass. DeepSeek did not answer two runs (the free provider stopped answering for a while), so it is not on the list yet. The harness also catches part of this itself: at L2 and L3 a code block in your language counts as rung 4 or 5, whatever the model wrote.
 
 Big Pickle may use your data during its free period (see below); GLM-5.3-Flash Free does not keep your data.
@@ -83,11 +91,13 @@ Big Pickle may use your data during its free period (see below); GLM-5.3-Flash F
 node harness/tools/compliance/compliance.mjs --model opencode/big-pickle --runs 3
 ```
 
-On Windows npm installs opencode as a `.cmd`, which Node does not start without a shell: add `--opencode "$env:APPDATA\npm\node_modules\opencode-ai\bin\opencode.exe"`. The suite prints its progress per answer; a free model that does not answer is tried four times and then counted as unanswered. Retest only that scenario with `--only c`. The answers stay in your temp folder (`leerharnas-compliance`): read them before you put a model on the list.
+On Windows npm installs opencode as a `.cmd`, which Node does not start without a shell. The suite therefore looks for the program itself in npm's global folder (opencode 2, then opencode 1). Is it somewhere else? Then add `--opencode "<path to opencode.exe>"`. The suite prints its progress per answer; a free model that does not answer is tried four times and then counted as unanswered. Retest only that scenario with `--only c`. The answers stay in your temp folder (`leerharnas-compliance`): read them before you put a model on the list.
 
 **Claude in opencode**, three routes: an Anthropic API key works, at a price per token. The `claude-agent` provider runs Claude Code inside opencode with your own login; whether that counts against your plan is unclear, so do not count on it. A Pro or Max subscription connected directly is not allowed.
 
 **Free models and your data.** According to opencode, Big Pickle may use your data to improve the model during its free period; the zero-retention models do not. The plugin warns once when a model may train on your data.
+
+**Free models have a daily limit.** After a number of messages opencode says that you have used today's free messages, and when they come back. The limit holds for all free models together, so switching models does not help. opencode publishes no number. The limit seems to count per internet connection, so a whole class on one school network could run into it together. Free is fine for practising at home; for a class, plan a paid route or Claude Code.
 
 ## Security
 
@@ -102,5 +112,5 @@ Your own `!` commands are never checked, as in Claude Code. And as in Claude Cod
 ## What is not there yet
 
 - Graded work: the AI-use log, the session export and the user-level gate for opencode come in a later version.
-- A whole practice session with a real model in opencode 2, and a test on Windows.
+- A test with several tasks and several days in a row, so promotion and demotion with a free model are tested too.
 - Per-session cost in the diary.

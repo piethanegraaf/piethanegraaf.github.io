@@ -609,6 +609,17 @@ These parts of the design were replaced. They used to sit on the [design page](d
 
 ## 11. Change log {#changelog}
 
+### 18 November 2026: a real practice task in opencode 2, on Windows
+
+The pilot student did a practice task (`Optellen` in `01-wiskunde`) in opencode 2.3.0 on Windows, with GLM-5.3-Flash Free, playing the learner.
+
+- **What worked:** the model wrote no code and asked for the tests first. It asked the confidence question (1–5) and gave hints. An "I don't know how" unlocked rung 1. The task was logged as "succeeded with help up to rung 2". Two weak explanations were rejected and the third approved, and the new skill was placed at L2.
+- **Two hints not logged.** Twice GLM wrote the rung in a sentence ("a question (rung 1)") instead of as `[rung 1]`. An earlier hint ("the only thing missing is what the method returns") had no rung at all. The Stop hook now also counts exactly the form "(rung N)" in round brackets, when the answer has no marker and no recap comes before it ("succeeded with help up to"). The rules ask for a marker on every hint, also at L2 and also the first one.
+- **Setting it higher.** At the placement the harness says that the learner may set it higher. The model repeated that with a reason of its own ("you did the other methods on your own"), although those came after the hint. The rules now say: do not repeat that with reasons of your own.
+- **"Claude" in opencode.** Messages said "(Claude judges, the hook checks.)" next to GLM. In opencode the agent is now called "opencode".
+- **Small things:** a pasted `!` command went to the model as a message (type the `!` yourself). Opencode 1 has to go first (`npm uninstall -g opencode-ai`), or installing opencode 2 stops with `EEXIST`. The installer reads a leading `~` as the home folder, because PowerShell passes it on as it is. The compliance suite now finds opencode on Windows itself. The free models have a daily message limit, which was also reached that day.
+- **Not tested yet:** several tasks on several days with a free model, so promotion and demotion.
+
 ### 17 November 2026: the learner confirms, the harness offers, and clear words
 
 The pilot student reviewed the sessions of 16 November (evening) and 17 November on the cost functions of the final assignment, and decided points 72–82.

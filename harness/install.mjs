@@ -102,7 +102,10 @@ const withCC = opts.host !== "opencode";
 const withOC = opts.host !== "claude-code";
 // The user-level gate for opencode belongs to release 2 (graded work on opencode).
 if (opts.userGuard && opts.host !== "claude-code") fail("install.ocUserGuard");
-const TARGET = path.resolve(opts.target);
+// A leading ~ is the home folder. PowerShell passes it to node as it is (it only expands ~ in its own commands), so
+// "~/code/oefen" would otherwise become a folder named "~" in the current folder.
+const expandHome = (p) => (typeof p === "string" ? p.replace(/^~(?=$|[\\/])/, os.homedir()) : p);
+const TARGET = path.resolve(expandHome(opts.target));
 if (!fs.existsSync(TARGET) || !fs.statSync(TARGET).isDirectory()) fail("install.noTarget", { dir: TARGET });
 {
   const r = path.relative(HARNESS, TARGET);
@@ -172,7 +175,7 @@ if (!manifest && withOC && !withCC) manifest = readManifest(MANIFEST);
 let localConfig = null;
 try { localConfig = JSON.parse(readText(inTarget(LOCAL)) ?? readText(inTarget(OC_LOCAL)) ?? "null"); } catch { /* an unreadable file is replaced */ }
 const learningDirRaw = opts.learningDir ?? (typeof localConfig?.learningDir === "string" ? localConfig.learningDir : null);
-const learningDir = learningDirRaw === null ? null : path.resolve(learningDirRaw.replace(/^\/([a-zA-Z])\//, "$1:/"));
+const learningDir = learningDirRaw === null ? null : path.resolve(expandHome(learningDirRaw).replace(/^\/([a-zA-Z])\//, "$1:/"));
 if (learningDir !== null) {
   const absolute = path.isAbsolute(learningDirRaw) || /^\/[a-zA-Z]\//.test(learningDirRaw);
   if (!absolute || !fs.existsSync(path.join(learningDir, "skills.json"))) fail("install.badLearningDir", { dir: learningDirRaw });

@@ -612,6 +612,17 @@ Deze delen van het ontwerp zijn vervangen. Ze stonden op de [ontwerppagina](desi
 
 ## 11. Wijzigingslog {#changelog}
 
+### 18 november 2026: een echte oefentaak in opencode 2, op Windows
+
+De pilotstudent maakte een oefentaak (`Optellen` in `01-wiskunde`) in opencode 2.3.0 op Windows, met GLM-5.3-Flash Free, en speelde daarbij zelf de student.
+
+- **Wat werkte:** het model schreef geen code en vroeg eerst om de tests. Het stelde de vraag naar het zelfvertrouwen (1–5) en gaf hints. Een "ik weet niet hoe" ontgrendelde trede 1. De taak is gelogd als "gelukt met hulp tot trede 2". Twee zwakke uitleggen werden afgewezen en de derde goedgekeurd, en de nieuwe vaardigheid kwam op L2.
+- **Twee hints niet gelogd.** GLM schreef de trede twee keer in een zin ("een vraag (trede 1)") in plaats van als `[trede 1]`. Een eerdere hint ("het enige wat ontbreekt is wat de methode teruggeeft") had helemaal geen trede. De Stop-hook telt nu ook precies de vorm "(trede N)" tussen haakjes, als het antwoord geen marker heeft en er geen terugblik vóór staat ("gelukt met hulp tot"). De regels vragen een marker bij elke hint, ook op L2 en ook bij de eerste.
+- **Hoger zetten.** Bij de plaatsing zegt de harnas dat de student het zelf hoger mag zetten. Het model herhaalde dat met een eigen reden ("je deed de andere methoden zelfstandig"), terwijl die na de hint kwamen. De regels zeggen nu: herhaal dat niet met eigen redenen.
+- **"Claude" in opencode.** Meldingen zeiden "(Claude beoordeelt, de hook controleert.)" naast GLM. In opencode heet de agent nu "opencode".
+- **Kleine dingen:** een geplakt `!`-commando ging als bericht naar het model (typ de `!` zelf). Opencode 1 moet eerst weg (`npm uninstall -g opencode-ai`), anders stopt de installatie met `EEXIST`. De installer leest een `~` aan het begin van het pad als de thuismap, want PowerShell geeft die letterlijk door. De nalevingssuite vindt opencode op Windows nu zelf. De gratis modellen hebben een daglimiet aan berichten, die deze dag ook bereikt werd.
+- **Nog niet getest:** meerdere taken op meerdere dagen met een gratis model, dus doorstromen en terugzetten.
+
 ### 17 november 2026: de student bevestigt, de harnas biedt aan, en heldere woorden
 
 De pilotstudent bekeek de sessies van 16 november ('s avonds) en 17 november over de kostenfuncties van de eindopdracht, en besloot over de punten 72–82.
