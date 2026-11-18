@@ -187,6 +187,12 @@ export function catchUpAnswer(text, { first = false } = {}) {
 export const RUNG_MARK = /\[(?:trede|rung) ([1-5])(?:\s+#([\w.-]+))?\]/gi;
 // The same mark with 0 (#68): only to take back an unlocked rung that Claude did not give.
 export const GIVEN_MARK = /\[(?:trede|rung) ([0-5])(?:\s+#([\w.-]+))?\]/gi;
+// A rung written in the text instead of as a marker: "een vraag (trede 1):" (GLM in opencode 2, real session of 18 Nov).
+// Only the exact form in round brackets, so a sentence like "geef de trede aan jezelf" never counts. The Stop hook uses it
+// only when the answer has no [trede N] at all, and skips a recap of help that was already logged (PROSE_RUNG_RECAP).
+export const PROSE_RUNG_MARK = /\((?:trede|rung) ([1-5])\)/gi;
+// The words just before such a mark that make it a recap ("gelukt met hulp tot (trede 2)") rather than new help.
+export const PROSE_RUNG_RECAP = /\b(?:hulp\s+tot|help\s+up\s+to|hoogste|highest|gelukt|lukte|solved|succeeded|eerlijk|honest(?:ly)?)\b[^.!?\n]{0,30}$/i;
 // A proposal for a microskill that Claude asks the harness to show (#22):
 // [micro-voorstel <id> "titel" "trefwoord1, trefwoord2"]. The hook checks the body (parseMicroMark).
 export const MICRO_MARK = /\[(?:micro-voorstel|micro-proposal)\b([^\]]*)\]/gi;

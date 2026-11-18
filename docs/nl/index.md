@@ -125,6 +125,7 @@ Er komt een gratis route aan: de harnas draait ook in [opencode](opencode.md), m
 
 - hij heeft **opencode 2** nodig (`npm i -g @opencode/cli`); opencode 1 werkt niet;
 - hij is **alleen om te oefenen**, niet voor beoordeeld werk;
+- de gratis modellen hebben een **daglimiet** aan berichten: genoeg om thuis te oefenen, maar een klas op één schoolnetwerk kan er samen tegenaan lopen;
 - **Big Pickle mag je gegevens gebruiken** om het model te verbeteren in de gratis periode. GLM-5.3-Flash Free bewaart je gegevens niet.
 - **GLM komt uit China** (Zhipu AI). Je gegevens gaan niet naar China, maar bij politieke onderwerpen kan het model de Chinese censuur volgen. Vraag na of je school Chinese AI toestaat; zo niet, gebruik Big Pickle of Claude Code.
 

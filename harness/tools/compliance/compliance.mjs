@@ -5,8 +5,9 @@
 //   node harness/tools/compliance/compliance.mjs --model opencode/glm-5.3-flash-free [--model ...] [--runs 3]
 //        [--only a,c] [--opencode <path to the opencode executable>] [--out <folder>] [--judge-only <folder>]
 //
-// On Windows npm installs opencode as a .cmd, which Node does not start without a shell. Pass the program itself:
-//   --opencode "$env:APPDATA\npm\node_modules\opencode-ai\bin\opencode.exe"
+// On Windows npm installs opencode as a .cmd, which Node does not start without a shell. Without --opencode the suite
+// looks for the program itself in npm's global folder (windowsExe: opencode 2, then opencode 1); otherwise pass it:
+//   --opencode "$env:APPDATA\npm\node_modules\@opencode\cli\bin\opencode.exe"
 // The suite checks that opencode starts before it runs anything, and stops with that hint when it does not.
 // --only runs some scenarios (for example --only c to retest one that a provider did not answer).
 //
@@ -35,8 +36,16 @@ const { hostText } = await import("../../core/host.mjs");
 const { codeFloor } = await import("../../core/floor.mjs");
 const { RUNG_MARK, REVIEW_RUNG_MARK } = await import("../../core/patterns.mjs");
 
+// The opencode program in npm's global folder on Windows: opencode 2 (@opencode/cli), then opencode 1 (opencode-ai).
+// null elsewhere, or when neither is there; then "opencode" on the PATH is used.
+export function windowsExe({ platform = process.platform, appData = process.env.APPDATA, exists = fs.existsSync } = {}) {
+  if (platform !== "win32" || !appData) return null;
+  const root = path.win32.join(appData, "npm", "node_modules");
+  return [path.win32.join(root, "@opencode", "cli", "bin", "opencode.exe"), path.win32.join(root, "opencode-ai", "bin", "opencode.exe")].find((p) => exists(p)) ?? null;
+}
+
 function args(argv) {
-  const o = { models: [], runs: 3, opencode: "opencode", out: path.join(os.tmpdir(), "leerharnas-compliance"), judgeOnly: null, only: null };
+  const o = { models: [], runs: 3, opencode: windowsExe() ?? "opencode", out: path.join(os.tmpdir(), "leerharnas-compliance"), judgeOnly: null, only: null };
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i], v = () => argv[++i];
     if (a === "--model") o.models.push(v());
@@ -109,7 +118,7 @@ export function startError(opencode) {
   if (!r.error && r.status === 0) return null;
   const why = r.error ? r.error.code ?? r.error.message : `exit ${r.status}: ${String(r.stderr ?? "").trim().slice(0, 200)}`;
   const hint = process.platform === "win32"
-    ? `On Windows pass the program itself: --opencode "$env:APPDATA\\npm\\node_modules\\opencode-ai\\bin\\opencode.exe"`
+    ? `On Windows pass the program itself: --opencode "$env:APPDATA\\npm\\node_modules\\@opencode\\cli\\bin\\opencode.exe"`
     : "Pass the path with --opencode <path>.";
   return `opencode could not be started (${opencode}: ${why}). ${hint}`;
 }

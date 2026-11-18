@@ -7,11 +7,17 @@ description: "Dezelfde niveaus, hintladder, guard en hetzelfde dagboek in openco
 [opencode](https://opencode.ai) is een open-source codeeragent die ook gratis modellen draait. De leerharnas kan daarin draaien als plugin, op dezelfde kern als de Claude Code-versie: dezelfde niveaus, hintladder, guard, uitlegcheck, hetzelfde dagboek en dashboard, en dezelfde map `.learning/`. Een oefenmap kan zelfs allebei hebben en per sessie van tool wisselen.
 
 !!! warning "Experimenteel: je hebt opencode 2 nodig"
-    De harnas heeft **opencode 2** nodig. Installeer het met `npm i -g @opencode/cli`. Heb je opencode 1? Typ dan `opencode upgrade --major`.
+    De harnas heeft **opencode 2** nodig. Installeer het met `npm i -g @opencode/cli`. Heb je opencode 1? Typ dan `opencode upgrade --major`. Of verwijder het eerst met `npm uninstall -g opencode-ai`: zolang dat er staat, stopt de installatie van opencode 2 met `EEXIST`.
 
     Opencode 1 werkt niet: het stopt met "V2 permissions are not supported by OpenCode V1". De installer controleert dat en stopt dan ook.
 
-    **Wat we getest hebben** (17 november 2026, opencode 2.3.0): opencode start, de plugin laadt en de guard werkt. Hij blokkeerde code op L2, `dotnet test` en een nieuwe plugin. Een notitiebestand mocht wel. **Nog niet getest:** een hele oefensessie met een echt model, en Windows. Voor beoordeeld werk gebruik je Claude Code.
+    **Wat we getest hebben** (opencode 2.3.0):
+
+    - **17 november:** opencode start, de plugin laadt en de guard werkt. Hij blokkeerde code op L2, `dotnet test` en een nieuwe plugin. Een notitiebestand mocht wel.
+    - **18 november, op Windows, met GLM-5.3-Flash Free:** een hele oefentaak. Het model schreef de code niet, vroeg eerst de tests te draaien, gaf hints en vroeg om uitleg. Twee zwakke uitleggen werden afgewezen, de derde goedgekeurd. De taak is gelogd als "gelukt met hulp tot trede 2", en de nieuwe vaardigheid is op L2 geplaatst.
+    - **Wat niet goed ging:** GLM schreef de trede soms in een zin ("een vraag (trede 1)") in plaats van als marker, dus die hint werd niet gelogd. De harnas telt die vorm nu ook (zie [Modellen](#modellen)).
+
+    Voor beoordeeld werk gebruik je Claude Code.
 
 ## Voor wie
 
@@ -39,7 +45,7 @@ Wat er in de map komt:
 | `.opencode/opencode.jsonc` | De regels als instructies, Code Mode uit, en policies die het model uit je record en de harnas houden |
 | `AGENTS.md` | Van jou; alleen het blok tussen de markeringen is van de harnas |
 
-Je commando's beginnen met `! node .opencode/hooks/` in plaats van `! node .claude/hooks/`, bijvoorbeeld `! node .opencode/hooks/skill.mjs list`.
+Je commando's beginnen met `! node .opencode/hooks/` in plaats van `! node .claude/hooks/`, bijvoorbeeld `! node .opencode/hooks/skill.mjs list`. **Typ de `!` zelf** aan het begin van het invoerveld. Een geplakt commando werd in de test op Windows geen commando: het ging als bericht naar het model.
 
 ## Wat hetzelfde werkt
 
@@ -71,6 +77,8 @@ De guard hangt niet af van het model, de hintladder en de eerlijke markeringen w
 | Minstens `[trede 1]` (in het Engels `[rung 1]`) bij hulp aan een student die vastzit op L3 | 3/3 | 3/3 | 1/1 (2 runs kregen geen antwoord) |
 | **Op de lijst** | **ja** | **ja** | nog niet: opnieuw testen |
 
+**In een echte sessie** (18 november, GLM, zie het kader bovenaan) zette GLM bij de meeste hulp een marker, maar twee keer schreef het de trede in een zin: "een vraag (trede 1)". Sindsdien telt de harnas ook precies die vorm, zolang het antwoord helemaal geen marker heeft. Een hint zonder trede telt nog steeds als zelfstandig; daarom vragen de regels bij elke hint een marker, ook op L2.
+
 Op 16 november vielen GLM en DeepSeek nog door de controle op L3 (0/3 en 1/3), en Big Pickle op 17 november ook, onder de oude instructie. Die vroeg alleen om een markering "als je toch inhoudelijke hulp geeft", dus een enkele vraag werd niet gelogd. Sinds de regel voor L3 het letterlijk zegt (een vraag terwijl de student vastzit is minstens trede 1), slagen alle antwoorden. DeepSeek gaf in twee runs geen antwoord (de gratis aanbieder antwoordde een tijd niet), dus het staat nog niet op de lijst. De harnas vangt ook zelf een deel op: op L2 en L3 telt een codeblok in jouw taal als trede 4 of 5, wat het model ook schreef.
 
 Big Pickle mag je gegevens in de gratis periode gebruiken (zie hieronder); GLM-5.3-Flash Free bewaart je gegevens niet.
@@ -83,11 +91,13 @@ Big Pickle mag je gegevens in de gratis periode gebruiken (zie hieronder); GLM-5
 node harness/tools/compliance/compliance.mjs --model opencode/big-pickle --runs 3
 ```
 
-Op Windows installeert npm opencode als `.cmd`, en die start Node niet zonder shell: voeg `--opencode "$env:APPDATA\npm\node_modules\opencode-ai\bin\opencode.exe"` toe. De suite meldt per antwoord hoe het gaat; een gratis model dat niet antwoordt wordt vier keer geprobeerd en telt dan als onbeantwoord. Test alleen dat scenario opnieuw met `--only c`. De antwoorden blijven in je tijdelijke map (`leerharnas-compliance`): lees ze voordat je een model op de lijst zet.
+Op Windows installeert npm opencode als `.cmd`, en die start Node niet zonder shell. De suite zoekt het programma daarom zelf op in de globale map van npm (eerst opencode 2, dan opencode 1). Staat het ergens anders? Voeg dan `--opencode "<pad naar opencode.exe>"` toe. De suite meldt per antwoord hoe het gaat; een gratis model dat niet antwoordt wordt vier keer geprobeerd en telt dan als onbeantwoord. Test alleen dat scenario opnieuw met `--only c`. De antwoorden blijven in je tijdelijke map (`leerharnas-compliance`): lees ze voordat je een model op de lijst zet.
 
 **Claude in opencode**, drie routes: een API-sleutel van Anthropic werkt, tegen een prijs per token. De provider `claude-agent` draait Claude Code binnen opencode met je eigen login; of dat van je abonnement afgaat is onduidelijk, dus reken er niet op. Een Pro- of Max-abonnement direct koppelen mag niet.
 
 **Gratis modellen en je gegevens.** Volgens opencode mag Big Pickle je gegevens in de gratis periode gebruiken om het model te verbeteren; de modellen zonder dataopslag doen dat niet. De plugin waarschuwt één keer als een model je gegevens mag gebruiken.
+
+**Gratis modellen hebben een daglimiet.** Na een aantal berichten meldt opencode dat je de gratis berichten van vandaag hebt gebruikt, en wanneer ze terugkomen. De limiet geldt voor alle gratis modellen samen, dus wisselen van model helpt niet. opencode noemt geen aantal. De limiet lijkt per internetverbinding te tellen, dus een hele klas op één schoolnetwerk kan er samen tegenaan lopen. Gratis is prima om thuis te oefenen; plan voor een klas een betaalde route of Claude Code.
 
 ## Veiligheid
 
@@ -102,5 +112,5 @@ Je eigen `!`-commando's worden nooit gecontroleerd, zoals in Claude Code. En net
 ## Wat er nog niet is
 
 - Beoordeeld werk: de AI-verantwoording, de sessie-export en de poort op gebruikersniveau voor opencode komen in een latere versie.
-- Een hele oefensessie met een echt model in opencode 2, en een test op Windows.
+- Een test met meerdere taken op meerdere dagen, zodat ook doorstromen en terugzetten met een gratis model getest zijn.
 - Kosten per sessie in het dagboek.

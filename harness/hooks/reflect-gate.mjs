@@ -30,7 +30,7 @@ import {
   verdictFromAgent, t, gradedOf, isGradedPath, isGradedDir, mentionsGraded, sessionWork, effectiveLevel, keywordHits, keywordMap, isMicro,
 } from "../core/lib.mjs";
 import path from "node:path";
-import { RUNG_MARK, GIVEN_MARK, REVIEW_RUNG_MARK, EXPLAIN_MARK, TRANSFER_MARK, MICRO_MARK, parseMicroMark, ASKS_CONFIDENCE, CHECK_MARK, LOG_MARK } from "../core/patterns.mjs";
+import { RUNG_MARK, GIVEN_MARK, PROSE_RUNG_MARK, PROSE_RUNG_RECAP, REVIEW_RUNG_MARK, EXPLAIN_MARK, TRANSFER_MARK, MICRO_MARK, parseMicroMark, ASKS_CONFIDENCE, CHECK_MARK, LOG_MARK } from "../core/patterns.mjs";
 import { logAnswer, openRows, fillLastColumn, sid8 } from "../core/graded.mjs";
 import { turnOf } from "../core/transcript.mjs";
 import { codeFloor } from "../core/floor.mjs";
@@ -103,6 +103,15 @@ for (const m of answer.matchAll(RUNG_MARK)) {
   const other = m[2] && data && isOtherFamily(data, m[2], rungSkill) ? findSkill(data, m[2]).id : false;
   rungMark(n, {}, other);
   if (m[2] && data) noteConceptHelp(data, st, m[2], n, { taskSkill: rungSkill, session: sid });
+}
+// A rung in the text instead of a marker, "(trede 1)" (real session in opencode 2 with GLM, 18 Nov): the model gave a
+// Socratic question and a tip that way, and neither was logged. It counts like [trede N], but only when the answer has
+// no marker at all (a marker is the model's own count), and not after words of a recap such as "gelukt met hulp".
+if (![...answer.matchAll(GIVEN_MARK)].length) {
+  for (const m of answer.matchAll(PROSE_RUNG_MARK)) {
+    if (PROSE_RUNG_RECAP.test(answer.slice(Math.max(0, m.index - 60), m.index))) continue;
+    rungMark(Number(m[1]), { prose: true });
+  }
 }
 // A hint of rung 2 or higher without an id that seems to be about a microskill of another family (review of 17 Nov, #80:
 // "private" on a local variable was hinted as [trede 2], so the microskill ood.klassen.veld-vs-lokaal got no evidence).
