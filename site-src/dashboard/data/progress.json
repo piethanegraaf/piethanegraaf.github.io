@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "generatedAt": "2026-11-18",
-  "exportedAt": "2026-11-18T10:52:45.298Z",
+  "exportedAt": "2026-11-18T14:39:55.696Z",
   "course": null,
   "language": "nl",
   "examDate": "2027-01-20",
@@ -2687,10 +2687,10 @@
     },
     {
       "date": "2026-11-18",
-      "sessions": 1,
-      "hints": 1,
-      "holds": 0,
-      "denials": 1,
+      "sessions": 2,
+      "hints": 2,
+      "holds": 1,
+      "denials": 3,
       "overridesUsed": 0,
       "reviewHelp": 0,
       "helpDropped": 0
@@ -2985,6 +2985,23 @@
         "nextStep": "(niet genoemd)"
       },
       "calibration": "vooraf 5 → lukte met trede 0, controlevragen half → klopt voor de taak, het waarom bij de controlevragen kan dieper"
+    },
+    {
+      "date": "2026-11-18",
+      "n": 2,
+      "time": "14:27–15:38",
+      "skills": "git (tooling, geen vaardigheid in het register), beoordeeld werk Makerlab",
+      "plan": "help me commit program.cs",
+      "confidenceBefore": "onbekend",
+      "wentWell": "de volgorde add → commit → push uitgevoerd en alleen de eigen bestanden gestaged (het logboek bewust niet), met hulp tot trede 4 (het principe van aanhalingstekens in de shell).",
+      "signals": "/mastery-check ood.aggregatie-compositie (alleen de transfertaak ontbreekt); verder zie status",
+      "reflection": {
+        "learned": "I learned the git add, git commit and git push command and how to add a message with -m \"the text\"",
+        "confusing": "the planceholders<> were confusing because in actuality i need to use \"..\" instead of <...>",
+        "confidenceAfter": "4",
+        "nextStep": "(niet genoemd)"
+      },
+      "calibration": "vooraf onbekend → lukte met hulp tot trede 4 → niet te bepalen"
     }
   ],
   "reviewHelp": [
@@ -3309,7 +3326,14 @@
       "vooraf 5 → lukte met trede 0, controlevragen half → klopt voor de taak, het waarom bij de controlevragen kan dieper": "beforehand 5 → succeeded at rung 0, review questions half → accurate for the task, the why in the review questions can go deeper",
       "I got to practise implementing a methode overwrite": "I got to practise implementing a methode overwrite",
       "the task was clear": "the task was clear",
-      "(niet genoemd)": "(not mentioned)"
+      "(niet genoemd)": "(not mentioned)",
+      "git (tooling, geen vaardigheid in het register), beoordeeld werk Makerlab": "git (tooling, not a skill in the register), graded work Makerlab",
+      "help me commit program.cs": "help me commit program.cs",
+      "de volgorde add → commit → push uitgevoerd en alleen de eigen bestanden gestaged (het logboek bewust niet), met hulp tot trede 4 (het principe van aanhalingstekens in de shell).": "carried out the sequence add → commit → push and staged only their own files (deliberately not the log), with help up to rung 4 (the principle of quotation marks in the shell).",
+      "/mastery-check ood.aggregatie-compositie (alleen de transfertaak ontbreekt); verder zie status": "/mastery-check ood.aggregatie-compositie (only the transfer task is missing); otherwise see status",
+      "vooraf onbekend → lukte met hulp tot trede 4 → niet te bepalen": "beforehand unknown → succeeded with help up to rung 4 → cannot be determined",
+      "I learned the git add, git commit and git push command and how to add a message with -m \"the text\"": "I learned the git add, git commit and git push command and how to add a message with -m \"the text\"",
+      "the planceholders<> were confusing because in actuality i need to use \"..\" instead of <...>": "the placeholders<> were confusing because in actuality i need to use \"..\" instead of <...>"
     }
   }
 }
