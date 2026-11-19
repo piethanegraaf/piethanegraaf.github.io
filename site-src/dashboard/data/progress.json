@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "generatedAt": "2026-11-19",
-  "exportedAt": "2026-11-19T16:23:04.466Z",
+  "exportedAt": "2026-11-19T18:48:12.525Z",
   "course": null,
   "language": "nl",
   "examDate": "2027-01-20",
@@ -2659,6 +2659,28 @@
       "corrections": [],
       "void": false,
       "voidReason": null
+    },
+    {
+      "id": "mwnssrwjx0hi",
+      "at": "2026-11-19T17:02:18.691Z",
+      "skill": "test.unit-tests",
+      "source": "done",
+      "success": true,
+      "maxRung": 0,
+      "minutes": 8,
+      "reviewRung": null,
+      "what": "PrinterDeviceCost-test",
+      "explained": true,
+      "explanation": "dit is een risico omdat je niet zeker weet dat als je een onverwachte waarde geeft hij dan wel op rood gaat, en je hebt niet eerst de test geschreven voordat de functie geimplemeneerd wordt, iets wat wel best practise is bij tdd",
+      "explainedAt": "2026-11-19T17:03:56.858Z",
+      "explainedBy": null,
+      "lapsed": false,
+      "lapseReason": null,
+      "retaggedFrom": null,
+      "rejections": [],
+      "corrections": [],
+      "void": false,
+      "voidReason": null
     }
   ],
   "reviews": [],
@@ -2690,6 +2712,18 @@
     {
       "at": "2026-11-12T22:03:36.510Z",
       "skill": "ood.encapsulatie",
+      "tests": 1,
+      "fixed": true
+    },
+    {
+      "at": "2026-11-19T17:04:44.315Z",
+      "skill": "test.unit-tests",
+      "tests": 1,
+      "fixed": false
+    },
+    {
+      "at": "2026-11-19T17:05:31.595Z",
+      "skill": "test.unit-tests",
       "tests": 1,
       "fixed": true
     }
@@ -2862,10 +2896,10 @@
     },
     {
       "date": "2026-11-19",
-      "sessions": 2,
-      "hints": 3,
+      "sessions": 3,
+      "hints": 4,
       "holds": 2,
-      "denials": 1,
+      "denials": 3,
       "overridesUsed": 0,
       "reviewHelp": 1,
       "helpDropped": 0
@@ -3245,6 +3279,23 @@
         "nextStep": "niet genoemd"
       },
       "calibration": "vooraf onbekend → lukte met hulp tot trede 1 → niet te bepalen"
+    },
+    {
+      "date": "2026-11-19",
+      "n": 3,
+      "time": "17:54–18:08",
+      "skills": "test.unit-tests (L2 Begeleid)",
+      "plan": "\"ik wil een nieuwe unit test maken, geen hint nodig\"",
+      "confidenceBefore": "onbekend",
+      "wentWell": "test.unit-tests: de PrinterDeviceCost-test zelfstandig gemaakt (trede 0), en daarna zelf geverifieerd dat hij rood kan worden. De uitleg legde zelf de link naar TDD (eerst rood zien).",
+      "signals": "test.unit-tests L2 → L3: taken 3/5 · gelukt 3/3 · zelfstandig 1",
+      "reflection": {
+        "learned": "dat Program.cs en de unit tests los van elkaar draaien",
+        "confusing": "De volgende keer zou ik direct beginnen met unit tests maken voor een project",
+        "confidenceAfter": "3 (\"level 3\")",
+        "nextStep": "niet genoemd"
+      },
+      "calibration": "vooraf onbekend → lukte zelfstandig (trede 0) → niet te bepalen"
     }
   ],
   "reviewHelp": [
@@ -3475,6 +3526,8 @@
       "ik heb Assert.That gebruikt in plaats van Assert.Equal gebruikt. Als ik dit niet deed kreeg ik een compile error\nweet ik niet\nNUnit 4.5.0 heeft alleen Assert.That dus NUnit 4.5.0 heeft geen Assert.AreEqual meer": "i used Assert.That instead of Assert.Equal. If i didn't do this i got a compile error\ni don't know\nNUnit 4.5.0 only has Assert.That so NUnit 4.5.0 doesn't have Assert.AreEqual anymore",
       "IroningDeviceCost": "IroningDeviceCost",
       "omdat ik dacht dat ik een soliron aan het aanmaken was terwijl ik bezig was met een lasercuttor\nnee, dat niet volgens mij. ik baseer nu de uitkomst van mijn test op de eindopdracht pdf en op mijn implementatie in Program.cs.\ndat het overeenkomt met Program.cs maar niet of het klopt, daarom het ik ook eerst gekeken naar de eindopdracht pdf": "because i thought i was creating a soldering iron while i was working on a laser cutter\nno, i don't think so. i now base the outcome of my test on the final assignment pdf and on my implementation in Program.cs.\nthat it matches Program.cs but not whether it's correct, that's why i also looked at the final assignment pdf first",
+      "PrinterDeviceCost-test": "PrinterDeviceCost test",
+      "dit is een risico omdat je niet zeker weet dat als je een onverwachte waarde geeft hij dan wel op rood gaat, en je hebt niet eerst de test geschreven voordat de functie geimplemeneerd wordt, iets wat wel best practise is bij tdd": "this is a risk because you don't know for sure that if you give an unexpected value it will actually go red, and you didn't write the test first before the function is implemented, which is best practice in tdd",
       "securitycheck site (tooling)": "security check site (tooling)",
       "cs.basis (L2), cs.basis.lus-grenzen (L2, nieuw), test.unit-tests (L1)": "cs.basis (L2), cs.basis.lus-grenzen (L2, new), test.unit-tests (L1)",
       "opdracht 04-even-getallen afmaken (niet expliciet benoemd)": "finish exercise 04-even-getallen (not stated explicitly)",
@@ -3646,7 +3699,14 @@
       "een nieuwe eigen unit test `IroningDeviceCost` gelukt met hulp tot trede 1 (Socratische vragen) (test.unit-tests). De compileerfout CS0103 en de verwisseling van de apparaten in de test loste de student zelf op na een vraag.": "a new unit test of their own, `IroningDeviceCost`, succeeded with help up to rung 1 (Socratic questions) (test.unit-tests). The learner fixed the compiler error CS0103 and the mix-up of the devices in the test themselves after a question.",
       "test.unit-tests L2 → L3: taken 2/5 · gelukt 2/5 · met hint 0–1 2/3; transfertaak open voor ood.klassen-properties, ood.associaties, ood.aggregatie-compositie, ood.encapsulatie en uml.klassendiagram (`/mastery-check <id>`)": "test.unit-tests L2 → L3: tasks 2/5 · succeeded 2/5 · with hint 0–1 2/3; transfer task open for ood.klassen-properties, ood.associaties, ood.aggregatie-compositie, ood.encapsulatie and uml.klassendiagram (`/mastery-check <id>`)",
       "dat program.cs en de unit tests los van elkaar draaien": "that program.cs and the unit tests run separately from each other",
-      "ik haalde twee divices door elkaar omdat ik even niet aan het opletten was.": "i mixed up two devices because i wasn't paying attention for a moment."
+      "ik haalde twee divices door elkaar omdat ik even niet aan het opletten was.": "i mixed up two devices because i wasn't paying attention for a moment.",
+      "\"ik wil een nieuwe unit test maken, geen hint nodig\"": "\"i want to make a new unit test, no hint needed\"",
+      "test.unit-tests: de PrinterDeviceCost-test zelfstandig gemaakt (trede 0), en daarna zelf geverifieerd dat hij rood kan worden. De uitleg legde zelf de link naar TDD (eerst rood zien).": "test.unit-tests: made the PrinterDeviceCost test independently (rung 0), and then verified on your own that it can go red. The explanation made the link to TDD on its own (seeing red first).",
+      "test.unit-tests L2 → L3: taken 3/5 · gelukt 3/3 · zelfstandig 1": "test.unit-tests L2 → L3: tasks 3/5 · succeeded 3/3 · independent 1",
+      "vooraf onbekend → lukte zelfstandig (trede 0) → niet te bepalen": "before unknown → succeeded independently (rung 0) → cannot be determined",
+      "dat Program.cs en de unit tests los van elkaar draaien": "that Program.cs and the unit tests run separately from each other",
+      "De volgende keer zou ik direct beginnen met unit tests maken voor een project": "Next time I would start making unit tests for a project right away",
+      "3 (\"level 3\")": "3 (\"level 3\")"
     }
   }
 }
