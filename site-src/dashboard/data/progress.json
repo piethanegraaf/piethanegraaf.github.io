@@ -1,7 +1,7 @@
 {
   "schema": 1,
-  "generatedAt": "2026-11-18",
-  "exportedAt": "2026-11-18T21:01:08.223Z",
+  "generatedAt": "2026-11-19",
+  "exportedAt": "2026-11-19T18:48:12.525Z",
   "course": null,
   "language": "nl",
   "examDate": "2027-01-20",
@@ -625,7 +625,7 @@
       "id": "test.unit-tests",
       "parent": null,
       "kind": null,
-      "level": "L1",
+      "level": "L2",
       "titles": {
         "nl": "Unit tests (NUnit): grenswaarden, TDD, testplan",
         "en": "Unit tests (NUnit): boundary values, TDD, test plan"
@@ -634,15 +634,31 @@
       "nextReview": null,
       "intervalIndex": 0,
       "lastReview": null,
-      "lastSeen": null,
-      "placement": "pending",
+      "lastSeen": "2026-11-19",
+      "placement": "done",
       "start": {
         "at": "2026-11-07T18:59:58.137Z",
         "open": true
       },
-      "windowSince": null,
-      "placementTask": null,
-      "history": []
+      "windowSince": "2026-11-19T10:26:34.534Z",
+      "placementTask": "mwnckmn7klyc",
+      "history": [
+        {
+          "at": "2026-11-19",
+          "changedAt": "2026-11-19T10:26:34.534Z",
+          "from": "L1",
+          "to": "L2",
+          "note": "plaatsing: hoogste trede 1 bij de eerste taak",
+          "notes": {
+            "nl": "plaatsing: hoogste trede 1 bij de eerste taak",
+            "en": "placement: highest rung 1 at the first task"
+          },
+          "auto": false,
+          "placement": true,
+          "kind": "placement",
+          "task": "mwnckmn7klyc"
+        }
+      ]
     },
     {
       "id": "test.uitvoer-lezen",
@@ -2560,6 +2576,111 @@
       "corrections": [],
       "void": false,
       "voidReason": null
+    },
+    {
+      "id": "mwna4caeesju",
+      "at": "2026-11-19T08:19:25.623Z",
+      "skill": "test.unit-tests",
+      "source": "check",
+      "success": true,
+      "maxRung": 0,
+      "minutes": 32,
+      "reviewRung": null,
+      "what": "Test1",
+      "explained": false,
+      "explanation": null,
+      "explainedAt": null,
+      "explainedBy": null,
+      "lapsed": false,
+      "lapseReason": null,
+      "retaggedFrom": null,
+      "rejections": [],
+      "corrections": [],
+      "void": true,
+      "voidReason": "sjabloontest van dotnet new nunit, geen eigen code"
+    },
+    {
+      "id": "mwnckmn7klyc",
+      "at": "2026-11-19T09:28:04.771Z",
+      "skill": "test.unit-tests",
+      "source": "check",
+      "success": true,
+      "maxRung": 1,
+      "minutes": 13,
+      "reviewRung": null,
+      "what": "VRCostTest",
+      "explained": true,
+      "explanation": "ik heb Assert.That gebruikt in plaats van Assert.Equal gebruikt. Als ik dit niet deed kreeg ik een compile error\nweet ik niet\nNUnit 4.5.0 heeft alleen Assert.That dus NUnit 4.5.0 heeft geen Assert.AreEqual meer",
+      "explainedAt": "2026-11-19T10:26:34.532Z",
+      "explainedBy": null,
+      "lapsed": false,
+      "lapseReason": null,
+      "retaggedFrom": null,
+      "rejections": [
+        {
+          "at": "2026-11-19T10:09:37.222Z",
+          "by": "claude",
+          "reasons": []
+        }
+      ],
+      "corrections": [],
+      "void": false,
+      "voidReason": null
+    },
+    {
+      "id": "mwnj9oyndpuh",
+      "at": "2026-11-19T12:35:31.871Z",
+      "skill": "test.unit-tests",
+      "source": "check",
+      "success": true,
+      "maxRung": 1,
+      "minutes": 16,
+      "reviewRung": null,
+      "what": "IroningDeviceCost",
+      "explained": true,
+      "explanation": "omdat ik dacht dat ik een soliron aan het aanmaken was terwijl ik bezig was met een lasercuttor\nnee, dat niet volgens mij. ik baseer nu de uitkomst van mijn test op de eindopdracht pdf en op mijn implementatie in Program.cs.\ndat het overeenkomt met Program.cs maar niet of het klopt, daarom het ik ook eerst gekeken naar de eindopdracht pdf",
+      "explainedAt": "2026-11-19T12:50:47.413Z",
+      "explainedBy": null,
+      "lapsed": false,
+      "lapseReason": null,
+      "retaggedFrom": null,
+      "rejections": [
+        {
+          "at": "2026-11-19T12:37:21.649Z",
+          "by": "claude",
+          "reasons": []
+        },
+        {
+          "at": "2026-11-19T12:46:12.823Z",
+          "by": "claude",
+          "reasons": []
+        }
+      ],
+      "corrections": [],
+      "void": false,
+      "voidReason": null
+    },
+    {
+      "id": "mwnssrwjx0hi",
+      "at": "2026-11-19T17:02:18.691Z",
+      "skill": "test.unit-tests",
+      "source": "done",
+      "success": true,
+      "maxRung": 0,
+      "minutes": 8,
+      "reviewRung": null,
+      "what": "PrinterDeviceCost-test",
+      "explained": true,
+      "explanation": "dit is een risico omdat je niet zeker weet dat als je een onverwachte waarde geeft hij dan wel op rood gaat, en je hebt niet eerst de test geschreven voordat de functie geimplemeneerd wordt, iets wat wel best practise is bij tdd",
+      "explainedAt": "2026-11-19T17:03:56.858Z",
+      "explainedBy": null,
+      "lapsed": false,
+      "lapseReason": null,
+      "retaggedFrom": null,
+      "rejections": [],
+      "corrections": [],
+      "void": false,
+      "voidReason": null
     }
   ],
   "reviews": [],
@@ -2591,6 +2712,18 @@
     {
       "at": "2026-11-12T22:03:36.510Z",
       "skill": "ood.encapsulatie",
+      "tests": 1,
+      "fixed": true
+    },
+    {
+      "at": "2026-11-19T17:04:44.315Z",
+      "skill": "test.unit-tests",
+      "tests": 1,
+      "fixed": false
+    },
+    {
+      "at": "2026-11-19T17:05:31.595Z",
+      "skill": "test.unit-tests",
       "tests": 1,
       "fixed": true
     }
@@ -2759,6 +2892,16 @@
       "denials": 10,
       "overridesUsed": 0,
       "reviewHelp": 0,
+      "helpDropped": 0
+    },
+    {
+      "date": "2026-11-19",
+      "sessions": 3,
+      "hints": 4,
+      "holds": 2,
+      "denials": 3,
+      "overridesUsed": 0,
+      "reviewHelp": 1,
       "helpDropped": 0
     }
   ],
@@ -3102,6 +3245,57 @@
         "nextStep": "eerst verder met de reserve functie bij andere devices, daarna de rollen/personen implementeren en daarna de noshow check ook toe voegen."
       },
       "calibration": "vooraf onbekend → lukte met hulp tot trede 1 → niet te bepalen"
+    },
+    {
+      "date": "2026-11-19",
+      "n": 1,
+      "time": "08:47–13:05",
+      "skills": "test.unit-tests (plaatsing open → L2 Begeleid)",
+      "plan": "ik wil unit tests opzetten voor mijn makerlab project",
+      "confidenceBefore": "onbekend",
+      "wentWell": "de testinfrastructuur voor de eindopdracht staat (NUnit-project, solution, referentie). De eerste eigen test `VRCostTest` is groen, gelukt met hulp tot trede 1 (Socratische vragen). Beide compileerfouten loste de student zelf op, en de oorzaak van de tweede (de NUnit-versie) zocht de student zelf op in de documentatie.",
+      "signals": "transfertaak open voor ood.klassen-properties, ood.associaties, ood.aggregatie-compositie, ood.encapsulatie en uml.klassendiagram (`/mastery-check <id>`); test.unit-tests L2 → L3: taken 1/5",
+      "reflection": {
+        "learned": "dat in NUnit 4.5.0 ik alleen .That werkt en .AreEqual niet meer werkt",
+        "confusing": "Eerst zelf checken wat de versie van het unit testing framework is en de documentatie voor die versie op zoeken.",
+        "confidenceAfter": "2",
+        "nextStep": "niet genoemd"
+      },
+      "calibration": "vooraf onbekend → lukte met hulp tot trede 1 → niet te bepalen"
+    },
+    {
+      "date": "2026-11-19",
+      "n": 2,
+      "time": "13:19–17:22",
+      "skills": "test.unit-tests (L2 Begeleid)",
+      "plan": "ik wil zelfstandig nog een nieuwe unit test toevoegen",
+      "confidenceBefore": "onbekend",
+      "wentWell": "een nieuwe eigen unit test `IroningDeviceCost` gelukt met hulp tot trede 1 (Socratische vragen) (test.unit-tests). De compileerfout CS0103 en de verwisseling van de apparaten in de test loste de student zelf op na een vraag.",
+      "signals": "test.unit-tests L2 → L3: taken 2/5 · gelukt 2/5 · met hint 0–1 2/3; transfertaak open voor ood.klassen-properties, ood.associaties, ood.aggregatie-compositie, ood.encapsulatie en uml.klassendiagram (`/mastery-check <id>`)",
+      "reflection": {
+        "learned": "dat program.cs en de unit tests los van elkaar draaien",
+        "confusing": "ik haalde twee divices door elkaar omdat ik even niet aan het opletten was.",
+        "confidenceAfter": "4",
+        "nextStep": "niet genoemd"
+      },
+      "calibration": "vooraf onbekend → lukte met hulp tot trede 1 → niet te bepalen"
+    },
+    {
+      "date": "2026-11-19",
+      "n": 3,
+      "time": "17:54–18:08",
+      "skills": "test.unit-tests (L2 Begeleid)",
+      "plan": "\"ik wil een nieuwe unit test maken, geen hint nodig\"",
+      "confidenceBefore": "onbekend",
+      "wentWell": "test.unit-tests: de PrinterDeviceCost-test zelfstandig gemaakt (trede 0), en daarna zelf geverifieerd dat hij rood kan worden. De uitleg legde zelf de link naar TDD (eerst rood zien).",
+      "signals": "test.unit-tests L2 → L3: taken 3/5 · gelukt 3/3 · zelfstandig 1",
+      "reflection": {
+        "learned": "dat Program.cs en de unit tests los van elkaar draaien",
+        "confusing": "De volgende keer zou ik direct beginnen met unit tests maken voor een project",
+        "confidenceAfter": "3 (\"level 3\")",
+        "nextStep": "niet genoemd"
+      },
+      "calibration": "vooraf onbekend → lukte zelfstandig (trede 0) → niet te bepalen"
     }
   ],
   "reviewHelp": [
@@ -3116,6 +3310,12 @@
       "skill": "ood.associaties",
       "rung": 2,
       "reviewOf": "mwc69pxgu3ib"
+    },
+    {
+      "at": "2026-11-19T10:26:34.527Z",
+      "skill": "test.unit-tests",
+      "rung": 2,
+      "reviewOf": "mwnckmn7klyc"
     }
   ],
   "helpDropped": [],
@@ -3320,6 +3520,14 @@
       "var Weight created a local field instead of referencing the class field\nnothing happens to the local variable and Costs() still sees 0 for weight because it is not updated afther the local variable is created": "var Weight created a local field instead of referencing the class field\nnothing happens to the local variable and Costs() still sees 0 for weight because it is not updated afther the local variable is created",
       "Reserve overlap check": "Reserve overlap check",
       "als de nieuwe startijd gelijk of groter is dan de bestaande startijd en kleiner of gelijk is dan de eindtijd aan een bestaande reserverings start en eindtijd, of het zelfde maar dan voor de eindtijd, dus als die er ook op of tussen valt\ndan zegt de code dat er geen agendaconfilit is maar dat zou eigenlijk wel moeten...\nik heb als voorwaarde gesteld dat de nieuwe begintijd kleiner of gelijk is dan de oude eindtijd en dat de nieuwe eindtijd kleiner is dan de nieuwe begintijd, hierdoor wordt alle (deelse) overlap opgemerkt en herkent als overlap. binnen de forloop word zo elke reservering in het systeem langsgelopen\nik heb als voorwaarde gesteld dat de nieuwe begintijd kleiner of gelijk is dan de oude eindtijd en dat de nieuwe eindtijd kleiner is dan de oude begintijd, hierdoor wordt alle (deelse) overlap opgemerkt en herkent als overlap. als de nieuwe sessie start voor de eindtijd wordt dat herkent en als als de nieuwe sessie stop na de begintijd word dit herkend, hierdoor heb je alle sc": "if the new start time is equal to or greater than the existing start time and less than or equal to the end time of an existing reservation's start and end time, or the same but for the end time, so if that also falls on or between them\nthen the code says there is no calendar conflict but there actually should be...\ni set as the condition that the new start time is less than or equal to the old end time and that the new end time is less than the new start time, this way all (partial) overlap is noticed and recognized as overlap. inside the for loop every reservation in the system is gone through this way\ni set as the condition that the new start time is less than or equal to the old end time and that the new end time is less than the old start time, this way all (partial) overlap is noticed and recognized as overlap. if the new session starts before the end time that is recognized and if the new session stops after the start time this is recognized, this way you have covered all sc",
+      "Test1": "Test1",
+      "sjabloontest van dotnet new nunit, geen eigen code": "template test from dotnet new nunit, not my own code",
+      "VRCostTest": "VRCostTest",
+      "ik heb Assert.That gebruikt in plaats van Assert.Equal gebruikt. Als ik dit niet deed kreeg ik een compile error\nweet ik niet\nNUnit 4.5.0 heeft alleen Assert.That dus NUnit 4.5.0 heeft geen Assert.AreEqual meer": "i used Assert.That instead of Assert.Equal. If i didn't do this i got a compile error\ni don't know\nNUnit 4.5.0 only has Assert.That so NUnit 4.5.0 doesn't have Assert.AreEqual anymore",
+      "IroningDeviceCost": "IroningDeviceCost",
+      "omdat ik dacht dat ik een soliron aan het aanmaken was terwijl ik bezig was met een lasercuttor\nnee, dat niet volgens mij. ik baseer nu de uitkomst van mijn test op de eindopdracht pdf en op mijn implementatie in Program.cs.\ndat het overeenkomt met Program.cs maar niet of het klopt, daarom het ik ook eerst gekeken naar de eindopdracht pdf": "because i thought i was creating a soldering iron while i was working on a laser cutter\nno, i don't think so. i now base the outcome of my test on the final assignment pdf and on my implementation in Program.cs.\nthat it matches Program.cs but not whether it's correct, that's why i also looked at the final assignment pdf first",
+      "PrinterDeviceCost-test": "PrinterDeviceCost test",
+      "dit is een risico omdat je niet zeker weet dat als je een onverwachte waarde geeft hij dan wel op rood gaat, en je hebt niet eerst de test geschreven voordat de functie geimplemeneerd wordt, iets wat wel best practise is bij tdd": "this is a risk because you don't know for sure that if you give an unexpected value it will actually go red, and you didn't write the test first before the function is implemented, which is best practice in tdd",
       "securitycheck site (tooling)": "security check site (tooling)",
       "cs.basis (L2), cs.basis.lus-grenzen (L2, nieuw), test.unit-tests (L1)": "cs.basis (L2), cs.basis.lus-grenzen (L2, new), test.unit-tests (L1)",
       "opdracht 04-even-getallen afmaken (niet expliciet benoemd)": "finish exercise 04-even-getallen (not stated explicitly)",
@@ -3479,7 +3687,26 @@
       "vooraf onbekend → lukte met hulp tot trede 1 → niet te bepalen": "unknown beforehand → succeeded with help up to rung 1 → cannot be determined",
       "waarom je new moet gebruiken als je een nieuwe lijst aanmaakt en hoe je checkt of een object niet null is": "why you have to use new when you create a new list and how you check that an object is not null",
       "of ik alle gevallen had afgehandeld van overlap, de volgende keer zou ik eerst de relevante test scenarios toevoegen om te checken of dit wel goed gaat.": "whether i had handled all cases of overlap, next time i would first add the relevant test scenarios to check whether this actually works.",
-      "eerst verder met de reserve functie bij andere devices, daarna de rollen/personen implementeren en daarna de noshow check ook toe voegen.": "first continue with the reserve function for the other devices, then implement the roles/people and then also add the no-show check."
+      "eerst verder met de reserve functie bij andere devices, daarna de rollen/personen implementeren en daarna de noshow check ook toe voegen.": "first continue with the reserve function for the other devices, then implement the roles/people and then also add the no-show check.",
+      "test.unit-tests (plaatsing open → L2 Begeleid)": "test.unit-tests (placement open → L2 Guided)",
+      "ik wil unit tests opzetten voor mijn makerlab project": "i want to set up unit tests for my makerlab project",
+      "de testinfrastructuur voor de eindopdracht staat (NUnit-project, solution, referentie). De eerste eigen test `VRCostTest` is groen, gelukt met hulp tot trede 1 (Socratische vragen). Beide compileerfouten loste de student zelf op, en de oorzaak van de tweede (de NUnit-versie) zocht de student zelf op in de documentatie.": "the test infrastructure for the final assignment is in place (NUnit project, solution, reference). The first own test `VRCostTest` is green, succeeded with help up to rung 1 (Socratic questions). The learner fixed both compiler errors themselves, and looked up the cause of the second one (the NUnit version) in the documentation.",
+      "transfertaak open voor ood.klassen-properties, ood.associaties, ood.aggregatie-compositie, ood.encapsulatie en uml.klassendiagram (`/mastery-check <id>`); test.unit-tests L2 → L3: taken 1/5": "transfer task open for ood.klassen-properties, ood.associaties, ood.aggregatie-compositie, ood.encapsulatie and uml.klassendiagram (`/mastery-check <id>`); test.unit-tests L2 → L3: tasks 1/5",
+      "dat in NUnit 4.5.0 ik alleen .That werkt en .AreEqual niet meer werkt": "that in NUnit 4.5.0 only .That works and .AreEqual doesn't work anymore",
+      "Eerst zelf checken wat de versie van het unit testing framework is en de documentatie voor die versie op zoeken.": "First check myself which version of the unit testing framework it is and look up the documentation for that version.",
+      "test.unit-tests (L2 Begeleid)": "test.unit-tests (L2 Guided)",
+      "ik wil zelfstandig nog een nieuwe unit test toevoegen": "i want to add another new unit test independently",
+      "een nieuwe eigen unit test `IroningDeviceCost` gelukt met hulp tot trede 1 (Socratische vragen) (test.unit-tests). De compileerfout CS0103 en de verwisseling van de apparaten in de test loste de student zelf op na een vraag.": "a new unit test of their own, `IroningDeviceCost`, succeeded with help up to rung 1 (Socratic questions) (test.unit-tests). The learner fixed the compiler error CS0103 and the mix-up of the devices in the test themselves after a question.",
+      "test.unit-tests L2 → L3: taken 2/5 · gelukt 2/5 · met hint 0–1 2/3; transfertaak open voor ood.klassen-properties, ood.associaties, ood.aggregatie-compositie, ood.encapsulatie en uml.klassendiagram (`/mastery-check <id>`)": "test.unit-tests L2 → L3: tasks 2/5 · succeeded 2/5 · with hint 0–1 2/3; transfer task open for ood.klassen-properties, ood.associaties, ood.aggregatie-compositie, ood.encapsulatie and uml.klassendiagram (`/mastery-check <id>`)",
+      "dat program.cs en de unit tests los van elkaar draaien": "that program.cs and the unit tests run separately from each other",
+      "ik haalde twee divices door elkaar omdat ik even niet aan het opletten was.": "i mixed up two devices because i wasn't paying attention for a moment.",
+      "\"ik wil een nieuwe unit test maken, geen hint nodig\"": "\"i want to make a new unit test, no hint needed\"",
+      "test.unit-tests: de PrinterDeviceCost-test zelfstandig gemaakt (trede 0), en daarna zelf geverifieerd dat hij rood kan worden. De uitleg legde zelf de link naar TDD (eerst rood zien).": "test.unit-tests: made the PrinterDeviceCost test independently (rung 0), and then verified on your own that it can go red. The explanation made the link to TDD on its own (seeing red first).",
+      "test.unit-tests L2 → L3: taken 3/5 · gelukt 3/3 · zelfstandig 1": "test.unit-tests L2 → L3: tasks 3/5 · succeeded 3/3 · independent 1",
+      "vooraf onbekend → lukte zelfstandig (trede 0) → niet te bepalen": "before unknown → succeeded independently (rung 0) → cannot be determined",
+      "dat Program.cs en de unit tests los van elkaar draaien": "that Program.cs and the unit tests run separately from each other",
+      "De volgende keer zou ik direct beginnen met unit tests maken voor een project": "Next time I would start making unit tests for a project right away",
+      "3 (\"level 3\")": "3 (\"level 3\")"
     }
   }
 }
