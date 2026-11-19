@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "generatedAt": "2026-11-19",
-  "exportedAt": "2026-11-19T12:05:33.899Z",
+  "exportedAt": "2026-11-19T16:23:04.466Z",
   "course": null,
   "language": "nl",
   "examDate": "2027-01-20",
@@ -2626,6 +2626,39 @@
       "corrections": [],
       "void": false,
       "voidReason": null
+    },
+    {
+      "id": "mwnj9oyndpuh",
+      "at": "2026-11-19T12:35:31.871Z",
+      "skill": "test.unit-tests",
+      "source": "check",
+      "success": true,
+      "maxRung": 1,
+      "minutes": 16,
+      "reviewRung": null,
+      "what": "IroningDeviceCost",
+      "explained": true,
+      "explanation": "omdat ik dacht dat ik een soliron aan het aanmaken was terwijl ik bezig was met een lasercuttor\nnee, dat niet volgens mij. ik baseer nu de uitkomst van mijn test op de eindopdracht pdf en op mijn implementatie in Program.cs.\ndat het overeenkomt met Program.cs maar niet of het klopt, daarom het ik ook eerst gekeken naar de eindopdracht pdf",
+      "explainedAt": "2026-11-19T12:50:47.413Z",
+      "explainedBy": null,
+      "lapsed": false,
+      "lapseReason": null,
+      "retaggedFrom": null,
+      "rejections": [
+        {
+          "at": "2026-11-19T12:37:21.649Z",
+          "by": "claude",
+          "reasons": []
+        },
+        {
+          "at": "2026-11-19T12:46:12.823Z",
+          "by": "claude",
+          "reasons": []
+        }
+      ],
+      "corrections": [],
+      "void": false,
+      "voidReason": null
     }
   ],
   "reviews": [],
@@ -2829,8 +2862,8 @@
     },
     {
       "date": "2026-11-19",
-      "sessions": 1,
-      "hints": 1,
+      "sessions": 2,
+      "hints": 3,
       "holds": 2,
       "denials": 1,
       "overridesUsed": 0,
@@ -3195,6 +3228,23 @@
         "nextStep": "niet genoemd"
       },
       "calibration": "vooraf onbekend → lukte met hulp tot trede 1 → niet te bepalen"
+    },
+    {
+      "date": "2026-11-19",
+      "n": 2,
+      "time": "13:19–17:22",
+      "skills": "test.unit-tests (L2 Begeleid)",
+      "plan": "ik wil zelfstandig nog een nieuwe unit test toevoegen",
+      "confidenceBefore": "onbekend",
+      "wentWell": "een nieuwe eigen unit test `IroningDeviceCost` gelukt met hulp tot trede 1 (Socratische vragen) (test.unit-tests). De compileerfout CS0103 en de verwisseling van de apparaten in de test loste de student zelf op na een vraag.",
+      "signals": "test.unit-tests L2 → L3: taken 2/5 · gelukt 2/5 · met hint 0–1 2/3; transfertaak open voor ood.klassen-properties, ood.associaties, ood.aggregatie-compositie, ood.encapsulatie en uml.klassendiagram (`/mastery-check <id>`)",
+      "reflection": {
+        "learned": "dat program.cs en de unit tests los van elkaar draaien",
+        "confusing": "ik haalde twee divices door elkaar omdat ik even niet aan het opletten was.",
+        "confidenceAfter": "4",
+        "nextStep": "niet genoemd"
+      },
+      "calibration": "vooraf onbekend → lukte met hulp tot trede 1 → niet te bepalen"
     }
   ],
   "reviewHelp": [
@@ -3423,6 +3473,8 @@
       "sjabloontest van dotnet new nunit, geen eigen code": "template test from dotnet new nunit, not my own code",
       "VRCostTest": "VRCostTest",
       "ik heb Assert.That gebruikt in plaats van Assert.Equal gebruikt. Als ik dit niet deed kreeg ik een compile error\nweet ik niet\nNUnit 4.5.0 heeft alleen Assert.That dus NUnit 4.5.0 heeft geen Assert.AreEqual meer": "i used Assert.That instead of Assert.Equal. If i didn't do this i got a compile error\ni don't know\nNUnit 4.5.0 only has Assert.That so NUnit 4.5.0 doesn't have Assert.AreEqual anymore",
+      "IroningDeviceCost": "IroningDeviceCost",
+      "omdat ik dacht dat ik een soliron aan het aanmaken was terwijl ik bezig was met een lasercuttor\nnee, dat niet volgens mij. ik baseer nu de uitkomst van mijn test op de eindopdracht pdf en op mijn implementatie in Program.cs.\ndat het overeenkomt met Program.cs maar niet of het klopt, daarom het ik ook eerst gekeken naar de eindopdracht pdf": "because i thought i was creating a soldering iron while i was working on a laser cutter\nno, i don't think so. i now base the outcome of my test on the final assignment pdf and on my implementation in Program.cs.\nthat it matches Program.cs but not whether it's correct, that's why i also looked at the final assignment pdf first",
       "securitycheck site (tooling)": "security check site (tooling)",
       "cs.basis (L2), cs.basis.lus-grenzen (L2, nieuw), test.unit-tests (L1)": "cs.basis (L2), cs.basis.lus-grenzen (L2, new), test.unit-tests (L1)",
       "opdracht 04-even-getallen afmaken (niet expliciet benoemd)": "finish exercise 04-even-getallen (not stated explicitly)",
@@ -3588,7 +3640,13 @@
       "de testinfrastructuur voor de eindopdracht staat (NUnit-project, solution, referentie). De eerste eigen test `VRCostTest` is groen, gelukt met hulp tot trede 1 (Socratische vragen). Beide compileerfouten loste de student zelf op, en de oorzaak van de tweede (de NUnit-versie) zocht de student zelf op in de documentatie.": "the test infrastructure for the final assignment is in place (NUnit project, solution, reference). The first own test `VRCostTest` is green, succeeded with help up to rung 1 (Socratic questions). The learner fixed both compiler errors themselves, and looked up the cause of the second one (the NUnit version) in the documentation.",
       "transfertaak open voor ood.klassen-properties, ood.associaties, ood.aggregatie-compositie, ood.encapsulatie en uml.klassendiagram (`/mastery-check <id>`); test.unit-tests L2 → L3: taken 1/5": "transfer task open for ood.klassen-properties, ood.associaties, ood.aggregatie-compositie, ood.encapsulatie and uml.klassendiagram (`/mastery-check <id>`); test.unit-tests L2 → L3: tasks 1/5",
       "dat in NUnit 4.5.0 ik alleen .That werkt en .AreEqual niet meer werkt": "that in NUnit 4.5.0 only .That works and .AreEqual doesn't work anymore",
-      "Eerst zelf checken wat de versie van het unit testing framework is en de documentatie voor die versie op zoeken.": "First check myself which version of the unit testing framework it is and look up the documentation for that version."
+      "Eerst zelf checken wat de versie van het unit testing framework is en de documentatie voor die versie op zoeken.": "First check myself which version of the unit testing framework it is and look up the documentation for that version.",
+      "test.unit-tests (L2 Begeleid)": "test.unit-tests (L2 Guided)",
+      "ik wil zelfstandig nog een nieuwe unit test toevoegen": "i want to add another new unit test independently",
+      "een nieuwe eigen unit test `IroningDeviceCost` gelukt met hulp tot trede 1 (Socratische vragen) (test.unit-tests). De compileerfout CS0103 en de verwisseling van de apparaten in de test loste de student zelf op na een vraag.": "a new unit test of their own, `IroningDeviceCost`, succeeded with help up to rung 1 (Socratic questions) (test.unit-tests). The learner fixed the compiler error CS0103 and the mix-up of the devices in the test themselves after a question.",
+      "test.unit-tests L2 → L3: taken 2/5 · gelukt 2/5 · met hint 0–1 2/3; transfertaak open voor ood.klassen-properties, ood.associaties, ood.aggregatie-compositie, ood.encapsulatie en uml.klassendiagram (`/mastery-check <id>`)": "test.unit-tests L2 → L3: tasks 2/5 · succeeded 2/5 · with hint 0–1 2/3; transfer task open for ood.klassen-properties, ood.associaties, ood.aggregatie-compositie, ood.encapsulatie and uml.klassendiagram (`/mastery-check <id>`)",
+      "dat program.cs en de unit tests los van elkaar draaien": "that program.cs and the unit tests run separately from each other",
+      "ik haalde twee divices door elkaar omdat ik even niet aan het opletten was.": "i mixed up two devices because i wasn't paying attention for a moment."
     }
   }
 }
