@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "generatedAt": "2026-11-26",
-  "exportedAt": "2026-11-26T13:15:18.716Z",
+  "exportedAt": "2026-11-26T14:38:39.683Z",
   "course": null,
   "language": "nl",
   "examDate": "2027-01-20",
@@ -2761,6 +2761,39 @@
       "corrections": [],
       "void": false,
       "voidReason": null
+    },
+    {
+      "id": "mwxmnfh0tz6v",
+      "at": "2026-11-26T14:07:53.364Z",
+      "skill": "uml.klassendiagram",
+      "source": "done",
+      "success": true,
+      "maxRung": 1,
+      "minutes": 0,
+      "reviewRung": null,
+      "what": "certificaten van de user",
+      "explained": true,
+      "explanation": "Omdat een gebruiker mogelijk voor meerdere divices certificering nodig kan hebben en dat dan een sertification string onvoldoende is om dit op te slaan\ndus niet alleen of de gebruiker certificering heeft maar ook voor welk apparaat de gebruiker certificering heeft\nof je certificering nog gelding is omdat je certifiering niet langer geldig kan zijn en de gebruiker dan opnieuw zijn certificering moet halen",
+      "explainedAt": "2026-11-26T14:14:35.256Z",
+      "explainedBy": null,
+      "lapsed": false,
+      "lapseReason": null,
+      "retaggedFrom": null,
+      "rejections": [
+        {
+          "at": "2026-11-26T14:11:18.146Z",
+          "by": "claude",
+          "reasons": []
+        },
+        {
+          "at": "2026-11-26T14:12:12.550Z",
+          "by": "claude",
+          "reasons": []
+        }
+      ],
+      "corrections": [],
+      "void": false,
+      "voidReason": null
     }
   ],
   "reviews": [],
@@ -2986,13 +3019,13 @@
     },
     {
       "date": "2026-11-26",
-      "sessions": 1,
+      "sessions": 2,
       "hints": 2,
       "holds": 0,
-      "denials": 1,
+      "denials": 2,
       "overridesUsed": 0,
       "reviewHelp": 3,
-      "helpDropped": 0
+      "helpDropped": 1
     }
   ],
   "diary": [
@@ -3403,6 +3436,23 @@
         "nextStep": "(niet genoemd)"
       },
       "calibration": "vooraf 3 → gebruikersdiagram lukte met trede 0, de rolklasse kostte trede 3 → klopt ongeveer (nu 2)"
+    },
+    {
+      "date": "2026-11-26",
+      "n": 2,
+      "time": "14:38–15:31",
+      "skills": "uml.klassendiagram (L3), pattern.strategy (L0, plaatsing open) · beoordeeld werk (eindopdracht Makerlab)",
+      "plan": "\"ik wil de class diagram voor users afronden\"",
+      "confidenceBefore": "2",
+      "wentWell": "de certificaten van de user (uml.klassendiagram) zijn gelukt met hulp tot trede 1 (Socratische vragen): van één `String` naar een eigen klasse met apparaattype en vervaldatum, passend bij R4. BudgetHolderRole als rolklasse en ExternalUser met StaffCompanion stonden er al goed in.",
+      "signals": "uml.klassendiagram: 3x zelfstandig op 2 dagen, alleen de transfertaak ontbreekt → `/mastery-check uml.klassendiagram`",
+      "reflection": {
+        "learned": "ik heb kennis gemaakt met het srategy pattern en waneer dit handig kan zijn",
+        "confusing": "het was in eerste instatie niet duidelijk hoe de classenstructuur het invoeren van een daltarief naast een roltarief zou kunnen implementeren zodat de code goed aanpasbaar blijft",
+        "confidenceAfter": "2",
+        "nextStep": "onbekend"
+      },
+      "calibration": "vooraf 2 → het onderdeel certificaten lukte met trede ≤1, het tarief is nog open na trede 2 → klopt"
     }
   ],
   "reviewHelp": [
@@ -3443,7 +3493,13 @@
       "reviewOf": "mwx4vrnqzk6h"
     }
   ],
-  "helpDropped": [],
+  "helpDropped": [
+    {
+      "at": "2026-11-26T14:22:28.659Z",
+      "skill": "uml.klassendiagram",
+      "rung": 2
+    }
+  ],
   "transfers": [],
   "conceptHelp": [
     {
@@ -3536,6 +3592,13 @@
       "rung": 2,
       "taskSkill": "ood.klassen-properties",
       "task": "mwmb1qbt48t1"
+    },
+    {
+      "at": "2026-11-26T14:18:55.836Z",
+      "skill": "pattern.strategy",
+      "rung": 2,
+      "taskSkill": "uml.klassendiagram",
+      "task": "mwxn1mmz5cl5"
     }
   ],
   "microProposals": [
@@ -3668,6 +3731,8 @@
       "Dan zou de ExternalUser de zelfde functies krijgen als Staff en zelf expence claims kunnen doen terwijl in de opdracht juist wordt vermeld dat dit niet de bedoeling is. Daarom heb ik er niet voor gekozen om ExternalUser van Staff te laten erven": "Then the ExternalUser would get the same functions as Staff and could make expense claims itself, while the assignment specifically says that this is not intended. That's why I chose not to let ExternalUser inherit from Staff",
       "budgethouder als rolklasse": "budget holder as a role class",
       "Het is geen subklasse van staff omdat een budgethouder zou kunne stoppen als budget houder maar door zou kunnen als staff. dan zou de budgethouder instatie gedistruct moeten worden en dat is niet handig omdat dan alle bijbehorende informatie dan wees wordt of verloren gaat": "It is not a subclass of staff because a budget holder could stop being a budget holder but could continue as staff. then the budget holder instance would have to be destructed and that is not handy because then all the related information becomes orphaned or gets lost",
+      "certificaten van de user": "certificates of the user",
+      "Omdat een gebruiker mogelijk voor meerdere divices certificering nodig kan hebben en dat dan een sertification string onvoldoende is om dit op te slaan\ndus niet alleen of de gebruiker certificering heeft maar ook voor welk apparaat de gebruiker certificering heeft\nof je certificering nog gelding is omdat je certifiering niet langer geldig kan zijn en de gebruiker dan opnieuw zijn certificering moet halen": "Because a user may need certification for multiple devices and then a certification string is not enough to store this\nso not only whether the user has certification but also for which device the user has certification\nwhether your certification is still valid because your certification can stop being valid and the user then has to get their certification again",
       "securitycheck site (tooling)": "security check site (tooling)",
       "cs.basis (L2), cs.basis.lus-grenzen (L2, nieuw), test.unit-tests (L1)": "cs.basis (L2), cs.basis.lus-grenzen (L2, new), test.unit-tests (L1)",
       "opdracht 04-even-getallen afmaken (niet expliciet benoemd)": "finish exercise 04-even-getallen (not stated explicitly)",
@@ -3853,7 +3918,14 @@
       "uml.klassendiagram: 3x zelfstandig op 2 dagen, alleen de transfertaak ontbreekt → `/mastery-check uml.klassendiagram`. Ook ood.aggregatie-compositie → `/mastery-check ood.aggregatie-compositie`; ood.klassen-properties, ood.associaties, ood.encapsulatie: transfertaak op een andere dag.": "uml.klassendiagram: 3x independently on 2 days, only the transfer task is missing → `/mastery-check uml.klassendiagram`. Also ood.aggregatie-compositie → `/mastery-check ood.aggregatie-compositie`; ood.klassen-properties, ood.associaties, ood.encapsulatie: transfer task on another day.",
       "vooraf 3 → gebruikersdiagram lukte met trede 0, de rolklasse kostte trede 3 → klopt ongeveer (nu 2)": "beforehand 3 → users diagram succeeded at rung 0, the role class took rung 3 → roughly right (now 2)",
       "ik heb geleerd om na te denken over waneer het handig is om een rol te laten overerven of een rol te defineiren als apparte eingen klasse": "i learned to think about when it is handy to let a role inherit or to define a role as a separate own class",
-      "het was lastig om overzicht te houden en te bedenken hoe een staff te kopelen aan de rol van budgethouder": "it was hard to keep an overview and to figure out how to link a staff to the role of budget holder"
+      "het was lastig om overzicht te houden en te bedenken hoe een staff te kopelen aan de rol van budgethouder": "it was hard to keep an overview and to figure out how to link a staff to the role of budget holder",
+      "uml.klassendiagram (L3), pattern.strategy (L0, plaatsing open) · beoordeeld werk (eindopdracht Makerlab)": "uml.klassendiagram (L3), pattern.strategy (L0, placement open) · graded work (Makerlab final project)",
+      "\"ik wil de class diagram voor users afronden\"": "\"i want to finish the class diagram for users\"",
+      "de certificaten van de user (uml.klassendiagram) zijn gelukt met hulp tot trede 1 (Socratische vragen): van één `String` naar een eigen klasse met apparaattype en vervaldatum, passend bij R4. BudgetHolderRole als rolklasse en ExternalUser met StaffCompanion stonden er al goed in.": "the certificates of the user (uml.klassendiagram) succeeded with help up to rung 1 (Socratic questions): from one `String` to a class of its own with equipment type and expiry date, fitting R4. BudgetHolderRole as a role class and ExternalUser with StaffCompanion were already in place correctly.",
+      "uml.klassendiagram: 3x zelfstandig op 2 dagen, alleen de transfertaak ontbreekt → `/mastery-check uml.klassendiagram`": "uml.klassendiagram: 3x independent on 2 days, only the transfer task is missing → `/mastery-check uml.klassendiagram`",
+      "vooraf 2 → het onderdeel certificaten lukte met trede ≤1, het tarief is nog open na trede 2 → klopt": "beforehand 2 → the certificates part succeeded with rung ≤1, the rate is still open after rung 2 → accurate",
+      "ik heb kennis gemaakt met het srategy pattern en waneer dit handig kan zijn": "i got to know the strategy pattern and when it can be useful",
+      "het was in eerste instatie niet duidelijk hoe de classenstructuur het invoeren van een daltarief naast een roltarief zou kunnen implementeren zodat de code goed aanpasbaar blijft": "at first it was not clear how the class structure could implement introducing an off-peak rate next to a role rate so that the code stays easy to change"
     }
   }
 }
