@@ -1,7 +1,7 @@
 {
   "schema": 1,
-  "generatedAt": "2026-11-26",
-  "exportedAt": "2026-11-26T14:38:39.683Z",
+  "generatedAt": "2026-11-28",
+  "exportedAt": "2026-11-28T06:45:13.164Z",
   "course": null,
   "language": "nl",
   "examDate": "2027-01-20",
@@ -634,7 +634,7 @@
       "nextReview": null,
       "intervalIndex": 0,
       "lastReview": null,
-      "lastSeen": "2026-11-19",
+      "lastSeen": "2026-11-28",
       "placement": "done",
       "start": {
         "at": "2026-11-07T18:59:58.137Z",
@@ -2794,6 +2794,39 @@
       "corrections": [],
       "void": false,
       "voidReason": null
+    },
+    {
+      "id": "mx00pxptno4t",
+      "at": "2026-11-28T06:23:55.960Z",
+      "skill": "test.unit-tests",
+      "source": "check",
+      "success": true,
+      "maxRung": 1,
+      "minutes": 23,
+      "reviewRung": null,
+      "what": "StudentUpgradesBalance",
+      "explained": true,
+      "explanation": "1 student kon er niet bij omdat _balance provate was 2 50 wert toegevoegd aan Balance en niet aan _balance\nik had geleerd dat : / Auto-implemented property: the compiler creates the backing field itself\n public string Name { get; set; } maar dat klopt dan niet of ik begrijp niet wat dat betekend want _balance wordt blijkbaar niet aangemaakt\nik dacht dat dit altijd _naam werdt\nja, dus je moet het zelf eeerst een naam geven?\nomdat dit het backing field nog geen naam gekregen had omdat je altijd zelf expliciet een naam voor het backing field moet aangeven anders betaat het niet",
+      "explainedAt": "2026-11-28T06:34:57.076Z",
+      "explainedBy": null,
+      "lapsed": false,
+      "lapseReason": null,
+      "retaggedFrom": null,
+      "rejections": [
+        {
+          "at": "2026-11-28T06:28:59.373Z",
+          "by": "claude",
+          "reasons": []
+        },
+        {
+          "at": "2026-11-28T06:33:20.814Z",
+          "by": "claude",
+          "reasons": []
+        }
+      ],
+      "corrections": [],
+      "void": false,
+      "voidReason": null
     }
   ],
   "reviews": [],
@@ -3026,6 +3059,26 @@
       "overridesUsed": 0,
       "reviewHelp": 3,
       "helpDropped": 1
+    },
+    {
+      "date": "2026-11-27",
+      "sessions": 1,
+      "hints": 0,
+      "holds": 0,
+      "denials": 0,
+      "overridesUsed": 0,
+      "reviewHelp": 0,
+      "helpDropped": 0
+    },
+    {
+      "date": "2026-11-28",
+      "sessions": 1,
+      "hints": 3,
+      "holds": 1,
+      "denials": 1,
+      "overridesUsed": 0,
+      "reviewHelp": 0,
+      "helpDropped": 0
     }
   ],
   "diary": [
@@ -3453,6 +3506,23 @@
         "nextStep": "onbekend"
       },
       "calibration": "vooraf 2 → het onderdeel certificaten lukte met trede ≤1, het tarief is nog open na trede 2 → klopt"
+    },
+    {
+      "date": "2026-11-28",
+      "n": 1,
+      "time": "06:37–07:45",
+      "skills": "test.unit-tests (L2), ood.klassen.veld-vs-lokaal (L2) · beoordeeld werk (Makerlab)",
+      "plan": "\"Ik wil nu zelfstandig gaan beginnen met het implementeren van de class diagram voor users\"",
+      "confidenceBefore": "onbekend",
+      "wentWell": "test-first gewerkt (test.unit-tests): eerst een rode test, daarna zelf de compileerfout en de logische fout opgelost. Gelukt met hulp tot trede 1 (Socratische vragen); het leren zat bij ood.klassen.veld-vs-lokaal: een veld als `_balance` bestaat alleen als je het zelf declareert, het backing field van `{ get; set; }` is niet bij naam aan te spreken.",
+      "signals": "transfertaak open voor uml.klassendiagram en ood.aggregatie-compositie (`/mastery-check <id>`); ood.klassen-properties, ood.associaties en ood.encapsulatie op een andere dag. test.unit-tests L2 → L3: 4/5 taken.",
+      "reflection": {
+        "learned": "als je een property aanmaakt moet je expliciet de backing field een naam geven en een toegangsmodifier toevoegen",
+        "confusing": "dat er wel een backing field wordt aangemaakt maar dat deze niet automatische de naam _naam krijgt.",
+        "confidenceAfter": "3",
+        "nextStep": "(niet genoemd)"
+      },
+      "calibration": "vooraf onbekend → lukte met trede ≤1 → niet te bepalen"
     }
   ],
   "reviewHelp": [
@@ -3599,6 +3669,27 @@
       "rung": 2,
       "taskSkill": "uml.klassendiagram",
       "task": "mwxn1mmz5cl5"
+    },
+    {
+      "at": "2026-11-28T06:17:17.298Z",
+      "skill": "ood.klassen.veld-vs-lokaal",
+      "rung": 1,
+      "taskSkill": "test.unit-tests",
+      "task": "mx00pxptno4t"
+    },
+    {
+      "at": "2026-11-28T06:32:06.475Z",
+      "skill": "ood.klassen.veld-vs-lokaal",
+      "rung": 1,
+      "taskSkill": "test.unit-tests",
+      "task": "mx018zt6ahh7"
+    },
+    {
+      "at": "2026-11-28T06:39:31.290Z",
+      "skill": "ood.klassen.veld-vs-lokaal",
+      "rung": 2,
+      "taskSkill": "test.unit-tests",
+      "task": "mx018zt6ahh7"
     }
   ],
   "microProposals": [
@@ -3733,6 +3824,8 @@
       "Het is geen subklasse van staff omdat een budgethouder zou kunne stoppen als budget houder maar door zou kunnen als staff. dan zou de budgethouder instatie gedistruct moeten worden en dat is niet handig omdat dan alle bijbehorende informatie dan wees wordt of verloren gaat": "It is not a subclass of staff because a budget holder could stop being a budget holder but could continue as staff. then the budget holder instance would have to be destructed and that is not handy because then all the related information becomes orphaned or gets lost",
       "certificaten van de user": "certificates of the user",
       "Omdat een gebruiker mogelijk voor meerdere divices certificering nodig kan hebben en dat dan een sertification string onvoldoende is om dit op te slaan\ndus niet alleen of de gebruiker certificering heeft maar ook voor welk apparaat de gebruiker certificering heeft\nof je certificering nog gelding is omdat je certifiering niet langer geldig kan zijn en de gebruiker dan opnieuw zijn certificering moet halen": "Because a user may need certification for multiple devices and then a certification string is not enough to store this\nso not only whether the user has certification but also for which device the user has certification\nwhether your certification is still valid because your certification can stop being valid and the user then has to get their certification again",
+      "StudentUpgradesBalance": "StudentUpgradesBalance",
+      "1 student kon er niet bij omdat _balance provate was 2 50 wert toegevoegd aan Balance en niet aan _balance\nik had geleerd dat : / Auto-implemented property: the compiler creates the backing field itself\n public string Name { get; set; } maar dat klopt dan niet of ik begrijp niet wat dat betekend want _balance wordt blijkbaar niet aangemaakt\nik dacht dat dit altijd _naam werdt\nja, dus je moet het zelf eeerst een naam geven?\nomdat dit het backing field nog geen naam gekregen had omdat je altijd zelf expliciet een naam voor het backing field moet aangeven anders betaat het niet": "1 student couldn't access it because _balance was private 2 50 was added to Balance and not to _balance\ni had learned that : / Auto-implemented property: the compiler creates the backing field itself\n public string Name { get; set; } but then that isn't right or i don't understand what that means because _balance apparently isn't created\ni thought this always became _naam\nyes, so you have to give it a name yourself first?\nbecause the backing field hadn't been given a name yet because you always have to explicitly specify a name for the backing field yourself otherwise it doesn't exist",
       "securitycheck site (tooling)": "security check site (tooling)",
       "cs.basis (L2), cs.basis.lus-grenzen (L2, nieuw), test.unit-tests (L1)": "cs.basis (L2), cs.basis.lus-grenzen (L2, new), test.unit-tests (L1)",
       "opdracht 04-even-getallen afmaken (niet expliciet benoemd)": "finish exercise 04-even-getallen (not stated explicitly)",
@@ -3925,7 +4018,14 @@
       "uml.klassendiagram: 3x zelfstandig op 2 dagen, alleen de transfertaak ontbreekt → `/mastery-check uml.klassendiagram`": "uml.klassendiagram: 3x independent on 2 days, only the transfer task is missing → `/mastery-check uml.klassendiagram`",
       "vooraf 2 → het onderdeel certificaten lukte met trede ≤1, het tarief is nog open na trede 2 → klopt": "beforehand 2 → the certificates part succeeded with rung ≤1, the rate is still open after rung 2 → accurate",
       "ik heb kennis gemaakt met het srategy pattern en waneer dit handig kan zijn": "i got to know the strategy pattern and when it can be useful",
-      "het was in eerste instatie niet duidelijk hoe de classenstructuur het invoeren van een daltarief naast een roltarief zou kunnen implementeren zodat de code goed aanpasbaar blijft": "at first it was not clear how the class structure could implement introducing an off-peak rate next to a role rate so that the code stays easy to change"
+      "het was in eerste instatie niet duidelijk hoe de classenstructuur het invoeren van een daltarief naast een roltarief zou kunnen implementeren zodat de code goed aanpasbaar blijft": "at first it was not clear how the class structure could implement introducing an off-peak rate next to a role rate so that the code stays easy to change",
+      "test.unit-tests (L2), ood.klassen.veld-vs-lokaal (L2) · beoordeeld werk (Makerlab)": "test.unit-tests (L2), ood.klassen.veld-vs-lokaal (L2) · graded work (Makerlab)",
+      "\"Ik wil nu zelfstandig gaan beginnen met het implementeren van de class diagram voor users\"": "\"I now want to start independently implementing the class diagram for users\"",
+      "test-first gewerkt (test.unit-tests): eerst een rode test, daarna zelf de compileerfout en de logische fout opgelost. Gelukt met hulp tot trede 1 (Socratische vragen); het leren zat bij ood.klassen.veld-vs-lokaal: een veld als `_balance` bestaat alleen als je het zelf declareert, het backing field van `{ get; set; }` is niet bij naam aan te spreken.": "worked test-first (test.unit-tests): first a red test, then fixed the compiler error and the logic error myself. Succeeded with help up to rung 1 (Socratic questions); the learning was in ood.klassen.veld-vs-lokaal: a field like `_balance` only exists if you declare it yourself, the backing field of `{ get; set; }` cannot be accessed by name.",
+      "transfertaak open voor uml.klassendiagram en ood.aggregatie-compositie (`/mastery-check <id>`); ood.klassen-properties, ood.associaties en ood.encapsulatie op een andere dag. test.unit-tests L2 → L3: 4/5 taken.": "transfer task open for uml.klassendiagram and ood.aggregatie-compositie (`/mastery-check <id>`); ood.klassen-properties, ood.associaties and ood.encapsulatie on another day. test.unit-tests L2 → L3: 4/5 tasks.",
+      "vooraf onbekend → lukte met trede ≤1 → niet te bepalen": "beforehand unknown → succeeded with rung ≤1 → cannot be determined",
+      "als je een property aanmaakt moet je expliciet de backing field een naam geven en een toegangsmodifier toevoegen": "when you create a property you have to explicitly give the backing field a name and add an access modifier",
+      "dat er wel een backing field wordt aangemaakt maar dat deze niet automatische de naam _naam krijgt.": "that a backing field is created but that it doesn't automatically get the name _naam."
     }
   }
 }
