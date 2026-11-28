@@ -3,7 +3,7 @@
 # mkdocs-static-i18n and mkdocs-git-revision-date-localized-plugin. The rest are their dependencies.
 # The social cards also need the Cairo library of the system (libcairo2, see build-deploy.yml).
 babel==2.18.0
-backrefs==8.2
+backrefs==8.3
 cairocffi==1.7.1
 CairoSVG==2.9.1
 certifi==2026.10.23
@@ -34,7 +34,7 @@ pillow==13.0.0
 platformdirs==4.14.5
 pycparser==3.12
 Pygments==2.21.0
-pymdown-extensions==13.0
+pymdown-extensions==13.1
 python-dateutil==4.0.0
 PyYAML==6.0.3
 pyyaml_env_tag==1.1
